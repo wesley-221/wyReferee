@@ -13,15 +13,16 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppComponent } from './app.component';
-import { BodyComponent } from './components/main-page/body/body.component';
 import { TitlebarComponent } from './components/main-page/titlebar/titlebar.component';
 import { MainComponent } from './components/main-page/main/main.component';
 import { SidebarComponent } from './components/main-page/sidebar/sidebar.component';
-import { ContentComponent } from './components/main-page/content/content.component';
 
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
+import { SettingsComponent } from './components/settings/settings.component';
+import { ErrorComponent } from './components/main-page/error/error.component';
+import { InformationComponent } from './components/information/information.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -29,7 +30,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-	declarations: [AppComponent, BodyComponent, TitlebarComponent, MainComponent, SidebarComponent, ContentComponent],
+	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent],
 	imports: [
 		BrowserModule,
 		FormsModule,

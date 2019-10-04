@@ -12,15 +12,15 @@
         <div class=sb-header-text>
             AxS calculator
             <hr />
-            <button type="button" class="btn btn-sb-menu btn-xs" title="Settings"><fa-icon [icon]="['fas', 'cogs']"></fa-icon></button>
+            <button type="button" class="btn btn-sb-menu btn-xs" title="Settings" [routerLink]="['/settings']" routerLinkActive="in" ><fa-icon [icon]="['fas', 'cogs']"></fa-icon></button>
         </div>
     </div>
     
     <div class=sb-navigation>
-        <button type="button" class="sb-nav-column"><fa-icon [icon]="['fas', 'info']"></fa-icon> Information</button>
-        <button type="button" class="sb-nav-column"><fa-icon [icon]="['fas', 'bars']"></fa-icon> Lobby overview</button>
-        <button type="button" class="sb-nav-column"><fa-icon [icon]="['far', 'plus-square']"></fa-icon> Create a lobby</button>
-        <button type="button" class="sb-nav-column"><fa-icon [icon]="['far', 'times-circle']"></fa-icon> Modifiers</button>
-        <button type="button" class="sb-nav-column"><fa-icon [icon]="['far', 'times-circle']"></fa-icon> Mappool</button>
+        <button type="button" [routerLink]="['/information']" routerLinkActive="in"  class="sb-nav-column"><fa-icon [icon]="['fas', 'info']"></fa-icon> Information</button>
+        <button type="button" [routerLink]="['/lobby-overview']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['fas', 'bars']"></fa-icon> Lobby overview</button>
+        <button type="button" [routerLink]="['/create-lobby']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['far', 'plus-square']"></fa-icon> Create a lobby</button>
+        <button type="button" [routerLink]="['/modifiers']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['far', 'times-circle']"></fa-icon> Modifiers</button>
+        <button type="button" [routerLink]="['/mappool']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['far', 'times-circle']"></fa-icon> Mappool</button>
     </div>
 </div>
