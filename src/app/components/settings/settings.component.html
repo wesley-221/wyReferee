@@ -1,1 +1,60 @@
-<p>settings works!</p>
+<div class=row>
+    <div class=col-12>
+        <div class=form-group>
+            <h2>API key</h2>
+            <p>Enter your osu!API key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The API key can be found <a [routerLink]="" (click)="electronService.openLink('https://osu.ppy.sh/p/api');">here</a>.</p>
+            <input id=apiKey type=password class=form-control placeholder="osu!API key" />
+        </div>
+
+        <div id=message></div>
+
+        <button type="button" class="btn btn-primary float-right">Save</button>
+    </div>
+</div>
+
+<hr />
+
+<table class="table table-hover table-border">
+    <tbody>
+        <tr>
+            <td>
+                This will export the config file and save it as a file in case you need to share it with someone. <br />
+                <b>Note:</b> It will not export the API key in the file <br />
+            </td>
+
+            <td>
+                <button id="exportConfigFile" type="button" class="btn btn-primary form-control">Export config file</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                This will clear all the cache. 
+            </td>
+
+            <td>
+                <button id="clearCache" type="button" class="btn btn-primary form-control">Clear cache</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                This will remove the API key.
+            </td>
+
+            <td>
+                <button id="removeApiKey" type="button" class="btn btn-primary form-control">Remove API key</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                This will export all the modifiers.
+            </td>
+
+            <td>
+                <button id="exportModifiers" type="button" class="btn btn-primary form-control">Export modifiers</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

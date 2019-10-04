@@ -1,8 +1,9 @@
 // =============================
 // Overwrite framework variables
 // =============================
-$font-family:   'Open Sans', Arial, Helvetica, sans-serif;
-$primary:       #fb9678;
+$font-family:       'Open Sans', Arial, Helvetica, sans-serif;
+$primary:           #fb9678;
+$enable-rounded:    false;
 
 // =================
 // Import frameworks
@@ -305,6 +306,22 @@ html, body {
     border-radius:  .2rem;
 }
 
+.btn-primary {
+    color: white;
+
+    &:hover {
+        color: white;
+    }
+}
+
 h1, h2, h3, h4, h5, h6 {
     color: $primary;
+}
+
+.table-border {
+    tr {
+        td {
+            border-top: 1px solid $sidebar-hr-color;
+        }
+    }
 }
