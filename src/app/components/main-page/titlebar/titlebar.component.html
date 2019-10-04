@@ -1,0 +1,7 @@
+<div class="titleBar">
+    <div class="buttons-right">
+        <div class="navButton" (click)="minimizeWindow();"><fa-icon icon="window-minimize"></fa-icon></div>
+        <div class="navButton" (click)="maximizeWindow();"><fa-icon #maximizeButton [icon]="['far', 'clone']"></fa-icon></div>
+        <div class="navButton" (click)="closeWindow();"><fa-icon icon="times"></fa-icon></div>
+    </div>
+</div>

@@ -1,0 +1,280 @@
+// =============================
+// Overwrite framework variables
+// =============================
+$font-family:   'Open Sans', Arial, Helvetica, sans-serif;
+$primary:       #fb9678;
+
+// =================
+// Import frameworks
+// =================
+@import "assets/scss/bootstrap/bootstrap.scss";
+
+$background-color:          #3C4452;
+
+$sidebar-background-color:  #353C48;
+$sidebar-color:             #adb5bd;
+$sidebar-color-hover:       #fb9678;
+$sidebar-hr-color:          #4C545C;
+$sidebar-scroll-color:      #808080;
+$sidebar-width:             280px;
+$sidebar-logo-width:        75px;
+
+$header-background-color:   #303641;
+$header-height:             50px;
+
+$btn-sb-menu-color:         #36393E;
+
+$users-background-default:  grey;
+$users-background-hover:    darken($users-background-default, 5%);
+
+$navbar-height: 22px; 
+
+html, body {
+    background-color:   $background-color;
+	color:              white;
+	font-family: 		$font-family;
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: $sidebar-color;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: $sidebar-color-hover;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: darken($sidebar-color-hover, 5%);
+    } 
+}
+
+.titleBar {
+    position: fixed;
+
+    height: $navbar-height;
+    width: 100%;
+
+    margin: 0;
+
+    -webkit-app-region: drag;
+
+    background-color: $sidebar-color-hover;
+
+    .buttons-right {
+        float: right;
+
+        height: $navbar-height;
+
+        -webkit-app-region: no-drag;
+
+        .navButton {
+            float: left;
+
+            z-index: 10000;
+
+            min-height: $navbar-height;
+            height: $navbar-height;
+            line-height: $navbar-height;
+
+            width: 47px;
+            
+            margin: 0;
+            padding-left: 4px;
+            padding-right: 4px;
+
+            text-align: center;
+
+            &:hover {
+                background-color: darken($sidebar-color-hover, 15%);
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.container {
+    width:      100%;
+    max-width:  100%;
+
+    .sideBar {
+        position:   fixed;
+        width:      $sidebar-width;
+        z-index:    1000;
+
+        top:        $navbar-height;
+        bottom:     0;
+        left:       0;
+
+        padding:    0;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        background-color: $sidebar-background-color;
+
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        .sb-old-version {
+            display: none;
+            width: 100%;
+            background-color: #991010;
+            
+            padding: 3px;
+
+            &.in {
+                display: block;
+            }
+        }
+
+        .sb-header {
+            margin-top:     7px;
+            padding-top:    7px;
+            padding-left:   15px;
+            padding-right:  15px;
+            overflow:       hidden;
+            
+            .sb-header-img {
+                float:              left;
+                margin-top:         5px;
+                
+                width:              $sidebar-logo-width;
+                height:             $sidebar-logo-width;
+                line-height:        $sidebar-logo-width;
+                
+                border-radius:      50%;
+                border:             1px solid $sidebar-hr-color;
+
+                background-image: url("assets/images/axs.ico");
+            }
+
+            .sb-header-text {
+                padding:        5px;
+
+                width:          calc(100% - #{$sidebar-logo-width});
+
+                color:          white;
+                float:          left;
+
+                border-top:     1px solid $sidebar-hr-color;
+                border-bottom:  1px solid $sidebar-hr-color;
+            }
+
+            hr {
+                display:    block;
+                height:     1px;
+                border:     0;
+                border-top: 1px solid $sidebar-hr-color;
+                margin:     1em 0;
+                padding:    0; 
+            }
+        }
+
+        .sb-navigation {
+            float: left;
+            width: 100%;
+
+            margin-top: 15px;
+
+            .sb-nav-column {
+                display:            block;
+                text-align:         left;
+            
+                color:              $sidebar-color;
+                background:         none;
+                border:             0;
+                border-left:        3px solid $sidebar-background-color;
+
+                margin-bottom:      1px;
+                padding-left:       5px;
+                padding-right:      5px;
+                padding-top:        3px;
+                padding-bottom:     3px;
+
+                width:              100%;
+
+                text-decoration:    none;
+                transition:         all 0.1s ease-out;
+
+                &.in {
+                    color:          $sidebar-color-hover;
+                    border-left:    3px solid $sidebar-color-hover;
+                }
+
+                &:hover {
+                    color:          $sidebar-color-hover;
+                    border-left:    3px solid $sidebar-color-hover;
+
+                    cursor:         pointer;
+                }
+
+                &:active, &:focus {
+                    outline: 0;
+                }
+            }
+
+            .sb-nav-column-expand {
+                display:        none;
+
+                &.in {
+                    display: block;
+                }
+
+                .sb-nav-column {
+                    color:          $sidebar-color;
+                    border-left:    0;
+                    margin-left:    30px;
+                    transition:     all 0.1s ease-out;
+                
+                    &.active {
+                        color:          $sidebar-color-hover;
+                        border-left:    0;
+                    }
+
+                    &:hover {
+                        color:          $sidebar-color-hover;
+                        border-left:    0;
+                    }
+                }
+            }
+        }
+
+        // ================
+        // Custom scrollbar 
+        scrollbar-face-color: $sidebar-scroll-color;
+        scrollbar-track-color: $sidebar-background-color;
+
+        &::-webkit-scrollbar {
+            width:  8px;
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: $sidebar-scroll-color;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: $sidebar-background-color;
+        }
+    }
+}
+
+.btn-sb-menu {
+    @include button-outline-variant(lighten($btn-sb-menu-color, 15%), white, lighten($btn-sb-menu-color, 15%), lighten($btn-sb-menu-color, 15%));
+    border-radius:  0;
+    color:          white;
+}
+
+.btn-group-xs > .btn, .btn-xs {
+    padding:        .25rem .4rem;
+    font-size:      .875rem;
+    line-height:    .5;
+    border-radius:  .2rem;
+}
