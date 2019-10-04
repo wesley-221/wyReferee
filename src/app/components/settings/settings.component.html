@@ -3,12 +3,10 @@
         <div class=form-group>
             <h2>API key</h2>
             <p>Enter your osu!API key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The API key can be found <a [routerLink]="" (click)="electronService.openLink('https://osu.ppy.sh/p/api');">here</a>.</p>
-            <input id=apiKey type=password class=form-control placeholder="osu!API key" />
+            <input #apiKey type="password" class="form-control" placeholder="osu!API key" value="{{ getApiKey() }}" />
         </div>
 
-        <div id=message></div>
-
-        <button type="button" class="btn btn-primary float-right">Save</button>
+        <button type="button" class="btn btn-primary float-right" (click)="saveApiKey()">Save</button>
     </div>
 </div>
 
