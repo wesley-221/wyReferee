@@ -1,0 +1,44 @@
+<div class="form-group">
+    <h2>Match description</h2>
+    <p>This will only be a description about the match so you can distinguish them from other matches. Will be updated when you enter the names of the teams.</p>
+    
+    <div *ngIf="teamOneName || teamTwoName">
+        <span class="red-text">{{ teamOneName }}</span> vs <span class="blue-text">{{ teamTwoName }}</span>
+    </div>
+</div>
+
+<hr />
+
+<div class="form-group">
+    <h2>Multiplayer link</h2>
+    <div>
+        Enter a multiplayer link in here for the match you want to calculate the scores off. <br /><br />
+        Accepted URL's: <br />
+        <ul>
+            <li>https://osu.ppy.sh/community/matches/46358686</li>
+        </ul>
+    </div>
+    <input [(ngModel)]="multiplayerLobby" type="text" class="form-control" placeholder="Multiplayer link" />
+</div>
+
+<div class="createLobbyTeamRow">
+    <div class="teamOne form-group">
+        <h2>Team one name</h2>
+        <p>
+            Enter the name of the first team. This will be team <span class=red-text>red</span> and has slot 1, 2 and 3.
+        </p>
+        <input [(ngModel)]="teamOneName" type="text" class="form-control" placeholder="Team one name" />
+    </div>
+
+    <div class="teamTwo form-group">
+        <h2>Team two name</h2>
+        <p>
+            Enter the name of the second team. This will be team <span class=blue-text>red</span> and has slot 4, 5 and 6.
+        </p>
+        <input [(ngModel)]="teamTwoName" type="text" class="form-control" placeholder="Team two name" />
+    </div>
+</div>
+
+<hr />
+
+<button type="button" (click)="createLobby()" class="btn btn-primary float-right">Create</button>

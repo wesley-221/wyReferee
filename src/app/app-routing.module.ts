@@ -4,6 +4,8 @@ import { MainComponent } from './components/main-page/main/main.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
 import { InformationComponent } from './components/information/information.component';
+import { AllLobbiesComponent } from './components/all-lobbies/all-lobbies.component';
+import { CreateLobbyComponent } from './components/create-lobby/create-lobby.component';
 
 const routes: Routes = [
 	{
@@ -13,6 +15,8 @@ const routes: Routes = [
 			{ path: '', component: InformationComponent },
 			{ path: 'information', component: InformationComponent },
 			{ path: 'settings', component: SettingsComponent}, 
+			{ path: 'lobby-overview', component: AllLobbiesComponent },
+			{ path: 'create-lobby', component: CreateLobbyComponent },
 			{ path: '**', component: ErrorComponent }
 		]
 	}

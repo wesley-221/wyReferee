@@ -1,0 +1,20 @@
+<div class="scroll">
+    <div class="allLobbies">
+        <div *ngFor="let lobby of allLobbies" (click)="openLobby(lobby)" class="multiplayerLobby">
+            <div class="body">
+                <div class="row">
+                    <div class="col-11">
+                        <span class="multiplayerId"><h1>{{ lobby.description }}</h1></span>
+                        <span class="multiplayerDesc">{{ lobby.teamOneName }} vs {{ lobby.teamTwoName }}</span>
+                    </div>
+    
+                    <div class="col-1">
+                        <div class="multiplayerClose">
+                            <button type="button" (click)="deleteLobby(lobby)" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

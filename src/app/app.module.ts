@@ -24,6 +24,8 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
 import { InformationComponent } from './components/information/information.component';
 import { ToastComponent } from './components/main-page/toast/toast.component';
+import { AllLobbiesComponent } from './components/all-lobbies/all-lobbies.component';
+import { CreateLobbyComponent } from './components/create-lobby/create-lobby.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -31,7 +33,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent],
+	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent, AllLobbiesComponent, CreateLobbyComponent],
 	imports: [
 		BrowserModule,
 		FormsModule,
