@@ -47,6 +47,13 @@ export enum Mods
     ScoreIncreaseMods = Hidden | HardRock | DoubleTime | Flashlight | FadeIn
 }
 
+export enum Gamemodes {
+    Osu = 0,
+    Taiko = 1,
+    Catch = 2,
+    Mania = 3
+}
+
 export class OsuApi {
     protected url: string = "https://osu.ppy.sh/";
     protected endpoint: string;
