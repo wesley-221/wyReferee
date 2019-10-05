@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastService } from '../../../services/toast.service';
-import { Toast } from '../../../models/toast';
+import { Toast, ToastType } from '../../../models/toast';
 
 @Component({
 	selector: 'app-toast',
@@ -11,8 +11,12 @@ import { Toast } from '../../../models/toast';
 export class ToastComponent implements OnInit {
 	allToasts;
 
+	toastType;
+
 	constructor(private toastService: ToastService) { 
 		this.allToasts = toastService.getAllToasts();
+
+		this.toastType = ToastType;
 	}
 
 	ngOnInit() { }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Toast } from '../models/toast';
+import { Toast, ToastType } from '../models/toast';
 
 @Injectable({
   	providedIn: 'root'
@@ -18,8 +18,8 @@ export class ToastService {
 	 * @param message the message to show
 	 * @param duration how long the toast should stay alive (in seconds)
 	 */
-	addToast(message: string, duration: number = 5): void {
-		const newToast = new Toast(this.lastId + 1, message);
+	addToast(message: string, toastType: ToastType = ToastType.Information, duration: number = 5): void {
+		const newToast = new Toast(this.lastId + 1, message, toastType);
 
 		this.allToasts.unshift(newToast);
 		this.lastId ++;
