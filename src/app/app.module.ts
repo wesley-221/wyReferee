@@ -23,6 +23,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
 import { InformationComponent } from './components/information/information.component';
+import { ToastComponent } from './components/main-page/toast/toast.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -30,7 +31,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent],
+	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent],
 	imports: [
 		BrowserModule,
 		FormsModule,
