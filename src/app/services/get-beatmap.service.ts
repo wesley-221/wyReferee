@@ -4,7 +4,7 @@ import { Beatmap } from '../models/beatmap';
 import { Injectable } from '@angular/core';
 import { StoreService } from './store.service';
 import { map } from 'rxjs/operators';
-import { OsuApi } from '../models/osu-api';
+import { OsuApi, OsuApiEndpoints } from '../models/osu-api';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +12,7 @@ import { OsuApi } from '../models/osu-api';
 
 export class GetBeatmap extends OsuApi {
     constructor(private httpClient: HttpClient, private storeService: StoreService) {
-        super(storeService.get('api-key'));
+        super(storeService.get('api-key'), OsuApiEndpoints.GetBeatmaps);
     }
 
     /**
