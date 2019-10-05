@@ -4,32 +4,29 @@ import { Beatmap } from '../models/beatmap';
 import { Injectable } from '@angular/core';
 import { StoreService } from './store.service';
 import { map } from 'rxjs/operators';
+import { OsuApi } from '../models/osu-api';
 
 @Injectable({
     providedIn: 'root'
 })
 
-export class GetBeatmap {
-    private url: string = "https://osu.ppy.sh/";
-    private endpoint: string = "api/get_beatmaps";
-    private key: string;
-
+export class GetBeatmap extends OsuApi {
     constructor(private httpClient: HttpClient, private storeService: StoreService) {
-        this.key = storeService.get('api-key');
+        super(storeService.get('api-key'));
     }
 
     /**
      * Grab a beatmapset from the osu! api with the given beatmapsetId
      * @param beatmapsetId the beatmapsetId to grab the data from
      */
-    public getByBeatmapsetId(beatmapsetId: number): Observable<Beatmap> {
-        return this.httpClient.get<Beatmap>(`${this.url}${this.endpoint}?k=${this.key}&s=${beatmapsetId}`)
+    public getByBeatmapId(beatmapsetId: number): Observable<Beatmap> {
+        return this.httpClient.get<Beatmap>(`${this.url}${this.endpoint}?k=${this.key}&b=${beatmapsetId}`)
         .pipe(
             map((data: any) => this.serializeFromJson(data))
         );
     }
 
-    serializeFromJson(json: any): Beatmap {
+    private serializeFromJson(json: any): Beatmap {
         const beatmap = new Beatmap();
 
         // Unwrap json object > osu api gives back [{...}]
