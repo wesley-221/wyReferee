@@ -51,4 +51,18 @@ export class MultiplayerLobbiesService {
 
 		this.storeService.delete(`lobby.${multiplayerLobby.lobbyId}`);
 	}
+
+	/**
+	 * Get a multiplayerlobby
+	 * @param lobbyId the id of the multiplayerlobby to get
+	 */
+	public get(lobbyId: number): MultiplayerLobby {
+		for(let lobby in this.allLobbies) {
+			if(this.allLobbies[lobby].lobbyId == lobbyId) {
+				return this.allLobbies[lobby];
+			}
+		}
+
+		return null;
+	}
 }

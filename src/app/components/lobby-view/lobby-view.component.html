@@ -1,0 +1,18 @@
+<div class="matchHeader">
+    <h2>{{ selectedLobby.description }}</h2>
+    Multiplayer link: <a href="">{{ selectedLobby.multiplayerLink }}</a><br />
+
+    <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': teamOneScore > teamTwoScore, 'teamLoss': teamTwoScore > teamOneScore}">{{ teamOneScore }}</span> | <span [ngClass]="{'teamWin': teamTwoScore > teamOneScore, 'teamLoss': teamOneScore > teamTwoScore}">{{ teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
+
+    <div class="btn-group float-right">
+        <button type="button" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon></button>
+        <button type="button" class="btn btn-info" title="Score count settings"><fa-icon [icon]="['fas', 'cogs']"></fa-icon></button>
+        <button type="button" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
+    </div>
+
+    <hr />
+</div>
+
+<div class="allMaps">
+    
+</div>

@@ -376,6 +376,45 @@ html, body {
                 padding-left: 5px;
             }
         }
+
+        .teamWin {
+            color: green;
+        }
+    
+        .teamLoss {
+            color: red;
+        }
+    
+        .matchHeader {
+            position: fixed;
+    
+            left: 0;
+            padding-left: calc(#{$sidebar-width} + 14px);
+            
+            width: 100%;
+            z-index: 50;
+    
+            height: 120px;
+    
+            background-color: $background-color;
+    
+            #getMultiplayerData {
+                margin-right: 14px;
+            }
+        }
+    
+        .allMaps {
+            height:     calc(100% - #{$navbar-height} - 111px);
+            max-height: calc(100% - #{$navbar-height} - 111px);
+    
+            margin-top: 134px;
+    
+            padding-right: 16px;
+            padding-bottom: 16px;
+    
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     }
 }
 

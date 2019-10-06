@@ -6,6 +6,7 @@ import { ErrorComponent } from './components/main-page/error/error.component';
 import { InformationComponent } from './components/information/information.component';
 import { AllLobbiesComponent } from './components/all-lobbies/all-lobbies.component';
 import { CreateLobbyComponent } from './components/create-lobby/create-lobby.component';
+import { LobbyViewComponent } from './components/lobby-view/lobby-view.component';
 
 const routes: Routes = [
 	{
@@ -17,6 +18,7 @@ const routes: Routes = [
 			{ path: 'settings', component: SettingsComponent}, 
 			{ path: 'lobby-overview', component: AllLobbiesComponent },
 			{ path: 'create-lobby', component: CreateLobbyComponent },
+			{ path: 'lobby-view/:id', component: LobbyViewComponent },
 			{ path: '**', component: ErrorComponent }
 		]
 	}
