@@ -2,12 +2,12 @@
     <h2>{{ selectedLobby.description }}</h2>
     Multiplayer link: <a [routerLink]="" (click)="elctronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a><br />
 
-    <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': teamOneScore > teamTwoScore, 'teamLoss': teamTwoScore > teamOneScore}">{{ teamOneScore }}</span> | <span [ngClass]="{'teamWin': teamTwoScore > teamOneScore, 'teamLoss': teamOneScore > teamTwoScore}">{{ teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
+    <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': teamOneScore > teamTwoScore, 'teamLoss': teamTwoScore > teamOneScore}">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="{'teamWin': teamTwoScore > teamOneScore, 'teamLoss': teamOneScore > teamTwoScore}">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
 
     <div class="btn-group float-right">
         <button type="button" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon></button>
         <button type="button" class="btn btn-info" title="Score count settings"><fa-icon [icon]="['fas', 'cogs']"></fa-icon></button>
-        <button type="button" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
+        <button type="button" (click)="synchronizeMp()" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
     </div>
 
     <hr />
@@ -19,12 +19,12 @@
 
         <div class="mapContent">
             <div class="mapTitle">
-                <h4>{{ MAPNAME }}</h4>
+                <h4>Mapname{{ MAPNAME }}</h4>
             </div>
 
             <div class="mapModifier">
-                <div class="alert alert-danger"><fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon> There was no modifier set for this map. <a [routerLink]="['/modifier']">Make sure to set a modifier so you get the accurate score.</a></div>
-                <h6>Beatmap modifier: {{ MODIFIER }}</h6>
+                <div class="alert alert-danger"><fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon> There was no modifier set for this map. <a [routerLink]="['/modifiers']">Make sure to set a modifier so you get the accurate score.</a></div>
+                <h6>Beatmap modifier: modifier{{ MODIFIER }}</h6>
             </div>
 
             <hr />
@@ -35,25 +35,25 @@
                     <tr>
                         <td><b>Accuracy player</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.players[0].score != 0 ? addDot(match.players[0].score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ match.getPlayer(0).score != 0 ? addDot(match.getPlayer(0).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.players[0].accuracy }}%)</td>
+                        <td>({{ match.getPlayer(0).accuracy }}%)</td>
                     </tr>
 
                     <tr>
                         <td><b>Score player</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.players[1].score != 0 ? addDot(match.players[1].score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ match.getPlayer(1).score != 0 ? addDot(match.getPlayer(1).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.players[1].accuracy }}%)</td>
+                        <td>({{ match.getPlayer(1).accuracy }}%)</td>
                     </tr>
 
                     <tr>
                         <td><b>Score player</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.players[2].score != 0 ? addDot(match.players[2].score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ match.getPlayer(2).score != 0 ? addDot(match.getPlayer(2).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.players[2].accuracy }}%)</td>
+                        <td>({{ match.getPlayer(2).accuracy }}%)</td>
                     </tr>
                 </table>
                 
@@ -64,36 +64,36 @@
                     <tr>
                         <td><b>Accuracy player</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.players[3].score != 0 ? addDot(match.players[3].score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ match.getPlayer(3).score != 0 ? addDot(match.getPlayer(3).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.players[3].accuracy }}%)</td>
+                        <td>({{ match.getPlayer(3).accuracy }}%)</td>
                     </tr>
 
                     <tr>
                         <td><b>Score player</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.players[4].score != 0 ? addDot(match.players[4].score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ match.getPlayer(4).score != 0 ? addDot(match.getPlayer(4).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.players[4].accuracy }}%)</td>
+                        <td>({{ match.getPlayer(4).accuracy }}%)</td>
                     </tr>
 
                     <tr>
                         <td><b>Score player</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.players[5].score != 0 ? addDot(match.players[5].score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ match.getPlayer(5).score != 0 ? addDot(match.getPlayer(5).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.players[5].accuracy }}%)</td>
+                        <td>({{ match.getPlayer(5).accuracy }}%)</td>
                     </tr>
                 </table>
 
                 <hr />
 
-                <div class=red-text>Team {{ selectedLobby.teamOneName }} score: {{ teamOneScore }}</div>
-                <div class=blue-text>Team {{ selectedLobby.teamTwoName }} score: {{ teamTwoScore }}</div>
+                <div class=red-text>Team {{ selectedLobby.teamOneName }} score: {{ addDot(match.team_one_score, " ") }}</div>
+                <div class=blue-text>Team {{ selectedLobby.teamTwoName }} score: {{ addDot(match.team_two_score, " ") }}</div>
 
                 <br />
 
-                {{ winMessage }}
+                <h3><span class=red-text>Team {{ selectedLobby.teamOneName }}</span> has won.</h3><span class=red-text>Team {{ selectedLobby.teamOneName }}</span> score: {{ addDot(match.team_one_score, " ")}} | <span class=blue-text>Team {{ selectedLobby.teamTwoName }}</span> score: {{ addDot(match.team_two_score, " ") }} | Score difference: {{ addDot(match.team_one_score - match.team_two_score, " ") }}
             </div>
         </div>
 

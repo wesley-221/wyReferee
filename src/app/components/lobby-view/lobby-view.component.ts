@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MultiplayerLobby } from '../../models/multiplayer-lobby';
 import { MultiplayerLobbiesService } from '../../services/multiplayer-lobbies.service';
 import { ElectronService } from '../../services/electron.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -13,18 +14,19 @@ import { ElectronService } from '../../services/electron.service';
 export class LobbyViewComponent implements OnInit {
 	selectedLobby: MultiplayerLobby;
 
-	teamOneScore = 8;
-	teamTwoScore = 5;
-
-	constructor(private route: ActivatedRoute, private multiplayerLobbies: MultiplayerLobbiesService, private elctronService: ElectronService) {
+	constructor(private route: ActivatedRoute, private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
-
-			console.log(this.selectedLobby)
 		});
 	}
 
 	ngOnInit() { }
+
+	synchronizeMp() {
+		this.toastService.addToast('Synchronizing multiplayer lobby...');
+
+		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby);
+	}
 
 	getThumbUrl(thumbName: string) {
 		return `url('https://b.ppy.sh/thumb/${thumbName}.jpg')`;
