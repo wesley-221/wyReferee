@@ -4,6 +4,7 @@ import { MultiplayerLobby } from '../../models/multiplayer-lobby';
 import { MultiplayerLobbiesService } from '../../services/multiplayer-lobbies.service';
 import { ElectronService } from '../../services/electron.service';
 import { ToastService } from '../../services/toast.service';
+import { CacheService } from '../../services/cache.service';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -14,7 +15,7 @@ import { ToastService } from '../../services/toast.service';
 export class LobbyViewComponent implements OnInit {
 	selectedLobby: MultiplayerLobby;
 
-	constructor(private route: ActivatedRoute, private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService) {
+	constructor(private route: ActivatedRoute, private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService, private cacheService: CacheService) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
 		});
@@ -30,6 +31,12 @@ export class LobbyViewComponent implements OnInit {
 
 	getThumbUrl(thumbName: string) {
 		return `url('https://b.ppy.sh/thumb/${thumbName}.jpg')`;
+	}
+
+	getUsernameFromUserId(userId: number) {
+		const cachedUser = this.cacheService.getCachedUser(userId);
+		
+		return (cachedUser != null) ? cachedUser.username : "Unknown";
 	}
 
 	addDot(nStr, splitter) {

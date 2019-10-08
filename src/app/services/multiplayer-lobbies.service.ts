@@ -6,6 +6,9 @@ import { MultiplayerDataUser } from '../models/multiplayer-data-user';
 import { AxsCalculations } from '../models/axs-calculations';
 import { MultiplayerData } from '../models/multiplayer-data';
 import { ToastService } from './toast.service';
+import { CacheService } from './cache.service';
+import { CacheUser } from '../models/cache-user';
+import { GetUser } from './get-user.service';
 
 @Injectable({
   	providedIn: 'root'
@@ -15,7 +18,12 @@ export class MultiplayerLobbiesService {
 	private allLobbies: MultiplayerLobby[] = [];
 	availableLobbyId: number = 0;
 	
-  	constructor(private storeService: StoreService, private getMultiplayer: GetMultiplayerService, private toastService: ToastService) {
+  	constructor(
+		  private storeService: StoreService, 
+		  private getMultiplayer: GetMultiplayerService, 
+		  private toastService: ToastService, 
+		  private cacheService: CacheService,
+		  private getUser: GetUser) {
 		const allLobbies = storeService.get('lobby');
 
 		for(let lobby in allLobbies) {
@@ -102,7 +110,14 @@ export class MultiplayerLobbiesService {
 				multiplayerData.beatmap_id = currentGame.beatmap_id;
 
 				for(let score in currentGame.scores) {
-					// TODO: cache username of currentGame.scores[score].user_id
+					let cachedUser: CacheUser = this.cacheService.getCachedUser(currentGame.scores[score].user_id);
+
+					// Check if the user is cached
+					if(cachedUser == null) {
+						this.getUser.getByUserId(currentGame.scores[score].user_id).subscribe(data => {
+							this.cacheService.cacheUser(data);
+						});
+					}
 
 					const currentScore = currentGame.scores[score];
 					const newMpDataUser = new MultiplayerDataUser();

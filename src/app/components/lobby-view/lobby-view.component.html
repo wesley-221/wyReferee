@@ -33,27 +33,33 @@
                 <h5>Team {{ selectedLobby.teamOneName }}</h5>
                 <table>
                     <tr>
-                        <td><b>Accuracy player</b></td>
+                        <td><b>{{ getUsernameFromUserId(match.getPlayer(0).user) }}</b></td>
                         <td>&emsp;</td>
                         <td>{{ match.getPlayer(0).score != 0 ? addDot(match.getPlayer(0).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
                         <td>({{ match.getPlayer(0).accuracy }}%)</td>
+                        <td>&emsp;</td>
+                        <td>(Accuracy player)</td>
                     </tr>
 
                     <tr>
-                        <td><b>Score player</b></td>
+                        <td><b>{{ getUsernameFromUserId(match.getPlayer(1).user) }}</b></td>
                         <td>&emsp;</td>
                         <td>{{ match.getPlayer(1).score != 0 ? addDot(match.getPlayer(1).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
                         <td>({{ match.getPlayer(1).accuracy }}%)</td>
+                        <td>&emsp;</td>
+                        <td>(Score player)</td>
                     </tr>
 
                     <tr>
-                        <td><b>Score player</b></td>
+                        <td><b>{{ getUsernameFromUserId(match.getPlayer(2).user) }}</b></td>
                         <td>&emsp;</td>
                         <td>{{ match.getPlayer(2).score != 0 ? addDot(match.getPlayer(2).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
                         <td>({{ match.getPlayer(2).accuracy }}%)</td>
+                        <td>&emsp;</td>
+                        <td>(Score player)</td>
                     </tr>
                 </table>
                 
@@ -62,27 +68,33 @@
                 <h5>Team {{ selectedLobby.teamTwoName }}</h5>
                 <table>
                     <tr>
-                        <td><b>Accuracy player</b></td>
+                        <td><b>{{ getUsernameFromUserId(match.getPlayer(3).user) }}</b></td>
                         <td>&emsp;</td>
                         <td>{{ match.getPlayer(3).score != 0 ? addDot(match.getPlayer(3).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
                         <td>({{ match.getPlayer(3).accuracy }}%)</td>
+                        <td>&emsp;</td>
+                        <td>(Accuracy player)</td>
                     </tr>
 
                     <tr>
-                        <td><b>Score player</b></td>
+                        <td><b>{{ getUsernameFromUserId(match.getPlayer(4).user) }}</b></td>
                         <td>&emsp;</td>
                         <td>{{ match.getPlayer(4).score != 0 ? addDot(match.getPlayer(4).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
                         <td>({{ match.getPlayer(4).accuracy }}%)</td>
+                        <td>&emsp;</td>
+                        <td>(Score player)</td>
                     </tr>
 
                     <tr>
-                        <td><b>Score player</b></td>
+                        <td><b>{{ getUsernameFromUserId(match.getPlayer(5).user) }}</b></td>
                         <td>&emsp;</td>
                         <td>{{ match.getPlayer(5).score != 0 ? addDot(match.getPlayer(5).score.toFixed(), " ") : 0 }}</td>
                         <td>&emsp;</td>
                         <td>({{ match.getPlayer(5).accuracy }}%)</td>
+                        <td>&emsp;</td>
+                        <td>(Score player)</td>
                     </tr>
                 </table>
 
