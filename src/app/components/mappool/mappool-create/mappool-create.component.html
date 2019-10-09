@@ -1,0 +1,15 @@
+<h3>Mappool description</h3>
+<p>This will be the header of the mappool. It is used to identify the mappools more easily.</p>
+
+<input type="text" class="form-control" placeholder="Mappool description" />
+
+<hr />
+
+<h3>Mod brackets</h3>
+<p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod bracket. Fill in the name of the bracket</p>
+
+<button class="btn btn-primary" (click)="createNewBracket()">Create new bracket</button>
+
+<hr />
+
+<app-mappool-bracket *ngFor="let bracket of allBrackets" [bracket]="bracket"></app-mappool-bracket>

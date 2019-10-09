@@ -7,6 +7,8 @@ import { InformationComponent } from './components/information/information.compo
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
 import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
+import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
+import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
 
 const routes: Routes = [
 	{
@@ -19,6 +21,8 @@ const routes: Routes = [
 			{ path: 'lobby-overview', component: AllLobbiesComponent },
 			{ path: 'create-lobby', component: CreateLobbyComponent },
 			{ path: 'lobby-view/:id', component: LobbyViewComponent },
+			{ path: 'mappool-overview', component: MappoolOverviewComponent },
+			{ path: 'mappool-create', component: MappoolCreateComponent },
 			{ path: '**', component: ErrorComponent }
 		]
 	}

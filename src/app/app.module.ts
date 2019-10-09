@@ -27,6 +27,9 @@ import { ToastComponent } from './components/main-page/toast/toast.component';
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
 import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
+import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
+import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
+import { MappoolBracketComponent } from './components/mappool/mappool-bracket/mappool-bracket.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -34,7 +37,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent, AllLobbiesComponent, CreateLobbyComponent, LobbyViewComponent],
+	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent, AllLobbiesComponent, CreateLobbyComponent, LobbyViewComponent, MappoolOverviewComponent, MappoolCreateComponent, MappoolBracketComponent],
 	imports: [
 		BrowserModule,
 		FormsModule,
