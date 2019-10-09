@@ -1,7 +1,10 @@
 <div class="form-group">
     <h2>Match description</h2>
-    <p>This will only be a description about the match so you can distinguish them from other matches. Will be updated when you enter the names of the teams.</p>
-    
+
+    <div *ngIf="!teamOneName && !teamTwoName">
+        No description yet :(
+    </div>
+
     <div *ngIf="teamOneName || teamTwoName">
         <span class="red-text">{{ teamOneName }}</span> vs <span class="blue-text">{{ teamTwoName }}</span>
     </div>
