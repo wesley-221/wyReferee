@@ -2,7 +2,7 @@
     <h2>{{ selectedLobby.description }}</h2>
     Multiplayer link: <a [routerLink]="" (click)="electronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a><br />
 
-    <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': teamOneScore > teamTwoScore, 'teamLoss': teamTwoScore > teamOneScore}">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="{'teamWin': teamTwoScore > teamOneScore, 'teamLoss': teamOneScore > teamTwoScore}">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
+    <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': selectedLobby.teamOneScore > selectedLobby.teamTwoScore, 'teamLoss': selectedLobby.teamTwoScore > selectedLobby.teamOneScore}">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="{'teamWin': selectedLobby.teamTwoScore > selectedLobby.teamOneScore, 'teamLoss': selectedLobby.teamOneScore > selectedLobby.teamTwoScore}">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
 
     <div class="btn-group float-right">
         <button type="button" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon></button>

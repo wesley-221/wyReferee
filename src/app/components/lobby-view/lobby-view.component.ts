@@ -22,7 +22,7 @@ export class LobbyViewComponent implements OnInit {
 		private multiplayerLobbies: MultiplayerLobbiesService, 
 		private toastService: ToastService, 
 		private cacheService: CacheService,
-		private electronService: ElectronService) {
+		public electronService: ElectronService) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
 		});

@@ -21,13 +21,8 @@ function createWindow() {
 		},
 		frame: false,
 		titleBarStyle: 'hidden',
-		icon: `${__dirname}/src/assets/images/axs.ico`
+		icon: `${__dirname}/src/assets/images/icon.png`
 	});
-
-	// Check for OS
-	if(process.platform === 'linux') {
-		win.icon = path.join(`${__dirname}/src/assets/images/axs.png`);
-	}
 
 	if (serve) {
 		require('electron-reload')(__dirname, {

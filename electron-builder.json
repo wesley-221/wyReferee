@@ -1,5 +1,5 @@
 {
-  "productName": "angular-electron",
+  "productName": "AxS calculator",
   "directories": {
     "output": "release/"
   },
@@ -20,19 +20,13 @@
         "!tslint.json"
     ],
   "win": {
-    "icon": "dist",
+    "icon": "src/assets/images/icon.png",
     "target": [
       "portable"
     ]
   },
-  "mac": {
-    "icon": "dist",
-    "target": [
-      "dmg"
-    ]
-  },
   "linux": {
-    "icon": "dist",
+    "icon": "src/assets/images/icon.png",
     "target": [
       "AppImage"
     ]

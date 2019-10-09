@@ -15,7 +15,7 @@ export class SettingsComponent implements OnInit {
 	@ViewChild('apiKey', { static: false }) apiKey: ElementRef;
 
 	constructor(
-		private electronService: ElectronService, 
+		public electronService: ElectronService, 
 		private storeService: StoreService, 
 		private toastService: ToastService,
 		private apiKeyValidation: ApiKeyValidation
