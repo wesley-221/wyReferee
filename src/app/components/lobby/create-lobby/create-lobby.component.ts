@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MultiplayerLobby } from '../../models/store-multiplayer/multiplayer-lobby';
-import { MultiplayerLobbiesService } from '../../services/multiplayer-lobbies.service';
-import { ToastService } from '../../services/toast.service';
+import { MultiplayerLobby } from '../../../models/store-multiplayer/multiplayer-lobby';
+import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
 	selector: 'app-create-lobby',

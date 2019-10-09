@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { StoreService } from '../../services/store.service';
-import { MultiplayerLobby } from '../../models/store-multiplayer/multiplayer-lobby';
-import { MultiplayerLobbiesService } from '../../services/multiplayer-lobbies.service';
-import { ToastService } from '../../services/toast.service';
+import { StoreService } from '../../../services/store.service';
+import { MultiplayerLobby } from '../../../models/store-multiplayer/multiplayer-lobby';
+import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies.service';
+import { ToastService } from '../../../services/toast.service';
 import { Router } from '@angular/router';
 
 @Component({

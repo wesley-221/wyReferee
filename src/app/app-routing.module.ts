@@ -4,9 +4,9 @@ import { MainComponent } from './components/main-page/main/main.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
 import { InformationComponent } from './components/information/information.component';
-import { AllLobbiesComponent } from './components/all-lobbies/all-lobbies.component';
-import { CreateLobbyComponent } from './components/create-lobby/create-lobby.component';
-import { LobbyViewComponent } from './components/lobby-view/lobby-view.component';
+import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
+import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
+import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 
 const routes: Routes = [
 	{
