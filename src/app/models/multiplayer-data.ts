@@ -27,18 +27,6 @@ export class MultiplayerData {
      * @param slot the slot of the player
      */
     getPlayer(slot: number) {
-        if(this.players[slot] == undefined) {
-            const tempUser = new MultiplayerDataUser();
-            
-            tempUser.slot = slot;
-            tempUser.score = 0;
-            tempUser.passed = 0;
-            tempUser.mods = 0;
-            tempUser.accuracy = 0;
-
-            return tempUser;
-        }
-
         return this.players[slot];
     }
 
