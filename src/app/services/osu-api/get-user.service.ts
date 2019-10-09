@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { OsuApi, OsuApiEndpoints } from "../models/osu-api";
-import { StoreService } from "./store.service";
+import { OsuApi, OsuApiEndpoints } from "../../models/osu-models/osu-api";
+import { StoreService } from "../store.service";
 import { HttpClient } from "@angular/common/http";
-import { User } from "../models/user";
+import { User } from "../../models/user";
 import { Observable } from "rxjs";
 import { map } from 'rxjs/operators';
 

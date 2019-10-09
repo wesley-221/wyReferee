@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CacheBeatmap } from '../models/cache-beatmap';
-import { CacheUser } from '../models/cache-user';
-import { CacheModifier } from '../models/cache-modifier';
+import { CacheBeatmap } from '../models/cache/cache-beatmap';
+import { CacheUser } from '../models/cache/cache-user';
+import { CacheModifier } from '../models/cache/cache-modifier';
 import { StoreService } from './store.service';
 
 @Injectable({

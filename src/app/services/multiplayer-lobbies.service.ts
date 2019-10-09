@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { MultiplayerLobby } from '../models/multiplayer-lobby';
+import { MultiplayerLobby } from '../models/store-multiplayer/multiplayer-lobby';
 import { StoreService } from './store.service';
-import { GetMultiplayerService } from './get-multiplayer.service';
-import { MultiplayerDataUser } from '../models/multiplayer-data-user';
+import { GetMultiplayerService } from './osu-api/get-multiplayer.service';
+import { MultiplayerDataUser } from '../models/store-multiplayer/multiplayer-data-user';
 import { AxsCalculations } from '../models/axs-calculations';
-import { MultiplayerData } from '../models/multiplayer-data';
+import { MultiplayerData } from '../models/store-multiplayer/multiplayer-data';
 import { ToastService } from './toast.service';
 import { CacheService } from './cache.service';
-import { CacheUser } from '../models/cache-user';
-import { GetUser } from './get-user.service';
-import { CacheBeatmap } from '../models/cache-beatmap';
-import { GetBeatmap } from './get-beatmap.service';
+import { CacheUser } from '../models/cache/cache-user';
+import { GetUser } from './osu-api/get-user.service';
+import { CacheBeatmap } from '../models/cache/cache-beatmap';
+import { GetBeatmap } from './osu-api/get-beatmap.service';
 
 @Injectable({
   	providedIn: 'root'

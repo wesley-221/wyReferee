@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MultiplayerLobby } from '../../models/multiplayer-lobby';
+import { MultiplayerLobby } from '../../models/store-multiplayer/multiplayer-lobby';
 import { MultiplayerLobbiesService } from '../../services/multiplayer-lobbies.service';
 import { ElectronService } from '../../services/electron.service';
 import { ToastService } from '../../services/toast.service';
 import { CacheService } from '../../services/cache.service';
-import { MultiplayerData } from '../../models/multiplayer-data';
-import { MultiplayerDataUser } from '../../models/multiplayer-data-user';
+import { MultiplayerData } from '../../models/store-multiplayer/multiplayer-data';
+import { MultiplayerDataUser } from '../../models/store-multiplayer/multiplayer-data-user';
 
 @Component({
 	selector: 'app-lobby-view',

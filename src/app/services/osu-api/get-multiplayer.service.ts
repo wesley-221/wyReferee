@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { StoreService } from './store.service';
-import { OsuApiEndpoints, OsuApi } from '../models/osu-api';
+import { StoreService } from '../store.service';
+import { OsuApiEndpoints, OsuApi } from '../../models/osu-models/osu-api';
 import { Observable } from 'rxjs';
-import { MultiplayerMatch } from '../models/multiplayer-match';
+import { MultiplayerMatch } from '../../models/osu-models/multiplayer-match';
 import { map } from 'rxjs/operators';
-import { MultiplayerGame } from '../models/multiplayer-game';
-import { MultiplayerGameScore } from '../models/multiplayer-game-score';
+import { MultiplayerGame } from '../../models/osu-models/multiplayer-game';
+import { MultiplayerGameScore } from '../../models/osu-models/multiplayer-game-score';
 
 @Injectable({
   	providedIn: 'root'

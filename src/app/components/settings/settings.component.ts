@@ -3,7 +3,7 @@ import { ElectronService } from '../../services/electron.service';
 import { StoreService } from '../../services/store.service';
 import { ToastService } from '../../services/toast.service';
 import { ToastType } from '../../models/toast';
-import { ApiKeyValidation } from '../../services/api-key-validation.service';
+import { ApiKeyValidation } from '../../services/osu-api/api-key-validation.service';
 
 @Component({
 	selector: 'app-settings',

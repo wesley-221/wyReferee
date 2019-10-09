@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, OnChanges } from '@angular/core';
-import { MultiplayerLobby } from '../../models/multiplayer-lobby';
+import { Component, OnInit } from '@angular/core';
+import { MultiplayerLobby } from '../../models/store-multiplayer/multiplayer-lobby';
 import { MultiplayerLobbiesService } from '../../services/multiplayer-lobbies.service';
 import { ToastService } from '../../services/toast.service';
 

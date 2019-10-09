@@ -1,4 +1,4 @@
-import { MultiplayerGameScore } from "./multiplayer-game-score";
+import { MultiplayerGameScore } from "./osu-models/multiplayer-game-score";
 
 export class AxsCalculations {
     /**

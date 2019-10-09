@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Beatmap } from '../models/beatmap';
+import { Beatmap } from '../../models/osu-models/beatmap';
 import { Injectable } from '@angular/core';
-import { StoreService } from './store.service';
+import { StoreService } from '../store.service';
 import { map } from 'rxjs/operators';
-import { OsuApi, OsuApiEndpoints } from '../models/osu-api';
+import { OsuApi, OsuApiEndpoints } from '../../models/osu-models/osu-api';
 
 @Injectable({
     providedIn: 'root'
