@@ -27,6 +27,11 @@ export class GetBeatmap extends OsuApi {
     }
 
     private serializeFromJson(json: any): Beatmap {
+        // Check if the returned value is empty
+        if(Object.entries(json).length == 0) {
+            return new Beatmap();
+        }
+
         const beatmap = new Beatmap();
 
         // Unwrap json object > osu api gives back [{...}]
@@ -36,7 +41,7 @@ export class GetBeatmap extends OsuApi {
         beatmap.submit_date = json.submit_date;
         beatmap.approved_date = json.approved_date;
         beatmap.last_update = json.last_update;
-        beatmap.artist = json.aritst;
+        beatmap.artist = json.artist;
         beatmap.beatmap_id = json.beatmap_id;
         beatmap.beatmapset_id = json.beatmapset_id;
         beatmap.bpm = json.bpm;
