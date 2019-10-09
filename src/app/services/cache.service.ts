@@ -32,6 +32,54 @@ export class CacheService {
 	}
 
 	/**
+	 * Check if the given beatmapId is cached
+	 * @param beatmapId the beatmapId to look for
+	 * @returns returns CacheBeatmap if found, null if not
+	 */
+	public getCachedBeatmap(beatmapId: number): CacheBeatmap {
+		let cachedBeatmap: CacheBeatmap = null;
+
+		for(let beatmap in this.cachedBeatmaps) {
+			if(this.cachedBeatmaps[beatmap].beatmap_id == beatmapId) {
+				cachedBeatmap = this.cachedBeatmaps[beatmap];
+				break;
+			}
+		}
+
+		return (cachedBeatmap !== null) ? cachedBeatmap : null;
+	}
+
+	/**
+	 * Create or update the cache for the given beatmap
+	 * @param cachedBeatmap the CacheBeatmap to create/update
+	 */
+	public cacheBeatmap(cachedBeatmap: CacheBeatmap): void {
+		let cachedBeatmapIndex: number = null;
+
+		// Find the index of the cached user
+		for(let beatmap in this.cachedBeatmaps) {
+			if(this.cachedBeatmaps[beatmap].beatmap_id == cachedBeatmap.beatmap_id) {
+				cachedBeatmapIndex = parseInt(beatmap);
+				break;
+			}
+		}
+
+		// Update or insert the cached user
+		if(cachedBeatmapIndex == null) {
+			this.cachedBeatmaps.push(cachedBeatmap);
+		}
+		else {
+			this.cachedBeatmaps[cachedBeatmapIndex] = cachedBeatmap;
+		}
+
+		// Save it in the store
+		this.storeService.set(`cache.beatmaps.${cachedBeatmap.beatmap_id}`, {
+			name: cachedBeatmap.name,
+			beatmapset_id: cachedBeatmap.beatmapset_id
+		});
+	}
+
+	/**
 	 * Check if the given userId is cached
 	 * @param userId the userId to look for
 	 * @returns returns CacheUser if found, null if not

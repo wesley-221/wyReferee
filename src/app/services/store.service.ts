@@ -28,7 +28,7 @@ export class StoreService {
 	 * @param key the key you want to set
 	 * @param value the value you want to set
 	 */
-	set(key: string, value: string): void {
+	set(key: string, value: any): void {
 		this.storage.set(key, value);
 	}
 
