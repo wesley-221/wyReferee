@@ -9,6 +9,8 @@ import { ToastService } from './toast.service';
 import { CacheService } from './cache.service';
 import { CacheUser } from '../models/cache-user';
 import { GetUser } from './get-user.service';
+import { CacheBeatmap } from '../models/cache-beatmap';
+import { GetBeatmap } from './get-beatmap.service';
 
 @Injectable({
   	providedIn: 'root'
@@ -23,7 +25,8 @@ export class MultiplayerLobbiesService {
 		  private getMultiplayer: GetMultiplayerService, 
 		  private toastService: ToastService, 
 		  private cacheService: CacheService,
-		  private getUser: GetUser) {
+		  private getUser: GetUser,
+		  private getBeatmap: GetBeatmap) {
 		const allLobbies = storeService.get('lobby');
 
 		for(let lobby in allLobbies) {
@@ -99,7 +102,6 @@ export class MultiplayerLobbiesService {
 			multiplayerLobby.teamOneScore = 0;
 			multiplayerLobby.teamTwoScore = 0;
 
-
 			for(let game in data.games) {
 				const currentGame = data.games[game];
 				const multiplayerData = new MultiplayerData();
@@ -109,8 +111,17 @@ export class MultiplayerLobbiesService {
 				multiplayerData.game_id = currentGame.game_id;
 				multiplayerData.beatmap_id = currentGame.beatmap_id;
 
+				const cachedBeatmap: CacheBeatmap = this.cacheService.getCachedBeatmap(multiplayerData.beatmap_id);
+
+				// Check if the beatmap is cached
+				if(cachedBeatmap == null) {
+					this.getBeatmap.getByBeatmapId(multiplayerData.beatmap_id).subscribe(data => {
+						this.cacheService.cacheBeatmap(new CacheBeatmap(`${data.artist} - ${data.title} [${data.version}]`, data.beatmap_id, data.beatmapset_id));
+					});
+				}
+
 				for(let score in currentGame.scores) {
-					let cachedUser: CacheUser = this.cacheService.getCachedUser(currentGame.scores[score].user_id);
+					const cachedUser: CacheUser = this.cacheService.getCachedUser(currentGame.scores[score].user_id);
 
 					// Check if the user is cached
 					if(cachedUser == null) {
@@ -140,6 +151,9 @@ export class MultiplayerLobbiesService {
 						newMpDataUser.passed = currentScore.pass;
 						newMpDataUser.slot = currentScore.slot;
 					}
+
+					if(!multiplayerLobby.hasOwnProperty('mapsCountTowardsScore')) 
+						multiplayerLobby.mapsCountTowardScore = {};
 
 					if(!multiplayerLobby.mapsCountTowardScore.hasOwnProperty(currentGame.game_id)) {
 						multiplayerLobby.mapsCountTowardScore[currentGame.game_id] = true;
