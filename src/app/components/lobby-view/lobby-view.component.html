@@ -1,6 +1,6 @@
 <div class="matchHeader">
     <h2>{{ selectedLobby.description }}</h2>
-    Multiplayer link: <a [routerLink]="" (click)="elctronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a><br />
+    Multiplayer link: <a [routerLink]="" (click)="electronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a><br />
 
     <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': teamOneScore > teamTwoScore, 'teamLoss': teamTwoScore > teamOneScore}">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="{'teamWin': teamTwoScore > teamOneScore, 'teamLoss': teamOneScore > teamTwoScore}">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
 
@@ -19,7 +19,7 @@
 
         <div class="mapContent">
             <div class="mapTitle">
-                <h4>Mapname{{ MAPNAME }}</h4>
+                <h4>{{ getBeatmapname(match.beatmap_id) }}</h4>
             </div>
 
             <div class="mapModifier">
@@ -35,9 +35,9 @@
                     <tr>
                         <td><b>{{ getUsernameFromUserId(match.getPlayer(0).user) }}</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.getPlayer(0).score != 0 ? addDot(match.getPlayer(0).score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ getScore(match, 0) }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.getPlayer(0).accuracy }}%)</td>
+                        <td>({{ getAccuracy(match, 0) }}%)</td>
                         <td>&emsp;</td>
                         <td>(Accuracy player)</td>
                     </tr>
@@ -45,9 +45,9 @@
                     <tr>
                         <td><b>{{ getUsernameFromUserId(match.getPlayer(1).user) }}</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.getPlayer(1).score != 0 ? addDot(match.getPlayer(1).score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ getScore(match, 1) }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.getPlayer(1).accuracy }}%)</td>
+                        <td>({{ getAccuracy(match, 1) }}%)</td>
                         <td>&emsp;</td>
                         <td>(Score player)</td>
                     </tr>
@@ -55,9 +55,9 @@
                     <tr>
                         <td><b>{{ getUsernameFromUserId(match.getPlayer(2).user) }}</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.getPlayer(2).score != 0 ? addDot(match.getPlayer(2).score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ getScore(match, 2) }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.getPlayer(2).accuracy }}%)</td>
+                        <td>({{ getAccuracy(match, 2) }}%)</td>
                         <td>&emsp;</td>
                         <td>(Score player)</td>
                     </tr>
@@ -70,9 +70,9 @@
                     <tr>
                         <td><b>{{ getUsernameFromUserId(match.getPlayer(3).user) }}</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.getPlayer(3).score != 0 ? addDot(match.getPlayer(3).score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ getScore(match, 3) }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.getPlayer(3).accuracy }}%)</td>
+                        <td>({{ getAccuracy(match, 3) }}%)</td>
                         <td>&emsp;</td>
                         <td>(Accuracy player)</td>
                     </tr>
@@ -80,9 +80,9 @@
                     <tr>
                         <td><b>{{ getUsernameFromUserId(match.getPlayer(4).user) }}</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.getPlayer(4).score != 0 ? addDot(match.getPlayer(4).score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ getScore(match, 4) }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.getPlayer(4).accuracy }}%)</td>
+                        <td>({{ getAccuracy(match, 4) }}%)</td>
                         <td>&emsp;</td>
                         <td>(Score player)</td>
                     </tr>
@@ -90,9 +90,9 @@
                     <tr>
                         <td><b>{{ getUsernameFromUserId(match.getPlayer(5).user) }}</b></td>
                         <td>&emsp;</td>
-                        <td>{{ match.getPlayer(5).score != 0 ? addDot(match.getPlayer(5).score.toFixed(), " ") : 0 }}</td>
+                        <td>{{ getScore(match, 5) }}</td>
                         <td>&emsp;</td>
-                        <td>({{ match.getPlayer(5).accuracy }}%)</td>
+                        <td>({{ getAccuracy(match, 5) }}%)</td>
                         <td>&emsp;</td>
                         <td>(Score player)</td>
                     </tr>
