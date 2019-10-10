@@ -532,3 +532,18 @@ h1, h2, h3, h4, h5, h6 {
         }
     }
 }
+
+input {
+    &.has-error {
+        border: 1px solid #E94F64;
+
+        &:focus {
+            border: 1px solid #E94F64;
+            box-shadow: 0 0 0 0.2rem rgba(233, 79, 100, 0.25);
+        }
+    }
+}
+
+.has-error {
+    color: #E94F64;
+}

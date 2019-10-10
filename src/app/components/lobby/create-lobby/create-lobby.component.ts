@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MultiplayerLobby } from '../../../models/store-multiplayer/multiplayer-lobby';
 import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies.service';
 import { ToastService } from '../../../services/toast.service';
+import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -16,9 +17,24 @@ export class CreateLobbyComponent implements OnInit {
 
 	matchDescription: string;
 
+	validationForm: FormGroup;
+
 	constructor(private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService) { }
 
-	ngOnInit() { }
+	ngOnInit() { 
+		this.validationForm = new FormGroup({
+			'multiplayerLink': new FormControl('', [
+				Validators.required,
+				Validators.pattern(/https\:\/\/osu.ppy.sh\/community\/matches\/[0-9]+/)
+			]),
+			'teamOneName': new FormControl('', [
+				Validators.required
+			]),
+			'teamTwoName': new FormControl('', [
+				Validators.required
+			])
+		});
+	}
 
 	createLobby() {
 		const newLobby = new MultiplayerLobby();
@@ -28,10 +44,10 @@ export class CreateLobbyComponent implements OnInit {
 		// Increment lobby id
 		this.multiplayerLobbies.availableLobbyId;
 
-		newLobby.teamOneName = this.teamOneName;
-		newLobby.teamTwoName = this.teamTwoName;
-		newLobby.multiplayerLink = this.multiplayerLobby;
-		newLobby.description = `${this.teamOneName} vs ${this.teamTwoName}`;
+		newLobby.teamOneName = this.validationForm.get('teamOneName').value;
+		newLobby.teamTwoName = this.validationForm.get('teamTwoName').value;
+		newLobby.multiplayerLink = this.validationForm.get('multiplayerLink').value;
+		newLobby.description = `${this.validationForm.get('teamOneName').value} vs ${this.validationForm.get('teamTwoName').value}`;
 
 		this.multiplayerLobbies.add(newLobby);
 

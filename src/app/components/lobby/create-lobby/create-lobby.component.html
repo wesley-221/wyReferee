@@ -1,47 +1,63 @@
-<div class="form-group">
-    <h2>Match description</h2>
+<form [formGroup]="validationForm">
+    <div class="form-group">
+        <h2>Multiplayer link</h2>
+        <div>
+            Enter a multiplayer link in here for the match you want to calculate the scores off. <br /><br />
+            Accepted URL's: <br />
+            <ul>
+                <li>https://osu.ppy.sh/community/matches/46358686</li>
+            </ul>
+        </div>
 
-    <div *ngIf="!teamOneName && !teamTwoName">
-        No description yet :(
+        <input formControlName="multiplayerLink" type="text" class="form-control" placeholder="Multiplayer link" 
+                [ngClass]="{'has-error': validationForm.get('multiplayerLink').errors && (validationForm.get('multiplayerLink').touched || validationForm.get('multiplayerLink').dirty)}" />
+        
+        <div class="has-error" 
+            *ngIf="validationForm.get('multiplayerLink').errors && validationForm.get('multiplayerLink').errors.required && 
+                    (validationForm.get('multiplayerLink').touched || validationForm.get('multiplayerLink').dirty)">
+            This field is required
+        </div>
+
+        <div class="has-error" *ngIf="validationForm.get('multiplayerLink').errors && validationForm.get('multiplayerLink').errors.pattern">
+            Invalid multiplayer link given. <br /><b>Accepted format:</b> https://osu.ppy.sh/community/matches/46358686
+        </div>
     </div>
 
-    <div *ngIf="teamOneName || teamTwoName">
-        <span class="red-text">{{ teamOneName }}</span> vs <span class="blue-text">{{ teamTwoName }}</span>
+    <div class="createLobbyTeamRow">
+        <div class="teamOne form-group">
+            <h2>Team one name</h2>
+            <p>
+                Enter the name of the first team. This will be team <span class=red-text>red</span> and has slot 1, 2 and 3.
+            </p>
+
+            <input formControlName="teamOneName" type="text" class="form-control" placeholder="Team one name" 
+                    [ngClass]="{'has-error': validationForm.get('teamOneName').errors && (validationForm.get('teamOneName').touched || validationForm.get('teamOneName').dirty)  }" />
+
+            <div class="has-error" 
+                *ngIf="validationForm.get('teamOneName').errors && validationForm.get('teamOneName').errors.required && 
+                    (validationForm.get('teamOneName').touched || validationForm.get('teamOneName').dirty)">
+                This field is required
+            </div>
+        </div>
+
+        <div class="teamTwo form-group">
+            <h2>Team two name</h2>
+            <p>
+                Enter the name of the second team. This will be team <span class=blue-text>red</span> and has slot 4, 5 and 6.
+            </p>
+
+            <input formControlName="teamTwoName" type="text" class="form-control" placeholder="Team two name"
+                    [ngClass]="{'has-error': validationForm.get('teamTwoName').errors && (validationForm.get('teamTwoName').touched || validationForm.get('teamTwoName').dirty)  }" />
+
+            <div class="has-error" 
+                *ngIf="validationForm.get('teamTwoName').errors && validationForm.get('teamTwoName').errors.required && 
+                    (validationForm.get('teamTwoName').touched || validationForm.get('teamTwoName').dirty)">
+                This field is required
+            </div>
+        </div>
     </div>
-</div>
 
-<hr />
+    <hr />
 
-<div class="form-group">
-    <h2>Multiplayer link</h2>
-    <div>
-        Enter a multiplayer link in here for the match you want to calculate the scores off. <br /><br />
-        Accepted URL's: <br />
-        <ul>
-            <li>https://osu.ppy.sh/community/matches/46358686</li>
-        </ul>
-    </div>
-    <input [(ngModel)]="multiplayerLobby" type="text" class="form-control" placeholder="Multiplayer link" />
-</div>
-
-<div class="createLobbyTeamRow">
-    <div class="teamOne form-group">
-        <h2>Team one name</h2>
-        <p>
-            Enter the name of the first team. This will be team <span class=red-text>red</span> and has slot 1, 2 and 3.
-        </p>
-        <input [(ngModel)]="teamOneName" type="text" class="form-control" placeholder="Team one name" />
-    </div>
-
-    <div class="teamTwo form-group">
-        <h2>Team two name</h2>
-        <p>
-            Enter the name of the second team. This will be team <span class=blue-text>red</span> and has slot 4, 5 and 6.
-        </p>
-        <input [(ngModel)]="teamTwoName" type="text" class="form-control" placeholder="Team two name" />
-    </div>
-</div>
-
-<hr />
-
-<button type="button" (click)="createLobby()" class="btn btn-primary float-right">Create</button>
+    <button type="button" (click)="createLobby()" class="btn btn-primary float-right" [disabled]="validationForm.invalid">Create</button>
+</form>
