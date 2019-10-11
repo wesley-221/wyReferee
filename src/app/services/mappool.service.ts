@@ -34,6 +34,7 @@ export class MappoolService {
 
 				newBracket.id = thisBracket.id;
 				newBracket.mods = thisBracket.mods;
+				newBracket.bracketName = thisBracket.bracketName;
 
 				// Loop through all the beatmaps in the current bracket
 				for(let beatmap in thisBracket.beatmaps) {

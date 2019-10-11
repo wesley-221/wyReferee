@@ -1,1 +1,8 @@
+<div class="mappool" *ngFor="let mappool of mappoolService.allMappools">
+    <h3>{{ mappool.name }}</h3>
+    
+    <span *ngFor="let bracket of mappool.modBrackets">{{ bracket.bracketName }}</span>
+</div>
+
+
 <button [routerLink]="['/mappool-create']" class="btn btn-primary">add</button>
