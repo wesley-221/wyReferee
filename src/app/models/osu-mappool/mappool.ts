@@ -1,7 +1,7 @@
 import { ModBracket } from "./mod-bracket";
 
 export class Mappool {
-    id: number;
+    id: number = null;
     name: string;
     modBrackets: ModBracket[] = [];
     modifiers: {} = {};

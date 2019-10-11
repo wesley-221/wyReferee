@@ -60,6 +60,23 @@ export class MappoolService {
 	}
 
 	/**
+	 * Get the mappool of the given id
+	 * @param mappoolId the id of the mappool
+	 */
+	public getMappool(mappoolId: number): Mappool {
+		let returnMappool: Mappool = null;
+
+		for(let i in this.allMappools) {
+			if(this.allMappools[i].id == mappoolId) {
+				returnMappool = this.allMappools[i];
+				break;
+			}
+		}
+
+		return returnMappool;
+	}
+
+	/**
 	 * Save the mappool in the store and add it to the service
 	 * @param mappool the mappool to save
 	 */

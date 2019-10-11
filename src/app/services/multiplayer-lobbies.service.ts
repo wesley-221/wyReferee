@@ -11,6 +11,7 @@ import { CacheUser } from '../models/cache/cache-user';
 import { GetUser } from './osu-api/get-user.service';
 import { CacheBeatmap } from '../models/cache/cache-beatmap';
 import { GetBeatmap } from './osu-api/get-beatmap.service';
+import { MappoolService } from './mappool.service';
 
 @Injectable({
   	providedIn: 'root'
@@ -26,7 +27,8 @@ export class MultiplayerLobbiesService {
 		  private toastService: ToastService, 
 		  private cacheService: CacheService,
 		  private getUser: GetUser,
-		  private getBeatmap: GetBeatmap) {
+		  private getBeatmap: GetBeatmap, 
+		  private mappoolService: MappoolService) {
 		const allLobbies = storeService.get('lobby');
 
 		for(let lobby in allLobbies) {
@@ -106,7 +108,17 @@ export class MultiplayerLobbiesService {
 				const currentGame = data.games[game];
 				const multiplayerData = new MultiplayerData();
 
-				const MODIFIER = 0;
+				let MODIFIER = 0;
+
+				// Get the mappool if it wasn't set yet
+				if(multiplayerLobby.mappool == null) {
+					multiplayerLobby.mappool = this.mappoolService.getMappool(multiplayerLobby.mappoolId);
+				}
+
+				// Check if there is a mappool selected and if the modifier exists for the beatmap
+				if(multiplayerLobby.mappool != null && multiplayerLobby.mappool.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
+					MODIFIER = multiplayerLobby.mappool.modifiers[currentGame.beatmap_id].modifier;	
+				}
 
 				multiplayerData.game_id = currentGame.game_id;
 				multiplayerData.beatmap_id = currentGame.beatmap_id;

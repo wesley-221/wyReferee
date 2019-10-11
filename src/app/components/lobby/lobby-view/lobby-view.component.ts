@@ -7,6 +7,7 @@ import { ToastService } from '../../../services/toast.service';
 import { CacheService } from '../../../services/cache.service';
 import { MultiplayerData } from '../../../models/store-multiplayer/multiplayer-data';
 import { MultiplayerDataUser } from '../../../models/store-multiplayer/multiplayer-data-user';
+import { MappoolService } from '../../../services/mappool.service';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -22,7 +23,8 @@ export class LobbyViewComponent implements OnInit {
 		private multiplayerLobbies: MultiplayerLobbiesService, 
 		private toastService: ToastService, 
 		private cacheService: CacheService,
-		public electronService: ElectronService) {
+		public electronService: ElectronService, 
+		public mappoolService: MappoolService) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
 		});
@@ -39,6 +41,47 @@ export class LobbyViewComponent implements OnInit {
 		// console.time('synchronize-lobby');
 		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby);
 		// console.timeEnd('synchronize-lobby');
+	}
+
+	/**
+	 * Change the mappool for the selected lobby
+	 * @param event the event that is triggered
+	 */
+	changeMappool(event: any) {
+		this.multiplayerLobbies.get(this.selectedLobby.lobbyId).mappool = this.mappoolService.getMappool(event.target.value);
+	}
+
+	/**
+	 * Get the mappool id of the selected lobby
+	 */
+	getMappoolId() {
+		if(this.selectedLobby.mappool == null) {
+			if(this.selectedLobby.mappoolId != null) {
+				return this.selectedLobby.mappoolId;
+			}
+		}
+		else {
+			return this.selectedLobby.mappool.id;
+		}
+		
+		return -1;
+	}
+
+	/**
+	 * Get the modifier for the given beatmapid 
+	 * @param beatmapId the beatmapid to get the modifier for
+	 */
+	getModifier(beatmapId: number) {
+		if(this.selectedLobby.mappool == null) {
+			return null;
+		}
+		else {
+			if(this.selectedLobby.mappool.modifiers.hasOwnProperty(beatmapId)) {
+				return this.selectedLobby.mappool.modifiers[beatmapId].modifier;
+			}
+		}
+
+		return null;
 	}
 
 	/**

@@ -1,16 +1,25 @@
 <div class="matchHeader">
     <h2>{{ selectedLobby.description }}</h2>
-    Multiplayer link: <a [routerLink]="" (click)="electronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a><br />
+    <div class="row">
+        <div class="col-7">
+            Multiplayer link: <a [routerLink]="" (click)="electronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a><br />
 
-    <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': selectedLobby.teamOneScore > selectedLobby.teamTwoScore, 'teamLoss': selectedLobby.teamTwoScore > selectedLobby.teamOneScore}">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="{'teamWin': selectedLobby.teamTwoScore > selectedLobby.teamOneScore, 'teamLoss': selectedLobby.teamOneScore > selectedLobby.teamTwoScore}">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
+            <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': selectedLobby.teamOneScore > selectedLobby.teamTwoScore, 'teamLoss': selectedLobby.teamTwoScore > selectedLobby.teamOneScore}">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="{'teamWin': selectedLobby.teamTwoScore > selectedLobby.teamOneScore, 'teamLoss': selectedLobby.teamOneScore > selectedLobby.teamTwoScore}">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
+        </div>
 
-    <div class="btn-group float-right">
-        <button type="button" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon></button>
-        <button type="button" class="btn btn-info" title="Score count settings"><fa-icon [icon]="['fas', 'cogs']"></fa-icon></button>
-        <button type="button" (click)="synchronizeMp()" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
+        <div class="col-5">
+            <select class="form-control" (change)="changeMappool($event)" [value]="getMappoolId()">
+                <option value="-1">Select a mappool</option>
+                <option [value]="mappool.id" *ngFor="let mappool of mappoolService.allMappools">{{ mappool.name }}</option>
+            </select>
+
+            <div class="btn-group float-right">
+                <button type="button" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon></button>
+                <button type="button" class="btn btn-info" title="Score count settings"><fa-icon [icon]="['fas', 'cogs']"></fa-icon></button>
+                <button type="button" (click)="synchronizeMp()" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
+            </div>
+        </div>
     </div>
-
-    <hr />
 </div>
 
 <div class="allMaps">
@@ -23,8 +32,8 @@
             </div>
 
             <div class="mapModifier">
-                <div class="alert alert-danger"><fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon> There was no modifier set for this map. <a [routerLink]="['/modifiers']">Make sure to set a modifier so you get the accurate score.</a></div>
-                <h6>Beatmap modifier: modifier{{ MODIFIER }}</h6>
+                <div class="alert alert-danger" *ngIf="getModifier(match.beatmap_id) == null"><fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon> There was no modifier set for this map. <a [routerLink]="['/modifiers']">Make sure to set a modifier so you get the accurate score.</a></div>
+                <h6 *ngIf="getModifier(match.beatmap_id) != null">Beatmap modifier: {{ getModifier(match.beatmap_id) }}</h6>
             </div>
 
             <hr />

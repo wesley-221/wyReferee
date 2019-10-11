@@ -1,5 +1,7 @@
 import { MultiplayerData } from "./multiplayer-data";
 import { MultiplayerDataUser } from "./multiplayer-data-user";
+import { Mappool } from "../osu-mappool/mappool";
+import { MappoolService } from "../../services/mappool.service";
 
 export class MultiplayerLobby {
     lobbyId: number;
@@ -9,6 +11,8 @@ export class MultiplayerLobby {
     teamTwoName: string;
     teamOneScore: number = 0;
     teamTwoScore: number = 0;
+    mappool: Mappool = null;
+    mappoolId: number = null;
 
     // TODO: Change type > { '5012312': true }, { '3920123', false }
     mapsCountTowardScore: any;
@@ -50,6 +54,7 @@ export class MultiplayerLobby {
         this.multiplayerLink = json.data.multiplayerLink;
         this.teamOneName = json.data.teamOneName;
         this.teamTwoName = json.data.teamTwoName;
+        this.mappoolId = json.data.selectedMappoolId;
 
         this.mapsCountTowardScore = json.countForScore;
 
@@ -106,7 +111,8 @@ export class MultiplayerLobby {
                 "description": multiplayerLobby.description,
                 "multiplayerLink": multiplayerLobby.multiplayerLink,
                 "teamOneName": multiplayerLobby.teamOneName,
-                "teamTwoName": multiplayerLobby.teamTwoName
+                "teamTwoName": multiplayerLobby.teamTwoName,
+                "selectedMappoolId": multiplayerLobby.mappool.id
             },
             "countForScore": { },
             "multiplayerData": { }
