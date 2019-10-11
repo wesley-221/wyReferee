@@ -56,9 +56,8 @@ export class Beatmap {
 
     /**
      * Get the url from the beatmap using the old url
-     * TODO: Figure out if there is a similar link but with the new website
      */
     public getBeatmapUrl(): string {
-        return `https://osu.ppy.sh/b/${this.beatmap_id}`;
+        return `https://osu.ppy.sh/beatmaps/${this.beatmap_id}`;
     }
 }
