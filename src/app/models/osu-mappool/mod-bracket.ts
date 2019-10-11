@@ -2,24 +2,13 @@ import { Mods } from "../osu-models/osu-api";
 import { ModBracketMap } from "./mod-bracket-map";
 
 export class ModBracket {
+    id: number;
     bracketName: string;
-    mods: Mods[] = [];
+    mods: string;
     private beatmaps: ModBracketMap[] = [];
 
-    /**
-     * Add a mod so that it can be used in the irc client when picking a map
-     * @param mod the mod to add to the bracket
-     */
-    public addMod(mod: Mods) {
-        this.mods.push(mod);
-    }
-
-    /**
-     * Remove a mod from the bracket
-     * @param mod the mod to remove from the bracket
-     */
-    public removeMod(mod: Mods) {
-        this.mods.splice(this.mods.indexOf(mod), 1);
+    getBeatmaps() {
+        return this.beatmaps;
     }
 
     /**
