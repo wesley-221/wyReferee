@@ -51,8 +51,14 @@ export class MappoolCreateComponent implements OnInit {
 	 */
 	synchronizeBeatmap(beatmap: ModBracketMap) {
 		this.getBeatmap.getByBeatmapId(beatmap.beatmapId).subscribe(data => {
-			beatmap.beatmapName = data.getBeatmapname();
-			beatmap.beatmapUrl = data.getBeatmapUrl();
+			if(data.beatmap_id == null) {
+				beatmap.invalid = true;
+			}
+			else {
+				beatmap.beatmapName = data.getBeatmapname();
+				beatmap.beatmapUrl = data.getBeatmapUrl();
+				beatmap.invalid = false;
+			}
 		});
 	}
 

@@ -45,12 +45,13 @@
                     </div>
 
                     <div class="col-2">
-                        <input type="text" class="form-control" [(ngModel)]="beatmap.modifier" placeholder="Beatmap modifier" />
+                        <input type="text" class="form-control" [(ngModel)]="beatmap.modifier" placeholder="Modifier" />
                     </div>
 
                     <div class="col-6">
                         <span *ngIf="beatmap.beatmapName == null" class="has-error">No beatmap found, have you tried synchronizing?</span>
-                        <a [routerLink]="" *ngIf="beatmap.beatmapName" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a> 
+                        <a [routerLink]="" *ngIf="beatmap.beatmapName && !beatmap.invalid" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a> 
+                        <span *ngIf="beatmap.invalid" class="has-error">There was no beatmap found with the beatmap id "{{ beatmap.beatmapId }}".</span>
                     </div>
 
                     <div class="col">
