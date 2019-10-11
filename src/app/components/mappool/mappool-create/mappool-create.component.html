@@ -14,49 +14,62 @@
     <hr />
 
     <div class="mod-bracket" *ngFor="let bracket of creationMappool.getAllBrackets()">
-        <h3 *ngIf="bracket.bracketName">{{ bracket.bracketName }}</h3>
-        <h3 *ngIf="!bracket.bracketName">Unnamed bracket</h3>
-        <p>Enter the name of the bracket to get started.</p>
-        <input type="text" class="form-control" [(ngModel)]="bracket.bracketName" />
+        <div class="header">
+            <div class="row">
+                <div class="col">
+                    <h3 *ngIf="bracket.bracketName">{{ bracket.bracketName }}</h3>
+                    <h3 *ngIf="!bracket.bracketName">Unnamed bracket</h3>
+                </div>
 
-        <hr />
+                <div class="col">
+                    <button class="btn btn-outline-primary float-right" (click)="collapseBracket(bracket)">Collapse</button>
+                </div>
+            </div>
+        </div>
 
-        <h3>Mods</h3>
-        <p>
-            Select the mods you want to add to this bracket when selecting a map. <br />
-            <b>Note:</b> If you leave the mods empty, it will be considered as Nomod. <br />
-            <b>Format:</b> <code>!mp mods nomod</code>
-        </p>
+        <div [ngClass]="{'hide': bracket.collapsed}" class="body">
+            <p>Enter the name of the bracket to get started.</p>
+            <input type="text" class="form-control" [(ngModel)]="bracket.bracketName" />
 
-        <input type="text" class="form-control" [(ngModel)]="bracket.mods" />
+            <hr />
 
-        <hr />
+            <h3>Mods</h3>
+            <p>
+                Select the mods you want to add to this bracket when selecting a map. <br />
+                <b>Note:</b> If you leave the mods empty, it will be considered as Nomod. <br />
+                <b>Format:</b> <code>!mp mods nomod</code>
+            </p>
 
-        <h3>Beatmaps</h3>
-        <p>Here you can select all the beatmaps you'd like to add to this specific bracket. Make sure to validate them so you know you're adding the correct beatmap!</p>
+            <input type="text" class="form-control" [(ngModel)]="bracket.mods" />
 
-        <button class="btn btn-primary mb-2" (click)="addBeatmap(bracket)">Add new beatmap</button>
-        
-        <div class="beatmaps">
-            <div class="beatmap mb-2" *ngFor="let beatmap of bracket.getBeatmaps()">
-                <div class="row">
-                    <div class="col-2">
-                        <input type="text" class="form-control" [(ngModel)]="beatmap.beatmapId" placeholder="Beatmap id" />
-                    </div>
+            <hr />
 
-                    <div class="col-2">
-                        <input type="text" class="form-control" [(ngModel)]="beatmap.modifier" placeholder="Modifier" />
-                    </div>
+            <h3>Beatmaps</h3>
+            <p>Here you can select all the beatmaps you'd like to add to this specific bracket. Make sure to validate them so you know you're adding the correct beatmap!</p>
 
-                    <div class="col-6">
-                        <span *ngIf="beatmap.beatmapName == null" class="has-error">No beatmap found, have you tried synchronizing?</span>
-                        <a [routerLink]="" *ngIf="beatmap.beatmapName && !beatmap.invalid" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a> 
-                        <span *ngIf="beatmap.invalid" class="has-error">There was no beatmap found with the beatmap id "{{ beatmap.beatmapId }}".</span>
-                    </div>
+            <button class="btn btn-primary mb-2" (click)="addBeatmap(bracket)">Add new beatmap</button>
+            
+            <div class="beatmaps">
+                <div class="beatmap mb-2" *ngFor="let beatmap of bracket.getBeatmaps()">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="text" class="form-control" [(ngModel)]="beatmap.beatmapId" placeholder="Beatmap id" />
+                        </div>
 
-                    <div class="col">
-                        <button class="btn btn-primary" (click)="synchronizeBeatmap(beatmap)"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
-                        <button class="btn btn-danger" (click)="removeBeatmap(bracket, beatmap)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+                        <div class="col-2">
+                            <input type="text" class="form-control" [(ngModel)]="beatmap.modifier" placeholder="Modifier" />
+                        </div>
+
+                        <div class="col-6">
+                            <span *ngIf="beatmap.beatmapName == null" class="has-error">No beatmap found, have you tried synchronizing?</span>
+                            <a [routerLink]="" *ngIf="beatmap.beatmapName && !beatmap.invalid" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a> 
+                            <span *ngIf="beatmap.invalid" class="has-error">There was no beatmap found with the beatmap id "{{ beatmap.beatmapId }}".</span>
+                        </div>
+
+                        <div class="col">
+                            <button class="btn btn-primary" (click)="synchronizeBeatmap(beatmap)"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
+                            <button class="btn btn-danger" (click)="removeBeatmap(bracket, beatmap)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -5,6 +5,7 @@ export class ModBracket {
     bracketName: string;
     mods: string;
     beatmaps: ModBracketMap[] = [];
+    collapsed: boolean = false; // Used for showing/hiding the body when creating a bracket
 
     getBeatmaps() {
         return this.beatmaps;

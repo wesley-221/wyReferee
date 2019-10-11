@@ -71,4 +71,12 @@ export class MappoolCreateComponent implements OnInit {
 		this.mappoolService.saveMappool(this.creationMappool);
 		this.toastService.addToast(`Successfully created the mappool "${this.creationMappool.name}"!`);
 	}
+
+	/**
+	 * Collapse a bracket
+	 * @param bracket the bracket to collapse
+	 */
+	collapseBracket(bracket: ModBracket) {
+		bracket.collapsed = !bracket.collapsed;
+	}
 }
