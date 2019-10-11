@@ -1,11 +1,10 @@
-import { Mods } from "../osu-models/osu-api";
 import { ModBracketMap } from "./mod-bracket-map";
 
 export class ModBracket {
     id: number;
     bracketName: string;
     mods: string;
-    private beatmaps: ModBracketMap[] = [];
+    beatmaps: ModBracketMap[] = [];
 
     getBeatmaps() {
         return this.beatmaps;

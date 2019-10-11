@@ -5,6 +5,7 @@ import { MappoolService } from '../../../services/mappool.service';
 import { ModBracketMap } from '../../../models/osu-mappool/mod-bracket-map';
 import { GetBeatmap } from '../../../services/osu-api/get-beatmap.service';
 import { ElectronService } from '../../../services/electron.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
 	selector: 'app-mappool-create',
@@ -15,8 +16,9 @@ import { ElectronService } from '../../../services/electron.service';
 export class MappoolCreateComponent implements OnInit {
 	creationMappool: Mappool;
 
-	constructor(public electronService: ElectronService, private mappoolService: MappoolService, private getBeatmap: GetBeatmap) { 
+	constructor(public electronService: ElectronService, private mappoolService: MappoolService, private getBeatmap: GetBeatmap, private toastService: ToastService) { 
 		this.creationMappool = mappoolService.creationMappool;
+		this.creationMappool.id = mappoolService.availableMappoolId;
 	}
 
 	ngOnInit() { }
@@ -66,6 +68,7 @@ export class MappoolCreateComponent implements OnInit {
 	 * Create the mappool from the creationMappool object
 	 */
 	createMappool() {
-		// create the mappool here
+		this.mappoolService.saveMappool(this.creationMappool);
+		this.toastService.addToast(`Successfully created the mappool "${this.creationMappool.name}"!`);
 	}
 }
