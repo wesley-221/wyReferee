@@ -67,4 +67,13 @@ export class MappoolService {
 		this.allMappools.push(mappool);
 		this.storeService.set(`cache.mappool.${mappool.id}`, mappool.convertToJson());
 	}
+
+	/**
+	 * Delete the mappool in the store and service
+	 * @param mappool the mappool to delete
+	 */
+	public deleteMappool(mappool: Mappool): void {
+		this.allMappools.splice(this.allMappools.indexOf(mappool), 1);
+		this.storeService.delete(`cache.mappool.${mappool.id}`);
+	}
 }

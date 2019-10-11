@@ -3,7 +3,16 @@
     <hr />
 
     <div class="mappool" *ngFor="let mappool of mappoolService.allMappools">
-        <h1>{{ mappool.name }}</h1>
+        <div class="row">
+            <div class="col">
+                <h1>{{ mappool.name }}</h1>
+            </div>
+
+            <div class="col">
+                <button class="btn btn-danger float-right" (click)="deleteMappool(mappool)">Delete</button>
+            </div>
+        </div>
+
         <hr />
 
         <h3>Mod brackets</h3>
