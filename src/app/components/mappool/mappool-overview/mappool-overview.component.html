@@ -4,11 +4,11 @@
 
     <div class="mappool" *ngFor="let mappool of mappoolService.allMappools">
         <div class="row">
-            <div class="col">
+            <div class="col-11">
                 <h1>{{ mappool.name }}</h1>
             </div>
 
-            <div class="col">
+            <div class="col-1">
                 <button class="btn btn-danger float-right" (click)="deleteMappool(mappool)">Delete</button>
             </div>
         </div>
