@@ -8,6 +8,28 @@
     -moz-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
 
+    .modbrackets {
+        display: flex;
+        flex-direction: row;
+        flex-flow: row wrap;
+
+        .bracket {
+            display: flex;
+            flex-direction: column;
+            flex: 1 0 15%;
+            
+            border: 1px solid darken(#3C4452, 15%);
+            -webkit-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.15);
+            -moz-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.15);
+            box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.15);
+
+            margin-right: 16px;
+            margin-bottom: 16px;
+
+            padding: 16px;
+        }
+    }
+
     &:first-of-type {
         margin-top: 8px;
     }

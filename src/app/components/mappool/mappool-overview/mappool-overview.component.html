@@ -1,8 +1,18 @@
-<div class="mappool" *ngFor="let mappool of mappoolService.allMappools">
-    <h3>{{ mappool.name }}</h3>
-    
-    <span *ngFor="let bracket of mappool.modBrackets">{{ bracket.bracketName }}</span>
+<div class="scroll">
+    <button [routerLink]="['/mappool-create']" class="btn btn-primary mt-4">Create a new mappool</button>
+    <hr />
+
+    <div class="mappool" *ngFor="let mappool of mappoolService.allMappools">
+        <h1>{{ mappool.name }}</h1>
+        <hr />
+
+        <h3>Mod brackets</h3>
+        <div class="modbrackets">
+            <div class="bracket" *ngFor="let bracket of mappool.modBrackets">
+                <div><h5>{{ bracket.bracketName }}</h5></div>
+                <div>{{ bracket.beatmaps.length }} map<span *ngIf="bracket.beatmaps.length != 1">s</span></div>
+                <div><code>{{ bracket.mods }}</code></div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-<button [routerLink]="['/mappool-create']" class="btn btn-primary">add</button>

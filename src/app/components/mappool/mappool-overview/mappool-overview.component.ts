@@ -8,13 +8,7 @@ import { MappoolService } from '../../../services/mappool.service';
 })
 
 export class MappoolOverviewComponent implements OnInit {
-	constructor(public mappoolService: MappoolService) { 
-		for(let mappool in mappoolService.allMappools) {
-			for(let bracket in mappoolService.allMappools[mappool].modBrackets) {
-				console.log(mappoolService.allMappools[mappool].modBrackets[bracket])
-			}
-		}
-	}
+	constructor(public mappoolService: MappoolService) { }
 
 	ngOnInit() { }
 }
