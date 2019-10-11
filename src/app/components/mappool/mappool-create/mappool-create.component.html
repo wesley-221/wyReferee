@@ -1,57 +1,73 @@
-<h3>Mappool description</h3>
-<p>This will be the header of the mappool. It is used to identify the mappools more easily.</p>
+<div class="scroll">
+    <h3>Mappool description</h3>
+    <p>This will be the header of the mappool. It is used to identify the mappools more easily.</p>
 
-<input type="text" class="form-control" placeholder="Mappool description" [(ngModel)]="creationMappool.name" />
-
-<hr />
-
-<h3>Mod brackets</h3>
-<p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod bracket. Fill in the name of the bracket</p>
-
-<button class="btn btn-primary" (click)="createNewBracket()">Create new bracket</button>
-
-<hr />
-
-<div class="mod-bracket shadow" *ngFor="let bracket of creationMappool.getAllBrackets()">
-    <h3 *ngIf="bracket.bracketName">{{ bracket.bracketName }}</h3>
-    <h3 *ngIf="!bracket.bracketName">Unnamed bracket</h3>
-    <p>Enter the name of the bracket to get started.</p>
-    <input type="text" class="form-control" [(ngModel)]="bracket.bracketName" />
+    <input type="text" class="form-control" placeholder="Mappool description" [(ngModel)]="creationMappool.name" />
 
     <hr />
 
-    <h3>Mods</h3>
-    <p>
-        Select the mods you want to add to this bracket when selecting a map. <br />
-        <b>Note:</b> If you leave the mods empty, it will be considered as Nomod. <br />
-        <b>Format:</b> <code>!mp mods nomod</code>
-    </p>
+    <h3>Mod brackets</h3>
+    <p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod bracket. Fill in the name of the bracket</p>
 
-    <input type="text" class="form-control" [(ngModel)]="bracket.mods" />
+    <button class="btn btn-primary" (click)="createNewBracket()">Create new bracket</button>
 
     <hr />
 
-    <h3>Beatmaps</h3>
-    <p>Here you can select all the beatmaps you'd like to add to this specific bracket. Make sure to validate them so you know you're adding the correct beatmap!</p>
+    <div class="mod-bracket" *ngFor="let bracket of creationMappool.getAllBrackets()">
+        <h3 *ngIf="bracket.bracketName">{{ bracket.bracketName }}</h3>
+        <h3 *ngIf="!bracket.bracketName">Unnamed bracket</h3>
+        <p>Enter the name of the bracket to get started.</p>
+        <input type="text" class="form-control" [(ngModel)]="bracket.bracketName" />
 
-    <button class="btn btn-primary mb-2" (click)="addBeatmap(bracket)">Add new beatmap</button>
-    
-    <div class="beatmaps">
-        <div class="beatmap" *ngFor="let beatmap of bracket.getBeatmaps()">
-            <div class="row">
-                <div class="col-4">
-                    <input type="text" class="form-control" [(ngModel)]="beatmap.beatmapId" placeholder="Beatmap id" />
-                </div>
+        <hr />
 
-                <div class="col-6">
-                    <a [routerLink]="" (click)="electronService.openLink('https://osu.ppy.sh/beatmapsets/461966#osu/1024483')">Mami Kawada - Contrail ~Kiseki~ (Epsilon Remix) [Taeyang's Miracle]</a>
-                </div>
+        <h3>Mods</h3>
+        <p>
+            Select the mods you want to add to this bracket when selecting a map. <br />
+            <b>Note:</b> If you leave the mods empty, it will be considered as Nomod. <br />
+            <b>Format:</b> <code>!mp mods nomod</code>
+        </p>
 
-                <div class="col">
-                    <button class="btn btn-primary" (click)="synchronizeBeatmap(bracket, beatmap)"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
-                    <button class="btn btn-danger" (click)="removeBeatmap(bracket, beatmap)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+        <input type="text" class="form-control" [(ngModel)]="bracket.mods" />
+
+        <hr />
+
+        <h3>Beatmaps</h3>
+        <p>Here you can select all the beatmaps you'd like to add to this specific bracket. Make sure to validate them so you know you're adding the correct beatmap!</p>
+
+        <button class="btn btn-primary mb-2" (click)="addBeatmap(bracket)">Add new beatmap</button>
+        
+        <div class="beatmaps">
+            <div class="beatmap mb-2" *ngFor="let beatmap of bracket.getBeatmaps()">
+                <div class="row">
+                    <div class="col-2">
+                        <input type="text" class="form-control" [(ngModel)]="beatmap.beatmapId" placeholder="Beatmap id" />
+                    </div>
+
+                    <div class="col-2">
+                        <input type="text" class="form-control" [(ngModel)]="beatmap.modifier" placeholder="Beatmap modifier" />
+                    </div>
+
+                    <div class="col-6">
+                        <span *ngIf="beatmap.beatmapName == null" class="has-error">No beatmap found, have you tried synchronizing?</span>
+                        <a [routerLink]="" *ngIf="beatmap.beatmapName" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a> 
+                    </div>
+
+                    <div class="col">
+                        <button class="btn btn-primary" (click)="synchronizeBeatmap(beatmap)"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
+                        <button class="btn btn-danger" (click)="removeBeatmap(bracket, beatmap)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div *ngIf="creationMappool.getAllBrackets().length > 0">
+        <hr />
+        
+        <h3>Saving the mappool</h3>
+        <p>Now that you have created a mappool, you have to save it so it can be used in the tournament. Press the create button to finalize the mappool</p>
+
+        <button class="btn btn-primary" (click)="createMappool()">Create</button>
     </div>
 </div>

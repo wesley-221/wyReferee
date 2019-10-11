@@ -46,4 +46,19 @@ export class Beatmap {
     max_combo: number;
     download_unavailable: number;
     audio_unavailable: number;
+
+    /**
+     * Get the artist, title, version and creator of the beatmap
+     */
+    public getBeatmapname(): string {
+        return `${this.artist} - ${this.title} [${this.version}] (${this.creator})`;
+    }
+
+    /**
+     * Get the url from the beatmap using the old url
+     * TODO: Figure out if there is a similar link but with the new website
+     */
+    public getBeatmapUrl(): string {
+        return `https://osu.ppy.sh/b/${this.beatmap_id}`;
+    }
 }

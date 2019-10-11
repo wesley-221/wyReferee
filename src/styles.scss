@@ -311,8 +311,11 @@ html, body {
         box-sizing:         border-box;
 
         .scroll {
-            height:     calc(100% - #{$navbar-height});
-            max-height: calc(100% - #{$navbar-height});
+            height:         100%;
+            max-height:     100%;
+
+            padding-right:  16px;
+            padding-left:   16px;
 
             overflow-y: auto;
             overflow-x: hidden;
@@ -536,6 +539,7 @@ h1, h2, h3, h4, h5, h6 {
 input {
     &.has-error {
         border: 1px solid #E94F64;
+        color: black;
 
         &:focus {
             border: 1px solid #E94F64;

@@ -1,8 +1,12 @@
 .mod-bracket {
     margin-bottom: 8px;
-    padding: 8px;
+    padding: 16px;
 
-    border: 1px solid black;
+    border: 1px solid darken(#3C4452, 15%);
+
+    -webkit-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
 
     .mods {
         display: flex;
@@ -16,5 +20,13 @@
     
             width: 80px;    
         }
+    }
+
+    &:hover {
+        border: 1px solid white;
+        
+        -webkit-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
+        -moz-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
+        box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
     }
 }
