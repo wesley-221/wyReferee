@@ -28,11 +28,11 @@
         <div class="mapContent">
             <div class="mapTitle mb-2">
                 <div class="row">
-                    <div class="col-11">
+                    <div class="col-10">
                         <h4>{{ getBeatmapname(match.beatmap_id) }}</h4>
                     </div>
 
-                    <div class="col-1">
+                    <div class="col-2">
                         <button type="button" class="btn float-right" [ngClass]="{'btn-danger': selectedLobby.mapsCountTowardScore[match.game_id] == true, 'btn-success': selectedLobby.mapsCountTowardScore[match.game_id] == false}" (click)="markAsInvalid(match)">Mark as <span *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == true">in</span>valid</button>
                     </div>
                 </div>
