@@ -8,6 +8,7 @@ import { CacheService } from '../../../services/cache.service';
 import { MultiplayerData } from '../../../models/store-multiplayer/multiplayer-data';
 import { MultiplayerDataUser } from '../../../models/store-multiplayer/multiplayer-data-user';
 import { MappoolService } from '../../../services/mappool.service';
+import { StoreService } from '../../../services/store.service';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -24,7 +25,8 @@ export class LobbyViewComponent implements OnInit {
 		private toastService: ToastService, 
 		private cacheService: CacheService,
 		public electronService: ElectronService, 
-		public mappoolService: MappoolService) {
+		public mappoolService: MappoolService, 
+		private storeService: StoreService) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
 		});
@@ -41,6 +43,22 @@ export class LobbyViewComponent implements OnInit {
 		// console.time('synchronize-lobby');
 		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby);
 		// console.timeEnd('synchronize-lobby');
+	}
+
+	/**
+	 * Mark the match as valid or invalid so that it counts towards the team score
+	 * @param match the match 
+	 */
+	markAsInvalid(match: MultiplayerData) {
+		this.selectedLobby.mapsCountTowardScore[match.game_id] = !this.selectedLobby.mapsCountTowardScore[match.game_id];
+		this.storeService.set(`lobby.${this.selectedLobby.lobbyId}.countForScore.${match.game_id}`, this.selectedLobby.mapsCountTowardScore[match.game_id]);
+		
+		if(this.selectedLobby.mapsCountTowardScore[match.game_id]) {
+			this.toastService.addToast(`"${this.getBeatmapname(match.beatmap_id)}" will now count towards the score.`);
+		}
+		else {
+			this.toastService.addToast(`"${this.getBeatmapname(match.beatmap_id)}" will no longer count towards the score.`);
+		}
 	}
 
 	/**
