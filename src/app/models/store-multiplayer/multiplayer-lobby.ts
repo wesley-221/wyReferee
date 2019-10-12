@@ -123,15 +123,7 @@ export class MultiplayerLobby {
         
         for(let match in multiplayerLobby.multiplayerData) {
             const currentMatch = multiplayerLobby.multiplayerData[match];
-
-            // Get rid of undefined game, not entirely sure where it comes from
-            // If you come accross this comment after the 14th of october 2019 
-            // Check the electron store after synchronizing a room and see if there is an undefined game
-            // If not, feel free to remove the entire comment section :-)
-            // if(currentMatch.game_id == undefined) continue;
-
             lobby.multiplayerData[currentMatch.game_id] = { };
-
             const allPlayers = currentMatch.getPlayers();
 
             for(let score in allPlayers) {
