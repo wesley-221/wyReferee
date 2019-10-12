@@ -109,17 +109,23 @@
 
                 <hr />
 
-                <div class=red-text>Team {{ selectedLobby.teamOneName }} score: {{ addDot(match.team_one_score, " ") }}</div>
-                <div class=blue-text>Team {{ selectedLobby.teamTwoName }} score: {{ addDot(match.team_two_score, " ") }}</div>
+                <div class="red-text">Team {{ selectedLobby.teamOneName }} score: {{ addDot(match.team_one_score, " ") }}</div>
+                <div class="blue-text">Team {{ selectedLobby.teamTwoName }} score: {{ addDot(match.team_two_score, " ") }}</div>
 
                 <br />
+                
+                <div *ngIf="match.team_one_score > match.team_two_score">
+                    <h3><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> has won.</h3><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score: {{ addDot(match.team_one_score, " ")}} | <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span> score: {{ addDot(match.team_two_score, " ") }} | Score difference: {{ addDot(match.team_one_score - match.team_two_score, " ") }}
+                </div>
 
-                <h3><span class=red-text>Team {{ selectedLobby.teamOneName }}</span> has won.</h3><span class=red-text>Team {{ selectedLobby.teamOneName }}</span> score: {{ addDot(match.team_one_score, " ")}} | <span class=blue-text>Team {{ selectedLobby.teamTwoName }}</span> score: {{ addDot(match.team_two_score, " ") }} | Score difference: {{ addDot(match.team_one_score - match.team_two_score, " ") }}
+                <div *ngIf="match.team_two_score > match.team_one_score">
+                    <h3><span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span> has won.</h3><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score: {{ addDot(match.team_one_score, " ")}} | <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span> score: {{ addDot(match.team_two_score, " ") }} | Score difference: {{ addDot(match.team_two_score - match.team_one_score, " ") }}
+                </div>
             </div>
         </div>
 
-        <div class=mapButtons>
-            <button type=button class="btn btn-primary">Copy result</button>
+        <div class="mapButtons">
+            <button type="button" class="btn btn-primary">Copy result</button>
         </div>
     </div>
     

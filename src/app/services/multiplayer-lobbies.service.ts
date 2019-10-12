@@ -157,7 +157,6 @@ export class MultiplayerLobbiesService {
 					else if(currentScore.slot == 1 || currentScore.slot == 2 || currentScore.slot == 4 || currentScore.slot == 5) {
 						newMpDataUser.user = currentScore.user_id;
 						
-						// TODO: implement modifier
 						newMpDataUser.score = (currentScore.pass == 0 ? 0 : AxsCalculations.calculateScorePlayerScore(currentScore.score, AxsCalculations.getAccuracyOfScore(currentScore), MODIFIER));
 						newMpDataUser.accuracy = AxsCalculations.getAccuracyOfScore(currentScore);
 						newMpDataUser.passed = currentScore.pass;
@@ -174,9 +173,35 @@ export class MultiplayerLobbiesService {
 					multiplayerData.addPlayer(newMpDataUser);
 				}
 
-				// TODO: implement modifier
-				multiplayerData.team_one_score = AxsCalculations.calculateTeamScore(multiplayerData.getPlayer(0).score, multiplayerData.getPlayer(1).score, multiplayerData.getPlayer(2).score, multiplayerData.getPlayer(0).accuracy, MODIFIER);
-				multiplayerData.team_two_score = AxsCalculations.calculateTeamScore(multiplayerData.getPlayer(3).score, multiplayerData.getPlayer(4).score, multiplayerData.getPlayer(5).score, multiplayerData.getPlayer(3).accuracy, MODIFIER);
+				const 	playerOne = multiplayerData.getPlayer(0), 
+						playerTwo = multiplayerData.getPlayer(1),
+						playerThree = multiplayerData.getPlayer(2),
+						playerFour = multiplayerData.getPlayer(3),
+						playerFive = multiplayerData.getPlayer(4),
+						playerSix = multiplayerData.getPlayer(5);
+
+				const playerOneData = {
+					score: playerOne == null ? 0 : playerOne.score, 
+					accuracy : playerOne == null ? 0 : playerOne.accuracy
+				}, playerTwoData = {
+					score: playerTwo == null ? 0 : playerTwo.score, 
+					accuracy : playerTwo == null ? 0 : playerTwo.accuracy
+				}, playerThreeData = {
+					score: playerThree == null ? 0 : playerThree.score, 
+					accuracy : playerThree == null ? 0 : playerThree.accuracy
+				}, playerFourData = {
+					score: playerFour == null ? 0 : playerFour.score, 
+					accuracy : playerFour == null ? 0 : playerFour.accuracy
+				}, playerFiveData = {
+					score: playerFive == null ? 0 : playerFive.score, 
+					accuracy : playerFive == null ? 0 : playerFive.accuracy
+				}, playerSixData = {
+					score: playerSix == null ? 0 : playerSix.score, 
+					accuracy : playerSix == null ? 0 : playerSix.accuracy
+				};
+
+				multiplayerData.team_one_score = AxsCalculations.calculateTeamScore(playerOneData.score, playerTwoData.score, playerThreeData.score, playerThree.accuracy, MODIFIER);
+				multiplayerData.team_two_score = AxsCalculations.calculateTeamScore(playerFourData.score, playerFiveData.score, playerSixData.score, playerFourData.accuracy, MODIFIER);
 
 				// Add team score if it counts towards the score
 				if(multiplayerData.team_one_score > multiplayerData.team_two_score) {
