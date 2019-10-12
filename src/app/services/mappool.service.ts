@@ -86,6 +86,21 @@ export class MappoolService {
 	}
 
 	/**
+	 * Update the mappool with the given id
+	 * @param mappool the mappool to update
+	 */
+	public updateMappool(mappool: Mappool): void {
+		for(let i in this.allMappools) {
+			if(this.allMappools[i].id == mappool.id) {
+				this.allMappools[i] = mappool;
+
+				this.storeService.set(`cache.mappool.${mappool.id}`, mappool.convertToJson());
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Delete the mappool in the store and service
 	 * @param mappool the mappool to delete
 	 */

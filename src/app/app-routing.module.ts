@@ -9,6 +9,7 @@ import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lob
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
 import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
+import { MappoolBracketEditComponent } from './components/mappool/mappool-bracket-edit/mappool-bracket-edit.component';
 
 const routes: Routes = [
 	{
@@ -23,6 +24,7 @@ const routes: Routes = [
 			{ path: 'lobby-view/:id', component: LobbyViewComponent },
 			{ path: 'mappool-overview', component: MappoolOverviewComponent },
 			{ path: 'mappool-create', component: MappoolCreateComponent },
+			{ path: 'edit-bracket/:mappoolId/:bracketId', component: MappoolBracketEditComponent },
 			{ path: '**', component: ErrorComponent }
 		]
 	}

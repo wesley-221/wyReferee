@@ -26,4 +26,25 @@ export class ModBracket {
     public removeMap(map: ModBracketMap) {
         this.beatmaps.splice(this.beatmaps.indexOf(map), 1);
     }
+
+    /**
+     * Make a true copy of the given bracket
+     * @param bracket the bracket
+     */
+    public static makeTrueCopy(bracket: ModBracket): ModBracket {
+        const newBracket = new ModBracket();
+
+        newBracket.id = bracket.id
+        newBracket.bracketName = bracket.bracketName;
+        newBracket.mods = bracket.mods
+
+        // Make true copies of the beatmaps
+        for(let beatmap in bracket.beatmaps) {
+            newBracket.beatmaps.push(ModBracketMap.makeTrueCopy(bracket.beatmaps[beatmap]));
+        }
+
+        newBracket.collapsed = bracket.collapsed
+
+        return newBracket;
+    }
 }

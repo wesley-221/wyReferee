@@ -17,7 +17,7 @@
 
         <h3>Mod brackets</h3>
         <div class="modbrackets">
-            <div class="bracket" *ngFor="let bracket of mappool.modBrackets">
+            <div class="bracket" *ngFor="let bracket of mappool.modBrackets" (click)="editBracket(mappool, bracket)">
                 <div><h5>{{ bracket.bracketName }}</h5></div>
                 <div>{{ bracket.beatmaps.length }} map<span *ngIf="bracket.beatmaps.length != 1">s</span></div>
                 <div><code>{{ bracket.mods }}</code></div>

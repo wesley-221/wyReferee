@@ -38,12 +38,8 @@ export class CreateLobbyComponent implements OnInit {
 
 	createLobby() {
 		const newLobby = new MultiplayerLobby();
-
-		newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
 		
-		// Increment lobby id
-		this.multiplayerLobbies.availableLobbyId;
-
+		newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
 		newLobby.teamOneName = this.validationForm.get('teamOneName').value;
 		newLobby.teamTwoName = this.validationForm.get('teamTwoName').value;
 		newLobby.multiplayerLink = this.validationForm.get('multiplayerLink').value;

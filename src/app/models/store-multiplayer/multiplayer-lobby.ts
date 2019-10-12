@@ -112,7 +112,7 @@ export class MultiplayerLobby {
                 "multiplayerLink": multiplayerLobby.multiplayerLink,
                 "teamOneName": multiplayerLobby.teamOneName,
                 "teamTwoName": multiplayerLobby.teamTwoName,
-                "selectedMappoolId": multiplayerLobby.mappool.id
+                "selectedMappoolId": (multiplayerLobby.mappool == null) ? -1 : multiplayerLobby.mappool.id
             },
             "countForScore": { },
             "multiplayerData": { }

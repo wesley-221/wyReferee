@@ -63,4 +63,19 @@ export class Mappool {
 
         return mappool;
     }
+
+    /**
+     * Make a true copy of the given mappool
+     * @param mappool the mappool
+     */
+    public static makeTrueCopy(mappool: Mappool): Mappool {
+        const newMappool = new Mappool();
+
+        newMappool.id = mappool.id;
+        newMappool.name = mappool.name;
+        newMappool.modBrackets = mappool.modBrackets;
+        newMappool.modifiers = mappool.modifiers;
+
+        return newMappool;
+    }
 }
