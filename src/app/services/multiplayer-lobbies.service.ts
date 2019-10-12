@@ -163,9 +163,6 @@ export class MultiplayerLobbiesService {
 						newMpDataUser.slot = currentScore.slot;
 					}
 
-					if(!multiplayerLobby.hasOwnProperty('mapsCountTowardsScore')) 
-						multiplayerLobby.mapsCountTowardScore = {};
-
 					if(!multiplayerLobby.mapsCountTowardScore.hasOwnProperty(currentGame.game_id)) {
 						multiplayerLobby.mapsCountTowardScore[currentGame.game_id] = true;
 					}
