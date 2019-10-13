@@ -93,8 +93,10 @@ export class LobbyViewComponent implements OnInit {
 		if(this.selectedLobby.mappool == null) {
 			this.selectedLobby.mappool = this.mappoolService.getMappool(this.selectedLobby.mappoolId);
 
-			if(this.selectedLobby.mappool.modifiers.hasOwnProperty(beatmapId)) {
-				return this.selectedLobby.mappool.modifiers[beatmapId].modifier;
+			if(this.selectedLobby.mappool != null) {
+				if(this.selectedLobby.mappool.modifiers.hasOwnProperty(beatmapId)) {
+					return this.selectedLobby.mappool.modifiers[beatmapId].modifier;
+				}
 			}
 		}
 		else {
