@@ -1,7 +1,9 @@
 import { ModBracket } from "./mod-bracket";
+import { ModBracketMap } from "./mod-bracket-map";
 
 export class Mappool {
     id: number = null;
+    publish_id: string = null;
     name: string;
     modBrackets: ModBracket[] = [];
     modifiers: {} = {};
@@ -29,6 +31,7 @@ export class Mappool {
     public convertToJson(): any {
         let mappool = {
             id: this.id,
+            publish_id: this.publish_id,
             name: this.name,
             brackets: [], 
             modifiers: {}
@@ -72,9 +75,67 @@ export class Mappool {
         const newMappool = new Mappool();
 
         newMappool.id = mappool.id;
+        newMappool.publish_id = mappool.publish_id;
         newMappool.name = mappool.name;
         newMappool.modBrackets = mappool.modBrackets;
         newMappool.modifiers = mappool.modifiers;
+
+        return newMappool;
+    }
+
+    /**
+     * Create a new token used for publishing a mappool
+     * @param tokenLength the length of the token
+     */
+    public static generatePublishToken(tokenLength: number = 35): string {
+        let token = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@%^&*()_+-=';
+
+        for (let i = 0; i < tokenLength; i ++ ) {
+            token += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+
+        return token;
+    }
+
+    /**
+     * Serialize the json so that it gives back a mappool object
+     * @param json the json to serialize
+     */
+    public static serializeJson(json: any): Mappool {
+        const 	thisMappool = json, 
+                newMappool = new Mappool();
+
+        newMappool.id = thisMappool.id
+        newMappool.publish_id = thisMappool.publish_id;
+        newMappool.name = thisMappool.name;
+
+        // Loop through all the brackets in the current mappool
+        for(let bracket in thisMappool.brackets) {
+            const 	thisBracket = thisMappool.brackets[bracket],
+                    newBracket = new ModBracket();
+
+            newBracket.id = thisBracket.id;
+            newBracket.mods = thisBracket.mods;
+            newBracket.bracketName = thisBracket.bracketName;
+
+            // Loop through all the beatmaps in the current bracket
+            for(let beatmap in thisBracket.beatmaps) {
+                const newBeatmap = new ModBracketMap();
+
+                newBeatmap.beatmapId = thisBracket.beatmaps[beatmap];
+                newBeatmap.beatmapName = thisMappool.modifiers[newBeatmap.beatmapId].beatmapName;
+                newBeatmap.beatmapUrl = thisMappool.modifiers[newBeatmap.beatmapId].beatmapUrl;
+                newBeatmap.modifier = thisMappool.modifiers[newBeatmap.beatmapId].modifier;
+                newBeatmap.invalid = false;
+
+                newBracket.addBeatmap(newBeatmap);
+
+                newMappool.modifiers[newBeatmap.beatmapId] = newBeatmap;
+            }
+
+            newMappool.addBracket(newBracket);
+        }
 
         return newMappool;
     }

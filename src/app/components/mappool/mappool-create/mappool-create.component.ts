@@ -68,6 +68,7 @@ export class MappoolCreateComponent implements OnInit {
 	 * Create the mappool from the creationMappool object
 	 */
 	createMappool() {
+		this.creationMappool.publish_id = Mappool.generatePublishToken();
 		this.mappoolService.saveMappool(this.creationMappool);
 		this.toastService.addToast(`Successfully created the mappool "${this.creationMappool.name}"!`);
 	}

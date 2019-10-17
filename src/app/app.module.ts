@@ -8,6 +8,9 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 
+import * as firebase from 'firebase/app';
+import { AppConfig } from '../environments/environment';
+
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -30,6 +33,7 @@ import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.com
 import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
 import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
 import { MappoolBracketEditComponent } from './components/mappool/mappool-bracket-edit/mappool-bracket-edit.component';
+import { LoginComponent } from './components/authentication/login/login.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -37,7 +41,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent, AllLobbiesComponent, CreateLobbyComponent, LobbyViewComponent, MappoolOverviewComponent, MappoolCreateComponent, MappoolBracketEditComponent],
+	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent, AllLobbiesComponent, CreateLobbyComponent, LobbyViewComponent, MappoolOverviewComponent, MappoolCreateComponent, MappoolBracketEditComponent, LoginComponent],
 	imports: [
 		BrowserModule,
 		FormsModule,
@@ -60,5 +64,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 export class AppModule {
 	constructor(library: FaIconLibrary) {
 		library.addIconPacks(fas, far);
+		firebase.initializeApp(AppConfig.firebase);
 	}
 }

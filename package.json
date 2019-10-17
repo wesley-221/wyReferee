@@ -87,6 +87,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-regular-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
-    "electron-store": "^5.0.0"
+    "electron-store": "^5.0.0",
+    "firebase": "^7.2.1"
   }
 }

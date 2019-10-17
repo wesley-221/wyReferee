@@ -1,20 +1,24 @@
 import { Injectable } from '@angular/core';
-import { ModBracket } from '../models/osu-mappool/mod-bracket';
 import { Mappool } from '../models/osu-mappool/mappool';
 import { StoreService } from './store.service';
-import { ModBracketMap } from '../models/osu-mappool/mod-bracket-map';
+import { HttpClient } from '@angular/common/http';
+import * as firebase from 'firebase/app';
+import 'firebase/database';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   	providedIn: 'root'
 })
 
 export class MappoolService {
+	private readonly firebaseUrl: string = "https://axs-calculator-2f0ab.firebaseio.com/mappool.json";
 	creationMappool: Mappool;
 
 	allMappools: Mappool[] = [];
 	availableMappoolId: number = 0;
 
-  	constructor(private storeService: StoreService) {
+  	constructor(private storeService: StoreService, private httpClient: HttpClient) {
 		this.creationMappool = new Mappool();
 
 		const storeAllMappools = storeService.get('cache.mappool');
@@ -22,37 +26,7 @@ export class MappoolService {
 		// Loop through all the mappools
 		for(let mappool in storeAllMappools) {
 			const 	thisMappool = storeAllMappools[mappool], 
-					newMappool = new Mappool();
-
-			newMappool.id = thisMappool.id
-			newMappool.name = thisMappool.name;
-
-			// Loop through all the brackets in the current mappool
-			for(let bracket in thisMappool.brackets) {
-				const 	thisBracket = thisMappool.brackets[bracket],
-						newBracket = new ModBracket();
-
-				newBracket.id = thisBracket.id;
-				newBracket.mods = thisBracket.mods;
-				newBracket.bracketName = thisBracket.bracketName;
-
-				// Loop through all the beatmaps in the current bracket
-				for(let beatmap in thisBracket.beatmaps) {
-					const newBeatmap = new ModBracketMap();
-
-					newBeatmap.beatmapId = thisBracket.beatmaps[beatmap];
-					newBeatmap.beatmapName = thisMappool.modifiers[newBeatmap.beatmapId].beatmapName;
-					newBeatmap.beatmapUrl = thisMappool.modifiers[newBeatmap.beatmapId].beatmapUrl;
-					newBeatmap.modifier = thisMappool.modifiers[newBeatmap.beatmapId].modifier;
-					newBeatmap.invalid = false;
-
-					newBracket.addBeatmap(newBeatmap);
-
-					newMappool.modifiers[newBeatmap.beatmapId] = newBeatmap;
-				}
-
-				newMappool.addBracket(newBracket);
-			}
+					newMappool = Mappool.serializeJson(thisMappool);
 
 			this.availableMappoolId = newMappool.id + 1;
 			this.allMappools.push(newMappool);
@@ -107,5 +81,29 @@ export class MappoolService {
 	public deleteMappool(mappool: Mappool): void {
 		this.allMappools.splice(this.allMappools.indexOf(mappool), 1);
 		this.storeService.delete(`cache.mappool.${mappool.id}`);
+	}
+
+	/**
+	 * Publish a mappool to firebase
+	 * @param mappool the mappool to publish
+	 */
+	public publishMappool(mappool: Mappool) {
+		firebase.database().ref(`mappool/${mappool.publish_id}`).set(mappool.convertToJson());
+	}
+
+	/**
+	 * Get a published mappool by the published_id
+	 * @param publish_id the id of the mappool that was published
+	 */
+	public getPublishedMappool(publish_id: string): Observable<Mappool> {
+		return this.httpClient.get<Mappool>(this.firebaseUrl).pipe(
+			map((data: any) => {
+				if(data.hasOwnProperty(publish_id)) {
+					return Mappool.serializeJson(data[publish_id]) 
+				}
+				
+				return undefined;
+			})
+		);
 	}
 }
