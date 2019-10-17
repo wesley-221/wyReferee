@@ -4,7 +4,7 @@ import '../polyfills';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -34,6 +34,7 @@ import { MappoolOverviewComponent } from './components/mappool/mappool-overview/
 import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
 import { MappoolBracketEditComponent } from './components/mappool/mappool-bracket-edit/mappool-bracket-edit.component';
 import { LoginComponent } from './components/authentication/login/login.component';
+import { AuthInterceptor } from "./components/authentication/token-interceptor";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -57,7 +58,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 		}),
 		FontAwesomeModule
 	],
-	providers: [],
+	providers: [
+		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+	],
 	bootstrap: [AppComponent]
 })
 

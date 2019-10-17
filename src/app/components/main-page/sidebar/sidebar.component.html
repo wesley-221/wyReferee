@@ -12,7 +12,9 @@
         <div class=sb-header-text>
             AxS calculator
             <hr />
-            <button type="button" class="btn btn-sb-menu btn-xs" title="Settings" [routerLink]="['/settings']" routerLinkActive="in" ><fa-icon [icon]="['fas', 'cogs']"></fa-icon></button>
+            <button type="button" class="btn btn-sb-menu btn-xs mr-1" title="Settings" [routerLink]="['/settings']" routerLinkActive="in" ><fa-icon [icon]="['fas', 'cogs']"></fa-icon></button>
+            <button type="button" class="btn btn-sb-menu btn-xs" title="Login" [routerLink]="['/login']" routerLinkActive="in" *ngIf="!authService.loggedIn"><fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon></button>
+            <button type="button" class="btn btn-sb-menu btn-xs" title="Logout" [routerLink]="" *ngIf="authService.loggedIn" (click)="logout()"><fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon></button>
         </div>
     </div>
     

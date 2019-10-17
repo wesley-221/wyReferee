@@ -4,6 +4,7 @@ import { Mappool } from '../../../models/osu-mappool/mappool';
 import { ModBracket } from '../../../models/osu-mappool/mod-bracket';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../services/toast.service';
+import { AuthenticateService } from '../../../services/authenticate.service';
 
 @Component({
 	selector: 'app-mappool-overview',
@@ -14,7 +15,7 @@ import { ToastService } from '../../../services/toast.service';
 export class MappoolOverviewComponent implements OnInit {
 	mappoolPublishId: string;
 
-	constructor(public mappoolService: MappoolService, private router: Router, private toastService: ToastService) { }
+	constructor(public mappoolService: MappoolService, private router: Router, private toastService: ToastService, public authService: AuthenticateService) { }
 	ngOnInit() { }
 
 	/**

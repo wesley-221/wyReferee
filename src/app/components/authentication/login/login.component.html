@@ -1,0 +1,24 @@
+<div class="login-container">
+    <div class="login">
+        <div class="header">
+            <div class="header-image"></div>
+        </div>
+    
+        <div class="body">
+            <div class="row">
+                <div class="col-xs-12 col-lg-8 offset-lg-2">
+                    <form [formGroup]="validationForm">
+                        <input type="text" class="form-control" placeholder="Email" formControlName="email" />
+                        <div class="spacing"></div>
+                        <input type="password" class="form-control" placeholder="Password" formControlName="password" />
+                        <div class="spacing"></div><div class="spacing"></div>
+                        
+                        <div class="center"> 
+                            <button (click)="login()" class="btn btn-success custom-btn" [disabled]="validationForm.invalid">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

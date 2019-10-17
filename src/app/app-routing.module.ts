@@ -10,6 +10,7 @@ import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.com
 import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
 import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
 import { MappoolBracketEditComponent } from './components/mappool/mappool-bracket-edit/mappool-bracket-edit.component';
+import { LoginComponent } from './components/authentication/login/login.component';
 
 const routes: Routes = [
 	{
@@ -19,6 +20,7 @@ const routes: Routes = [
 			{ path: '', component: InformationComponent },
 			{ path: 'information', component: InformationComponent },
 			{ path: 'settings', component: SettingsComponent}, 
+			{ path: 'login', component: LoginComponent },
 			{ path: 'lobby-overview', component: AllLobbiesComponent },
 			{ path: 'create-lobby', component: CreateLobbyComponent },
 			{ path: 'lobby-view/:id', component: LobbyViewComponent },

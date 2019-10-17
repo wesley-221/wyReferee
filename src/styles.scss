@@ -498,6 +498,16 @@ html, body {
     @include button-outline-variant(lighten($btn-sb-menu-color, 15%), white, lighten($btn-sb-menu-color, 15%), lighten($btn-sb-menu-color, 15%));
     border-radius:  0;
     color:          white;
+
+    box-shadow: none;
+
+    &.in, &:active, &:focus, &:active:focus, &:hover {
+        color: $primary !important;
+        border-color: $primary !important;
+        background-color: transparent !important;
+
+        box-shadow: none !important;
+    }
 }
 
 .btn-group-xs > .btn, .btn-xs {
