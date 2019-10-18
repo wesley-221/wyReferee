@@ -10,6 +10,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { AppConfig } from '../../environments/environment';
 import { ToastService } from './toast.service';
+import { ToastType } from '../models/toast';
 
 @Injectable({
   	providedIn: 'root'
@@ -72,8 +73,11 @@ export class ElectronService {
 				});
 
 				this.autoUpdater.on('update-downloaded', info => {
-					toastService.addToast('The update has been downloaded and will now be installed.');
-					this.autoUpdater.quitAndInstall();
+					toastService.addToast('The update has been downloaded and will be installed in 10 seconds. If you close the program immediately, it will install the update right away.', ToastType.Information, 10);
+
+					setTimeout(() => {
+						this.autoUpdater.quitAndInstall();
+					}, 10000);
 				});
 			}
 		}
