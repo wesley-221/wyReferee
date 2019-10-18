@@ -77,7 +77,8 @@
     "typescript": "3.5.3",
     "wait-on": "3.3.0",
     "webdriver-manager": "12.1.5",
-    "zone.js": "0.9.1"
+    "zone.js": "0.9.1",
+    "firebase": "^7.2.1"
   },
   "engines": {
     "node": ">=10.9.0"
@@ -87,7 +88,6 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-regular-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
-    "electron-store": "^5.0.0",
-    "firebase": "^7.2.1"
+    "electron-store": "^5.0.0"
   }
 }
