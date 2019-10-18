@@ -15,6 +15,7 @@
   "main": "main.js",
   "private": true,
   "scripts": {
+    "gh-publish": "npm run build:prod && electron-builder -p always",
     "postinstall": "npm run postinstall:electron && electron-builder install-app-deps",
     "postinstall:web": "node postinstall-web",
     "postinstall:electron": "node postinstall",

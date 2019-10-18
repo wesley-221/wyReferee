@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { AppConfig } from '../../environments/environment.prod';
+import { ToastService } from './toast.service';
 
 @Injectable({
   	providedIn: 'root'
@@ -30,7 +31,7 @@ export class ElectronService {
 	  	return window && window.process && window.process.type;
 	}
   
-	constructor() {
+	constructor(private toastService: ToastService) {
 		// Conditional imports
 		if (this.isElectron) {
 			this.ipcRenderer = window.require('electron').ipcRenderer;
@@ -52,10 +53,23 @@ export class ElectronService {
 			this.autoUpdater.autoDownload = true;
 
 			if(AppConfig.production) {
-				this.autoUpdater.checkForUpdates();
+				autoUpdater.checkForUpdates();
 
-				this.autoUpdater.on('checking-for-updates', () => {
-					console.log('Checking for updates...');
+				autoUpdater.on('checking-for-updates', () => {
+					console.log('Checking for updates');
+				});
+
+				autoUpdater.on('update-available', () => {
+					toastService.addToast('A new update is available. The download will start in the background.');
+				});
+
+				autoUpdater.on('error', err => {
+					toastService.addToast(`Something went wrong while trying to update: ${err}`);
+				});
+
+				autoUpdater.on('update-downloaded', info => {
+					toastService.addToast('The update has been downloaded and will now be installed.');
+					autoUpdater.quitAndInstall();
 				});
 			}
 		}
