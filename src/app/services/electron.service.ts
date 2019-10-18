@@ -59,6 +59,10 @@ export class ElectronService {
 					console.log('Checking for updates');
 				});
 
+				this.autoUpdater.on('update-not-available', () => {
+					console.log('No updates were found');
+				});
+
 				this.autoUpdater.on('update-available', () => {
 					toastService.addToast('A new update is available. The download will start in the background.');
 				});
