@@ -53,23 +53,23 @@ export class ElectronService {
 			this.autoUpdater.autoDownload = true;
 
 			if(AppConfig.production) {
-				autoUpdater.checkForUpdates();
+				this.autoUpdater.checkForUpdates();
 
-				autoUpdater.on('checking-for-updates', () => {
+				this.autoUpdater.on('checking-for-updates', () => {
 					console.log('Checking for updates');
 				});
 
-				autoUpdater.on('update-available', () => {
+				this.autoUpdater.on('update-available', () => {
 					toastService.addToast('A new update is available. The download will start in the background.');
 				});
 
-				autoUpdater.on('error', err => {
+				this.autoUpdater.on('error', err => {
 					toastService.addToast(`Something went wrong while trying to update: ${err}`);
 				});
 
-				autoUpdater.on('update-downloaded', info => {
+				this.autoUpdater.on('update-downloaded', info => {
 					toastService.addToast('The update has been downloaded and will now be installed.');
-					autoUpdater.quitAndInstall();
+					this.autoUpdater.quitAndInstall();
 				});
 			}
 		}
