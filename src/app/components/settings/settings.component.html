@@ -21,7 +21,7 @@
             </td>
 
             <td>
-                <button id="exportConfigFile" type="button" class="btn btn-primary form-control">Export config file</button>
+                <button type="button" class="btn btn-primary form-control" (click)="exportConfigFile()">Export config file</button>
             </td>
         </tr>
 
@@ -31,7 +31,7 @@
             </td>
 
             <td>
-                <button id="clearCache" type="button" class="btn btn-primary form-control">Clear cache</button>
+                <button type="button" class="btn btn-primary form-control" (click)="clearCache()">Clear cache</button>
             </td>
         </tr>
 
@@ -41,17 +41,7 @@
             </td>
 
             <td>
-                <button id="removeApiKey" type="button" class="btn btn-primary form-control">Remove API key</button>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                This will export all the modifiers.
-            </td>
-
-            <td>
-                <button id="exportModifiers" type="button" class="btn btn-primary form-control">Export modifiers</button>
+                <button type="button" class="btn btn-primary form-control" (click)="removeApiKey()">Remove API key</button>
             </td>
         </tr>
     </tbody>
