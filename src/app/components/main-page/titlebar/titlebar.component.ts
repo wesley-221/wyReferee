@@ -13,7 +13,18 @@ export class TitlebarComponent implements OnInit {
 	@ViewChild('maximizeButton', { static: false }) maximizeButton: FaIconComponent;
 
 	constructor(private electronService: ElectronService) { }
-	ngOnInit() { }
+
+	ngOnInit() { 
+		this.electronService.remote.getCurrentWindow().on('maximize', () => {
+			this.maximizeButton.icon = faClone;
+			this.maximizeButton.render();
+		});
+
+		this.electronService.remote.getCurrentWindow().on('unmaximize', () => {
+			this.maximizeButton.icon = faSquare;
+			this.maximizeButton.render();
+		});
+	}
 
 	/**
 	 * Minimize the window
@@ -28,16 +39,10 @@ export class TitlebarComponent implements OnInit {
 	maximizeWindow(): void {
 		if(this.electronService.remote.getCurrentWindow().isMaximized()) {
 			this.electronService.remote.getCurrentWindow().unmaximize();
-
-			this.maximizeButton.icon = faSquare;
 		}
 		else {
 			this.electronService.remote.getCurrentWindow().maximize();
-
-			this.maximizeButton.icon = faClone;
 		}
-
-		this.maximizeButton.render();
 	}
 
 	/**
