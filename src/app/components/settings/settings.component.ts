@@ -35,21 +35,14 @@ export class SettingsComponent implements OnInit {
 	saveApiKey() {
 		const apiKey = this.storeService.get('api-key');
 
-		// Check if the key hasn't changed
-		if(apiKey == this.apiKey.nativeElement.value) {
-			this.toastService.addToast('The entered api-key is the same as the one already saved.', ToastType.Information);
-		}
-		else {
+		// Key is valid
+		this.apiKeyValidation.validate(this.apiKey.nativeElement.value).subscribe(() => {
 			this.storeService.set('api-key', this.apiKey.nativeElement.value);
-
-			// Key is valid
-			this.apiKeyValidation.validate(this.apiKey.nativeElement.value).subscribe(() => {
-				this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
-			}, 
-			// Key is invalid
-			err => {
-				this.toastService.addToast('The entered api-key was invalid.', ToastType.Error);
-			});
-		}
+			this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
+		}, 
+		// Key is invalid
+		err => {
+			this.toastService.addToast('The entered api-key was invalid.', ToastType.Error);
+		});
 	}
 }
