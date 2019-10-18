@@ -67,7 +67,6 @@ html, body {
     
     .toast {
         padding: 8px;
-        background-color: $primary;
 
         -webkit-touch-callout: none;
         -webkit-user-select: none;
@@ -78,6 +77,18 @@ html, body {
 
         &:hover {
             cursor: pointer;
+        }
+
+        &.toast-error {
+            background-color: $danger;
+        }
+
+        &.toast-warning {
+            background-color: $warning;
+        }
+
+        &.toast-information {
+            background-color: $primary;
         }
     }
 }
