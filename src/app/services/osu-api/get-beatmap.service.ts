@@ -12,7 +12,7 @@ import { OsuApi, OsuApiEndpoints } from '../../models/osu-models/osu-api';
 
 export class GetBeatmap extends OsuApi {
     constructor(private httpClient: HttpClient, private storeService: StoreService) {
-        super(storeService.get('api-key'), OsuApiEndpoints.GetBeatmaps);
+        super(OsuApiEndpoints.GetBeatmaps);
     }
 
     /**
@@ -20,7 +20,7 @@ export class GetBeatmap extends OsuApi {
      * @param beatmapsetId the beatmapsetId to grab the data from
      */
     public getByBeatmapId(beatmapsetId: number): Observable<Beatmap> {
-        return this.httpClient.get<Beatmap>(`${this.url}${this.endpoint}?k=${this.key}&b=${beatmapsetId}`)
+        return this.httpClient.get<Beatmap>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key')}&b=${beatmapsetId}`)
         .pipe(
             map((data: any) => this.serializeFromJson(data))
         );

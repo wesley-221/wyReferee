@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 
 export class GetUser extends OsuApi {
     constructor(private httpClient: HttpClient, private storeService: StoreService) {
-        super(storeService.get('api-key'), OsuApiEndpoints.GetUser);
+        super(OsuApiEndpoints.GetUser);
     }
 
     /**
@@ -21,7 +21,7 @@ export class GetUser extends OsuApi {
      * @param gamemode the gamemode 
      */
     public getByUsername(username: string, gamemode: number = 0): Observable<User> {
-        return this.httpClient.get<User>(`${this.url}${this.endpoint}?k=${this.key}&u=${username}&type=string&m=${gamemode}`)
+        return this.httpClient.get<User>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key')}&u=${username}&type=string&m=${gamemode}`)
         .pipe(
             map((data: any) => this.serializeFromJson(data))
         );
@@ -33,7 +33,7 @@ export class GetUser extends OsuApi {
      * @param gamemode the gamemode 
      */
     public getByUserId(userid: number, gamemode: number = 0): Observable<User> {
-        return this.httpClient.get<User>(`${this.url}${this.endpoint}?k=${this.key}&u=${userid}&type=id&m=${gamemode}`)
+        return this.httpClient.get<User>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key')}&u=${userid}&type=id&m=${gamemode}`)
         .pipe(
             map((data: any) => this.serializeFromJson(data))
         );

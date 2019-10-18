@@ -57,10 +57,8 @@ export enum Gamemodes {
 export class OsuApi {
     protected url: string = "https://osu.ppy.sh";
     protected endpoint: string;
-    protected key: string;
 
-    constructor(key: string, endpoint: string) {
+    constructor(endpoint: string) {
         this.endpoint = endpoint;
-        this.key = key;
     }
 }

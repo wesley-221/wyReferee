@@ -14,7 +14,7 @@ import { MultiplayerGameScore } from '../../models/osu-models/multiplayer-game-s
 
 export class GetMultiplayerService extends OsuApi {
 	constructor(private httpClient: HttpClient, private storeService: StoreService) {
-        super(storeService.get('api-key'), OsuApiEndpoints.GetMultiplayer);
+        super(OsuApiEndpoints.GetMultiplayer);
 	}
 	
 	/**
@@ -24,7 +24,7 @@ export class GetMultiplayerService extends OsuApi {
     public get(multiplayerLink: string): Observable<MultiplayerMatch> {
 		const multiplayerId = this.getMultiplayerIdFromUrl(multiplayerLink);
 
-        return this.httpClient.get<MultiplayerMatch>(`${this.url}${this.endpoint}?k=${this.key}&mp=${multiplayerId}`)
+        return this.httpClient.get<MultiplayerMatch>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key')}&mp=${multiplayerId}`)
         .pipe(
             map((data: any) => this.serializeFromJson(data))
         );
