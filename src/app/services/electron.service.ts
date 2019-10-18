@@ -8,7 +8,7 @@ import * as fs from 'fs';
 
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { AppConfig } from '../../environments/environment.prod';
+import { AppConfig } from '../../environments/environment';
 import { ToastService } from './toast.service';
 
 @Injectable({
