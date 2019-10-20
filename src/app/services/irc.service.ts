@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as irc from 'irc';
+import * as irc from 'irc-upd';
 import { ToastService } from './toast.service';
 import { ToastType } from '../models/toast';
 
@@ -12,23 +12,28 @@ export class IrcService {
 	client: typeof irc.Client;
 
   	constructor(private toastService: ToastService) { 
-		this.irc = require('irc');
+		this.irc = require('irc-upd');
 	}
 
 	connect(username: string, password: string) {
-		this.client = this.irc.Client('irc.ppy.sh', username, {
+		this.client = new irc.Client('irc.ppy.sh', username, {
 			password: password, 
 			autoConnect: false, 
-			debug: true,
-			channels: ['#osu']
+			autoRejoin: false,
+			retryCount: 0,
+			debug: false
 		});
 
-		// this.client.addListener('error', error => {
-		// 	this.toastService.addToast(error, ToastType.Error);
-		// });
+		this.client.addListener('error', error => {
+			this.toastService.addToast(error, ToastType.Error);
+		});
 
-		// this.client.addListener('message', (from, to, message) => {
-		// 	console.log(`${from} => ${to}: ${message}`);
-		// });
+		this.client.addListener('message', (from, to, message) => {
+			console.log(`${from} => ${to}: ${message}`);
+		});
+
+		this.client.connect(0, err => {
+			
+		});
 	}
 }
