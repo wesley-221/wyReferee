@@ -11,6 +11,7 @@ import { MappoolOverviewComponent } from './components/mappool/mappool-overview/
 import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
 import { MappoolBracketEditComponent } from './components/mappool/mappool-bracket-edit/mappool-bracket-edit.component';
 import { LoginComponent } from './components/authentication/login/login.component';
+import { IrcComponent } from './components/irc/irc.component';
 
 const routes: Routes = [
 	{
@@ -27,6 +28,7 @@ const routes: Routes = [
 			{ path: 'mappool-overview', component: MappoolOverviewComponent },
 			{ path: 'mappool-create', component: MappoolCreateComponent },
 			{ path: 'edit-bracket/:mappoolId/:bracketId', component: MappoolBracketEditComponent },
+			{ path: 'irc', component: IrcComponent },
 			{ path: '**', component: ErrorComponent }
 		]
 	}

@@ -79,7 +79,8 @@
     "typescript": "3.5.3",
     "wait-on": "3.3.0",
     "webdriver-manager": "12.1.5",
-    "zone.js": "0.9.1"
+    "zone.js": "0.9.1",
+    "irc": "^0.5.2"
   },
   "engines": {
     "node": ">=10.9.0"

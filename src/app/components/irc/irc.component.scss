@@ -1,0 +1,106 @@
+$border-color: #3C4452;
+$background-color: #4C5769;
+$primary: #fb9678;
+$send-message-height: 38px;
+
+.irc {
+    height: calc(100% - 32px);
+
+    margin-top: 16px;
+    margin-bottom: 16px;
+
+    background-color: $background-color;
+    border: 1px solid darken($border-color, 15%);
+
+    .channels {
+        float: left;
+
+        width: 20%;
+        height: calc(100% - #{$send-message-height});
+
+        background-color: darken($background-color, 5%);
+
+        .channel {
+            padding: 8px;
+            border-left: 3px solid transparent;
+
+            user-select: none;
+
+            &:hover {
+                color: $primary;
+                cursor: pointer;
+
+                border-left: 3px solid $primary;
+            }
+
+            &.active {
+                color: $primary;
+                font-weight: bold;
+
+                border-left: 3px solid $primary;
+            }
+        }
+    }
+    
+    .messages {
+        float: left;
+
+        width: 80%;
+        height: calc(100% - #{$send-message-height});
+
+        overflow-y: auto;
+
+        .chat {
+            display: flex;
+            align-items: flex-start;
+            flex-flow: row wrap;
+
+            width: 100%;
+
+            .author {
+                flex: 1 0 0;
+
+                margin-left: 6px;
+                margin-right: 6px;
+                padding: 3px;
+
+                text-align: center;
+
+                background-color: #ffff00;
+                color: black;
+
+                border-radius: 50px;
+
+                &.bancho {
+                    background-color: #df96c0;
+                }
+
+                &.highlighted {
+                    background-color: #36f027;
+                }
+
+                &.me {
+                    background-color: #ffffff;
+                    color: #000000;
+                }
+            }
+
+            .message {
+                flex: 5 0px;
+                width: calc(100% - (80px + 12px));
+
+                padding: 8px;
+            }
+
+            &:nth-child(odd) {
+                .message {
+                    background-color: darken($background-color, 5%);
+                }
+            }
+        }
+    }
+
+    .send-message {
+        height: $send-message-height;
+    }
+}

@@ -35,6 +35,7 @@ import { MappoolCreateComponent } from './components/mappool/mappool-create/mapp
 import { MappoolBracketEditComponent } from './components/mappool/mappool-bracket-edit/mappool-bracket-edit.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { AuthInterceptor } from "./components/authentication/token-interceptor";
+import { IrcComponent } from './components/irc/irc.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -42,7 +43,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent, AllLobbiesComponent, CreateLobbyComponent, LobbyViewComponent, MappoolOverviewComponent, MappoolCreateComponent, MappoolBracketEditComponent, LoginComponent],
+	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent, AllLobbiesComponent, CreateLobbyComponent, LobbyViewComponent, MappoolOverviewComponent, MappoolCreateComponent, MappoolBracketEditComponent, LoginComponent, IrcComponent],
 	imports: [
 		BrowserModule,
 		FormsModule,

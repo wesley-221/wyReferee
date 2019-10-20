@@ -1,0 +1,27 @@
+<div class="irc">
+    <div class="channels">
+        <div class="channel" *ngFor="let channel of channels" (click)="changeChannel(channel)" [ngClass]="{'active': channel == selectedChannel}">{{ channel }}</div>
+    </div>
+
+    <div class="messages" #messageContainer>
+        <div class="chat" *ngFor="let chat of chats">
+            <div class="author bancho">
+                BanchoBot
+            </div>
+
+            <div class="message">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus explicabo perferendis corrupti quas excepturi nihil, aliquid odit minus ipsa, nesciunt recusandae ratione dolorem dignissimos cum velit commodi est iusto consequatur?
+            </div>
+        </div>
+    </div>
+
+    <div class="send-message">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Message..." />
+
+            <div class="input-group-append">
+                <button class="btn btn-primary" (click)="temp()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
