@@ -3,20 +3,57 @@
         <div class="header">
             <div class="header-image"></div>
         </div>
+
+        <div class="title">Mappool publishing</div>
     
         <div class="body">
             <div class="row">
                 <div class="col-xs-12 col-lg-8 offset-lg-2">
-                    <form [formGroup]="validationForm">
+                    <form [formGroup]="mappoolPublishForm">
                         <input type="text" class="form-control" placeholder="Email" formControlName="email" />
                         <div class="spacing"></div>
                         <input type="password" class="form-control" placeholder="Password" formControlName="password" />
                         <div class="spacing"></div><div class="spacing"></div>
                         
                         <div class="center"> 
-                            <button (click)="login()" class="btn btn-success custom-btn" [disabled]="validationForm.invalid">Login</button>
+                            <button (click)="loginMappoolPublish()" class="btn btn-success custom-btn" [disabled]="mappoolPublishForm.invalid">Login</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-irc">
+        <div class="header">
+            <div class="header-image"></div>
+        </div>
+
+        <div class="title">osu! Irc connection</div>
+    
+        <div class="body">
+            <div class="row">
+                <div class="col-xs-12 col-lg-8 offset-lg-2">
+                    <form [formGroup]="ircForm" *ngIf="!ircService.isAuthenticated">
+                        <input type="text" class="form-control" placeholder="Username" formControlName="username" />
+                        <div class="spacing"></div>
+                        <input type="password" class="form-control" placeholder="Password" formControlName="password" />
+                        <div class="spacing"></div><div class="spacing"></div>
+                        
+                        <div class="center"> 
+                            <button (click)="connectIrc()" class="btn btn-success custom-btn" [disabled]="ircForm.invalid">Connect <fa-icon *ngIf="isConnecting" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></button>
+                        </div>
+                    </form>
+
+                    <div *ngIf="ircService.isAuthenticated">
+                        <div class="center-text">Logged in as&nbsp;<b>{{ ircService.authenticatedUser }}</b></div>
+
+                        <div class="spacing"></div>
+
+                        <div class="center">
+                            <button (click)="disconnectIrc()" class="btn btn-success custom-btn">Disconnect <fa-icon *ngIf="isDisconnecting" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

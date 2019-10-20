@@ -3,6 +3,7 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { ToastService } from '../../../services/toast.service';
 import { ToastType } from '../../../models/toast';
+import { IrcService } from '../../../services/irc.service';
 
 @Component({
 	selector: 'app-login',
@@ -10,12 +11,16 @@ import { ToastType } from '../../../models/toast';
 	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-	validationForm: FormGroup;
+	mappoolPublishForm: FormGroup;
+	ircForm: FormGroup;
+
+	isConnecting: boolean = false;
+	isDisconnecting: boolean = false;
 	
-	constructor(private auth: AuthenticateService, private toastService: ToastService) { }
+	constructor(private auth: AuthenticateService, private toastService: ToastService, public ircService: IrcService) { }
 
 	ngOnInit() {
-		this.validationForm = new FormGroup({
+		this.mappoolPublishForm = new FormGroup({
 			'email': new FormControl('', [
 				Validators.required
 			]),
@@ -23,19 +28,52 @@ export class LoginComponent implements OnInit {
 				Validators.required
 			])
 		});
+
+		this.ircForm = new FormGroup({
+			'username': new FormControl('', [
+				Validators.required
+			]),
+			'password': new FormControl('', [
+				Validators.required
+			])
+		});
+
+		// Subscribe to the isConnecting variable to show/hide the spinner
+		this.ircService.getIsConnecting().subscribe(value => {
+			this.isConnecting = value;
+		});
+
+		// Subscribe to the isConnecting variable to show/hide the spinner
+		this.ircService.getIsDisconnecting().subscribe(value => {
+			this.isDisconnecting = value;
+		});
 	}
 
 	/**
 	 * Login the user with the given email and password
 	 */
-	login() {
-		const 	email = this.validationForm.get('email').value, 
-				password = this.validationForm.get('password').value;
+	loginMappoolPublish() {
+		const 	email = this.mappoolPublishForm.get('email').value, 
+				password = this.mappoolPublishForm.get('password').value;
 
 		this.auth.login(email, password).then(res => {
 			this.toastService.addToast(`Successfully logged in with the email "${this.auth.loggedInUser}"!`);
 		}).catch((err: Error) => {
 			this.toastService.addToast(`Something went wrong while trying to login: "${err.message}"`, ToastType.Error);
 		});
+	}
+
+	/**
+	 * Login to irc with the given credentials
+	 */
+	connectIrc() {
+		const 	username = this.ircForm.get('username').value, 
+				password = this.ircForm.get('password').value;
+
+		this.ircService.connect(username, password);
+	}
+
+	disconnectIrc() {
+		this.ircService.disconnect();
 	}
 }
