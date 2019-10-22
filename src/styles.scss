@@ -575,3 +575,20 @@ input {
 .has-error {
     color: #E94F64;
 }
+
+// Get rid of backdrop because of bootstrap position fixed issues
+.modal-backdrop {
+    display: none;
+}
+
+.modal {
+    .modal-dialog {
+        .modal-content {
+            background-color: $background-color;
+
+            .modal-header {
+                border-bottom: 1px solid lighten($background-color, 15%);
+            }
+        }
+    }
+}

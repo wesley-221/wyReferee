@@ -1,26 +1,76 @@
 <div class="irc">
     <div class="channels">
-        <div class="channel" *ngFor="let channel of channels" (click)="changeChannel(channel)" [ngClass]="{'active': channel == selectedChannel}">{{ channel }}</div>
+        <div class="header">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#join-channel" (click)="openModal()">Join channel</button>
+        </div>
+
+        <div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
+            <div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary=".all-channels">
+                <div class="channel-name" 
+                        (click)="changeChannel(channel.channelName)" 
+                        [ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active }">
+                    {{ channel.channelName }}
+                </div>
+
+                <div class="delete-button" (click)="partChannel(channel.channelName)">
+                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="messages" #messageContainer>
         <div class="chat" *ngFor="let chat of chats">
-            <div class="author bancho">
-                BanchoBot
+            <div class="author" 
+                    [ngClass]="{'me': chat.author == ircService.authenticatedUser, 'bancho': chat.author == 'BanchoBot'}">
+                {{ chat.author }}
             </div>
 
-            <div class="message">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus explicabo perferendis corrupti quas excepturi nihil, aliquid odit minus ipsa, nesciunt recusandae ratione dolorem dignissimos cum velit commodi est iusto consequatur?
+            <div class="message" *ngIf="!chat.containsHtml">
+                {{ chat.message }}
+            </div>
+
+            <div class="message" *ngIf="chat.containsHtml" (click)="electronService.openLink(chat.linkData.link)">
+                <div class="link">
+                    {{ chat.linkData.messageBeforeName }} <span class="url">{{ chat.linkData.name }}</span>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="send-message">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Message..." />
+        <form>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Message..." #chatMessage />
 
-            <div class="input-group-append">
-                <button class="btn btn-primary" (click)="temp()">Send</button>
+                <div class="input-group-append">
+                    <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="join-channel" tabindex="-1" role="dialog">
+    <div class="modal-dialog shadow" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Join a channel</h3>
+            </div>
+
+            <div class="modal-body">
+                <p>Enter the channel name below to join that channel. </p>
+                <ul>
+                    <li>If you want to join a channel, make sure to enter the <b>#</b> as well (<b>#osu, #taiko, #ctb, #mania, etc.</b>)</li>
+                    <li>If you want to message a player, enter just their name (<b>Wesley, Sartan, Porojax, etc.</b>)</li>
+                    <li>To join a multiplayer lobby, enter "#mp_" followed by the multiplayerlobby id (<b>#mp_53809297, #mp_55519658, etc.</b>)</li>
+                </ul>
+
+                <form>
+                    <label for="channel-name">Channel name</label>
+                    <input id="channel-name" type="text" class="form-control mb-2" placeholder="Channel name" #channelName />
+                    <button class="btn btn-primary" style="width: 100%;" (click)="joinChannel()">Attempt to join <fa-icon *ngIf="isAttemptingToJoin" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></button>
+                </form>
             </div>
         </div>
     </div>

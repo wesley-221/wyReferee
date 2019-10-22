@@ -14,6 +14,7 @@ import { AppConfig } from '../environments/environment';
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
 import { TitlebarComponent } from './components/main-page/titlebar/titlebar.component';
@@ -57,7 +58,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 				deps: [HttpClient]
 			}
 		}),
-		FontAwesomeModule
+		FontAwesomeModule,
+		DragDropModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
