@@ -247,13 +247,8 @@ export class IrcService {
 	 * @param linkData an object with link and name
 	 */
 	addMessageToChannel(channelName: string, author: string, message: string, containsHtml: boolean = false, linkData: { messageBeforeName: string, link: string, name: string } = null) {
-		for(let i in this.allChannels) {
-			if(this.allChannels[i].channelName == channelName) {
-				// TODO: try to make allChannels[i].addNewMessage()) a promise, after its completed call .next()
-				this.allChannels[i].allMessages.push(new Message(author, message, containsHtml, linkData));
-				return;
-			}
-		}
+		// TODO: try to make allChannels[i].addNewMessage()) a promise, after its completed call .next()
+		this.getChannelByName(channelName).allMessages.push(new Message(author, message, containsHtml, linkData));
 	}
 
 	/**
@@ -317,7 +312,7 @@ export class IrcService {
 	 * @param message the message to send
 	 */
 	sendMessage(channelName: string, message: string) {
-		this.getChannelByName(channelName).allMessages.push(new Message(this.authenticatedUser, message));
+		this.addMessageToChannel(channelName, this.authenticatedUser, message);
 		this.client.say(channelName, message);
 	}
 
