@@ -239,7 +239,7 @@ export class IrcService {
 	}
 
 	/**
-	 * Add a message to the given channel
+	 * Add a message to the given channel. Will not send the message to irc
 	 * @param channelName the channel to add the message to 
 	 * @param author the author of the message
 	 * @param message the message itself
