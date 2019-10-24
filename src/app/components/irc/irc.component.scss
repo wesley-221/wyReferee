@@ -125,15 +125,32 @@ $send-message-height: 38px;
 
                 &.bancho {
                     background-color: #df96c0;
+
+                    &:hover {
+                        background-color: darken(#df96c0, 15%);
+                    }
                 }
 
                 &.highlighted {
                     background-color: #36f027;
+
+                    &:hover {
+                        background-color: darken(#36f027, 15%);
+                    }
                 }
 
                 &.me {
                     background-color: #ffffff;
                     color: #000000;
+
+                    &:hover {
+                        background-color: darken(#ffffff, 15%);
+                    }
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: darken(#ffff00, 10%);
                 }
             }
 

@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { IrcService } from '../../services/irc.service';
 import { Channel } from '../../models/irc/channel';
 import { Message } from '../../models/irc/message';
 import { ElectronService } from '../../services/electron.service';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 declare var $: any;
 
 @Component({
@@ -21,10 +21,11 @@ export class IrcComponent implements OnInit {
 	channels: Channel[];
 
 	chatLength: number = 0;
+	keyPressed: boolean = false;
 
 	isAttemptingToJoin: boolean = false;
 
-	constructor(public electronService: ElectronService, public ircService: IrcService) { 
+	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef) { 
 		this.channels = ircService.allChannels;
 
 		// Temporary workaround for scrolling to bottom
@@ -90,5 +91,69 @@ export class IrcComponent implements OnInit {
 		moveItemInArray(this.channels, event.previousIndex, event.currentIndex);
 
 		this.ircService.rearrangeChannels(this.channels);
+	}
+
+	/**
+	 * When a key was pressed
+	 * @param event 
+	 * @param eventName up or down (for key up/down)
+	 */
+	onKey(event: KeyboardEvent, eventName: string) {
+		event.preventDefault();
+
+		// Check if the pressed key was tab
+		if(event.key === "Tab") {
+			this.changeDetector.detectChanges();
+			this.chatMessage.nativeElement.focus();
+
+			// The key is being hold
+			if(eventName == "down") {
+				if(this.keyPressed == false) {
+					// Check if there is a selected channel
+					if(this.selectedChannel != undefined) {
+						// Check if the object exists
+						if(!this.ircService.client.chans.hasOwnProperty(this.selectedChannel.channelName)) return;
+
+						const lastWordOfSentence = this.chatMessage.nativeElement.value.split(" ").pop();
+						let matchedUsers = [];
+
+						// Prevent 0 letter autocompletion
+						if(lastWordOfSentence.length < 1) return;
+
+						for(let user in this.ircService.client.chans[this.selectedChannel.channelName].users) {
+							// Remove irc levels
+							const newUser = user.replace(/[\@|\+]/gi, '');
+
+							if(newUser.toLowerCase().startsWith(lastWordOfSentence.toLowerCase())) {
+								matchedUsers.push(newUser);
+							}
+						}
+
+						// Show the matched users
+						if(matchedUsers.length > 1) {
+							this.ircService.addMessageToChannel(this.selectedChannel.channelName, 'BanchoBot', `Matched users: ${matchedUsers.join(', ')}`);
+						}
+						// Replace the autocompleted user
+						else if(matchedUsers.length == 1) {
+							this.chatMessage.nativeElement.value = this.chatMessage.nativeElement.value.replace(lastWordOfSentence, matchedUsers[0]);
+						}
+					}
+
+					this.keyPressed = true;
+				}
+			}
+			// The key was released
+			else {
+				this.keyPressed = false;
+			}
+		}
+	}
+
+	/**
+	 * Open the link to the users userpage
+	 * @param username
+	 */
+	openUserpage(username: string) {
+		this.electronService.openLink(`https://osu.ppy.sh/users/${username}`);
 	}
 }
