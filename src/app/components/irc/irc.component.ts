@@ -28,6 +28,14 @@ export class IrcComponent implements OnInit {
 	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef) { 
 		this.channels = ircService.allChannels;
 
+		// TODO: Fix the reference to the appropriate channel
+		// for(let channel in this.channels) {
+		// 	if(this.channels[channel].lastActiveChannel) {
+		// 		this.selectedChannel = this.ircService.getChannelByName(this.channels[channel].channelName);
+		// 		break;
+		// 	}
+		// }
+
 		// Temporary workaround for scrolling to bottom
 		setInterval(() => {
 			if(this.chats.length != this.chatLength) {
@@ -49,7 +57,16 @@ export class IrcComponent implements OnInit {
 	 * @param channel the channel to change to
 	 */
 	changeChannel(channel: string) {
+		if(this.selectedChannel != undefined) {
+			this.selectedChannel.lastActiveChannel = false;
+			this.ircService.changeActiveChannel(this.selectedChannel, false);
+		}
+		
 		this.selectedChannel = this.ircService.getChannelByName(channel);
+		
+		this.selectedChannel.lastActiveChannel = true;
+		this.ircService.changeActiveChannel(this.selectedChannel, true);
+		
 		this.chats = this.selectedChannel.allMessages;
 	}
 

@@ -51,9 +51,13 @@ export class IrcService {
 
 		const connectedChannels = storeService.get('irc.channels');
 
-		if(connectedChannels != undefined) {
+		if(connectedChannels != undefined && Object.keys(connectedChannels).length > 0) {
 			for(let channel in connectedChannels) {
-				this.allChannels.push(new Channel(connectedChannels[channel]));
+				const nChannel = new Channel(connectedChannels[channel].name);
+				nChannel.active = connectedChannels[channel].active;
+				nChannel.lastActiveChannel = connectedChannels[channel].lastActiveChannel;
+
+				this.allChannels.push(nChannel);
 			}
 		}
 	}
@@ -97,7 +101,11 @@ export class IrcService {
 
 		// Check if the user already has joined channels
 		if(allJoinedChannels !== undefined) {
-			ircSettings['channels'] = allJoinedChannels;
+			ircSettings['channels'] = [];
+
+			for(let channel in allJoinedChannels) {
+				ircSettings['channels'].push(allJoinedChannels[channel].name);	
+			}
 		}
 
 		this.client = new irc.Client('irc.ppy.sh', username, ircSettings);
@@ -260,19 +268,18 @@ export class IrcService {
 		this.isJoiningChannel$.next(true);
 
 		// Check if you have already joined the channel
-		if(allJoinedChannels.includes(channelName)) {
+		if(allJoinedChannels != undefined && allJoinedChannels.hasOwnProperty(channelName)) {
 			this.toastService.addToast(`You have already joined the channel "${channelName}".`);
 			return;
 		}
 
-		this.client.join(channelName, () => {			
-			// Check if they already joined a channel
-			if(allJoinedChannels == undefined) {
-				this.storeService.set('irc.channels', [channelName]);
-			}
-			else {
-				this.storeService.set('irc.channels', [...allJoinedChannels, channelName]);
-			}
+		this.client.join(channelName, () => {
+			this.storeService.set(`irc.channels.${channelName}`, {
+				name: channelName,
+				active: true,
+				messageHistory: {},
+				lastActiveChannel: false
+			});
 
 			this.isJoiningChannel$.next(false);
 
@@ -321,12 +328,32 @@ export class IrcService {
 	 * @param channels the rearranged channels
 	 */
 	rearrangeChannels(channels: Channel[]) {
-		let rearrangedChannels = [];
+		let rearrangedChannels = {};
 
 		for(let i in channels) {
-			rearrangedChannels.push(channels[i].channelName);
+			// TODO: message history
+
+			rearrangedChannels[channels[i].channelName] = {
+				name: channels[i].channelName,
+				active: channels[i].active,
+				messageHistory: {},
+				lastActiveChannel: channels[i].lastActiveChannel
+			};
 		}
 
 		this.storeService.set('irc.channels', rearrangedChannels);
+	}
+	
+	/**
+	 * Change the active status in the store for the given channel
+	 * @param channel the channel to change the status of
+	 * @param active the status
+	 */
+	changeActiveChannel(channel: Channel, active: boolean) {
+		const storeChannel = this.storeService.get(`irc.channels.${channel.channelName}`);
+
+		storeChannel.lastActiveChannel = active;
+
+		this.storeService.set(`irc.channels.${channel.channelName}`, storeChannel);
 	}
 }
