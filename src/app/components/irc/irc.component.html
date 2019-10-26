@@ -23,6 +23,10 @@
         <div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning mr-3 ml-3 mt-3">There are no messages yet.</div>
         <div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning mr-3 ml-3 mt-3">There is no selected channel.</div>
         <div class="chat" *ngFor="let chat of chats">
+            <div class="time">
+                {{ chat.time }}
+            </div>
+
             <div class="author" 
                     [ngClass]="{'me': chat.author == ircService.authenticatedUser, 'bancho': chat.author == 'BanchoBot'}"
                     (click)="openUserpage(chat.author)">

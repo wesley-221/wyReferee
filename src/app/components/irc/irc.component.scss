@@ -109,6 +109,12 @@ $send-message-height: 38px;
 
             width: 100%;
 
+            .time {
+                margin-left: 6px;
+                margin-right: 6px;
+                padding: 3px;
+            }
+
             .author {
                 flex: 1 0 0;
 

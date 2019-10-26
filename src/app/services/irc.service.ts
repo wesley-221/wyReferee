@@ -257,7 +257,10 @@ export class IrcService {
 	 */
 	addMessageToChannel(channelName: string, author: string, message: string, containsHtml: boolean = false, linkData: { messageBeforeName: string, link: string, name: string } = null) {
 		// TODO: try to make allChannels[i].addNewMessage()) a promise, after its completed call .next()
-		this.getChannelByName(channelName).allMessages.push(new Message(author, message, containsHtml, linkData));
+		const 	date = new Date(),
+				dateFormat = `${(date.getHours() <= 9 ? '0' : '')}${date.getHours()}:${date.getMinutes()}`;
+
+		this.getChannelByName(channelName).allMessages.push(new Message(dateFormat, author, message, containsHtml, linkData));
 	}
 
 	/**
