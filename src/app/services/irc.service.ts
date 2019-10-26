@@ -135,6 +135,7 @@ export class IrcService {
 				else {
 					if(this.getChannelByName(channelName) != null) {
 						this.getChannelByName(channelName).active = false;
+						this.changeActiveChannel(this.getChannelByName(channelName), false);
 					}
 				}
 			}
@@ -345,7 +346,7 @@ export class IrcService {
 	}
 	
 	/**
-	 * Change the active status in the store for the given channel
+	 * Change the last active status in the store for the given channel
 	 * @param channel the channel to change the status of
 	 * @param active the status
 	 */
@@ -353,6 +354,19 @@ export class IrcService {
 		const storeChannel = this.storeService.get(`irc.channels.${channel.channelName}`);
 
 		storeChannel.lastActiveChannel = active;
+
+		this.storeService.set(`irc.channels.${channel.channelName}`, storeChannel);
+	}
+
+	/**
+	 * Change the active status in the store for the given channel
+	 * @param channel the channel to change the status of
+	 * @param active the status
+	 */
+	changeActiveChannel(channel: Channel, active: boolean) {
+		const storeChannel = this.storeService.get(`irc.channels.${channel.channelName}`);
+
+		storeChannel.active = active;
 
 		this.storeService.set(`irc.channels.${channel.channelName}`, storeChannel);
 	}
