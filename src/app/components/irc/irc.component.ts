@@ -59,13 +59,13 @@ export class IrcComponent implements OnInit {
 	changeChannel(channel: string) {
 		if(this.selectedChannel != undefined) {
 			this.selectedChannel.lastActiveChannel = false;
-			this.ircService.changeActiveChannel(this.selectedChannel, false);
+			this.ircService.changeLastActiveChannel(this.selectedChannel, false);
 		}
 		
 		this.selectedChannel = this.ircService.getChannelByName(channel);
 		
 		this.selectedChannel.lastActiveChannel = true;
-		this.ircService.changeActiveChannel(this.selectedChannel, true);
+		this.ircService.changeLastActiveChannel(this.selectedChannel, true);
 		
 		this.chats = this.selectedChannel.allMessages;
 	}

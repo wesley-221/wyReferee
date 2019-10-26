@@ -349,7 +349,7 @@ export class IrcService {
 	 * @param channel the channel to change the status of
 	 * @param active the status
 	 */
-	changeActiveChannel(channel: Channel, active: boolean) {
+	changeLastActiveChannel(channel: Channel, active: boolean) {
 		const storeChannel = this.storeService.get(`irc.channels.${channel.channelName}`);
 
 		storeChannel.lastActiveChannel = active;
