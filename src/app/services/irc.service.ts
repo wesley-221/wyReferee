@@ -33,6 +33,7 @@ export class IrcService {
 	isConnecting$: BehaviorSubject<boolean>;
 	isDisconnecting$: BehaviorSubject<boolean>;
 	isJoiningChannel$: BehaviorSubject<boolean>;
+	messageHasBeenSend$: BehaviorSubject<boolean>;
 
   	constructor(private toastService: ToastService, private storeService: StoreService) { 
 		this.irc = require('irc-upd');
@@ -41,6 +42,7 @@ export class IrcService {
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
 		this.isJoiningChannel$ = new BehaviorSubject<boolean>(false);
+		this.messageHasBeenSend$ = new BehaviorSubject<boolean>(false);
 
 		// Connect to irc if the credentials are saved
 		const ircCredentials = storeService.get('irc');
@@ -99,6 +101,13 @@ export class IrcService {
 	 */
 	getIsJoiningChannel(): Observable<boolean> {
 		return this.isJoiningChannel$.asObservable();
+	}
+
+	/**
+	 * Check if there was a message send
+	 */
+	hasMessageBeenSend(): Observable<boolean> {
+		return this.messageHasBeenSend$.asObservable();
 	}
 
 	/**
@@ -246,7 +255,6 @@ export class IrcService {
 	 * @param message the message itself
 	 */
 	addMessageToChannel(channelName: string, author: string, message: string) {
-		// TODO: try to make allChannels[i].addNewMessage()) a promise, after its completed call .next()
 		const 	date = new Date(),
 				timeFormat = `${(date.getHours() <= 9 ? '0' : '')}${date.getHours()}:${(date.getMinutes() <= 9 ? '0' : '')}${date.getMinutes()}`,
 				dateFormat = `${(date.getDate() <= 9 ? '0' : '')}${date.getDate()}/${(date.getMonth() <= 9 ? '0' : '')}${date.getMonth()}/${date.getFullYear()}`;
@@ -255,6 +263,8 @@ export class IrcService {
 		this.getChannelByName(channelName).allMessages.push(newMessage);
 
 		this.saveMessageToHistory(channelName, newMessage);
+
+		this.messageHasBeenSend$.next(true);
 	}
 
 	/**
@@ -330,12 +340,10 @@ export class IrcService {
 		let rearrangedChannels = {};
 
 		for(let i in channels) {
-			// TODO: message history
-
 			rearrangedChannels[channels[i].channelName] = {
 				name: channels[i].channelName,
 				active: channels[i].active,
-				messageHistory: [],
+				messageHistory: [channels[i].allMessages],
 				lastActiveChannel: channels[i].lastActiveChannel
 			};
 		}

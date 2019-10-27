@@ -37,6 +37,7 @@ import { MappoolBracketEditComponent } from './components/mappool/mappool-bracke
 import { LoginComponent } from './components/authentication/login/login.component';
 import { AuthInterceptor } from "./components/authentication/token-interceptor";
 import { IrcComponent } from './components/irc/irc.component';
+import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -44,7 +45,24 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-	declarations: [AppComponent, TitlebarComponent, MainComponent, SidebarComponent, SettingsComponent, ErrorComponent, InformationComponent, ToastComponent, AllLobbiesComponent, CreateLobbyComponent, LobbyViewComponent, MappoolOverviewComponent, MappoolCreateComponent, MappoolBracketEditComponent, LoginComponent, IrcComponent],
+	declarations: [
+		AppComponent, 
+		TitlebarComponent, 
+		MainComponent, 
+		SidebarComponent, 
+		SettingsComponent, 
+		ErrorComponent, 
+		InformationComponent, 
+		ToastComponent, 
+		AllLobbiesComponent, 
+		CreateLobbyComponent, 
+		LobbyViewComponent, 
+		MappoolOverviewComponent, 
+		MappoolCreateComponent, 
+		MappoolBracketEditComponent, 
+		LoginComponent, 
+		IrcComponent
+	],
 	imports: [
 		BrowserModule,
 		FormsModule,
@@ -59,7 +77,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 			}
 		}),
 		FontAwesomeModule,
-		DragDropModule
+		DragDropModule,
+		VirtualScrollerModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

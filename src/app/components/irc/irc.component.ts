@@ -4,6 +4,7 @@ import { Channel } from '../../models/irc/channel';
 import { Message } from '../../models/irc/message';
 import { ElectronService } from '../../services/electron.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
 declare var $: any;
 
 @Component({
@@ -12,13 +13,16 @@ declare var $: any;
 	styleUrls: ['./irc.component.scss']
 })
 export class IrcComponent implements OnInit {
-	@ViewChild('messageContainer', { static: false}) messageContainer: ElementRef;
 	@ViewChild('channelName', { static: false}) channelName: ElementRef;
 	@ViewChild('chatMessage', { static: false }) chatMessage: ElementRef;
 
+	@ViewChild(VirtualScrollerComponent, { static: true }) private virtualScroller: VirtualScrollerComponent;
+
 	selectedChannel: Channel;
-	chats: Message[] = [];
 	channels: Channel[];
+
+	chats: Message[] = [];
+	viewPortItems: Message[];
 
 	chatLength: number = 0;
 	keyPressed: boolean = false;
@@ -36,14 +40,16 @@ export class IrcComponent implements OnInit {
 		// 	}
 		// }
 
-		// Temporary workaround for scrolling to bottom
-		setInterval(() => {
-			if(this.chats.length != this.chatLength) {
-				this.chatLength = this.chats.length;
-	
-				$('.messages').scrollTop($('.messages')[0].scrollHeight);
+		// Initialize the scroll
+		this.ircService.hasMessageBeenSend().subscribe(() => {
+			if(!this.viewPortItems) {
+				return;
 			}
-		}, 1000);
+
+			if(this.viewPortItems[this.viewPortItems.length - 1] === this.chats[this.chats.length - 2]) {
+				this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+			}
+		});
 	}
 
 	ngOnInit() { 
@@ -68,6 +74,9 @@ export class IrcComponent implements OnInit {
 		this.ircService.changeLastActiveChannel(this.selectedChannel, true);
 		
 		this.chats = this.selectedChannel.allMessages;
+
+		// Scroll to the bottom
+		this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
 	}
 
 	/**

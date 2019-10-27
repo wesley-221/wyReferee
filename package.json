@@ -79,7 +79,7 @@
     "typescript": "3.5.3",
     "wait-on": "3.3.0",
     "webdriver-manager": "12.1.5",
-    "zone.js": "0.9.1", 
+    "zone.js": "0.9.1",
     "@angular/cdk": "^8.2.3"
   },
   "engines": {
@@ -93,6 +93,7 @@
     "electron-log": "^3.0.8",
     "electron-store": "^5.0.0",
     "electron-updater": "^4.1.2",
-    "irc-upd": "^0.10.0"
+    "irc-upd": "^0.10.0",
+    "ngx-virtual-scroller": "^3.0.3"
   }
 }

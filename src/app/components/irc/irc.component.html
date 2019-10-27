@@ -19,10 +19,11 @@
         </div>
     </div>
 
-    <div class="messages" #messageContainer>
+    <virtual-scroller class="messages" [items]="chats" (vsUpdate)="viewPortItems = $event">
         <div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning mr-3 ml-3 mt-3">There are no messages yet.</div>
         <div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning mr-3 ml-3 mt-3">There is no selected channel.</div>
-        <div class="chat" *ngFor="let chat of chats">
+        
+        <div class="chat" *ngFor="let chat of viewPortItems">
             <div class="chat-content divider" *ngIf="!chat.isADivider">
                 <div class="time" *ngIf="chat.comesFromHistory" [title]="chat.date">
                     {{ chat.time }}
@@ -54,7 +55,7 @@
                 <div class="divider"><span>{{ chat.author }}</span></div>
             </div>
         </div>
-    </div>
+    </virtual-scroller>
 
     <div class="send-message">
         <form>
