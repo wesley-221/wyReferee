@@ -170,6 +170,10 @@ export class IrcService {
 					}
 				}
 			}
+			// User is not online
+			else if(error.command == "err_nosuchnick") {
+				this.toastService.addToast(`"${error.args[1]}" is not online.`, ToastType.Error);
+			}
 			// Unhandled error
 			else {
 				console.log(error);
@@ -346,7 +350,7 @@ export class IrcService {
 			}
 
 			if(channelName.startsWith('#')) {
-			this.client.part(channelName);
+				this.client.part(channelName);
 			}
 
 			delete allJoinedChannels[channelName];
