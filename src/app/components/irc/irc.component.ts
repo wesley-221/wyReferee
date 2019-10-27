@@ -187,4 +187,28 @@ export class IrcComponent implements OnInit {
 	openUserpage(username: string) {
 		this.electronService.openLink(`https://osu.ppy.sh/users/${username}`);
 	}
+
+	/**
+	 * Change the read status of the messages
+	 * @param event 
+	 */
+	virtualScrollerUpdate(event: Message[]) {
+		this.viewPortItems = event;
+
+		// Loop through the messages in view
+		for(let message in event) {
+			// Check if the message is unread
+			if(!event[message].read) {
+				for(let chat in this.chats) {
+					if(this.chats[chat].messageId == event[message].messageId) {
+						this.chats[chat].read = true;
+						this.ircService.getChannelByName(this.selectedChannel.channelName).reduceUnreadMessages();
+						this.ircService.changeMessageReadToHistory(this.selectedChannel.channelName, this.chats[chat].messageId);
+
+						break;
+					}
+				}
+			}
+		}
+	}
 }

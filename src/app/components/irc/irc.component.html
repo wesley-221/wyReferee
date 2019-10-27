@@ -12,6 +12,12 @@
                     {{ channel.channelName }}
                 </div>
 
+                <div class="unread-messages">
+                    <div class="badge badge-primary">
+                        {{ channel.unreadMessages }}
+                    </div>
+                </div>
+
                 <div class="delete-button" (click)="partChannel(channel.channelName)">
                     <fa-icon [icon]="['fas', 'times']"></fa-icon>
                 </div>
@@ -19,7 +25,7 @@
         </div>
     </div>
 
-    <virtual-scroller class="messages" [items]="chats" (vsUpdate)="viewPortItems = $event">
+    <virtual-scroller class="messages" [items]="chats" (vsUpdate)="virtualScrollerUpdate($event)">
         <div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning mr-3 ml-3 mt-3">There are no messages yet.</div>
         <div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning mr-3 ml-3 mt-3">There is no selected channel.</div>
         

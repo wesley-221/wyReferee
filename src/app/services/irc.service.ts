@@ -73,11 +73,16 @@ export class IrcService {
 						messageBuilder.push(new MessageBuilder(thisMessageInBuilder.messageType, thisMessageInBuilder.message, thisMessageInBuilder.linkName));
 					}
 
-					nChannel.allMessages.push(new Message(thisMessage.date, thisMessage.time, thisMessage.author, messageBuilder));
+					nChannel.allMessages.push(new Message(thisMessage.messageId, thisMessage.date, thisMessage.time, thisMessage.author, messageBuilder, false, thisMessage.read));
+
+					// Count unread messages
+					if(thisMessage.read == false) {
+						nChannel.unreadMessages ++;
+					}
 				}
 
 				// Add a divider to the channel to show new messages
-				nChannel.allMessages.push(new Message('n/a', 'n/a', 'Today', [new MessageBuilder(MessageType.Message, 'Messages from history')], true));
+				nChannel.allMessages.push(new Message(null, 'n/a', 'n/a', 'Today', [new MessageBuilder(MessageType.Message, 'Messages from history')], true));
 
 				this.allChannels.push(nChannel);
 			}
@@ -264,18 +269,24 @@ export class IrcService {
 				timeFormat = `${(date.getHours() <= 9 ? '0' : '')}${date.getHours()}:${(date.getMinutes() <= 9 ? '0' : '')}${date.getMinutes()}`,
 				dateFormat = `${(date.getDate() <= 9 ? '0' : '')}${date.getDate()}/${(date.getMonth() <= 9 ? '0' : '')}${date.getMonth()}/${date.getFullYear()}`;
 
-		const newMessage = new Message(dateFormat, timeFormat, author, this.buildMessage(message));
+		let newMessage;
 
-		if(isPM) {
+		if(isPM) {			
 			if(this.getChannelByName(author) == null) {
 				this.joinChannel(author);
 			}
+
+			newMessage = new Message(Object.keys(this.getChannelByName(author).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false, false);
 			
 			this.getChannelByName(author).allMessages.push(newMessage);
+			this.getChannelByName(author).unreadMessages ++;
 			this.saveMessageToHistory(author, newMessage);
 		}
 		else {
+			newMessage = new Message(Object.keys(this.getChannelByName(channelName).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false, false);
+
 			this.getChannelByName(channelName).allMessages.push(newMessage);
+			this.getChannelByName(channelName).unreadMessages ++;
 			this.saveMessageToHistory(channelName, newMessage);
 		}
 
@@ -424,6 +435,24 @@ export class IrcService {
 	saveMessageToHistory(channelName: string, message: Message) {
 		const storeChannel = this.storeService.get(`irc.channels.${channelName}`);
 		storeChannel.messageHistory.push(message.convertToJson());
+		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
+	}
+
+	/**
+	 * 
+	 * @param channelName the channel to save it in
+	 * @param messageId the message id to save
+	 */
+	changeMessageReadToHistory(channelName: string, messageId: number) {
+		const storeChannel = this.storeService.get(`irc.channels.${channelName}`);
+
+		for(let message in storeChannel.messageHistory) {
+			if(storeChannel.messageHistory[message].messageId == messageId) {
+				storeChannel.messageHistory[message].read = true;
+				break;
+			}
+		}
+
 		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
 	}
 
