@@ -5,8 +5,10 @@ export class Channel {
     active: boolean = true;
     allMessages: Message[] = [];
     lastActiveChannel: boolean = false;
+    isPrivateChannel: boolean = false;
 
-    constructor(channelName: string) {
+    constructor(channelName: string, isPrivateChannel: boolean = false) {
         this.channelName = channelName;
+        this.isPrivateChannel = isPrivateChannel;
     }
 }

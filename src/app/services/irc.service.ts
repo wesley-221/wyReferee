@@ -60,6 +60,7 @@ export class IrcService {
 				const nChannel = new Channel(connectedChannels[channel].name);
 				nChannel.active = connectedChannels[channel].active;
 				nChannel.lastActiveChannel = connectedChannels[channel].lastActiveChannel;
+				nChannel.isPrivateChannel = connectedChannels[channel].isPrivateChannel;
 
 				// Loop through all the messages
 				for(let message in connectedChannels[channel].messageHistory) {
@@ -75,6 +76,7 @@ export class IrcService {
 					nChannel.allMessages.push(new Message(thisMessage.date, thisMessage.time, thisMessage.author, messageBuilder, true));
 				}
 
+				// Add a divider to the channel to show new messages
 				nChannel.allMessages.push(new Message('n/a', 'n/a', 'Today', [new MessageBuilder(MessageType.Message, 'Messages from history')], false, true));
 
 				this.allChannels.push(nChannel);
@@ -156,8 +158,10 @@ export class IrcService {
 			else if(error.command === "err_nosuchchannel") {
 				const channelName = error.args[1];
 
-				if(!channelName.startsWith('#mp_')) {
+				if(!channelName.startsWith('#')) { }
+				else if(!channelName.startsWith('#mp_')) {
 					this.toastService.addToast('The channel you are trying to join does not exist.', ToastType.Error);
+					this.isJoiningChannel$.next(false);
 				}
 				else {
 					if(this.getChannelByName(channelName) != null) {
@@ -177,10 +181,8 @@ export class IrcService {
 		/**
 		 * Message handler
 		 */
-		this.client.addListener('message', (from, to, message) => {
-			this.addMessageToChannel(to, from, message);
-			
-			// console.log(`${from} => ${to}: ${message}`);
+		this.client.addListener('message', (from: string, to: string, message: string) => {
+			this.addMessageToChannel(to, from, message, !to.startsWith('#'));
 		});
 
 		/**
@@ -188,8 +190,6 @@ export class IrcService {
 		 */
 		this.client.addListener('action', (from, to, message) => {
 			this.addMessageToChannel(to, from, message);
-
-			// console.log(`${from} => ${to}: ${message}`);
 		});
 
 		/**
@@ -253,16 +253,27 @@ export class IrcService {
 	 * @param channelName the channel to add the message to 
 	 * @param author the author of the message
 	 * @param message the message itself
+	 * @param isPM if the message came from a PM
 	 */
-	addMessageToChannel(channelName: string, author: string, message: string) {
+	addMessageToChannel(channelName: string, author: string, message: string, isPM: boolean = false) {
 		const 	date = new Date(),
 				timeFormat = `${(date.getHours() <= 9 ? '0' : '')}${date.getHours()}:${(date.getMinutes() <= 9 ? '0' : '')}${date.getMinutes()}`,
 				dateFormat = `${(date.getDate() <= 9 ? '0' : '')}${date.getDate()}/${(date.getMonth() <= 9 ? '0' : '')}${date.getMonth()}/${date.getFullYear()}`;
 
 		const newMessage = new Message(dateFormat, timeFormat, author, this.buildMessage(message));
-		this.getChannelByName(channelName).allMessages.push(newMessage);
 
-		this.saveMessageToHistory(channelName, newMessage);
+		if(isPM) {
+			if(this.getChannelByName(author) == null) {
+				this.joinChannel(author);
+			}
+			
+			this.getChannelByName(author).allMessages.push(newMessage);
+			this.saveMessageToHistory(author, newMessage);
+		}
+		else {
+			this.getChannelByName(channelName).allMessages.push(newMessage);
+			this.saveMessageToHistory(channelName, newMessage);
+		}
 
 		this.messageHasBeenSend$.next(true);
 	}
@@ -281,20 +292,42 @@ export class IrcService {
 			return;
 		}
 
-		this.client.join(channelName, () => {
-			this.storeService.set(`irc.channels.${channelName}`, {
-				name: channelName,
-				active: true,
-				messageHistory: [],
-				lastActiveChannel: false
-			});
+		if(!channelName.startsWith('#')) {
+			const getChannel = this.getChannelByName(channelName);
+
+			if(getChannel == null) {
+				this.allChannels.push(new Channel(channelName, true));
+
+				this.storeService.set(`irc.channels.${channelName}`, {
+					name: channelName,
+					active: true,
+					messageHistory: [],
+					lastActiveChannel: false,
+					isPrivateChannel: true
+				});
+
+				this.toastService.addToast(`Opened private message channel with "${channelName}".`);
+			}
 
 			this.isJoiningChannel$.next(false);
-
-			this.allChannels.push(new Channel(channelName));
-
-			this.toastService.addToast(`Joined channel "${channelName}".`);
-		});
+		}
+		else {
+			this.client.join(channelName, () => {
+				this.storeService.set(`irc.channels.${channelName}`, {
+					name: channelName,
+					active: true,
+					messageHistory: [],
+					lastActiveChannel: false,
+					isPrivateChannel: false
+				});
+	
+				this.isJoiningChannel$.next(false);
+	
+				this.allChannels.push(new Channel(channelName));
+	
+				this.toastService.addToast(`Joined channel "${channelName}".`);
+			});
+		}
 	}
 
 	/**
@@ -343,8 +376,9 @@ export class IrcService {
 			rearrangedChannels[channels[i].channelName] = {
 				name: channels[i].channelName,
 				active: channels[i].active,
-				messageHistory: [channels[i].allMessages],
-				lastActiveChannel: channels[i].lastActiveChannel
+				messageHistory: channels[i].allMessages,
+				lastActiveChannel: channels[i].lastActiveChannel,
+				isPrivateChannel: channels[i].isPrivateChannel
 			};
 		}
 
