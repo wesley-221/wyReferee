@@ -14,7 +14,6 @@ export class MultiplayerLobby {
     mappool: Mappool = null;
     mappoolId: number = null;
 
-    // TODO: Change type > { '5012312': true }, { '3920123', false }
     mapsCountTowardScore: any;
     multiplayerData: MultiplayerData[];
 
