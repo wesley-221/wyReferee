@@ -338,7 +338,6 @@ export class IrcService {
 		const allJoinedChannels = this.storeService.get('irc.channels');
 
 		if(allJoinedChannels.hasOwnProperty(channelName)) {
-
 			for(let i in this.allChannels) {
 				if(this.allChannels[i].channelName == channelName) {
 					this.allChannels.splice(parseInt(i), 1);
@@ -346,7 +345,9 @@ export class IrcService {
 				}
 			}
 
+			if(channelName.startsWith('#')) {
 			this.client.part(channelName);
+			}
 
 			delete allJoinedChannels[channelName];
 

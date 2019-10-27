@@ -100,7 +100,7 @@ export class IrcComponent implements OnInit {
 	partChannel(channelName: string) {
 		this.ircService.partChannel(channelName);
 
-		if(this.selectedChannel.channelName == channelName) {
+		if(this.selectedChannel != undefined && (this.selectedChannel.channelName == channelName)) {
 			this.selectedChannel = undefined;
 			this.chats = [];
 		}
