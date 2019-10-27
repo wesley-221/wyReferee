@@ -1,7 +1,7 @@
 <div class="irc">
     <div class="channels">
         <div class="header">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#join-channel" (click)="openModal()">Join channel</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#join-channel" (click)="openModal()" [disabled]="!ircService.isAuthenticated">Join channel</button>
         </div>
 
         <div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
@@ -23,24 +23,35 @@
         <div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning mr-3 ml-3 mt-3">There are no messages yet.</div>
         <div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning mr-3 ml-3 mt-3">There is no selected channel.</div>
         <div class="chat" *ngFor="let chat of chats">
-            <div class="time">
-                {{ chat.time }}
-            </div>
-
-            <div class="author" 
-                    [ngClass]="{'me': chat.author == ircService.authenticatedUser, 'bancho': chat.author == 'BanchoBot'}"
-                    (click)="openUserpage(chat.author)">
-                {{ chat.author }}
-            </div>
-
-            <div class="message" *ngIf="!chat.containsHtml">
-                {{ chat.message }}
-            </div>
-
-            <div class="message" *ngIf="chat.containsHtml" (click)="electronService.openLink(chat.linkData.link)">
-                <div class="link">
-                    {{ chat.linkData.messageBeforeName }} <span class="url">{{ chat.linkData.name }}</span>
+            <div class="chat-content divider" *ngIf="!chat.isADivider">
+                <div class="time" *ngIf="chat.comesFromHistory" [title]="chat.date">
+                    {{ chat.time }}
                 </div>
+    
+                <div class="time" *ngIf="!chat.comesFromHistory">
+                    {{ chat.time }}
+                </div>
+    
+                <div class="author" 
+                        [ngClass]="{'me': chat.author == ircService.authenticatedUser, 'bancho': chat.author == 'BanchoBot'}"
+                        (click)="openUserpage(chat.author)">
+                    {{ chat.author }}
+                </div>
+    
+                <div class="message">
+                    <div class="message-piece" *ngFor="let chatPiece of chat.message">
+                        <span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
+                        <div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
+                            &nbsp;
+                            <span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
+                            <span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-content" *ngIf="chat.isADivider">
+                <div class="divider"><span>{{ chat.author }}</span></div>
             </div>
         </div>
     </div>
@@ -48,10 +59,10 @@
     <div class="send-message">
         <form>
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Message..." #chatMessage (keyup.Tab)="onKey($event, 'up'); false;" (keydown.Tab)="onKey($event, 'down'); false;" />
+                <input type="text" class="form-control" placeholder="Message..." #chatMessage (keyup.Tab)="onKey($event, 'up'); false;" (keydown.Tab)="onKey($event, 'down'); false;" [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" />
 
                 <div class="input-group-append">
-                    <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+                    <button class="btn btn-primary" (click)="sendMessage()" [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)">Send</button>
                 </div>
             </div>
         </form>

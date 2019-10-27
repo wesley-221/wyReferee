@@ -103,82 +103,107 @@ $send-message-height: 38px;
         overflow-y: auto;
 
         .chat {
-            display: flex;
-            align-items: flex-start;
-            flex-flow: row wrap;
+            .chat-content {
+                display: flex;
+                align-items: flex-start;
+                flex-flow: row wrap;
 
-            width: 100%;
+                width: 100%;
 
-            .time {
-                margin-left: 6px;
-                margin-right: 6px;
-                padding: 3px;
-            }
+                .divider {
+                    width: 100%; 
+                    line-height: 0.1em;
+                    margin: 25px 0 25px; 
 
-            .author {
-                flex: 1 0 0;
+                    text-align: center; 
+                    border-bottom: 3px solid $primary; 
+                    
+                    span {                        
+                        background-color: $background-color;
+                        color: $primary;
 
-                margin-left: 6px;
-                margin-right: 6px;
-                padding: 3px;
+                        font-weight: bold;
+                        font-size: 20px;
 
-                text-align: center;
-
-                background-color: #ffff00;
-                color: black;
-
-                border-radius: 50px;
-
-                &.bancho {
-                    background-color: #df96c0;
-
-                    &:hover {
-                        background-color: darken(#df96c0, 15%);
+                        padding: 0 10px;
                     }
                 }
 
-                &.highlighted {
-                    background-color: #36f027;
-
-                    &:hover {
-                        background-color: darken(#36f027, 15%);
-                    }
+                .time {
+                    margin-left: 6px;
+                    margin-right: 6px;
+                    padding: 3px;
                 }
-
-                &.me {
-                    background-color: #ffffff;
-                    color: #000000;
-
-                    &:hover {
-                        background-color: darken(#ffffff, 15%);
+    
+                .author {
+                    flex: 1 0 0;
+    
+                    margin-left: 6px;
+                    margin-right: 6px;
+                    padding: 3px;
+    
+                    text-align: center;
+    
+                    background-color: #ffff00;
+                    color: black;
+    
+                    border-radius: 50px;
+    
+                    &.bancho {
+                        background-color: #df96c0;
+    
+                        &:hover {
+                            background-color: darken(#df96c0, 15%);
+                        }
                     }
-                }
-
-                &:hover {
-                    cursor: pointer;
-                    background-color: darken(#ffff00, 10%);
-                }
-            }
-
-            .message {
-                flex: 5 0px;
-                width: calc(100% - (80px + 12px));
-
-                padding: 8px;
-
-                word-break: break-all;
-
-                .link {
-                    .url {
-                        background-color: #2b4576;
-                        padding: 5px;
+    
+                    &.highlighted {
+                        background-color: #36f027;
+    
+                        &:hover {
+                            background-color: darken(#36f027, 15%);
+                        }
                     }
-
+    
+                    &.me {
+                        background-color: #ffffff;
+                        color: #000000;
+    
+                        &:hover {
+                            background-color: darken(#ffffff, 15%);
+                        }
+                    }
+    
                     &:hover {
                         cursor: pointer;
-                        
-                        .url {
-                            background-color: #acd6eb;
+                        background-color: darken(#ffff00, 10%);
+                    }
+                }
+    
+                .message {
+                    flex: 5 0px;
+                    width: calc(100% - (80px + 12px));
+    
+                    padding: 8px;
+    
+                    word-break: break-all;
+    
+                    .message-piece {
+                        display: inline-block;
+    
+                        .link {
+                            .url {
+                                background-color: #2b4576;
+                                padding: 5px;
+                            }
+        
+                            &:hover {
+                                cursor: pointer;
+                                
+                                .url {
+                                    background-color: #acd6eb;
+                                }
+                            }
                         }
                     }
                 }

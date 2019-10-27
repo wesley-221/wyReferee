@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Channel } from '../models/irc/channel';
 import { Message } from '../models/irc/message';
 import { Regex } from '../models/irc/regex';
+import { MessageBuilder, MessageType } from '../models/irc/message-builder';
 
 @Injectable({
   	providedIn: 'root'
@@ -52,10 +53,27 @@ export class IrcService {
 		const connectedChannels = storeService.get('irc.channels');
 
 		if(connectedChannels != undefined && Object.keys(connectedChannels).length > 0) {
+			// Loop through all the channels
 			for(let channel in connectedChannels) {
 				const nChannel = new Channel(connectedChannels[channel].name);
 				nChannel.active = connectedChannels[channel].active;
 				nChannel.lastActiveChannel = connectedChannels[channel].lastActiveChannel;
+
+				// Loop through all the messages
+				for(let message in connectedChannels[channel].messageHistory) {
+					const thisMessage = connectedChannels[channel].messageHistory[message];
+					const messageBuilder: MessageBuilder[] = [];
+
+					// Loop through the message builder
+					for(let messageInBuilder in thisMessage.message) {
+						const thisMessageInBuilder = thisMessage.message[messageInBuilder];
+						messageBuilder.push(new MessageBuilder(thisMessageInBuilder.messageType, thisMessageInBuilder.message, thisMessageInBuilder.linkName));
+					}
+
+					nChannel.allMessages.push(new Message(thisMessage.date, thisMessage.time, thisMessage.author, messageBuilder, true));
+				}
+
+				nChannel.allMessages.push(new Message('n/a', 'n/a', 'Today', [new MessageBuilder(MessageType.Message, 'Messages from history')], false, true));
 
 				this.allChannels.push(nChannel);
 			}
@@ -151,14 +169,7 @@ export class IrcService {
 		 * Message handler
 		 */
 		this.client.addListener('message', (from, to, message) => {
-			const playerBeatmapChange = Regex.playerBeatmapChange.run(message);
-
-			if(playerBeatmapChange != null) {
-				this.addMessageToChannel(to, from, null, true, { messageBeforeName: 'Beatmap changed to ', link: playerBeatmapChange.link, name: playerBeatmapChange.name });
-			}
-			else {
-				this.addMessageToChannel(to, from, message);
-			}
+			this.addMessageToChannel(to, from, message);
 			
 			// console.log(`${from} => ${to}: ${message}`);
 		});
@@ -167,26 +178,7 @@ export class IrcService {
 		 * "/me" handler
 		 */
 		this.client.addListener('action', (from, to, message) => {
-			const isListeningRegex = Regex.isListeningTo.run(message);
-			const isWatchingRegex = Regex.isWatching.run(message);
-			const isPlayingRegex = Regex.isPlaying.run(message);
-			const isEditingRegex = Regex.isEditing.run(message);
-
-			if(isListeningRegex != null) {
-				this.addMessageToChannel(to, from, null, true, { messageBeforeName: 'is listening to', link: isListeningRegex.link, name: isListeningRegex.name });
-			}
-			else if(isWatchingRegex != null) {
-				this.addMessageToChannel(to, from, null, true, { messageBeforeName: 'is watching', link: isWatchingRegex.link, name: isWatchingRegex.name });
-			}
-			else if(isPlayingRegex != null) {
-				this.addMessageToChannel(to, from, null, true, { messageBeforeName: 'is playing', link: isPlayingRegex.link, name: isPlayingRegex.name });
-			}
-			else if(isEditingRegex != null) {
-				this.addMessageToChannel(to, from, null, true, { messageBeforeName: 'is editing', link: isEditingRegex.link, name: isEditingRegex.name });
-			}
-			else {
-				this.addMessageToChannel(to, from, message);
-			}
+			this.addMessageToChannel(to, from, message);
 
 			// console.log(`${from} => ${to}: ${message}`);
 		});
@@ -252,15 +244,17 @@ export class IrcService {
 	 * @param channelName the channel to add the message to 
 	 * @param author the author of the message
 	 * @param message the message itself
-	 * @param containsHtml if the message contains html code
-	 * @param linkData an object with link and name
 	 */
-	addMessageToChannel(channelName: string, author: string, message: string, containsHtml: boolean = false, linkData: { messageBeforeName: string, link: string, name: string } = null) {
+	addMessageToChannel(channelName: string, author: string, message: string) {
 		// TODO: try to make allChannels[i].addNewMessage()) a promise, after its completed call .next()
 		const 	date = new Date(),
-				dateFormat = `${(date.getHours() <= 9 ? '0' : '')}${date.getHours()}:${date.getMinutes()}`;
+				timeFormat = `${(date.getHours() <= 9 ? '0' : '')}${date.getHours()}:${(date.getMinutes() <= 9 ? '0' : '')}${date.getMinutes()}`,
+				dateFormat = `${(date.getDate() <= 9 ? '0' : '')}${date.getDate()}/${(date.getMonth() <= 9 ? '0' : '')}${date.getMonth()}/${date.getFullYear()}`;
 
-		this.getChannelByName(channelName).allMessages.push(new Message(dateFormat, author, message, containsHtml, linkData));
+		const newMessage = new Message(dateFormat, timeFormat, author, this.buildMessage(message));
+		this.getChannelByName(channelName).allMessages.push(newMessage);
+
+		this.saveMessageToHistory(channelName, newMessage);
 	}
 
 	/**
@@ -281,7 +275,7 @@ export class IrcService {
 			this.storeService.set(`irc.channels.${channelName}`, {
 				name: channelName,
 				active: true,
-				messageHistory: {},
+				messageHistory: [],
 				lastActiveChannel: false
 			});
 
@@ -300,7 +294,8 @@ export class IrcService {
 	partChannel(channelName: string) {
 		const allJoinedChannels = this.storeService.get('irc.channels');
 
-		if(allJoinedChannels.includes(channelName)) {
+		if(allJoinedChannels.hasOwnProperty(channelName)) {
+
 			for(let i in this.allChannels) {
 				if(this.allChannels[i].channelName == channelName) {
 					this.allChannels.splice(parseInt(i), 1);
@@ -310,7 +305,7 @@ export class IrcService {
 
 			this.client.part(channelName);
 
-			allJoinedChannels.splice(allJoinedChannels.indexOf(channelName), 1);
+			delete allJoinedChannels[channelName];
 
 			this.storeService.set('irc.channels', allJoinedChannels);
 			this.toastService.addToast(`Successfully parted "${channelName}".`);
@@ -340,7 +335,7 @@ export class IrcService {
 			rearrangedChannels[channels[i].channelName] = {
 				name: channels[i].channelName,
 				active: channels[i].active,
-				messageHistory: {},
+				messageHistory: [],
 				lastActiveChannel: channels[i].lastActiveChannel
 			};
 		}
@@ -372,5 +367,72 @@ export class IrcService {
 		storeChannel.active = active;
 
 		this.storeService.set(`irc.channels.${channel.channelName}`, storeChannel);
+	}
+
+	/**
+	 * Save the message in the channel history
+	 * @param channelName the channel to save it in
+	 * @param message the message object to save
+	 */
+	saveMessageToHistory(channelName: string, message: Message) {
+		const storeChannel = this.storeService.get(`irc.channels.${channelName}`);
+		storeChannel.messageHistory.push(message.convertToJson());
+		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
+	}
+
+	/**
+	 * Build a message with the appropriate hyperlinks
+	 * @param message the message to build
+	 */
+	buildMessage(message: string): MessageBuilder[] {
+		let messageBuilder: MessageBuilder[] = [];
+
+		const allRegexes = [
+			Regex.isListeningTo,
+			Regex.isWatching,
+			Regex.isPlaying,
+			Regex.isEditing,
+			Regex.playerBeatmapChange
+		];
+
+		let regexSucceeded = false;
+
+		// Handle all the regexes
+		for(let regex in allRegexes) {
+			const currentRegex = allRegexes[regex].run(message);
+
+			if(currentRegex != null) {
+				messageBuilder.push(new MessageBuilder(MessageType.Message, currentRegex.message));
+				messageBuilder.push(new MessageBuilder(MessageType.Link, currentRegex.link, currentRegex.name));
+
+				regexSucceeded = true;
+			}
+		}
+
+		// Handle messages that do not match any of the regexes
+		if(!regexSucceeded) {
+			const isLinkRegex = Regex.isLink.run(message);
+
+			// Check if there is a link
+			if(isLinkRegex != null) {
+				const splittedString = message.split(Regex.isLink.regex).filter(s => s != "" && s.trim());
+
+				for(let split in splittedString) {
+					// The split is a link
+					if(Regex.isLink.run(splittedString[split])) {
+						messageBuilder.push(new MessageBuilder(MessageType.Link, splittedString[split]));
+					}
+					// The split is a message
+					else {
+						messageBuilder.push(new MessageBuilder(MessageType.Message, splittedString[split]));
+					}
+				}
+			}
+			else {
+				messageBuilder.push(new MessageBuilder(MessageType.Message, message));
+			}
+		}
+
+		return messageBuilder;
 	}
 }

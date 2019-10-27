@@ -1,15 +1,28 @@
+import { MessageBuilder } from "./message-builder";
+
 export class Message {
+    date: string;
     time: string;
     author: string;
-    message: string;
-    containsHtml: boolean = false;
-    linkData: { messageBeforeName: string, link: string, name: string };
+    message: MessageBuilder[];
+    comesFromHistory: boolean;
+    isADivider: boolean;
 
-    constructor(time: string, author: string, message: string, containsHtml: boolean = false, linkData: { messageBeforeName: string, link: string, name: string } = null) {
+    constructor(date: string, time: string, author: string, message: MessageBuilder[], comesFromHistory: boolean = false, isADivider: boolean = false) {
+        this.date = date;
         this.time = time;
         this.author = author;
         this.message = message;
-        this.containsHtml = containsHtml;
-        this.linkData = linkData;
+        this.comesFromHistory = comesFromHistory;
+        this.isADivider = isADivider;
+    }
+
+    convertToJson(): { date: string, time: string, author: string, message: any[] } {
+        return {
+            date: this.date,
+            time: this.time,
+            author: this.author, 
+            message: this.message.map(m => m.convertToJson())
+        };
     }
 }
