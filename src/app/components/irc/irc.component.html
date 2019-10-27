@@ -25,11 +25,7 @@
         
         <div class="chat" *ngFor="let chat of viewPortItems">
             <div class="chat-content divider" *ngIf="!chat.isADivider">
-                <div class="time" *ngIf="chat.comesFromHistory" [title]="chat.date">
-                    {{ chat.time }}
-                </div>
-    
-                <div class="time" *ngIf="!chat.comesFromHistory">
+                <div class="time" [title]="chat.date">
                     {{ chat.time }}
                 </div>
     

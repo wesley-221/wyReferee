@@ -5,15 +5,13 @@ export class Message {
     time: string;
     author: string;
     message: MessageBuilder[];
-    comesFromHistory: boolean;
     isADivider: boolean;
 
-    constructor(date: string, time: string, author: string, message: MessageBuilder[], comesFromHistory: boolean = false, isADivider: boolean = false) {
+    constructor(date: string, time: string, author: string, message: MessageBuilder[], isADivider: boolean = false) {
         this.date = date;
         this.time = time;
         this.author = author;
         this.message = message;
-        this.comesFromHistory = comesFromHistory;
         this.isADivider = isADivider;
     }
 

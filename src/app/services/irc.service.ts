@@ -73,11 +73,11 @@ export class IrcService {
 						messageBuilder.push(new MessageBuilder(thisMessageInBuilder.messageType, thisMessageInBuilder.message, thisMessageInBuilder.linkName));
 					}
 
-					nChannel.allMessages.push(new Message(thisMessage.date, thisMessage.time, thisMessage.author, messageBuilder, true));
+					nChannel.allMessages.push(new Message(thisMessage.date, thisMessage.time, thisMessage.author, messageBuilder));
 				}
 
 				// Add a divider to the channel to show new messages
-				nChannel.allMessages.push(new Message('n/a', 'n/a', 'Today', [new MessageBuilder(MessageType.Message, 'Messages from history')], false, true));
+				nChannel.allMessages.push(new Message('n/a', 'n/a', 'Today', [new MessageBuilder(MessageType.Message, 'Messages from history')], true));
 
 				this.allChannels.push(nChannel);
 			}
