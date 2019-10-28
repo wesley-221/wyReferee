@@ -372,6 +372,38 @@ export class IrcService {
 	}
 
 	/**
+	 * Mark all messages in the given channel as read
+	 * @param channelName the channel to mark the messages as read
+	 */
+	markEverythingAsRead(channelName: string) {
+		const channel = this.storeService.get(`irc.channels.${channelName}`);
+
+		// Change all the unread messages to read in the history
+		for(let message in channel.messageHistory) {
+			if(channel.messageHistory[message].read == false) {
+				channel.messageHistory[message].read = true;
+			}
+		}
+
+		this.storeService.set(`irc.channels.${channelName}`, channel);
+
+		// Change all the unread messages to read in the current channels
+		for(let channel in this.allChannels) {
+			if(this.allChannels[channel].channelName == channelName) {
+				this.allChannels[channel].unreadMessages = 0;
+
+				for(let message in this.allChannels[channel].allMessages) {
+					if(this.allChannels[channel].allMessages[message].read == false) {
+						this.allChannels[channel].allMessages[message].read = true;
+					}
+				}
+			}
+		}
+
+		this.toastService.addToast(`Marked everything as read in "${channelName}".`, ToastType.Information);
+	}
+
+	/**
 	 * Send a message to the said channel
 	 * @param channelName the channel to send the message in
 	 * @param message the message to send

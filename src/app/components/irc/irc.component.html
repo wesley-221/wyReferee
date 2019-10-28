@@ -18,8 +18,14 @@
                     </div>
                 </div>
 
-                <div class="delete-button" (click)="partChannel(channel.channelName)">
-                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                <div class="side-button">
+                    <div class="button blue" (click)="markAsRead(channel.channelName)">
+                        <fa-icon [icon]="['far', 'envelope-open']"></fa-icon>
+                    </div>
+
+                    <div class="button red" (click)="partChannel(channel.channelName)">
+                        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                    </div>
                 </div>
             </div>
         </div>

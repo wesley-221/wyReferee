@@ -3,6 +3,7 @@
 // =============================
 $font-family:       'Montserrat', 'Open Sans', Arial, Helvetica, sans-serif;
 $primary:           #fb9678;
+$info:              #4C63C7;
 $enable-rounded:    false;
 
 // =================
@@ -88,7 +89,7 @@ html, body {
         }
 
         &.toast-information {
-            background-color: $primary;
+            background-color: $info;
         }
     }
 }

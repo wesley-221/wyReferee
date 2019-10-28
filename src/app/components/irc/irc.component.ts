@@ -107,6 +107,14 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Mark all the messages as read in the channel
+	 * @param channelName the channel to mark the messages in as read
+	 */
+	markAsRead(channelName: string) {
+		this.ircService.markEverythingAsRead(channelName);
+	}
+
+	/**
 	 * Send the entered message to the selected channel
 	 */
 	sendMessage() {
