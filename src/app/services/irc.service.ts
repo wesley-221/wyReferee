@@ -424,7 +424,7 @@ export class IrcService {
 			rearrangedChannels[channels[i].channelName] = {
 				name: channels[i].channelName,
 				active: channels[i].active,
-				messageHistory: channels[i].allMessages,
+				messageHistory: channels[i].allMessages.filter(m => !m.isADivider),
 				lastActiveChannel: channels[i].lastActiveChannel,
 				isPrivateChannel: channels[i].isPrivateChannel
 			};
@@ -465,6 +465,8 @@ export class IrcService {
 	 * @param message the message object to save
 	 */
 	saveMessageToHistory(channelName: string, message: Message) {
+		if(message.isADivider) return;
+
 		const storeChannel = this.storeService.get(`irc.channels.${channelName}`);
 		storeChannel.messageHistory.push(message.convertToJson());
 		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
