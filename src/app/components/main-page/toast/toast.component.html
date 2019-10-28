@@ -1,5 +1,5 @@
 <div class="toast-area">
-    <div *ngFor="let toast of allToasts" (click)="removeToast(toast)" class="toast mb-2 shadow row" 
+    <div *ngFor="let toast of allToasts" (click)="removeToast(toast)" class="toast mb-2 shadow row" [@simpleFadeAnimation]="'in'"
             [ngClass]="{'toast-information': toast.toastType == toastType.Information, 
                         'toast-warning': toast.toastType == toastType.Warning, 
                         'toast-error': toast.toastType == toastType.Error }">

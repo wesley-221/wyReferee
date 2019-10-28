@@ -1,6 +1,6 @@
 {
   "name": "axs-calculator",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "",
   "author": {
     "name": "Wesley"
@@ -86,6 +86,7 @@
     "node": ">=10.9.0"
   },
   "dependencies": {
+    "@angular/animations": "^8.2.12",
     "@fortawesome/angular-fontawesome": "^0.5.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-regular-svg-icons": "^5.11.2",
