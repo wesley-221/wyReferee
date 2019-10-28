@@ -76,6 +76,16 @@
             </div>
         </form>
     </div>
+
+    <div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}">
+        <div class="side-menu-button">
+            <button class="btn btn-primary" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+        </div>
+
+        <div class="side-menu-content">
+            <h3>Multiplayer options</h3>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="join-channel" tabindex="-1" role="dialog">

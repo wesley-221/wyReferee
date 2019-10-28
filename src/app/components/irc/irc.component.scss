@@ -250,6 +250,60 @@ $send-message-height: 38px;
     .send-message {
         height: $send-message-height;
     }
+
+    .side-menu {
+        position: absolute;
+
+        width: 40px;
+
+        right: 17px;
+        top: 17px;
+        bottom: 56px;
+
+        transition: width 0.4s ease;
+
+        .side-menu-button {
+            float: left;
+
+            width: 40px;
+
+            z-index: 55;
+
+            button {
+                float: right;
+
+                width: 40px;
+                height: 40px;
+
+                z-index: 55;
+            }
+        }
+
+        .side-menu-content {
+            float: right;
+
+            width: calc(100% - 40px);
+            height: 100%;
+
+            opacity: 0;
+
+            background-color: darken($background-color, 5%);
+
+            box-shadow: -1px 0px 7px 0px rgba(0,0,0,0.75);
+
+            z-index: 50;
+
+            transition: opacity 0.4s ease;
+        }
+
+        &.in {
+            width: 25%;
+
+            .side-menu-content {
+                opacity: 1;
+            }
+        }
+    }
 }
 
 .cdk-drag-preview {

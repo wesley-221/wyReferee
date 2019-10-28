@@ -13,7 +13,7 @@ declare var $: any;
 	styleUrls: ['./irc.component.scss']
 })
 export class IrcComponent implements OnInit {
-	@ViewChild('channelName', { static: false}) channelName: ElementRef;
+	@ViewChild('channelName', { static: false }) channelName: ElementRef;
 	@ViewChild('chatMessage', { static: false }) chatMessage: ElementRef;
 
 	@ViewChild(VirtualScrollerComponent, { static: true }) private virtualScroller: VirtualScrollerComponent;
@@ -28,6 +28,8 @@ export class IrcComponent implements OnInit {
 	keyPressed: boolean = false;
 
 	isAttemptingToJoin: boolean = false;
+
+	isOptionMenuMinimized: boolean = true;
 
 	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef) { 
 		this.channels = ircService.allChannels;
