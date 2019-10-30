@@ -77,5 +77,44 @@ export class Regex {
         }
     }
 
+    static multiplayerInitialization = {
+        regex: /^Team mode: (.+), Win condition: (.+)/,
+        run: (message): { teamMode: string, winCondition: string } => {
+            const multiplayerInitializationRegex = RegExp(Regex.multiplayerInitialization.regex).exec(message);
+
+            if(multiplayerInitializationRegex !== null) {
+                return { teamMode: multiplayerInitializationRegex[1], winCondition: multiplayerInitializationRegex[2] };
+            }
+
+            return null;
+        }
+    }
+
+    static multiplayerMatchSize = {
+        regex: /^Changed match to size ([0-9][0-9]?)/,
+        run: (message): { size: number } => {
+            const multiplayerMatchSizeRegex = RegExp(Regex.multiplayerMatchSize.regex).exec(message);
+
+            if(multiplayerMatchSizeRegex !== null) {
+                return { size: parseInt(multiplayerMatchSizeRegex[1]) };
+            }
+
+            return null;
+        }
+    }
+
+    static multiplayerSettingsChange = {
+        regex: /Changed match settings to ([0-9][0-9]?) slots, (.+), (.+)/,
+        run: (message): { size: number, teamMode: string, winCondition: string } => {
+            const multiplayerSettingsChange = RegExp(Regex.multiplayerSettingsChange.regex).exec(message);
+
+            if(multiplayerSettingsChange !== null) {
+                return { size: parseInt(multiplayerSettingsChange[1]), teamMode: multiplayerSettingsChange[2], winCondition: multiplayerSettingsChange[3] };
+            }
+            
+            return null;
+        }
+    }
+
     // TODO: refereeBeatmapChange
 }

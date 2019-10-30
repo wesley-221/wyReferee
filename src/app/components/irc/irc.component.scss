@@ -39,6 +39,8 @@ $send-message-height: 38px;
                 width: 100%;
                 height: 40px;
 
+                border-left: 3px solid transparent;
+
                 &:hover, &.cdk-drag-preview {
                     .channel-name {
                         width: calc(100% - 80px);
@@ -60,26 +62,6 @@ $send-message-height: 38px;
                     width: calc(100% - 40px);
 
                     padding: 8px;
-                    border-left: 3px solid transparent;
-
-                    &:hover {
-                        color: $primary;
-                        cursor: pointer;
-        
-                        border-left: 3px solid $primary;
-                    }
-        
-                    &.active {
-                        color: $primary;
-                        font-weight: bold;
-        
-                        border-left: 3px solid $primary;
-                    }
-    
-                    &.inactive, &.inactive.active {
-                        color: white;
-                        background-color: rgba(255, 0, 0, 0.3);
-                    }
                 }
 
                 .unread-messages {
@@ -117,6 +99,32 @@ $send-message-height: 38px;
                         &.red {
                             background-color: red;
                         }
+                    }
+                }
+
+                &.inactive, &.inactive.active {
+                    border-left: 3px solid rgba(255, 0, 0, 0.3);
+
+                    .channel-name, .unread-messages {
+                        color: white;
+                        background-color: rgba(255, 0, 0, 0.3);
+                    }
+                }
+
+                &.active {
+                    color: $primary;
+                    font-weight: bold;
+    
+                    border-left: 3px solid $primary;
+                }
+
+                &:hover {
+                    cursor: pointer;
+    
+                    border-left: 3px solid $primary;
+
+                    .channel-name {
+                        color: $primary;
                     }
                 }
             }
@@ -274,8 +282,6 @@ $send-message-height: 38px;
 
                 width: 40px;
                 height: 40px;
-
-                z-index: 55;
             }
         }
 
@@ -288,16 +294,69 @@ $send-message-height: 38px;
             opacity: 0;
 
             background-color: darken($background-color, 5%);
-
             box-shadow: -1px 0px 7px 0px rgba(0,0,0,0.75);
 
-            z-index: 50;
+            overflow: hidden;
 
             transition: opacity 0.4s ease;
+
+            .header {
+                height: 290px;
+                padding: 16px;
+            }
+
+            .mappool {
+                height: calc(100% - 290px);
+                padding-left: 16px;
+
+                overflow-y: auto;
+
+                width: 100%;
+
+                .mod-bracket {
+                    width: 100%; 
+
+                    margin-bottom: 16px;
+
+                    .map {
+                        width: 100%;
+                        background-color: $background-color;
+
+                        overflow: hidden;
+
+                        padding: 4px;
+
+                        .name {
+                            float: left;
+
+                            width: calc(100% - 60px);
+
+                            overflow: hidden;
+                            word-wrap: none;
+
+                            &:hover {
+                                cursor: pointer;
+                                color: $primary;
+                                font-weight: bold;
+                            }
+                        }
+
+                        .beatmap-pick {
+                            float: right;
+
+                            width: 60px;
+                        }
+                        
+                        &:nth-child(even) {
+                            background-color: lighten($background-color, 5%);
+                        }
+                    }
+                }
+            }
         }
 
         &.in {
-            width: 25%;
+            width: 30%;
 
             .side-menu-content {
                 opacity: 1;

@@ -5,10 +5,9 @@
         </div>
 
         <div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
-            <div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary=".all-channels">
-                <div class="channel-name" 
-                        (click)="changeChannel(channel.channelName)" 
-                        [ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active }">
+            <div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary=".all-channels" 
+                                [ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active }">
+                <div class="channel-name" (click)="changeChannel(channel.channelName)">
                     {{ channel.channelName }}
                 </div>
 
@@ -77,13 +76,83 @@
         </form>
     </div>
 
-    <div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}">
+    <div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
         <div class="side-menu-button">
             <button class="btn btn-primary" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
         </div>
 
         <div class="side-menu-content">
-            <h3>Multiplayer options</h3>
+            <div class="header">
+                <div class="row">
+                    <div class="col">
+                        <h6>Team mode</h6>
+                        <select class="form-control" #teamMode (change)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
+                            <option></option>
+                            <option value="0">Head To Head</option>
+                            <option value="1">Tag Coop</option>
+                            <option value="2">Team Vs</option>
+                            <option value="3">Tag Team Vs</option>
+                        </select>
+                    </div>
+    
+                    <div class="col">
+                        <h6>Win condition</h6>
+                        <select class="form-control" #winCondition (change)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
+                            <option></option>
+                            <option value="0">Score</option>
+                            <option value="1">Accuracy</option>
+                            <option value="2">Combo</option>
+                            <option value="3">Score V2</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="row mt-2">
+                    <div class="col">
+                        <h6>Players</h6>
+    
+                        <select class="form-control" #players (change)="onRoomSettingChange()" [value]="selectedChannel.players">
+                            <option></option>
+                            <option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">{{ number }}</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="row mt-2">
+                    <div class="col">
+                        <h6>Mappool</h6>
+    
+                        <select class="form-control" (change)="onMappoolChange($event)" [value]="selectedChannel != undefined && selectedChannel.mappool != undefined && selectedChannel.mappool.id">
+                            <option value=""></option>
+                            <option *ngFor="let mappool of mappoolService.allMappools" [value]="mappool.id">{{ mappool.name }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2" *ngIf="selectedChannel.mappool">
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Search for beatmap..." [(ngModel)]="searchValue" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="mappool" *ngIf="selectedChannel.mappool">
+                <div class="mod-bracket" *ngFor="let bracket of ( selectedChannel.mappool.modBrackets | search : searchValue )">
+                    <hr />
+                    <h3>{{ bracket.bracketName }}</h3>
+                    <hr />
+
+                    <div class="map" *ngFor="let beatmap of bracket.beatmaps">
+                        <div class="name" (click)="electronService.openLink(beatmap.beatmapUrl)">
+                            {{ beatmap.beatmapName }}
+                        </div>
+
+                        <div class="beatmap-pick">
+                            <button class="btn btn-primary" (click)="pickBeatmap(beatmap, bracket)">Pick</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

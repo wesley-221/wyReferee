@@ -4,7 +4,7 @@ import { ToastService } from './toast.service';
 import { ToastType } from '../models/toast';
 import { StoreService } from './store.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Channel } from '../models/irc/channel';
+import { Channel, WinCondition, TeamMode } from '../models/irc/channel';
 import { Message } from '../models/irc/message';
 import { Regex } from '../models/irc/regex';
 import { MessageBuilder, MessageType } from '../models/irc/message-builder';
@@ -192,6 +192,32 @@ export class IrcService {
 		 */
 		this.client.addListener('message', (from: string, to: string, message: string) => {
 			this.addMessageToChannel(to, from, message, !to.startsWith('#'));
+
+			// Check if message was send by banchobot in a multiplayer lobby
+			if(from == "BanchoBot" && to.startsWith('#mp_')) {
+				const 	multiplayerInitialization = Regex.multiplayerInitialization.run(message), 
+						multiplayerMatchSize = Regex.multiplayerMatchSize.run(message),
+						multiplayerSettingsChange = Regex.multiplayerSettingsChange.run(message);
+
+
+				// Initialize the channel with the correct teammode and wincondition
+				if(multiplayerInitialization != null) {
+					this.getChannelByName(to).teamMode = TeamMode[multiplayerInitialization.teamMode];
+					this.getChannelByName(to).winCondition = WinCondition[multiplayerInitialization.winCondition];
+				}
+
+				// The team size was changed with "!mp size x"
+				if(multiplayerMatchSize) {
+					this.getChannelByName(to).players = multiplayerMatchSize.size;
+				}
+
+				// The room was changed by "!mp set x x x"
+				if(multiplayerSettingsChange) {
+					this.getChannelByName(to).players = multiplayerSettingsChange.size;
+					this.getChannelByName(to).teamMode = TeamMode[multiplayerSettingsChange.teamMode];
+					this.getChannelByName(to).winCondition = WinCondition[multiplayerSettingsChange.winCondition];
+				}
+			}
 		});
 
 		/**

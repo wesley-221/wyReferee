@@ -39,6 +39,7 @@ import { LoginComponent } from './components/authentication/login/login.componen
 import { AuthInterceptor } from "./components/authentication/token-interceptor";
 import { IrcComponent } from './components/irc/irc.component';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
+import { SearchPipe } from './pipes/search.pipe';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -62,7 +63,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		MappoolCreateComponent, 
 		MappoolBracketEditComponent, 
 		LoginComponent, 
-		IrcComponent
+		IrcComponent, 
+		SearchPipe
 	],
 	imports: [
 		BrowserModule,

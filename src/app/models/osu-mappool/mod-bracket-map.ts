@@ -1,9 +1,12 @@
+import { Gamemodes } from "../osu-models/osu-api";
+
 export class ModBracketMap {
     invalid: boolean = false;
     beatmapId: number = null;
     beatmapName: string = null;
     beatmapUrl: string = null;
     modifier: number = null;
+    gamemodeId: Gamemodes = Gamemodes.Osu;
 
     /**
      * Make a true copy of the given bracketmap
@@ -17,6 +20,7 @@ export class ModBracketMap {
         newModBracketMap.beatmapName = bracketMap.beatmapName;
         newModBracketMap.beatmapUrl = bracketMap.beatmapUrl;
         newModBracketMap.modifier = bracketMap.modifier;
+        newModBracketMap.gamemodeId = bracketMap.gamemodeId;
 
         return newModBracketMap;
     }

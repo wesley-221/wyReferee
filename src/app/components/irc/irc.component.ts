@@ -5,6 +5,9 @@ import { Message } from '../../models/irc/message';
 import { ElectronService } from '../../services/electron.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
+import { MappoolService } from '../../services/mappool.service';
+import { ModBracketMap } from '../../models/osu-mappool/mod-bracket-map';
+import { ModBracket } from '../../models/osu-mappool/mod-bracket';
 declare var $: any;
 
 @Component({
@@ -31,7 +34,16 @@ export class IrcComponent implements OnInit {
 
 	isOptionMenuMinimized: boolean = true;
 
-	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef) { 
+	@ViewChild('teamMode', { static: false }) teamMode: ElementRef;
+	@ViewChild('winCondition', { static: false }) winCondition: ElementRef;
+	@ViewChild('players', { static: false }) players: ElementRef;
+
+	searchValue: string;
+
+	roomSettingGoingOn: boolean = false;
+	roomSettingDelay: number = 2;
+
+	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef, public mappoolService: MappoolService) { 
 		this.channels = ircService.allChannels;
 
 		// TODO: Fix the reference to the appropriate channel
@@ -79,6 +91,17 @@ export class IrcComponent implements OnInit {
 
 		// Scroll to the bottom
 		this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+
+		// Reset search bar
+		this.searchValue = "";
+
+		// Channel was changed to a multiplayer lobby
+		if(channel.startsWith('#mp_') && this.selectedChannel.active) {
+			// Check if either the team mode or win condition isn't set
+			if(this.selectedChannel.teamMode == undefined || this.selectedChannel.winCondition == undefined) {
+				this.ircService.sendMessage(channel, '!mp settings');
+			}
+		}
 	}
 
 	/**
@@ -220,5 +243,50 @@ export class IrcComponent implements OnInit {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Change the current mappool
+	 * @param event 
+	 */
+	onMappoolChange(event: Event) {
+		this.ircService.getChannelByName(this.selectedChannel.channelName).mappool = this.mappoolService.getMappool((<any>event.currentTarget).value);
+	}
+
+	/**
+	 * Pick a beatmap from the given bracket
+	 * @param beatmap the picked beatmap
+	 * @param bracket the bracket where the beatmap is from
+	 */
+	pickBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
+		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp map ${beatmap.beatmapId} ${beatmap.gamemodeId}`);
+		this.ircService.sendMessage(this.selectedChannel.channelName, `${bracket.mods}`);
+	}
+
+	/**
+	 * Change the room settings
+	 */
+	onRoomSettingChange() {
+		if(!this.roomSettingGoingOn) {
+			let timer = 
+			setInterval(() => {
+				if(this.roomSettingDelay == 0) {
+					this.ircService.sendMessage(this.selectedChannel.channelName, `!mp set ${this.teamMode.nativeElement.value} ${this.winCondition.nativeElement.value} ${this.players.nativeElement.value}`);
+
+					this.ircService.getChannelByName(this.selectedChannel.channelName).teamMode = this.teamMode.nativeElement.value;
+					this.ircService.getChannelByName(this.selectedChannel.channelName).winCondition = this.winCondition.nativeElement.value;
+					this.ircService.getChannelByName(this.selectedChannel.channelName).players = this.players.nativeElement.value;
+
+					this.roomSettingGoingOn = false;
+					clearInterval(timer);
+				}
+
+				this.roomSettingDelay --;
+			}, 1000);
+
+			this.roomSettingGoingOn = true;
+		}
+		
+		this.roomSettingDelay = 3;	
 	}
 }
