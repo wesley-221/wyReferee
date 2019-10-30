@@ -15,6 +15,7 @@ import { ToastService } from '../../../services/toast.service';
 
 export class MappoolCreateComponent implements OnInit {
 	creationMappool: Mappool;
+	gamemodeId: number;
 
 	constructor(public electronService: ElectronService, private mappoolService: MappoolService, private getBeatmap: GetBeatmap, private toastService: ToastService) { 
 		this.creationMappool = mappoolService.creationMappool;
@@ -35,7 +36,10 @@ export class MappoolCreateComponent implements OnInit {
 	 * @param bracket the bracket to add the beatmap to
 	 */
 	addBeatmap(bracket: ModBracket) {
-		bracket.addBeatmap(new ModBracketMap());
+		const newBracket = new ModBracketMap();
+		newBracket.gamemodeId = this.gamemodeId;
+
+		bracket.addBeatmap(newBracket);
 	}
 
 	/**

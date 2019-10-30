@@ -4,6 +4,16 @@
 
     <input type="text" class="form-control" placeholder="Mappool description" [(ngModel)]="creationMappool.name" />
 
+    <h3>Mappool gamemode</h3>
+    <p>The gamemode that will be used for all the beatmaps when picking.</p>
+    
+    <select class="form-control" [(ngModel)]="gamemodeId">
+        <option value="0">osu!</option>
+        <option value="1">osu!Taiko</option>
+        <option value="2">osu!Catch</option>
+        <option value="3">osu!Mania</option>
+    </select>
+
     <hr />
 
     <h3>Mod brackets</h3>

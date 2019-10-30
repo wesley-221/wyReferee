@@ -260,6 +260,12 @@ export class IrcComponent implements OnInit {
 	 */
 	pickBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
 		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp map ${beatmap.beatmapId} ${beatmap.gamemodeId}`);
+
+		// Reset all mods if the freemod is being enabled
+		if(bracket.mods.includes('freemod')) {
+			this.ircService.sendMessage(this.selectedChannel.channelName, '!mp mods none');
+		}
+
 		this.ircService.sendMessage(this.selectedChannel.channelName, `${bracket.mods}`);
 	}
 
