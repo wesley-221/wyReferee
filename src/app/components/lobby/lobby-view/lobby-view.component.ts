@@ -56,8 +56,15 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	joinIrc() {
-		this.toastService.addToast(`Attempting to join channel "${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}"...`);
-		this.ircService.joinChannel(`#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`);
+		const ircName = `#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`;
+		
+		if(this.ircService.getChannelByName(ircName) != null) {
+			this.toastService.addToast(`You are already in channel "${ircName}"`);
+		}
+		else {
+			this.toastService.addToast(`Attempting to join channel "${ircName}"...`);
+			this.ircService.joinChannel(ircName);
+		}
 	}
 
 	/**
