@@ -522,20 +522,50 @@ export class IrcService {
 
 		// Handle messages that do not match any of the regexes
 		if(!regexSucceeded) {
-			const isLinkRegex = Regex.isLink.run(message);
+			const 	isLinkRegex = Regex.isLink.run(message),
+					isEmbedRegex = Regex.isEmbedLink.run(message);
 
+			// Embed link
+			if(isEmbedRegex != null) {
+				const splittedString = message.split(Regex.isEmbedLink.regexFullEmbed).filter(s => s != "" && s.trim());
+
+				if(splittedString.length == 1) {
+					const linkSplit = splittedString[0].split(Regex.isEmbedLink.regexSplit).filter(s => s != "" && s.trim());
+
+					messageBuilder.push(new MessageBuilder(MessageType.Link, linkSplit[0], linkSplit[1]));
+				}
+				else {
+					for(let split in splittedString) {
+						// The split is a link
+						if(Regex.isEmbedLink.run(splittedString[split])) {
+							const linkSplit = splittedString[split].split(Regex.isEmbedLink.regexSplit).filter(s => s != "" && s.trim());
+
+							messageBuilder.push(new MessageBuilder(MessageType.Link, linkSplit[0], linkSplit[1]));
+						}
+						// The split is a message
+						else {
+							messageBuilder.push(new MessageBuilder(MessageType.Message, splittedString[split]));
+						}
+					}
+				}
+			}
 			// Check if there is a link
-			if(isLinkRegex != null) {
+			else if(isLinkRegex != null) {
 				const splittedString = message.split(Regex.isLink.regex).filter(s => s != "" && s.trim());
 
-				for(let split in splittedString) {
-					// The split is a link
-					if(Regex.isLink.run(splittedString[split])) {
-						messageBuilder.push(new MessageBuilder(MessageType.Link, splittedString[split]));
-					}
-					// The split is a message
-					else {
-						messageBuilder.push(new MessageBuilder(MessageType.Message, splittedString[split]));
+				if(splittedString.length == 1) {
+					messageBuilder.push(new MessageBuilder(MessageType.Link, splittedString[0]));
+				}
+				else {
+					for(let split in splittedString) {
+						// The split is a link
+						if(Regex.isLink.run(splittedString[split])) {
+							messageBuilder.push(new MessageBuilder(MessageType.Link, splittedString[split]));
+						}
+						// The split is a message
+						else {
+							messageBuilder.push(new MessageBuilder(MessageType.Message, splittedString[split]));
+						}
 					}
 				}
 			}

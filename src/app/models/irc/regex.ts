@@ -12,6 +12,20 @@ export class Regex {
         }
     }
 
+    static isEmbedLink = {
+        regexFullEmbed: /(\[https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*) .+\])/g,
+        regexSplit: /\[(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)) (.+)\]/g,
+        run: (message) => {
+            const isEmbedLinkRegex = RegExp(Regex.isEmbedLink.regexFullEmbed).exec(message);
+
+            if(isEmbedLinkRegex != null) {
+                return isEmbedLinkRegex;
+            }
+            
+            return null;
+        }
+    }
+
     static isListeningTo = {
         regex: /^(is listening to) \[(https:\/\/osu\.ppy\.sh\/[b|s]\/\d+) (.+)\]/,
         run: (message): { message: string, link: string, name: string } => {

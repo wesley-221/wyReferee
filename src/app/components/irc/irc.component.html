@@ -40,7 +40,6 @@
                     <div class="message-piece" *ngFor="let chatPiece of chat.message">
                         <span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
                         <div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
-                            &nbsp;
                             <span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
                             <span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
                         </div>
