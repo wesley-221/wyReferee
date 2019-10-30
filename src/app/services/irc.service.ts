@@ -35,6 +35,7 @@ export class IrcService {
 	isDisconnecting$: BehaviorSubject<boolean>;
 	isJoiningChannel$: BehaviorSubject<boolean>;
 	messageHasBeenSend$: BehaviorSubject<boolean>;
+	private isAuthenticated$: BehaviorSubject<boolean>;
 
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
 	isCreatingMultiplayerLobby: number = -1;
@@ -47,6 +48,7 @@ export class IrcService {
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
 		this.isJoiningChannel$ = new BehaviorSubject<boolean>(false);
 		this.messageHasBeenSend$ = new BehaviorSubject<boolean>(false);
+		this.isAuthenticated$ = new BehaviorSubject<boolean>(false);
 
 		// Connect to irc if the credentials are saved
 		const ircCredentials = storeService.get('irc');
@@ -114,6 +116,13 @@ export class IrcService {
 	 */
 	hasMessageBeenSend(): Observable<boolean> {
 		return this.messageHasBeenSend$.asObservable();
+	}
+
+	/**
+	 * Check if the user is authenticated
+	 */
+	getIsAuthenticated(): Observable<boolean> {
+		return this.isAuthenticated$.asObservable();
 	}
 
 	/**
@@ -263,6 +272,8 @@ export class IrcService {
 			this.storeService.set('irc.password', password);
 
 			this.isConnecting$.next(false);
+
+			this.isAuthenticated$.next(true);
 
 			this.toastService.addToast('Successfully connected to irc!');
 		});

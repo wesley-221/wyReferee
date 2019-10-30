@@ -46,13 +46,19 @@ export class IrcComponent implements OnInit {
 	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef, public mappoolService: MappoolService) { 
 		this.channels = ircService.allChannels;
 
-		// TODO: Fix the reference to the appropriate channel
-		// for(let channel in this.channels) {
-		// 	if(this.channels[channel].lastActiveChannel) {
-		// 		this.selectedChannel = this.ircService.getChannelByName(this.channels[channel].channelName);
-		// 		break;
-		// 	}
-		// }
+		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
+			// Check if the user was authenticated
+			if(isAuthenticated) {
+				for(let channel in this.channels) {
+					// Change the channel if it was the last active channel
+					if(this.channels[channel].lastActiveChannel) {
+						this.changeChannel(this.channels[channel].channelName, true);
+
+						break;
+					}
+				}
+			}
+		});
 
 		// Initialize the scroll
 		this.ircService.hasMessageBeenSend().subscribe(() => {
@@ -80,7 +86,7 @@ export class IrcComponent implements OnInit {
 	 * Change the channel
 	 * @param channel the channel to change to
 	 */
-	changeChannel(channel: string) {
+	changeChannel(channel: string, delayScroll: boolean = false) {
 		if(this.selectedChannel != undefined) {
 			this.selectedChannel.lastActiveChannel = false;
 			this.ircService.changeLastActiveChannel(this.selectedChannel, false);
@@ -95,8 +101,15 @@ export class IrcComponent implements OnInit {
 		
 		this.chats = this.selectedChannel.allMessages;
 
-		// Scroll to the bottom
-		this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+		// Scroll to the bottom - delay it by 500 ms or do it instantly
+		if(delayScroll) {
+			setTimeout(() => {
+				this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+			}, 500);
+		}
+		else {
+			this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+		}
 
 		// Reset search bar
 		this.searchValue = "";
