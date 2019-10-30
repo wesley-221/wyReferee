@@ -1,6 +1,6 @@
 {
   "name": "axs-calculator",
-  "version": "1.6.0",
+  "version": "1.6.5",
   "description": "",
   "author": {
     "name": "Wesley"
@@ -95,6 +95,7 @@
     "electron-store": "^5.0.0",
     "electron-updater": "^4.1.2",
     "irc-upd": "^0.10.0",
+    "ngx-clipboard": "^12.2.1",
     "ngx-virtual-scroller": "^3.0.3"
   }
 }

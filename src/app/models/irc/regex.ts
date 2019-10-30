@@ -116,5 +116,25 @@ export class Regex {
         }
     }
 
+    static tournamentMatchCreated = {
+        regex: /^Created the tournament match https:\/\/osu\.ppy\.sh\/mp\/(\d+).+/,
+        run: (message): { multiplayerId: string } => { 
+            const tournamentMatchCreated = RegExp(Regex.tournamentMatchCreated.regex).exec(message);
+
+            if(tournamentMatchCreated !== null) {
+                return { multiplayerId: tournamentMatchCreated[1] };
+            }
+
+            return null;
+        }
+    }
+
+    static closedMatch = {
+        regex: /^Closed the match/,
+        run: (message): boolean => {
+            return RegExp(Regex.closedMatch.regex).test(message);
+        }
+    }
+
     // TODO: refereeBeatmapChange
 }

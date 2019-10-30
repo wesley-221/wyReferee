@@ -16,6 +16,7 @@ import { AppConfig } from '../environments/environment';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { AppComponent } from './app.component';
 import { TitlebarComponent } from './components/main-page/titlebar/titlebar.component';
@@ -82,7 +83,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		FontAwesomeModule,
 		DragDropModule,
 		VirtualScrollerModule, 
-		BrowserAnimationsModule
+		BrowserAnimationsModule,
+		ClipboardModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

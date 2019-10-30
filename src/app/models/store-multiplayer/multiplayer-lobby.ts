@@ -7,12 +7,15 @@ export class MultiplayerLobby {
     lobbyId: number;
     description: string;
     multiplayerLink: string;
+    tournamentAcronym: string;
     teamOneName: string;
     teamTwoName: string;
     teamOneScore: number = 0;
     teamTwoScore: number = 0;
     mappool: Mappool = null;
     mappoolId: number = null;
+    ircChannel: string;
+    ircConnected: boolean = false;
 
     mapsCountTowardScore: any;
     multiplayerData: MultiplayerData[];
@@ -51,6 +54,7 @@ export class MultiplayerLobby {
         this.lobbyId = json.data.lobbyId;
         this.description = json.data.description;
         this.multiplayerLink = json.data.multiplayerLink;
+        this.tournamentAcronym = json.data.tournamentAcronym;
         this.teamOneName = json.data.teamOneName;
         this.teamTwoName = json.data.teamTwoName;
         this.mappoolId = json.data.selectedMappoolId;
@@ -109,6 +113,7 @@ export class MultiplayerLobby {
                 "lobbyId": multiplayerLobby.lobbyId,
                 "description": multiplayerLobby.description,
                 "multiplayerLink": multiplayerLobby.multiplayerLink,
+                "tournamentAcronym": multiplayerLobby.tournamentAcronym,
                 "teamOneName": multiplayerLobby.teamOneName,
                 "teamTwoName": multiplayerLobby.teamTwoName,
                 "selectedMappoolId": (multiplayerLobby.mappool == null) ? -1 : multiplayerLobby.mappool.id

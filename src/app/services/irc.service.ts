@@ -8,6 +8,7 @@ import { Channel, WinCondition, TeamMode } from '../models/irc/channel';
 import { Message } from '../models/irc/message';
 import { Regex } from '../models/irc/regex';
 import { MessageBuilder, MessageType } from '../models/irc/message-builder';
+import { MultiplayerLobbiesService } from './multiplayer-lobbies.service';
 
 @Injectable({
   	providedIn: 'root'
@@ -35,7 +36,10 @@ export class IrcService {
 	isJoiningChannel$: BehaviorSubject<boolean>;
 	messageHasBeenSend$: BehaviorSubject<boolean>;
 
-  	constructor(private toastService: ToastService, private storeService: StoreService) { 
+	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
+	isCreatingMultiplayerLobby: number = -1;
+
+  	constructor(private toastService: ToastService, private storeService: StoreService, private multiplayerLobbiesService: MultiplayerLobbiesService) { 
 		this.irc = require('irc-upd');
 
 		// Create observables for is(Dis)Connecting
@@ -188,29 +192,54 @@ export class IrcService {
 		this.client.addListener('message', (from: string, to: string, message: string) => {
 			this.addMessageToChannel(to, from, message, !to.startsWith('#'));
 
-			// Check if message was send by banchobot in a multiplayer lobby
-			if(from == "BanchoBot" && to.startsWith('#mp_')) {
-				const 	multiplayerInitialization = Regex.multiplayerInitialization.run(message), 
-						multiplayerMatchSize = Regex.multiplayerMatchSize.run(message),
-						multiplayerSettingsChange = Regex.multiplayerSettingsChange.run(message);
+			// Check if message was send by banchobot
+			if(from == "BanchoBot") {
+				// =============================================
+				// The messages were send in a multiplayer lobby
+				if(to.startsWith('#mp_')) {
+					const 	multiplayerInitialization = Regex.multiplayerInitialization.run(message), 
+							multiplayerMatchSize = Regex.multiplayerMatchSize.run(message),
+							multiplayerSettingsChange = Regex.multiplayerSettingsChange.run(message),
+							matchClosed = Regex.closedMatch.run(message);
 
+					// Initialize the channel with the correct teammode and wincondition
+					if(multiplayerInitialization != null) {
+						this.getChannelByName(to).teamMode = TeamMode[multiplayerInitialization.teamMode];
+						this.getChannelByName(to).winCondition = WinCondition[multiplayerInitialization.winCondition];
+					}
 
-				// Initialize the channel with the correct teammode and wincondition
-				if(multiplayerInitialization != null) {
-					this.getChannelByName(to).teamMode = TeamMode[multiplayerInitialization.teamMode];
-					this.getChannelByName(to).winCondition = WinCondition[multiplayerInitialization.winCondition];
+					// The team size was changed with "!mp size x"
+					if(multiplayerMatchSize) {
+						this.getChannelByName(to).players = multiplayerMatchSize.size;
+					}
+
+					// The room was changed by "!mp set x x x"
+					if(multiplayerSettingsChange) {
+						this.getChannelByName(to).players = multiplayerSettingsChange.size;
+						this.getChannelByName(to).teamMode = TeamMode[multiplayerSettingsChange.teamMode];
+						this.getChannelByName(to).winCondition = WinCondition[multiplayerSettingsChange.winCondition];
+					}
+
+					// The match was closed
+					if(matchClosed) {
+						this.changeActiveChannel(this.getChannelByName(to), false);
+					}
 				}
+				// ===========================================
+				// The messages were send as a private message
+				else {
+					const tournamentMatchCreated = Regex.tournamentMatchCreated.run(message);
 
-				// The team size was changed with "!mp size x"
-				if(multiplayerMatchSize) {
-					this.getChannelByName(to).players = multiplayerMatchSize.size;
-				}
+					// A tournament match was created
+					if(tournamentMatchCreated) {
+						// Check if the match is created for a specific multiplayer lobby
+						if(this.isCreatingMultiplayerLobby != -1) {
+							this.multiplayerLobbiesService.get(this.isCreatingMultiplayerLobby).multiplayerLink = `https://osu.ppy.sh/community/matches/${tournamentMatchCreated.multiplayerId}`;
+							this.multiplayerLobbiesService.update(this.multiplayerLobbiesService.get(this.isCreatingMultiplayerLobby));
 
-				// The room was changed by "!mp set x x x"
-				if(multiplayerSettingsChange) {
-					this.getChannelByName(to).players = multiplayerSettingsChange.size;
-					this.getChannelByName(to).teamMode = TeamMode[multiplayerSettingsChange.teamMode];
-					this.getChannelByName(to).winCondition = WinCondition[multiplayerSettingsChange.winCondition];
+							this.isCreatingMultiplayerLobby = -1;
+						}
+					}
 				}
 			}
 		});
@@ -325,6 +354,7 @@ export class IrcService {
 		// Check if you have already joined the channel
 		if(allJoinedChannels != undefined && allJoinedChannels.hasOwnProperty(channelName)) {
 			this.toastService.addToast(`You have already joined the channel "${channelName}".`);
+			this.isJoiningChannel$.next(false);
 			return;
 		}
 

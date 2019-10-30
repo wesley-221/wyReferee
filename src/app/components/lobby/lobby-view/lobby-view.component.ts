@@ -9,6 +9,8 @@ import { MultiplayerData } from '../../../models/store-multiplayer/multiplayer-d
 import { MultiplayerDataUser } from '../../../models/store-multiplayer/multiplayer-data-user';
 import { MappoolService } from '../../../services/mappool.service';
 import { StoreService } from '../../../services/store.service';
+import { IrcService } from '../../../services/irc.service';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -26,9 +28,17 @@ export class LobbyViewComponent implements OnInit {
 		private cacheService: CacheService,
 		public electronService: ElectronService, 
 		public mappoolService: MappoolService, 
-		private storeService: StoreService) {
+		private storeService: StoreService,
+		public ircService: IrcService,
+		private clipboardService: ClipboardService) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
+
+			this.selectedLobby.ircChannel = `#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`;
+			
+			if(ircService.getChannelByName(this.selectedLobby.ircChannel) != null && ircService.getChannelByName(this.selectedLobby.ircChannel).active) {
+				this.selectedLobby.ircConnected = true;
+			}
 		});
 	}
 
@@ -43,6 +53,63 @@ export class LobbyViewComponent implements OnInit {
 		// console.time('synchronize-lobby');
 		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby);
 		// console.timeEnd('synchronize-lobby');
+	}
+
+	joinIrc() {
+		this.toastService.addToast(`Attempting to join channel "${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}"...`);
+		this.ircService.joinChannel(`#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`);
+	}
+
+	/**
+	 * Send the result of the beatmap to irc if connected
+	 * @param match 
+	 */
+	sendBeatmapResult(match: MultiplayerData) {
+		// User is connected to irc channel
+		if(this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
+			if(match.team_one_score > match.team_two_score) {
+				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${this.addDot(match.team_one_score, " ")} | ${this.selectedLobby.teamTwoName} : ${this.addDot(match.team_two_score, " ")} | Score difference : ${this.addDot(match.team_one_score - match.team_two_score, " ")}`);
+			}
+			else {
+				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${this.addDot(match.team_one_score, " ")} | ${this.selectedLobby.teamTwoName} : ${this.addDot(match.team_two_score, " ")} | Score difference : ${this.addDot(match.team_two_score - match.team_one_score, " ")}`);
+			}
+		}
+	}
+
+	/**
+	 * Copy the result of the beatmap to the clipboard
+	 * @param match 
+	 */
+	copyBeatmapResult(match: MultiplayerData) {
+		let string = '';
+		
+		if(match.team_one_score > match.team_two_score) {
+			string = `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_one_score - match.team_two_score}`;
+		}
+		else {
+			string = `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_two_score - match.team_one_score}`;
+		}
+
+		this.clipboardService.copyFromContent(string);
+
+		this.toastService.addToast(`Copied the result for "${this.getBeatmapname(match.beatmap_id)}"`);
+	}
+
+	/**
+	 * Send the result of the match to irc if connected
+	 */
+	sendMatchResult() {
+		// User is connected to irc channel
+		if(this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
+			this.ircService.sendMessage(this.selectedLobby.ircChannel, `${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}`);
+		}
+	}
+
+	/**
+	 * Copy the result of the match to the clipboard
+	 */
+	copyMatchResult() {
+		this.clipboardService.copyFromContent(`${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}`);
 	}
 
 	/**
@@ -174,5 +241,19 @@ export class LobbyViewComponent implements OnInit {
         }
 
         return x1 + x2;
-    }
+	}
+	
+	/**
+	 * Get the id of the multiplayer link
+	 * @param link the multiplayerlink
+	 */
+	getMultiplayerIdFromLink(link: string) {
+		const regularExpression = new RegExp(/https:\/\/osu\.ppy\.sh\/community\/matches\/([0-9]+)/).exec(link);
+
+        if(regularExpression) {
+            return regularExpression[1];
+        }
+
+        return null;
+	}
 }

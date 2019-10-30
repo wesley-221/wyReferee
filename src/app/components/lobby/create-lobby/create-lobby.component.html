@@ -7,19 +7,35 @@
             <ul>
                 <li>https://osu.ppy.sh/community/matches/46358686</li>
             </ul>
+
+            <div class="alert alert-danger">
+                You only have to fill in the multiplayer link when you want to use an old multiplayer lobby. If you leave this blank, it will create a <b>NEW</b> multiplayer lobby on osu!.
+            </div>
         </div>
 
         <input formControlName="multiplayerLink" type="text" class="form-control" placeholder="Multiplayer link" 
                 [ngClass]="{'has-error': validationForm.get('multiplayerLink').errors && (validationForm.get('multiplayerLink').touched || validationForm.get('multiplayerLink').dirty)}" />
-        
-        <div class="has-error" 
-            *ngIf="validationForm.get('multiplayerLink').errors && validationForm.get('multiplayerLink').errors.required && 
-                    (validationForm.get('multiplayerLink').touched || validationForm.get('multiplayerLink').dirty)">
-            This field is required
-        </div>
 
         <div class="has-error" *ngIf="validationForm.get('multiplayerLink').errors && validationForm.get('multiplayerLink').errors.pattern">
             Invalid multiplayer link given. <br /><b>Accepted format:</b> https://osu.ppy.sh/community/matches/46358686
+        </div>
+
+        <h2>Tournament acronym</h2>
+        <div>
+            Enter an acronym that will be used to create the multiplayer match.
+        </div>
+
+        <div class="alert alert-danger">
+            You only have to fill in the tournament acronym when you want to create a <b>NEW</b> multiplayer lobby on osu!.
+        </div>
+
+        <input formControlName="tournamentAcronym" type="text" class="form-control" placeholder="Tournament acronym" 
+                [ngClass]="{'has-error': validationForm.get('tournamentAcronym').errors && (validationForm.get('tournamentAcronym').touched || validationForm.get('tournamentAcronym').dirty)}" />
+
+        <div class="has-error" 
+            *ngIf="validationForm.get('tournamentAcronym').errors && validationForm.get('tournamentAcronym').errors.maxlength && 
+                    (validationForm.get('tournamentAcronym').touched || validationForm.get('tournamentAcronym').dirty)">
+            The tournament acronym can have a maximum of 5 characters
         </div>
     </div>
 
@@ -59,5 +75,5 @@
 
     <hr />
 
-    <button type="button" (click)="createLobby()" class="btn btn-primary float-right" [disabled]="validationForm.invalid">Create</button>
+    <button type="button" (click)="createLobby()" class="btn btn-primary float-right" [disabled]="validationForm.invalid || lobbyHasBeenCreated">Create</button>
 </form>

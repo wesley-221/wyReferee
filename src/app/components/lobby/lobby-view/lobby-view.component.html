@@ -14,7 +14,9 @@
             </select>
 
             <div class="btn-group float-right">
-                <button type="button" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon></button>
+                <button type="button" (click)="joinIrc()" class="btn btn-info" title="Join irc channel" [disabled]="!ircService.isAuthenticated"><fa-icon [icon]="['fas', 'comment-dots']"></fa-icon></button>
+                <button type="button" (click)="copyMatchResult()" *ngIf="!selectedLobby.ircConnected" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon></button>
+                <button type="button" (click)="sendMatchResult()" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated" class="btn btn-info" title="Send match score to irc"><fa-icon icon="copy"></fa-icon></button>
                 <button type="button" (click)="synchronizeMp()" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
             </div>
         </div>
@@ -136,7 +138,8 @@
         </div>
 
         <div class="mapButtons">
-            <button type="button" class="btn btn-primary">Copy result</button>
+            <button type="button" class="btn btn-primary" (click)="sendBeatmapResult(match)" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated">Send result</button>
+            <button type="button" class="btn btn-primary" (click)="copyBeatmapResult(match)" *ngIf="!selectedLobby.ircConnected">Copy result</button>
         </div>
     </div>
     
