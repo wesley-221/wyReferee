@@ -1,6 +1,7 @@
 $border-color: #3C4452;
 $background-color: #4C5769;
 $primary: #fb9678;
+$info: #4C63C7;
 $send-message-height: 38px;
 
 .irc {
@@ -43,15 +44,11 @@ $send-message-height: 38px;
 
                 &:hover, &.cdk-drag-preview {
                     .channel-name {
-                        width: calc(100% - 80px);
-                    }
-
-                    .unread-messages {
-                        width: 0px;
+                        width: calc(100% - 40px);
                     }
 
                     .side-button {
-                        width: 80px;
+                        width: 40px;
 
                         display: inline-block;
                     }
@@ -59,17 +56,9 @@ $send-message-height: 38px;
 
                 .channel-name {
                     float: left; 
-                    width: calc(100% - 40px);
+                    width: 100%;
 
                     padding: 8px;
-                }
-
-                .unread-messages {
-                    float: right;
-
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
                 }
 
                 .side-button {
@@ -103,12 +92,10 @@ $send-message-height: 38px;
                 }
 
                 &.inactive, &.inactive.active {
-                    border-left: 3px solid rgba(255, 0, 0, 0.3);
+                    border-left: 3px solid transparent;
 
-                    .channel-name, .unread-messages {
-                        color: white;
-                        background-color: rgba(255, 0, 0, 0.3);
-                    }
+                    color: white;
+                    background-color: rgba(255, 0, 0, 0.3);
                 }
 
                 &.active {
@@ -122,10 +109,16 @@ $send-message-height: 38px;
                     cursor: pointer;
     
                     border-left: 3px solid $primary;
+                    color: $primary;
 
-                    .channel-name {
-                        color: $primary;
+                    .side-button {
+                        color: white;
                     }
+                }
+
+                &.unread {
+                    background-color: $info;
+                    color: white;
                 }
             }
         }
@@ -380,10 +373,6 @@ $send-message-height: 38px;
                 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 
     .delete-button {
-        display: none;
-    }
-
-    .unread-messages {
         display: none;
     }
 

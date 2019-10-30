@@ -21,7 +21,7 @@ export class Channel {
     allMessages: Message[] = [];
     lastActiveChannel: boolean = false;
     isPrivateChannel: boolean = false;
-    unreadMessages: number = 0;
+    hasUnreadMessages: boolean = false;
 
     teamMode: TeamMode;
     winCondition: WinCondition;
@@ -31,10 +31,5 @@ export class Channel {
     constructor(channelName: string, isPrivateChannel: boolean = false) {
         this.channelName = channelName;
         this.isPrivateChannel = isPrivateChannel;
-    }
-
-    reduceUnreadMessages() {
-        if(this.unreadMessages > 0) 
-            this.unreadMessages --;
     }
 }

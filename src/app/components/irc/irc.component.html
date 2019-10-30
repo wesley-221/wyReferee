@@ -5,23 +5,13 @@
         </div>
 
         <div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
-            <div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary=".all-channels" 
-                                [ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active }">
+            <div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="all-channels" 
+                                [ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages }">
                 <div class="channel-name" (click)="changeChannel(channel.channelName)">
                     {{ channel.channelName }}
                 </div>
 
-                <div class="unread-messages">
-                    <div class="badge badge-primary">
-                        {{ channel.unreadMessages }}
-                    </div>
-                </div>
-
                 <div class="side-button">
-                    <div class="button blue" (click)="markAsRead(channel.channelName)">
-                        <fa-icon [icon]="['far', 'envelope-open']"></fa-icon>
-                    </div>
-
                     <div class="button red" (click)="partChannel(channel.channelName)">
                         <fa-icon [icon]="['fas', 'times']"></fa-icon>
                     </div>
@@ -30,7 +20,7 @@
         </div>
     </div>
 
-    <virtual-scroller class="messages" [items]="chats" (vsUpdate)="virtualScrollerUpdate($event)">
+    <virtual-scroller class="messages" [items]="chats" [stripedTable]="true" (vsUpdate)="viewPortItems = $event">
         <div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning mr-3 ml-3 mt-3">There are no messages yet.</div>
         <div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning mr-3 ml-3 mt-3">There is no selected channel.</div>
         

@@ -63,6 +63,10 @@ export class IrcComponent implements OnInit {
 			if(this.viewPortItems[this.viewPortItems.length - 1] === this.chats[this.chats.length - 2]) {
 				this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
 			}
+
+			if(this.selectedChannel && ircService.getChannelByName(this.selectedChannel.channelName).hasUnreadMessages) {
+				ircService.getChannelByName(this.selectedChannel.channelName).hasUnreadMessages = false;
+			}
 		});
 	}
 
@@ -83,9 +87,11 @@ export class IrcComponent implements OnInit {
 		}
 		
 		this.selectedChannel = this.ircService.getChannelByName(channel);
-		
+
 		this.selectedChannel.lastActiveChannel = true;
 		this.ircService.changeLastActiveChannel(this.selectedChannel, true);
+
+		this.selectedChannel.hasUnreadMessages = false;
 		
 		this.chats = this.selectedChannel.allMessages;
 
@@ -129,14 +135,6 @@ export class IrcComponent implements OnInit {
 			this.selectedChannel = undefined;
 			this.chats = [];
 		}
-	}
-
-	/**
-	 * Mark all the messages as read in the channel
-	 * @param channelName the channel to mark the messages in as read
-	 */
-	markAsRead(channelName: string) {
-		this.ircService.markEverythingAsRead(channelName);
 	}
 
 	/**
@@ -219,30 +217,6 @@ export class IrcComponent implements OnInit {
 	 */
 	openUserpage(username: string) {
 		this.electronService.openLink(`https://osu.ppy.sh/users/${username}`);
-	}
-
-	/**
-	 * Change the read status of the messages
-	 * @param event 
-	 */
-	virtualScrollerUpdate(event: Message[]) {
-		this.viewPortItems = event;
-
-		// Loop through the messages in view
-		for(let message in event) {
-			// Check if the message is unread
-			if(!event[message].read) {
-				for(let chat in this.chats) {
-					if(this.chats[chat].messageId == event[message].messageId) {
-						this.chats[chat].read = true;
-						this.ircService.getChannelByName(this.selectedChannel.channelName).reduceUnreadMessages();
-						this.ircService.changeMessageReadToHistory(this.selectedChannel.channelName, this.chats[chat].messageId);
-
-						break;
-					}
-				}
-			}
-		}
 	}
 
 	/**

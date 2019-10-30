@@ -73,12 +73,7 @@ export class IrcService {
 						messageBuilder.push(new MessageBuilder(thisMessageInBuilder.messageType, thisMessageInBuilder.message, thisMessageInBuilder.linkName));
 					}
 
-					nChannel.allMessages.push(new Message(thisMessage.messageId, thisMessage.date, thisMessage.time, thisMessage.author, messageBuilder, false, thisMessage.read));
-
-					// Count unread messages
-					if(thisMessage.read == false) {
-						nChannel.unreadMessages ++;
-					}
+					nChannel.allMessages.push(new Message(thisMessage.messageId, thisMessage.date, thisMessage.time, thisMessage.author, messageBuilder, false));
 				}
 
 				// Add a divider to the channel to show new messages
@@ -302,17 +297,17 @@ export class IrcService {
 				this.joinChannel(author);
 			}
 
-			newMessage = new Message(Object.keys(this.getChannelByName(author).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false, false);
+			newMessage = new Message(Object.keys(this.getChannelByName(author).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false);
 			
 			this.getChannelByName(author).allMessages.push(newMessage);
-			this.getChannelByName(author).unreadMessages ++;
+			this.getChannelByName(author).hasUnreadMessages = true;
 			this.saveMessageToHistory(author, newMessage);
 		}
 		else {
-			newMessage = new Message(Object.keys(this.getChannelByName(channelName).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false, false);
+			newMessage = new Message(Object.keys(this.getChannelByName(channelName).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false);
 
 			this.getChannelByName(channelName).allMessages.push(newMessage);
-			this.getChannelByName(channelName).unreadMessages ++;
+			this.getChannelByName(channelName).hasUnreadMessages = true;
 			this.saveMessageToHistory(channelName, newMessage);
 		}
 
@@ -398,38 +393,6 @@ export class IrcService {
 	}
 
 	/**
-	 * Mark all messages in the given channel as read
-	 * @param channelName the channel to mark the messages as read
-	 */
-	markEverythingAsRead(channelName: string) {
-		const channel = this.storeService.get(`irc.channels.${channelName}`);
-
-		// Change all the unread messages to read in the history
-		for(let message in channel.messageHistory) {
-			if(channel.messageHistory[message].read == false) {
-				channel.messageHistory[message].read = true;
-			}
-		}
-
-		this.storeService.set(`irc.channels.${channelName}`, channel);
-
-		// Change all the unread messages to read in the current channels
-		for(let channel in this.allChannels) {
-			if(this.allChannels[channel].channelName == channelName) {
-				this.allChannels[channel].unreadMessages = 0;
-
-				for(let message in this.allChannels[channel].allMessages) {
-					if(this.allChannels[channel].allMessages[message].read == false) {
-						this.allChannels[channel].allMessages[message].read = true;
-					}
-				}
-			}
-		}
-
-		this.toastService.addToast(`Marked everything as read in "${channelName}".`, ToastType.Information);
-	}
-
-	/**
 	 * Send a message to the said channel
 	 * @param channelName the channel to send the message in
 	 * @param message the message to send
@@ -495,24 +458,6 @@ export class IrcService {
 
 		const storeChannel = this.storeService.get(`irc.channels.${channelName}`);
 		storeChannel.messageHistory.push(message.convertToJson());
-		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
-	}
-
-	/**
-	 * 
-	 * @param channelName the channel to save it in
-	 * @param messageId the message id to save
-	 */
-	changeMessageReadToHistory(channelName: string, messageId: number) {
-		const storeChannel = this.storeService.get(`irc.channels.${channelName}`);
-
-		for(let message in storeChannel.messageHistory) {
-			if(storeChannel.messageHistory[message].messageId == messageId) {
-				storeChannel.messageHistory[message].read = true;
-				break;
-			}
-		}
-
 		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
 	}
 
