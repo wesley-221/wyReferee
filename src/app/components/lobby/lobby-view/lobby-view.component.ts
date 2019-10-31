@@ -21,6 +21,8 @@ import { ClipboardService } from 'ngx-clipboard';
 export class LobbyViewComponent implements OnInit {
 	selectedLobby: MultiplayerLobby;
 
+	settingsTabIsOpened: boolean = false;
+
 	constructor(
 		private route: ActivatedRoute, 
 		private multiplayerLobbies: MultiplayerLobbiesService, 
@@ -74,11 +76,22 @@ export class LobbyViewComponent implements OnInit {
 	sendBeatmapResult(match: MultiplayerData) {
 		// User is connected to irc channel
 		if(this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
-			if(match.team_one_score > match.team_two_score) {
-				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${this.addDot(match.team_one_score, " ")} | ${this.selectedLobby.teamTwoName} : ${this.addDot(match.team_two_score, " ")} | Score difference : ${this.addDot(match.team_one_score - match.team_two_score, " ")}`);
+			const totalMapsPlayed = this.selectedLobby.teamOneScore + this.selectedLobby.teamTwoScore;
+			let nextPick = '';
+
+			// First pick goes to .firstPick
+			if(totalMapsPlayed % 2 == 0) {
+				nextPick = this.selectedLobby.firstPick;
 			}
 			else {
-				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${this.addDot(match.team_one_score, " ")} | ${this.selectedLobby.teamTwoName} : ${this.addDot(match.team_two_score, " ")} | Score difference : ${this.addDot(match.team_two_score - match.team_one_score, " ")}`);
+				nextPick = this.selectedLobby.firstPick == this.selectedLobby.teamOneName ? this.selectedLobby.teamTwoName : this.selectedLobby.teamOneName;
+			}
+
+			if(match.team_one_score > match.team_two_score) {
+				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${this.addDot(match.team_one_score, " ")} | ${this.selectedLobby.teamTwoName} : ${this.addDot(match.team_two_score, " ")} | Score difference : ${this.addDot(match.team_one_score - match.team_two_score, " ")}${(totalMapsPlayed != 0) ? ' // Next pick is for ' + nextPick : ''}`);
+			}
+			else {
+				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${this.addDot(match.team_one_score, " ")} | ${this.selectedLobby.teamTwoName} : ${this.addDot(match.team_two_score, " ")} | Score difference : ${this.addDot(match.team_two_score - match.team_one_score, " ")}${(totalMapsPlayed != 0) ? ' // Next pick is for ' + nextPick : ''}`);
 			}
 		}
 	}
@@ -120,6 +133,44 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
+	 * Copy the result of the beatmap to the clipboard
+	 */
+	copyNextPick() {
+		const totalMapsPlayed = this.selectedLobby.teamOneScore + this.selectedLobby.teamTwoScore;
+		let nextPick = '';
+
+		// First pick goes to .firstPick
+		if(totalMapsPlayed % 2 == 0) {
+			nextPick = this.selectedLobby.firstPick;
+		}
+		else {
+			nextPick = this.selectedLobby.firstPick == this.selectedLobby.teamOneName ? this.selectedLobby.teamTwoName : this.selectedLobby.teamOneName;
+		}
+
+		this.clipboardService.copyFromContent(`Next pick is for ${nextPick}`);
+	}
+
+	/**
+	 * Send the result of the beatmap to irc if connected
+	 */
+	sendNextPick() {
+		const totalMapsPlayed = this.selectedLobby.teamOneScore + this.selectedLobby.teamTwoScore;
+		let nextPick = '';
+
+		// First pick goes to .firstPick
+		if(totalMapsPlayed % 2 == 0) {
+			nextPick = this.selectedLobby.firstPick;
+		}
+		else {
+			nextPick = this.selectedLobby.firstPick == this.selectedLobby.teamOneName ? this.selectedLobby.teamTwoName : this.selectedLobby.teamOneName;
+		}
+
+		if(this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
+			this.ircService.sendMessage(this.selectedLobby.ircChannel, `Next pick is for ${nextPick}`);
+		}
+	}
+
+	/**
 	 * Mark the match as valid or invalid so that it counts towards the team score
 	 * @param match the match 
 	 */
@@ -133,6 +184,9 @@ export class LobbyViewComponent implements OnInit {
 		else {
 			this.toastService.addToast(`"${this.getBeatmapname(match.beatmap_id)}" will no longer count towards the score.`);
 		}
+
+		// Re-synchronize the lobby to change game counter
+		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby, false);
 	}
 
 	/**
@@ -140,7 +194,12 @@ export class LobbyViewComponent implements OnInit {
 	 * @param event the event that is triggered
 	 */
 	changeMappool(event: any) {
+		this.multiplayerLobbies.get(this.selectedLobby.lobbyId).mappoolId = event.target.value;
 		this.multiplayerLobbies.get(this.selectedLobby.lobbyId).mappool = this.mappoolService.getMappool(event.target.value);
+
+		this.selectedLobby.mappool = this.mappoolService.getMappool(event.target.value);
+		this.selectedLobby.mappoolId = event.target.value;
+
 		this.multiplayerLobbies.update(this.selectedLobby);
 	}
 
@@ -230,6 +289,34 @@ export class LobbyViewComponent implements OnInit {
 		const user: MultiplayerDataUser = match.getPlayer(slotId);
 
 		return (user != undefined) ? this.addDot(user.score.toFixed(), " ") : 0;
+	}
+
+	/**
+	 * Change various settings for the lobby
+	 * @param element 
+	 * @param event 
+	 */
+	change(element: string, event: Event) {
+		if(element == 'firstPick') {
+			this.selectedLobby.firstPick = (<any>event.currentTarget).value;
+		}
+		else if(element == 'bestOf') {
+			this.selectedLobby.bestOf = (<any>event.currentTarget).value;
+		}
+		else if(element == 'teamOneBanOne') {
+			this.selectedLobby.teamOneBanOne = (<any>event.currentTarget).value;
+		}
+		else if(element == 'teamOneBanTwo') {
+			this.selectedLobby.teamOneBanTwo = (<any>event.currentTarget).value;
+		}
+		else if(element == 'teamTwoBanOne') {
+			this.selectedLobby.teamTwoBanOne = (<any>event.currentTarget).value;
+		}
+		else if(element == 'teamTwoBanTwo') {
+			this.selectedLobby.teamTwoBanTwo = (<any>event.currentTarget).value;
+		}
+
+		this.multiplayerLobbies.update(this.selectedLobby);
 	}
 
 	/**

@@ -1,7 +1,6 @@
 import { MultiplayerData } from "./multiplayer-data";
 import { MultiplayerDataUser } from "./multiplayer-data-user";
 import { Mappool } from "../osu-mappool/mappool";
-import { MappoolService } from "../../services/mappool.service";
 
 export class MultiplayerLobby {
     lobbyId: number;
@@ -16,6 +15,14 @@ export class MultiplayerLobby {
     mappoolId: number = null;
     ircChannel: string;
     ircConnected: boolean = false;
+
+    firstPick: string;
+    bestOf: number;
+
+    teamOneBanOne: string;
+    teamOneBanTwo: string;
+    teamTwoBanOne: string;
+    teamTwoBanTwo: string;
 
     mapsCountTowardScore: any;
     multiplayerData: MultiplayerData[];
@@ -58,6 +65,13 @@ export class MultiplayerLobby {
         this.teamOneName = json.data.teamOneName;
         this.teamTwoName = json.data.teamTwoName;
         this.mappoolId = json.data.selectedMappoolId;
+       
+        this.firstPick = json.data.firstPick;
+        this.bestOf = json.data.bestOf;
+        this.teamOneBanOne = json.data.teamOneBanOne;
+        this.teamOneBanTwo = json.data.teamOneBanTwo;
+        this.teamTwoBanOne = json.data.teamTwoBanOne;
+        this.teamTwoBanTwo = json.data.teamTwoBanTwo;
 
         this.mapsCountTowardScore = json.countForScore;
 
@@ -116,7 +130,13 @@ export class MultiplayerLobby {
                 "tournamentAcronym": multiplayerLobby.tournamentAcronym,
                 "teamOneName": multiplayerLobby.teamOneName,
                 "teamTwoName": multiplayerLobby.teamTwoName,
-                "selectedMappoolId": (multiplayerLobby.mappool == null) ? -1 : multiplayerLobby.mappool.id
+                "selectedMappoolId": (multiplayerLobby.mappool == null) ? -1 : multiplayerLobby.mappool.id,
+                "firstPick": multiplayerLobby.firstPick,
+                "bestOf": multiplayerLobby.bestOf,
+                "teamOneBanOne": multiplayerLobby.teamOneBanOne,
+                "teamOneBanTwo": multiplayerLobby.teamOneBanTwo,
+                "teamTwoBanOne": multiplayerLobby.teamTwoBanOne,
+                "teamTwoBanTwo": multiplayerLobby.teamTwoBanTwo
             },
             "countForScore": { },
             "multiplayerData": { }

@@ -7,8 +7,9 @@ export class Mappool {
     name: string;
     modBrackets: ModBracket[] = [];
     modifiers: {} = {};
+    allBeatmaps: any[] = [];
 
-    constructor() { }
+    constructor() {}
 
     /**
      * Get all the mod brackets
@@ -132,6 +133,12 @@ export class Mappool {
                 newBracket.addBeatmap(newBeatmap);
 
                 newMappool.modifiers[newBeatmap.beatmapId] = newBeatmap;
+                
+                newMappool.allBeatmaps.push({
+                    beatmapId: thisBracket.beatmaps[beatmap],
+                    name: thisMappool.modifiers[newBeatmap.beatmapId].beatmapName,
+                    mod: thisBracket.mods
+                });
             }
 
             newMappool.addBracket(newBracket);

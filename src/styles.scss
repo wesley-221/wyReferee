@@ -477,17 +477,36 @@ html, body {
             position: fixed;
     
             left: 0;
-            padding-left: calc(#{$sidebar-width} + 14px);
-            
-            width: 100%;
+            margin-left: $sidebar-width;            
+            width: calc(100% - #{$sidebar-width});
+
             z-index: 50;
     
             height: 120px;
     
             background-color: $background-color;
-    
-            #getMultiplayerData {
-                margin-right: 14px;
+
+            .header-content {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            &.settings-active {
+                height: auto;
+            }
+
+            .settings-tab {
+                display: none;
+                opacity: 0;
+
+                padding: 16px;
+
+                border-bottom: 1px solid black;
+
+                &.active {
+                    display: block;
+                    opacity: 1;
+                }
             }
         }
     

@@ -1,25 +1,101 @@
-<div class="matchHeader">
-    <h2>{{ selectedLobby.description }}</h2>
-    <div class="row">
-        <div class="col-7">
-            Multiplayer link: <a [routerLink]="" (click)="electronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a><br />
+<div class="matchHeader" [ngClass]="{'settings-active': settingsTabIsOpened}">
+    <div class="header-content">
+        <h2>{{ selectedLobby.description }}</h2>
+        <div class="row">
+            <div class="col-7">
+                Multiplayer link: <a [routerLink]="" (click)="electronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a><br />
 
-            <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': selectedLobby.teamOneScore > selectedLobby.teamTwoScore, 'teamLoss': selectedLobby.teamTwoScore > selectedLobby.teamOneScore}">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="{'teamWin': selectedLobby.teamTwoScore > selectedLobby.teamOneScore, 'teamLoss': selectedLobby.teamOneScore > selectedLobby.teamTwoScore}">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
-        </div>
+                <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': selectedLobby.teamOneScore > selectedLobby.teamTwoScore, 'teamLoss': selectedLobby.teamTwoScore > selectedLobby.teamOneScore}">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="{'teamWin': selectedLobby.teamTwoScore > selectedLobby.teamOneScore, 'teamLoss': selectedLobby.teamOneScore > selectedLobby.teamTwoScore}">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
+            </div>
 
-        <div class="col-5">
-            <select class="form-control" (change)="changeMappool($event)" [value]="getMappoolId()">
-                <option value="-1">Select a mappool</option>
-                <option [value]="mappool.id" *ngFor="let mappool of mappoolService.allMappools">{{ mappool.name }}</option>
-            </select>
+            <div class="col-5">
+                <select class="form-control" (change)="changeMappool($event)" [value]="getMappoolId()">
+                    <option value="-1">Select a mappool</option>
+                    <option [value]="mappool.id" *ngFor="let mappool of mappoolService.allMappools">{{ mappool.name }}</option>
+                </select>
 
-            <div class="btn-group float-right">
-                <button type="button" (click)="joinIrc()" class="btn btn-info" title="Join irc channel" [disabled]="!ircService.isAuthenticated"><fa-icon [icon]="['fas', 'comment-dots']"></fa-icon></button>
-                <button type="button" (click)="copyMatchResult()" *ngIf="!selectedLobby.ircConnected" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon></button>
-                <button type="button" (click)="sendMatchResult()" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated" class="btn btn-info" title="Send match score to irc"><fa-icon icon="copy"></fa-icon></button>
-                <button type="button" (click)="synchronizeMp()" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
+                <div class="btn-group float-right">
+                    <button class="btn btn-primary" (click)="settingsTabIsOpened = !settingsTabIsOpened"><fa-icon [icon]="['fas', 'cogs']"></fa-icon> Settings</button>
+                    <button type="button" (click)="copyNextPick()" *ngIf="!selectedLobby.ircConnected" class="btn btn-info"><fa-icon [icon]="['far', 'envelope-open']"></fa-icon> Copy next pick</button>
+                    <button type="button" (click)="sendNextPick()" *ngIf="selectedLobby.ircConnected" class="btn btn-info" [disabled]="!ircService.isAuthenticated"><fa-icon [icon]="['far', 'envelope-open']"></fa-icon> Send next pick</button>
+                    <button type="button" (click)="synchronizeMp()" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon> Synchronize</button>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div class="settings-tab" [ngClass]="{'active': settingsTabIsOpened}">
+        <div class="row">
+            <div class="col-3">
+                <div class="row">
+                    <div class="col">
+                        <h5>First pick</h5>
+                        <select class="form-control" (change)="change('firstPick', $event)" [value]="selectedLobby.firstPick">
+                            <option></option>
+                            <option [value]="selectedLobby.teamOneName">{{ selectedLobby.teamOneName }}</option>
+                            <option [value]="selectedLobby.teamTwoName">{{ selectedLobby.teamTwoName }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h5>Best of</h5>
+                        <select class="form-control" (change)="change('bestOf', $event)" [value]="selectedLobby.bestOf">
+                            <option [value]="item" *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">{{ item }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-9" *ngIf="selectedLobby && selectedLobby.mappoolId == -1">
+                <div class="alert alert-warning">
+                    You have to select a mappool first.
+                </div>
+            </div>
+
+            <div class="col-9" *ngIf="selectedLobby && selectedLobby.mappoolId != -1 && selectedLobby.mappool">
+                <h5>Bans</h5>
+
+                <table class="table">
+                    <tr>
+                        <td>{{ selectedLobby.teamOneName }}</td>
+                        <td>
+                            <select class="form-control" (change)="change('teamOneBanOne', $event)" [value]="selectedLobby.teamOneBanOne">
+                                <option [value]="beatmap.beatmapId" *ngFor="let beatmap of selectedLobby.mappool.allBeatmaps">{{ beatmap.name }}</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <select class="form-control" (change)="change('teamOneBanTwo', $event)" [value]="selectedLobby.teamOneBanTwo">
+                                <option [value]="beatmap.beatmapId" *ngFor="let beatmap of selectedLobby.mappool.allBeatmaps">{{ beatmap.name }}</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>{{ selectedLobby.teamTwoName }}</td>
+                        <td>
+                            <select class="form-control" (change)="change('teamTwoBanOne', $event)" [value]="selectedLobby.teamTwoBanOne">
+                                <option [value]="beatmap.beatmapId" *ngFor="let beatmap of selectedLobby.mappool.allBeatmaps">{{ beatmap.name }}</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <select class="form-control" (change)="change('teamTwoBanTwo', $event)" [value]="selectedLobby.teamTwoBanTwo">
+                                <option [value]="beatmap.beatmapId" *ngFor="let beatmap of selectedLobby.mappool.allBeatmaps">{{ beatmap.name }}</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <hr />
+
+        <button type="button" (click)="joinIrc()" class="btn btn-info" title="Join irc channel" [disabled]="!ircService.isAuthenticated"><fa-icon [icon]="['fas', 'comment-dots']"></fa-icon> Join irc channel</button>
+        <button type="button" (click)="copyMatchResult()" *ngIf="!selectedLobby.ircConnected" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon> Copy match score</button>
+        <button type="button" (click)="sendMatchResult()" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated" class="btn btn-info" title="Send match score to irc"><fa-icon icon="copy"></fa-icon> Send match score</button>
     </div>
 </div>
 
