@@ -163,10 +163,6 @@ export class MultiplayerLobbiesService {
 						newMpDataUser.slot = currentScore.slot;
 					}
 
-					if(!multiplayerLobby.hasOwnProperty('mapsCountTowardsScore')) {
-						multiplayerLobby['mapsCountTowardScore'] = {};
-					}
-
 					if(!multiplayerLobby.mapsCountTowardScore.hasOwnProperty(currentGame.game_id)) {
 						multiplayerLobby.mapsCountTowardScore[currentGame.game_id] = true;
 					}
@@ -226,6 +222,8 @@ export class MultiplayerLobbiesService {
 
 			// Save multiplayerLobby
 			this.update(multiplayerLobby);
+
+			console.log(multiplayerLobby);
 
 			if(showToasts) 
 				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');

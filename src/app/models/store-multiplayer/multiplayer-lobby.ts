@@ -24,7 +24,7 @@ export class MultiplayerLobby {
     teamTwoBanOne: string;
     teamTwoBanTwo: string;
 
-    mapsCountTowardScore: any;
+    mapsCountTowardScore: {} = {};
     multiplayerData: MultiplayerData[];
 
     constructor() { 
