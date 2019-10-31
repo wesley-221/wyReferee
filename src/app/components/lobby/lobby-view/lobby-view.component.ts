@@ -141,6 +141,7 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	changeMappool(event: any) {
 		this.multiplayerLobbies.get(this.selectedLobby.lobbyId).mappool = this.mappoolService.getMappool(event.target.value);
+		this.multiplayerLobbies.update(this.selectedLobby);
 	}
 
 	/**
