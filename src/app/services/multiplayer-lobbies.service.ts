@@ -99,7 +99,7 @@ export class MultiplayerLobbiesService {
 		}
 	}
 
-	public synchronizeMultiplayerMatch(multiplayerLobby: MultiplayerLobby): void {
+	public synchronizeMultiplayerMatch(multiplayerLobby: MultiplayerLobby, showToasts: boolean = true): void {
 		this.getMultiplayer.get(multiplayerLobby.multiplayerLink).subscribe(data => {
 			multiplayerLobby.teamOneScore = 0;
 			multiplayerLobby.teamTwoScore = 0;
@@ -163,6 +163,10 @@ export class MultiplayerLobbiesService {
 						newMpDataUser.slot = currentScore.slot;
 					}
 
+					if(!multiplayerLobby.hasOwnProperty('mapsCountTowardsScore')) {
+						multiplayerLobby['mapsCountTowardScore'] = {};
+					}
+
 					if(!multiplayerLobby.mapsCountTowardScore.hasOwnProperty(currentGame.game_id)) {
 						multiplayerLobby.mapsCountTowardScore[currentGame.game_id] = true;
 					}
@@ -223,7 +227,8 @@ export class MultiplayerLobbiesService {
 			// Save multiplayerLobby
 			this.update(multiplayerLobby);
 
-			this.toastService.addToast('Successfully synchronized the multiplayer lobby.');
+			if(showToasts) 
+				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');
 		});
 	}
 }
