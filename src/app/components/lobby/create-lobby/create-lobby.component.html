@@ -75,5 +75,5 @@
 
     <hr />
 
-    <button type="button" (click)="createLobby()" class="btn btn-primary float-right" [disabled]="validationForm.invalid || lobbyHasBeenCreated">Create</button>
+    <button type="button" (click)="createLobby()" class="btn btn-primary float-right" [disabled]="validationForm.invalid || lobbyHasBeenCreated || !ircAuthenticated">Create</button>
 </form>

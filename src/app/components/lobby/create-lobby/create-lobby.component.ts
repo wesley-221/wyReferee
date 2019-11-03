@@ -21,7 +21,13 @@ export class CreateLobbyComponent implements OnInit {
 	validationForm: FormGroup;
 	lobbyHasBeenCreated: boolean = false;
 
-	constructor(private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService, private ircService: IrcService) { }
+	ircAuthenticated: boolean = false;
+
+	constructor(private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService, private ircService: IrcService) { 
+		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
+			this.ircAuthenticated = isAuthenticated;
+		});
+	}
 
 	ngOnInit() { 
 		this.validationForm = new FormGroup({
@@ -53,7 +59,7 @@ export class CreateLobbyComponent implements OnInit {
 		if(newLobby.multiplayerLink == '') {
 			this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
 
-			this.ircService.sendMessage('BanchoBot', `!mp make ${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`);
+			this.ircService.client.say('BanchoBot', `!mp make ${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`);
 		}
 
 		this.lobbyHasBeenCreated = true;

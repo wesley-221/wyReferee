@@ -332,7 +332,7 @@ export class IrcService {
 
 		let newMessage;
 
-		if(isPM) {			
+		if(isPM) {
 			if(this.getChannelByName(author) == null) {
 				this.joinChannel(author);
 			}
@@ -438,8 +438,8 @@ export class IrcService {
 	 * @param channelName the channel to send the message in
 	 * @param message the message to send
 	 */
-	sendMessage(channelName: string, message: string) {
-		this.addMessageToChannel(channelName, this.authenticatedUser, message);
+	sendMessage(channelName: string, message: string, isPM: boolean = false) {
+		this.addMessageToChannel(channelName, this.authenticatedUser, message, isPM);
 		this.client.say(channelName, message);
 	}
 
