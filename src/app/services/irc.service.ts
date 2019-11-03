@@ -209,7 +209,8 @@ export class IrcService {
 					const 	multiplayerInitialization = Regex.multiplayerInitialization.run(message), 
 							multiplayerMatchSize = Regex.multiplayerMatchSize.run(message),
 							multiplayerSettingsChange = Regex.multiplayerSettingsChange.run(message),
-							matchClosed = Regex.closedMatch.run(message);
+							matchClosed = Regex.closedMatch.run(message),
+							matchFinished = Regex.matchFinished.run(message);
 
 					// Initialize the channel with the correct teammode and wincondition
 					if(multiplayerInitialization != null) {
@@ -232,6 +233,12 @@ export class IrcService {
 					// The match was closed
 					if(matchClosed) {
 						this.changeActiveChannel(this.getChannelByName(to), false);
+						this.getChannelByName(to).active = false;
+					}
+
+					// A beatmap has finished
+					if(matchFinished) {
+						this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getByIrcLobby(to));
 					}
 				}
 				// ===========================================

@@ -150,5 +150,12 @@ export class Regex {
         }
     }
 
+    static matchFinished = {
+        regex: /^The match has finished!/,
+        run: (message): boolean => {
+            return RegExp(Regex.matchFinished.regex).test(message);
+        }
+    }
+
     // TODO: refereeBeatmapChange
 }

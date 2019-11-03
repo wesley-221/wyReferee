@@ -85,6 +85,18 @@ export class MultiplayerLobbiesService {
 	}
 
 	/**
+	 * Get a multiplayerlobby by an irc channel
+	 * @param name the irc channel
+	 */
+	public getByIrcLobby(name: string): MultiplayerLobby {
+		for(let lobby in this.allLobbies) {
+			if(`#mp_${this.getMultiplayerIdFromLink(this.allLobbies[lobby].multiplayerLink)}` == name) {
+				return this.allLobbies[lobby];
+			}
+		}
+	}
+
+	/**
 	 * Update the multiplayerlobby
 	 * @param multiplayerLobby the multiplayerlobby to update
 	 */
@@ -228,5 +240,19 @@ export class MultiplayerLobbiesService {
 			if(showToasts) 
 				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');
 		});
+	}
+
+	/**
+	 * Get the id of the multiplayer link
+	 * @param link the multiplayerlink
+	 */
+	private getMultiplayerIdFromLink(link: string) {
+		const regularExpression = new RegExp(/https:\/\/osu\.ppy\.sh\/community\/matches\/([0-9]+)/).exec(link);
+
+        if(regularExpression) {
+            return regularExpression[1];
+        }
+
+        return null;
 	}
 }
