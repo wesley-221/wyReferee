@@ -1,16 +1,14 @@
 {
   "name": "axs-calculator",
-  "version": "1.7.2",
-  "description": "",
+  "version": "1.7.3",
+  "description": "Referee client for AxS",
   "author": {
     "name": "Wesley"
   },
   "keywords": [
-    "angular",
     "angular 8",
-    "electron",
-    "typescript",
-    "sass"
+    "axs",
+    "referee client"
   ],
   "main": "main.js",
   "private": true,

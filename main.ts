@@ -20,7 +20,7 @@ function createWindow() {
 		},
 		frame: false,
 		titleBarStyle: 'hidden',
-		icon: `${__dirname}/src/assets/images/icon.png`
+		icon: `${__dirname}/src/assets/images/axs_logo.png`
 	});
 
 	if (serve) {
