@@ -134,9 +134,9 @@ export class IrcService {
 		let ircSettings = {
 			password: password, 
 			autoConnect: false, 
-			autoRejoin: false,
-			retryCount: 0,
-			debug: false
+			autoRejoin: true,
+			debug: false,
+			showErrors: false
 		};
 
 		const allJoinedChannels = this.storeService.get('irc.channels');
@@ -155,7 +155,7 @@ export class IrcService {
 		this.isConnecting$.next(true);
 
 		/**
-		 * Error handler
+		 * Error handlers
 		 */
 		this.client.addListener('error', error => {
 			// Get rid of error, hasn't been fixed by irc-upd devs yet
@@ -193,6 +193,20 @@ export class IrcService {
 
 				this.toastService.addToast('Unknown error given! Check the console for more information.', ToastType.Error);
 			}
+		});
+
+		this.client.addListener('netError', (exception) => {
+			console.log('@@@@@@@@@@@@@@@');
+			console.log('netError found:');
+			console.log(exception);
+			console.log('@@@@@@@@@@@@@@@');
+		});
+
+		this.client.addListener('unhandled', (message) => {
+			console.log(`@@@@@@@@@@@@@@@@@@@@@@`);
+			console.log(`Unhandled error found:`);
+			console.log(message);
+			console.log(`@@@@@@@@@@@@@@@@@@@@@@`);
 		});
 
 		/**
