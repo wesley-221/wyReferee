@@ -11,6 +11,7 @@ export class MultiplayerLobby {
     teamTwoName: string;
     teamOneScore: number = 0;
     teamTwoScore: number = 0;
+    webhook: string;
     mappool: Mappool = null;
     mappoolId: number = null;
     ircChannel: string;
@@ -19,10 +20,10 @@ export class MultiplayerLobby {
     firstPick: string;
     bestOf: number;
 
-    teamOneBanOne: string;
-    teamOneBanTwo: string;
-    teamTwoBanOne: string;
-    teamTwoBanTwo: string;
+    teamOneBanOne: number;
+    teamOneBanTwo: number;
+    teamTwoBanOne: number;
+    teamTwoBanTwo: number;
 
     mapsCountTowardScore: {} = {};
     multiplayerData: MultiplayerData[];
@@ -64,6 +65,7 @@ export class MultiplayerLobby {
         this.tournamentAcronym = json.data.tournamentAcronym;
         this.teamOneName = json.data.teamOneName;
         this.teamTwoName = json.data.teamTwoName;
+        this.webhook = json.data.webhook;
         this.mappoolId = json.data.selectedMappoolId;
        
         this.firstPick = json.data.firstPick;
@@ -130,6 +132,7 @@ export class MultiplayerLobby {
                 "tournamentAcronym": multiplayerLobby.tournamentAcronym,
                 "teamOneName": multiplayerLobby.teamOneName,
                 "teamTwoName": multiplayerLobby.teamTwoName,
+                "webhook": multiplayerLobby.webhook,
                 "selectedMappoolId": (multiplayerLobby.mappool == null) ? -1 : multiplayerLobby.mappool.id,
                 "firstPick": multiplayerLobby.firstPick,
                 "bestOf": multiplayerLobby.bestOf,

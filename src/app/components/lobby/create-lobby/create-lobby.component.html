@@ -1,79 +1,100 @@
-<form [formGroup]="validationForm">
-    <div class="form-group">
-        <h2>Multiplayer link</h2>
-        <div>
-            Enter a multiplayer link in here for the match you want to calculate the scores off. <br /><br />
-            Accepted URL's: <br />
-            <ul>
-                <li>https://osu.ppy.sh/community/matches/46358686</li>
-            </ul>
+<div class="scroll">
+    <form [formGroup]="validationForm">
+        <div class="form-group">
+            <h2>Multiplayer link</h2>
+            <div>
+                Enter a multiplayer link in here for the match you want to calculate the scores off. <br /><br />
+                Accepted URL's: <br />
+                <ul>
+                    <li>https://osu.ppy.sh/community/matches/46358686</li>
+                </ul>
+
+                <div class="alert alert-danger">
+                    You only have to fill in the multiplayer link when you want to use an old multiplayer lobby. If you leave this blank, it will create a <b>NEW</b> multiplayer lobby on osu!.
+                </div>
+            </div>
+
+            <input formControlName="multiplayerLink" type="text" class="form-control" placeholder="Multiplayer link" 
+                    [ngClass]="{'has-error': validationForm.get('multiplayerLink').errors && (validationForm.get('multiplayerLink').touched || validationForm.get('multiplayerLink').dirty)}" />
+
+            <div class="has-error" *ngIf="validationForm.get('multiplayerLink').errors && validationForm.get('multiplayerLink').errors.pattern">
+                Invalid multiplayer link given. <br /><b>Accepted format:</b> https://osu.ppy.sh/community/matches/46358686
+            </div>
+
+            <h2>Tournament acronym</h2>
+            <div>
+                Enter an acronym that will be used to create the multiplayer match.
+            </div>
 
             <div class="alert alert-danger">
-                You only have to fill in the multiplayer link when you want to use an old multiplayer lobby. If you leave this blank, it will create a <b>NEW</b> multiplayer lobby on osu!.
+                You only have to fill in the tournament acronym when you want to create a <b>NEW</b> multiplayer lobby on osu!.
             </div>
-        </div>
 
-        <input formControlName="multiplayerLink" type="text" class="form-control" placeholder="Multiplayer link" 
-                [ngClass]="{'has-error': validationForm.get('multiplayerLink').errors && (validationForm.get('multiplayerLink').touched || validationForm.get('multiplayerLink').dirty)}" />
-
-        <div class="has-error" *ngIf="validationForm.get('multiplayerLink').errors && validationForm.get('multiplayerLink').errors.pattern">
-            Invalid multiplayer link given. <br /><b>Accepted format:</b> https://osu.ppy.sh/community/matches/46358686
-        </div>
-
-        <h2>Tournament acronym</h2>
-        <div>
-            Enter an acronym that will be used to create the multiplayer match.
-        </div>
-
-        <div class="alert alert-danger">
-            You only have to fill in the tournament acronym when you want to create a <b>NEW</b> multiplayer lobby on osu!.
-        </div>
-
-        <input formControlName="tournamentAcronym" type="text" class="form-control" placeholder="Tournament acronym" 
-                [ngClass]="{'has-error': validationForm.get('tournamentAcronym').errors && (validationForm.get('tournamentAcronym').touched || validationForm.get('tournamentAcronym').dirty)}" />
-
-        <div class="has-error" 
-            *ngIf="validationForm.get('tournamentAcronym').errors && validationForm.get('tournamentAcronym').errors.maxlength && 
-                    (validationForm.get('tournamentAcronym').touched || validationForm.get('tournamentAcronym').dirty)">
-            The tournament acronym can have a maximum of 5 characters
-        </div>
-    </div>
-
-    <div class="createLobbyTeamRow">
-        <div class="teamOne form-group">
-            <h2>Team one name</h2>
-            <p>
-                Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot 1, 2 and 3.
-            </p>
-
-            <input formControlName="teamOneName" type="text" class="form-control" placeholder="Team one name" 
-                    [ngClass]="{'has-error': validationForm.get('teamOneName').errors && (validationForm.get('teamOneName').touched || validationForm.get('teamOneName').dirty)  }" />
+            <input formControlName="tournamentAcronym" type="text" class="form-control" placeholder="Tournament acronym" 
+                    [ngClass]="{'has-error': validationForm.get('tournamentAcronym').errors && (validationForm.get('tournamentAcronym').touched || validationForm.get('tournamentAcronym').dirty)}" />
 
             <div class="has-error" 
-                *ngIf="validationForm.get('teamOneName').errors && validationForm.get('teamOneName').errors.required && 
-                    (validationForm.get('teamOneName').touched || validationForm.get('teamOneName').dirty)">
-                This field is required
+                *ngIf="validationForm.get('tournamentAcronym').errors && validationForm.get('tournamentAcronym').errors.maxlength && 
+                        (validationForm.get('tournamentAcronym').touched || validationForm.get('tournamentAcronym').dirty)">
+                The tournament acronym can have a maximum of 5 characters
             </div>
         </div>
 
-        <div class="teamTwo form-group">
-            <h2>Team two name</h2>
-            <p>
-                Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot 4, 5 and 6.
-            </p>
+        <div class="createLobbyTeamRow">
+            <div class="teamOne form-group">
+                <h2>Team one name</h2>
+                <p>
+                    Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot 1, 2 and 3.
+                </p>
 
-            <input formControlName="teamTwoName" type="text" class="form-control" placeholder="Team two name"
-                    [ngClass]="{'has-error': validationForm.get('teamTwoName').errors && (validationForm.get('teamTwoName').touched || validationForm.get('teamTwoName').dirty)  }" />
+                <input formControlName="teamOneName" type="text" class="form-control" placeholder="Team one name" 
+                        [ngClass]="{'has-error': validationForm.get('teamOneName').errors && (validationForm.get('teamOneName').touched || validationForm.get('teamOneName').dirty)  }" />
 
-            <div class="has-error" 
-                *ngIf="validationForm.get('teamTwoName').errors && validationForm.get('teamTwoName').errors.required && 
-                    (validationForm.get('teamTwoName').touched || validationForm.get('teamTwoName').dirty)">
-                This field is required
+                <div class="has-error" 
+                    *ngIf="validationForm.get('teamOneName').errors && validationForm.get('teamOneName').errors.required && 
+                        (validationForm.get('teamOneName').touched || validationForm.get('teamOneName').dirty)">
+                    This field is required
+                </div>
+            </div>
+
+            <div class="teamTwo form-group">
+                <h2>Team two name</h2>
+                <p>
+                    Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot 4, 5 and 6.
+                </p>
+
+                <input formControlName="teamTwoName" type="text" class="form-control" placeholder="Team two name"
+                        [ngClass]="{'has-error': validationForm.get('teamTwoName').errors && (validationForm.get('teamTwoName').touched || validationForm.get('teamTwoName').dirty)  }" />
+
+                <div class="has-error" 
+                    *ngIf="validationForm.get('teamTwoName').errors && validationForm.get('teamTwoName').errors.required && 
+                        (validationForm.get('teamTwoName').touched || validationForm.get('teamTwoName').dirty)">
+                    This field is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <h2>Webhook</h2>
+                <i>NOTE: this field is optional</i>
+                <p>In order for scores to appear in a discord channel, you have to enter a webhook so it knows where to send the messages to.</p>
+                
+                <h5>How to create a Discord webhook:</h5>
+                <i>NOTE: this step is only required when there is no webhook available yet.</i>
+                <ul>
+                    <li>Go to the server you want the messages to be send to</li>
+                    <li>Right click on the channel you want the messages to be send to</li>
+                    <li>Click on "Edit Channel"</li>
+                    <li>Click on "Webhooks"</li>
+                    <li>Click on "Create Webhook"</li>
+                    <li>Fill in the fields and finally copy the "Webhook url"</li>
+                </ul>
+
+                <input formControlName="webhook" type="text" class="form-control" placeholder="Webhook" />
             </div>
         </div>
-    </div>
 
-    <hr />
+        <hr />
 
-    <button type="button" (click)="createLobby()" class="btn btn-primary float-right" [disabled]="validationForm.invalid || lobbyHasBeenCreated || !ircAuthenticated">Create</button>
-</form>
+        <button type="button" (click)="createLobby()" class="btn btn-primary float-right mb-2" [disabled]="validationForm.invalid || lobbyHasBeenCreated || !ircAuthenticated">Create</button>
+    </form>
+</div>

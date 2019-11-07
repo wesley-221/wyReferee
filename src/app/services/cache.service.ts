@@ -50,6 +50,22 @@ export class CacheService {
 	}
 
 	/**
+	 * Check if the given beatmapId is cached in a mappool
+	 * @param beatmapId the beatmapId to look for
+	 */
+	public getCachedBeatmapFromMappools(beatmapId: number): { beatmapName: string, beatmapUrl: string } {
+		const mappools = this.storeService.get(`cache.mappool`);
+
+		for(let mappool in mappools) {
+			for(let map in mappools[mappool].modifiers) {
+				if(mappools[mappool].modifiers[map].beatmapId == beatmapId) {
+					return { beatmapName: mappools[mappool].modifiers[map].beatmapName, beatmapUrl: mappools[mappool].modifiers[map].beatmapUrl };
+				}
+			}
+		}
+	}
+
+	/**
 	 * Create or update the cache for the given beatmap
 	 * @param cachedBeatmap the CacheBeatmap to create/update
 	 */

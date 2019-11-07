@@ -42,7 +42,8 @@ export class CreateLobbyComponent implements OnInit {
 			]),
 			'teamTwoName': new FormControl('', [
 				Validators.required
-			])
+			]),
+			'webhook': new FormControl()
 		});
 	}
 
@@ -55,6 +56,7 @@ export class CreateLobbyComponent implements OnInit {
 		newLobby.multiplayerLink = this.validationForm.get('multiplayerLink').value;
 		newLobby.tournamentAcronym = this.validationForm.get('tournamentAcronym').value;
 		newLobby.description = `${this.validationForm.get('teamOneName').value} vs ${this.validationForm.get('teamTwoName').value}`;
+		newLobby.webhook = this.validationForm.get('webhook').value;
 
 		if(newLobby.multiplayerLink == '') {
 			this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;

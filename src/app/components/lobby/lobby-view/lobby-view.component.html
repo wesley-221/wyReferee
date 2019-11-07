@@ -91,11 +91,20 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col">
+                <h5>Webhook</h5>
+                <input type="text" class="form-control" placeholder="Webhook" (change)="changeWebhook($event)" [value]="selectedLobby.webhook" />
+            </div>  
+        </div>
+
         <hr />
 
         <button type="button" (click)="joinIrc()" class="btn btn-info" title="Join irc channel" [disabled]="!ircService.isAuthenticated"><fa-icon [icon]="['fas', 'comment-dots']"></fa-icon> Join irc channel</button>
         <button type="button" (click)="copyMatchResult()" *ngIf="!selectedLobby.ircConnected" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon> Copy match score</button>
         <button type="button" (click)="sendMatchResult()" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated" class="btn btn-info" title="Send match score to irc"><fa-icon icon="copy"></fa-icon> Send match score</button>
+        &nbsp;
+        <button type="button" (click)="sendFinalResult()" class="btn btn-info" *ngIf="selectedLobby.webhook">Send final result to Discord</button>
     </div>
 </div>
 

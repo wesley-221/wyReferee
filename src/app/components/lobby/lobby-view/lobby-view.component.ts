@@ -11,6 +11,7 @@ import { MappoolService } from '../../../services/mappool.service';
 import { StoreService } from '../../../services/store.service';
 import { IrcService } from '../../../services/irc.service';
 import { ClipboardService } from 'ngx-clipboard';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -32,7 +33,8 @@ export class LobbyViewComponent implements OnInit {
 		public mappoolService: MappoolService, 
 		private storeService: StoreService,
 		public ircService: IrcService,
-		private clipboardService: ClipboardService) {
+		private clipboardService: ClipboardService,
+		private http: HttpClient) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
 
@@ -171,6 +173,56 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
+	 * Send the final result to discord
+	 */
+	sendFinalResult() {
+		const httpOptions = {
+			headers: new HttpHeaders({
+				'Content-Type': 'multipart/form-data'
+			})
+		};
+
+		const scoreString = (this.selectedLobby.teamOneScore > this.selectedLobby.teamTwoScore) ? 
+							`**Score: ${this.selectedLobby.teamOneName}** | **${this.selectedLobby.teamOneScore}** - ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}` : 
+							`**Score:** ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} - **${this.selectedLobby.teamTwoScore}** | **${this.selectedLobby.teamTwoName}**`;
+		
+		const body = {
+			"embeds": [
+				{
+					"title": `Result of **${this.selectedLobby.teamOneName}** vs. **${this.selectedLobby.teamTwoName}**`,
+					"description": `${scoreString} \n\n**First pick**: ${this.selectedLobby.firstPick} \n\n[${this.selectedLobby.multiplayerLink}](${this.selectedLobby.multiplayerLink})`,
+					"color": 15258703,
+					"fields": [
+						{
+							"name": `**${this.selectedLobby.teamOneName}** bans:`,
+							"value": `[${this.getBeatmapnameFromMappools(this.selectedLobby.teamOneBanOne).beatmapName}](${this.getBeatmapnameFromMappools(this.selectedLobby.teamOneBanOne).beatmapUrl}) \n[${this.getBeatmapnameFromMappools(this.selectedLobby.teamOneBanTwo).beatmapName}](${this.getBeatmapnameFromMappools(this.selectedLobby.teamOneBanTwo).beatmapUrl})`,
+							"inline": true
+						},
+						{
+							"name": `**${this.selectedLobby.teamTwoName}** bans:`,
+							"value": `[${this.getBeatmapnameFromMappools(this.selectedLobby.teamTwoBanOne).beatmapName}](${this.getBeatmapnameFromMappools(this.selectedLobby.teamTwoBanOne).beatmapUrl}) \n[${this.getBeatmapnameFromMappools(this.selectedLobby.teamTwoBanTwo).beatmapName}](${this.getBeatmapnameFromMappools(this.selectedLobby.teamTwoBanTwo).beatmapUrl})`,
+							"inline": true
+						}
+					]
+				}
+			]
+		}
+
+		this.http.post(this.selectedLobby.webhook, { "payload_json": JSON.stringify(body) }, httpOptions).subscribe(obj => {
+			console.log(obj);
+		});
+	}
+
+	/**
+	 * Gets called when the webhook changes
+	 * @param event 
+	 */
+	changeWebhook(event: any) {
+		this.selectedLobby.webhook = event.target.value;
+		this.multiplayerLobbies.update(this.selectedLobby);
+	}
+
+	/**
 	 * Mark the match as valid or invalid so that it counts towards the team score
 	 * @param match the match 
 	 */
@@ -249,6 +301,15 @@ export class LobbyViewComponent implements OnInit {
 	getBeatmapname(beatmapId: number) {
 		const cachedBeatmap = this.cacheService.getCachedBeatmap(beatmapId);
 		return (cachedBeatmap != null) ? cachedBeatmap.name : `Unknown beatmap, synchronize the lobby to get the map name.`;
+	}
+
+	/**
+	 * Get a beatmap from any given mappool
+	 * @param beatmapId the beatmapid
+	 */
+	getBeatmapnameFromMappools(beatmapId: number): { beatmapName: string, beatmapUrl: string } {
+		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(beatmapId);
+		return (cachedBeatmap != null) ? cachedBeatmap : null;
 	}
 	
 	/**
