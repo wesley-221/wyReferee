@@ -4,6 +4,7 @@ import { AuthenticateService } from '../../../services/authenticate.service';
 import { ToastService } from '../../../services/toast.service';
 import { ToastType } from '../../../models/toast';
 import { IrcService } from '../../../services/irc.service';
+import { ElectronService } from '../../../services/electron.service';
 
 @Component({
 	selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
 	isConnecting: boolean = false;
 	isDisconnecting: boolean = false;
 	
-	constructor(private auth: AuthenticateService, private toastService: ToastService, public ircService: IrcService) { }
+	constructor(private auth: AuthenticateService, private toastService: ToastService, public ircService: IrcService, public electronService: ElectronService) { }
 
 	ngOnInit() {
 		this.mappoolPublishForm = new FormGroup({

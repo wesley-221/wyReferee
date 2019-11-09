@@ -29,7 +29,10 @@
             <div class="header-image"></div>
         </div>
 
-        <div class="title">osu! Irc connection</div>
+        <div class="title">
+            osu! Irc connection <br />
+            <a [routerLink]="" (click)="electronService.openLink('https://osu.ppy.sh/p/irc')" *ngIf="!ircService.isAuthenticated">Your irc credentials</a>
+        </div>
     
         <div class="body">
             <div class="row">
