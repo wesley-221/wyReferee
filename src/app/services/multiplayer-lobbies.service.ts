@@ -235,8 +235,6 @@ export class MultiplayerLobbiesService {
 			// Save multiplayerLobby
 			this.update(multiplayerLobby);
 
-			console.log(multiplayerLobby);
-
 			if(showToasts) 
 				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');
 		});
