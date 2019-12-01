@@ -115,6 +115,7 @@ export class MultiplayerLobby {
                     newMpDataUser.score = currentMpData[playerData].score;
                     newMpDataUser.user = currentMpData[playerData].user;
                     newMpDataUser.slot = parseInt(playerData);
+                    newMpDataUser.caption = currentMpData[playerData].caption;
 
                     newMpData.addPlayer(newMpDataUser);
                 }
@@ -165,7 +166,8 @@ export class MultiplayerLobby {
                     "score": allPlayers[score].score,
                     "accuracy": allPlayers[score].accuracy,
                     "passed": allPlayers[score].passed,
-                    "mods": allPlayers[score].mods
+                    "mods": allPlayers[score].mods,
+                    "caption": allPlayers[score].caption
                 }
             }
 

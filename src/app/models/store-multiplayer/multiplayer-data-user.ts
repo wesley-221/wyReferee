@@ -7,4 +7,5 @@ export class MultiplayerDataUser {
     score: number;
     user: number;
     slot: number;
+    caption: string;
 }
