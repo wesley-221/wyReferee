@@ -11,6 +11,7 @@ export class MultiplayerLobby {
     teamTwoName: string;
     teamOneScore: number = 0;
     teamTwoScore: number = 0;
+    teamSize: number;
     webhook: string;
     mappool: Mappool = null;
     mappoolId: number = null;
@@ -65,6 +66,7 @@ export class MultiplayerLobby {
         this.tournamentAcronym = json.data.tournamentAcronym;
         this.teamOneName = json.data.teamOneName;
         this.teamTwoName = json.data.teamTwoName;
+        this.teamSize = json.data.teamSize;
         this.webhook = json.data.webhook;
         this.mappoolId = json.data.selectedMappoolId;
        
@@ -132,6 +134,7 @@ export class MultiplayerLobby {
                 "tournamentAcronym": multiplayerLobby.tournamentAcronym,
                 "teamOneName": multiplayerLobby.teamOneName,
                 "teamTwoName": multiplayerLobby.teamTwoName,
+                "teamSize": multiplayerLobby.teamSize,
                 "webhook": multiplayerLobby.webhook,
                 "selectedMappoolId": (multiplayerLobby.mappool == null) ? -1 : multiplayerLobby.mappool.id,
                 "firstPick": multiplayerLobby.firstPick,
