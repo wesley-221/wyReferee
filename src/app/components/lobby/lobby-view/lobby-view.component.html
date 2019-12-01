@@ -139,34 +139,14 @@
             <div class="mapScore">
                 <h5>Team {{ selectedLobby.teamOneName }}</h5>
                 <table>
-                    <tr>
-                        <td><b>{{ getUsernameFromUserId(match.getPlayer(0).user) }}</b></td>
+                    <tr *ngFor="let slot of selectedLobby.teamOneSlotArray">
+                        <td><b>{{ getUsernameFromUserId(match.getPlayer(slot).user) }}</b></td>
                         <td>&emsp;</td>
-                        <td>{{ getScore(match, 0) }}</td>
+                        <td>{{ getScore(match, slot) }}</td>
                         <td>&emsp;</td>
-                        <td>({{ getAccuracy(match, 0) }}%)</td>
+                        <td>({{ getAccuracy(match, slot) }}%)</td>
                         <td>&emsp;</td>
-                        <td>(Accuracy player)</td>
-                    </tr>
-
-                    <tr>
-                        <td><b>{{ getUsernameFromUserId(match.getPlayer(1).user) }}</b></td>
-                        <td>&emsp;</td>
-                        <td>{{ getScore(match, 1) }}</td>
-                        <td>&emsp;</td>
-                        <td>({{ getAccuracy(match, 1) }}%)</td>
-                        <td>&emsp;</td>
-                        <td>(Score player)</td>
-                    </tr>
-
-                    <tr>
-                        <td><b>{{ getUsernameFromUserId(match.getPlayer(2).user) }}</b></td>
-                        <td>&emsp;</td>
-                        <td>{{ getScore(match, 2) }}</td>
-                        <td>&emsp;</td>
-                        <td>({{ getAccuracy(match, 2) }}%)</td>
-                        <td>&emsp;</td>
-                        <td>(Score player)</td>
+                        <td>(temp - acc/score/caption)</td>
                     </tr>
                 </table>
                 
@@ -174,34 +154,14 @@
 
                 <h5>Team {{ selectedLobby.teamTwoName }}</h5>
                 <table>
-                    <tr>
-                        <td><b>{{ getUsernameFromUserId(match.getPlayer(3).user) }}</b></td>
+                    <tr *ngFor="let slot of selectedLobby.teamTwoSlotArray">
+                        <td><b>{{ getUsernameFromUserId(match.getPlayer(slot).user) }}</b></td>
                         <td>&emsp;</td>
-                        <td>{{ getScore(match, 3) }}</td>
+                        <td>{{ getScore(match, slot) }}</td>
                         <td>&emsp;</td>
-                        <td>({{ getAccuracy(match, 3) }}%)</td>
+                        <td>({{ getAccuracy(match, slot) }}%)</td>
                         <td>&emsp;</td>
-                        <td>(Accuracy player)</td>
-                    </tr>
-
-                    <tr>
-                        <td><b>{{ getUsernameFromUserId(match.getPlayer(4).user) }}</b></td>
-                        <td>&emsp;</td>
-                        <td>{{ getScore(match, 4) }}</td>
-                        <td>&emsp;</td>
-                        <td>({{ getAccuracy(match, 4) }}%)</td>
-                        <td>&emsp;</td>
-                        <td>(Score player)</td>
-                    </tr>
-
-                    <tr>
-                        <td><b>{{ getUsernameFromUserId(match.getPlayer(5).user) }}</b></td>
-                        <td>&emsp;</td>
-                        <td>{{ getScore(match, 5) }}</td>
-                        <td>&emsp;</td>
-                        <td>({{ getAccuracy(match, 5) }}%)</td>
-                        <td>&emsp;</td>
-                        <td>(Score player)</td>
+                        <td>(temp - acc/score/caption)</td>
                     </tr>
                 </table>
 

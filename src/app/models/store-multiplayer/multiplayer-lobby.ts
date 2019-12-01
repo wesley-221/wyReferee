@@ -29,6 +29,9 @@ export class MultiplayerLobby {
     mapsCountTowardScore: {} = {};
     multiplayerData: MultiplayerData[];
 
+    teamOneSlotArray: number[] = [];
+    teamTwoSlotArray: number[] = [];
+
     constructor() { 
         this.multiplayerData = [];
     }
