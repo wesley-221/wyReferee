@@ -37,6 +37,12 @@ export class CreateLobbyComponent implements OnInit {
 			'tournamentAcronym': new FormControl('', [
 				Validators.maxLength(5)
 			]),
+			'teamSize': new FormControl('', [
+				Validators.required,
+				Validators.min(1),
+				Validators.max(6),
+				Validators.pattern(/^\d$/)
+			]),
 			'teamOneName': new FormControl('', [
 				Validators.required
 			]),
@@ -53,6 +59,7 @@ export class CreateLobbyComponent implements OnInit {
 		newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
 		newLobby.teamOneName = this.validationForm.get('teamOneName').value;
 		newLobby.teamTwoName = this.validationForm.get('teamTwoName').value;
+		newLobby.teamSize = this.validationForm.get('teamSize').value;
 		newLobby.multiplayerLink = this.validationForm.get('multiplayerLink').value;
 		newLobby.tournamentAcronym = this.validationForm.get('tournamentAcronym').value;
 		newLobby.description = `${this.validationForm.get('teamOneName').value} vs ${this.validationForm.get('teamTwoName').value}`;
@@ -73,5 +80,9 @@ export class CreateLobbyComponent implements OnInit {
 		this.multiplayerLobbies.add(newLobby);
 
 		this.toastService.addToast(`Successfully created the multiplayer lobby ${newLobby.description}!`);
+	}
+
+	getValidation(key: string): any {
+		return this.validationForm.get(key);
 	}
 }

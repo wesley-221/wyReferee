@@ -15,9 +15,9 @@
             </div>
 
             <input formControlName="multiplayerLink" type="text" class="form-control" placeholder="Multiplayer link" 
-                    [ngClass]="{'has-error': validationForm.get('multiplayerLink').errors && (validationForm.get('multiplayerLink').touched || validationForm.get('multiplayerLink').dirty)}" />
+                    [ngClass]="{'has-error': getValidation('multiplayerLink').errors && (getValidation('multiplayerLink').touched || getValidation('multiplayerLink').dirty)}" />
 
-            <div class="has-error" *ngIf="validationForm.get('multiplayerLink').errors && validationForm.get('multiplayerLink').errors.pattern">
+            <div class="has-error" *ngIf="getValidation('multiplayerLink').errors && getValidation('multiplayerLink').errors.pattern">
                 Invalid multiplayer link given. <br /><b>Accepted format:</b> https://osu.ppy.sh/community/matches/46358686
             </div>
 
@@ -31,16 +31,52 @@
             </div>
 
             <input formControlName="tournamentAcronym" type="text" class="form-control" placeholder="Tournament acronym" 
-                    [ngClass]="{'has-error': validationForm.get('tournamentAcronym').errors && (validationForm.get('tournamentAcronym').touched || validationForm.get('tournamentAcronym').dirty)}" />
+                    [ngClass]="{'has-error': getValidation('tournamentAcronym').errors && (getValidation('tournamentAcronym').touched || getValidation('tournamentAcronym').dirty)}" />
 
             <div class="has-error" 
-                *ngIf="validationForm.get('tournamentAcronym').errors && validationForm.get('tournamentAcronym').errors.maxlength && 
-                        (validationForm.get('tournamentAcronym').touched || validationForm.get('tournamentAcronym').dirty)">
+                *ngIf="getValidation('tournamentAcronym').errors && getValidation('tournamentAcronym').errors.maxlength && 
+                        (getValidation('tournamentAcronym').touched || getValidation('tournamentAcronym').dirty)">
                 The tournament acronym can have a maximum of 5 characters
             </div>
         </div>
 
+        <hr />
+
         <div class="createLobbyTeamRow">
+            <div class="form-group">
+                <h2>Team size</h2>
+                <p>
+                    Enter the amount of players that are allowed to play in a team. 
+                </p>
+
+                <input formControlName="teamSize" type="text" class="form-control" placeholder="Team size" 
+                        [ngClass]="{'has-error': getValidation('teamSize').errors && (getValidation('teamSize').touched || getValidation('teamSize').dirty)  }" />
+
+                <div class="has-error" 
+                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.required && 
+                        (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
+                    This field is required
+                </div>
+
+                <div class="has-error" 
+                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.min && 
+                        (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
+                    The team size must have at least a size of 1
+                </div>
+
+                <div class="has-error" 
+                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.max && 
+                        (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
+                    The team size can not be higher than 6
+                </div>
+
+                <div class="has-error" 
+                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.pattern && 
+                        (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
+                    The team size can only be a number
+                </div>
+            </div>
+
             <div class="teamOne form-group">
                 <h2>Team one name</h2>
                 <p>
@@ -48,11 +84,11 @@
                 </p>
 
                 <input formControlName="teamOneName" type="text" class="form-control" placeholder="Team one name" 
-                        [ngClass]="{'has-error': validationForm.get('teamOneName').errors && (validationForm.get('teamOneName').touched || validationForm.get('teamOneName').dirty)  }" />
+                        [ngClass]="{'has-error': getValidation('teamOneName').errors && (getValidation('teamOneName').touched || getValidation('teamOneName').dirty)  }" />
 
                 <div class="has-error" 
-                    *ngIf="validationForm.get('teamOneName').errors && validationForm.get('teamOneName').errors.required && 
-                        (validationForm.get('teamOneName').touched || validationForm.get('teamOneName').dirty)">
+                    *ngIf="getValidation('teamOneName').errors && getValidation('teamOneName').errors.required && 
+                        (getValidation('teamOneName').touched || getValidation('teamOneName').dirty)">
                     This field is required
                 </div>
             </div>
@@ -64,11 +100,11 @@
                 </p>
 
                 <input formControlName="teamTwoName" type="text" class="form-control" placeholder="Team two name"
-                        [ngClass]="{'has-error': validationForm.get('teamTwoName').errors && (validationForm.get('teamTwoName').touched || validationForm.get('teamTwoName').dirty)  }" />
+                        [ngClass]="{'has-error': getValidation('teamTwoName').errors && (getValidation('teamTwoName').touched || getValidation('teamTwoName').dirty)  }" />
 
                 <div class="has-error" 
-                    *ngIf="validationForm.get('teamTwoName').errors && validationForm.get('teamTwoName').errors.required && 
-                        (validationForm.get('teamTwoName').touched || validationForm.get('teamTwoName').dirty)">
+                    *ngIf="getValidation('teamTwoName').errors && getValidation('teamTwoName').errors.required && 
+                        (getValidation('teamTwoName').touched || getValidation('teamTwoName').dirty)">
                     This field is required
                 </div>
             </div>
