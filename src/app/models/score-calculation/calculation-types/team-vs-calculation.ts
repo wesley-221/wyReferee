@@ -2,15 +2,25 @@ import { ScoreInterface } from "./score-interface";
 import { MultiplayerDataUser } from "../../store-multiplayer/multiplayer-data-user";
 
 export class TeamVsCalculation extends ScoreInterface {
-    calculatePlayerScore(player: MultiplayerDataUser) {
-        return player.score;
+    calculatePlayerScore(player: MultiplayerDataUser): number {
+        return Number(player != null ? player.score : 0);
     }
 
-    calculateTeamScore() {
-        let teamScore = 0;
+    calculateTeamOneScore() {
+        let teamScore: number = 0;
+        
+        for(let i = 0; i < this.getTeamSize(); i ++) {
+            teamScore += this.calculatePlayerScore(this.getUserBySlot(i));
+        }
 
-        for(let user of this.getUsers()) {
-            teamScore += this.calculatePlayerScore(user);
+        return teamScore;
+    }
+
+    calculateTeamTwoScore() {
+        let teamScore: number = 0;
+        
+        for(let i = this.getTeamSize(); i < this.getTeamSize() * 2; i ++) {
+            teamScore += this.calculatePlayerScore(this.getUserBySlot(i));
         }
 
         return teamScore;
