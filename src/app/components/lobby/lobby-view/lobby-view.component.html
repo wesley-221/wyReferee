@@ -146,7 +146,7 @@
                         <td>&emsp;</td>
                         <td>({{ getAccuracy(match, slot) }}%)</td>
                         <td>&emsp;</td>
-                        <td>(temp - acc/score/caption)</td>
+                        <td *ngIf="match.getPlayer(slot).caption && match.getPlayer(slot).caption.length > 0">({{ match.getPlayer(slot).caption }})</td>
                     </tr>
                 </table>
                 
@@ -161,7 +161,7 @@
                         <td>&emsp;</td>
                         <td>({{ getAccuracy(match, slot) }}%)</td>
                         <td>&emsp;</td>
-                        <td>(temp - acc/score/caption)</td>
+                        <td *ngIf="match.getPlayer(slot).caption && match.getPlayer(slot).caption.length > 0">({{ match.getPlayer(slot).caption }})</td>
                     </tr>
                 </table>
 

@@ -40,24 +40,26 @@ export abstract class ScoreInterface {
      * Add a user to the current score interface
      * @param user the user to add
      */
-    public addUser(user: MultiplayerDataUser) {
-        this.allUsers.push(user);
+    public addUserScore(user: MultiplayerDataUser) {
+        if(user == undefined) return;
+
+        this.allUsers[user.slot] = user;
     }
 
     /**
      * Adds several users to the current score interface
      * @param users the users object to add
      */
-    public addUsers(users: MultiplayerDataUser[]) {
+    public addUserScores(users: MultiplayerDataUser[]) {
         for(let user of users) {
-            this.addUser(user);
+            this.addUserScore(user);
         }
     }
 
     /**
      * Get all the users of the current score interface
      */
-    public getUsers(): MultiplayerDataUser[] {
+    public getUserScores(): MultiplayerDataUser[] {
         return this.allUsers;
     }
 
@@ -65,14 +67,20 @@ export abstract class ScoreInterface {
      * Get a user by the given slot
      * @param slot 
      */
-    public getUserBySlot(slot: number): MultiplayerDataUser | null {
+    public getUserScoreBySlot(slot: number): MultiplayerDataUser {
         for(let user of this.allUsers) {
             if(user.slot == slot) {
                 return user;
             }
         }
 
-        return null;
+        const newUser = new MultiplayerDataUser();
+        newUser.slot = slot;
+        newUser.score = 0;
+        newUser.passed = 0;
+        newUser.accuracy = 0;
+
+        return newUser;
     }
 
     /**
@@ -88,6 +96,11 @@ export abstract class ScoreInterface {
      */
     public setTeamSize(teamSize: number): void {
         this.teamSize = teamSize;
+
+        // Initialize the array with empty users
+        for(let i = 0; i < this.teamSize * 2; i ++) {
+            this.addUserScore(this.getUserScoreBySlot(i));
+        }
     }
 
     /**

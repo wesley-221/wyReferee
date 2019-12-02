@@ -3,7 +3,7 @@ import { MultiplayerLobby } from '../models/store-multiplayer/multiplayer-lobby'
 import { StoreService } from './store.service';
 import { GetMultiplayerService } from './osu-api/get-multiplayer.service';
 import { MultiplayerDataUser } from '../models/store-multiplayer/multiplayer-data-user';
-import { AxsCalculations } from '../models/axs-calculations';
+import { Calculations } from '../models/calculations';
 import { MultiplayerData } from '../models/store-multiplayer/multiplayer-data';
 import { ToastService } from './toast.service';
 import { CacheService } from './cache.service';
@@ -13,6 +13,7 @@ import { CacheBeatmap } from '../models/cache/cache-beatmap';
 import { GetBeatmap } from './osu-api/get-beatmap.service';
 import { MappoolService } from './mappool.service';
 import { Calculate } from '../models/score-calculation/calculate';
+import { AxSCalculation } from '../models/score-calculation/calculation-types/axs-calculation';
 
 @Injectable({
   	providedIn: 'root'
@@ -161,28 +162,9 @@ export class MultiplayerLobbiesService {
 
 					newMpDataUser.user = currentScore.user_id;
 					newMpDataUser.score = currentScore.score;
-					newMpDataUser.accuracy = AxsCalculations.getAccuracyOfScore(currentScore);
+					newMpDataUser.accuracy = Calculations.getAccuracyOfScore(currentScore);
 					newMpDataUser.passed = currentScore.pass;
 					newMpDataUser.slot = currentScore.slot;
-
-
-					// Accuracy players are placed in slot 0 and 3
-					// if(currentScore.slot == 0 || currentScore.slot == 3) {
-					// 	newMpDataUser.user = currentScore.user_id;
-					// 	newMpDataUser.score = (currentScore.pass == 0 ? 0 : AxsCalculations.calculateAccuracyPlayerScore(currentScore.score));
-					// 	newMpDataUser.accuracy = AxsCalculations.getAccuracyOfScore(currentScore);
-					// 	newMpDataUser.passed = currentScore.pass;
-					// 	newMpDataUser.slot = currentScore.slot;
-					// }
-					// // Score players are placed in slot 1, 2 and 4, 5
-					// else if(currentScore.slot == 1 || currentScore.slot == 2 || currentScore.slot == 4 || currentScore.slot == 5) {
-					// 	newMpDataUser.user = currentScore.user_id;
-						
-					// 	newMpDataUser.score = (currentScore.pass == 0 ? 0 : AxsCalculations.calculateScorePlayerScore(currentScore.score, AxsCalculations.getAccuracyOfScore(currentScore), MODIFIER));
-					// 	newMpDataUser.accuracy = AxsCalculations.getAccuracyOfScore(currentScore);
-					// 	newMpDataUser.passed = currentScore.pass;
-					// 	newMpDataUser.slot = currentScore.slot;
-					// }
 
 					if(!multiplayerLobby.mapsCountTowardScore.hasOwnProperty(currentGame.game_id)) {
 						multiplayerLobby.mapsCountTowardScore[currentGame.game_id] = true;
@@ -191,41 +173,15 @@ export class MultiplayerLobbiesService {
 					multiplayerData.addPlayer(newMpDataUser);
 				}
 
-				// const 	playerOne = multiplayerData.getPlayer(0), 
-				// 		playerTwo = multiplayerData.getPlayer(1),
-				// 		playerThree = multiplayerData.getPlayer(2),
-				// 		playerFour = multiplayerData.getPlayer(3),
-				// 		playerFive = multiplayerData.getPlayer(4),
-				// 		playerSix = multiplayerData.getPlayer(5);
-
-				// const playerOneData = {
-				// 	score: playerOne == null ? 0 : playerOne.score, 
-				// 	accuracy : playerOne == null ? 0 : playerOne.accuracy
-				// }, playerTwoData = {
-				// 	score: playerTwo == null ? 0 : playerTwo.score, 
-				// 	accuracy : playerTwo == null ? 0 : playerTwo.accuracy
-				// }, playerThreeData = {
-				// 	score: playerThree == null ? 0 : playerThree.score, 
-				// 	accuracy : playerThree == null ? 0 : playerThree.accuracy
-				// }, playerFourData = {
-				// 	score: playerFour == null ? 0 : playerFour.score, 
-				// 	accuracy : playerFour == null ? 0 : playerFour.accuracy
-				// }, playerFiveData = {
-				// 	score: playerFive == null ? 0 : playerFive.score, 
-				// 	accuracy : playerFive == null ? 0 : playerFive.accuracy
-				// }, playerSixData = {
-				// 	score: playerSix == null ? 0 : playerSix.score, 
-				// 	accuracy : playerSix == null ? 0 : playerSix.accuracy
-				// };
-
-				// multiplayerData.team_one_score = AxsCalculations.calculateTeamScore(playerOneData.score, playerTwoData.score, playerThreeData.score, playerThree.accuracy, MODIFIER);
-				// multiplayerData.team_two_score = AxsCalculations.calculateTeamScore(playerFourData.score, playerFiveData.score, playerSixData.score, playerFourData.accuracy, MODIFIER);
-
 				const calculate = new Calculate();
-				const scoreInterface = calculate.getScoreInterface('Team vs.');
+				const scoreInterface = calculate.getScoreInterface('AxS');
 
 				scoreInterface.setTeamSize(multiplayerLobby.teamSize);
-				scoreInterface.addUsers(multiplayerData.getPlayers());
+				scoreInterface.addUserScores(multiplayerData.getPlayers());
+
+				if(scoreInterface.getIdentifier() == "AxS") {
+					(<AxSCalculation>scoreInterface).setModifier(MODIFIER);
+				}
 
 				multiplayerData.team_one_score = scoreInterface.calculateTeamOneScore();
 				multiplayerData.team_two_score = scoreInterface.calculateTeamTwoScore();

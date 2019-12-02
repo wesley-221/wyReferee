@@ -1,5 +1,6 @@
 import { ScoreInterface } from "./calculation-types/score-interface";
 import { TeamVsCalculation } from "./calculation-types/team-vs-calculation";
+import { AxSCalculation } from "./calculation-types/axs-calculation";
 
 export class Calculate {
     private scoreInterfaces: ScoreInterface[];
@@ -8,6 +9,7 @@ export class Calculate {
         this.scoreInterfaces = [];
 
         this.addScoreInterface(new TeamVsCalculation("Team vs."));
+        this.addScoreInterface(new AxSCalculation("AxS"));
     }
 
     /**
