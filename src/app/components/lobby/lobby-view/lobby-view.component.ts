@@ -359,7 +359,7 @@ export class LobbyViewComponent implements OnInit {
 	getScore(match: MultiplayerData, slotId: number) {
 		const user: MultiplayerDataUser = match.getPlayer(slotId);
 
-		return (user != undefined) ? this.addDot(user.score.toFixed(), " ") : 0;
+		return (user != undefined) ? this.addDot(user.score % 1 == 0 ? user.score : user.score.toFixed(), " ") : 0;
 	}
 
 	/**
