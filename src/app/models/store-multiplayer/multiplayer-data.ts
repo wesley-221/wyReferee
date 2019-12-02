@@ -7,7 +7,7 @@ export class MultiplayerData {
     mods: Mods;
     team_one_score: number;
     team_two_score: number;
-    private players: {};
+    private players: MultiplayerDataUser[];
 
     constructor() {
         this.players = [];
@@ -42,7 +42,7 @@ export class MultiplayerData {
     /**
      * Return all the players
      */
-    getPlayers(): {} {
+    getPlayers(): MultiplayerDataUser[] {
         return this.players;
     }
 
