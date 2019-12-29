@@ -44,6 +44,9 @@ export class LobbyViewComponent implements OnInit {
 				this.selectedLobby.ircConnected = true;
 			}
 
+			this.selectedLobby.teamOneSlotArray = [];
+			this.selectedLobby.teamTwoSlotArray = [];
+
 			// Setup the team arrays
 			for(let i: any = 0; i < this.selectedLobby.teamSize * 2; i ++) {
 				if(i < this.selectedLobby.teamSize) {
@@ -218,7 +221,7 @@ export class LobbyViewComponent implements OnInit {
 			]
 		}
 
-		this.http.post(this.selectedLobby.webhook, { "payload_json": JSON.stringify(body) }, httpOptions).subscribe(obj => {
+		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' })}).subscribe(obj => {
 			console.log(obj);
 		});
 	}
