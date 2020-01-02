@@ -8,6 +8,9 @@ import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
 import { MappoolService } from '../../services/mappool.service';
 import { ModBracketMap } from '../../models/osu-mappool/mod-bracket-map';
 import { ModBracket } from '../../models/osu-mappool/mod-bracket';
+import { MultiplayerLobbiesService } from '../../services/multiplayer-lobbies.service';
+import { Router } from '@angular/router';
+import { ToastService } from '../../services/toast.service';
 declare var $: any;
 
 @Component({
@@ -43,7 +46,8 @@ export class IrcComponent implements OnInit {
 	roomSettingGoingOn: boolean = false;
 	roomSettingDelay: number = 2;
 
-	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef, public mappoolService: MappoolService) { 
+	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef, 
+				public mappoolService: MappoolService, private multiplayerLobbies: MultiplayerLobbiesService, private router: Router, private toastService: ToastService) { 
 		this.channels = ircService.allChannels;
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -281,5 +285,16 @@ export class IrcComponent implements OnInit {
 		}
 		
 		this.roomSettingDelay = 3;	
+	}
+
+	navigateLobbyOverview() {
+		const lobbyId = this.multiplayerLobbies.getByIrcLobby(this.selectedChannel.channelName).lobbyId;
+
+		if(lobbyId) {
+			this.router.navigate(['lobby-view', lobbyId]);
+		}
+		else {
+			this.toastService.addToast(`No lobby overview found for this irc channel`);
+		}
 	}
 }

@@ -15,10 +15,11 @@
                 </select>
 
                 <div class="btn-group float-right">
+                    <button class="btn btn-primary" (click)="goToIrc()"><fa-icon [icon]="['fas', 'comment']"></fa-icon> IRC</button>
                     <button class="btn btn-primary" (click)="settingsTabIsOpened = !settingsTabIsOpened"><fa-icon [icon]="['fas', 'cogs']"></fa-icon> Settings</button>
                     <button type="button" (click)="copyNextPick()" *ngIf="!selectedLobby.ircConnected" class="btn btn-info"><fa-icon [icon]="['far', 'envelope-open']"></fa-icon> Copy next pick</button>
                     <button type="button" (click)="sendNextPick()" *ngIf="selectedLobby.ircConnected" class="btn btn-info" [disabled]="!ircService.isAuthenticated"><fa-icon [icon]="['far', 'envelope-open']"></fa-icon> Send next pick</button>
-                    <button type="button" (click)="synchronizeMp()" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon> Synchronize</button>
+                    <button type="button" (click)="synchronizeMp()" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
                 </div>
             </div>
         </div>

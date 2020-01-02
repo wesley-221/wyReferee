@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MultiplayerLobby } from '../../../models/store-multiplayer/multiplayer-lobby';
 import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies.service';
 import { ElectronService } from '../../../services/electron.service';
@@ -34,7 +34,8 @@ export class LobbyViewComponent implements OnInit {
 		private storeService: StoreService,
 		public ircService: IrcService,
 		private clipboardService: ClipboardService,
-		private http: HttpClient) {
+		private http: HttpClient,
+		private router: Router) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
 
@@ -428,5 +429,9 @@ export class LobbyViewComponent implements OnInit {
         }
 
         return null;
+	}
+
+	goToIrc() {
+		this.router.navigate(['irc']);
 	}
 }

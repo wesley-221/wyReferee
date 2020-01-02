@@ -68,6 +68,7 @@
     <div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
         <div class="side-menu-button">
             <button class="btn btn-primary" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+            <button class="btn btn-info" (click)="navigateLobbyOverview(selectedChannel.channelName)"><fa-icon [icon]="['fas', 'bars']"></fa-icon></button>
         </div>
 
         <div class="side-menu-content">
