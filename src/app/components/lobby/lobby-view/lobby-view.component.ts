@@ -205,6 +205,10 @@ export class LobbyViewComponent implements OnInit {
 					"title": `Result of **${this.selectedLobby.teamOneName}** vs. **${this.selectedLobby.teamTwoName}**`,
 					"description": `${scoreString} \n\n**First pick**: ${this.selectedLobby.firstPick} \n\n[${this.selectedLobby.multiplayerLink}](${this.selectedLobby.multiplayerLink})`,
 					"color": 15258703,
+					"timestamp": new Date(),
+					"footer": {
+						"text": `Match referee was ${this.ircService.authenticatedUser}`
+					},
 					"fields": [
 						{
 							"name": `**${this.selectedLobby.teamOneName}** bans:`,
