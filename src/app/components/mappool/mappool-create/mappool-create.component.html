@@ -7,7 +7,7 @@
     <h3>Mappool gamemode</h3>
     <p>The gamemode that will be used for all the beatmaps when picking.</p>
     
-    <select class="form-control" [(ngModel)]="gamemodeId">
+    <select class="form-control" (change)="changeGamemode($event)">
         <option value="0">osu!</option>
         <option value="1">osu!Taiko</option>
         <option value="2">osu!Catch</option>
