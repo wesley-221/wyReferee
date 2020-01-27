@@ -44,11 +44,11 @@ $send-message-height: 38px;
 
                 &:hover, &.cdk-drag-preview {
                     .channel-name {
-                        width: calc(100% - 40px);
+                        width: calc(100% - 80px);
                     }
 
                     .side-button {
-                        width: 40px;
+                        width: 80px;
 
                         display: inline-block;
                     }
@@ -87,6 +87,26 @@ $send-message-height: 38px;
 
                         &.red {
                             background-color: red;
+
+                            &:hover {
+                                background-color: darken(red, 5%);
+                            }
+                        }
+
+                        &.muted {
+                            background-color: red;
+
+                            &:hover {
+                                background-color: darken(red, 5%);
+                            }
+                        }
+
+                        &.not-muted {
+                            background-color: green;
+
+                            &:hover {
+                                background-color: darken(green, 5%);
+                            }
                         }
                     }
                 }

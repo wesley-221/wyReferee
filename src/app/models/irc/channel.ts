@@ -22,6 +22,7 @@ export class Channel {
     lastActiveChannel: boolean = false;
     isPrivateChannel: boolean = false;
     hasUnreadMessages: boolean = false;
+    playSoundOnMessage: boolean = false;
 
     teamMode: TeamMode;
     winCondition: WinCondition;
@@ -31,5 +32,6 @@ export class Channel {
     constructor(channelName: string, isPrivateChannel: boolean = false) {
         this.channelName = channelName;
         this.isPrivateChannel = isPrivateChannel;
+        this.playSoundOnMessage = false;
     }
 }

@@ -11,6 +11,7 @@ import { ModBracket } from '../../models/osu-mappool/mod-bracket';
 import { MultiplayerLobbiesService } from '../../services/multiplayer-lobbies.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
+import { StoreService } from '../../services/store.service';
 declare var $: any;
 
 @Component({
@@ -46,7 +47,7 @@ export class IrcComponent implements OnInit {
 	roomSettingGoingOn: boolean = false;
 	roomSettingDelay: number = 2;
 
-	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef, 
+	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef, private storeService: StoreService,
 				public mappoolService: MappoolService, private multiplayerLobbies: MultiplayerLobbiesService, private router: Router, private toastService: ToastService) { 
 		this.channels = ircService.allChannels;
 
@@ -296,5 +297,11 @@ export class IrcComponent implements OnInit {
 		else {
 			this.toastService.addToast(`No lobby overview found for this irc channel`);
 		}
+	}
+
+	playSound(channel: Channel, status: boolean) {
+		channel.playSoundOnMessage = status;
+		this.storeService.set(`irc.channels.${channel.channelName}.playSoundOnMessage`, status);
+		this.toastService.addToast(`${channel.channelName} will ${status == false ? "no longer beep on message" : "now beep on message"}.`);
 	}
 }

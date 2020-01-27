@@ -12,6 +12,14 @@
                 </div>
 
                 <div class="side-button">
+                    <div class="button not-muted" (click)="playSound(channel, false)" *ngIf="channel.playSoundOnMessage">
+                        <fa-icon [icon]="['fas', 'volume-up']"></fa-icon>
+                    </div>
+
+                    <div class="button muted" (click)="playSound(channel, true)" *ngIf="!channel.playSoundOnMessage">
+                        <fa-icon [icon]="['fas', 'volume-mute']"></fa-icon>
+                    </div>
+
                     <div class="button red" (click)="partChannel(channel.channelName)">
                         <fa-icon [icon]="['fas', 'times']"></fa-icon>
                     </div>

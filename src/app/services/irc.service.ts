@@ -9,6 +9,7 @@ import { Message } from '../models/irc/message';
 import { Regex } from '../models/irc/regex';
 import { MessageBuilder, MessageType } from '../models/irc/message-builder';
 import { MultiplayerLobbiesService } from './multiplayer-lobbies.service';
+import { Howl } from 'howler';
 
 @Injectable({
   	providedIn: 'root'
@@ -40,6 +41,9 @@ export class IrcService {
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
 	isCreatingMultiplayerLobby: number = -1;
 
+	// Indication if a sound is playing or not
+	private soundIsPlaying: boolean = false;
+
   	constructor(private toastService: ToastService, private storeService: StoreService, private multiplayerLobbiesService: MultiplayerLobbiesService) { 
 		this.irc = require('irc-upd');
 
@@ -67,6 +71,7 @@ export class IrcService {
 				nChannel.active = connectedChannels[channel].active;
 				nChannel.lastActiveChannel = connectedChannels[channel].lastActiveChannel;
 				nChannel.isPrivateChannel = connectedChannels[channel].isPrivateChannel;
+				nChannel.playSoundOnMessage = (connectedChannels[channel].playSoundOnMessage ? connectedChannels[channel].playSoundOnMessage : false);
 
 				// Loop through all the messages
 				for(let message in connectedChannels[channel].messageHistory) {
@@ -363,6 +368,21 @@ export class IrcService {
 			this.getChannelByName(author).allMessages.push(newMessage);
 			this.getChannelByName(author).hasUnreadMessages = true;
 			this.saveMessageToHistory(author, newMessage);
+
+			if(this.getChannelByName(author).playSoundOnMessage) {
+				let sound = new Howl({
+					src: ['assets/stairs.mp3'],
+				});
+	
+				if(!this.soundIsPlaying) {
+					sound.play();
+					this.soundIsPlaying = true;
+				}
+	
+				sound.on('end', () => {
+					this.soundIsPlaying = false;
+				});
+			}
 		}
 		else {
 			newMessage = new Message(Object.keys(this.getChannelByName(channelName).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false);
@@ -370,11 +390,28 @@ export class IrcService {
 			this.getChannelByName(channelName).allMessages.push(newMessage);
 			this.getChannelByName(channelName).hasUnreadMessages = true;
 			this.saveMessageToHistory(channelName, newMessage);
+
+			if(author != this.authenticatedUser) {
+				if(this.getChannelByName(channelName).playSoundOnMessage) {
+					let sound = new Howl({
+						src: ['assets/stairs.mp3'],
+					});
+		
+					if(!this.soundIsPlaying) {
+						sound.play();
+						this.soundIsPlaying = true;
+					}
+		
+					sound.on('end', () => {
+						this.soundIsPlaying = false;
+					});
+				}
+			}
 		}
 
 		this.messageHasBeenSend$.next(true);
 	}
-
+	
 	/**
 	 * Join a channel
 	 * @param channelName the channel to join
@@ -401,7 +438,8 @@ export class IrcService {
 					active: true,
 					messageHistory: [],
 					lastActiveChannel: false,
-					isPrivateChannel: true
+					isPrivateChannel: true,
+					playSoundOnMessage: false
 				});
 
 				this.toastService.addToast(`Opened private message channel with "${channelName}".`);
@@ -416,7 +454,8 @@ export class IrcService {
 					active: true,
 					messageHistory: [],
 					lastActiveChannel: false,
-					isPrivateChannel: false
+					isPrivateChannel: false,
+					playSoundOnMessage: false
 				});
 	
 				this.isJoiningChannel$.next(false);
