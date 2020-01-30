@@ -6,7 +6,7 @@
 
         <div class="col-5">
             <div class="input-group mt-4">
-                <input type="text" class="form-control" placeholder="Publish id" [(ngModel)]="mappoolPublishId" />
+                <input type="text" class="form-control" placeholder="Mappool id" [(ngModel)]="mappoolId" />
         
                 <div class="input-group-append">
                     <button class="btn btn-primary" (click)="importMappool()">Import</button>
@@ -21,12 +21,12 @@
         <div class="row">
             <div class="col-9">
                 <h1>{{ mappool.name }}</h1>
-                <span><b>Publish id:</b> {{ mappool.publish_id }}</span>
+                <span><b>Mappool id:</b> {{ mappool.id }}</span>
             </div>
 
             <div class="col-3">
                 <div class="btn-group float-right">
-                    <button class="btn btn-primary" (click)="publishMappool(mappool)" *ngIf="authService.loggedIn">Publish</button>
+                    <button class="btn btn-primary" (click)="publishMappool(mappool)">Publish</button>
                     <button class="btn btn-danger" (click)="deleteMappool(mappool)">Delete</button>
                 </div>
             </div>

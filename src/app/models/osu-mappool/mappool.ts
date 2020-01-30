@@ -4,7 +4,6 @@ import { Gamemodes } from "../osu-models/osu-api";
 
 export class Mappool {
     id: number = null;
-    publish_id: string = null;
     name: string;
     modBrackets: ModBracket[] = [];
     modifiers: {} = {};
@@ -34,7 +33,6 @@ export class Mappool {
     public convertToJson(): any {
         let mappool = {
             id: this.id,
-            publish_id: this.publish_id,
             name: this.name,
             brackets: [], 
             modifiers: {},
@@ -80,28 +78,12 @@ export class Mappool {
         const newMappool = new Mappool();
 
         newMappool.id = mappool.id;
-        newMappool.publish_id = mappool.publish_id;
         newMappool.name = mappool.name;
         newMappool.modBrackets = mappool.modBrackets;
         newMappool.modifiers = mappool.modifiers;
         newMappool.gamemodeId = mappool.gamemodeId;
 
         return newMappool;
-    }
-
-    /**
-     * Create a new token used for publishing a mappool
-     * @param tokenLength the length of the token
-     */
-    public static generatePublishToken(tokenLength: number = 35): string {
-        let token = '';
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@%^&*()_+-=';
-
-        for (let i = 0; i < tokenLength; i ++ ) {
-            token += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-
-        return token;
     }
 
     /**
@@ -113,7 +95,6 @@ export class Mappool {
                 newMappool = new Mappool();
 
         newMappool.id = thisMappool.id
-        newMappool.publish_id = thisMappool.publish_id;
         newMappool.name = thisMappool.name;
         newMappool.gamemodeId = thisMappool.gamemode;
 

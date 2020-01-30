@@ -9,9 +9,6 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common
 
 import { AppRoutingModule } from './app-routing.module';
 
-import * as firebase from 'firebase/app';
-import { AppConfig } from '../environments/environment';
-
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -95,6 +92,5 @@ export function HttpLoaderFactory(http: HttpClient) {
 export class AppModule {
 	constructor(library: FaIconLibrary) {
 		library.addIconPacks(fas, far);
-		firebase.initializeApp(AppConfig.firebase);
 	}
 }
