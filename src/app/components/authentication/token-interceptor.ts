@@ -8,10 +8,14 @@ export class AuthInterceptor implements HttpInterceptor {
     constructor(private authService: AuthenticateService) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const token = this.authService.token;
+        let token;
+
+        if(this.authService.loggedIn) {
+            token = this.authService.loggedInUser.token;
+        }
 
         if(token) {
-            req = req.clone({ url: `${req.url}?auth=${token}`});
+            req = req.clone({ setHeaders: { Authorization: `${token}` }, withCredentials: true });
         }
 
         return next.handle(req);

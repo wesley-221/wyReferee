@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ToastService } from '../../../services/toast.service';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { ToastType } from '../../../models/toast';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	selector: 'app-mappool-overview',
@@ -46,8 +47,13 @@ export class MappoolOverviewComponent implements OnInit {
 		if(confirm(`Are you sure you want to publish "${mappool.name}"?`)) {
 			this.mappoolService.publishMappool(mappool).subscribe((data) => {
 				this.toastService.addToast(`Successfully published the mappool "${data.name}" with the id ${data.id}.`);
-			}, () => {
-				this.toastService.addToast(`Unable to publish the mappool.`, ToastType.Error);
+			}, (err: HttpErrorResponse) => {
+				if(err.error.status == 403) {
+					this.toastService.addToast(`${err.error.message}`, ToastType.Error);
+				}
+				else {
+					this.toastService.addToast(`Unknown error: ${err.error.message} (${err.error.status})`);
+				}
 			})
 		}
 	}

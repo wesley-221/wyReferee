@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { ToastService } from '../../../services/toast.service';
-import { ToastType } from '../../../models/toast';
 import { IrcService } from '../../../services/irc.service';
 import { ElectronService } from '../../../services/electron.service';
+import { RegisterRequest } from '../../../models/authentication/register-request';
+import { LoggedInUser } from '../../../models/authentication/logged-in-user';
+import { ToastType } from '../../../models/toast';
 
 @Component({
 	selector: 'app-login',
@@ -18,7 +20,7 @@ export class LoginComponent implements OnInit {
 	isConnecting: boolean = false;
 	isDisconnecting: boolean = false;
 	
-	constructor(private auth: AuthenticateService, private toastService: ToastService, public ircService: IrcService, public electronService: ElectronService) { }
+	constructor(public auth: AuthenticateService, private toastService: ToastService, public ircService: IrcService, public electronService: ElectronService) { }
 
 	ngOnInit() {
 		this.mappoolPublishForm = new FormGroup({
@@ -57,11 +59,31 @@ export class LoginComponent implements OnInit {
 		const 	username = this.mappoolPublishForm.get('username').value, 
 				password = this.mappoolPublishForm.get('password').value;
 
-		this.auth.login(username, password).then(res => {
-			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser}"!`);
-		}).catch((err: Error) => {
-			this.toastService.addToast(`Something went wrong while trying to login: "${err.message}"`, ToastType.Error);
+		const registerUser = new RegisterRequest();
+
+		registerUser.username = username;
+		registerUser.password = password;
+
+		this.auth.login(registerUser).subscribe(data => {
+			const loggedInUser: LoggedInUser = new LoggedInUser();
+
+			loggedInUser.userId = data.body.userId;
+			loggedInUser.username = data.body.username;
+			loggedInUser.isAdmin = data.body.admin;
+			loggedInUser.token = data.headers.get('Authorization');
+
+			this.auth.loggedInUser = loggedInUser;
+			this.auth.loggedIn = true;
+
+			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser.username}"!`);
+		}, (err) => {
+			this.toastService.addToast(`${err.error.message}`, ToastType.Error);
 		});
+	}
+
+	logoutMappoolPublish() {
+		this.auth.logout();
+		this.toastService.addToast(`Successfully logged out.`);
 	}
 
 	/**

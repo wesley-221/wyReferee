@@ -1,3 +1,6 @@
 spring.jpa.hibernate.ddl-auto=update
 #spring.jpa.show-sql=true
 logging.level.root=info
+
+jwt.issuer=""
+jwt.passphrase=""

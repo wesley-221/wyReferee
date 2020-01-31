@@ -12,7 +12,7 @@
         <div class="body">
             <div class="row">
                 <div class="col-xs-12 col-lg-8 offset-lg-2">
-                    <form [formGroup]="mappoolPublishForm">
+                    <form [formGroup]="mappoolPublishForm" *ngIf="!auth.loggedIn">
                         <input type="text" class="form-control" placeholder="Username" formControlName="username" />
                         <div class="spacing"></div>
                         <input type="password" class="form-control" placeholder="Password" formControlName="password" />
@@ -22,6 +22,16 @@
                             <button (click)="loginMappoolPublish()" class="btn btn-success custom-btn" [disabled]="mappoolPublishForm.invalid">Login</button>
                         </div>
                     </form>
+
+                    <div *ngIf="auth.loggedIn">
+                        <div class="center-text">Logged in as&nbsp;<b>{{ auth.loggedInUser.username }}</b></div>
+
+                        <div class="spacing"></div>
+
+                        <div class="center">
+                            <button (click)="logoutMappoolPublish()" class="btn btn-success custom-btn">Logout</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-package axs.api.models;
+package axs.api.models.authentication;
 
 public class RegisterRequest {
 	private String username;

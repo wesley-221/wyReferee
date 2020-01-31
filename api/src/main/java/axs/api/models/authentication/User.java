@@ -1,4 +1,4 @@
-package axs.api.models;
+package axs.api.models.authentication;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

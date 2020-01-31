@@ -1,9 +1,12 @@
 package axs.api.rest;
 
-import axs.api.models.RegisterRequest;
-import axs.api.models.User;
+import axs.api.models.authentication.JWToken;
+import axs.api.models.authentication.RegisterRequest;
+import axs.api.models.authentication.User;
 import axs.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +20,12 @@ public class AuthenticateController {
 	UserRepository userRepository;
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+	@Value("${jwt.issuer}")
+	private String issuer;
+
+	@Value("${jwt.passphrase}")
+	private String passphrase;
 
 	@PostMapping("/register")
 	public ResponseEntity<Object> register(@RequestBody RegisterRequest registerRequest) {
@@ -36,5 +45,28 @@ public class AuthenticateController {
 		userRepository.save(user);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Successfully registered your account.\"}");
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<Object> login(@RequestBody RegisterRequest registerRequest) {
+		User user = userRepository.findByUsername(registerRequest.getUsername());
+
+		// Check if the user exists
+		if(user == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Invalid username or password given.\"}");
+		}
+
+		// Check if the correct password is given
+		if(!passwordEncoder.matches(registerRequest.getPassword(), user.getPassword())) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Invalid username or password given.\"}");
+		}
+
+		JWToken jwToken = new JWToken(user.getId(), user.getUsername(), user.isAdmin());
+		String token = jwToken.encode(this.issuer, this.passphrase);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		return new ResponseEntity<>("{ \"message\": \"Successfully logged in.\", \"userId\": \"" + user.getId() + "\", \"username\": \"" + user.getUsername() + "\", \"admin\": \"" + user.isAdmin() + "\" }", headers, HttpStatus.OK);
 	}
 }

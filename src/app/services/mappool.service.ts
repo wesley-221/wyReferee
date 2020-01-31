@@ -87,8 +87,8 @@ export class MappoolService {
 	 * Publish a mappool
 	 * @param mappool the mappool to publish
 	 */
-	public publishMappool(mappool: Mappool): Observable<Mappool> {
-		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool/create`, mappool);
+	public publishMappool(mappool: Mappool): Observable<any> {
+		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool/create`, mappool, { observe : "response" });
 	}
 
 	/**

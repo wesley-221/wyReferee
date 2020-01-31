@@ -11,12 +11,4 @@ import { ToastService } from '../../../services/toast.service';
 export class SidebarComponent implements OnInit {
 	constructor(public authService: AuthenticateService, private toastService: ToastService) { }
 	ngOnInit() { }
-
-	/**
-	 * Logout the user
-	 */
-	logout() {
-		this.authService.logout();
-		this.toastService.addToast(`Successfully logged out.`);
-	}
 }

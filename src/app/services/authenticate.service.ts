@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { RegisterRequest } from '../models/authentication/register-request';
 import { AppConfig } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { LoggedInUser } from '../models/authentication/logged-in-user';
 
 @Injectable({
   	providedIn: 'root'
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs';
 
 export class AuthenticateService {
 	private readonly apiUrl = AppConfig.apiUrl;
-	public loggedInUser: string = "Guest";
+	public loggedInUser: LoggedInUser;
 	public loggedIn: boolean = false;
 
   	constructor(private httpClient: HttpClient) { }
@@ -28,14 +29,15 @@ export class AuthenticateService {
 	 * @param email the email to login with
 	 * @param password the password to login with
 	 */
-	public login(email: string, password: string): Promise<any> {
-		return null;
+	public login(registerRequest: RegisterRequest): Observable<any> {
+		return this.httpClient.post<RegisterRequest>(`${this.apiUrl}login`, registerRequest, { observe: 'response' });
 	}
 
 	/**
 	 * Logout the current loggedin user
 	 */
 	public logout() {
-		return null;
+		this.loggedIn = false;
+		this.loggedInUser = null;
 	}
 }
