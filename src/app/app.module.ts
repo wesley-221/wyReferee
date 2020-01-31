@@ -38,6 +38,7 @@ import { AuthInterceptor } from "./components/authentication/token-interceptor";
 import { IrcComponent } from './components/irc/irc.component';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { SearchPipe } from './pipes/search.pipe';
+import { RegisterComponent } from './components/authentication/register/register.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -62,7 +63,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 		MappoolBracketEditComponent, 
 		LoginComponent, 
 		IrcComponent, 
-		SearchPipe
+		SearchPipe, RegisterComponent
 	],
 	imports: [
 		BrowserModule,
@@ -84,7 +85,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 		ClipboardModule
 	],
 	providers: [
-		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+		// { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
 	],
 	bootstrap: [AppComponent]
 })

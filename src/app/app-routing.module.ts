@@ -12,6 +12,7 @@ import { MappoolCreateComponent } from './components/mappool/mappool-create/mapp
 import { MappoolBracketEditComponent } from './components/mappool/mappool-bracket-edit/mappool-bracket-edit.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { IrcComponent } from './components/irc/irc.component';
+import { RegisterComponent } from './components/authentication/register/register.component';
 
 const routes: Routes = [
 	{
@@ -22,6 +23,7 @@ const routes: Routes = [
 			{ path: 'information', component: InformationComponent },
 			{ path: 'settings', component: SettingsComponent}, 
 			{ path: 'login', component: LoginComponent },
+			{ path: 'register', component: RegisterComponent },
 			{ path: 'lobby-overview', component: AllLobbiesComponent },
 			{ path: 'create-lobby', component: CreateLobbyComponent },
 			{ path: 'lobby-view/:id', component: LobbyViewComponent },

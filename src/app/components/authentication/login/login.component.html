@@ -4,13 +4,16 @@
             <div class="header-image"></div>
         </div>
 
-        <div class="title">Mappool publishing</div>
+        <div class="title">
+            Mappool publishing <br />
+            <a [routerLink]="['/register']">No account yet? Click here</a>
+        </div>
     
         <div class="body">
             <div class="row">
                 <div class="col-xs-12 col-lg-8 offset-lg-2">
                     <form [formGroup]="mappoolPublishForm">
-                        <input type="text" class="form-control" placeholder="Email" formControlName="email" />
+                        <input type="text" class="form-control" placeholder="Username" formControlName="username" />
                         <div class="spacing"></div>
                         <input type="password" class="form-control" placeholder="Password" formControlName="password" />
                         <div class="spacing"></div><div class="spacing"></div>

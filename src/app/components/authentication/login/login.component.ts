@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
 
 	ngOnInit() {
 		this.mappoolPublishForm = new FormGroup({
-			'email': new FormControl('', [
+			'username': new FormControl('', [
 				Validators.required
 			]),
 			'password': new FormControl('', [
@@ -51,14 +51,14 @@ export class LoginComponent implements OnInit {
 	}
 
 	/**
-	 * Login the user with the given email and password
+	 * Login the user with the given username and password
 	 */
 	loginMappoolPublish() {
-		const 	email = this.mappoolPublishForm.get('email').value, 
+		const 	username = this.mappoolPublishForm.get('username').value, 
 				password = this.mappoolPublishForm.get('password').value;
 
-		this.auth.login(email, password).then(res => {
-			this.toastService.addToast(`Successfully logged in with the email "${this.auth.loggedInUser}"!`);
+		this.auth.login(username, password).then(res => {
+			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser}"!`);
 		}).catch((err: Error) => {
 			this.toastService.addToast(`Something went wrong while trying to login: "${err.message}"`, ToastType.Error);
 		});
