@@ -75,6 +75,8 @@ export class LoginComponent implements OnInit {
 			this.auth.loggedInUser = loggedInUser;
 			this.auth.loggedIn = true;
 
+			this.auth.cacheLoggedInUser(loggedInUser);
+
 			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser.username}"!`);
 		}, (err) => {
 			this.toastService.addToast(`${err.error.message}`, ToastType.Error);

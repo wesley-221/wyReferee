@@ -47,14 +47,7 @@ export class MappoolOverviewComponent implements OnInit {
 		if(confirm(`Are you sure you want to publish "${mappool.name}"?`)) {
 			this.mappoolService.publishMappool(mappool).subscribe((data) => {
 				this.toastService.addToast(`Successfully published the mappool "${data.name}" with the id ${data.id}.`);
-			}, (err: HttpErrorResponse) => {
-				if(err.error.status == 403) {
-					this.toastService.addToast(`${err.error.message}`, ToastType.Error);
-				}
-				else {
-					this.toastService.addToast(`Unknown error: ${err.error.message} (${err.error.status})`);
-				}
-			})
+			});
 		}
 	}
 

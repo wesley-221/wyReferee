@@ -4,6 +4,7 @@ import { RegisterRequest } from '../models/authentication/register-request';
 import { AppConfig } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { LoggedInUser } from '../models/authentication/logged-in-user';
+import { StoreService } from './store.service';
 
 @Injectable({
   	providedIn: 'root'
@@ -14,7 +15,14 @@ export class AuthenticateService {
 	public loggedInUser: LoggedInUser;
 	public loggedIn: boolean = false;
 
-  	constructor(private httpClient: HttpClient) { }
+  	constructor(private httpClient: HttpClient, private storeService: StoreService) { 
+		const userCredentials = storeService.get('auth');
+
+		if(userCredentials != undefined) {
+			this.loggedInUser = LoggedInUser.mapFromJson(storeService.get('auth'));
+			this.loggedIn = true;
+		}
+	}
 
 	/**
 	 * Register a new user
@@ -39,5 +47,15 @@ export class AuthenticateService {
 	public logout() {
 		this.loggedIn = false;
 		this.loggedInUser = null;
+
+		this.storeService.delete(`auth`);
+	}
+
+	/**
+	 * Cache the data of a user
+	 * @param loggedInUser the loggedin user to cache
+	 */
+	public cacheLoggedInUser(loggedInUser: LoggedInUser) {
+		this.storeService.set(`auth`, loggedInUser.convertToJson());
 	}
 }

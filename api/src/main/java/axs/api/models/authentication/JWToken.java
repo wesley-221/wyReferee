@@ -35,6 +35,7 @@ public class JWToken {
 			.claim(JWT_ADMIN_CLAIM, this.isAdmin)
 			.setIssuer(issuer)
 			.setIssuedAt(new Date())
+			.setExpiration(new Date(System.currentTimeMillis() + 19 * 24 * 3600 *  1000))
 			.signWith(key, SignatureAlgorithm.HS512)
 			.compact();
 	}
