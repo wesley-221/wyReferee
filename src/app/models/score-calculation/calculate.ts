@@ -9,7 +9,7 @@ export class Calculate {
         this.scoreInterfaces = [];
 
         this.addScoreInterface(new TeamVsCalculation("Team vs."));
-        this.addScoreInterface(new AxSCalculation("AxS"));
+        this.addScoreInterface(new AxSCalculation("AxS", 3));
     }
 
     /**
@@ -32,5 +32,12 @@ export class Calculate {
      */
     public addScoreInterface(scoreInterface: ScoreInterface) {
         this.scoreInterfaces.push(scoreInterface);
-    }
+	}
+
+	/**
+	 * Get all the score interfaces
+	 */
+	public getAllScoreInterfaces(): ScoreInterface[] {
+		return this.scoreInterfaces;
+	}
 }

@@ -22,14 +22,14 @@ import { AxSCalculation } from '../models/score-calculation/calculation-types/ax
 export class MultiplayerLobbiesService {
 	private allLobbies: MultiplayerLobby[] = [];
 	availableLobbyId: number = 0;
-	
+
   	constructor(
-		  private storeService: StoreService, 
-		  private getMultiplayer: GetMultiplayerService, 
-		  private toastService: ToastService, 
+		  private storeService: StoreService,
+		  private getMultiplayer: GetMultiplayerService,
+		  private toastService: ToastService,
 		  private cacheService: CacheService,
 		  private getUser: GetUser,
-		  private getBeatmap: GetBeatmap, 
+		  private getBeatmap: GetBeatmap,
 		  private mappoolService: MappoolService) {
 		const allLobbies = storeService.get('lobby');
 
@@ -131,7 +131,7 @@ export class MultiplayerLobbiesService {
 
 				// Check if there is a mappool selected and if the modifier exists for the beatmap
 				if(multiplayerLobby.mappool != null && multiplayerLobby.mappool.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
-					MODIFIER = multiplayerLobby.mappool.modifiers[currentGame.beatmap_id].modifier;	
+					MODIFIER = multiplayerLobby.mappool.modifiers[currentGame.beatmap_id].modifier;
 				}
 
 				multiplayerData.game_id = currentGame.game_id;
@@ -174,7 +174,7 @@ export class MultiplayerLobbiesService {
 				}
 
 				const calculate = new Calculate();
-				const scoreInterface = calculate.getScoreInterface('AxS');
+				const scoreInterface = calculate.getScoreInterface(multiplayerLobby.scoreInterfaceIndentifier);
 
 				scoreInterface.setTeamSize(multiplayerLobby.teamSize);
 				scoreInterface.addUserScores(multiplayerData.getPlayers());
@@ -209,7 +209,7 @@ export class MultiplayerLobbiesService {
 			// Save multiplayerLobby
 			this.update(multiplayerLobby);
 
-			if(showToasts) 
+			if(showToasts)
 				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');
 		});
 	}

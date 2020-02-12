@@ -16,7 +16,8 @@ export class MultiplayerLobby {
     mappool: Mappool = null;
     mappoolId: number = null;
     ircChannel: string;
-    ircConnected: boolean = false;
+	ircConnected: boolean = false;
+	scoreInterfaceIndentifier: string;
 
     firstPick: string;
     bestOf: number;
@@ -32,7 +33,7 @@ export class MultiplayerLobby {
     teamOneSlotArray: number[] = [];
     teamTwoSlotArray: number[] = [];
 
-    constructor() { 
+    constructor() {
         this.multiplayerData = [];
     }
 
@@ -45,7 +46,7 @@ export class MultiplayerLobby {
         return false;
     }
 
-    updateMpData(multiplayerData: MultiplayerData): void {        
+    updateMpData(multiplayerData: MultiplayerData): void {
         for(let mpData in this.multiplayerData) {
             if(this.multiplayerData[mpData].game_id == multiplayerData.game_id) {
                 this.multiplayerData[mpData] = multiplayerData;
@@ -71,14 +72,15 @@ export class MultiplayerLobby {
         this.teamTwoName = json.data.teamTwoName;
         this.teamSize = json.data.teamSize;
         this.webhook = json.data.webhook;
-        this.mappoolId = json.data.selectedMappoolId;
-       
+		this.mappoolId = json.data.selectedMappoolId;
+		this.scoreInterfaceIndentifier = json.data.scoreInterfaceIndentifier;
+
         this.firstPick = json.data.firstPick;
         this.bestOf = json.data.bestOf;
         this.teamOneBanOne = json.data.teamOneBanOne;
         this.teamOneBanTwo = json.data.teamOneBanTwo;
         this.teamTwoBanOne = json.data.teamTwoBanOne;
-        this.teamTwoBanTwo = json.data.teamTwoBanTwo;
+		this.teamTwoBanTwo = json.data.teamTwoBanTwo;
 
         this.mapsCountTowardScore = json.countForScore;
 
@@ -146,15 +148,16 @@ export class MultiplayerLobby {
                 "teamOneBanOne": multiplayerLobby.teamOneBanOne,
                 "teamOneBanTwo": multiplayerLobby.teamOneBanTwo,
                 "teamTwoBanOne": multiplayerLobby.teamTwoBanOne,
-                "teamTwoBanTwo": multiplayerLobby.teamTwoBanTwo
+				"teamTwoBanTwo": multiplayerLobby.teamTwoBanTwo,
+				"scoreInterfaceIndentifier": multiplayerLobby.scoreInterfaceIndentifier
             },
             "countForScore": { },
             "multiplayerData": { }
         };
 
-        if(multiplayerLobby.mapsCountTowardScore !== undefined) 
+        if(multiplayerLobby.mapsCountTowardScore !== undefined)
             lobby.countForScore = multiplayerLobby.mapsCountTowardScore;
-        
+
         for(let match in multiplayerLobby.multiplayerData) {
             const currentMatch = multiplayerLobby.multiplayerData[match];
             lobby.multiplayerData[currentMatch.game_id] = { };

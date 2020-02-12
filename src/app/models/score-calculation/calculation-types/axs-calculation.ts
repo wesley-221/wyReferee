@@ -2,7 +2,14 @@ import { ScoreInterface } from "./score-interface";
 import { MultiplayerDataUser } from "../../store-multiplayer/multiplayer-data-user";
 
 export class AxSCalculation extends ScoreInterface {
-    private modifier: number = 0; 
+	private modifier: number = 0;
+
+	constructor(identifier: string, teamSize: number) {
+		super(identifier);
+
+		this.setTeamSize(teamSize);
+		this.setDescription(`The score calculation that is used for a tournament called AxS. The team size is set to ${teamSize}, where the first player in the multiplayerlobby is the accuracy player and the second and third are score players.`);
+	}
 
     public calculatePlayerScore(player: MultiplayerDataUser): number {
         return Number(player != null ? player.score : 0);
@@ -68,7 +75,7 @@ export class AxSCalculation extends ScoreInterface {
      * @param accuracy the accuracy of the player
      * @param modifier the modifier of the map
      */
-    private static calculateScorePlayerScore(score: number, accuracy: number, modifier: number) {        
+    private static calculateScorePlayerScore(score: number, accuracy: number, modifier: number) {
         return (score * (Math.pow((100 - ((100 - accuracy) / 5)) / 100, modifier)));
     }
 

@@ -4,7 +4,8 @@ import { MultiplayerDataUser } from "../../store-multiplayer/multiplayer-data-us
  * An interface with some methods that help you implement different score calculations
  */
 export abstract class ScoreInterface {
-    private identifier: string;
+	private identifier: string;
+	private description: string;
     private teamSize: number;
     private allUsers: MultiplayerDataUser[];
 
@@ -65,7 +66,7 @@ export abstract class ScoreInterface {
 
     /**
      * Get a user by the given slot
-     * @param slot 
+     * @param slot
      */
     public getUserScoreBySlot(slot: number): MultiplayerDataUser {
         for(let user of this.allUsers) {
@@ -108,5 +109,20 @@ export abstract class ScoreInterface {
      */
     public getTeamSize(): number {
         return this.teamSize;
-    }
+	}
+
+	/**
+	 * Get the description of the score interface
+	 */
+	public getDescription(): string {
+		return this.description;
+	}
+
+	/**
+	 * Set the description of the score interface
+	 * @param description the description
+	 */
+	public setDescription(description: string): void {
+		this.description = description;
+	}
 }

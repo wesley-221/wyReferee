@@ -14,7 +14,7 @@
                 </div>
             </div>
 
-            <input formControlName="multiplayerLink" type="text" class="form-control" placeholder="Multiplayer link" 
+            <input formControlName="multiplayerLink" type="text" class="form-control" placeholder="Multiplayer link"
                     [ngClass]="{'has-error': getValidation('multiplayerLink').errors && (getValidation('multiplayerLink').touched || getValidation('multiplayerLink').dirty)}" />
 
             <div class="has-error" *ngIf="getValidation('multiplayerLink').errors && getValidation('multiplayerLink').errors.pattern">
@@ -30,11 +30,11 @@
                 You only have to fill in the tournament acronym when you want to create a <b>NEW</b> multiplayer lobby on osu!.
             </div>
 
-            <input formControlName="tournamentAcronym" type="text" class="form-control" placeholder="Tournament acronym" 
+            <input formControlName="tournamentAcronym" type="text" class="form-control" placeholder="Tournament acronym"
                     [ngClass]="{'has-error': getValidation('tournamentAcronym').errors && (getValidation('tournamentAcronym').touched || getValidation('tournamentAcronym').dirty)}" />
 
-            <div class="has-error" 
-                *ngIf="getValidation('tournamentAcronym').errors && getValidation('tournamentAcronym').errors.maxlength && 
+            <div class="has-error"
+                *ngIf="getValidation('tournamentAcronym').errors && getValidation('tournamentAcronym').errors.maxlength &&
                         (getValidation('tournamentAcronym').touched || getValidation('tournamentAcronym').dirty)">
                 The tournament acronym can have a maximum of 5 characters
             </div>
@@ -43,35 +43,47 @@
         <hr />
 
         <div class="createLobbyTeamRow">
-            <div class="form-group">
+			<div class="form-group">
+				<h2>Score system</h2>
+				<p>
+					Enter the score system that is being used for the multiplayer game
+				</p>
+
+				<select formControlName="scoreInterface" class="form-control" (change)="changeScoreInterface($event)">
+					<option></option>
+					<option *ngFor="let scoreInterface of this.calculateScoreInterfaces.getAllScoreInterfaces()">{{ scoreInterface.getIdentifier() }}</option>
+				</select>
+
+				<br />
+
+				<div class="alert alert-primary" *ngIf="this.selectedScoreInterface">
+					{{ this.selectedScoreInterface.getDescription() }}
+				</div>
+			</div>
+
+            <div class="form-group" *ngIf="this.teamSize == 0 || this.teamSize == null">
                 <h2>Team size</h2>
                 <p>
-                    Enter the amount of players that are allowed to play in a team. 
+                    Enter the amount of players that are allowed to play in a team.
                 </p>
 
-                <input formControlName="teamSize" type="text" class="form-control" placeholder="Team size" 
+                <input formControlName="teamSize" type="text" class="form-control" placeholder="Team size"
                         [ngClass]="{'has-error': getValidation('teamSize').errors && (getValidation('teamSize').touched || getValidation('teamSize').dirty)  }" />
 
-                <div class="has-error" 
-                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.required && 
-                        (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
-                    This field is required
-                </div>
-
-                <div class="has-error" 
-                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.min && 
+                <div class="has-error"
+                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.min &&
                         (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
                     The team size must have at least a size of 1
                 </div>
 
-                <div class="has-error" 
-                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.max && 
+                <div class="has-error"
+                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.max &&
                         (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
                     The team size can not be higher than 6
                 </div>
 
-                <div class="has-error" 
-                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.pattern && 
+                <div class="has-error"
+                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.pattern &&
                         (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
                     The team size can only be a number
                 </div>
@@ -83,11 +95,11 @@
                     Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot 1, 2 and 3.
                 </p>
 
-                <input formControlName="teamOneName" type="text" class="form-control" placeholder="Team one name" 
+                <input formControlName="teamOneName" type="text" class="form-control" placeholder="Team one name"
                         [ngClass]="{'has-error': getValidation('teamOneName').errors && (getValidation('teamOneName').touched || getValidation('teamOneName').dirty)  }" />
 
-                <div class="has-error" 
-                    *ngIf="getValidation('teamOneName').errors && getValidation('teamOneName').errors.required && 
+                <div class="has-error"
+                    *ngIf="getValidation('teamOneName').errors && getValidation('teamOneName').errors.required &&
                         (getValidation('teamOneName').touched || getValidation('teamOneName').dirty)">
                     This field is required
                 </div>
@@ -102,8 +114,8 @@
                 <input formControlName="teamTwoName" type="text" class="form-control" placeholder="Team two name"
                         [ngClass]="{'has-error': getValidation('teamTwoName').errors && (getValidation('teamTwoName').touched || getValidation('teamTwoName').dirty)  }" />
 
-                <div class="has-error" 
-                    *ngIf="getValidation('teamTwoName').errors && getValidation('teamTwoName').errors.required && 
+                <div class="has-error"
+                    *ngIf="getValidation('teamTwoName').errors && getValidation('teamTwoName').errors.required &&
                         (getValidation('teamTwoName').touched || getValidation('teamTwoName').dirty)">
                     This field is required
                 </div>
@@ -113,7 +125,7 @@
                 <h2>Webhook</h2>
                 <i>NOTE: this field is optional</i>
                 <p>In order for scores to appear in a discord channel, you have to enter a webhook so it knows where to send the messages to.</p>
-                
+
                 <h5>How to create a Discord webhook:</h5>
                 <i>NOTE: this step is only required when there is no webhook available yet.</i>
                 <ul>

@@ -25,12 +25,12 @@ export class LobbyViewComponent implements OnInit {
 	settingsTabIsOpened: boolean = false;
 
 	constructor(
-		private route: ActivatedRoute, 
-		private multiplayerLobbies: MultiplayerLobbiesService, 
-		private toastService: ToastService, 
+		private route: ActivatedRoute,
+		private multiplayerLobbies: MultiplayerLobbiesService,
+		private toastService: ToastService,
 		private cacheService: CacheService,
-		public electronService: ElectronService, 
-		public mappoolService: MappoolService, 
+		public electronService: ElectronService,
+		public mappoolService: MappoolService,
 		private storeService: StoreService,
 		public ircService: IrcService,
 		private clipboardService: ClipboardService,
@@ -40,7 +40,7 @@ export class LobbyViewComponent implements OnInit {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
 
 			this.selectedLobby.ircChannel = `#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`;
-			
+
 			if(ircService.getChannelByName(this.selectedLobby.ircChannel) != null && ircService.getChannelByName(this.selectedLobby.ircChannel).active) {
 				this.selectedLobby.ircConnected = true;
 			}
@@ -75,7 +75,7 @@ export class LobbyViewComponent implements OnInit {
 
 	joinIrc() {
 		const ircName = `#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`;
-		
+
 		if(this.ircService.getChannelByName(ircName) != null) {
 			this.toastService.addToast(`You are already in channel "${ircName}"`);
 		}
@@ -87,7 +87,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Send the result of the beatmap to irc if connected
-	 * @param match 
+	 * @param match
 	 */
 	sendBeatmapResult(match: MultiplayerData) {
 		// User is connected to irc channel
@@ -114,11 +114,11 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Copy the result of the beatmap to the clipboard
-	 * @param match 
+	 * @param match
 	 */
 	copyBeatmapResult(match: MultiplayerData) {
 		let string = '';
-		
+
 		if(match.team_one_score > match.team_two_score) {
 			string = `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_one_score - match.team_two_score}`;
 		}
@@ -196,10 +196,10 @@ export class LobbyViewComponent implements OnInit {
 			})
 		};
 
-		const scoreString = (this.selectedLobby.teamOneScore > this.selectedLobby.teamTwoScore) ? 
-							`**Score: ${this.selectedLobby.teamOneName}** | **${this.selectedLobby.teamOneScore}** - ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}` : 
+		const scoreString = (this.selectedLobby.teamOneScore > this.selectedLobby.teamTwoScore) ?
+							`**Score: ${this.selectedLobby.teamOneName}** | **${this.selectedLobby.teamOneScore}** - ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}` :
 							`**Score:** ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} - **${this.selectedLobby.teamTwoScore}** | **${this.selectedLobby.teamTwoName}**`;
-		
+
 		const body = {
 			"embeds": [
 				{
@@ -233,7 +233,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Gets called when the webhook changes
-	 * @param event 
+	 * @param event
 	 */
 	changeWebhook(event: any) {
 		this.selectedLobby.webhook = event.target.value;
@@ -242,12 +242,12 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Mark the match as valid or invalid so that it counts towards the team score
-	 * @param match the match 
+	 * @param match the match
 	 */
 	markAsInvalid(match: MultiplayerData) {
 		this.selectedLobby.mapsCountTowardScore[match.game_id] = !this.selectedLobby.mapsCountTowardScore[match.game_id];
 		this.storeService.set(`lobby.${this.selectedLobby.lobbyId}.countForScore.${match.game_id}`, this.selectedLobby.mapsCountTowardScore[match.game_id]);
-		
+
 		if(this.selectedLobby.mapsCountTowardScore[match.game_id]) {
 			this.toastService.addToast(`"${this.getBeatmapname(match.beatmap_id)}" will now count towards the score.`);
 		}
@@ -285,12 +285,12 @@ export class LobbyViewComponent implements OnInit {
 		else {
 			return this.selectedLobby.mappool.id;
 		}
-		
+
 		return -1;
 	}
 
 	/**
-	 * Get the modifier for the given beatmapid 
+	 * Get the modifier for the given beatmapid
 	 * @param beatmapId the beatmapid to get the modifier for
 	 */
 	getModifier(beatmapId: number) {
@@ -329,7 +329,7 @@ export class LobbyViewComponent implements OnInit {
 		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(beatmapId);
 		return (cachedBeatmap != null) ? cachedBeatmap : null;
 	}
-	
+
 	/**
 	 * Get the beatmap image
 	 * @param beatmapId the beatmapid
@@ -340,7 +340,7 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Get the cached username 
+	 * Get the cached username
 	 * @param userId the userid
 	 */
 	getUsernameFromUserId(userId: number) {
@@ -372,8 +372,8 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Change various settings for the lobby
-	 * @param element 
-	 * @param event 
+	 * @param element
+	 * @param event
 	 */
 	change(element: string, event: Event) {
 		if(element == 'firstPick') {
@@ -399,7 +399,7 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Split the string 
+	 * Split the string
 	 * @param nStr the string to split
 	 * @param splitter the character to split the string with
 	 */
@@ -416,7 +416,7 @@ export class LobbyViewComponent implements OnInit {
 
         return x1 + x2;
 	}
-	
+
 	/**
 	 * Get the id of the multiplayer link
 	 * @param link the multiplayerlink
