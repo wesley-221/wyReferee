@@ -1,5 +1,5 @@
 export const AppConfig = {
 	production: true,
 	environment: 'PROD',
-	apiUrl: 'https://api.wybin.xyz/'
+	apiUrl: 'https://axs.wybin.xyz/'
 };
