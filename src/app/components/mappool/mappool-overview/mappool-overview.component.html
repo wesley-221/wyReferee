@@ -7,14 +7,14 @@
         <div class="col-5">
             <div class="input-group mt-4">
                 <input type="text" class="form-control" placeholder="Mappool id" [(ngModel)]="mappoolId" />
-        
+
                 <div class="input-group-append">
                     <button class="btn btn-primary" (click)="importMappool()">Import</button>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <hr />
 
     <div class="mappool" *ngFor="let mappool of mappoolService.allMappools">
@@ -26,7 +26,7 @@
 
             <div class="col-3">
                 <div class="btn-group float-right">
-                    <button class="btn btn-primary" (click)="publishMappool(mappool)">Publish</button>
+					<button class="btn btn-primary" (click)="publishMappool(mappool)" *ngIf="authService.loggedIn && authService.loggedInUser.isAdmin">Publish</button>
                     <button class="btn btn-danger" (click)="deleteMappool(mappool)">Delete</button>
                 </div>
             </div>
