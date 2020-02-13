@@ -6,6 +6,7 @@ import { MappoolService } from '../../../services/mappool.service';
 import { ToastService } from '../../../services/toast.service';
 import { ModBracketMap } from '../../../models/osu-mappool/mod-bracket-map';
 import { GetBeatmap } from '../../../services/osu-api/get-beatmap.service';
+import { ElectronService } from '../../../services/electron.service';
 
 @Component({
 	selector: 'app-mappool-bracket-edit',
@@ -20,7 +21,7 @@ export class MappoolBracketEditComponent implements OnInit {
 	mappoolId: number;
 	bracketId: number;
 
-	constructor(private route: ActivatedRoute, private mappoolService: MappoolService, private toastService: ToastService, private getBeatmap: GetBeatmap) { 
+	constructor(private route: ActivatedRoute, private mappoolService: MappoolService, private toastService: ToastService, private getBeatmap: GetBeatmap, public electronService: ElectronService) {
 		this.route.params.subscribe(params => {
 			this.selectedMappool = Mappool.makeTrueCopy(mappoolService.getMappool(params.mappoolId));
 			this.selectedBracket = ModBracket.makeTrueCopy(this.selectedMappool.modBrackets[params.bracketId]);
@@ -29,7 +30,7 @@ export class MappoolBracketEditComponent implements OnInit {
 			this.bracketId = params.bracketId;
 		});
 	}
-	
+
 	ngOnInit() { }
 
 	/**
