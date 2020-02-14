@@ -104,10 +104,12 @@ export class LobbyViewComponent implements OnInit {
 			}
 
 			if(match.team_one_score > match.team_two_score) {
-				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, " ")} - ${this.addDot(match.team_two_score, " ")} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, " ")}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} // Next pick is for ${nextPick}` : ''}`);
+				const teamOneHasWon = (this.selectedLobby.teamOneScore == Math.ceil(this.selectedLobby.bestOf / 2));
+				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, " ")} - ${this.addDot(match.team_two_score, " ")} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, " ")}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamOneHasWon ? "// Next pick is for " + nextPick : ''}` : ''}`);
 			}
 			else {
-				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, " ")} - ${this.addDot(match.team_two_score, " ")} // Score difference : ${this.addDot(match.team_two_score - match.team_one_score, " ")}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} // Next pick is for ${nextPick}` : ''}`);
+				const teamTwoHasWon = (this.selectedLobby.teamTwoScore == Math.ceil(this.selectedLobby.bestOf / 2));
+				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, " ")} - ${this.addDot(match.team_two_score, " ")} // Score difference : ${this.addDot(match.team_two_score - match.team_one_score, " ")}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamTwoHasWon ? "// Next pick is for " + nextPick : ''}` : ''}`);
 			}
 		}
 	}
@@ -170,19 +172,8 @@ export class LobbyViewComponent implements OnInit {
 	 * Send the result of the beatmap to irc if connected
 	 */
 	sendNextPick() {
-		const totalMapsPlayed = this.selectedLobby.teamOneScore + this.selectedLobby.teamTwoScore;
-		let nextPick = '';
-
-		// First pick goes to .firstPick
-		if(totalMapsPlayed % 2 == 0) {
-			nextPick = this.selectedLobby.firstPick;
-		}
-		else {
-			nextPick = this.selectedLobby.firstPick == this.selectedLobby.teamOneName ? this.selectedLobby.teamTwoName : this.selectedLobby.teamOneName;
-		}
-
 		if(this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
-			this.ircService.sendMessage(this.selectedLobby.ircChannel, `Next pick is for ${nextPick}`);
+			this.ircService.sendMessage(this.selectedLobby.ircChannel, `Next pick is for ${this.selectedLobby.getNextPickName()}`);
 		}
 	}
 

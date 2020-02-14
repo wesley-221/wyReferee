@@ -181,5 +181,51 @@ export class MultiplayerLobby {
         }
 
         return lobby;
-    }
+	}
+
+	/**
+	 * Get the name of the team that has to pick next
+	 */
+	getNextPickName() {
+		const totalMapsPlayed = this.teamOneScore + this.teamTwoScore;
+		let nextPick = '';
+
+		// First pick goes to .firstPick
+		if(totalMapsPlayed % 2 == 0) {
+			nextPick = this.firstPick;
+		}
+		else {
+			nextPick = this.firstPick == this.teamOneName ? this.teamTwoName : this.teamOneName;
+		}
+
+		return nextPick;
+	}
+
+	/**
+	 * Check if a team is on a breakpoint
+	 */
+	getBreakpoint() {
+		if(this.teamOneScore == Math.floor(this.bestOf / 2)) {
+			return this.teamOneName
+		}
+		else if(this.teamTwoScore == Math.floor(this.bestOf / 2)) {
+			return this.teamTwoName;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Check if a team has won the match
+	 */
+	getHasWon() {
+		if(this.teamOneScore == Math.ceil(this.bestOf / 2)) {
+			return this.teamOneName;
+		}
+		else if(this.teamOneScore == Math.ceil(this.bestOf / 2)) {
+			return this.teamTwoName;
+		}
+
+		return null;
+	}
 }

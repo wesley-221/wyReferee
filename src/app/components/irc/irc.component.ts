@@ -12,6 +12,7 @@ import { MultiplayerLobbiesService } from '../../services/multiplayer-lobbies.se
 import { Router } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { StoreService } from '../../services/store.service';
+import { MultiplayerLobby } from '../../models/store-multiplayer/multiplayer-lobby';
 declare var $: any;
 
 @Component({
@@ -26,6 +27,7 @@ export class IrcComponent implements OnInit {
 	@ViewChild(VirtualScrollerComponent, { static: true }) private virtualScroller: VirtualScrollerComponent;
 
 	selectedChannel: Channel;
+	selectedChannelMultiplayerLobby: MultiplayerLobby;
 	channels: Channel[];
 
 	chats: Message[] = [];
@@ -47,8 +49,14 @@ export class IrcComponent implements OnInit {
 	roomSettingGoingOn: boolean = false;
 	roomSettingDelay: number = 2;
 
+	teamOneScore: number = 0;
+	teamTwoScore: number = 0;
+	nextPick: string = null;
+	breakpoint: string = null;
+	hasWon: string = null;
+
 	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef, private storeService: StoreService,
-				public mappoolService: MappoolService, private multiplayerLobbies: MultiplayerLobbiesService, private router: Router, private toastService: ToastService) { 
+				public mappoolService: MappoolService, private multiplayerLobbies: MultiplayerLobbiesService, private router: Router, private toastService: ToastService) {
 		this.channels = ircService.allChannels;
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -58,7 +66,6 @@ export class IrcComponent implements OnInit {
 					// Change the channel if it was the last active channel
 					if(this.channels[channel].lastActiveChannel) {
 						this.changeChannel(this.channels[channel].channelName, true);
-
 						break;
 					}
 				}
@@ -81,7 +88,7 @@ export class IrcComponent implements OnInit {
 		});
 	}
 
-	ngOnInit() { 
+	ngOnInit() {
 		this.ircService.getIsJoiningChannel().subscribe(value => {
 			this.isAttemptingToJoin = value;
 		});
@@ -96,15 +103,29 @@ export class IrcComponent implements OnInit {
 			this.selectedChannel.lastActiveChannel = false;
 			this.ircService.changeLastActiveChannel(this.selectedChannel, false);
 		}
-		
+
 		this.selectedChannel = this.ircService.getChannelByName(channel);
+		this.selectedChannelMultiplayerLobby = this.multiplayerLobbies.getByIrcLobby(channel);
 
 		this.selectedChannel.lastActiveChannel = true;
 		this.ircService.changeLastActiveChannel(this.selectedChannel, true);
 
 		this.selectedChannel.hasUnreadMessages = false;
-		
 		this.chats = this.selectedChannel.allMessages;
+
+		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
+			if(data != -1) {
+				this.refreshIrcHeader(this.multiplayerLobbies.get(data));
+			}
+		});
+
+		if(this.selectedChannelMultiplayerLobby != undefined) {
+			this.teamOneScore = this.selectedChannelMultiplayerLobby.teamOneScore;
+			this.teamTwoScore = this.selectedChannelMultiplayerLobby.teamTwoScore;
+			this.nextPick = this.selectedChannelMultiplayerLobby.getNextPickName();
+			this.breakpoint = this.selectedChannelMultiplayerLobby.getBreakpoint();
+			this.hasWon = this.selectedChannelMultiplayerLobby.getHasWon();
+		}
 
 		// Scroll to the bottom - delay it by 500 ms or do it instantly
 		if(delayScroll) {
@@ -122,7 +143,7 @@ export class IrcComponent implements OnInit {
 		// Channel was changed to a multiplayer lobby
 		if(channel.startsWith('#mp_') && this.selectedChannel.active) {
 			// Check if either the team mode or win condition isn't set
-			if(this.selectedChannel.teamMode == undefined || this.selectedChannel.winCondition == undefined) {
+			if(this.selectedChannel.teamMode == undefined || this.selectedChannel.winCondition == undefined && this.selectedChannel.active) {
 				this.ircService.sendMessage(channel, '!mp settings');
 			}
 		}
@@ -165,7 +186,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Drop a channel to rearrange it
-	 * @param event 
+	 * @param event
 	 */
 	dropChannel(event: CdkDragDrop<Channel[]>) {
 		moveItemInArray(this.channels, event.previousIndex, event.currentIndex);
@@ -175,7 +196,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * When a key was pressed
-	 * @param event 
+	 * @param event
 	 * @param eventName up or down (for key up/down)
 	 */
 	onKey(event: KeyboardEvent, eventName: string) {
@@ -239,7 +260,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Change the current mappool
-	 * @param event 
+	 * @param event
 	 */
 	onMappoolChange(event: Event) {
 		this.ircService.getChannelByName(this.selectedChannel.channelName).mappool = this.mappoolService.getMappool((<any>event.currentTarget).value);
@@ -266,7 +287,7 @@ export class IrcComponent implements OnInit {
 	 */
 	onRoomSettingChange() {
 		if(!this.roomSettingGoingOn) {
-			let timer = 
+			let timer =
 			setInterval(() => {
 				if(this.roomSettingDelay == 0) {
 					this.ircService.sendMessage(this.selectedChannel.channelName, `!mp set ${this.teamMode.nativeElement.value} ${this.winCondition.nativeElement.value} ${this.players.nativeElement.value}`);
@@ -284,8 +305,8 @@ export class IrcComponent implements OnInit {
 
 			this.roomSettingGoingOn = true;
 		}
-		
-		this.roomSettingDelay = 3;	
+
+		this.roomSettingDelay = 3;
 	}
 
 	navigateLobbyOverview() {
@@ -297,6 +318,14 @@ export class IrcComponent implements OnInit {
 		else {
 			this.toastService.addToast(`No lobby overview found for this irc channel`);
 		}
+	}
+
+	refreshIrcHeader(multiplayerLobby: MultiplayerLobby) {
+		this.teamOneScore = multiplayerLobby.teamOneScore;
+		this.teamTwoScore = multiplayerLobby.teamTwoScore;
+		this.nextPick = multiplayerLobby.getNextPickName();
+		this.breakpoint = multiplayerLobby.getBreakpoint();
+		this.hasWon = multiplayerLobby.getHasWon();
 	}
 
 	playSound(channel: Channel, status: boolean) {

@@ -14,6 +14,7 @@ import { GetBeatmap } from './osu-api/get-beatmap.service';
 import { MappoolService } from './mappool.service';
 import { Calculate } from '../models/score-calculation/calculate';
 import { AxSCalculation } from '../models/score-calculation/calculation-types/axs-calculation';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   	providedIn: 'root'
@@ -22,6 +23,7 @@ import { AxSCalculation } from '../models/score-calculation/calculation-types/ax
 export class MultiplayerLobbiesService {
 	private allLobbies: MultiplayerLobby[] = [];
 	availableLobbyId: number = 0;
+	private synchronizeDone: BehaviorSubject<number>;
 
   	constructor(
 		  private storeService: StoreService,
@@ -42,6 +44,8 @@ export class MultiplayerLobbiesService {
 
 			this.availableLobbyId = newLobby.lobbyId + 1;
 		}
+
+		this.synchronizeDone = new BehaviorSubject(-1);
 	}
 
 	/**
@@ -206,12 +210,21 @@ export class MultiplayerLobbiesService {
 				}
 			}
 
+			this.synchronizeDone.next(multiplayerLobby.lobbyId);
+
 			// Save multiplayerLobby
 			this.update(multiplayerLobby);
 
 			if(showToasts)
 				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');
 		});
+	}
+
+	/**
+	 * Check what lobby has been syncrhonized
+	 */
+	public synchronizeIsCompleted() {
+		return this.synchronizeDone.asObservable();
 	}
 
 	/**

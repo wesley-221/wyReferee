@@ -5,7 +5,7 @@
         </div>
 
         <div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
-            <div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="all-channels" 
+            <div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="all-channels"
                                 [ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages }">
                 <div class="channel-name" (click)="changeChannel(channel.channelName)">
                     {{ channel.channelName }}
@@ -26,133 +26,147 @@
                 </div>
             </div>
         </div>
-    </div>
+	</div>
 
-    <virtual-scroller class="messages" [items]="chats" [stripedTable]="true" (vsUpdate)="viewPortItems = $event">
-        <div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning mr-3 ml-3 mt-3">There are no messages yet.</div>
-        <div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning mr-3 ml-3 mt-3">There is no selected channel.</div>
-        
-        <div class="chat" *ngFor="let chat of viewPortItems">
-            <div class="chat-content divider" *ngIf="!chat.isADivider">
-                <div class="time" [title]="chat.date">
-                    {{ chat.time }}
-                </div>
-    
-                <div class="author" 
-                        [ngClass]="{'me': chat.author == ircService.authenticatedUser, 'bancho': chat.author == 'BanchoBot'}"
-                        (click)="openUserpage(chat.author)">
-                    {{ chat.author }}
-                </div>
-    
-                <div class="message">
-                    <div class="message-piece" *ngFor="let chatPiece of chat.message">
-                        <span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
-                        <div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
-                            <span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
-                            <span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+	<div class="chat-container">
+		<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')) && this.selectedChannelMultiplayerLobby != null">
+			Current score: {{ teamOneScore }} - {{ teamTwoScore }} <span *ngIf="this.hasWon == null">| Next pick: <b>{{ nextPick }}</b></span> <br />
 
-            <div class="chat-content" *ngIf="chat.isADivider">
-                <div class="divider"><span>{{ chat.author }}</span></div>
-            </div>
-        </div>
-    </virtual-scroller>
+			<div *ngIf="selectedChannel != null && this.breakpoint != null">
+				Breakpoint for <b>{{ this.breakpoint }}</b>
+			</div>
 
-    <div class="send-message">
-        <form>
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Message..." #chatMessage (keyup.Tab)="onKey($event, 'up'); false;" (keydown.Tab)="onKey($event, 'down'); false;" [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" />
+			<div *ngIf="selectedChannel != null && this.hasWon != null">
+				<b>{{ this.hasWon }}</b> has won the match, GG and wp!
+			</div>
+		</div>
 
-                <div class="input-group-append">
-                    <button class="btn btn-primary" (click)="sendMessage()" [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)">Send</button>
-                </div>
-            </div>
-        </form>
-    </div>
+		<virtual-scroller class="messages" [items]="chats" [stripedTable]="true" (vsUpdate)="viewPortItems = $event">
+			<div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning mr-3 ml-3 mt-3">There are no messages yet.</div>
+			<div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning mr-3 ml-3 mt-3">There is no selected channel.</div>
 
-    <div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
-        <div class="side-menu-button">
-            <button class="btn btn-primary" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><fa-icon [icon]="['fas', 'cog']"></fa-icon></button>
-            <button class="btn btn-info" (click)="navigateLobbyOverview(selectedChannel.channelName)"><fa-icon [icon]="['fas', 'bars']"></fa-icon></button>
-        </div>
+			<div class="chat" *ngFor="let chat of viewPortItems">
+				<div class="chat-content divider" *ngIf="!chat.isADivider">
+					<div class="time" [title]="chat.date">
+						{{ chat.time }}
+					</div>
 
-        <div class="side-menu-content">
-            <div class="header">
-                <div class="row">
-                    <div class="col">
-                        <h6>Team mode</h6>
-                        <select class="form-control" #teamMode (change)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
-                            <option></option>
-                            <option value="0">Head To Head</option>
-                            <option value="1">Tag Coop</option>
-                            <option value="2">Team Vs</option>
-                            <option value="3">Tag Team Vs</option>
-                        </select>
-                    </div>
-    
-                    <div class="col">
-                        <h6>Win condition</h6>
-                        <select class="form-control" #winCondition (change)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
-                            <option></option>
-                            <option value="0">Score</option>
-                            <option value="1">Accuracy</option>
-                            <option value="2">Combo</option>
-                            <option value="3">Score V2</option>
-                        </select>
-                    </div>
-                </div>
-    
-                <div class="row mt-2">
-                    <div class="col">
-                        <h6>Players</h6>
-    
-                        <select class="form-control" #players (change)="onRoomSettingChange()" [value]="selectedChannel.players">
-                            <option></option>
-                            <option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">{{ number }}</option>
-                        </select>
-                    </div>
-                </div>
-    
-                <div class="row mt-2">
-                    <div class="col">
-                        <h6>Mappool</h6>
-    
-                        <select class="form-control" (change)="onMappoolChange($event)" [value]="selectedChannel != undefined && selectedChannel.mappool != undefined && selectedChannel.mappool.id">
-                            <option value=""></option>
-                            <option *ngFor="let mappool of mappoolService.allMappools" [value]="mappool.id">{{ mappool.name }}</option>
-                        </select>
-                    </div>
-                </div>
+					<div class="author"
+							[ngClass]="{'me': chat.author == ircService.authenticatedUser, 'bancho': chat.author == 'BanchoBot'}"
+							(click)="openUserpage(chat.author)">
+						{{ chat.author }}
+					</div>
 
-                <div class="row mt-2" *ngIf="selectedChannel.mappool">
-                    <div class="col">
-                        <input type="text" class="form-control" placeholder="Search for beatmap..." [(ngModel)]="searchValue" />
-                    </div>
-                </div>
-            </div>
+					<div class="message">
+						<div class="message-piece" *ngFor="let chatPiece of chat.message">
+							<span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
+							<div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
+								<span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
+								<span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
 
-            <div class="mappool" *ngIf="selectedChannel.mappool">
-                <div class="mod-bracket" *ngFor="let bracket of ( selectedChannel.mappool.modBrackets | search : searchValue )">
-                    <hr />
-                    <h3>{{ bracket.bracketName }}</h3>
-                    <hr />
+				<div class="chat-content" *ngIf="chat.isADivider">
+					<div class="divider"><span>{{ chat.author }}</span></div>
+				</div>
+			</div>
+		</virtual-scroller>
 
-                    <div class="map" *ngFor="let beatmap of bracket.beatmaps">
-                        <div class="name" (click)="electronService.openLink(beatmap.beatmapUrl)">
-                            {{ beatmap.beatmapName }}
-                        </div>
+		<div class="send-message">
+			<form>
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Message..." #chatMessage (keyup.Tab)="onKey($event, 'up'); false;" (keydown.Tab)="onKey($event, 'down'); false;" [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" />
 
-                        <div class="beatmap-pick">
-                            <button class="btn btn-primary" (click)="pickBeatmap(beatmap, bracket)">Pick</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					<div class="input-group-append">
+						<button class="btn btn-primary" (click)="sendMessage()" [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)">Send</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
+			<div class="side-menu-button">
+				<button class="btn btn-primary" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><fa-icon [icon]="['fas', 'cog']"></fa-icon></button>
+				<button class="btn btn-info" (click)="navigateLobbyOverview(selectedChannel.channelName)"><fa-icon [icon]="['fas', 'bars']"></fa-icon></button>
+			</div>
+
+			<div class="side-menu-content">
+				<div class="header">
+					<div class="row">
+						<div class="col">
+							<h6>Team mode</h6>
+							<select class="form-control" #teamMode (change)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
+								<option></option>
+								<option value="0">Head To Head</option>
+								<option value="1">Tag Coop</option>
+								<option value="2">Team Vs</option>
+								<option value="3">Tag Team Vs</option>
+							</select>
+						</div>
+
+						<div class="col">
+							<h6>Win condition</h6>
+							<select class="form-control" #winCondition (change)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
+								<option></option>
+								<option value="0">Score</option>
+								<option value="1">Accuracy</option>
+								<option value="2">Combo</option>
+								<option value="3">Score V2</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="row mt-2">
+						<div class="col">
+							<h6>Players</h6>
+
+							<select class="form-control" #players (change)="onRoomSettingChange()" [value]="selectedChannel.players">
+								<option></option>
+								<option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">{{ number }}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="row mt-2">
+						<div class="col">
+							<h6>Mappool</h6>
+
+							<select class="form-control" (change)="onMappoolChange($event)" [value]="selectedChannel != undefined && selectedChannel.mappool != undefined && selectedChannel.mappool.id">
+								<option value=""></option>
+								<option *ngFor="let mappool of mappoolService.allMappools" [value]="mappool.id">{{ mappool.name }}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="row mt-2" *ngIf="selectedChannel.mappool">
+						<div class="col">
+							<input type="text" class="form-control" placeholder="Search for beatmap..." [(ngModel)]="searchValue" />
+						</div>
+					</div>
+				</div>
+
+				<div class="mappool" *ngIf="selectedChannel.mappool">
+					<div class="mod-bracket" *ngFor="let bracket of ( selectedChannel.mappool.modBrackets | search : searchValue )">
+						<hr />
+						<h3>{{ bracket.bracketName }}</h3>
+						<hr />
+
+						<div class="map" *ngFor="let beatmap of bracket.beatmaps">
+							<div class="name" (click)="electronService.openLink(beatmap.beatmapUrl)">
+								{{ beatmap.beatmapName }}
+							</div>
+
+							<div class="beatmap-pick">
+								<button class="btn btn-primary" (click)="pickBeatmap(beatmap, bracket)">Pick</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="join-channel" tabindex="-1" role="dialog">
