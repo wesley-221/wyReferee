@@ -21,7 +21,8 @@ public class HttpInterceptor extends OncePerRequestFilter {
 	private String passphrase;
 
 	private AuthRoute[] authRoutes = new AuthRoute[] {
-		new AuthRoute("/mappool/create", true)
+		new AuthRoute("/mappool/create", true),
+		new AuthRoute("/tournament/create", true)
 	};
 
 	@Override
