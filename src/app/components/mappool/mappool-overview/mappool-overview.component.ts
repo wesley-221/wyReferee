@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { ToastService } from '../../../services/toast.service';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { ToastType } from '../../../models/toast';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	selector: 'app-mappool-overview',
@@ -46,9 +45,16 @@ export class MappoolOverviewComponent implements OnInit {
 	publishMappool(mappool: Mappool) {
 		if(confirm(`Are you sure you want to publish "${mappool.name}"?`)) {
 			this.mappoolService.publishMappool(mappool).subscribe((data) => {
-				this.toastService.addToast(`Successfully published the mappool "${data.name}" with the id ${data.id}.`);
+				this.toastService.addToast(`Successfully published the mappool "${data.body.name}" with the id ${data.body.id}.`);
 			});
 		}
+	}
+
+	/**
+	 * Check if the user has sufficient permissions to publish the mappool
+	 */
+	canPublish() {
+		return this.authService.loggedIn && ((<any>this.authService.loggedInUser.isTournamentHost) == 'true' || this.authService.loggedInUser.isTournamentHost == true || this.authService.loggedInUser.isAdmin);
 	}
 
 	/**

@@ -15,7 +15,7 @@ export class AuthenticateService {
 	public loggedInUser: LoggedInUser;
 	public loggedIn: boolean = false;
 
-  	constructor(private httpClient: HttpClient, private storeService: StoreService) { 
+  	constructor(private httpClient: HttpClient, private storeService: StoreService) {
 		const userCredentials = storeService.get('auth');
 
 		if(userCredentials != undefined) {
@@ -26,7 +26,7 @@ export class AuthenticateService {
 
 	/**
 	 * Register a new user
-	 * @param registerRequest 
+	 * @param registerRequest
 	 */
 	public register(registerRequest: RegisterRequest): Observable<any> {
 		return this.httpClient.post<RegisterRequest>(`${this.apiUrl}register`, registerRequest);

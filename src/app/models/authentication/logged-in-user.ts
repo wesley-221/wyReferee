@@ -1,7 +1,8 @@
 export class LoggedInUser {
     userId: number;
     username: string;
-    isAdmin: boolean;
+	isAdmin: boolean;
+	isTournamentHost: boolean
     token: string;
 
     public static mapFromJson(json: any): LoggedInUser {
@@ -9,7 +10,8 @@ export class LoggedInUser {
 
         loggedInUser.userId = json.userId;
         loggedInUser.username = json.username;
-        loggedInUser.isAdmin = json.isAdmin;
+        loggedInUser.isAdmin = (<any>json.isAdmin) == 'true' ? true : false;
+		loggedInUser.isTournamentHost = (<any>json.isTournamentHost) == 'true' ? true : false;
         loggedInUser.token = json.token;
 
         return loggedInUser;
@@ -20,9 +22,10 @@ export class LoggedInUser {
      */
     public convertToJson(): {} {
         return {
-            userId: this.userId, 
-            username: this.username, 
-            isAdmin: this.isAdmin,
+            userId: this.userId,
+            username: this.username,
+			isAdmin: this.isAdmin,
+			isTournamentHost: this.isTournamentHost,
             token: this.token
         }
     }
