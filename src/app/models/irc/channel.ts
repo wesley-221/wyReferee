@@ -11,7 +11,7 @@ export enum TeamMode {
 export enum WinCondition {
     Score = 0,
     Accuracy = 1,
-    Combo = 2, 
+    Combo = 2,
     ScoreV2 = 3
 }
 
@@ -27,7 +27,6 @@ export class Channel {
     teamMode: TeamMode;
     winCondition: WinCondition;
     players: number;
-    mappool: Mappool;
 
     constructor(channelName: string, isPrivateChannel: boolean = false) {
         this.channelName = channelName;

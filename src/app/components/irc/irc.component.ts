@@ -27,7 +27,7 @@ export class IrcComponent implements OnInit {
 	@ViewChild(VirtualScrollerComponent, { static: true }) private virtualScroller: VirtualScrollerComponent;
 
 	selectedChannel: Channel;
-	selectedChannelMultiplayerLobby: MultiplayerLobby;
+	selectedLobby: MultiplayerLobby;
 	channels: Channel[];
 
 	chats: Message[] = [];
@@ -54,6 +54,9 @@ export class IrcComponent implements OnInit {
 	nextPick: string = null;
 	breakpoint: string = null;
 	hasWon: string = null;
+
+	popupBannedMap: ModBracketMap = null;
+	popupBannedBracket: ModBracket = null;
 
 	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef, private storeService: StoreService,
 				public mappoolService: MappoolService, private multiplayerLobbies: MultiplayerLobbiesService, private router: Router, private toastService: ToastService) {
@@ -105,7 +108,7 @@ export class IrcComponent implements OnInit {
 		}
 
 		this.selectedChannel = this.ircService.getChannelByName(channel);
-		this.selectedChannelMultiplayerLobby = this.multiplayerLobbies.getByIrcLobby(channel);
+		this.selectedLobby = this.multiplayerLobbies.getByIrcLobby(channel);
 
 		this.selectedChannel.lastActiveChannel = true;
 		this.ircService.changeLastActiveChannel(this.selectedChannel, true);
@@ -119,12 +122,12 @@ export class IrcComponent implements OnInit {
 			}
 		});
 
-		if(this.selectedChannelMultiplayerLobby != undefined) {
-			this.teamOneScore = this.selectedChannelMultiplayerLobby.teamOneScore;
-			this.teamTwoScore = this.selectedChannelMultiplayerLobby.teamTwoScore;
-			this.nextPick = this.selectedChannelMultiplayerLobby.getNextPickName();
-			this.breakpoint = this.selectedChannelMultiplayerLobby.getBreakpoint();
-			this.hasWon = this.selectedChannelMultiplayerLobby.getHasWon();
+		if(this.selectedLobby != undefined) {
+			this.teamOneScore = this.selectedLobby.teamOneScore;
+			this.teamTwoScore = this.selectedLobby.teamTwoScore;
+			this.nextPick = this.selectedLobby.getNextPickName();
+			this.breakpoint = this.selectedLobby.getBreakpoint();
+			this.hasWon = this.selectedLobby.getHasWon();
 		}
 
 		// Scroll to the bottom - delay it by 500 ms or do it instantly
@@ -152,8 +155,15 @@ export class IrcComponent implements OnInit {
 	/**
 	 * Open the modal to join a channel
 	 */
-	openModal() {
-		$('#join-channel').modal('toggle');
+	openModal(modalName: string) {
+		$(`#${modalName}`).modal('toggle');
+	}
+
+	/**
+	 * Hide the modal
+	 */
+	hideModal(modalName: string) {
+		$(`#${modalName}`).modal('toggle');
 	}
 
 	/**
@@ -263,7 +273,10 @@ export class IrcComponent implements OnInit {
 	 * @param event
 	 */
 	onMappoolChange(event: Event) {
-		this.ircService.getChannelByName(this.selectedChannel.channelName).mappool = this.mappoolService.getMappool((<any>event.currentTarget).value);
+		this.selectedLobby.mappool = this.mappoolService.getMappool((<any>event.currentTarget).value);
+		this.selectedLobby.mappoolId = this.mappoolService.getMappool((<any>event.currentTarget).value).id;
+
+		this.multiplayerLobbies.update(this.selectedLobby);
 	}
 
 	/**
@@ -309,6 +322,9 @@ export class IrcComponent implements OnInit {
 		this.roomSettingDelay = 3;
 	}
 
+	/**
+	 * Navigate to the lobbyoverview from irc
+	 */
 	navigateLobbyOverview() {
 		const lobbyId = this.multiplayerLobbies.getByIrcLobby(this.selectedChannel.channelName).lobbyId;
 
@@ -320,6 +336,10 @@ export class IrcComponent implements OnInit {
 		}
 	}
 
+	/**
+	 * Refresh the stats for a multiplayer lobby.
+	 * @param multiplayerLobby the multiplayerlobby
+	 */
 	refreshIrcHeader(multiplayerLobby: MultiplayerLobby) {
 		this.teamOneScore = multiplayerLobby.teamOneScore;
 		this.teamTwoScore = multiplayerLobby.teamTwoScore;
@@ -328,9 +348,52 @@ export class IrcComponent implements OnInit {
 		this.hasWon = multiplayerLobby.getHasWon();
 	}
 
+	/**
+	 * Play a sound when a message is being send to a specific channel
+	 * @param channel the channel that should where a message should be send from
+	 * @param status mute or unmute the sound
+	 */
 	playSound(channel: Channel, status: boolean) {
 		channel.playSoundOnMessage = status;
 		this.storeService.set(`irc.channels.${channel.channelName}.playSoundOnMessage`, status);
 		this.toastService.addToast(`${channel.channelName} will ${status == false ? "no longer beep on message" : "now beep on message"}.`);
+	}
+
+	/**
+	 * When trying to ban a map show a modal
+	 * @param beatmap
+	 * @param bracket
+	 */
+	banBeatmapPopup(beatmap: ModBracketMap, bracket: ModBracket) {
+		this.popupBannedMap = beatmap;
+		this.popupBannedBracket = bracket;
+
+		this.hideModal('ban-a-map');
+	}
+
+	/**
+	 * Ban a beatmap
+	 */
+	banBeatmap(team: number) {
+		// Handle banning
+		if(team == 1) {
+			this.selectedLobby.teamOneBans.push(this.popupBannedMap.beatmapId);
+		}
+		else if(team == 2) {
+			this.selectedLobby.teamTwoBans.push(this.popupBannedMap.beatmapId);
+		}
+
+		this.multiplayerLobbies.update(this.selectedLobby);
+
+		this.hideModal('ban-a-map');
+	}
+
+	/**
+	 * Check if a beatmap is banned int he current lobby
+	 * @param multiplayerLobby the multiplayerlobby to check from
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsBanned(multiplayerLobby: MultiplayerLobby, beatmapId: number) {
+		return multiplayerLobby.teamOneBans.indexOf(beatmapId) > -1 || multiplayerLobby.teamTwoBans.indexOf(beatmapId) > -1;
 	}
 }

@@ -9,11 +9,6 @@
             </div>
 
             <div class="col-5">
-                <select class="form-control" (change)="changeMappool($event)" [value]="getMappoolId()">
-                    <option value="-1">Select a mappool</option>
-                    <option [value]="mappool.id" *ngFor="let mappool of mappoolService.allMappools">{{ mappool.name }}</option>
-                </select>
-
                 <div class="btn-group float-right">
                     <button class="btn btn-primary" (click)="goToIrc()"><fa-icon [icon]="['fas', 'comment']"></fa-icon> IRC</button>
                     <button class="btn btn-primary" (click)="settingsTabIsOpened = !settingsTabIsOpened"><fa-icon [icon]="['fas', 'cogs']"></fa-icon> Settings</button>
@@ -26,77 +21,29 @@
     </div>
 
     <div class="settings-tab" [ngClass]="{'active': settingsTabIsOpened}">
-        <div class="row">
-            <div class="col-3">
-                <div class="row">
-                    <div class="col">
-                        <h5>First pick</h5>
-                        <select class="form-control" (change)="change('firstPick', $event)" [value]="selectedLobby.firstPick">
-                            <option></option>
-                            <option [value]="selectedLobby.teamOneName">{{ selectedLobby.teamOneName }}</option>
-                            <option [value]="selectedLobby.teamTwoName">{{ selectedLobby.teamTwoName }}</option>
-                        </select>
-                    </div>
-                </div>
+		<div class="row">
+			<div class="col">
+				<h5>First pick</h5>
+				<select class="form-control" (change)="change('firstPick', $event)" [value]="selectedLobby.firstPick">
+					<option></option>
+					<option [value]="selectedLobby.teamOneName">{{ selectedLobby.teamOneName }}</option>
+					<option [value]="selectedLobby.teamTwoName">{{ selectedLobby.teamTwoName }}</option>
+				</select>
+			</div>
 
-                <div class="row">
-                    <div class="col">
-                        <h5>Best of</h5>
-                        <select class="form-control" (change)="change('bestOf', $event)" [value]="selectedLobby.bestOf">
-                            <option [value]="item" *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">{{ item }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-9" *ngIf="selectedLobby && selectedLobby.mappoolId == -1">
-                <div class="alert alert-warning">
-                    You have to select a mappool first.
-                </div>
-            </div>
-
-            <div class="col-9" *ngIf="selectedLobby && selectedLobby.mappoolId != -1 && selectedLobby.mappool">
-                <h5>Bans</h5>
-
-                <table class="table">
-                    <tr>
-                        <td>{{ selectedLobby.teamOneName }}</td>
-                        <td>
-                            <select class="form-control" (change)="change('teamOneBanOne', $event)" [value]="selectedLobby.teamOneBanOne">
-                                <option [value]="beatmap.beatmapId" *ngFor="let beatmap of selectedLobby.mappool.allBeatmaps">{{ beatmap.name }}</option>
-                            </select>
-                        </td>
-
-                        <td>
-                            <select class="form-control" (change)="change('teamOneBanTwo', $event)" [value]="selectedLobby.teamOneBanTwo">
-                                <option [value]="beatmap.beatmapId" *ngFor="let beatmap of selectedLobby.mappool.allBeatmaps">{{ beatmap.name }}</option>
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>{{ selectedLobby.teamTwoName }}</td>
-                        <td>
-                            <select class="form-control" (change)="change('teamTwoBanOne', $event)" [value]="selectedLobby.teamTwoBanOne">
-                                <option [value]="beatmap.beatmapId" *ngFor="let beatmap of selectedLobby.mappool.allBeatmaps">{{ beatmap.name }}</option>
-                            </select>
-                        </td>
-
-                        <td>
-                            <select class="form-control" (change)="change('teamTwoBanTwo', $event)" [value]="selectedLobby.teamTwoBanTwo">
-                                <option [value]="beatmap.beatmapId" *ngFor="let beatmap of selectedLobby.mappool.allBeatmaps">{{ beatmap.name }}</option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+			<div class="col">
+				<h5>Best of</h5>
+				<select class="form-control" (change)="change('bestOf', $event)" [value]="selectedLobby.bestOf">
+					<option [value]="item" *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">{{ item }}</option>
+				</select>
+			</div>
+		</div>
 
         <div class="row">
             <div class="col">
                 <h5>Webhook</h5>
                 <input type="text" class="form-control" placeholder="Webhook" (change)="changeWebhook($event)" [value]="selectedLobby.webhook" />
-            </div>  
+            </div>
         </div>
 
         <hr />
@@ -150,7 +97,7 @@
                         <td *ngIf="match.getPlayer(slot).caption && match.getPlayer(slot).caption.length > 0">({{ match.getPlayer(slot).caption }})</td>
                     </tr>
                 </table>
-                
+
                 <hr />
 
                 <h5>Team {{ selectedLobby.teamTwoName }}</h5>
@@ -172,7 +119,7 @@
                 <div class="blue-text">Team {{ selectedLobby.teamTwoName }} score: {{ addDot(match.team_two_score, " ") }}</div>
 
                 <br />
-                
+
                 <div *ngIf="match.team_one_score > match.team_two_score">
                     <h3><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> has won.</h3><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score: {{ addDot(match.team_one_score, " ")}} | <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span> score: {{ addDot(match.team_two_score, " ") }} | Score difference: {{ addDot(match.team_one_score - match.team_two_score, " ") }}
                 </div>
@@ -188,5 +135,5 @@
             <button type="button" class="btn btn-primary" (click)="copyBeatmapResult(match)" *ngIf="!selectedLobby.ircConnected">Copy result</button>
         </div>
     </div>
-    
+
 </div>

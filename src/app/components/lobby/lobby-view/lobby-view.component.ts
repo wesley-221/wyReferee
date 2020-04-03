@@ -181,15 +181,20 @@ export class LobbyViewComponent implements OnInit {
 	 * Send the final result to discord
 	 */
 	sendFinalResult() {
-		const httpOptions = {
-			headers: new HttpHeaders({
-				'Content-Type': 'multipart/form-data'
-			})
-		};
-
 		const scoreString = (this.selectedLobby.teamOneScore > this.selectedLobby.teamTwoScore) ?
 							`**Score: ${this.selectedLobby.teamOneName}** | **${this.selectedLobby.teamOneScore}** - ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}` :
 							`**Score:** ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} - **${this.selectedLobby.teamTwoScore}** | **${this.selectedLobby.teamTwoName}**`;
+
+		let teamOneBans: any[] = [],
+			teamTwoBans: any[] = [];
+
+		for(let ban of this.selectedLobby.teamOneBans) {
+			teamOneBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
+		}
+
+		for(let ban of this.selectedLobby.teamTwoBans) {
+			teamTwoBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
+		}
 
 		const body = {
 			"embeds": [
@@ -204,12 +209,12 @@ export class LobbyViewComponent implements OnInit {
 					"fields": [
 						{
 							"name": `**${this.selectedLobby.teamOneName}** bans:`,
-							"value": `[${this.getBeatmapnameFromMappools(this.selectedLobby.teamOneBanOne).beatmapName}](${this.getBeatmapnameFromMappools(this.selectedLobby.teamOneBanOne).beatmapUrl}) \n[${this.getBeatmapnameFromMappools(this.selectedLobby.teamOneBanTwo).beatmapName}](${this.getBeatmapnameFromMappools(this.selectedLobby.teamOneBanTwo).beatmapUrl})`,
+							"value": teamOneBans.join('\n'),
 							"inline": true
 						},
 						{
 							"name": `**${this.selectedLobby.teamTwoName}** bans:`,
-							"value": `[${this.getBeatmapnameFromMappools(this.selectedLobby.teamTwoBanOne).beatmapName}](${this.getBeatmapnameFromMappools(this.selectedLobby.teamTwoBanOne).beatmapUrl}) \n[${this.getBeatmapnameFromMappools(this.selectedLobby.teamTwoBanTwo).beatmapName}](${this.getBeatmapnameFromMappools(this.selectedLobby.teamTwoBanTwo).beatmapUrl})`,
+							"value": teamTwoBans.join('\n'),
 							"inline": true
 						}
 					]
@@ -248,36 +253,6 @@ export class LobbyViewComponent implements OnInit {
 
 		// Re-synchronize the lobby to change game counter
 		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby, false);
-	}
-
-	/**
-	 * Change the mappool for the selected lobby
-	 * @param event the event that is triggered
-	 */
-	changeMappool(event: any) {
-		this.multiplayerLobbies.get(this.selectedLobby.lobbyId).mappoolId = event.target.value;
-		this.multiplayerLobbies.get(this.selectedLobby.lobbyId).mappool = this.mappoolService.getMappool(event.target.value);
-
-		this.selectedLobby.mappool = this.mappoolService.getMappool(event.target.value);
-		this.selectedLobby.mappoolId = event.target.value;
-
-		this.multiplayerLobbies.update(this.selectedLobby);
-	}
-
-	/**
-	 * Get the mappool id of the selected lobby
-	 */
-	getMappoolId() {
-		if(this.selectedLobby.mappool == null) {
-			if(this.selectedLobby.mappoolId != null) {
-				return this.selectedLobby.mappoolId;
-			}
-		}
-		else {
-			return this.selectedLobby.mappool.id;
-		}
-
-		return -1;
 	}
 
 	/**
@@ -372,18 +347,6 @@ export class LobbyViewComponent implements OnInit {
 		}
 		else if(element == 'bestOf') {
 			this.selectedLobby.bestOf = (<any>event.currentTarget).value;
-		}
-		else if(element == 'teamOneBanOne') {
-			this.selectedLobby.teamOneBanOne = (<any>event.currentTarget).value;
-		}
-		else if(element == 'teamOneBanTwo') {
-			this.selectedLobby.teamOneBanTwo = (<any>event.currentTarget).value;
-		}
-		else if(element == 'teamTwoBanOne') {
-			this.selectedLobby.teamTwoBanOne = (<any>event.currentTarget).value;
-		}
-		else if(element == 'teamTwoBanTwo') {
-			this.selectedLobby.teamTwoBanTwo = (<any>event.currentTarget).value;
 		}
 
 		this.multiplayerLobbies.update(this.selectedLobby);

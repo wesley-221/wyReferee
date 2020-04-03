@@ -22,10 +22,8 @@ export class MultiplayerLobby {
     firstPick: string;
     bestOf: number;
 
-    teamOneBanOne: number;
-    teamOneBanTwo: number;
-    teamTwoBanOne: number;
-    teamTwoBanTwo: number;
+    teamOneBans: number[] = [];
+    teamTwoBans: number[] = [];
 
     mapsCountTowardScore: {} = {};
     multiplayerData: MultiplayerData[];
@@ -77,10 +75,9 @@ export class MultiplayerLobby {
 
         this.firstPick = json.data.firstPick;
         this.bestOf = json.data.bestOf;
-        this.teamOneBanOne = json.data.teamOneBanOne;
-        this.teamOneBanTwo = json.data.teamOneBanTwo;
-        this.teamTwoBanOne = json.data.teamTwoBanOne;
-		this.teamTwoBanTwo = json.data.teamTwoBanTwo;
+
+		this.teamOneBans = json.data.teamOneBans;
+        this.teamTwoBans = json.data.teamTwoBans;
 
         this.mapsCountTowardScore = json.countForScore;
 
@@ -145,10 +142,8 @@ export class MultiplayerLobby {
                 "selectedMappoolId": (multiplayerLobby.mappool == null) ? -1 : multiplayerLobby.mappool.id,
                 "firstPick": multiplayerLobby.firstPick,
                 "bestOf": multiplayerLobby.bestOf,
-                "teamOneBanOne": multiplayerLobby.teamOneBanOne,
-                "teamOneBanTwo": multiplayerLobby.teamOneBanTwo,
-                "teamTwoBanOne": multiplayerLobby.teamTwoBanOne,
-				"teamTwoBanTwo": multiplayerLobby.teamTwoBanTwo,
+                "teamOneBans": multiplayerLobby.teamOneBans,
+                "teamTwoBans": multiplayerLobby.teamTwoBans,
 				"scoreInterfaceIndentifier": multiplayerLobby.scoreInterfaceIndentifier
             },
             "countForScore": { },

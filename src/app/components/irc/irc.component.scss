@@ -363,7 +363,7 @@ $send-message-height: 38px;
 							.name {
 								float: left;
 
-								width: calc(100% - 60px);
+								width: calc(100% - 120px);
 
 								overflow: hidden;
 								word-wrap: none;
@@ -373,12 +373,31 @@ $send-message-height: 38px;
 									color: $primary;
 									font-weight: bold;
 								}
+
+								&.beatmapBanned {
+									background-color: #730101;
+									text-decoration: line-through;
+
+									&:hover {
+										color: white;
+										font-weight: normal;
+									}
+								}
 							}
 
-							.beatmap-pick {
+							.buttons {
 								float: right;
+								width: 120px;
 
-								width: 60px;
+								.beatmap-ban {
+									display: inline-block;
+									width: 60px;
+								}
+
+								.beatmap-pick {
+									display: inline-block;
+									width: 60px;
+								}
 							}
 
 							&:nth-child(even) {
@@ -398,6 +417,13 @@ $send-message-height: 38px;
 			}
 		}
 	}
+}
+
+.beatmap {
+	display: block;
+	padding: 8px;
+	color: white;
+	text-shadow: 8px 8px 8px 8px black;
 }
 
 .cdk-drag-preview {

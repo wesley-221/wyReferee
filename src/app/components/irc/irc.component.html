@@ -1,7 +1,7 @@
 <div class="irc">
     <div class="channels">
         <div class="header">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#join-channel" (click)="openModal()" [disabled]="!ircService.isAuthenticated">Join channel</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#join-channel" (click)="openModal('join-channel')" [disabled]="!ircService.isAuthenticated">Join channel</button>
         </div>
 
         <div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
@@ -29,7 +29,7 @@
 	</div>
 
 	<div class="chat-container">
-		<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')) && this.selectedChannelMultiplayerLobby != null">
+		<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')) && this.selectedLobby != null">
 			Current score: {{ teamOneScore }} - {{ teamTwoScore }} <span *ngIf="this.hasWon == null">| Next pick: <b>{{ nextPick }}</b></span> <br />
 
 			<div *ngIf="selectedChannel != null && this.breakpoint != null">
@@ -133,33 +133,39 @@
 						<div class="col">
 							<h6>Mappool</h6>
 
-							<select class="form-control" (change)="onMappoolChange($event)" [value]="selectedChannel != undefined && selectedChannel.mappool != undefined && selectedChannel.mappool.id">
+							<select class="form-control" (change)="onMappoolChange($event)" [value]="selectedLobby != undefined && selectedLobby.mappool != undefined && selectedLobby.mappool.id">
 								<option value=""></option>
 								<option *ngFor="let mappool of mappoolService.allMappools" [value]="mappool.id">{{ mappool.name }}</option>
 							</select>
 						</div>
 					</div>
 
-					<div class="row mt-2" *ngIf="selectedChannel.mappool">
+					<div class="row mt-2" *ngIf="selectedLobby.mappool != null">
 						<div class="col">
 							<input type="text" class="form-control" placeholder="Search for beatmap..." [(ngModel)]="searchValue" />
 						</div>
 					</div>
 				</div>
 
-				<div class="mappool" *ngIf="selectedChannel.mappool">
-					<div class="mod-bracket" *ngFor="let bracket of ( selectedChannel.mappool.modBrackets | search : searchValue )">
+				<div class="mappool" *ngIf="selectedLobby.mappool != null">
+					<div class="mod-bracket" *ngFor="let bracket of ( selectedLobby.mappool.modBrackets | search : searchValue )">
 						<hr />
 						<h3>{{ bracket.bracketName }}</h3>
 						<hr />
 
 						<div class="map" *ngFor="let beatmap of bracket.beatmaps">
-							<div class="name" (click)="electronService.openLink(beatmap.beatmapUrl)">
+							<div class="name" (click)="electronService.openLink(beatmap.beatmapUrl)" [ngClass]="{ 'beatmapBanned': beatmapIsBanned(selectedLobby, beatmap.beatmapId) }">
 								{{ beatmap.beatmapName }}
 							</div>
 
-							<div class="beatmap-pick">
-								<button class="btn btn-primary" (click)="pickBeatmap(beatmap, bracket)">Pick</button>
+							<div class="buttons">
+								<div class="beatmap-ban">
+									<button class="btn btn-danger" (click)="banBeatmapPopup(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Ban</button>
+								</div>
+
+								<div class="beatmap-pick">
+									<button class="btn btn-primary" (click)="pickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Pick</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -189,6 +195,30 @@
                     <input id="channel-name" type="text" class="form-control mb-2" placeholder="Channel name" #channelName />
                     <button class="btn btn-primary" style="width: 100%;" (click)="joinChannel()">Attempt to join <fa-icon *ngIf="isAttemptingToJoin" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ban-a-map" tabindex="-1" role="dialog">
+    <div class="modal-dialog shadow" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ban a map</h3>
+            </div>
+
+            <div class="modal-body">
+				<p>Select the team that wants to ban the following map</p>
+
+				<div class="beatmap" *ngIf="popupBannedMap">
+					{{ popupBannedMap.beatmapName }}
+				</div>
+
+                <div class="float-right">
+                    <button class="btn btn-danger mr-2" (click)="hideModal('ban-a-map')">Cancel</button>
+                    <button class="btn btn-success mr-2" (click)="banBeatmap(1)" *ngIf="selectedLobby">{{ selectedLobby.teamOneName }}</button>
+                    <button class="btn btn-success" (click)="banBeatmap(2)" *ngIf="selectedLobby">{{ selectedLobby.teamTwoName }}</button>
+                </div>
             </div>
         </div>
     </div>
