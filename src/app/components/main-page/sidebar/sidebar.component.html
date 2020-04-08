@@ -5,10 +5,10 @@
         <b>Latest version:</b> <span id=latest-version>1.0.0</span> <br />
         <a href="https://bitbucket.org/wesley221/axs-calculator/downloads/" class="btn btn-primary">Download newest version</a>
     </div>
-    
+
     <div class=sb-header>
         <div class=sb-header-img></div>
-    
+
         <div class=sb-header-text>
             AxS calculator
             <hr />
@@ -16,12 +16,13 @@
             <button type="button" class="btn btn-sb-menu btn-xs" title="Login" [routerLink]="['/login']" routerLinkActive="in"><fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon></button>
         </div>
     </div>
-    
+
     <div class=sb-navigation>
         <button type="button" [routerLink]="['/information']" routerLinkActive="in"  class="sb-nav-column"><fa-icon [icon]="['fas', 'info']"></fa-icon> Information</button>
         <button type="button" [routerLink]="['/lobby-overview']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['fas', 'bars']"></fa-icon> Lobby overview</button>
         <button type="button" [routerLink]="['/create-lobby']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['far', 'plus-square']"></fa-icon> Create a lobby</button>
-        <button type="button" [routerLink]="['/mappool-overview']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['far', 'times-circle']"></fa-icon> Mappool</button>
+		<button type="button" [routerLink]="['/mappool-overview']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['far', 'times-circle']"></fa-icon> Mappool</button>
+		<button type="button" [routerLink]="['/tournament']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['fas', 'trophy']"></fa-icon> Tournaments</button>
         <button type="button" [routerLink]="['/irc']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['fas', 'comment-dots']"></fa-icon> Irc</button>
     </div>
 </div>

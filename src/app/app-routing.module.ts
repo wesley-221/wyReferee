@@ -13,15 +13,18 @@ import { MappoolBracketEditComponent } from './components/mappool/mappool-bracke
 import { LoginComponent } from './components/authentication/login/login.component';
 import { IrcComponent } from './components/irc/irc.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
+import { TournamentCreateComponent } from './components/tournament/tournament-create/tournament-create.component';
+import { TournamentOverviewComponent } from './components/tournament/tournament-overview/tournament-overview.component';
+import { TournamentEditComponent } from './components/tournament/tournament-edit/tournament-edit.component';
 
 const routes: Routes = [
 	{
 		path: '',
-		component: MainComponent, 
+		component: MainComponent,
 		children: [
 			{ path: '', component: InformationComponent },
 			{ path: 'information', component: InformationComponent },
-			{ path: 'settings', component: SettingsComponent}, 
+			{ path: 'settings', component: SettingsComponent},
 			{ path: 'login', component: LoginComponent },
 			{ path: 'register', component: RegisterComponent },
 			{ path: 'lobby-overview', component: AllLobbiesComponent },
@@ -30,6 +33,11 @@ const routes: Routes = [
 			{ path: 'mappool-overview', component: MappoolOverviewComponent },
 			{ path: 'mappool-create', component: MappoolCreateComponent },
 			{ path: 'edit-bracket/:mappoolId/:bracketId', component: MappoolBracketEditComponent },
+
+			{ path: 'tournament', component: TournamentOverviewComponent },
+			{ path: 'tournament-create', component: TournamentCreateComponent },
+			{ path: 'tournament-edit/:tournamentId', component: TournamentEditComponent },
+
 			{ path: 'irc', component: IrcComponent },
 			{ path: '**', component: ErrorComponent }
 		]

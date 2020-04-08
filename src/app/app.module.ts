@@ -39,10 +39,13 @@ import { IrcComponent } from './components/irc/irc.component';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { SearchPipe } from './pipes/search.pipe';
 import { RegisterComponent } from './components/authentication/register/register.component';
+import { TournamentCreateComponent } from './components/tournament/tournament-create/tournament-create.component';
+import { TournamentOverviewComponent } from './components/tournament/tournament-overview/tournament-overview.component';
+import { TournamentEditComponent } from './components/tournament/tournament-edit/tournament-edit.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-  	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -63,7 +66,11 @@ export function HttpLoaderFactory(http: HttpClient) {
 		MappoolBracketEditComponent,
 		LoginComponent,
 		IrcComponent,
-		SearchPipe, RegisterComponent
+		SearchPipe,
+		RegisterComponent,
+		TournamentCreateComponent,
+		TournamentOverviewComponent,
+		TournamentEditComponent
 	],
 	imports: [
 		BrowserModule,

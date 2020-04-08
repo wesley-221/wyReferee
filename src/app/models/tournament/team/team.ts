@@ -1,0 +1,79 @@
+import { TeamPlayer } from "./team-player";
+
+export class Team {
+	teamName: string;
+	collapsed: boolean = false;
+    private teamPlayers: TeamPlayer[];
+
+    constructor() {
+        this.teamPlayers = [];
+    }
+
+    /**
+     * Get all the players
+     */
+    public getPlayers(): TeamPlayer[] {
+        return this.teamPlayers;
+    }
+
+    /**
+     * Add a player to the team
+     * @param teamPlayer
+     */
+    public addPlayer(teamPlayer: TeamPlayer): void {
+        this.teamPlayers.push(teamPlayer);
+    }
+
+    /**
+     * Remove a player from the team
+     * @param teamPlayer
+     */
+    public removePlayer(teamPlayer: TeamPlayer): void {
+        this.teamPlayers.splice(this.teamPlayers.indexOf(teamPlayer), 1);
+    }
+
+    /**
+     * Get all the players in an array
+     */
+    public getPlayersAsArray(): string[] {
+        let returnArray: string[] = [];
+
+        for(let player of this.teamPlayers) {
+            returnArray.push(player.username);
+        }
+
+        return returnArray;
+    }
+
+	/**
+	 * Create a true copy of the object
+	 * @param team the object to make a copy of
+	 */
+    static makeTrueCopy(team: Team): Team {
+        const newTeam = new Team();
+
+        newTeam.teamName = team.teamName;
+
+        for(let player in team.teamPlayers) {
+            newTeam.addPlayer(TeamPlayer.makeTrueCopy(team.teamPlayers[player]));
+        }
+
+        return newTeam;
+	}
+
+	/**
+	 * Convert the object to a json object
+	 */
+	convertToJson() {
+		let team = {
+			teamName: this.teamName,
+			teamPlayers: []
+		}
+
+		for(let player in this.teamPlayers) {
+			team.teamPlayers.push(this.teamPlayers[player].convertToJson());
+		}
+
+		return team;
+	}
+}
