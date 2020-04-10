@@ -24,6 +24,8 @@ export class TournamentService {
 
 		for(let tournament in allTournamentsCache) {
 			const newTournament = new Tournament();
+
+			newTournament.tournamentId = allTournamentsCache[tournament].tournamentId;
 			newTournament.tournamentName = allTournamentsCache[tournament].tournamentName;
 			newTournament.acronym = allTournamentsCache[tournament].acronym;
 			this.availableTournamentId = newTournament.tournamentId + 1;
@@ -56,7 +58,7 @@ export class TournamentService {
 
 		this.allTournaments.push(tournament);
 
-		this.storeService.set(`cache.tournaments.${tournament.tournamentName}`, tournament.convertToJson());
+		this.storeService.set(`cache.tournaments.${tournament.tournamentId}`, tournament.convertToJson());
 	}
 
 	/**
@@ -65,7 +67,7 @@ export class TournamentService {
 	 */
 	removeTournament(tournament: Tournament): void {
 		this.allTournaments.splice(this.allTournaments.indexOf(tournament), 1);
-		this.storeService.delete(`cache.tournaments.${tournament.tournamentName}`);
+		this.storeService.delete(`cache.tournaments.${tournament.tournamentId}`);
 	}
 
 	/**
@@ -79,6 +81,8 @@ export class TournamentService {
 				this.allTournaments[tournament] = newTournament;
 			}
 		}
+
+		this.storeService.set(`cache.tournaments.${oldTournament.tournamentId}`, newTournament.convertToJson());
 	}
 
 	/**
