@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Tournament } from '../../../models/tournament/tournament';
 import { TournamentService } from '../../../services/tournament.service';
-import { Team } from '../../../models/tournament/team/team';
-import { TeamPlayer } from '../../../models/tournament/team/team-player';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
@@ -24,46 +22,6 @@ export class TournamentEditComponent implements OnInit {
 	}
 
 	ngOnInit() { }
-
-	/**
-	 * Add a team to the tournament
-	 */
-	addTeam() {
-		this.tournamentEdit.addTeam(new Team());
-	}
-
-	/**
-	 * Delete a team from the tournament
-	 * @param team the team to remove
-	 */
-	deleteTeam(team: Team) {
-		this.tournamentEdit.removeTeam(team);
-	}
-
-	/**
-	 * Collapse a team bracket
-	 * @param team the team bracket to collapse
-	 */
-	collapseBracket(team: Team) {
-		team.collapsed = !team.collapsed;
-	}
-
-	/**
-	 * Add a player to the given team
-	 * @param team the team to add the player to
-	 */
-	addNewPlayer(team: Team) {
-		team.addPlayer(new TeamPlayer());
-	}
-
-	/**
-	 * Remove a player from the given team
-	 * @param team the team to remove a player from
-	 * @param player the player to remove from the team
-	 */
-	removePlayer(team: Team, player: TeamPlayer) {
-		team.removePlayer(player);
-	}
 
 	/**
 	 * Create the tournament

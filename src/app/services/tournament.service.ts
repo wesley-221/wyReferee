@@ -28,6 +28,8 @@ export class TournamentService {
 			newTournament.tournamentId = allTournamentsCache[tournament].tournamentId;
 			newTournament.tournamentName = allTournamentsCache[tournament].tournamentName;
 			newTournament.acronym = allTournamentsCache[tournament].acronym;
+			newTournament.teamSize = allTournamentsCache[tournament].teamSize;
+			newTournament.tournamentScoreInterfaceIdentifier = allTournamentsCache[tournament].scoreInterfaceIdentifier;
 			this.availableTournamentId = newTournament.tournamentId + 1;
 
 			for(let team in allTournamentsCache[tournament].teams) {

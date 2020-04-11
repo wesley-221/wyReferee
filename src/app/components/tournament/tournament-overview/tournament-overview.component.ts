@@ -38,7 +38,6 @@ export class TournamentOverviewComponent implements OnInit {
 	}
 
 	editTournament(tournament: Tournament) {
-		console.log(tournament.tournamentId)
 		this.router.navigate(['tournament-edit', tournament.tournamentId]);
 	}
 

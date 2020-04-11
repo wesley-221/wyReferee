@@ -1,66 +1,7 @@
 <div class="scroll">
-	<div class="row">
-		<div class="col">
-			<h3>Tournament name</h3>
-			<input type="text" class="form-control" placeholder="Tournament name" [(ngModel)]="tournamentEdit.tournamentName" />
-		</div>
+	<app-tournament-creation [tournament]="tournamentEdit"></app-tournament-creation>
 
-		<div class="col">
-			<h3>Tournament acronym</h3>
-			<input type="text" class="form-control" placeholder="Tournament acronym" [(ngModel)]="tournamentEdit.acronym" />
-		</div>
-	</div>
-
-    <hr />
-
-    <h3>Teams</h3>
-    <p>Add a team to the tournament</p>
-
-    <button class="btn btn-primary" (click)="addTeam()">Create new team</button>
-
-    <hr />
-
-    <div class="team" *ngFor="let team of tournamentEdit.getTeams()">
-		<div class="header">
-			<div class="row">
-                <div class="col">
-                    <h3 *ngIf="team.teamName">{{ team.teamName }}</h3>
-                    <h3 *ngIf="!team.teamName">Unnamed team</h3>
-                </div>
-
-                <div class="col">
-                    <button class="btn btn-outline-primary float-right" (click)="collapseBracket(team)">Collapse</button>
-                </div>
-            </div>
-		</div>
-
-		<div [ngClass]="{'hide': team.collapsed}" class="body">
-			<h3>Create a new team</h3>
-			<p>Enter the name for the team</p>
-			<div class="team-name">
-				<input type="text" class="form-control mb-2" [(ngModel)]="team.teamName" placeholder="Team name" />
-			</div>
-
-			<h3>Manage players</h3>
-			<p>Add or remove players from the given team</p>
-
-			<button class="btn btn-primary" (click)="addNewPlayer(team)">Add new player</button>
-
-			<div class="team-players">
-				<div class="player" *ngFor="let player of team.getPlayers()">
-					<div class="player-name">
-						<input type="text" class="form-control mb-2" [(ngModel)]="player.username" placeholder="Player name" />
-					</div>
-
-					<div class="manage-buttons">
-						<button class="btn btn-danger" (click)="removePlayer(team, player)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
-					</div>
-				</div>
-			</div>
-		</div>
-    </div>
-
-    <div *ngIf="tournamentEdit.getTeams().length > 0">
+    <div *ngIf="tournamentEdit != null && tournamentEdit.getTeams().length > 0">
         <hr />
 
 		<h3>Updating the tournament</h3>

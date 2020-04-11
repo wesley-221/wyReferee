@@ -5,6 +5,8 @@ export class Tournament {
 	tournamentName: string;
 	acronym: string;
 	teams: Team[];
+	tournamentScoreInterfaceIdentifier: string;
+	teamSize: number;
 
 	constructor() {
         this.teams = [];
@@ -43,6 +45,8 @@ export class Tournament {
 		newTournament.tournamentId = tournament.tournamentId;
 		newTournament.tournamentName = tournament.tournamentName;
 		newTournament.acronym = tournament.acronym;
+		newTournament.teamSize = tournament.teamSize;
+		newTournament.tournamentScoreInterfaceIdentifier = tournament.tournamentScoreInterfaceIdentifier;
 
 		for(let team in tournament.teams) {
 			newTournament.teams.push(Team.makeTrueCopy(tournament.teams[team]));
@@ -59,6 +63,8 @@ export class Tournament {
 			tournamentId: this.tournamentId,
 			tournamentName: this.tournamentName,
 			acronym: this.acronym,
+			teamSize: this.teamSize,
+			scoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
 			teams: []
 		};
 

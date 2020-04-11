@@ -42,6 +42,7 @@ import { RegisterComponent } from './components/authentication/register/register
 import { TournamentCreateComponent } from './components/tournament/tournament-create/tournament-create.component';
 import { TournamentOverviewComponent } from './components/tournament/tournament-overview/tournament-overview.component';
 import { TournamentEditComponent } from './components/tournament/tournament-edit/tournament-edit.component';
+import { TournamentCreationComponent } from './components/tournament/tournament-creation/tournament-creation.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -70,7 +71,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		RegisterComponent,
 		TournamentCreateComponent,
 		TournamentOverviewComponent,
-		TournamentEditComponent
+		TournamentEditComponent,
+		TournamentCreationComponent
 	],
 	imports: [
 		BrowserModule,
