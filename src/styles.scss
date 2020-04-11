@@ -29,13 +29,13 @@ $btn-sb-menu-color:         #36393E;
 $users-background-default:  grey;
 $users-background-hover:    darken($users-background-default, 5%);
 
-$navbar-height: 22px; 
+$navbar-height: 22px;
 
 html, body {
     background-color:   $background-color;
 	color:              white;
     font-family: 		$font-family;
-    
+
     height: 100%;
     width: 100%;
 
@@ -53,7 +53,7 @@ html, body {
 
     ::-webkit-scrollbar-thumb:hover {
         background: darken($sidebar-color-hover, 5%);
-    } 
+    }
 }
 
 .toast-area {
@@ -65,7 +65,7 @@ html, body {
 
     margin: 50px;
     width: 300px;
-    
+
     .toast {
         padding: 8px;
 
@@ -123,7 +123,7 @@ html, body {
             line-height: $navbar-height;
 
             width: 47px;
-            
+
             margin: 0;
             padding-left: 4px;
             padding-right: 4px;
@@ -169,7 +169,7 @@ html, body {
             display: none;
             width: 100%;
             background-color: #991010;
-            
+
             padding: 3px;
 
             &.in {
@@ -183,15 +183,15 @@ html, body {
             padding-left:   15px;
             padding-right:  15px;
             overflow:       hidden;
-            
+
             .sb-header-img {
                 float:              left;
                 margin-top:         5px;
-                
+
                 width:              $sidebar-logo-width;
                 height:             $sidebar-logo-width;
                 line-height:        $sidebar-logo-width;
-                
+
                 border-radius:      50%;
                 border:             1px solid $sidebar-hr-color;
 
@@ -217,7 +217,7 @@ html, body {
                 border:     0;
                 border-top: 1px solid $sidebar-hr-color;
                 margin:     1em 0;
-                padding:    0; 
+                padding:    0;
             }
         }
 
@@ -230,7 +230,7 @@ html, body {
             .sb-nav-column {
                 display:            block;
                 text-align:         left;
-            
+
                 color:              $sidebar-color;
                 background:         none;
                 border:             0;
@@ -276,7 +276,7 @@ html, body {
                     border-left:    0;
                     margin-left:    30px;
                     transition:     all 0.1s ease-out;
-                
+
                     &.active {
                         color:          $sidebar-color-hover;
                         border-left:    0;
@@ -291,7 +291,7 @@ html, body {
         }
 
         // ================
-        // Custom scrollbar 
+        // Custom scrollbar
         scrollbar-face-color: $sidebar-scroll-color;
         scrollbar-track-color: $sidebar-background-color;
 
@@ -348,10 +348,10 @@ html, body {
                 overflow: hidden;
                 border: 1px solid darken($background-color, 15%);
                 margin: 7px;
-                
+
                 text-align: center;
 
-                height: $grid-gutter-width * 4; 
+                height: $grid-gutter-width * 4;
 
                 -webkit-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
                 -moz-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
@@ -399,7 +399,7 @@ html, body {
             }
 
             .mapContent {
-                float: left; 
+                float: left;
                 padding-left: $grid-gutter-width;
 
                 width: calc(100% - 160px);
@@ -441,50 +441,51 @@ html, body {
 
             &:hover {
                 border: 1px solid white;
-                
+
                 -webkit-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
                 -moz-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
                 box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
             }
-        }
+		}
 
         .createLobbyTeamRow {
-            overflow: hidden; 
+			.team-select {
+				overflow: hidden;
 
-            .teamOne {
-                width: 50%;
-                float: left;
+				display: flex;
+				flex-direction: row;
 
-                padding-right: 5px;
-            }
+				.teamOne, .teamTwo {
+					display: flex;
+					flex-direction: column;
 
-            .teamTwo {
-                width: 50%;
-                float:  left;
+					justify-content: space-between;
 
-                padding-left: 5px;
-            }
+					width: 50%;
+					padding-right: 5px;
+				}
+			}
         }
 
         .teamWin {
             color: green;
         }
-    
+
         .teamLoss {
             color: red;
         }
-    
+
         .matchHeader {
             position: fixed;
-    
+
             left: 0;
-            margin-left: $sidebar-width;            
+            margin-left: $sidebar-width;
             width: calc(100% - #{$sidebar-width});
 
             z-index: 50;
-    
+
             height: 120px;
-    
+
             background-color: $background-color;
 
             .header-content {
@@ -510,16 +511,16 @@ html, body {
                 }
             }
         }
-    
+
         .allMaps {
             height:     calc(100% - #{$navbar-height} - 111px);
             max-height: calc(100% - #{$navbar-height} - 111px);
-    
+
             margin-top: 134px;
-    
+
             padding-right: 16px;
             padding-bottom: 16px;
-    
+
             overflow-y: auto;
             overflow-x: hidden;
         }
