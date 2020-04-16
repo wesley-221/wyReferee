@@ -42,7 +42,7 @@ export class TournamentOverviewComponent implements OnInit {
 	}
 
 	canPublish() {
-		return this.authService.loggedIn && ((<any>this.authService.loggedInUser.isTournamentHost) == 'true' || this.authService.loggedInUser.isTournamentHost == true);
+		return this.authService.loggedIn && ((<any>this.authService.loggedInUser.isTournamentHost) == 'true' || this.authService.loggedInUser.isTournamentHost == true || this.authService.loggedInUser.isAdmin);
 	}
 
 	/**
