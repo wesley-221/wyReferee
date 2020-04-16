@@ -56,8 +56,8 @@ export class CreateLobbyComponent implements OnInit {
 			]),
 			'teamSize': new FormControl('', [
 				Validators.min(1),
-				Validators.max(6),
-				Validators.pattern(/^\d$/)
+				Validators.max(8),
+				Validators.pattern(/^\d+$/)
 			]),
 			'teamOneName': new FormControl('', [
 				Validators.required
