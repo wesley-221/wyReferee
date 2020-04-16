@@ -602,6 +602,14 @@ input {
     }
 }
 
+.alert {
+	&.alert-info {
+		background-color: lighten($info, 5%);
+		border-color: darken($info, 5%);
+		color: white;
+	}
+}
+
 .has-error {
     color: #E94F64;
 }
