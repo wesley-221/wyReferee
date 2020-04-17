@@ -16,7 +16,7 @@ import { ToastService } from '../../../services/toast.service';
 export class MappoolCreateComponent implements OnInit {
 	creationMappool: Mappool;
 
-	constructor(public electronService: ElectronService, private mappoolService: MappoolService, private getBeatmap: GetBeatmap, private toastService: ToastService) { 
+	constructor(public electronService: ElectronService, private mappoolService: MappoolService, private getBeatmap: GetBeatmap, private toastService: ToastService) {
 		this.creationMappool = mappoolService.creationMappool;
 		this.creationMappool.id = mappoolService.availableMappoolId;
 	}
@@ -31,55 +31,11 @@ export class MappoolCreateComponent implements OnInit {
 	}
 
 	/**
-	 * Add a new beatmap to the given bracket
-	 * @param bracket the bracket to add the beatmap to
-	 */
-	addBeatmap(bracket: ModBracket) {
-		const newBracket = new ModBracketMap();
-
-		bracket.addBeatmap(newBracket);
-	}
-
-	/**
-	 * Remove the given beatmap from the given bracket
-	 * @param bracket the bracket to remove the beatmap from
-	 * @param beatmap the beatmap to remove
-	 */
-	removeBeatmap(bracket: ModBracket, beatmap: ModBracketMap) {
-		bracket.removeMap(beatmap);
-	}
-
-	/**
-	 * Get the data from the given beatmap
-	 * @param beatmap the beatmap to synchronize
-	 */
-	synchronizeBeatmap(beatmap: ModBracketMap) {
-		this.getBeatmap.getByBeatmapId(beatmap.beatmapId).subscribe(data => {
-			if(data.beatmap_id == null) {
-				beatmap.invalid = true;
-			}
-			else {
-				beatmap.beatmapName = data.getBeatmapname();
-				beatmap.beatmapUrl = data.getBeatmapUrl();
-				beatmap.invalid = false;
-			}
-		});
-	}
-
-	/**
 	 * Create the mappool from the creationMappool object
 	 */
 	createMappool() {
 		this.mappoolService.saveMappool(this.creationMappool);
 		this.toastService.addToast(`Successfully created the mappool "${this.creationMappool.name}"!`);
-	}
-
-	/**
-	 * Collapse a bracket
-	 * @param bracket the bracket to collapse
-	 */
-	collapseBracket(bracket: ModBracket) {
-		bracket.collapsed = !bracket.collapsed;
 	}
 
 	/**

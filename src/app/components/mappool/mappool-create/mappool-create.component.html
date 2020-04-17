@@ -6,7 +6,7 @@
 
     <h3>Mappool gamemode</h3>
     <p>The gamemode that will be used for all the beatmaps when picking.</p>
-    
+
     <select class="form-control" (change)="changeGamemode($event)">
         <option value="0">osu!</option>
         <option value="1">osu!Taiko</option>
@@ -21,74 +21,13 @@
 
     <button class="btn btn-primary" (click)="createNewBracket()">Create new bracket</button>
 
-    <hr />
+	<hr />
 
-    <div class="mod-bracket" *ngFor="let bracket of creationMappool.getAllBrackets()">
-        <div class="header">
-            <div class="row">
-                <div class="col">
-                    <h3 *ngIf="bracket.bracketName">{{ bracket.bracketName }}</h3>
-                    <h3 *ngIf="!bracket.bracketName">Unnamed bracket</h3>
-                </div>
-
-                <div class="col">
-                    <button class="btn btn-outline-primary float-right" (click)="collapseBracket(bracket)">Collapse</button>
-                </div>
-            </div>
-        </div>
-
-        <div [ngClass]="{'hide': bracket.collapsed}" class="body">
-            <p>Enter the name of the bracket to get started.</p>
-            <input type="text" class="form-control" [(ngModel)]="bracket.bracketName" />
-
-            <hr />
-
-            <h3>Mods</h3>
-            <p>
-                Select the mods you want to add to this bracket when selecting a map. <br />
-                <b>Note:</b> If you leave the mods empty, it will be considered as Nomod. <br />
-                <b>Format:</b> <code>!mp mods nomod</code>
-            </p>
-
-            <input type="text" class="form-control" [(ngModel)]="bracket.mods" />
-
-            <hr />
-
-            <h3>Beatmaps</h3>
-            <p>Here you can select all the beatmaps you'd like to add to this specific bracket. Make sure to validate them so you know you're adding the correct beatmap!</p>
-
-            <button class="btn btn-primary mb-2" (click)="addBeatmap(bracket)">Add new beatmap</button>
-            
-            <div class="beatmaps">
-                <div class="beatmap mb-2" *ngFor="let beatmap of bracket.getBeatmaps()">
-                    <div class="row">
-                        <div class="col-2">
-                            <input type="text" class="form-control" [(ngModel)]="beatmap.beatmapId" placeholder="Beatmap id" />
-                        </div>
-
-                        <div class="col-2">
-                            <input type="text" class="form-control" [(ngModel)]="beatmap.modifier" placeholder="Modifier" />
-                        </div>
-
-                        <div class="col-6">
-                            <span *ngIf="beatmap.beatmapName == null" class="has-error">No beatmap found, have you tried synchronizing?</span>
-                            <a [routerLink]="" *ngIf="beatmap.beatmapName && !beatmap.invalid" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a> 
-                            <span *ngIf="beatmap.invalid" class="has-error">There was no beatmap found with the beatmap id "{{ beatmap.beatmapId }}".</span>
-                        </div>
-
-                        <div class="col">
-                            <button class="btn btn-primary" (click)="synchronizeBeatmap(beatmap)"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
-                            <button class="btn btn-danger" (click)="removeBeatmap(bracket, beatmap)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<app-mod-bracket [modBracket]="bracket" *ngFor="let bracket of creationMappool.getAllBrackets()" [withBorder]="true" [withCollapse]="true"></app-mod-bracket>
 
     <div *ngIf="creationMappool.getAllBrackets().length > 0">
         <hr />
-        
+
         <h3>Saving the mappool</h3>
         <p>Now that you have created a mappool, you have to save it so it can be used in the tournament. Press the create button to finalize the mappool</p>
 

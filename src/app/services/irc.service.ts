@@ -44,7 +44,7 @@ export class IrcService {
 	// Indication if a sound is playing or not
 	private soundIsPlaying: boolean = false;
 
-  	constructor(private toastService: ToastService, private storeService: StoreService, private multiplayerLobbiesService: MultiplayerLobbiesService) { 
+  	constructor(private toastService: ToastService, private storeService: StoreService, private multiplayerLobbiesService: MultiplayerLobbiesService) {
 		this.irc = require('irc-upd');
 
 		// Create observables for is(Dis)Connecting
@@ -137,8 +137,8 @@ export class IrcService {
 	 */
 	connect(username: string, password: string) {
 		let ircSettings = {
-			password: password, 
-			autoConnect: false, 
+			password: password,
+			autoConnect: false,
 			autoRejoin: true,
 			debug: false,
 			showErrors: false
@@ -151,7 +151,7 @@ export class IrcService {
 			ircSettings['channels'] = [];
 
 			for(let channel in allJoinedChannels) {
-				ircSettings['channels'].push(allJoinedChannels[channel].name);	
+				ircSettings['channels'].push(allJoinedChannels[channel].name);
 			}
 		}
 
@@ -225,7 +225,7 @@ export class IrcService {
 				// =============================================
 				// The messages were send in a multiplayer lobby
 				if(to.startsWith('#mp_')) {
-					const 	multiplayerInitialization = Regex.multiplayerInitialization.run(message), 
+					const 	multiplayerInitialization = Regex.multiplayerInitialization.run(message),
 							multiplayerMatchSize = Regex.multiplayerMatchSize.run(message),
 							multiplayerSettingsChange = Regex.multiplayerSettingsChange.run(message),
 							matchClosed = Regex.closedMatch.run(message),
@@ -346,7 +346,7 @@ export class IrcService {
 
 	/**
 	 * Add a message to the given channel. Will not send the message to irc
-	 * @param channelName the channel to add the message to 
+	 * @param channelName the channel to add the message to
 	 * @param author the author of the message
 	 * @param message the message itself
 	 * @param isPM if the message came from a PM
@@ -364,7 +364,7 @@ export class IrcService {
 			}
 
 			newMessage = new Message(Object.keys(this.getChannelByName(author).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false);
-			
+
 			this.getChannelByName(author).allMessages.push(newMessage);
 			this.getChannelByName(author).hasUnreadMessages = true;
 			this.saveMessageToHistory(author, newMessage);
@@ -373,12 +373,12 @@ export class IrcService {
 				let sound = new Howl({
 					src: ['assets/stairs.mp3'],
 				});
-	
+
 				if(!this.soundIsPlaying) {
 					sound.play();
 					this.soundIsPlaying = true;
 				}
-	
+
 				sound.on('end', () => {
 					this.soundIsPlaying = false;
 				});
@@ -396,12 +396,12 @@ export class IrcService {
 					let sound = new Howl({
 						src: ['assets/stairs.mp3'],
 					});
-		
+
 					if(!this.soundIsPlaying) {
 						sound.play();
 						this.soundIsPlaying = true;
 					}
-		
+
 					sound.on('end', () => {
 						this.soundIsPlaying = false;
 					});
@@ -411,7 +411,7 @@ export class IrcService {
 
 		this.messageHasBeenSend$.next(true);
 	}
-	
+
 	/**
 	 * Join a channel
 	 * @param channelName the channel to join
@@ -457,11 +457,11 @@ export class IrcService {
 					isPrivateChannel: false,
 					playSoundOnMessage: false
 				});
-	
+
 				this.isJoiningChannel$.next(false);
-	
+
 				this.allChannels.push(new Channel(channelName));
-	
+
 				this.toastService.addToast(`Joined channel "${channelName}".`);
 			});
 		}
@@ -522,7 +522,7 @@ export class IrcService {
 
 		this.storeService.set('irc.channels', rearrangedChannels);
 	}
-	
+
 	/**
 	 * Change the last active status in the store for the given channel
 	 * @param channel the channel to change the status of
