@@ -18,6 +18,14 @@
     <hr />
 
     <div class="mappool" *ngFor="let mappool of mappoolService.allMappools">
+		<div class="row" *ngIf="mappool.updateAvailable">
+			<div class="col">
+				<div class="alert alert-info">
+					Looks like this mappool isn't up to date. Click on the update button to get the latest version.
+				</div>
+			</div>
+		</div>
+
         <div class="row">
             <div class="col-9">
                 <h1>{{ mappool.name }}</h1>
@@ -26,6 +34,7 @@
 
             <div class="col-3">
                 <div class="btn-group float-right">
+					<button class="btn btn-success" (click)="updateMappool(mappool)" *ngIf="mappool.updateAvailable">Update</button>
 					<button class="btn btn-primary" (click)="publishMappool(mappool)" *ngIf="canPublish()">Publish</button>
                     <button class="btn btn-danger" (click)="deleteMappool(mappool)">Delete</button>
                 </div>

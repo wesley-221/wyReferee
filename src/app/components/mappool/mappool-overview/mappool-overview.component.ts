@@ -14,7 +14,7 @@ import { ToastType } from '../../../models/toast';
 })
 
 export class MappoolOverviewComponent implements OnInit {
-	mappoolId: string;
+	mappoolId: number;
 
 	constructor(public mappoolService: MappoolService, private router: Router, private toastService: ToastService, public authService: AuthenticateService) { }
 	ngOnInit() { }
@@ -69,6 +69,22 @@ export class MappoolOverviewComponent implements OnInit {
 			this.toastService.addToast(`Imported the mappool "${newMappool.name}".`);
 		}, () => {
 			this.toastService.addToast(`Unable to import the mappool with the id "${this.mappoolId}".`, ToastType.Error);
+		});
+	}
+
+	/**
+	 * Update a mappool
+	 * @param mappool the mappool to update
+	 */
+	updateMappool(mappool: Mappool) {
+		this.mappoolService.getPublishedMappool(mappool.publishId).subscribe((data) => {
+			const updatedMappool: Mappool = this.mappoolService.mapFromJson(data);
+			updatedMappool.id = mappool.id;
+			updatedMappool.updateAvailable = false;
+
+			this.mappoolService.replaceMappool(mappool, updatedMappool);
+
+			this.toastService.addToast(`Successfully updated the mappool "${mappool.name}"!`, ToastType.Information);
 		});
 	}
 }

@@ -8,7 +8,9 @@ export class Mappool {
     modBrackets: ModBracket[] = [];
     modifiers: {} = {};
     allBeatmaps: any[] = [];
-    gamemodeId: Gamemodes = Gamemodes.Osu;
+	gamemodeId: Gamemodes = Gamemodes.Osu;
+	publishId: number;
+	updateAvailable: boolean = false;
 
     constructor() {}
 
@@ -34,9 +36,10 @@ export class Mappool {
         let mappool = {
             id: this.id,
             name: this.name,
-            brackets: [], 
+            brackets: [],
             modifiers: {},
-            gamemode: this.gamemodeId
+			gamemode: this.gamemodeId,
+			publishId: this.publishId
         };
 
         for(let bracket in this.modBrackets) {
@@ -59,7 +62,7 @@ export class Mappool {
                     beatmapId: thisMap.beatmapId,
                     beatmapName: thisMap.beatmapName,
                     beatmapUrl: thisMap.beatmapUrl,
-                    modifier: thisMap.modifier, 
+                    modifier: thisMap.modifier,
                     gamemode: this.gamemodeId
                 };
             }
@@ -81,7 +84,8 @@ export class Mappool {
         newMappool.name = mappool.name;
         newMappool.modBrackets = mappool.modBrackets;
         newMappool.modifiers = mappool.modifiers;
-        newMappool.gamemodeId = mappool.gamemodeId;
+		newMappool.gamemodeId = mappool.gamemodeId;
+		newMappool.publishId = mappool.publishId;
 
         return newMappool;
     }
@@ -91,12 +95,13 @@ export class Mappool {
      * @param json the json to serialize
      */
     public static serializeJson(json: any): Mappool {
-        const 	thisMappool = json, 
-                newMappool = new Mappool();
+        const 	thisMappool = json,
+				newMappool = new Mappool();
 
         newMappool.id = thisMappool.id
         newMappool.name = thisMappool.name;
-        newMappool.gamemodeId = thisMappool.gamemode;
+		newMappool.gamemodeId = thisMappool.gamemode;
+		newMappool.publishId = thisMappool.publishId;
 
         // Loop through all the brackets in the current mappool
         for(let bracket in thisMappool.brackets) {
@@ -121,7 +126,7 @@ export class Mappool {
                 newBracket.addBeatmap(newBeatmap);
 
                 newMappool.modifiers[newBeatmap.beatmapId] = newBeatmap;
-                
+
                 newMappool.allBeatmaps.push({
                     beatmapId: thisBracket.beatmaps[beatmap],
                     name: thisMappool.modifiers[newBeatmap.beatmapId].beatmapName,

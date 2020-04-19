@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { ModBracket } from '../models/osu-mappool/mod-bracket';
 import { ModBracketMap } from '../models/osu-mappool/mod-bracket-map';
 import { AppConfig } from '../../environments/environment';
+import { Misc } from '../models/misc';
 
 @Injectable({
   	providedIn: 'root'
@@ -25,11 +26,23 @@ export class MappoolService {
 
 		// Loop through all the mappools
 		for(let mappool in storeAllMappools) {
-			const 	thisMappool = storeAllMappools[mappool], 
+			const 	thisMappool = storeAllMappools[mappool],
 					newMappool = Mappool.serializeJson(thisMappool);
 
 			this.availableMappoolId = newMappool.id + 1;
-			this.allMappools.push(newMappool);
+
+			// Check for updates
+			if(newMappool.publishId != undefined) {
+				this.getPublishedMappool(newMappool.publishId).subscribe((data) => {
+					const updatedMappool: Mappool = this.mapFromJson(data);
+					newMappool.updateAvailable = !Misc.deepEquals(updatedMappool, newMappool);
+
+					this.allMappools.push(newMappool);
+				});
+			}
+			else {
+				this.allMappools.push(newMappool);
+			}
 		}
 	}
 
@@ -75,6 +88,23 @@ export class MappoolService {
 	}
 
 	/**
+	 * Replace the original mappool with the new mappool
+	 * @param originalMappool the mappool to replace
+	 * @param updatedMappool the mappool with the new values
+	 */
+	public replaceMappool(originalMappool: Mappool, updatedMappool: Mappool) {
+		for(let i in this.allMappools) {
+			if(this.allMappools[i].id == originalMappool.id) {
+				updatedMappool.id = originalMappool.id;
+				this.allMappools[i] = updatedMappool;
+
+				this.storeService.set(`cache.mappool.${originalMappool.id}`, updatedMappool.convertToJson());
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Delete the mappool in the store and service
 	 * @param mappool the mappool to delete
 	 */
@@ -95,29 +125,31 @@ export class MappoolService {
 	 * Get a published mappool by mappool id
 	 * @param mappool_id the id of the mappool that was published
 	 */
-	public getPublishedMappool(mappool_id: string): Observable<Mappool> {
+	public getPublishedMappool(mappool_id: number): Observable<Mappool> {
 		return this.httpClient.get<Mappool>(`${this.apiUrl}mappool/get/${mappool_id}`);
 	}
 
 	/**
 	 * Map back-end mappool to front-end
-	 * @param json 
+	 * @param json
 	 */
 	public mapFromJson(json: Mappool): Mappool {
 		const newMappool: Mappool = new Mappool();
 
 		newMappool.id = json.id;
 		newMappool.name = json.name;
+		newMappool.gamemodeId = json.gamemodeId;
+		newMappool.publishId = json.id;
 
 		for(let modBracket in json.modBrackets) {
-			const 	newBracket: ModBracket = new ModBracket(), 
+			const 	newBracket: ModBracket = new ModBracket(),
 					iterationBracket = json.modBrackets[modBracket];
 
 			// Reset the bracket id
 			newBracket.id = parseInt(modBracket);
 			newBracket.mods = iterationBracket.mods;
 			newBracket.bracketName = iterationBracket.bracketName;
-			
+
 			for(let beatmap in iterationBracket.beatmaps) {
 				const 	newBeatmap: ModBracketMap = new ModBracketMap(),
 						iterationMap: ModBracketMap = iterationBracket.beatmaps[beatmap];
@@ -135,12 +167,12 @@ export class MappoolService {
 					mod: newBracket.mods,
 					name: newBeatmap.beatmapName
 				})
-				
+
 				newBracket.addBeatmap(newBeatmap);
 			}
 
 			newMappool.addBracket(newBracket);
-		}		
+		}
 
 		return newMappool;
 	}
