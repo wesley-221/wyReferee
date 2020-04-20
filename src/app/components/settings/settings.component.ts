@@ -12,7 +12,7 @@ import { ApiKeyValidation } from '../../services/osu-api/api-key-validation.serv
 })
 
 export class SettingsComponent implements OnInit {
-	@ViewChild('apiKey', { static: false }) apiKey: ElementRef;
+	@ViewChild('apiKey') apiKey: ElementRef;
 
 	constructor(
 		public electronService: ElectronService, 

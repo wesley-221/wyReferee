@@ -10,7 +10,7 @@ import { faSquare, faClone } from '@fortawesome/free-regular-svg-icons';
 })
 
 export class TitlebarComponent implements OnInit {
-	@ViewChild('maximizeButton', { static: false }) maximizeButton: FaIconComponent;
+	@ViewChild('maximizeButton') maximizeButton: FaIconComponent;
 
 	constructor(private electronService: ElectronService) { }
 

@@ -21,8 +21,8 @@ declare var $: any;
 	styleUrls: ['./irc.component.scss']
 })
 export class IrcComponent implements OnInit {
-	@ViewChild('channelName', { static: false }) channelName: ElementRef;
-	@ViewChild('chatMessage', { static: false }) chatMessage: ElementRef;
+	@ViewChild('channelName') channelName: ElementRef;
+	@ViewChild('chatMessage') chatMessage: ElementRef;
 
 	@ViewChild(VirtualScrollerComponent, { static: true }) private virtualScroller: VirtualScrollerComponent;
 
@@ -40,9 +40,9 @@ export class IrcComponent implements OnInit {
 
 	isOptionMenuMinimized: boolean = true;
 
-	@ViewChild('teamMode', { static: false }) teamMode: ElementRef;
-	@ViewChild('winCondition', { static: false }) winCondition: ElementRef;
-	@ViewChild('players', { static: false }) players: ElementRef;
+	@ViewChild('teamMode') teamMode: ElementRef;
+	@ViewChild('winCondition') winCondition: ElementRef;
+	@ViewChild('players') players: ElementRef;
 
 	searchValue: string;
 
