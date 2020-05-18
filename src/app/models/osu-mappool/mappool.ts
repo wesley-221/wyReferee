@@ -3,140 +3,158 @@ import { ModBracketMap } from "./mod-bracket-map";
 import { Gamemodes } from "../osu-models/osu-api";
 
 export class Mappool {
-    id: number = null;
-    name: string;
-    modBrackets: ModBracket[] = [];
-    modifiers: {} = {};
-    allBeatmaps: any[] = [];
+	id: number = null;
+	name: string;
+	modBrackets: ModBracket[] = [];
+	modifiers: {} = {};
+	allBeatmaps: any[] = [];
 	gamemodeId: Gamemodes = Gamemodes.Osu;
 	publishId: number;
 	updateAvailable: boolean = false;
 
-    constructor() {}
+	constructor() { }
 
     /**
      * Get all the mod brackets
      */
-    public getAllBrackets() {
-        return this.modBrackets;
-    }
+	public getAllBrackets() {
+		return this.modBrackets;
+	}
 
     /**
      * Add a modbracket to the mappool
      * @param modBracket the modbracket to add
      */
-    public addBracket(modBracket: ModBracket) {
-        this.modBrackets.push(modBracket);
-    }
+	public addBracket(modBracket: ModBracket) {
+		this.modBrackets.push(modBracket);
+	}
+
+	/**
+	 * Get a modbracket by the given id
+	 * @param modBracketId the id of the bracket
+	 */
+	public getModBracketByid(modBracketId: number) {
+		for (let bracket in this.modBrackets) {
+			if (this.modBrackets[bracket].id == modBracketId) {
+				return this.modBrackets[bracket];
+			}
+		}
+
+		return null;
+	}
 
     /**
      * Convert the mappool object to json format
      */
-    public convertToJson(): any {
-        let mappool = {
-            id: this.id,
-            name: this.name,
-            brackets: [],
-            modifiers: {},
+	public convertToJson(): any {
+		let mappool = {
+			id: this.id,
+			name: this.name,
+			brackets: [],
+			modifiers: {},
 			gamemode: this.gamemodeId,
 			publishId: this.publishId
-        };
+		};
 
-        for(let bracket in this.modBrackets) {
-            const thisBracket = this.modBrackets[bracket];
+		for (let bracket in this.modBrackets) {
+			const thisBracket = this.modBrackets[bracket];
 
-            let newBracket = {
-                id: (thisBracket.id == null) ? parseInt(bracket) : thisBracket.id,
-                bracketName: thisBracket.bracketName,
-                mods: thisBracket.mods,
-                beatmaps: {}
-            };
+			let newBracket = {
+				id: (thisBracket.id == null) ? parseInt(bracket) : thisBracket.id,
+				bracketName: thisBracket.bracketName,
+				mods: thisBracket.mods,
+				beatmaps: []
+			};
 
-            for(let map in thisBracket.beatmaps) {
-                const thisMap = thisBracket.beatmaps[map];
-                if(thisMap.beatmapId == null) continue;
+			for (let map in thisBracket.beatmaps) {
+				const thisMap = thisBracket.beatmaps[map];
+				if (thisMap.beatmapId == null) continue;
 
-                newBracket.beatmaps[map] = thisMap.beatmapId;
+				newBracket.beatmaps.push({
+					id: thisMap.id,
+					beatmapId: thisMap.beatmapId,
+					beatmapName: thisMap.beatmapName,
+					beatmapUrl: thisMap.beatmapUrl,
+					modifier: thisMap.modifier,
+					gamemode: this.gamemodeId
+				});
+			}
 
-                mappool.modifiers[thisMap.beatmapId] = {
-                    beatmapId: thisMap.beatmapId,
-                    beatmapName: thisMap.beatmapName,
-                    beatmapUrl: thisMap.beatmapUrl,
-                    modifier: thisMap.modifier,
-                    gamemode: this.gamemodeId
-                };
-            }
+			mappool.brackets.push(newBracket);
+		}
 
-            mappool.brackets.push(newBracket);
-        }
-
-        return mappool;
-    }
+		return mappool;
+	}
 
     /**
      * Make a true copy of the given mappool
      * @param mappool the mappool
      */
-    public static makeTrueCopy(mappool: Mappool): Mappool {
-        const newMappool = new Mappool();
+	public static makeTrueCopy(mappool: Mappool): Mappool {
+		const newMappool = new Mappool();
 
-        newMappool.id = mappool.id;
-        newMappool.name = mappool.name;
-        newMappool.modBrackets = mappool.modBrackets;
-        newMappool.modifiers = mappool.modifiers;
+		newMappool.id = mappool.id;
+		newMappool.name = mappool.name;
+
+		for (let bracket in mappool.modBrackets) {
+			newMappool.modBrackets.push(ModBracket.makeTrueCopy(mappool.modBrackets[bracket]));
+		}
+
+		newMappool.modifiers = mappool.modifiers;
 		newMappool.gamemodeId = mappool.gamemodeId;
 		newMappool.publishId = mappool.publishId;
 
-        return newMappool;
-    }
+		return newMappool;
+	}
 
     /**
      * Serialize the json so that it gives back a mappool object
      * @param json the json to serialize
      */
-    public static serializeJson(json: any): Mappool {
-        const 	thisMappool = json,
-				newMappool = new Mappool();
+	public static serializeJson(json: any): Mappool {
+		const thisMappool = json,
+			newMappool = new Mappool();
 
-        newMappool.id = thisMappool.id
-        newMappool.name = thisMappool.name;
+		newMappool.id = thisMappool.id
+		newMappool.name = thisMappool.name;
 		newMappool.gamemodeId = thisMappool.gamemode;
 		newMappool.publishId = thisMappool.publishId;
 
-        // Loop through all the brackets in the current mappool
-        for(let bracket in thisMappool.brackets) {
-            const 	thisBracket = thisMappool.brackets[bracket],
-                    newBracket = new ModBracket();
+		// Loop through all the brackets in the current mappool
+		for (let bracket in thisMappool.brackets) {
+			const thisBracket = thisMappool.brackets[bracket],
+				newBracket = new ModBracket();
 
-            newBracket.id = thisBracket.id;
-            newBracket.mods = thisBracket.mods;
-            newBracket.bracketName = thisBracket.bracketName;
+			newBracket.id = thisBracket.id;
+			newBracket.mods = thisBracket.mods;
+			newBracket.bracketName = thisBracket.bracketName;
 
-            // Loop through all the beatmaps in the current bracket
-            for(let beatmap in thisBracket.beatmaps) {
-                const newBeatmap = new ModBracketMap();
+			// Loop through all the beatmaps in the current bracket
+			for (let beatmap in thisBracket.beatmaps) {
+				const newBeatmap = new ModBracketMap();
 
-                newBeatmap.beatmapId = thisBracket.beatmaps[beatmap];
-                newBeatmap.beatmapName = thisMappool.modifiers[newBeatmap.beatmapId].beatmapName;
-                newBeatmap.beatmapUrl = thisMappool.modifiers[newBeatmap.beatmapId].beatmapUrl;
-                newBeatmap.modifier = thisMappool.modifiers[newBeatmap.beatmapId].modifier;
-                newBeatmap.gamemodeId = thisMappool.gamemode;
-                newBeatmap.invalid = false;
+				newBeatmap.id = thisBracket.beatmaps[beatmap].id;
+				newBeatmap.beatmapId = thisBracket.beatmaps[beatmap].beatmapId;
+				newBeatmap.beatmapName = thisBracket.beatmaps[beatmap].beatmapName;
+				newBeatmap.beatmapUrl = thisBracket.beatmaps[beatmap].beatmapUrl;
+				newBeatmap.modifier = thisBracket.beatmaps[beatmap].modifier;
+				newBeatmap.gamemodeId = thisBracket.beatmaps[beatmap].gamemode;
+				newBeatmap.invalid = false;
 
-                newBracket.addBeatmap(newBeatmap);
+				newBracket.addBeatmap(newBeatmap);
 
-                newMappool.modifiers[newBeatmap.beatmapId] = newBeatmap;
+				newMappool.modifiers[newBeatmap.beatmapId] = newBeatmap;
 
-                newMappool.allBeatmaps.push({
-                    beatmapId: thisBracket.beatmaps[beatmap],
-                    name: thisMappool.modifiers[newBeatmap.beatmapId].beatmapName,
-                    mod: thisBracket.mods
-                });
-            }
+				newMappool.allBeatmaps.push({
+					beatmapId: newBeatmap.beatmapId,
+					name: newMappool.modifiers[newBeatmap.beatmapId].beatmapName,
+					mod: thisBracket.mods
+				});
+			}
 
-            newMappool.addBracket(newBracket);
-        }
+			newMappool.addBracket(newBracket);
+		}
 
-        return newMappool;
-    }
+		return newMappool;
+	}
 }

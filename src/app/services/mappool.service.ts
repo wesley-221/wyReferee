@@ -7,6 +7,7 @@ import { ModBracket } from '../models/osu-mappool/mod-bracket';
 import { ModBracketMap } from '../models/osu-mappool/mod-bracket-map';
 import { AppConfig } from '../../environments/environment';
 import { Misc } from '../models/misc';
+import { LoggedInUser } from '../models/authentication/logged-in-user';
 
 @Injectable({
   	providedIn: 'root'
@@ -37,6 +38,8 @@ export class MappoolService {
 					const updatedMappool: Mappool = this.mapFromJson(data);
 					newMappool.updateAvailable = !Misc.deepEquals(updatedMappool, newMappool);
 
+					this.allMappools.push(newMappool);
+				}, (err) => {
 					this.allMappools.push(newMappool);
 				});
 			}
@@ -88,6 +91,14 @@ export class MappoolService {
 	}
 
 	/**
+	 * Update a published mappool
+	 * @param mappool the mappool to update
+	 */
+	public updatePublishedMappool(mappool: Mappool) {
+		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool/update`, mappool, { observe: "response" });
+	}
+
+	/**
 	 * Replace the original mappool with the new mappool
 	 * @param originalMappool the mappool to replace
 	 * @param updatedMappool the mappool with the new values
@@ -130,6 +141,22 @@ export class MappoolService {
 	}
 
 	/**
+	 * Get all the published mappools from the given user
+	 * @param user the user to get all the mappools from
+	 */
+	public getAllPublishedMappoolsFromUser(user: LoggedInUser) {
+		return this.httpClient.get<Mappool[]>(`${this.apiUrl}mappool/created_by/${user.userId}`);
+	}
+
+	/**
+	 * Delete a mappool
+	 * @param mappool the mappool to delete
+	 */
+	public deletePublishedMappool(mappool: Mappool) {
+		return this.httpClient.delete<Mappool>(`${this.apiUrl}mappool/${mappool.id}`);
+	}
+
+	/**
 	 * Map back-end mappool to front-end
 	 * @param json
 	 */
@@ -146,7 +173,7 @@ export class MappoolService {
 					iterationBracket = json.modBrackets[modBracket];
 
 			// Reset the bracket id
-			newBracket.id = parseInt(modBracket);
+			newBracket.id = iterationBracket.id;
 			newBracket.mods = iterationBracket.mods;
 			newBracket.bracketName = iterationBracket.bracketName;
 
@@ -154,6 +181,7 @@ export class MappoolService {
 				const 	newBeatmap: ModBracketMap = new ModBracketMap(),
 						iterationMap: ModBracketMap = iterationBracket.beatmaps[beatmap];
 
+				newBeatmap.id = iterationMap.id;
 				newBeatmap.beatmapId = iterationMap.beatmapId;
 				newBeatmap.beatmapName = iterationMap.beatmapName;
 				newBeatmap.beatmapUrl = iterationMap.beatmapUrl;

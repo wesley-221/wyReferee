@@ -16,17 +16,22 @@ import { ElectronService } from '../../../services/electron.service';
 export class MappoolBracketEditComponent implements OnInit {
 	selectedMappool: Mappool;
 	selectedBracket: ModBracket;
-
-	mappoolId: number;
-	bracketId: number;
+	publish: any;
 
 	constructor(private route: ActivatedRoute, private mappoolService: MappoolService, private toastService: ToastService, private getBeatmap: GetBeatmap, public electronService: ElectronService) {
 		this.route.params.subscribe(params => {
-			this.selectedMappool = Mappool.makeTrueCopy(mappoolService.getMappool(params.mappoolId));
-			this.selectedBracket = ModBracket.makeTrueCopy(this.selectedMappool.modBrackets[params.bracketId]);
+			this.publish = params.publish;
 
-			this.mappoolId = params.mappoolId;
-			this.bracketId = params.bracketId;
+			if(this.publish == true || this.publish == "true") {
+				mappoolService.getPublishedMappool(params.mappoolId).subscribe(data => {
+					this.selectedMappool = mappoolService.mapFromJson(data);
+					this.selectedBracket = ModBracket.makeTrueCopy(this.selectedMappool.getModBracketByid(params.bracketId));
+				});
+			}
+			else {
+				this.selectedMappool = Mappool.makeTrueCopy(mappoolService.getMappool(params.mappoolId));
+				this.selectedBracket = ModBracket.makeTrueCopy(this.selectedMappool.getModBracketByid(params.bracketId));
+			}
 		});
 	}
 
@@ -37,9 +42,27 @@ export class MappoolBracketEditComponent implements OnInit {
 	 * @param bracket the bracket to save
 	 */
 	saveBracket(bracket: ModBracket) {
-		this.selectedMappool.modBrackets[bracket.id] = bracket;
-		this.mappoolService.updateMappool(this.selectedMappool);
+		if(this.publish == true || this.publish == "true") {
+			for(let countBracket in this.selectedMappool.modBrackets) {
+				if(this.selectedMappool.modBrackets[countBracket].id == bracket.id) {
+					this.selectedMappool.modBrackets[countBracket] = bracket;
+				}
+			}
 
-		this.toastService.addToast(`Successfully updated the bracket "${bracket.bracketName}" from the mappool "${this.selectedMappool.name}".`);
+			this.mappoolService.updatePublishedMappool(this.selectedMappool).subscribe(res => {
+				this.toastService.addToast(`Successfully updated the bracket "${bracket.bracketName}" from the mappool "${this.selectedMappool.name}".`);
+			});
+		}
+		else {
+			for(let countBracket in this.selectedMappool.modBrackets) {
+				if(this.selectedMappool.modBrackets[countBracket].id == bracket.id) {
+					this.selectedMappool.modBrackets[countBracket] = bracket;
+				}
+			}
+
+			this.mappoolService.updateMappool(this.selectedMappool);
+
+			this.toastService.addToast(`Successfully updated the bracket "${bracket.bracketName}" from the mappool "${this.selectedMappool.name}".`);
+		}
 	}
 }

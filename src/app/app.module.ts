@@ -44,6 +44,8 @@ import { TournamentOverviewComponent } from './components/tournament/tournament-
 import { TournamentEditComponent } from './components/tournament/tournament-edit/tournament-edit.component';
 import { TournamentCreationComponent } from './components/tournament/tournament-creation/tournament-creation.component';
 import { ModBracketComponent } from './components/mappool/mod-bracket/mod-bracket.component';
+import { MyPublishedMappoolsComponent } from './components/mappool/my-published-mappools/my-published-mappools.component';
+import { MappoolComponent } from './components/mappool/mappool/mappool.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -74,7 +76,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 		TournamentOverviewComponent,
 		TournamentEditComponent,
 		TournamentCreationComponent,
-		ModBracketComponent
+		ModBracketComponent,
+		MyPublishedMappoolsComponent,
+		MappoolComponent
 	],
 	imports: [
 		BrowserModule,
