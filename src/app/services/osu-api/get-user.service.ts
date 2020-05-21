@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { OsuApi, OsuApiEndpoints } from "../../models/osu-models/osu-api";
+import { OsuApi, OsuApiEndpoints } from "../../models/osu-models/osu";
 import { StoreService } from "../store.service";
 import { HttpClient } from "@angular/common/http";
 import { User } from "../../models/user";

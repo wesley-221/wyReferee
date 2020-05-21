@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ModBracket } from '../../../models/osu-mappool/mod-bracket';
 import { Mappool } from '../../../models/osu-mappool/mappool';
 import { MappoolService } from '../../../services/mappool.service';
-import { ModBracketMap } from '../../../models/osu-mappool/mod-bracket-map';
 import { GetBeatmap } from '../../../services/osu-api/get-beatmap.service';
 import { ElectronService } from '../../../services/electron.service';
 import { ToastService } from '../../../services/toast.service';

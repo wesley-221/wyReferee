@@ -1,4 +1,5 @@
 import { ModBracketMap } from "./mod-bracket-map";
+import { OsuHelper } from "../osu-models/osu";
 
 export class ModBracket {
 	id: number;
@@ -25,6 +26,32 @@ export class ModBracket {
      */
 	public removeMap(map: ModBracketMap) {
 		this.beatmaps.splice(this.beatmaps.indexOf(map), 1);
+	}
+
+	/**
+	 * Get a list with the mods from the bracket
+	 */
+	public getFullMods(): string[] {
+		let modBit = 0, 
+			freemodEnabled = false,
+			mods = [];
+
+		for(let mod in this.mods) {
+			if(!isNaN(this.mods[mod].modValue)) {
+				modBit += Number(this.mods[mod].modValue);
+			}
+			else if(this.mods[mod].modValue == "freemod") {
+				freemodEnabled = true;
+			}
+		}
+
+		mods = OsuHelper.getModsFromBit(modBit);
+		
+		// Check if freemod is enabled
+		if(freemodEnabled) 
+			mods.push("freemod");
+
+		return mods;
 	}
 
     /**

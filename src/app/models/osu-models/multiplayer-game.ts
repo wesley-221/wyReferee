@@ -1,4 +1,4 @@
-import { Gamemodes, Mods } from "./osu-api";
+import { Gamemodes, Mods } from "./osu";
 import { MultiplayerGameScore } from "./multiplayer-game-score";
 
 export class MultiplayerGame {

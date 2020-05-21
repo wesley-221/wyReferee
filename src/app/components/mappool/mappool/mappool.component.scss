@@ -26,7 +26,18 @@
 			margin-right: 16px;
 			margin-bottom: 16px;
 
-			padding: 16px;
+            padding: 16px;
+            
+            .mods {
+                display: flex;
+                flex-direction: row;
+
+                .mod {
+                    margin-right: 8px;
+                    padding: 8px;
+                    border: 1px solid darken(#3C4452, 15%);
+                }
+            }
 
 			&:hover {
 				border: 1px solid white;

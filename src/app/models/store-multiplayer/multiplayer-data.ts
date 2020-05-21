@@ -1,4 +1,4 @@
-import { Mods } from "../osu-models/osu-api";
+import { Mods } from "../osu-models/osu";
 import { MultiplayerDataUser } from "./multiplayer-data-user";
 
 export class MultiplayerData {

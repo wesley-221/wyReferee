@@ -1,4 +1,4 @@
-import { Gamemodes } from "../osu-models/osu-api";
+import { Gamemodes } from "../osu-models/osu";
 
 export class ModBracketMap {
 	id: number = null;

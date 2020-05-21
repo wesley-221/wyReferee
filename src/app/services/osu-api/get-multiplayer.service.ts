@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { StoreService } from '../store.service';
-import { OsuApiEndpoints, OsuApi } from '../../models/osu-models/osu-api';
+import { OsuApiEndpoints, OsuApi } from '../../models/osu-models/osu';
 import { Observable } from 'rxjs';
 import { MultiplayerMatch } from '../../models/osu-models/multiplayer-match';
 import { map } from 'rxjs/operators';

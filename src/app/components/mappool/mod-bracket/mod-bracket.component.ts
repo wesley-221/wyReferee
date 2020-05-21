@@ -3,7 +3,7 @@ import { ModBracket } from '../../../models/osu-mappool/mod-bracket';
 import { ModBracketMap } from '../../../models/osu-mappool/mod-bracket-map';
 import { GetBeatmap } from '../../../services/osu-api/get-beatmap.service';
 import { ElectronService } from '../../../services/electron.service';
-import { Mods } from '../../../models/osu-models/osu-api';
+import { Mods } from '../../../models/osu-models/osu';
 import { ToastService } from '../../../services/toast.service';
 import { ToastType } from '../../../models/toast';
 

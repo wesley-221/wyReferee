@@ -42,9 +42,9 @@ export enum Mods
     Key2           = 268435456,
     ScoreV2        = 536870912,
     Mirror         = 1073741824,
-    KeyMod = Key1 | Key2 | Key3 | Key4 | Key5 | Key6 | Key7 | Key8 | Key9 | KeyCoop,
-    FreeModAllowed = NoFail | Easy | Hidden | HardRock | SuddenDeath | Flashlight | FadeIn | Relax | Relax2 | SpunOut | KeyMod,
-    ScoreIncreaseMods = Hidden | HardRock | DoubleTime | Flashlight | FadeIn
+    // KeyMod = Key1 | Key2 | Key3 | Key4 | Key5 | Key6 | Key7 | Key8 | Key9 | KeyCoop,
+    // FreeModAllowed = NoFail | Easy | Hidden | HardRock | SuddenDeath | Flashlight | FadeIn | Relax | Relax2 | SpunOut | KeyMod,
+    // ScoreIncreaseMods = Hidden | HardRock | DoubleTime | Flashlight | FadeIn
 }
 
 export enum Gamemodes {
@@ -61,4 +61,42 @@ export class OsuApi {
     constructor(endpoint: string) {
         this.endpoint = endpoint;
     }
+}
+
+export class OsuHelper {
+    /**
+     * Get the bit from the given mod strings
+     * @param mods the mods in an array
+     */
+    public static getBitFromMods(mods: string[]) {
+		mods = mods.map((str: string) => str.replace(/\s/g, ''));
+
+		let bit = 0;
+
+		for(let mod in mods) {
+			for(let item in Mods) {
+				if(mods[mod].toLowerCase() == item.toLowerCase()) {
+					bit += parseInt(Mods[item]);
+				}
+			}
+		}
+
+		return bit;
+    }
+    
+    /**
+	 * Get all mods from the given bit
+	 * @param bit the mods
+	 */
+	public static getModsFromBit(bit: number) {
+		let allMods = [];
+
+		for(let item in Mods) {
+			if(((<any>Mods[item]) & bit) > 0) {
+				allMods.push(item.toLowerCase())
+			}
+		}
+
+		return allMods;
+	}
 }

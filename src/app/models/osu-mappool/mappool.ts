@@ -1,6 +1,6 @@
 import { ModBracket } from "./mod-bracket";
 import { ModBracketMap } from "./mod-bracket-map";
-import { Gamemodes } from "../osu-models/osu-api";
+import { Gamemodes } from "../osu-models/osu";
 
 export class Mappool {
 	id: number = null;
