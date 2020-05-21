@@ -287,12 +287,27 @@ export class IrcComponent implements OnInit {
 	pickBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
 		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp map ${beatmap.beatmapId} ${beatmap.gamemodeId}`);
 
+		let modBit = 0,
+			freemodEnabled = false;
+
+
+		for(let mod in bracket.mods) {
+			if(!isNaN(bracket.mods[mod])) {
+				modBit += parseInt(bracket.mods[mod]);
+			}
+			else {
+				if(bracket.mods[mod] == "freemod") {
+					freemodEnabled = true;
+				}
+			}
+		}
+
 		// Reset all mods if the freemod is being enabled
-		if(bracket.mods.includes('freemod')) {
+		if(freemodEnabled) {
 			this.ircService.sendMessage(this.selectedChannel.channelName, '!mp mods none');
 		}
 
-		this.ircService.sendMessage(this.selectedChannel.channelName, `${bracket.mods}`);
+		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp mods ${modBit}${freemodEnabled ? " freemod" : ""}`);
 	}
 
 	/**

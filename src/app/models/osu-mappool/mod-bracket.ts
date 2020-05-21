@@ -3,7 +3,7 @@ import { ModBracketMap } from "./mod-bracket-map";
 export class ModBracket {
 	id: number;
 	bracketName: string;
-	mods: string;
+	mods: any[] = [];
 	beatmaps: ModBracketMap[] = [];
 	collapsed: boolean = false; // Used for showing/hiding the body when creating a bracket
 

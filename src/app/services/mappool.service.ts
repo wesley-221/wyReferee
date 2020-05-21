@@ -174,7 +174,7 @@ export class MappoolService {
 
 			// Reset the bracket id
 			newBracket.id = iterationBracket.id;
-			newBracket.mods = iterationBracket.mods;
+			newBracket.mods = JSON.parse((<any>iterationBracket.mods));
 			newBracket.bracketName = iterationBracket.bracketName;
 
 			for(let beatmap in iterationBracket.beatmaps) {

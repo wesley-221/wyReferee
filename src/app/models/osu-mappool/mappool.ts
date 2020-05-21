@@ -62,7 +62,7 @@ export class Mappool {
 			let newBracket = {
 				id: (thisBracket.id == null) ? parseInt(bracket) : thisBracket.id,
 				bracketName: thisBracket.bracketName,
-				mods: thisBracket.mods,
+				mods: JSON.stringify(thisBracket.mods),
 				beatmaps: []
 			};
 
@@ -126,7 +126,7 @@ export class Mappool {
 				newBracket = new ModBracket();
 
 			newBracket.id = thisBracket.id;
-			newBracket.mods = thisBracket.mods;
+			newBracket.mods = JSON.parse(thisBracket.mods);
 			newBracket.bracketName = thisBracket.bracketName;
 
 			// Loop through all the beatmaps in the current bracket

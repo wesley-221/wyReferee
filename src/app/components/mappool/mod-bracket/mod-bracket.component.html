@@ -21,11 +21,25 @@
 		<h3>Mods</h3>
 		<p>
 			Select the mods you want to add to this bracket when selecting a map. <br />
-			<b>Note:</b> If you leave the mods empty, it will be considered as Nomod. <br />
-			<b>Format:</b> <code>!mp mods nomod</code>
 		</p>
 
-		<input type="text" class="form-control" [(ngModel)]="modBracket.mods" />
+		<div class="spacing">
+			<button class="btn btn-primary" (click)="addNewMod()">Add new mod</button>
+		</div>
+
+		<div class="row">
+			<div class="col" *ngFor="let modSelect of selectedMods">
+				<div class="input-group">
+					<div class="input-group-prepend input-full-width">
+						<select class="form-control" (change)="changeMod(modSelect.index, $event)" [(ngModel)]="modSelect.modValue">
+							<option *ngFor="let mod of availableMods" [value]="mod.modValue">{{ mod.modName }}</option>
+						</select>
+					</div>
+
+					<button class="btn btn-danger" (click)="deleteMod(modSelect.index)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+				</div>
+			</div>
+		</div>
 
 		<hr />
 

@@ -41,6 +41,11 @@ export class MappoolComponent implements OnInit {
 	 * @param mappool the mappool to publish
 	 */
 	publishMappool(mappool: Mappool) {
+		// Stringify the mods
+		for(let modBracket in mappool.modBrackets) {
+			(<any>mappool.modBrackets[modBracket]).mods = JSON.stringify(mappool.modBrackets[modBracket].mods);
+		}
+
 		if(confirm(`Are you sure you want to publish "${mappool.name}"?`)) {
 			this.mappoolService.publishMappool(mappool).subscribe((data) => {
 				this.toastService.addToast(`Successfully published the mappool "${data.body.name}" with the id ${data.body.id}.`);
