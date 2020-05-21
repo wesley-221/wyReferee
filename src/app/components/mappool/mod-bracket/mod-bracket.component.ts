@@ -112,9 +112,9 @@ export class ModBracketComponent implements OnInit {
 			if(this.selectedMods[mod].index == modIndex) {
 				this.selectedMods[mod].modValue = modValue;
 			}
-
-			this.modBracket.mods = this.selectedMods[mod].modValue;
 		}
+
+		this.modBracket.mods = this.selectedMods;
 	}
 
 	/**
