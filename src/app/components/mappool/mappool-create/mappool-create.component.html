@@ -1,29 +1,5 @@
 <div class="scroll">
-    <h3>Mappool description</h3>
-    <p>This will be the header of the mappool. It is used to identify the mappools more easily.</p>
-
-    <input type="text" class="form-control" placeholder="Mappool description" [(ngModel)]="creationMappool.name" />
-
-    <h3>Mappool gamemode</h3>
-    <p>The gamemode that will be used for all the beatmaps when picking.</p>
-
-    <select class="form-control" (change)="changeGamemode($event)">
-        <option value="0">osu!</option>
-        <option value="1">osu!Taiko</option>
-        <option value="2">osu!Catch</option>
-        <option value="3">osu!Mania</option>
-    </select>
-
-    <hr />
-
-    <h3>Mod brackets</h3>
-    <p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod bracket. Fill in the name of the bracket</p>
-
-    <button class="btn btn-primary" (click)="createNewBracket()">Create new bracket</button>
-
-	<hr />
-
-	<app-mod-bracket [modBracket]="bracket" *ngFor="let bracket of creationMappool.getAllBrackets()" [withBorder]="true" [withCollapse]="true"></app-mod-bracket>
+    <app-mappool [mappool]="creationMappool"></app-mappool>
 
     <div *ngIf="creationMappool.getAllBrackets().length > 0">
         <hr />

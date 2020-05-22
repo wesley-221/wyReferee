@@ -32,7 +32,6 @@ import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lob
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
 import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
-import { MappoolBracketEditComponent } from './components/mappool/mappool-bracket-edit/mappool-bracket-edit.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { AuthInterceptor } from "./components/authentication/token-interceptor";
 import { IrcComponent } from './components/irc/irc.component';
@@ -45,6 +44,8 @@ import { TournamentEditComponent } from './components/tournament/tournament-edit
 import { TournamentCreationComponent } from './components/tournament/tournament-creation/tournament-creation.component';
 import { ModBracketComponent } from './components/mappool/mod-bracket/mod-bracket.component';
 import { MyPublishedMappoolsComponent } from './components/mappool/my-published-mappools/my-published-mappools.component';
+import { MappoolSummaryComponent } from './components/mappool/mappool-summary/mappool-summary.component';
+import { MappoolEditComponent } from './components/mappool/mappool-edit/mappool-edit.component';
 import { MappoolComponent } from './components/mappool/mappool/mappool.component';
 
 // AoT requires an exported function for factories
@@ -67,7 +68,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 		LobbyViewComponent,
 		MappoolOverviewComponent,
 		MappoolCreateComponent,
-		MappoolBracketEditComponent,
 		LoginComponent,
 		IrcComponent,
 		SearchPipe,
@@ -78,6 +78,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		TournamentCreationComponent,
 		ModBracketComponent,
 		MyPublishedMappoolsComponent,
+		MappoolSummaryComponent,
+		MappoolEditComponent,
 		MappoolComponent
 	],
 	imports: [

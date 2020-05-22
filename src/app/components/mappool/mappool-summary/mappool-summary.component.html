@@ -1,0 +1,40 @@
+<div class="mappool" (click)="editMappool(mappool, $event); $event.stopPropagation()">
+	<div class="row" *ngIf="mappool.updateAvailable">
+		<div class="col">
+			<div class="alert alert-info">
+				Looks like this mappool isn't up to date. Click on the update button to get the latest version.
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-9">
+			<h1>{{ mappool.name }}</h1>
+			<span><b>Mappool id:</b> {{ mappool.id }}</span>
+		</div>
+
+		<div class="col-3">
+			<div class="btn-group float-right">
+				<button class="btn btn-success" (click)="updateMappool(mappool)" *ngIf="mappool.updateAvailable">Update</button>
+				<button class="btn btn-primary" (click)="publishMappool(mappool)" *ngIf="canPublish()">Publish</button>
+				<button class="btn btn-danger" (click)="deleteMappool(mappool)">Delete</button>
+			</div>
+		</div>
+	</div>
+
+	<hr />
+
+	<h3>Mod brackets</h3>
+	<div class="modbrackets">
+		<div class="bracket" *ngFor="let bracket of mappool.modBrackets">
+			<div><h4>{{ bracket.bracketName }}</h4></div>
+			<div>{{ bracket.beatmaps.length }} map<span *ngIf="bracket.beatmaps.length != 1">s</span></div>
+			<div><h5>Mods</h5></div>
+			<div class="mods">
+				<div class="mod" *ngFor="let mod of bracket.getFullMods()">
+					{{ mod }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -9,7 +9,6 @@ import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lob
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
 import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
-import { MappoolBracketEditComponent } from './components/mappool/mappool-bracket-edit/mappool-bracket-edit.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { IrcComponent } from './components/irc/irc.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
@@ -17,6 +16,7 @@ import { TournamentCreateComponent } from './components/tournament/tournament-cr
 import { TournamentOverviewComponent } from './components/tournament/tournament-overview/tournament-overview.component';
 import { TournamentEditComponent } from './components/tournament/tournament-edit/tournament-edit.component';
 import { MyPublishedMappoolsComponent } from './components/mappool/my-published-mappools/my-published-mappools.component';
+import { MappoolEditComponent } from './components/mappool/mappool-edit/mappool-edit.component';
 
 const routes: Routes = [
 	{
@@ -34,7 +34,7 @@ const routes: Routes = [
 
 			{ path: 'mappool-overview', component: MappoolOverviewComponent },
 			{ path: 'mappool-create', component: MappoolCreateComponent },
-			{ path: 'edit-bracket/:mappoolId/:bracketId/:publish', component: MappoolBracketEditComponent },
+			{ path: 'mappool-edit/:mappoolId/:publish', component: MappoolEditComponent },
 			{ path: 'my-published-mappools', component: MyPublishedMappoolsComponent },
 
 			{ path: 'tournament', component: TournamentOverviewComponent },

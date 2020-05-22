@@ -45,12 +45,14 @@ export class Mappool {
 
     /**
      * Convert the mappool object to json format
+	 * @param publish
      */
-	public convertToJson(): any {
+	public convertToJson(publish: boolean = false): any {
 		let mappool = {
 			id: this.id,
 			name: this.name,
 			brackets: [],
+			modBrackets: [],
 			modifiers: {},
 			gamemode: this.gamemodeId,
 			publishId: this.publishId
@@ -80,7 +82,10 @@ export class Mappool {
 				});
 			}
 
-			mappool.brackets.push(newBracket);
+			if (publish)
+				mappool.modBrackets.push(newBracket);
+			else
+				mappool.brackets.push(newBracket);
 		}
 
 		return mappool;
