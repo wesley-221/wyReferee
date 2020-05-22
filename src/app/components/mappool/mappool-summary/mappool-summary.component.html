@@ -16,7 +16,7 @@
 		<div class="col-3">
 			<div class="btn-group float-right">
 				<button class="btn btn-success" (click)="updateMappool(mappool)" *ngIf="mappool.updateAvailable">Update</button>
-				<button class="btn btn-primary" (click)="publishMappool(mappool)" *ngIf="canPublish()">Publish</button>
+				<button class="btn btn-primary" (click)="publishMappool(mappool)" *ngIf="canPublish() && publish != true">Publish</button>
 				<button class="btn btn-danger" (click)="deleteMappool(mappool)">Delete</button>
 			</div>
 		</div>
