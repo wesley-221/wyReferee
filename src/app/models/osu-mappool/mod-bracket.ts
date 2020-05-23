@@ -32,26 +32,50 @@ export class ModBracket {
 	 * Get a list with the mods from the bracket
 	 */
 	public getFullMods(): string[] {
-		let modBit = 0, 
+		let modBit = 0,
 			freemodEnabled = false,
 			mods = [];
 
-		for(let mod in this.mods) {
-			if(!isNaN(this.mods[mod].modValue)) {
+		for (let mod in this.mods) {
+			if (!isNaN(this.mods[mod].modValue)) {
 				modBit += Number(this.mods[mod].modValue);
 			}
-			else if(this.mods[mod].modValue == "freemod") {
+			else if (this.mods[mod].modValue == "freemod") {
 				freemodEnabled = true;
 			}
 		}
 
 		mods = OsuHelper.getModsFromBit(modBit);
-		
+
 		// Check if freemod is enabled
-		if(freemodEnabled) 
+		if (freemodEnabled)
 			mods.push("freemod");
 
 		return mods;
+	}
+
+	/**
+	 * Compare the current modbracket with the given modbracket
+	 * @param modBracket the modbracket to compare with
+	 */
+	public compareTo(modBracket: ModBracket) {
+		if((this.bracketName == modBracket.bracketName && this.mods.length == modBracket.mods.length && this.beatmaps.length == modBracket.beatmaps.length) == false) {
+			return false;
+		}
+
+		for(let mod in this.mods) {
+			if(this.mods[mod].modValue != modBracket.mods[mod].modValue) {
+				return false;
+			}
+		}
+
+		for(let map in this.beatmaps) {
+			if(this.beatmaps[map].compareTo(modBracket.beatmaps[map]) == false) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
     /**

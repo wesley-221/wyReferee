@@ -5,12 +5,12 @@ import { Gamemodes } from "../osu-models/osu";
 export class Mappool {
 	id: number = null;
 	name: string;
-	modBrackets: ModBracket[] = [];
-	modifiers: {} = {};
-	allBeatmaps: any[] = [];
 	gamemodeId: Gamemodes = Gamemodes.Osu;
 	publishId: number;
 	updateAvailable: boolean = false;
+	modBrackets: ModBracket[] = [];
+	modifiers: {} = {};
+	allBeatmaps: any[] = [];
 
 	constructor() { }
 
@@ -41,6 +41,32 @@ export class Mappool {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Compare the current mappool with the given mappool
+	 * @param mappool the mappool to compare with
+	 */
+	public comapreTo(mappool: Mappool) {
+		if ((this.name == mappool.name && this.gamemodeId == mappool.gamemodeId && this.modBrackets.length == mappool.modBrackets.length && Object.keys(this.modifiers).length == Object.keys(mappool.modifiers).length) == false) {
+			return false;
+		}
+
+		// console.log(this.modifiers);
+
+		// for(let modifier in this.modifiers) {
+		// 	if(this.modifiers[modifier].compareTo(mappool.modifiers[modifier])) {
+		// 		return false;
+		// 	}
+		// }
+
+		for(let bracket in this.modBrackets) {
+			if(this.modBrackets[bracket].compareTo(mappool.modBrackets[bracket]) == false) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
     /**

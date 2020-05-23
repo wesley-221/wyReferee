@@ -9,6 +9,20 @@ export class ModBracketMap {
 	modifier: number = null;
 	gamemodeId: Gamemodes = Gamemodes.Osu;
 
+	/**
+	 * Compare the current modbracketmap with the given modbracketmap
+	 * @param modBracketMap the modbracketmap to compare with
+	 */
+	public compareTo(modBracketMap: ModBracketMap) {
+		return (
+			this.beatmapId == modBracketMap.beatmapId &&
+			this.beatmapName == modBracketMap.beatmapName &&
+			this.beatmapUrl == modBracketMap.beatmapUrl &&
+			this.modifier == modBracketMap.modifier &&
+			this.gamemodeId == modBracketMap.gamemodeId
+		);
+	}
+
     /**
      * Make a true copy of the given bracketmap
      * @param bracketMap the bracketmap

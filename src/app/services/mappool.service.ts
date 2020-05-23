@@ -36,7 +36,7 @@ export class MappoolService {
 			if(newMappool.publishId != undefined) {
 				this.getPublishedMappool(newMappool.publishId).subscribe((data) => {
 					const updatedMappool: Mappool = this.mapFromJson(data);
-					newMappool.updateAvailable = !Misc.deepEquals(updatedMappool, newMappool);
+					newMappool.updateAvailable = !newMappool.comapreTo(updatedMappool);
 
 					this.allMappools.push(newMappool);
 				}, (err) => {
