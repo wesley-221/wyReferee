@@ -46,7 +46,7 @@ export class Tournament {
 	 */
 	convertToJson(): any {
 		let tournament =  {
-			tournamentId: this.id,
+			id: this.id,
 			tournamentName: this.tournamentName,
 			acronym: this.acronym,
 			teamSize: this.teamSize,
