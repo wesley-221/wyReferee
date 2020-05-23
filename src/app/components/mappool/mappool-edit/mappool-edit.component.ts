@@ -45,7 +45,7 @@ export class MappoolEditComponent implements OnInit {
 	 */
 	updateMappool(mappool: Mappool) {
 		if (this.publish == true || this.publish == "true") {
-			this.mappoolService.updatePublishedMappool(this.mappool.convertToJson(true)).subscribe(res => {
+			this.mappoolService.updatePublishedMappool(mappool.convertToJson(true)).subscribe(res => {
 				console.log(res);
 
 				this.toastService.addToast(`Successfully updated the mappool "${mappool.name}".`);

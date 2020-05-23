@@ -25,7 +25,7 @@ export enum Mods
     Autoplay       = 2048,
     SpunOut        = 4096,
     Relax2         = 8192,    // Autopilot
-    Perfect        = 16384, // Only set along with SuddenDeath. i.e: PF only gives 16416  
+    Perfect        = 16384, // Only set along with SuddenDeath. i.e: PF only gives 16416
     Key4           = 32768,
     Key5           = 65536,
     Key6           = 131072,
@@ -83,7 +83,7 @@ export class OsuHelper {
 
 		return bit;
     }
-    
+
     /**
 	 * Get all mods from the given bit
 	 * @param bit the mods

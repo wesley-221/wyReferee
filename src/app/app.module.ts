@@ -41,12 +41,14 @@ import { RegisterComponent } from './components/authentication/register/register
 import { TournamentCreateComponent } from './components/tournament/tournament-create/tournament-create.component';
 import { TournamentOverviewComponent } from './components/tournament/tournament-overview/tournament-overview.component';
 import { TournamentEditComponent } from './components/tournament/tournament-edit/tournament-edit.component';
-import { TournamentCreationComponent } from './components/tournament/tournament-creation/tournament-creation.component';
+import { TournamentComponent } from './components/tournament/tournament/tournament.component';
 import { ModBracketComponent } from './components/mappool/mod-bracket/mod-bracket.component';
 import { MyPublishedMappoolsComponent } from './components/mappool/my-published-mappools/my-published-mappools.component';
 import { MappoolSummaryComponent } from './components/mappool/mappool-summary/mappool-summary.component';
 import { MappoolEditComponent } from './components/mappool/mappool-edit/mappool-edit.component';
 import { MappoolComponent } from './components/mappool/mappool/mappool.component';
+import { TournamentSummaryComponent } from './components/tournament/tournament-summary/tournament-summary.component';
+import { MyPublishedTournamentsComponent } from './components/tournament/my-published-tournaments/my-published-tournaments.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -75,12 +77,14 @@ export function HttpLoaderFactory(http: HttpClient) {
 		TournamentCreateComponent,
 		TournamentOverviewComponent,
 		TournamentEditComponent,
-		TournamentCreationComponent,
+		TournamentComponent,
 		ModBracketComponent,
 		MyPublishedMappoolsComponent,
 		MappoolSummaryComponent,
 		MappoolEditComponent,
-		MappoolComponent
+		MappoolComponent,
+		TournamentSummaryComponent,
+		MyPublishedTournamentsComponent
 	],
 	imports: [
 		BrowserModule,

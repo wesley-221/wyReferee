@@ -17,6 +17,7 @@ import { TournamentOverviewComponent } from './components/tournament/tournament-
 import { TournamentEditComponent } from './components/tournament/tournament-edit/tournament-edit.component';
 import { MyPublishedMappoolsComponent } from './components/mappool/my-published-mappools/my-published-mappools.component';
 import { MappoolEditComponent } from './components/mappool/mappool-edit/mappool-edit.component';
+import { MyPublishedTournamentsComponent } from './components/tournament/my-published-tournaments/my-published-tournaments.component';
 
 const routes: Routes = [
 	{
@@ -37,9 +38,10 @@ const routes: Routes = [
 			{ path: 'mappool-edit/:mappoolId/:publish', component: MappoolEditComponent },
 			{ path: 'my-published-mappools', component: MyPublishedMappoolsComponent },
 
-			{ path: 'tournament', component: TournamentOverviewComponent },
+			{ path: 'tournament-overview', component: TournamentOverviewComponent },
 			{ path: 'tournament-create', component: TournamentCreateComponent },
-			{ path: 'tournament-edit/:tournamentId', component: TournamentEditComponent },
+			{ path: 'tournament-edit/:tournamentId/:publish', component: TournamentEditComponent },
+			{ path: 'my-published-tournaments', component: MyPublishedTournamentsComponent },
 
 			{ path: 'irc', component: IrcComponent },
 			{ path: '**', component: ErrorComponent }

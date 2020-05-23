@@ -1,11 +1,11 @@
 <div class="scroll">
-	<app-tournament-creation [tournament]="tournamentEdit"></app-tournament-creation>
+	<app-tournament [tournament]="tournament"></app-tournament>
 
-    <div *ngIf="tournamentEdit != null && tournamentEdit.getTeams().length > 0">
+    <div *ngIf="tournament != null && tournament.getTeams().length > 0">
         <hr />
 
 		<h3>Updating the tournament</h3>
 		<p>Now that you have made your changes to the tournament, you have to save it so it can be used. Press the update button to finalize the tournament.</p>
-        <button class="btn btn-primary" (click)="udpateTournament()">Update</button>
+        <button class="btn btn-primary" (click)="udpateTournament(tournament)">Update</button>
     </div>
 </div>

@@ -22,7 +22,7 @@ export class TournamentCreateComponent implements OnInit {
 	 * Create the tournament
 	 */
 	createTournament() {
-		this.tournamentService.addTournament(this.tournamentCreate);
+		this.tournamentService.saveTournament(this.tournamentCreate);
 		this.toastService.addToast(`Successfully created the tournament "${this.tournamentCreate.tournamentName}" with a total of ${this.tournamentCreate.getTeams().length} team(s).`);
 
 		this.tournamentCreate = new Tournament();

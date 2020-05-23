@@ -1,0 +1,36 @@
+<div class="tournament" (click)="editTournament(tournament, $event)">
+	<div class="row" *ngIf="tournament.updateAvailable">
+		<div class="col">
+			<div class="alert alert-info">
+				Looks like this tournament isn't up to date. Click on the update button to get the latest version.
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-9">
+			<h1>{{ tournament.tournamentName }}</h1>
+			<span><b>Tournament id:</b> {{ tournament.id }}</span>
+		</div>
+
+		<div class="col-3">
+			<div class="btn-group float-right">
+				<button class="btn btn-success" (click)="updateTournament(tournament)" *ngIf="tournament.updateAvailable">Update</button>
+				<button class="btn btn-primary" (click)="publishTournament(tournament)" *ngIf="canPublish() && publish != true">Publish</button>
+			<button class="btn btn-danger" (click)="deleteTournament(tournament)">Delete</button>
+			</div>
+		</div>
+	</div>
+
+	<hr />
+
+	<h4>Teams</h4>
+
+	<div class="tournament-teams">
+		<div class="team" *ngFor="let team of tournament.getTeams()">
+			<h5>{{ team.teamName }}</h5>
+
+			{{ team.getPlayers().length }} player<span *ngIf="team.getPlayers().length > 1">s</span>
+		</div>
+	</div>
+</div>

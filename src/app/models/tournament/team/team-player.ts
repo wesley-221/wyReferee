@@ -1,4 +1,5 @@
 export class TeamPlayer {
+	id: number;
 	username: string;
 
     constructor() { }
@@ -10,6 +11,7 @@ export class TeamPlayer {
     static makeTrueCopy(teamPlayer: TeamPlayer): TeamPlayer {
         const newTeamPlayer = new TeamPlayer();
 
+		newTeamPlayer.id = teamPlayer.id;
         newTeamPlayer.username = teamPlayer.username;
 
         return newTeamPlayer;
@@ -20,6 +22,7 @@ export class TeamPlayer {
 	 */
 	convertToJson() {
 		return {
+			id: this.id,
 			username: this.username
 		}
 	}

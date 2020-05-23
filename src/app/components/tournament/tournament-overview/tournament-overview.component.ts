@@ -19,41 +19,26 @@ export class TournamentOverviewComponent implements OnInit {
 
 	ngOnInit() { }
 
-	importTeam() {
-		this.tournamentService.getPublishedTournament(this.tournamentId).subscribe((data) => {
-			const newTournament: Tournament = this.tournamentService.mapFromJson(data);
-
-			this.tournamentService.addTournament(newTournament);
-			this.toastService.addToast(`Imported the tournament "${newTournament.tournamentName}".`);
-		}, () => {
-			this.toastService.addToast(`Unable to import the tournament with the id "${this.tournamentId}".`, ToastType.Error);
-		});
-	}
-
-	deleteTournament(tournament: Tournament) {
-		if(confirm(`Are you sure you want to delete the tournament "${tournament.tournamentName}"?`)) {
-			this.tournamentService.removeTournament(tournament);
-			this.toastService.addToast(`Successfully deleted the tournament "${tournament.tournamentName}".`);
-		}
-	}
-
-	editTournament(tournament: Tournament) {
-		this.router.navigate(['tournament-edit', tournament.tournamentId]);
-	}
-
+	/**
+	 * Check if the user has sufficient permissions to publish the tournament
+	 */
 	canPublish() {
 		return this.authService.loggedIn && ((<any>this.authService.loggedInUser.isTournamentHost) == 'true' || this.authService.loggedInUser.isTournamentHost == true || this.authService.loggedInUser.isAdmin);
 	}
 
 	/**
-	 * Publish a tournament
-	 * @param mappool the mappool to publish
+	 * Import a tournament from the entered tournament id
 	 */
-	publishTournament(tournament: Tournament) {
-		if(confirm(`Are you sure you want to publish "${tournament.tournamentName}"?`)) {
-			this.tournamentService.publishTournament(tournament).subscribe((data) => {
-				this.toastService.addToast(`Successfully published the tournament "${data.body.tournamentName}" with the id ${data.body.id}.`);
-			});
-		}
+	importTournament() {
+		this.tournamentService.getPublishedTournament(this.tournamentId).subscribe((data) => {
+			const newTournament: Tournament = this.tournamentService.mapFromJson(data);
+			newTournament.id = this.tournamentService.availableTournamentId;
+			this.tournamentService.availableTournamentId ++;
+
+			this.tournamentService.saveTournament(newTournament);
+			this.toastService.addToast(`Imported the tournament "${newTournament.tournamentName}".`);
+		}, () => {
+			this.toastService.addToast(`Unable to import the tournament with the id "${this.tournamentId}".`, ToastType.Error);
+		});
 	}
 }

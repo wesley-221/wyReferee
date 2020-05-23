@@ -11,13 +11,31 @@ import { ToastService } from '../../../services/toast.service';
 })
 
 export class TournamentEditComponent implements OnInit {
-	originalTournament: Tournament;
-	tournamentEdit: Tournament;
+	publish: any;
+	tournament: Tournament;
 
 	constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private toastService: ToastService) {
 		this.route.params.subscribe(params => {
-			this.originalTournament = tournamentService.getTournamentById(params.tournamentId);
-			this.tournamentEdit = Tournament.makeTrueCopy(this.originalTournament);
+			this.publish = params.publish;
+
+			if (this.publish == true || this.publish == "true") {
+				this.tournamentService.getPublishedTournament(params.tournamentId).subscribe(data => {
+					this.tournament = tournamentService.mapFromJson(data);
+
+					// Collapse all teams
+					for(let team in this.tournament.teams) {
+						this.tournament.teams[team].collapsed = true;
+					}
+				});
+			}
+			else {
+				this.tournament = Tournament.makeTrueCopy(tournamentService.getTournament(params.tournamentId));
+
+				// Collapse all teams
+				for(let team in this.tournament.teams) {
+					this.tournament.teams[team].collapsed = true;
+				}
+			}
 		});
 	}
 
@@ -26,8 +44,15 @@ export class TournamentEditComponent implements OnInit {
 	/**
 	 * Create the tournament
 	 */
-	udpateTournament() {
-		this.tournamentService.updateTournament(this.originalTournament, this.tournamentEdit);
-		this.toastService.addToast(`Successfully updated the tournament "${this.tournamentEdit.tournamentName}".`);
+	udpateTournament(tournament: Tournament) {
+		if (this.publish == true || this.publish == "true") {
+			this.tournamentService.updatePublishedTournament(tournament.convertToJson()).subscribe(res => {
+				this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
+			});
+		}
+		else {
+			this.tournamentService.updateTournament(this.tournament);
+			this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
+		}
 	}
 }

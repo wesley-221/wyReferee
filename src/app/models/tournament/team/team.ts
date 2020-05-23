@@ -1,9 +1,10 @@
 import { TeamPlayer } from "./team-player";
 
 export class Team {
+	id: number;
 	teamName: string;
 	collapsed: boolean = false;
-    private teamPlayers: TeamPlayer[];
+    teamPlayers: TeamPlayer[];
 
     constructor() {
         this.teamPlayers = [];
@@ -52,6 +53,7 @@ export class Team {
     static makeTrueCopy(team: Team): Team {
         const newTeam = new Team();
 
+		newTeam.id = team.id;
         newTeam.teamName = team.teamName;
 
         for(let player in team.teamPlayers) {
@@ -66,6 +68,7 @@ export class Team {
 	 */
 	convertToJson() {
 		let team = {
+			id: this.id,
 			teamName: this.teamName,
 			teamPlayers: []
 		}

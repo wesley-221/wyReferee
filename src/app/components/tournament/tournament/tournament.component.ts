@@ -6,23 +6,20 @@ import { TeamPlayer } from '../../../models/tournament/team/team-player';
 import { Team } from '../../../models/tournament/team/team';
 
 @Component({
-	selector: 'app-tournament-creation',
-	templateUrl: './tournament-creation.component.html',
-	styleUrls: ['./tournament-creation.component.scss']
+	selector: 'app-tournament',
+	templateUrl: './tournament.component.html',
+	styleUrls: ['./tournament.component.scss']
 })
-export class TournamentCreationComponent implements OnInit {
+export class TournamentComponent implements OnInit {
 	@Input() tournament: Tournament;
 
 	calculateScoreInterfaces: Calculate;
-	selectedScoreInterface: ScoreInterface;
 
 	constructor() {
 		this.calculateScoreInterfaces = new Calculate();
 	}
 
-	ngOnInit() {
-		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(this.tournament.tournamentScoreInterfaceIdentifier);
-	}
+	ngOnInit() { }
 
 	/**
 	 * Add a team to the tournament
@@ -69,8 +66,7 @@ export class TournamentCreationComponent implements OnInit {
 	 * @param event
 	 */
 	changeScoreInterface(event: Event) {
-		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface((<any>event.target).value);
-		this.tournament.teamSize = this.selectedScoreInterface.getTeamSize();
-		this.tournament.tournamentScoreInterfaceIdentifier = this.selectedScoreInterface.getIdentifier();
+		let selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface((<any>event.target).value);
+		this.tournament.teamSize = selectedScoreInterface.getTeamSize();
 	}
 }
