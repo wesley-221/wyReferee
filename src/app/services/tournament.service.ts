@@ -34,9 +34,7 @@ export class TournamentService {
 			if(newTournament.publishId != undefined) {
 				this.getPublishedTournament(newTournament.publishId).subscribe((data) => {
 					const updatedTournament: Tournament = this.mapFromJson(data);
-					newTournament.updateAvailable = !Misc.deepEquals(updatedTournament, newTournament, true);
-
-					// console.log(updatedTournament, newTournament);
+					newTournament.updateAvailable = !Misc.deepEquals(updatedTournament, newTournament);
 
 					this.allTournaments.push(newTournament);
 				}, (err) => {
