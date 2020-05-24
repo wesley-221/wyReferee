@@ -52,13 +52,11 @@ export class Mappool {
 			return false;
 		}
 
-		// console.log(this.modifiers);
-
-		// for(let modifier in this.modifiers) {
-		// 	if(this.modifiers[modifier].compareTo(mappool.modifiers[modifier])) {
-		// 		return false;
-		// 	}
-		// }
+		for(let modifier in this.modifiers) {
+			if(this.modifiers[modifier].compareTo(mappool.modifiers[modifier]) == false) {
+				return false;
+			}
+		}
 
 		for(let bracket in this.modBrackets) {
 			if(this.modBrackets[bracket].compareTo(mappool.modBrackets[bracket]) == false) {
