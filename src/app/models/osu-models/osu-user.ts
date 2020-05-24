@@ -1,4 +1,4 @@
-export class User {
+export class OsuUser {
     user_id: number;
     username: string;
     join_date: Date;
