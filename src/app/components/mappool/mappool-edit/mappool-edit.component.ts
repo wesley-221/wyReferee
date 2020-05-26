@@ -20,7 +20,7 @@ export class MappoolEditComponent implements OnInit {
 
 			if (this.publish == true || this.publish == "true") {
 				this.mappoolService.getPublishedMappool(params.mappoolId).subscribe(data => {
-					this.mappool = mappoolService.mapFromJson(data);
+					this.mappool = Mappool.serializeJson(data);
 
 					for (let bracket in this.mappool.modBrackets) {
 						this.mappool.modBrackets[bracket].collapsed = true;
@@ -45,9 +45,7 @@ export class MappoolEditComponent implements OnInit {
 	 */
 	updateMappool(mappool: Mappool) {
 		if (this.publish == true || this.publish == "true") {
-			this.mappoolService.updatePublishedMappool(mappool.convertToJson(true)).subscribe(res => {
-				console.log(res);
-
+			this.mappoolService.updatePublishedMappool(mappool.convertToJson()).subscribe(res => {
 				this.toastService.addToast(`Successfully updated the mappool "${mappool.name}".`);
 			});
 		}

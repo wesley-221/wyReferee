@@ -9,5 +9,7 @@
 
 	<hr />
 
-	<app-mappool-summary [mappool]="mappool" [publish]="true" *ngFor="let mappool of publishedMappools"></app-mappool-summary>
+	<div *ngFor="let mappool of publishedMappools">
+		<app-mappool-summary *ngIf="mappool" [mappool]="mappool" [publish]="true"></app-mappool-summary>
+	</div>
 </div>

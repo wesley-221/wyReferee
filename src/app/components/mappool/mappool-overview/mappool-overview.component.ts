@@ -29,9 +29,9 @@ export class MappoolOverviewComponent implements OnInit {
 	 */
 	importMappool() {
 		this.mappoolService.getPublishedMappool(this.mappoolId).subscribe((data) => {
-			const newMappool: Mappool = this.mappoolService.mapFromJson(data);
+			const newMappool: Mappool = Mappool.serializeJson(data);
 			newMappool.id = this.mappoolService.availableMappoolId;
-			this.mappoolService.availableMappoolId ++;
+			this.mappoolService.availableMappoolId++;
 
 			this.mappoolService.saveMappool(newMappool);
 			this.toastService.addToast(`Imported the mappool "${newMappool.name}".`);

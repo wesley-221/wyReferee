@@ -7,7 +7,7 @@ import { LoggedInUser } from '../models/authentication/logged-in-user';
 import { StoreService } from './store.service';
 
 @Injectable({
-  	providedIn: 'root'
+	providedIn: 'root'
 })
 
 export class AuthenticateService {
@@ -15,10 +15,10 @@ export class AuthenticateService {
 	public loggedInUser: LoggedInUser;
 	public loggedIn: boolean = false;
 
-  	constructor(private httpClient: HttpClient, private storeService: StoreService) {
+	constructor(private httpClient: HttpClient, private storeService: StoreService) {
 		const userCredentials = storeService.get('auth');
 
-		if(userCredentials != undefined) {
+		if (userCredentials != undefined) {
 			this.loggedInUser = LoggedInUser.mapFromJson(storeService.get('auth'));
 			this.loggedIn = true;
 		}
@@ -39,6 +39,13 @@ export class AuthenticateService {
 	 */
 	public login(registerRequest: RegisterRequest): Observable<any> {
 		return this.httpClient.post<RegisterRequest>(`${this.apiUrl}login`, registerRequest, { observe: 'response' });
+	}
+
+	/**
+	 * Get all the users
+	 */
+	public getAllUser(): Observable<any> {
+		return this.httpClient.get(`${this.apiUrl}users/list`);
 	}
 
 	/**

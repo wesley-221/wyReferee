@@ -14,6 +14,48 @@
 		<option value="3">osu!mania</option>
 	</select>
 
+
+	<h3>Availability</h3>
+	<p>Select whether or not you want the mappool be available to everyone, for just you or for a select amount of people. The mappool will always be available for yourself.</p>
+
+	<div class="alert alert-info">
+		Note: Availability only affects published mappools.
+	</div>
+
+	<select class="form-control" (change)="changeAvailability($event)" [(ngModel)]="mappool.availability">
+		<option value="0">Available for everyone</option>
+		<option value="1">Available to just me</option>
+		<option value="2">Available to specific people</option>
+	</select>
+
+	<div class="spacing" *ngIf="mappool.availability == 2">
+		<p>Add users that will be able to import this mappool. You add or remove users later as you see fit.</p>
+
+		<div class="row">
+			<div class="col">
+				<button class="btn btn-primary" (click)="addNewUser()">Add new user</button>
+			</div>
+		</div>
+
+		<div class="users">
+			<div *ngIf="allowedUsers.length == 0" class="alert alert-danger full-width">
+				You haven't added a user yet. This mappool will only be visible for yourself.
+			</div>
+
+			<div class="user" *ngFor="let user of allowedUsers">
+				<div class="input-group">
+					<div class="input-group-prepend input-full-width">
+						<select class="form-control" (change)="changeUser(user.index, $event)" [(ngModel)]="user.userId">
+							<option *ngFor="let user of allUsers" [value]="user.id">{{ user.username }}</option>
+						</select>
+					</div>
+
+					<button class="btn btn-danger" (click)="deleteUser(user.index)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<hr />
 
 	<h3>Mod brackets</h3>

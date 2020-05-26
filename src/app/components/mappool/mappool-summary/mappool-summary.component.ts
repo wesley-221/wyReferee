@@ -16,7 +16,7 @@ export class MappoolSummaryComponent implements OnInit {
 	@Input() mappool: Mappool;
 	@Input() publish: boolean = false;
 
-	constructor(private mappoolService: MappoolService, private toastService: ToastService, private authService: AuthenticateService, private router: Router) {	}
+	constructor(private mappoolService: MappoolService, private toastService: ToastService, private authService: AuthenticateService, private router: Router) { }
 
 	ngOnInit(): void { }
 
@@ -26,7 +26,7 @@ export class MappoolSummaryComponent implements OnInit {
 	 */
 	updateMappool(mappool: Mappool) {
 		this.mappoolService.getPublishedMappool(mappool.publishId).subscribe((data) => {
-			const updatedMappool: Mappool = this.mappoolService.mapFromJson(data);
+			const updatedMappool: Mappool = Mappool.serializeJson(data);
 			updatedMappool.id = mappool.id;
 			updatedMappool.updateAvailable = false;
 
@@ -47,19 +47,19 @@ export class MappoolSummaryComponent implements OnInit {
 		publishMappool.id = null;
 
 		// Stringify the mods
-		for(let modBracket in publishMappool.modBrackets) {
+		for (let modBracket in publishMappool.modBrackets) {
 			// Reset id
 			publishMappool.modBrackets[modBracket].id = null;
 
 			(<any>publishMappool.modBrackets[modBracket]).mods = JSON.stringify(publishMappool.modBrackets[modBracket].mods);
 
 			// Reset id's
-			for(let modBracketMap in publishMappool.modBrackets[modBracket].beatmaps) {
+			for (let modBracketMap in publishMappool.modBrackets[modBracket].beatmaps) {
 				publishMappool.modBrackets[modBracket].beatmaps[modBracketMap].id = null;
 			}
 		}
 
-		if(confirm(`Are you sure you want to publish "${mappool.name}"?`)) {
+		if (confirm(`Are you sure you want to publish "${mappool.name}"?`)) {
 			this.mappoolService.publishMappool(publishMappool).subscribe((data) => {
 				this.toastService.addToast(`Successfully published the mappool "${data.body.name}" with the id ${data.body.id}.`);
 			});
@@ -71,8 +71,8 @@ export class MappoolSummaryComponent implements OnInit {
 	 * @param mappool the mappool
 	 */
 	deleteMappool(mappool: Mappool) {
-		if(this.publish == true) {
-			if(confirm(`Are you sure you want to delete "${mappool.name}"? \nNOTE: No one will be able to import it any longer if you continue.`)) {
+		if (this.publish == true) {
+			if (confirm(`Are you sure you want to delete "${mappool.name}"? \nNOTE: No one will be able to import it any longer if you continue.`)) {
 				this.mappoolService.deletePublishedMappool(mappool).subscribe(() => {
 					this.toastService.addToast(`Successfully deleted the published mappool "${mappool.name}".`);
 				}, (err) => {
@@ -81,7 +81,7 @@ export class MappoolSummaryComponent implements OnInit {
 			}
 		}
 		else {
-			if(confirm(`Are you sure you want to delete "${mappool.name}"?`)) {
+			if (confirm(`Are you sure you want to delete "${mappool.name}"?`)) {
 				this.mappoolService.deleteMappool(mappool);
 			}
 		}
@@ -100,7 +100,7 @@ export class MappoolSummaryComponent implements OnInit {
 	 */
 	editMappool(mappool: Mappool, event) {
 		// Check if click wasn't on a button
-		if(event.srcElement.className.indexOf('btn') == -1) {
+		if (event.srcElement.className.indexOf('btn') == -1) {
 			this.router.navigate(['mappool-edit', mappool.id, this.publish]);
 		}
 	}
