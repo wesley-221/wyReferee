@@ -5,6 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../environments/environment';
 import { LoggedInUser } from '../models/authentication/logged-in-user';
+import { ModBracket } from '../models/osu-mappool/mod-bracket';
+import { MysteryMappoolHelper } from '../models/osu-mappool/mystery-mappool-helper';
+import { MultiplayerLobby } from '../models/store-multiplayer/multiplayer-lobby';
 
 @Injectable({
 	providedIn: 'root'
@@ -151,5 +154,15 @@ export class MappoolService {
 	 */
 	public deletePublishedMappool(mappool: Mappool) {
 		return this.httpClient.delete<Mappool>(`${this.apiUrl}mappool/${mappool.id}`);
+	}
+
+	/**
+	 * Get a map from the given mystery mappool
+	 * @param mappool the mappool to get the mystery map from
+	 * @param modBracket the modbracket to get the mystery map from
+	 */
+	public pickMysteryMap(mappool: Mappool, modBracket: ModBracket, lobby: MultiplayerLobby, refereeName: String) {
+		const mysteryMappoolHelper = new MysteryMappoolHelper(mappool.publishId, modBracket.id, lobby, refereeName, lobby.pickedCategories);
+		return this.httpClient.post<MysteryMappoolHelper>(`${this.apiUrl}mappool/mystery/get`, mysteryMappoolHelper);
 	}
 }

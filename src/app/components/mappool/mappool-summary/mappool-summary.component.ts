@@ -4,7 +4,6 @@ import { MappoolService } from '../../../services/mappool.service';
 import { ToastService } from '../../../services/toast.service';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { Router } from '@angular/router';
-import { ModBracket } from '../../../models/osu-mappool/mod-bracket';
 import { ToastType } from '../../../models/toast';
 
 @Component({
@@ -27,7 +26,7 @@ export class MappoolSummaryComponent implements OnInit {
 	updateMappool(mappool: Mappool) {
 		this.mappoolService.getPublishedMappool(mappool.publishId).subscribe((data) => {
 			const updatedMappool: Mappool = Mappool.serializeJson(data);
-			updatedMappool.id = mappool.id;
+			updatedMappool.publishId = mappool.publishId;
 			updatedMappool.updateAvailable = false;
 
 			this.mappoolService.replaceMappool(mappool, updatedMappool);

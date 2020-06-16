@@ -59,18 +59,18 @@ export class ModBracket {
 	 * @param modBracket the modbracket to compare with
 	 */
 	public compareTo(modBracket: ModBracket) {
-		if((this.bracketName == modBracket.bracketName && this.mods.length == modBracket.mods.length && this.beatmaps.length == modBracket.beatmaps.length) == false) {
+		if ((this.bracketName == modBracket.bracketName && this.mods.length == modBracket.mods.length && this.beatmaps.length == modBracket.beatmaps.length) == false) {
 			return false;
 		}
 
-		for(let mod in this.mods) {
-			if(this.mods[mod].modValue != modBracket.mods[mod].modValue) {
+		for (let mod in this.mods) {
+			if (this.mods[mod].modValue != modBracket.mods[mod].modValue) {
 				return false;
 			}
 		}
 
-		for(let map in this.beatmaps) {
-			if(this.beatmaps[map].compareTo(modBracket.beatmaps[map]) == false) {
+		for (let map in this.beatmaps) {
+			if (this.beatmaps[map].compareTo(modBracket.beatmaps[map]) == false) {
 				return false;
 			}
 		}
@@ -95,6 +95,40 @@ export class ModBracket {
 		}
 
 		newBracket.collapsed = bracket.collapsed
+
+		return newBracket;
+	}
+
+	/**
+     * Convert the object to a json format
+	 * @param bracket
+     */
+	public static convertToJson(bracket: ModBracket): any {
+		let modBracket = {
+			id: bracket.id,
+			bracketName: bracket.bracketName,
+			mods: JSON.stringify(bracket.mods),
+			beatmaps: []
+		};
+
+		for (let map in bracket.beatmaps) {
+			const thisMap = ModBracketMap.convertToJson(bracket.beatmaps[map]);
+			modBracket.beatmaps.push(thisMap);
+		}
+
+		return modBracket;
+	}
+
+	public static serializeJson(json: any): ModBracket {
+		const newBracket = new ModBracket();
+
+		newBracket.id = json.id;
+		newBracket.mods = JSON.parse(json.mods);
+		newBracket.bracketName = json.bracketName;
+
+		for (let beatmap in json.beatmaps) {
+			newBracket.beatmaps.push(ModBracketMap.serializeJson(json.beatmaps[beatmap]));
+		}
 
 		return newBracket;
 	}

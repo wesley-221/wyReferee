@@ -4,16 +4,33 @@
 
 	<input type="text" class="form-control" placeholder="Mappool description" [(ngModel)]="mappool.name" />
 
-	<h3>Mappool gamemode</h3>
-	<p>The gamemode that will be used for all the beatmaps when picking.</p>
+	<div class="row">
+		<div class="col">
+			<h3>Mappool gamemode</h3>
 
-	<select class="form-control" (change)="changeGamemode($event)" [value]="mappool.gamemodeId">
-		<option value="0">osu!</option>
-		<option value="1">osu!taiko</option>
-		<option value="2">osu!catch</option>
-		<option value="3">osu!mania</option>
-	</select>
+			<select class="form-control" (change)="changeGamemode($event)" [value]="mappool.gamemodeId">
+				<option value="0">osu!</option>
+				<option value="1">osu!taiko</option>
+				<option value="2">osu!catch</option>
+				<option value="3">osu!mania</option>
+			</select>
 
+			<p>The gamemode that will be used for all the beatmaps when picking.</p>
+		</div>
+
+		<div class="col">
+			<h3>Mappool type</h3>
+
+			<select class="form-control" [(ngModel)]="mappool.mappoolType">
+				<option></option>
+				<option value="0">Normal</option>
+				<option value="1">AxS</option>
+				<option value="2">Mystery tournament</option>
+			</select>
+
+			<p>Various mappool types depending on what tournament it is being used for. Pick normal if you are unsure what to pick.</p>
+		</div>
+	</div>
 
 	<h3>Availability</h3>
 	<p>Select whether or not you want the mappool be available to everyone, for just you or for a select amount of people. The mappool will always be available for yourself.</p>
@@ -22,11 +39,15 @@
 		Note: Availability only affects published mappools.
 	</div>
 
-	<select class="form-control" (change)="changeAvailability($event)" [(ngModel)]="mappool.availability">
-		<option value="0">Available for everyone</option>
-		<option value="1">Available to just me</option>
-		<option value="2">Available to specific people</option>
-	</select>
+	<div class="row">
+		<div class="col">
+			<select class="form-control" (change)="changeAvailability($event)" [(ngModel)]="mappool.availability">
+				<option value="0">Available for everyone</option>
+				<option value="1">Available to just me</option>
+				<option value="2">Available to specific people</option>
+			</select>
+		</div>
+	</div>
 
 	<div class="spacing" *ngIf="mappool.availability == 2">
 		<p>Add users that will be able to import this mappool. You add or remove users later as you see fit.</p>
@@ -58,6 +79,31 @@
 
 	<hr />
 
+	<h3>Mod categories</h3>
+	<p>If you want to categorize your beatmaps, you can do so here. When a map gets picked, the assigned category will show up.</p>
+
+	<div class="row">
+		<div class="col">
+			<button class="btn btn-primary" (click)="addNewCategory()">Add new category</button>
+		</div>
+	</div>
+
+	<div class="categories">
+		<div *ngIf="mappool.modCategories.length == 0" class="alert alert-danger full-width">
+			You haven't added a category yet.
+		</div>
+
+		<div class="category" *ngFor="let category of mappool.modCategories">
+			<div class="input-group">
+				<div class="input-group-prepend input-full-width">
+					<input type="text" class="form-control" placeholder="Category name" [(ngModel)]="category.categoryName" />
+				</div>
+
+				<button class="btn btn-danger" (click)="deleteCategory(category)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+			</div>
+		</div>
+	</div>
+
 	<h3>Mod brackets</h3>
 	<p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod
 		bracket. Fill in the name of the bracket</p>
@@ -66,5 +112,5 @@
 
 	<hr />
 
-	<app-mod-bracket [modBracket]="bracket" *ngFor="let bracket of mappool.getAllBrackets()" [withBorder]="true" [withCollapse]="true"></app-mod-bracket>
+	<app-mod-bracket [modBracket]="bracket" *ngFor="let bracket of mappool.getAllBrackets()" [withBorder]="true" [withCollapse]="true" [mappool]="mappool"></app-mod-bracket>
 </div>

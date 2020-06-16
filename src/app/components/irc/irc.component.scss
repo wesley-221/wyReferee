@@ -352,6 +352,12 @@ $send-message-height: 38px;
 
 						margin-bottom: 16px;
 
+						.pick-random-map {
+							button {
+								width: calc(100% - 16px);
+							}
+						}
+
 						.map {
 							width: 100%;
 							background-color: $background-color;

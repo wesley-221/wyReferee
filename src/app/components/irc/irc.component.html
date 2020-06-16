@@ -153,18 +153,24 @@
 						<h3>{{ bracket.bracketName }}</h3>
 						<hr />
 
-						<div class="map" *ngFor="let beatmap of bracket.beatmaps">
-							<div class="name" (click)="electronService.openLink(beatmap.beatmapUrl)" [ngClass]="{ 'beatmapBanned': beatmapIsBanned(selectedLobby, beatmap.beatmapId) }">
-								{{ beatmap.beatmapName }}
-							</div>
+						<div class="pick-random-map" *ngIf="selectedLobby.mappool.mappoolType == 2">
+							<button class="btn btn-primary" (click)="pickMysteryMap(selectedLobby.mappool, bracket)" [disabled]="!selectedChannel.active">Pick random map</button>
+						</div>
 
-							<div class="buttons">
-								<div class="beatmap-ban">
-									<button class="btn btn-danger" (click)="banBeatmapPopup(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Ban</button>
+						<div *ngIf="selectedLobby.mappool.mappoolType != 2">
+							<div class="map" *ngFor="let beatmap of bracket.beatmaps">
+								<div class="name" (click)="electronService.openLink(beatmap.beatmapUrl)" [ngClass]="{ 'beatmapBanned': beatmapIsBanned(selectedLobby, beatmap.beatmapId) }">
+									{{ beatmap.beatmapName }}
 								</div>
 
-								<div class="beatmap-pick">
-									<button class="btn btn-primary" (click)="pickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Pick</button>
+								<div class="buttons">
+									<div class="beatmap-ban">
+										<button class="btn btn-danger" (click)="banBeatmapPopup(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Ban</button>
+									</div>
+
+									<div class="beatmap-pick">
+										<button class="btn btn-primary" (click)="pickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Pick</button>
+									</div>
 								</div>
 							</div>
 						</div>

@@ -2,11 +2,18 @@ import { ModBracket } from "./mod-bracket";
 import { ModBracketMap } from "./mod-bracket-map";
 import { Gamemodes } from "../osu-models/osu";
 import { User } from "../authentication/user";
+import { ModCategory } from "./mod-category";
 
 export enum Availability {
 	ToEveryone = 0,
 	ToMe = 1,
 	ToSpecificPeople = 2
+}
+
+export enum MappoolType {
+	Normal = 0,
+	AxS = 1,
+	MysteryTournament = 2
 }
 
 export class Mappool {
@@ -16,10 +23,12 @@ export class Mappool {
 	publishId: number;
 	updateAvailable: boolean = false;
 	availability: Availability = Availability.ToEveryone;
+	mappoolType: MappoolType = MappoolType.Normal;
 	availableTo: number[] = [];
 	modBrackets: ModBracket[] = [];
 	modifiers: {} = {};
 	allBeatmaps: any[] = [];
+	modCategories: ModCategory[] = [];
 
 	constructor() { }
 
@@ -76,6 +85,34 @@ export class Mappool {
 	}
 
 	/**
+	 * Add a mod category to the mappool
+	 * @param category
+	 */
+	public addModCategory(category: ModCategory) {
+		this.modCategories.push(category);
+	}
+
+	/**
+	 * Remove a mod category from the mappool
+	 * @param category
+	 */
+	public removeModCategory(category: ModCategory) {
+		this.modCategories.splice(this.modCategories.indexOf(category), 1);
+	}
+
+	/**
+	 * Get a mod category from the given name
+	 * @param categoryName
+	 */
+	public getModCategoryByName(categoryName: String) {
+		for (let modCategory in this.modCategories) {
+			if (this.modCategories[modCategory].categoryName == categoryName) {
+				return this.modCategories[modCategory];
+			}
+		}
+	}
+
+	/**
 	 * Compare the current mappool with the given mappool
 	 * @param mappool the mappool to compare with
 	 */
@@ -85,7 +122,9 @@ export class Mappool {
 			this.gamemodeId == mappool.gamemodeId &&
 			this.modBrackets.length == mappool.modBrackets.length &&
 			Object.keys(this.modifiers).length == Object.keys(mappool.modifiers).length &&
-			this.availability == mappool.availability
+			this.availability == mappool.availability &&
+			this.mappoolType == mappool.mappoolType &&
+			this.modCategories.length == mappool.modCategories.length
 		) == false) {
 			return false;
 		}
@@ -98,6 +137,12 @@ export class Mappool {
 
 		for (let bracket in this.modBrackets) {
 			if (this.modBrackets[bracket].compareTo(mappool.modBrackets[bracket]) == false) {
+				return false;
+			}
+		}
+
+		for (let modCategory in this.modCategories) {
+			if (this.modCategories[modCategory].compareTo(mappool.modCategories[modCategory]) == false) {
 				return false;
 			}
 		}
@@ -116,8 +161,10 @@ export class Mappool {
 			gamemodeId: this.gamemodeId,
 			publishId: this.publishId,
 			availability: this.availability,
+			mappoolType: this.mappoolType,
 			availableTo: [],
 			modBrackets: [],
+			modCategories: [],
 			modifiers: {}
 		};
 
@@ -141,11 +188,17 @@ export class Mappool {
 					beatmapName: thisMap.beatmapName,
 					beatmapUrl: thisMap.beatmapUrl,
 					modifier: thisMap.modifier,
-					gamemode: this.gamemodeId
+					gamemode: this.gamemodeId,
+					modCategory: (thisMap.modCategory != null) ? ModCategory.convertToJson(thisMap.modCategory) : null,
+					picked: thisMap.picked
 				});
 			}
 
 			mappool.modBrackets.push(newBracket);
+		}
+
+		for (let modCategory in this.modCategories) {
+			mappool.modCategories.push(ModCategory.convertToJson(this.modCategories[modCategory]));
 		}
 
 		for (let user in this.availableTo) {
@@ -167,6 +220,7 @@ export class Mappool {
 		newMappool.gamemodeId = mappool.gamemodeId;
 		newMappool.publishId = mappool.publishId;
 		newMappool.availability = mappool.availability;
+		newMappool.mappoolType = mappool.mappoolType;
 		newMappool.modifiers = mappool.modifiers;
 
 		for (let bracket in mappool.modBrackets) {
@@ -175,6 +229,10 @@ export class Mappool {
 
 		for (let user in mappool.availableTo) {
 			newMappool.availableTo.push(mappool.availableTo[user]);
+		}
+
+		for (let modCategory in mappool.modCategories) {
+			newMappool.modCategories.push(ModCategory.makeTrueCopy(mappool.modCategories[modCategory]));
 		}
 
 		return newMappool;
@@ -190,8 +248,9 @@ export class Mappool {
 		newMappool.id = json.id;
 		newMappool.name = json.name;
 		newMappool.gamemodeId = json.gamemodeId;
-		newMappool.publishId = json.id;
+		newMappool.publishId = json.publishId;
 		newMappool.availability = json.availability;
+		newMappool.mappoolType = json.mappoolType;
 
 		// Loop through all the brackets in the current mappool
 		for (let bracket in json.modBrackets) {
@@ -212,6 +271,8 @@ export class Mappool {
 				newBeatmap.beatmapUrl = thisBracket.beatmaps[beatmap].beatmapUrl;
 				newBeatmap.modifier = thisBracket.beatmaps[beatmap].modifier;
 				newBeatmap.gamemodeId = thisBracket.beatmaps[beatmap].gamemode;
+				newBeatmap.picked = thisBracket.beatmaps[beatmap].picked;
+				newBeatmap.modCategory = ModCategory.serializeJson(thisBracket.beatmaps[beatmap].modCategory);
 				newBeatmap.invalid = false;
 
 				newMappool.modifiers[newBeatmap.beatmapId] = newBeatmap;
@@ -230,6 +291,10 @@ export class Mappool {
 
 		for (let user in json.availableTo) {
 			newMappool.availableTo.push(json.availableTo[user]);
+		}
+
+		for (let modCategory in json.modCategories) {
+			newMappool.modCategories.push(ModCategory.serializeJson(json.modCategories[modCategory]));
 		}
 
 		return newMappool;

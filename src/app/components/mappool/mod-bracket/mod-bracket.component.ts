@@ -6,6 +6,7 @@ import { ElectronService } from '../../../services/electron.service';
 import { Mods } from '../../../models/osu-models/osu';
 import { ToastService } from '../../../services/toast.service';
 import { ToastType } from '../../../models/toast';
+import { Mappool } from '../../../models/osu-mappool/mappool';
 
 @Component({
 	selector: 'app-mod-bracket',
@@ -16,6 +17,7 @@ export class ModBracketComponent implements OnInit {
 	@Input() modBracket: ModBracket;
 	@Input() withBorder: boolean;
 	@Input() withCollapse: boolean;
+	@Input() mappool: Mappool;
 
 	selectedMods: { index: number, modValue: any }[] = [];
 	modBracketIndex: number = 0;
@@ -36,9 +38,9 @@ export class ModBracketComponent implements OnInit {
 
 	constructor(private getBeatmap: GetBeatmap, public electronService: ElectronService, private toastService: ToastService) { }
 	ngOnInit() {
-		for(let mod in this.modBracket.mods) {
+		for (let mod in this.modBracket.mods) {
 			this.selectedMods.push({ index: this.modBracketIndex + 1, modValue: this.modBracket.mods[mod].modValue });
-			this.modBracketIndex ++;
+			this.modBracketIndex++;
 		}
 	}
 
@@ -65,7 +67,7 @@ export class ModBracketComponent implements OnInit {
 	 */
 	synchronizeBeatmap(beatmap: ModBracketMap) {
 		this.getBeatmap.getByBeatmapId(beatmap.beatmapId).subscribe(data => {
-			if(data.beatmap_id == null) {
+			if (data.beatmap_id == null) {
 				beatmap.invalid = true;
 			}
 			else {
@@ -88,9 +90,9 @@ export class ModBracketComponent implements OnInit {
 	 * Add a new mod bracket
 	 */
 	addNewMod() {
-		if(this.selectedMods.length + 1 <= this.MAX_BRACKETS) {
+		if (this.selectedMods.length + 1 <= this.MAX_BRACKETS) {
 			this.selectedMods.push({ index: this.modBracketIndex + 1, modValue: 0 });
-			this.modBracketIndex ++;
+			this.modBracketIndex++;
 		}
 		else {
 			this.toastService.addToast(`Maximum amount of mods reached.`, ToastType.Warning);
@@ -108,8 +110,8 @@ export class ModBracketComponent implements OnInit {
 		// Reset the mods
 		this.modBracket.mods = [];
 
-		for(let mod in this.selectedMods) {
-			if(this.selectedMods[mod].index == modIndex) {
+		for (let mod in this.selectedMods) {
+			if (this.selectedMods[mod].index == modIndex) {
 				this.selectedMods[mod].modValue = modValue;
 			}
 		}
@@ -122,13 +124,22 @@ export class ModBracketComponent implements OnInit {
 	 * @param modIndex the index of the mod to delete
 	 */
 	deleteMod(modIndex: number) {
-		for(let mod in this.selectedMods) {
-			if(this.selectedMods[mod].index == modIndex) {
+		for (let mod in this.selectedMods) {
+			if (this.selectedMods[mod].index == modIndex) {
 				this.selectedMods.splice(Number(mod), 1);
 
 				this.modBracket.mods = this.selectedMods;
 				return;
 			}
 		}
+	}
+
+	/**
+	 * Change the mod category for the given map
+	 * @param beatmap
+	 * @param event
+	 */
+	changeModCategory(beatmap: ModBracketMap, event) {
+		beatmap.modCategory = this.mappool.getModCategoryByName(event.target.value);
 	}
 }

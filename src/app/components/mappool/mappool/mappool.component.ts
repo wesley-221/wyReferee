@@ -3,6 +3,8 @@ import { Mappool } from '../../../models/osu-mappool/mappool';
 import { ModBracket } from '../../../models/osu-mappool/mod-bracket';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { User } from '../../../models/authentication/user';
+import { ElectronService } from '../../../services/electron.service';
+import { ModCategory } from '../../../models/osu-mappool/mod-category';
 
 @Component({
 	selector: 'app-mappool',
@@ -16,7 +18,7 @@ export class MappoolComponent implements OnInit {
 	allowedUsers: { index: number, userId: number }[] = [];
 	userIndex: number = 0;
 
-	constructor(private auth: AuthenticateService) {
+	constructor(private auth: AuthenticateService, public electronService: ElectronService) {
 		this.auth.getAllUser().subscribe(data => {
 			for (let i in data) {
 				const user: User = User.mapFromJson(data[i]);
@@ -126,5 +128,21 @@ export class MappoolComponent implements OnInit {
 	 */
 	createNewBracket() {
 		this.mappool.addBracket(new ModBracket());
+	}
+
+	/**
+	 * Add a new mod category
+	 */
+	addNewCategory() {
+		const newCategory = new ModCategory();
+		this.mappool.addModCategory(newCategory);
+	}
+
+	/**
+	 * Delete a mod category
+	 * @param index the index of the mod category to delete
+	 */
+	deleteCategory(category: ModCategory) {
+		this.mappool.removeModCategory(category);
 	}
 }

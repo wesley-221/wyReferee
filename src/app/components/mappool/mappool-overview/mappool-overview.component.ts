@@ -30,6 +30,7 @@ export class MappoolOverviewComponent implements OnInit {
 	importMappool() {
 		this.mappoolService.getPublishedMappool(this.mappoolId).subscribe((data) => {
 			const newMappool: Mappool = Mappool.serializeJson(data);
+			newMappool.publishId = newMappool.id;
 			newMappool.id = this.mappoolService.availableMappoolId;
 			this.mappoolService.availableMappoolId++;
 

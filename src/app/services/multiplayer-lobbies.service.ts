@@ -17,7 +17,7 @@ import { AxSCalculation } from '../models/score-calculation/calculation-types/ax
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  	providedIn: 'root'
+	providedIn: 'root'
 })
 
 export class MultiplayerLobbiesService {
@@ -25,17 +25,17 @@ export class MultiplayerLobbiesService {
 	availableLobbyId: number = 0;
 	private synchronizeDone: BehaviorSubject<number>;
 
-  	constructor(
-		  private storeService: StoreService,
-		  private getMultiplayer: GetMultiplayerService,
-		  private toastService: ToastService,
-		  private cacheService: CacheService,
-		  private getUser: GetUser,
-		  private getBeatmap: GetBeatmap,
-		  private mappoolService: MappoolService) {
+	constructor(
+		private storeService: StoreService,
+		private getMultiplayer: GetMultiplayerService,
+		private toastService: ToastService,
+		private cacheService: CacheService,
+		private getUser: GetUser,
+		private getBeatmap: GetBeatmap,
+		private mappoolService: MappoolService) {
 		const allLobbies = storeService.get('lobby');
 
-		for(let lobby in allLobbies) {
+		for (let lobby in allLobbies) {
 			const currentLobby = allLobbies[lobby];
 
 			const newLobby = new MultiplayerLobby();
@@ -62,7 +62,7 @@ export class MultiplayerLobbiesService {
 	 */
 	public add(multiplayerLobby: MultiplayerLobby): void {
 		this.allLobbies.push(multiplayerLobby);
-		this.availableLobbyId ++;
+		this.availableLobbyId++;
 
 		this.storeService.set(`lobby.${multiplayerLobby.lobbyId}`, multiplayerLobby.convertToJson());
 	}
@@ -82,8 +82,8 @@ export class MultiplayerLobbiesService {
 	 * @param lobbyId the id of the multiplayerlobby to get
 	 */
 	public get(lobbyId: number): MultiplayerLobby {
-		for(let lobby in this.allLobbies) {
-			if(this.allLobbies[lobby].lobbyId == lobbyId) {
+		for (let lobby in this.allLobbies) {
+			if (this.allLobbies[lobby].lobbyId == lobbyId) {
 				return this.allLobbies[lobby];
 			}
 		}
@@ -96,8 +96,8 @@ export class MultiplayerLobbiesService {
 	 * @param name the irc channel
 	 */
 	public getByIrcLobby(name: string): MultiplayerLobby {
-		for(let lobby in this.allLobbies) {
-			if(`#mp_${this.getMultiplayerIdFromLink(this.allLobbies[lobby].multiplayerLink)}` == name) {
+		for (let lobby in this.allLobbies) {
+			if (`#mp_${this.getMultiplayerIdFromLink(this.allLobbies[lobby].multiplayerLink)}` == name) {
 				return this.allLobbies[lobby];
 			}
 		}
@@ -108,8 +108,8 @@ export class MultiplayerLobbiesService {
 	 * @param multiplayerLobby the multiplayerlobby to update
 	 */
 	public update(multiplayerLobby: MultiplayerLobby): void {
-		for(let lobby in this.allLobbies) {
-			if(this.allLobbies[lobby].lobbyId == multiplayerLobby.lobbyId) {
+		for (let lobby in this.allLobbies) {
+			if (this.allLobbies[lobby].lobbyId == multiplayerLobby.lobbyId) {
 				this.allLobbies[lobby] = multiplayerLobby;
 
 				this.storeService.set(`lobby.${multiplayerLobby.lobbyId}`, multiplayerLobby.convertToJson());
@@ -123,19 +123,19 @@ export class MultiplayerLobbiesService {
 			multiplayerLobby.teamOneScore = 0;
 			multiplayerLobby.teamTwoScore = 0;
 
-			for(let game in data.games) {
+			for (let game in data.games) {
 				const currentGame = data.games[game];
 				const multiplayerData = new MultiplayerData();
 
 				let MODIFIER = 0;
 
 				// Get the mappool if it wasn't set yet
-				if(multiplayerLobby.mappool == null) {
+				if (multiplayerLobby.mappool == null) {
 					multiplayerLobby.mappool = this.mappoolService.getMappool(multiplayerLobby.mappoolId);
 				}
 
 				// Check if there is a mappool selected and if the modifier exists for the beatmap
-				if(multiplayerLobby.mappool != null && multiplayerLobby.mappool.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
+				if (multiplayerLobby.mappool != null && multiplayerLobby.mappool.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
 					MODIFIER = multiplayerLobby.mappool.modifiers[currentGame.beatmap_id].modifier;
 				}
 
@@ -145,25 +145,25 @@ export class MultiplayerLobbiesService {
 				const cachedBeatmap: CacheBeatmap = this.cacheService.getCachedBeatmap(multiplayerData.beatmap_id);
 
 				// Check if the beatmap is cached
-				if(cachedBeatmap == null) {
+				if (cachedBeatmap == null) {
 					this.getBeatmap.getByBeatmapId(multiplayerData.beatmap_id).subscribe(data => {
 						this.cacheService.cacheBeatmap(new CacheBeatmap(`${data.artist} - ${data.title} [${data.version}]`, data.beatmap_id, data.beatmapset_id));
 					});
 				}
 
 				// Loop through all the scores
-				for(let score in currentGame.scores) {
+				for (let score in currentGame.scores) {
 					const cachedUser: CacheUser = this.cacheService.getCachedUser(currentGame.scores[score].user_id);
 
 					// Check if the user is cached
-					if(cachedUser == null) {
+					if (cachedUser == null) {
 						this.getUser.getByUserId(currentGame.scores[score].user_id).subscribe(data => {
 							this.cacheService.cacheUser(data);
 						});
 					}
 
-					const 	currentScore = currentGame.scores[score],
-							newMpDataUser = new MultiplayerDataUser();
+					const currentScore = currentGame.scores[score],
+						newMpDataUser = new MultiplayerDataUser();
 
 					newMpDataUser.user = currentScore.user_id;
 					newMpDataUser.score = currentScore.score;
@@ -171,7 +171,7 @@ export class MultiplayerLobbiesService {
 					newMpDataUser.passed = currentScore.pass;
 					newMpDataUser.slot = currentScore.slot;
 
-					if(!multiplayerLobby.mapsCountTowardScore.hasOwnProperty(currentGame.game_id)) {
+					if (!multiplayerLobby.mapsCountTowardScore.hasOwnProperty(currentGame.game_id)) {
 						multiplayerLobby.mapsCountTowardScore[currentGame.game_id] = true;
 					}
 
@@ -184,7 +184,7 @@ export class MultiplayerLobbiesService {
 				scoreInterface.setTeamSize(multiplayerLobby.teamSize);
 				scoreInterface.addUserScores(multiplayerData.getPlayers());
 
-				if(scoreInterface.getIdentifier() == "AxS") {
+				if (scoreInterface.getIdentifier() == "AxS") {
 					(<AxSCalculation>scoreInterface).setModifier(MODIFIER);
 				}
 
@@ -192,18 +192,18 @@ export class MultiplayerLobbiesService {
 				multiplayerData.team_two_score = scoreInterface.calculateTeamTwoScore();
 
 				// Add team score if it counts towards the score
-				if(multiplayerData.team_one_score > multiplayerData.team_two_score) {
-					if(multiplayerLobby.mapsCountTowardScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.mapsCountTowardScore[multiplayerData.game_id] == true) {
-						multiplayerLobby.teamOneScore ++;
+				if (multiplayerData.team_one_score > multiplayerData.team_two_score) {
+					if (multiplayerLobby.mapsCountTowardScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.mapsCountTowardScore[multiplayerData.game_id] == true) {
+						multiplayerLobby.teamOneScore++;
 					}
 				}
 				else {
-					if(multiplayerLobby.mapsCountTowardScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.mapsCountTowardScore[multiplayerData.game_id] == true) {
-						multiplayerLobby.teamTwoScore ++;
+					if (multiplayerLobby.mapsCountTowardScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.mapsCountTowardScore[multiplayerData.game_id] == true) {
+						multiplayerLobby.teamTwoScore++;
 					}
 				}
 
-				if(multiplayerLobby.existMpData(multiplayerData)) {
+				if (multiplayerLobby.existMpData(multiplayerData)) {
 					multiplayerLobby.updateMpData(multiplayerData);
 				}
 				else {
@@ -216,7 +216,7 @@ export class MultiplayerLobbiesService {
 			// Save multiplayerLobby
 			this.update(multiplayerLobby);
 
-			if(showToasts)
+			if (showToasts)
 				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');
 		});
 	}
@@ -235,10 +235,10 @@ export class MultiplayerLobbiesService {
 	private getMultiplayerIdFromLink(link: string) {
 		const regularExpression = new RegExp(/https:\/\/osu\.ppy\.sh\/community\/matches\/([0-9]+)/).exec(link);
 
-        if(regularExpression) {
-            return regularExpression[1];
-        }
+		if (regularExpression) {
+			return regularExpression[1];
+		}
 
-        return null;
+		return null;
 	}
 }
