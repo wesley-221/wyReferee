@@ -185,18 +185,7 @@ export class LobbyViewComponent implements OnInit {
 							`**Score: ${this.selectedLobby.teamOneName}** | **${this.selectedLobby.teamOneScore}** - ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}` :
 							`**Score:** ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} - **${this.selectedLobby.teamTwoScore}** | **${this.selectedLobby.teamTwoName}**`;
 
-		let teamOneBans: any[] = [],
-			teamTwoBans: any[] = [];
-
-		for(let ban of this.selectedLobby.teamOneBans) {
-			teamOneBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
-		}
-
-		for(let ban of this.selectedLobby.teamTwoBans) {
-			teamTwoBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
-		}
-
-		const body = {
+		let body = {
 			"embeds": [
 				{
 					"title": `Result of **${this.selectedLobby.teamOneName}** vs. **${this.selectedLobby.teamTwoName}**`,
@@ -207,19 +196,37 @@ export class LobbyViewComponent implements OnInit {
 						"text": `Match referee was ${this.ircService.authenticatedUser}`
 					},
 					"fields": [
-						{
-							"name": `**${this.selectedLobby.teamOneName}** bans:`,
-							"value": teamOneBans.join('\n'),
-							"inline": true
-						},
-						{
-							"name": `**${this.selectedLobby.teamTwoName}** bans:`,
-							"value": teamTwoBans.join('\n'),
-							"inline": true
-						}
 					]
 				}
 			]
+		}
+
+		let teamOneBans: any[] = [],
+			teamTwoBans: any[] = [];
+
+		if(this.selectedLobby.teamOneBans.length > 0) {
+			for(let ban of this.selectedLobby.teamOneBans) {
+				teamOneBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
+			}
+
+			body.embeds[0].fields.push({
+				"name": `**${this.selectedLobby.teamOneName}** bans:`,
+				"value": teamOneBans.join('\n'),
+				"inline": true
+			});
+
+		}
+
+		if(this.selectedLobby.teamTwoBans.length > 0) {
+			for(let ban of this.selectedLobby.teamTwoBans) {
+				teamTwoBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
+			}
+
+			body.embeds[0].fields.push({
+				"name": `**${this.selectedLobby.teamTwoName}** bans:`,
+				"value": teamTwoBans.join('\n'),
+				"inline": true
+			});
 		}
 
 		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' })}).subscribe(obj => {
