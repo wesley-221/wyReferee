@@ -292,15 +292,12 @@ export class IrcComponent implements OnInit {
 		let modBit = 0,
 			freemodEnabled = false;
 
-
 		for (let mod in bracket.mods) {
-			if (!isNaN(bracket.mods[mod])) {
-				modBit += parseInt(bracket.mods[mod]);
+			if (bracket.mods[mod].modValue != "freemod") {
+				modBit += parseInt(bracket.mods[mod].modValue);
 			}
 			else {
-				if (bracket.mods[mod] == "freemod") {
-					freemodEnabled = true;
-				}
+				freemodEnabled = true;
 			}
 		}
 
