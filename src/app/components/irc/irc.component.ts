@@ -286,8 +286,8 @@ export class IrcComponent implements OnInit {
 	 * @param beatmap the picked beatmap
 	 * @param bracket the bracket where the beatmap is from
 	 */
-	pickBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
-		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp map ${beatmap.beatmapId} ${beatmap.gamemodeId}`);
+	pickBeatmap(beatmap: ModBracketMap, bracket: ModBracket, gamemode: number = null) {
+		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp map ${beatmap.beatmapId} ${(gamemode != null ? gamemode : beatmap.gamemodeId)}`);
 
 		let modBit = 0,
 			freemodEnabled = false;
@@ -425,7 +425,7 @@ export class IrcComponent implements OnInit {
 			}
 			else {
 				const modBracketMap = ModBracketMap.serializeJson(res);
-				this.pickBeatmap(modBracketMap, modBracket);
+				this.pickBeatmap(modBracketMap, modBracket, mappool.gamemodeId);
 
 				// Pick a random map and update it to the cache
 				this.selectedLobby.pickModCategoryForModBracket(modBracket, modBracketMap.modCategory);
