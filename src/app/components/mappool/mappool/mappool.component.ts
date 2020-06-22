@@ -21,9 +21,9 @@ export class MappoolComponent implements OnInit {
 	constructor(private auth: AuthenticateService, public electronService: ElectronService, private mappoolService: MappoolService) {
 		this.mappoolService.mappoolLoaded$.subscribe(response => {
 			if (response == true) {
-				this.auth.getAllUser().subscribe(response => {
-					for (let item in response) {
-						const user = User.serializeJson(response[item]);
+				this.auth.getAllUser().subscribe(userArray => {
+					for (let item in userArray) {
+						const user = User.serializeJson(userArray[item]);
 						let foundUser = false;
 
 						for (let i in this.mappool.availableTo) {
@@ -35,6 +35,8 @@ export class MappoolComponent implements OnInit {
 						if (foundUser == false)
 							this.allUsers.push(user);
 					}
+
+					this.mappoolService.mappoolLoaded$.next(false);
 				});
 			}
 		});

@@ -38,6 +38,8 @@ export class MappoolEditComponent implements OnInit {
 				for (let bracket in this.mappool.modBrackets) {
 					this.mappool.modBrackets[bracket].collapsed = true;
 				}
+
+				this.mappoolService.mappoolLoaded$.next(true);
 			}
 		});
 	}

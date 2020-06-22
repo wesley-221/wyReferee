@@ -18,6 +18,8 @@ export class MappoolCreateComponent implements OnInit {
 	constructor(public electronService: ElectronService, private mappoolService: MappoolService, private getBeatmap: GetBeatmap, private toastService: ToastService) {
 		this.creationMappool = mappoolService.creationMappool;
 		this.creationMappool.id = mappoolService.availableMappoolId;
+
+		this.mappoolService.mappoolLoaded$.next(true);
 	}
 
 	ngOnInit() { }
