@@ -49,29 +49,46 @@
 		</div>
 	</div>
 
+	<hr />
+
 	<div class="spacing" *ngIf="mappool.availability == 2">
+		<h3>Available to</h3>
 		<p>Add users that will be able to import this mappool. You add or remove users later as you see fit.</p>
 
-		<div class="row">
-			<div class="col">
-				<button class="btn btn-primary" (click)="addNewUser()">Add new user</button>
-			</div>
-		</div>
-
 		<div class="users">
-			<div *ngIf="allowedUsers.length == 0" class="alert alert-danger full-width">
-				You haven't added a user yet. This mappool will only be visible for yourself.
-			</div>
+			<input class="form-control" [(ngModel)]="searchValue" placeholder="Search..." />
 
-			<div class="user" *ngFor="let user of allowedUsers">
-				<div class="input-group">
-					<div class="input-group-prepend input-full-width">
-						<select class="form-control" (change)="changeUser(user.index, $event)" [(ngModel)]="user.userId">
-							<option *ngFor="let user of allUsers" [value]="user.id">{{ user.username }}</option>
-						</select>
+			<div class="row">
+				<div class="col">
+					<div class="background-area all-users">
+						<div class="user" *ngFor="let user of (allUsers | search: searchValue )">
+							<div class="username">
+								<p>{{ user.username }}</p>
+							</div>
+
+							<div class="buttons">
+								<button class="btn btn-success" (click)="addNewMappicker(user)"><fa-icon [icon]="['fas', 'plus']"></fa-icon></button>
+							</div>
+						</div>
 					</div>
+				</div>
 
-					<button class="btn btn-danger" (click)="deleteUser(user.index)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+				<div class="col">
+					<div class="background-area all-users">
+						<div *ngIf="mappool.availableTo.length == 0" class="alert alert-danger full-width">
+							You haven't added a user yet. This mappool will only be visible for yourself.
+						</div>
+
+						<div class="user" *ngFor="let user of mappool.availableTo">
+							<div class="username">
+								<p>{{ user.username }}</p>
+							</div>
+
+							<div class="buttons">
+								<button class="btn btn-danger" (click)="removeMappicker(user)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

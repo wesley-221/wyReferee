@@ -24,7 +24,7 @@ export class Mappool {
 	updateAvailable: boolean = false;
 	availability: Availability = Availability.ToEveryone;
 	mappoolType: MappoolType = MappoolType.Normal;
-	availableTo: number[] = [];
+	availableTo: User[] = [];
 	modBrackets: ModBracket[] = [];
 	modifiers: {} = {};
 	allBeatmaps: any[] = [];
@@ -63,25 +63,18 @@ export class Mappool {
 
 	/**
 	 * Allow the user to view the mappool
-	 * @param userId
+	 * @param user
 	 */
-	public addUser(userId: number) {
-		this.availableTo.push(userId);
+	public addUser(user: User) {
+		this.availableTo.push(user);
 	}
 
 	/**
 	 * Remove the permissions for the user to view the mappool
 	 * @param user
 	 */
-	public removeUser(userId: number) {
-		for (let i in this.availableTo) {
-			if (this.availableTo[i] == userId) {
-				this.availableTo.splice(Number(i), 1);
-				return true;
-			}
-		}
-
-		return false;
+	public removeUser(user: User) {
+		this.availableTo.splice(this.availableTo.indexOf(user), 1);
 	}
 
 	/**
@@ -202,7 +195,7 @@ export class Mappool {
 		}
 
 		for (let user in this.availableTo) {
-			mappool.availableTo.push(this.availableTo[user]);
+			mappool.availableTo.push(User.convertToJson(this.availableTo[user]));
 		}
 
 		return mappool;
@@ -228,7 +221,7 @@ export class Mappool {
 		}
 
 		for (let user in mappool.availableTo) {
-			newMappool.availableTo.push(mappool.availableTo[user]);
+			newMappool.availableTo.push(User.makeTrueCopy(mappool.availableTo[user]));
 		}
 
 		for (let modCategory in mappool.modCategories) {
@@ -273,7 +266,7 @@ export class Mappool {
 				newBeatmap.gamemodeId = thisBracket.beatmaps[beatmap].gamemode;
 				newBeatmap.picked = thisBracket.beatmaps[beatmap].picked;
 
-				if(thisBracket.beatmaps[beatmap].modCategory != null) {
+				if (thisBracket.beatmaps[beatmap].modCategory != null) {
 					newBeatmap.modCategory = ModCategory.serializeJson(thisBracket.beatmaps[beatmap].modCategory);
 				}
 
@@ -294,7 +287,7 @@ export class Mappool {
 		}
 
 		for (let user in json.availableTo) {
-			newMappool.availableTo.push(json.availableTo[user]);
+			newMappool.availableTo.push(User.serializeJson(json.availableTo[user]));
 		}
 
 		for (let modCategory in json.modCategories) {

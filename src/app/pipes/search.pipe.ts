@@ -1,30 +1,22 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ModBracket } from '../models/osu-mappool/mod-bracket';
+import { User } from '../models/authentication/user';
 
 @Pipe({
   	name: 'search'
 })
 
 export class SearchPipe implements PipeTransform {
-	transform(allModbrackets: ModBracket[], beatmapName: string): any {
-		if(beatmapName == '' || beatmapName == undefined) {
-			return allModbrackets;
+	transform(allUsers: User[], username: string): any {
+		if(username == '' || username == undefined) {
+			return allUsers;
 		}
 
-		let returnModBrackets = [];
+		let returnUsers = [];
 
-		for(let bracket in allModbrackets) {
-			let currentBracket = ModBracket.makeTrueCopy(allModbrackets[bracket]);
+		returnUsers = allUsers.filter(user => {
+			return user.username.toLowerCase().indexOf(username.toLowerCase()) > -1;
+		});
 
-			currentBracket.beatmaps = currentBracket.beatmaps.filter(beatmap => {
-				return beatmap.beatmapName.toLowerCase().includes(beatmapName.toLowerCase())
-			});
-
-			if(currentBracket.beatmaps.length > 0) {
-				returnModBrackets.push(currentBracket);
-			}
-		}
-
-		return returnModBrackets;
+		return returnUsers;
     }
 }

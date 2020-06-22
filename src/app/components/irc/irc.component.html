@@ -148,7 +148,7 @@
 				</div>
 
 				<div class="mappool" *ngIf="selectedLobby.mappool != null">
-					<div class="mod-bracket" *ngFor="let bracket of ( selectedLobby.mappool.modBrackets | search : searchValue )">
+					<div class="mod-bracket" *ngFor="let bracket of ( selectedLobby.mappool.modBrackets | searchmodbracket : searchValue )">
 						<hr />
 						<h3>{{ bracket.bracketName }}</h3>
 						<hr />

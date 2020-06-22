@@ -36,6 +36,7 @@ import { LoginComponent } from './components/authentication/login/login.componen
 import { AuthInterceptor } from "./components/authentication/token-interceptor";
 import { IrcComponent } from './components/irc/irc.component';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
+import { SearchModBracketPipe } from './pipes/search-mod-bracket.pipe';
 import { SearchPipe } from './pipes/search.pipe';
 import { RegisterComponent } from './components/authentication/register/register.component';
 import { TournamentCreateComponent } from './components/tournament/tournament-create/tournament-create.component';
@@ -72,6 +73,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 		MappoolCreateComponent,
 		LoginComponent,
 		IrcComponent,
+		SearchModBracketPipe,
 		SearchPipe,
 		RegisterComponent,
 		TournamentCreateComponent,

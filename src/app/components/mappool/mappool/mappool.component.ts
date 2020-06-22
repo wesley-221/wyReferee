@@ -5,6 +5,7 @@ import { AuthenticateService } from '../../../services/authenticate.service';
 import { User } from '../../../models/authentication/user';
 import { ElectronService } from '../../../services/electron.service';
 import { ModCategory } from '../../../models/osu-mappool/mod-category';
+import { MappoolService } from '../../../services/mappool.service';
 
 @Component({
 	selector: 'app-mappool',
@@ -15,96 +16,47 @@ export class MappoolComponent implements OnInit {
 	@Input() mappool: Mappool;
 
 	allUsers: User[] = [];
-	allowedUsers: { index: number, userId: number }[] = [];
-	userIndex: number = 0;
+	searchValue: string;
 
-	constructor(private auth: AuthenticateService, public electronService: ElectronService) {
-		this.auth.getAllUser().subscribe(data => {
-			for (let i in data) {
-				const user: User = User.mapFromJson(data[i]);
-				this.allUsers.push(user);
+	constructor(private auth: AuthenticateService, public electronService: ElectronService, private mappoolService: MappoolService) {
+		this.mappoolService.mappoolLoaded$.subscribe(response => {
+			if (response == true) {
+				this.auth.getAllUser().subscribe(response => {
+					for (let item in response) {
+						const user = User.serializeJson(response[item]);
+						let foundUser = false;
+
+						for (let i in this.mappool.availableTo) {
+							if (user.id == this.mappool.availableTo[i].id) {
+								foundUser = true;
+							}
+						}
+
+						if (foundUser == false)
+							this.allUsers.push(user);
+					}
+				});
 			}
 		});
 	}
 
 	ngOnInit(): void { }
 
-	ngOnChanges(): void {
-		if (this.mappool) {
-			for (let user in this.mappool.availableTo) {
-				this.allowedUsers.push({ index: this.userIndex + 1, userId: this.mappool.availableTo[user] });
-				this.userIndex++;
-			}
-		}
+	/**
+	 * Add a new user to to mappool
+	 */
+	addNewMappicker(user: User) {
+		this.allUsers.splice(this.allUsers.indexOf(user), 1);
+		this.mappool.addUser(user);
 	}
 
 	/**
-	 * Add a new user
+	 * Remove a user from the mappool
+	 * @param user the user to delete
 	 */
-	addNewUser() {
-		this.allowedUsers.push({ index: this.userIndex + 1, userId: (this.allUsers.length > 0 ? this.allUsers[0].id : -1) });
-		this.mappool.addUser((this.allUsers.length > 0 ? this.allUsers[0].id : -1));
-
-		this.userIndex++;
-
-		// Reset availability
-		this.mappool.availableTo = [];
-
-		for (let user in this.allowedUsers) {
-			this.mappool.availableTo.push(this.allowedUsers[user].userId);
-		}
-	}
-
-	/**
-	 * Delete a user
-	 * @param userIndex the index of the user to delete
-	 */
-	deleteUser(userIndex: number) {
-		// Reset availability
-		this.mappool.availableTo = [];
-
-		for (let user in this.allowedUsers) {
-			if (this.allowedUsers[user].index == userIndex) {
-				this.mappool.removeUser(this.allowedUsers[user].userId);
-				this.allowedUsers.splice(Number(user), 1);
-			}
-
-			this.mappool.availableTo.push(this.allowedUsers[user].userId);
-		}
-	}
-
-	/**
-	 * Change the value of the selected user
-	 * @param userIndex the index of the user that has been changed
-	 * @param userId the new value of the user
-	 */
-	changeUser(userIndex: number, userId: any) {
-		userId = userId.target.value;
-
-		// Reset availability
-		this.mappool.availableTo = [];
-
-		for (let i in this.allowedUsers) {
-			if (this.allowedUsers[i].index == userIndex) {
-				this.allowedUsers[i].userId = Number(userId);
-			}
-
-			this.mappool.availableTo.push(this.allowedUsers[i].userId);
-		}
-	}
-
-	/**
-	 * Find a user by the given id
-	 * @param userId
-	 */
-	findUserById(userId: number) {
-		for (let user in this.allUsers) {
-			if (this.allUsers[user].id == userId) {
-				return this.allUsers[user];
-			}
-		}
-
-		return null;
+	removeMappicker(user: User) {
+		this.allUsers.push(user);
+		this.mappool.removeUser(user);
 	}
 
 	/**

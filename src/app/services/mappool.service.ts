@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Mappool } from '../models/osu-mappool/mappool';
 import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { AppConfig } from '../../environments/environment';
 import { LoggedInUser } from '../models/authentication/logged-in-user';
 import { ModBracket } from '../models/osu-mappool/mod-bracket';
@@ -20,7 +20,10 @@ export class MappoolService {
 	allMappools: Mappool[] = [];
 	availableMappoolId: number = 0;
 
+	mappoolLoaded$: BehaviorSubject<Boolean>;
+
 	constructor(private storeService: StoreService, private httpClient: HttpClient) {
+		this.mappoolLoaded$ = new BehaviorSubject<Boolean>(false);
 		this.creationMappool = new Mappool();
 
 		const storeAllMappools = storeService.get('cache.mappool');

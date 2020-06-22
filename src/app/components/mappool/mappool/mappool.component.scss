@@ -2,7 +2,7 @@ h3 {
 	margin-top: 8px;
 }
 
-.users, .categories {
+.categories {
 	display: flex;
 	flex-direction: row;
 	flex-flow: row wrap;
@@ -16,7 +16,7 @@ h3 {
 	-moz-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
 	box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
 
-	.user, .category {
+	.category {
 		display: flex;
 		flex-direction: column;
 		flex: 1 0 21%;
@@ -38,4 +38,29 @@ h3 {
 
 .full-width {
 	width: 100%;
+}
+
+.all-users {
+	max-height: 400px;
+	overflow-y: auto;
+
+	.user {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+
+		padding: 8px;
+		margin-bottom: 3px;
+
+		border: 1px solid rgba(0,0,0,0.75);
+
+		-webkit-box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
+		-moz-box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
+		box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
+
+		.username, .buttons {
+			display: flex;
+			align-items: center;
+		}
+	}
 }

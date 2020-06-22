@@ -7,7 +7,7 @@ export class User {
 	 * Map the json to a user object
 	 * @param json
 	 */
-	public static mapFromJson(json: any): User {
+	public static serializeJson(json: any): User {
 		const newUser = new User();
 
 		newUser.id = json.id;
@@ -21,7 +21,7 @@ export class User {
      * Convert the user to a json format
 	 * @param user the user
      */
-	public convertToJson(user: User) {
+	public static convertToJson(user: User) {
 		return {
 			id: user.id,
 			username: user.username,
