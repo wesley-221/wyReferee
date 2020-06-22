@@ -272,7 +272,11 @@ export class Mappool {
 				newBeatmap.modifier = thisBracket.beatmaps[beatmap].modifier;
 				newBeatmap.gamemodeId = thisBracket.beatmaps[beatmap].gamemode;
 				newBeatmap.picked = thisBracket.beatmaps[beatmap].picked;
-				newBeatmap.modCategory = ModCategory.serializeJson(thisBracket.beatmaps[beatmap].modCategory);
+
+				if(thisBracket.beatmaps[beatmap].modCategory != null) {
+					newBeatmap.modCategory = ModCategory.serializeJson(thisBracket.beatmaps[beatmap].modCategory);
+				}
+
 				newBeatmap.invalid = false;
 
 				newMappool.modifiers[newBeatmap.beatmapId] = newBeatmap;

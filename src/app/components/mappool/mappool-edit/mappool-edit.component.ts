@@ -22,6 +22,9 @@ export class MappoolEditComponent implements OnInit {
 				this.mappoolService.getPublishedMappool(params.mappoolId).subscribe(data => {
 					this.mappool = Mappool.serializeJson(data);
 
+					// Set the publish id for published maps
+					this.mappool.publishId = this.mappool.id;
+
 					for (let bracket in this.mappool.modBrackets) {
 						this.mappool.modBrackets[bracket].collapsed = true;
 					}

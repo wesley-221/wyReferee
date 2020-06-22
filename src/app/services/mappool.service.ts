@@ -95,7 +95,7 @@ export class MappoolService {
 	 * @param mappool the mappool to update
 	 */
 	public updatePublishedMappool(mappool: Mappool) {
-		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool/update`, mappool, { observe: "response" });
+		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool`, mappool, { observe: "response" });
 	}
 
 	/**
@@ -129,7 +129,7 @@ export class MappoolService {
 	 * @param mappool the mappool to publish
 	 */
 	public publishMappool(mappool: Mappool): Observable<any> {
-		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool/create`, mappool, { observe: "response" });
+		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool`, mappool, { observe: "response" });
 	}
 
 	/**
@@ -137,7 +137,7 @@ export class MappoolService {
 	 * @param mappool_id the id of the mappool that was published
 	 */
 	public getPublishedMappool(mappool_id: number): Observable<Mappool> {
-		return this.httpClient.get<Mappool>(`${this.apiUrl}mappool/get/${mappool_id}`);
+		return this.httpClient.get<Mappool>(`${this.apiUrl}mappool/${mappool_id}`);
 	}
 
 	/**

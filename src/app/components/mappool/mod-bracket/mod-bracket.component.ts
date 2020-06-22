@@ -7,6 +7,7 @@ import { Mods } from '../../../models/osu-models/osu';
 import { ToastService } from '../../../services/toast.service';
 import { ToastType } from '../../../models/toast';
 import { Mappool } from '../../../models/osu-mappool/mappool';
+import { ModCategory } from '../../../models/osu-mappool/mod-category';
 
 @Component({
 	selector: 'app-mod-bracket',
@@ -140,6 +141,13 @@ export class ModBracketComponent implements OnInit {
 	 * @param event
 	 */
 	changeModCategory(beatmap: ModBracketMap, event) {
-		beatmap.modCategory = this.mappool.getModCategoryByName(event.target.value);
+		const modCategory = this.mappool.getModCategoryByName(event.target.value);
+
+		if(modCategory == undefined) {
+			beatmap.modCategory = undefined;
+		}
+		else {
+			beatmap.modCategory = ModCategory.makeTrueCopy(this.mappool.getModCategoryByName(event.target.value));
+		}
 	}
 }

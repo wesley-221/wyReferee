@@ -59,7 +59,7 @@
 						<input type="text" class="form-control" [(ngModel)]="beatmap.modifier" placeholder="Modifier" />
 					</div>
 
-					<div class="col-2" *ngIf="mappool.mappoolType == 2">
+					<div class="col-2" *ngIf="mappool.mappoolType == 2 && mappool.publishId != null">
 						<div *ngIf="beatmap.modCategory != null; then modCategoryDefined; else modCategoryNotDefined"></div>
 
 						<ng-template #modCategoryDefined>
@@ -77,7 +77,7 @@
 						</ng-template>
 					</div>
 
-					<div [ngClass]="{'col-6': mappool.mappoolType != 0, 'col-8': mappool.mappoolType == 0}">
+					<div [ngClass]="{'col-6': mappool.mappoolType == 2 && mappool.publishId > 0, 'col-8': !mappool.publishId || mappool.mappoolType != 2}">
 						<span *ngIf="beatmap.beatmapName == null" class="has-error">No beatmap found, have you tried synchronizing?</span>
 						<a [routerLink]="" *ngIf="beatmap.beatmapName && !beatmap.invalid" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a>
 						<span *ngIf="beatmap.invalid" class="has-error">There was no beatmap found with the beatmap id "{{ beatmap.beatmapId }}".</span>
