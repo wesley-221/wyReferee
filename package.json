@@ -1,12 +1,12 @@
 {
-	"name": "axs-calculator",
-	"version": "2.4.5",
-	"description": "Referee client for AxS",
+	"name": "wyreferee",
+	"version": "3.0.0",
+	"description": "Referee client",
 	"author": {
 		"name": "Wesley"
 	},
 	"keywords": [
-		"angular 8",
+		"angular 9",
 		"axs",
 		"referee client"
 	],

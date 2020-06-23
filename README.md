@@ -1,8 +1,8 @@
 # Introduction
-Welcome to the AxS calculator. With this application you can calculate the scores with the AxS score format. 
+This client allows you to create, manage, publish and import both mappools and tournaments. It has a lot of QoL features for osu! multiplayer lobbies, such as picking maps from a mappool with just a single click on a button. 
 
 # Config file
-The config file can be found in `%appdata%/AxSCalculator`. This is the only place where things will be saved.
+The config file can be found in `%appdata%/wyreferee`. This is the only place where things will be saved.
 
 # Compiling
 To compile the application yourself, you have to follow the following steps:
