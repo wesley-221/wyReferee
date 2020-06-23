@@ -418,8 +418,6 @@ export class IrcComponent implements OnInit {
 	 */
 	pickMysteryMap(mappool: Mappool, modBracket: ModBracket) {
 		this.mappoolService.pickMysteryMap(mappool, modBracket, this.selectedLobby, this.ircService.authenticatedUser).subscribe((res: any) => {
-			console.log(res);
-
 			if (res.modCategory == null) {
 				this.toastService.addToast(res.beatmapName, ToastType.Error, 60);
 			}
