@@ -29,7 +29,7 @@ export class TournamentService {
 			const thisMappool = storeAllTournaments[tournament],
 				newTournament = Tournament.serializeJson(thisMappool);
 
-			newTournament.id = this.availableTournamentId;
+			newTournament.id = thisMappool.id;
 			this.availableTournamentId = newTournament.id + 1;
 
 			if (newTournament.publishId != undefined) {
@@ -70,6 +70,8 @@ export class TournamentService {
 	 * @param tournament the tournament to save
 	 */
 	public saveTournament(tournament: Tournament): void {
+		tournament.id = this.availableTournamentId ++;
+
 		this.allTournaments.push(tournament);
 		this.storeService.set(`cache.tournaments.${tournament.id}`, tournament.convertToJson());
 	}

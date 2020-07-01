@@ -17,7 +17,7 @@
 			<div class="btn-group float-right">
 				<button class="btn btn-success" (click)="updateTournament(tournament)" *ngIf="tournament.updateAvailable">Update</button>
 				<button class="btn btn-primary" (click)="publishTournament(tournament)" *ngIf="canPublish() && publish != true">Publish</button>
-			<button class="btn btn-danger" (click)="deleteTournament(tournament)">Delete</button>
+				<button class="btn btn-danger" (click)="deleteTournament(tournament)">Delete</button>
 			</div>
 		</div>
 	</div>

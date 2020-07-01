@@ -49,7 +49,7 @@ export class CreateLobbyComponent implements OnInit {
 				Validators.pattern(/https\:\/\/osu.ppy.sh\/community\/matches\/[0-9]+/)
 			]),
 			'tournamentAcronym': new FormControl('', [
-				Validators.maxLength(5)
+				Validators.maxLength(10)
 			]),
 			'scoreInterface': new FormControl('', [
 				Validators.required
