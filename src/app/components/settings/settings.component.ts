@@ -15,8 +15,8 @@ export class SettingsComponent implements OnInit {
 	@ViewChild('apiKey') apiKey: ElementRef;
 
 	constructor(
-		public electronService: ElectronService, 
-		private storeService: StoreService, 
+		public electronService: ElectronService,
+		private storeService: StoreService,
 		private toastService: ToastService,
 		private apiKeyValidation: ApiKeyValidation
 	) { }
@@ -37,18 +37,18 @@ export class SettingsComponent implements OnInit {
 		this.apiKeyValidation.validate(this.apiKey.nativeElement.value).subscribe(() => {
 			this.storeService.set('api-key', this.apiKey.nativeElement.value);
 			this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
-		}, 
-		// Key is invalid
-		err => {
-			this.toastService.addToast('The entered api-key was invalid.', ToastType.Error);
-		});
+		},
+			// Key is invalid
+			err => {
+				this.toastService.addToast('The entered api-key was invalid.', ToastType.Error);
+			});
 	}
 
 	/**
-	 * Clear the cache 
+	 * Clear the cache
 	 */
 	clearCache() {
-		if(confirm(`Are you sure you want to clear your cache?`)) {
+		if (confirm(`Are you sure you want to clear your cache?`)) {
 			this.storeService.delete('cache');
 
 			this.toastService.addToast(`Successfully cleared the cache.`);
@@ -59,15 +59,15 @@ export class SettingsComponent implements OnInit {
 	 * Remove the pai key
 	 */
 	removeApiKey() {
-		if(confirm(`Are you sure you want to remove your api key?`)) {
+		if (confirm(`Are you sure you want to remove your api key?`)) {
 			this.storeService.delete('api-key');
-			
+
 			this.toastService.addToast(`Successfully removed your api key.`);
 		}
 	}
 
 	/**
-	 * Export the config file 
+	 * Export the config file
 	 */
 	exportConfigFile() {
 		this.electronService.dialog.showSaveDialog({
@@ -78,11 +78,15 @@ export class SettingsComponent implements OnInit {
 			let configFile = this.storeService.storage.store;
 			configFile['api-key'] = "redacted";
 			configFile['auth'] = "redacted";
+			configFile['irc']['username'] = "redacted";
+			configFile['irc']['password'] = "redacted";
+
+			console.log(configFile);
 
 			configFile = JSON.stringify(configFile, null, '\t');
 
 			this.electronService.fs.writeFile(file.filePath, configFile, err => {
-				if(err) {
+				if (err) {
 					this.toastService.addToast(`Something went wrong while trying to export the config file: ${err.message}.`, ToastType.Error);
 				}
 				else {
