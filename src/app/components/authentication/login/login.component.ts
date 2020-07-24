@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
 
 	isConnecting: boolean = false;
 	isDisconnecting: boolean = false;
-	
+
 	constructor(public auth: AuthenticateService, private toastService: ToastService, public ircService: IrcService, public electronService: ElectronService) { }
 
 	ngOnInit() {
@@ -56,8 +56,8 @@ export class LoginComponent implements OnInit {
 	 * Login the user with the given username and password
 	 */
 	loginMappoolPublish() {
-		const 	username = this.mappoolPublishForm.get('username').value, 
-				password = this.mappoolPublishForm.get('password').value;
+		const username = this.mappoolPublishForm.get('username').value,
+			password = this.mappoolPublishForm.get('password').value;
 
 		const registerUser = new RegisterRequest();
 
@@ -71,6 +71,7 @@ export class LoginComponent implements OnInit {
 			loggedInUser.username = data.body.username;
 			loggedInUser.isAdmin = data.body.admin;
 			loggedInUser.token = data.headers.get('Authorization');
+			loggedInUser.isTournamentHost = data.body.tournament_host;
 
 			this.auth.loggedInUser = loggedInUser;
 			this.auth.loggedIn = true;
@@ -92,8 +93,8 @@ export class LoginComponent implements OnInit {
 	 * Login to irc with the given credentials
 	 */
 	connectIrc() {
-		const 	username = this.ircForm.get('username').value, 
-				password = this.ircForm.get('password').value;
+		const username = this.ircForm.get('username').value,
+			password = this.ircForm.get('password').value;
 
 		this.ircService.connect(username, password);
 	}
