@@ -67,6 +67,7 @@ export class TournamentComponent implements OnInit {
 	 */
 	changeScoreInterface(event: Event) {
 		let selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface((<any>event.target).value);
+		this.tournament.scoreInterface = selectedScoreInterface;
 		this.tournament.teamSize = selectedScoreInterface.getTeamSize();
 	}
 }

@@ -15,7 +15,7 @@ export class Tournament {
 	updateAvailable: boolean = false;
 
 	constructor() {
-        this.teams = [];
+		this.teams = [];
 	}
 
 	/**
@@ -45,17 +45,18 @@ export class Tournament {
 	 * Convert the object to a json object
 	 */
 	convertToJson(): any {
-		let tournament =  {
+		let tournament = {
 			id: this.id,
 			tournamentName: this.tournamentName,
 			acronym: this.acronym,
 			teamSize: this.teamSize,
 			scoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
+			tournamentScoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
 			teams: [],
 			publishId: this.publishId
 		};
 
-		for(let team in this.teams) {
+		for (let team in this.teams) {
 			tournament.teams.push(this.teams[team].convertToJson());
 		}
 
@@ -67,8 +68,8 @@ export class Tournament {
 	 * @param tournament the object to make a copy of
 	 */
 	static makeTrueCopy(tournament: Tournament) {
-		const 	newTournament = new Tournament(),
-				calc = new Calculate();
+		const newTournament = new Tournament(),
+			calc = new Calculate();
 
 		newTournament.id = tournament.id;
 		newTournament.tournamentName = tournament.tournamentName;
@@ -78,7 +79,7 @@ export class Tournament {
 		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
 		newTournament.publishId = tournament.publishId;
 
-		for(let team in tournament.teams) {
+		for (let team in tournament.teams) {
 			newTournament.teams.push(Team.makeTrueCopy(tournament.teams[team]));
 		}
 
@@ -90,9 +91,9 @@ export class Tournament {
 	 * @param json the json to serialize
 	 */
 	public static serializeJson(json: any): Tournament {
-		const 	thisTournament = json,
-				newTournament = new Tournament(),
-				calc = new Calculate();
+		const thisTournament = json,
+			newTournament = new Tournament(),
+			calc = new Calculate();
 
 		newTournament.id = thisTournament.tournamentId;
 		newTournament.tournamentName = thisTournament.tournamentName;
@@ -102,11 +103,11 @@ export class Tournament {
 		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
 		newTournament.publishId = thisTournament.publishId;
 
-		for(let team in thisTournament.teams) {
+		for (let team in thisTournament.teams) {
 			const newTeam = new Team();
 			newTeam.teamName = thisTournament.teams[team].teamName;
 
-			for(let player in thisTournament.teams[team].teamPlayers) {
+			for (let player in thisTournament.teams[team].teamPlayers) {
 				const newPlayer = new TeamPlayer();
 				newPlayer.username = thisTournament.teams[team].teamPlayers[player].username;
 

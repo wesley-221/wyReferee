@@ -23,7 +23,7 @@ export class TournamentEditComponent implements OnInit {
 					this.tournament = tournamentService.mapFromJson(data);
 
 					// Collapse all teams
-					for(let team in this.tournament.teams) {
+					for (let team in this.tournament.teams) {
 						this.tournament.teams[team].collapsed = true;
 					}
 				});
@@ -32,7 +32,7 @@ export class TournamentEditComponent implements OnInit {
 				this.tournament = Tournament.makeTrueCopy(tournamentService.getTournament(params.tournamentId));
 
 				// Collapse all teams
-				for(let team in this.tournament.teams) {
+				for (let team in this.tournament.teams) {
 					this.tournament.teams[team].collapsed = true;
 				}
 			}
@@ -46,7 +46,7 @@ export class TournamentEditComponent implements OnInit {
 	 */
 	udpateTournament(tournament: Tournament) {
 		if (this.publish == true || this.publish == "true") {
-			this.tournamentService.updatePublishedTournament(tournament.convertToJson()).subscribe(res => {
+			this.tournamentService.updatePublishedTournament(tournament).subscribe(res => {
 				this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
 			});
 		}
