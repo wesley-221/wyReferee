@@ -61,8 +61,9 @@
 					<h3 *ngIf="!team.teamName">Unnamed team</h3>
 				</div>
 
-				<div class="col">
+				<div class="col button-spacing">
 					<button class="btn btn-outline-primary float-right" (click)="collapseBracket(team)">Collapse</button>
+					<button class="btn btn-outline-danger float-right" (click)="deleteTeam(team)">Remove team</button>
 				</div>
 			</div>
 		</div>

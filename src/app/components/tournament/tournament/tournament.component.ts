@@ -33,7 +33,9 @@ export class TournamentComponent implements OnInit {
 	 * @param team the team to remove
 	 */
 	deleteTeam(team: Team) {
-		this.tournament.removeTeam(team);
+		if (confirm('Are you sure you want to remove this team?')) {
+			this.tournament.removeTeam(team);
+		}
 	}
 
 	/**
