@@ -412,6 +412,16 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Unban a beatmap
+	 * @param beatmap
+	 * @param bracket
+	 */
+	unbanBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
+		this.selectedLobby.teamOneBans.splice(this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId), 1);
+		this.selectedLobby.teamTwoBans.splice(this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId), 1);
+	}
+
+	/**
 	 * Pick a mystery map
 	 * @param mappool the mappool to pick from
 	 * @param modBracket the modbracket to pick from
