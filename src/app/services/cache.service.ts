@@ -5,7 +5,7 @@ import { CacheModifier } from '../models/cache/cache-modifier';
 import { StoreService } from './store.service';
 
 @Injectable({
-  	providedIn: 'root'
+	providedIn: 'root'
 })
 
 export class CacheService {
@@ -13,20 +13,20 @@ export class CacheService {
 	private cachedUsers: CacheUser[] = [];
 	private cachedModifiers: CacheModifier[] = [];
 
-  	constructor(private storeService: StoreService) { 
+	constructor(private storeService: StoreService) {
 		const beatmapCache = storeService.get('cache.beatmaps');
 		const userCache = storeService.get('cache.users');
 		const modifierCache = storeService.get('cache.modifiers');
 
-		for(let beatmap in beatmapCache) {
+		for (let beatmap in beatmapCache) {
 			this.cachedBeatmaps.push(new CacheBeatmap(beatmapCache[beatmap].name, parseInt(beatmap), parseInt(beatmapCache[beatmap].beatmapset_id)));
 		}
 
-		for(let user in userCache) {
+		for (let user in userCache) {
 			this.cachedUsers.push(new CacheUser(parseInt(user), userCache[user]));
 		}
 
-		for(let modifier in modifierCache) {
+		for (let modifier in modifierCache) {
 			this.cachedModifiers.push(new CacheModifier(modifierCache[modifier].beatmap_name, parseInt(modifier), modifierCache[modifier].modifier));
 		}
 	}
@@ -39,8 +39,8 @@ export class CacheService {
 	public getCachedBeatmap(beatmapId: number): CacheBeatmap {
 		let cachedBeatmap: CacheBeatmap = null;
 
-		for(let beatmap in this.cachedBeatmaps) {
-			if(this.cachedBeatmaps[beatmap].beatmap_id == beatmapId) {
+		for (let beatmap in this.cachedBeatmaps) {
+			if (this.cachedBeatmaps[beatmap].beatmap_id == beatmapId) {
 				cachedBeatmap = this.cachedBeatmaps[beatmap];
 				break;
 			}
@@ -56,10 +56,12 @@ export class CacheService {
 	public getCachedBeatmapFromMappools(beatmapId: number): { beatmapName: string, beatmapUrl: string } {
 		const mappools = this.storeService.get(`cache.mappool`);
 
-		for(let mappool in mappools) {
-			for(let map in mappools[mappool].modifiers) {
-				if(mappools[mappool].modifiers[map].beatmapId == beatmapId) {
-					return { beatmapName: mappools[mappool].modifiers[map].beatmapName, beatmapUrl: mappools[mappool].modifiers[map].beatmapUrl };
+		for (let mappool in mappools) {
+			for (let modBracket in mappools[mappool].modBrackets) {
+				for (let beatmap in mappools[mappool].modBrackets[modBracket].beatmaps) {
+					if (mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId == beatmapId) {
+						return { beatmapName: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapName, beatmapUrl: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapUrl };
+					}
 				}
 			}
 		}
@@ -73,15 +75,15 @@ export class CacheService {
 		let cachedBeatmapIndex: number = null;
 
 		// Find the index of the cached user
-		for(let beatmap in this.cachedBeatmaps) {
-			if(this.cachedBeatmaps[beatmap].beatmap_id == cachedBeatmap.beatmap_id) {
+		for (let beatmap in this.cachedBeatmaps) {
+			if (this.cachedBeatmaps[beatmap].beatmap_id == cachedBeatmap.beatmap_id) {
 				cachedBeatmapIndex = parseInt(beatmap);
 				break;
 			}
 		}
 
 		// Update or insert the cached user
-		if(cachedBeatmapIndex == null) {
+		if (cachedBeatmapIndex == null) {
 			this.cachedBeatmaps.push(cachedBeatmap);
 		}
 		else {
@@ -103,8 +105,8 @@ export class CacheService {
 	public getCachedUser(userId: number): CacheUser {
 		let cachedUser: CacheUser = null;
 
-		for(let user in this.cachedUsers) {
-			if(this.cachedUsers[user].user_id == userId) {
+		for (let user in this.cachedUsers) {
+			if (this.cachedUsers[user].user_id == userId) {
 				cachedUser = this.cachedUsers[user];
 				break;
 			}
@@ -121,15 +123,15 @@ export class CacheService {
 		let cachedUserIndex: number = null;
 
 		// Find the index of the cached user
-		for(let user in this.cachedUsers) {
-			if(this.cachedUsers[user].user_id == cachedUser.user_id) {
+		for (let user in this.cachedUsers) {
+			if (this.cachedUsers[user].user_id == cachedUser.user_id) {
 				cachedUserIndex = parseInt(user);
 				break;
 			}
 		}
 
 		// Update or insert the cached user
-		if(cachedUserIndex == null) {
+		if (cachedUserIndex == null) {
 			this.cachedUsers.push(cachedUser);
 		}
 		else {

@@ -41,7 +41,7 @@ export class LobbyViewComponent implements OnInit {
 
 			this.selectedLobby.ircChannel = `#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`;
 
-			if(ircService.getChannelByName(this.selectedLobby.ircChannel) != null && ircService.getChannelByName(this.selectedLobby.ircChannel).active) {
+			if (ircService.getChannelByName(this.selectedLobby.ircChannel) != null && ircService.getChannelByName(this.selectedLobby.ircChannel).active) {
 				this.selectedLobby.ircConnected = true;
 			}
 
@@ -49,8 +49,8 @@ export class LobbyViewComponent implements OnInit {
 			this.selectedLobby.teamTwoSlotArray = [];
 
 			// Setup the team arrays
-			for(let i: any = 0; i < this.selectedLobby.teamSize * 2; i ++) {
-				if(i < this.selectedLobby.teamSize) {
+			for (let i: any = 0; i < this.selectedLobby.teamSize * 2; i++) {
+				if (i < this.selectedLobby.teamSize) {
 					this.selectedLobby.teamOneSlotArray.push(parseInt(i));
 				}
 				else {
@@ -76,7 +76,7 @@ export class LobbyViewComponent implements OnInit {
 	joinIrc() {
 		const ircName = `#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`;
 
-		if(this.ircService.getChannelByName(ircName) != null) {
+		if (this.ircService.getChannelByName(ircName) != null) {
 			this.toastService.addToast(`You are already in channel "${ircName}"`);
 		}
 		else {
@@ -91,19 +91,19 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	sendBeatmapResult(match: MultiplayerData) {
 		// User is connected to irc channel
-		if(this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
+		if (this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
 			const totalMapsPlayed = this.selectedLobby.teamOneScore + this.selectedLobby.teamTwoScore;
 			let nextPick = '';
 
 			// First pick goes to .firstPick
-			if(totalMapsPlayed % 2 == 0) {
+			if (totalMapsPlayed % 2 == 0) {
 				nextPick = this.selectedLobby.firstPick;
 			}
 			else {
 				nextPick = this.selectedLobby.firstPick == this.selectedLobby.teamOneName ? this.selectedLobby.teamTwoName : this.selectedLobby.teamOneName;
 			}
 
-			if(match.team_one_score > match.team_two_score) {
+			if (match.team_one_score > match.team_two_score) {
 				const teamOneHasWon = (this.selectedLobby.teamOneScore == Math.ceil(this.selectedLobby.bestOf / 2));
 				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, " ")} - ${this.addDot(match.team_two_score, " ")} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, " ")}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamOneHasWon ? "// Next pick is for " + nextPick : ''}` : ''}`);
 			}
@@ -121,7 +121,7 @@ export class LobbyViewComponent implements OnInit {
 	copyBeatmapResult(match: MultiplayerData) {
 		let string = '';
 
-		if(match.team_one_score > match.team_two_score) {
+		if (match.team_one_score > match.team_two_score) {
 			string = `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_one_score - match.team_two_score}`;
 		}
 		else {
@@ -138,7 +138,7 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	sendMatchResult() {
 		// User is connected to irc channel
-		if(this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
+		if (this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
 			this.ircService.sendMessage(this.selectedLobby.ircChannel, `${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}`);
 		}
 	}
@@ -158,7 +158,7 @@ export class LobbyViewComponent implements OnInit {
 		let nextPick = '';
 
 		// First pick goes to .firstPick
-		if(totalMapsPlayed % 2 == 0) {
+		if (totalMapsPlayed % 2 == 0) {
 			nextPick = this.selectedLobby.firstPick;
 		}
 		else {
@@ -172,7 +172,7 @@ export class LobbyViewComponent implements OnInit {
 	 * Send the result of the beatmap to irc if connected
 	 */
 	sendNextPick() {
-		if(this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
+		if (this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
 			this.ircService.sendMessage(this.selectedLobby.ircChannel, `Next pick is for ${this.selectedLobby.getNextPickName()}`);
 		}
 	}
@@ -182,8 +182,8 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	sendFinalResult() {
 		const scoreString = (this.selectedLobby.teamOneScore > this.selectedLobby.teamTwoScore) ?
-							`**Score: ${this.selectedLobby.teamOneName}** | **${this.selectedLobby.teamOneScore}** - ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}` :
-							`**Score:** ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} - **${this.selectedLobby.teamTwoScore}** | **${this.selectedLobby.teamTwoName}**`;
+			`**Score: ${this.selectedLobby.teamOneName}** | **${this.selectedLobby.teamOneScore}** - ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}` :
+			`**Score:** ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} - **${this.selectedLobby.teamTwoScore}** | **${this.selectedLobby.teamTwoName}**`;
 
 		let body = {
 			"embeds": [
@@ -204,8 +204,8 @@ export class LobbyViewComponent implements OnInit {
 		let teamOneBans: any[] = [],
 			teamTwoBans: any[] = [];
 
-		if(this.selectedLobby.teamOneBans.length > 0) {
-			for(let ban of this.selectedLobby.teamOneBans) {
+		if (this.selectedLobby.teamOneBans.length > 0) {
+			for (let ban of this.selectedLobby.teamOneBans) {
 				teamOneBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
 			}
 
@@ -217,8 +217,8 @@ export class LobbyViewComponent implements OnInit {
 
 		}
 
-		if(this.selectedLobby.teamTwoBans.length > 0) {
-			for(let ban of this.selectedLobby.teamTwoBans) {
+		if (this.selectedLobby.teamTwoBans.length > 0) {
+			for (let ban of this.selectedLobby.teamTwoBans) {
 				teamTwoBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
 			}
 
@@ -229,7 +229,7 @@ export class LobbyViewComponent implements OnInit {
 			});
 		}
 
-		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' })}).subscribe(obj => {
+		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(obj => {
 			console.log(obj);
 		});
 	}
@@ -251,7 +251,7 @@ export class LobbyViewComponent implements OnInit {
 		this.selectedLobby.mapsCountTowardScore[match.game_id] = !this.selectedLobby.mapsCountTowardScore[match.game_id];
 		this.storeService.set(`lobby.${this.selectedLobby.lobbyId}.countForScore.${match.game_id}`, this.selectedLobby.mapsCountTowardScore[match.game_id]);
 
-		if(this.selectedLobby.mapsCountTowardScore[match.game_id]) {
+		if (this.selectedLobby.mapsCountTowardScore[match.game_id]) {
 			this.toastService.addToast(`"${this.getBeatmapname(match.beatmap_id)}" will now count towards the score.`);
 		}
 		else {
@@ -267,17 +267,17 @@ export class LobbyViewComponent implements OnInit {
 	 * @param beatmapId the beatmapid to get the modifier for
 	 */
 	getModifier(beatmapId: number) {
-		if(this.selectedLobby.mappool == null) {
+		if (this.selectedLobby.mappool == null) {
 			this.selectedLobby.mappool = this.mappoolService.getMappool(this.selectedLobby.mappoolId);
 
-			if(this.selectedLobby.mappool != null) {
-				if(this.selectedLobby.mappool.modifiers.hasOwnProperty(beatmapId)) {
+			if (this.selectedLobby.mappool != null) {
+				if (this.selectedLobby.mappool.modifiers.hasOwnProperty(beatmapId)) {
 					return this.selectedLobby.mappool.modifiers[beatmapId].modifier;
 				}
 			}
 		}
 		else {
-			if(this.selectedLobby.mappool.modifiers.hasOwnProperty(beatmapId)) {
+			if (this.selectedLobby.mappool.modifiers.hasOwnProperty(beatmapId)) {
 				return this.selectedLobby.mappool.modifiers[beatmapId].modifier;
 			}
 		}
@@ -349,10 +349,10 @@ export class LobbyViewComponent implements OnInit {
 	 * @param event
 	 */
 	change(element: string, event: Event) {
-		if(element == 'firstPick') {
+		if (element == 'firstPick') {
 			this.selectedLobby.firstPick = (<any>event.currentTarget).value;
 		}
-		else if(element == 'bestOf') {
+		else if (element == 'bestOf') {
 			this.selectedLobby.bestOf = (<any>event.currentTarget).value;
 		}
 
@@ -365,17 +365,17 @@ export class LobbyViewComponent implements OnInit {
 	 * @param splitter the character to split the string with
 	 */
 	addDot(nStr, splitter) {
-        nStr += '';
-        const x = nStr.split('.');
-        let x1 = x[0];
-        const x2 = x.length > 1 ? '.' + x[1] : '';
-        const rgx = /(\d+)(\d{3})/;
+		nStr += '';
+		const x = nStr.split('.');
+		let x1 = x[0];
+		const x2 = x.length > 1 ? '.' + x[1] : '';
+		const rgx = /(\d+)(\d{3})/;
 
-        while (rgx.test(x1)) {
-            x1 = x1.replace(rgx, '$1' + splitter + '$2');
-        }
+		while (rgx.test(x1)) {
+			x1 = x1.replace(rgx, '$1' + splitter + '$2');
+		}
 
-        return x1 + x2;
+		return x1 + x2;
 	}
 
 	/**
@@ -385,11 +385,11 @@ export class LobbyViewComponent implements OnInit {
 	getMultiplayerIdFromLink(link: string) {
 		const regularExpression = new RegExp(/https:\/\/osu\.ppy\.sh\/community\/matches\/([0-9]+)/).exec(link);
 
-        if(regularExpression) {
-            return regularExpression[1];
-        }
+		if (regularExpression) {
+			return regularExpression[1];
+		}
 
-        return null;
+		return null;
 	}
 
 	goToIrc() {
