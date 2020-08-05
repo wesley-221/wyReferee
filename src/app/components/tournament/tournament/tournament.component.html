@@ -63,7 +63,7 @@
 
 				<div class="col button-spacing">
 					<button class="btn btn-outline-primary float-right" (click)="collapseBracket(team)">Collapse</button>
-					<button class="btn btn-outline-danger float-right" (click)="deleteTeam(team)">Remove team</button>
+					<button class="btn btn-outline-danger float-right" (click)="openDialog(team)">Remove team</button>
 				</div>
 			</div>
 		</div>
@@ -90,6 +90,22 @@
 						<button class="btn btn-danger" (click)="removePlayer(team, player)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="dialog" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog shadow" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Remove a team from the tournament</h3>
+			</div>
+
+			<div class="modal-body">
+				<p [innerHTML]="dialogMessage"></p>
+
+				<button class="btn btn-primary" style="width: 100%;" (click)="deleteTeam(teamToRemove)">Remove team</button>
 			</div>
 		</div>
 	</div>

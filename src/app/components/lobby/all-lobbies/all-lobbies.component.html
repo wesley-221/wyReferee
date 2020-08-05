@@ -4,7 +4,7 @@
 			There are currently no lobbies available.
 		</div>
 
-		<div *ngFor="let lobby of allLobbies" (click)="openLobby(lobby)" class="multiplayerLobby">
+		<div *ngFor="let lobby of allLobbies" (click)="openLobby(lobby, $event)" class="multiplayerLobby">
 			<div class="body">
 				<div class="row">
 					<div class="col-11">
@@ -16,10 +16,26 @@
 
 					<div class="col-1">
 						<div class="multiplayerClose">
-							<button type="button" (click)="deleteLobby(lobby)" class="btn btn-danger">Delete</button>
+							<button type="button" (click)="openDialog(lobby)" class="btn btn-danger">Delete</button>
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="dialog" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog shadow" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Deleting lobby</h3>
+			</div>
+
+			<div class="modal-body">
+				<p [innerHTML]="dialogMessage"></p>
+
+				<button class="btn btn-danger" style="width: 100%;" (click)="deleteLobby(deleteMultiplayerLobby)">Delete lobby</button>
 			</div>
 		</div>
 	</div>

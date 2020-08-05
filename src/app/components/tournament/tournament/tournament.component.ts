@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Calculate } from '../../../models/score-calculation/calculate';
-import { ScoreInterface } from '../../../models/score-calculation/calculation-types/score-interface';
 import { Tournament } from '../../../models/tournament/tournament';
 import { TeamPlayer } from '../../../models/tournament/team/team-player';
 import { Team } from '../../../models/tournament/team/team';
+import { ToastService } from '../../../services/toast.service';
+declare var $: any;
 
 @Component({
 	selector: 'app-tournament',
@@ -15,7 +16,11 @@ export class TournamentComponent implements OnInit {
 
 	calculateScoreInterfaces: Calculate;
 
-	constructor() {
+	dialogMessage: string;
+	dialogAction: number = 0;
+	teamToRemove: Team;
+
+	constructor(private toastService: ToastService) {
 		this.calculateScoreInterfaces = new Calculate();
 	}
 
@@ -28,14 +33,24 @@ export class TournamentComponent implements OnInit {
 		this.tournament.addTeam(new Team());
 	}
 
+	openDialog(team: Team) {
+		this.dialogMessage = `Are you sure you want to remove "${team.teamName}" from the tournament?`;
+		this.teamToRemove = team;
+
+		setTimeout(() => {
+			$(`#dialog`).modal('toggle');
+		}, 1);
+	}
+
 	/**
 	 * Delete a team from the tournament
 	 * @param team the team to remove
 	 */
 	deleteTeam(team: Team) {
-		if (confirm('Are you sure you want to remove this team?')) {
-			this.tournament.removeTeam(team);
-		}
+		this.tournament.removeTeam(team);
+		this.toastService.addToast(`Successfully removed the team "${team.teamName}" from the tournament.`);
+
+		$(`#dialog`).modal('toggle');
 	}
 
 	/**

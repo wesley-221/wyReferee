@@ -16,8 +16,8 @@
 		<div class="col-3">
 			<div class="btn-group float-right">
 				<button class="btn btn-success" (click)="updateTournament(tournament)" *ngIf="tournament.updateAvailable">Update</button>
-				<button class="btn btn-primary" (click)="publishTournament(tournament)" *ngIf="canPublish() && publish != true">Publish</button>
-				<button class="btn btn-danger" (click)="deleteTournament(tournament)">Delete</button>
+				<button class="btn btn-primary" (click)="openDialog(tournament, 0)" *ngIf="canPublish() && publish != true">Publish</button>
+				<button class="btn btn-danger" (click)="openDialog(tournament, 1)">Delete</button>
 			</div>
 		</div>
 	</div>
@@ -31,6 +31,24 @@
 			<h5>{{ team.teamName }}</h5>
 
 			{{ team.getPlayers().length }} player<span *ngIf="team.getPlayers().length > 1">s</span>
+		</div>
+	</div>
+</div>
+
+<div [id]="'dialog' + tournamentToModify.id" class="modal fade" tabindex="-1" role="dialog" *ngIf="tournamentToModify">
+	<div class="modal-dialog shadow" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" *ngIf="dialogAction == 0">Publishing tournament</h3>
+				<h3 class="modal-title" *ngIf="dialogAction == 1">Deleting tournament</h3>
+			</div>
+
+			<div class="modal-body">
+				<p [innerHTML]="dialogMessage"></p>
+
+				<button class="btn btn-primary" style="width: 100%;" (click)="publishTournament(tournamentToModify)" *ngIf="dialogAction == 0">Publish tournament</button>
+				<button class="btn btn-danger" style="width: 100%;" (click)="deleteTournament(tournamentToModify)" *ngIf="dialogAction == 1">Delete tournament</button>
+			</div>
 		</div>
 	</div>
 </div>

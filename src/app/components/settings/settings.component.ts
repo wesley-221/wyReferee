@@ -4,6 +4,7 @@ import { StoreService } from '../../services/store.service';
 import { ToastService } from '../../services/toast.service';
 import { ToastType } from '../../models/toast';
 import { ApiKeyValidation } from '../../services/osu-api/api-key-validation.service';
+declare var $: any;
 
 @Component({
 	selector: 'app-settings',
@@ -13,6 +14,9 @@ import { ApiKeyValidation } from '../../services/osu-api/api-key-validation.serv
 
 export class SettingsComponent implements OnInit {
 	@ViewChild('apiKey') apiKey: ElementRef;
+
+	dialogMessage: string;
+	dialogAction: number = 0;
 
 	constructor(
 		public electronService: ElectronService,
@@ -48,22 +52,20 @@ export class SettingsComponent implements OnInit {
 	 * Clear the cache
 	 */
 	clearCache() {
-		if (confirm(`Are you sure you want to clear your cache?`)) {
-			this.storeService.delete('cache');
+		this.storeService.delete('cache');
+		this.toastService.addToast(`Successfully cleared the cache.`);
 
-			this.toastService.addToast(`Successfully cleared the cache.`);
-		}
+		$(`#dialog`).modal('toggle');
 	}
 
 	/**
 	 * Remove the pai key
 	 */
 	removeApiKey() {
-		if (confirm(`Are you sure you want to remove your api key?`)) {
-			this.storeService.delete('api-key');
+		this.storeService.delete('api-key');
+		this.toastService.addToast(`Successfully removed your api key.`);
 
-			this.toastService.addToast(`Successfully removed your api key.`);
-		}
+		$(`#dialog`).modal('toggle');
 	}
 
 	/**
@@ -94,5 +96,20 @@ export class SettingsComponent implements OnInit {
 				}
 			});
 		});
+	}
+
+	openDialog(dialogAction: number) {
+		this.dialogAction = dialogAction;
+
+		if (dialogAction == 0) {
+			this.dialogMessage = `Are you sure you want to clear your cache?`;
+		}
+		else if (dialogAction == 1) {
+			this.dialogMessage = `Are you sure you want to remove your api key?`;
+		}
+
+		setTimeout(() => {
+			$(`#dialog`).modal('toggle');
+		}, 1);
 	}
 }

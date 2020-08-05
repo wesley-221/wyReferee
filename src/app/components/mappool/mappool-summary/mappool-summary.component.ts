@@ -5,6 +5,7 @@ import { ToastService } from '../../../services/toast.service';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { Router } from '@angular/router';
 import { ToastType } from '../../../models/toast';
+declare var $: any;
 
 @Component({
 	selector: 'app-mappool-summary',
@@ -14,6 +15,10 @@ import { ToastType } from '../../../models/toast';
 export class MappoolSummaryComponent implements OnInit {
 	@Input() mappool: Mappool;
 	@Input() publish: boolean = false;
+
+	dialogMessage: string;
+	dialogAction: number = 0;
+	mappoolToModify: Mappool;
 
 	constructor(private mappoolService: MappoolService, private toastService: ToastService, private authService: AuthenticateService, private router: Router) { }
 
@@ -58,11 +63,11 @@ export class MappoolSummaryComponent implements OnInit {
 			}
 		}
 
-		if (confirm(`Are you sure you want to publish "${mappool.name}"?`)) {
-			this.mappoolService.publishMappool(publishMappool).subscribe((data) => {
-				this.toastService.addToast(`Successfully published the mappool "${data.body.name}" with the id ${data.body.id}.`);
-			});
-		}
+		this.mappoolService.publishMappool(publishMappool).subscribe((data) => {
+			this.toastService.addToast(`Successfully published the mappool "${data.body.name}" with the id ${data.body.id}.`);
+
+			$(`#dialog${this.mappoolToModify.id}`).modal('toggle');
+		});
 	}
 
 	/**
@@ -71,18 +76,47 @@ export class MappoolSummaryComponent implements OnInit {
 	 */
 	deleteMappool(mappool: Mappool) {
 		if (this.publish == true) {
-			if (confirm(`Are you sure you want to delete "${mappool.name}"? \nNOTE: No one will be able to import it any longer if you continue.`)) {
-				this.mappoolService.deletePublishedMappool(mappool).subscribe(() => {
-					this.toastService.addToast(`Successfully deleted the published mappool "${mappool.name}".`);
-				}, (err) => {
-					console.log(err);
-				});
-			}
+			this.mappoolService.deletePublishedMappool(mappool).subscribe(() => {
+				this.toastService.addToast(`Successfully deleted the published mappool "${mappool.name}".`);
+			}, (err) => {
+				console.log(err);
+			});
 		}
 		else {
-			if (confirm(`Are you sure you want to delete "${mappool.name}"?`)) {
-				this.mappoolService.deleteMappool(mappool);
+			this.mappoolService.deleteMappool(mappool);
+			this.toastService.addToast(`Successfully deleted the mappool "${mappool.name}".`);
+		}
+	}
+
+	/**
+	 * Open dialog
+	 * @param mappool
+	 * @param dialogAction
+	 */
+	openDialog(mappool: Mappool, dialogAction: number) {
+		this.dialogAction = dialogAction;
+
+		if (dialogAction == 0) {
+			this.dialogMessage = `Are you sure you want to publish "${mappool.name}"?`;
+			this.mappoolToModify = mappool;
+
+			setTimeout(() => {
+				$(`#dialog${this.mappoolToModify.id}`).modal('toggle');
+			}, 1);
+		}
+		else if (dialogAction == 1) {
+			if (this.publish == true) {
+				this.dialogMessage = `Are you sure you want to delete "${mappool.name}"? <br><br><b>NOTE:</b> No one will be able to import it any longer if you continue. <br><b>NOTE:</b> This action is permanent. Once the mappool has been deleted, this can not be retrieved anymore.`;
 			}
+			else {
+				this.dialogMessage = `Are you sure you want to delete "${mappool.name}"? <br><br><b>NOTE:</b> This action is permanent. Once the mappool has been deleted, this can not be retrieved anymore.`;
+			}
+
+			this.mappoolToModify = mappool;
+
+			setTimeout(() => {
+				$(`#dialog${this.mappoolToModify.id}`).modal('toggle');
+			}, 1);
 		}
 	}
 

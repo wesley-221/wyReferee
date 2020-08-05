@@ -16,8 +16,8 @@
 		<div class="col-3">
 			<div class="btn-group float-right">
 				<button class="btn btn-success" (click)="updateMappool(mappool)" *ngIf="mappool.updateAvailable">Update</button>
-				<button class="btn btn-primary" (click)="publishMappool(mappool)" *ngIf="canPublish() && publish != true">Publish</button>
-				<button class="btn btn-danger" (click)="deleteMappool(mappool)">Delete</button>
+				<button class="btn btn-primary" (click)="openDialog(mappool, 0)" *ngIf="canPublish() && publish != true">Publish</button>
+				<button class="btn btn-danger" (click)="openDialog(mappool, 1)">Delete</button>
 			</div>
 		</div>
 	</div>
@@ -42,6 +42,24 @@
 				<div class="mod" *ngFor="let mod of bracket.getFullMods()">
 					{{ mod }}
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div [id]="'dialog' + mappoolToModify.id" class="modal fade" tabindex="-1" role="dialog" *ngIf="mappoolToModify">
+	<div class="modal-dialog shadow" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" *ngIf="dialogAction == 0">Publishing mappool</h3>
+				<h3 class="modal-title" *ngIf="dialogAction == 1">Deleting mappool</h3>
+			</div>
+
+			<div class="modal-body">
+				<p [innerHTML]="dialogMessage"></p>
+
+				<button class="btn btn-primary" style="width: 100%;" (click)="publishMappool(mappoolToModify)" *ngIf="dialogAction == 0">Publish mappool</button>
+				<button class="btn btn-danger" style="width: 100%;" (click)="deleteMappool(mappoolToModify)" *ngIf="dialogAction == 1">Delete mappool</button>
 			</div>
 		</div>
 	</div>
