@@ -159,15 +159,19 @@
 					</div>
 
 					<div class="col">
-						<button class="btn btn-success" style="width: 100%;" (click)="sendFinalResult()">Normal result</button>
+						<button class="btn btn-success" style="width: 100%;" (click)="toggleNormalResult()">Normal result</button>
 					</div>
 				</div>
 
 				<div *ngIf="wbdSelected == true">
 					<hr />
 
-					<p>Select which team/player has "won" the match.</p>
+					<p>Select which team/player has "won" the match. Use "No-one" if both teams/players didn't show up.</p>
 					<div class="row">
+						<div class="col">
+							<button class="btn btn-primary" style="width: 100%;" (click)="selectWBDTeam('No-one', 'Everyone :(')" [ngClass]="{'active': wbdWinningTeam == 'No-one'}">No-one</button>
+						</div>
+
 						<div class="col">
 							<button class="btn btn-primary" style="width: 100%;" (click)="selectWBDTeam(selectedLobby.teamOneName, selectedLobby.teamTwoName)" [ngClass]="{'active': wbdWinningTeam == selectedLobby.teamOneName}">{{ selectedLobby.teamOneName }}</button>
 						</div>
@@ -184,7 +188,18 @@
 
 					<hr />
 
-					<button class="btn btn-success" style="width: 100%;" (click)="sendWinByDefaultResult()" [disabled]="wbdWinningTeam == null">Send win by default message</button>
+					<button class="btn btn-success" style="width: 100%;" (click)="sendWinByDefaultResult()">Send win by default message</button>
+				</div>
+
+				<div *ngIf="normalResultSelected == true">
+					<hr />
+
+					<p>Add an extra message to the final result. This field is optional</p>
+					<input id="extra-message" type="text" class="form-control mb-2" placeholder="Extra message" [(ngModel)]="extraMessage" />
+
+					<hr />
+
+					<button class="btn btn-success" style="width: 100%;" (click)="sendFinalResult()">Send normal result message</button>
 				</div>
 			</div>
 		</div>

@@ -23,7 +23,10 @@ declare var $: any;
 export class LobbyViewComponent implements OnInit {
 	selectedLobby: MultiplayerLobby;
 	settingsTabIsOpened: boolean = false;
+
 	wbdSelected: boolean = false;
+	normalResultSelected: boolean = false;
+
 	extraMessage: string;
 
 	wbdWinningTeam: string;
@@ -234,9 +237,17 @@ export class LobbyViewComponent implements OnInit {
 			});
 		}
 
+		if (this.extraMessage != null) {
+			body.embeds[0].fields.push({
+				"name": `**Additional message by ${this.ircService.authenticatedUser}**`,
+				"value": this.extraMessage,
+			});
+		}
+
 		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(obj => {
 			this.toggleModal();
 			this.wbdSelected = false;
+			this.normalResultSelected = false;
 
 			this.wbdWinningTeam = null;
 			this.wbdLosingTeam = null;
@@ -422,6 +433,19 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	toggleWBD() {
 		this.wbdSelected = !this.wbdSelected;
+
+		this.normalResultSelected = false;
+		this.extraMessage = null;
+	}
+
+	/**
+	 * Toggle the normal result options
+	 */
+	toggleNormalResult() {
+		this.normalResultSelected = !this.normalResultSelected;
+
+		this.wbdSelected = false;
+		this.extraMessage = null;
 	}
 
 	/**
@@ -438,11 +462,17 @@ export class LobbyViewComponent implements OnInit {
 	 * Send the WBD message to discord
 	 */
 	sendWinByDefaultResult() {
+		let resultDescription = `**Score:** **${this.wbdWinningTeam}** | 1 - 0 | ${this.wbdLosingTeam} \n\n**${this.wbdLosingTeam}** failed to show up.`;
+
+		if (this.wbdWinningTeam == "No-one") {
+			resultDescription = `**Score:** ${this.selectedLobby.teamOneName} | 0 - 0 | ${this.selectedLobby.teamTwoName} \n\nBoth **${this.selectedLobby.teamOneName}** and **${this.selectedLobby.teamTwoName}** failed to show up.`;
+		}
+
 		let body = {
 			"embeds": [
 				{
 					"title": `Result of **${this.selectedLobby.teamOneName}** vs. **${this.selectedLobby.teamTwoName}**`,
-					"description": `**Score:** **${this.wbdWinningTeam}** | 1 - 0 | ${this.wbdLosingTeam} \n\n**${this.wbdLosingTeam}** failed to show up.`,
+					"description": resultDescription,
 					"color": 15258703,
 					"timestamp": new Date(),
 					"footer": {
@@ -464,6 +494,7 @@ export class LobbyViewComponent implements OnInit {
 		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(obj => {
 			this.toggleModal();
 			this.wbdSelected = false;
+			this.normalResultSelected = false;
 
 			this.wbdWinningTeam = null;
 			this.wbdLosingTeam = null;
