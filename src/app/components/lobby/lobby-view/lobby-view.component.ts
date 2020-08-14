@@ -12,6 +12,7 @@ import { StoreService } from '../../../services/store.service';
 import { IrcService } from '../../../services/irc.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+declare var $: any;
 
 @Component({
 	selector: 'app-lobby-view',
@@ -21,8 +22,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 export class LobbyViewComponent implements OnInit {
 	selectedLobby: MultiplayerLobby;
-
 	settingsTabIsOpened: boolean = false;
+	wbdSelected: boolean = false;
+	extraMessage: string;
+
+	wbdWinningTeam: string;
+	wbdLosingTeam: string;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -230,6 +235,15 @@ export class LobbyViewComponent implements OnInit {
 		}
 
 		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(obj => {
+			this.toggleModal();
+			this.wbdSelected = false;
+
+			this.wbdWinningTeam = null;
+			this.wbdLosingTeam = null;
+			this.extraMessage = null;
+
+			this.toastService.addToast(`Successfully send the message to Discord.`);
+
 			console.log(obj);
 		});
 	}
@@ -394,5 +408,70 @@ export class LobbyViewComponent implements OnInit {
 
 	goToIrc() {
 		this.router.navigate(['irc']);
+	}
+
+	/**
+	 * Toggle the modal to send final result to discord
+	 */
+	toggleModal() {
+		$(`#send-final-result`).modal('toggle');
+	}
+
+	/**
+	 * Toggle the WBD options
+	 */
+	toggleWBD() {
+		this.wbdSelected = !this.wbdSelected;
+	}
+
+	/**
+	 * Select the winning and losing team
+	 * @param winningTeam
+	 * @param losingTeam
+	 */
+	selectWBDTeam(winningTeam: string, losingTeam: string) {
+		this.wbdWinningTeam = winningTeam;
+		this.wbdLosingTeam = losingTeam;
+	}
+
+	/**
+	 * Send the WBD message to discord
+	 */
+	sendWinByDefaultResult() {
+		let body = {
+			"embeds": [
+				{
+					"title": `Result of **${this.selectedLobby.teamOneName}** vs. **${this.selectedLobby.teamTwoName}**`,
+					"description": `**Score:** **${this.wbdWinningTeam}** | 1 - 0 | ${this.wbdLosingTeam} \n\n**${this.wbdLosingTeam}** failed to show up.`,
+					"color": 15258703,
+					"timestamp": new Date(),
+					"footer": {
+						"text": `Match referee was ${this.ircService.authenticatedUser}`
+					},
+					"fields": [
+					]
+				}
+			]
+		};
+
+		if (this.extraMessage != null) {
+			body.embeds[0].fields.push({
+				"name": `**Additional message by ${this.ircService.authenticatedUser}**`,
+				"value": this.extraMessage,
+			});
+		}
+
+		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(obj => {
+			this.toggleModal();
+			this.wbdSelected = false;
+
+			this.wbdWinningTeam = null;
+			this.wbdLosingTeam = null;
+			this.extraMessage = null;
+
+			this.toastService.addToast(`Successfully send the message to Discord.`);
+
+			console.log(obj);
+		});
 	}
 }

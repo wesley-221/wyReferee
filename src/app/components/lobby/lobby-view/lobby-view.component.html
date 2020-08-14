@@ -52,7 +52,7 @@
         <button type="button" (click)="copyMatchResult()" *ngIf="!selectedLobby.ircConnected" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon> Copy match score</button>
         <button type="button" (click)="sendMatchResult()" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated" class="btn btn-info" title="Send match score to irc"><fa-icon icon="copy"></fa-icon> Send match score</button>
         &nbsp;
-        <button type="button" (click)="sendFinalResult()" class="btn btn-info" *ngIf="selectedLobby.webhook">Send final result to Discord</button>
+        <button type="button" (click)="toggleModal()" class="btn btn-info" *ngIf="selectedLobby.webhook">Send final result to Discord</button>
     </div>
 </div>
 
@@ -135,5 +135,58 @@
             <button type="button" class="btn btn-primary" (click)="copyBeatmapResult(match)" *ngIf="!selectedLobby.ircConnected">Copy result</button>
         </div>
     </div>
+</div>
 
+<div class="modal fade" id="send-final-result" tabindex="-1" role="dialog">
+	<div class="modal-dialog shadow" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">Send final result</h3>
+				</div>
+
+				<div class="modal-body">
+				<p>Select the outcome of the match.</p>
+
+				<ul>
+					<li>"Win by default" is for when one of both teams/players didn't show up.</li>
+					<li>"Normal result" is for when the match finished as it's supposed to be.</li>
+				</ul>
+
+
+				<div class="row">
+					<div class="col">
+						<button class="btn btn-success" style="width: 100%;" (click)="toggleWBD()">Win by default</button>
+					</div>
+
+					<div class="col">
+						<button class="btn btn-success" style="width: 100%;" (click)="sendFinalResult()">Normal result</button>
+					</div>
+				</div>
+
+				<div *ngIf="wbdSelected == true">
+					<hr />
+
+					<p>Select which team/player has "won" the match.</p>
+					<div class="row">
+						<div class="col">
+							<button class="btn btn-primary" style="width: 100%;" (click)="selectWBDTeam(selectedLobby.teamOneName, selectedLobby.teamTwoName)" [ngClass]="{'active': wbdWinningTeam == selectedLobby.teamOneName}">{{ selectedLobby.teamOneName }}</button>
+						</div>
+
+						<div class="col">
+							<button class="btn btn-primary" style="width: 100%;" (click)="selectWBDTeam(selectedLobby.teamTwoName, selectedLobby.teamOneName)" [ngClass]="{'active': wbdWinningTeam == selectedLobby.teamTwoName}">{{ selectedLobby.teamTwoName }}</button>
+						</div>
+					</div>
+
+					<hr />
+
+					<p>Add an extra message to the final result. This field is optional</p>
+					<input id="extra-message" type="text" class="form-control mb-2" placeholder="Extra message" [(ngModel)]="extraMessage" />
+
+					<hr />
+
+					<button class="btn btn-success" style="width: 100%;" (click)="sendWinByDefaultResult()" [disabled]="wbdWinningTeam == null">Send win by default message</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
