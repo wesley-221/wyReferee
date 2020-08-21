@@ -419,6 +419,8 @@ export class IrcComponent implements OnInit {
 	unbanBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
 		this.selectedLobby.teamOneBans.splice(this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId), 1);
 		this.selectedLobby.teamTwoBans.splice(this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId), 1);
+
+		this.multiplayerLobbies.update(this.selectedLobby);
 	}
 
 	/**
