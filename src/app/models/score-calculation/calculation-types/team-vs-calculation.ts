@@ -8,27 +8,27 @@ export class TeamVsCalculation extends ScoreInterface {
 		this.setDescription(`The regular team versus team score calculation.`);
 	}
 
-    calculatePlayerScore(player: MultiplayerDataUser): number {
-        return Number(player != null ? player.score : 0);
-    }
+	calculatePlayerScore(player: MultiplayerDataUser): number {
+		return Number(player != null ? player.passed == 1 ? player.score : 0 : 0);
+	}
 
-    calculateTeamOneScore() {
-        let teamScore: number = 0;
+	calculateTeamOneScore() {
+		let teamScore: number = 0;
 
-        for(let i = 0; i < this.getTeamSize(); i ++) {
-            teamScore += this.calculatePlayerScore(this.getUserScoreBySlot(i));
-        }
+		for (let i = 0; i < this.getTeamSize(); i++) {
+			teamScore += this.calculatePlayerScore(this.getUserScoreBySlot(i));
+		}
 
-        return teamScore;
-    }
+		return teamScore;
+	}
 
-    calculateTeamTwoScore() {
-        let teamScore: number = 0;
+	calculateTeamTwoScore() {
+		let teamScore: number = 0;
 
-        for(let i = this.getTeamSize(); i < this.getTeamSize() * 2; i ++) {
-            teamScore += this.calculatePlayerScore(this.getUserScoreBySlot(i));
-        }
+		for (let i = this.getTeamSize(); i < this.getTeamSize() * 2; i++) {
+			teamScore += this.calculatePlayerScore(this.getUserScoreBySlot(i));
+		}
 
-        return teamScore;
-    }
+		return teamScore;
+	}
 }

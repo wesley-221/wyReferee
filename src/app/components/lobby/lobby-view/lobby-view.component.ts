@@ -351,7 +351,7 @@ export class LobbyViewComponent implements OnInit {
 	 * @param match the MultiplayerData
 	 * @param slotId the slot you want the accuracy from
 	 */
-	getAccuracy(match: MultiplayerData, slotId: number) {
+	getAccuracy(match: MultiplayerData, slotId: number): any {
 		const user: MultiplayerDataUser = match.getPlayer(slotId);
 
 		return (user != undefined) ? user.accuracy : 0.00

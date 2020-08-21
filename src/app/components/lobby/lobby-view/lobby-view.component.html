@@ -90,9 +90,25 @@
                     <tr *ngFor="let slot of selectedLobby.teamOneSlotArray">
                         <td><b>{{ getUsernameFromUserId(match.getPlayer(slot).user) }}</b></td>
                         <td>&emsp;</td>
-                        <td>{{ getScore(match, slot) }}</td>
+                        <td>
+							<s *ngIf="match.getPlayer(slot).passed == 0">
+								{{ getScore(match, slot) }}
+							</s>
+
+							<div *ngIf="match.getPlayer(slot).passed == 1">
+								{{ getScore(match, slot) }}
+							</div>
+						</td>
                         <td>&emsp;</td>
-                        <td>({{ getAccuracy(match, slot) }}%)</td>
+                        <td>
+							<s *ngIf="match.getPlayer(slot).passed == 0">
+								({{ getAccuracy(match, slot) }}%)
+							</s>
+
+							<div *ngIf="match.getPlayer(slot).passed == 1">
+								({{ getAccuracy(match, slot) }}%)
+							</div>
+						</td>
                         <td>&emsp;</td>
                         <td *ngIf="match.getPlayer(slot).caption && match.getPlayer(slot).caption.length > 0">({{ match.getPlayer(slot).caption }})</td>
                     </tr>
