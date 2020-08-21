@@ -178,6 +178,7 @@ export class Mappool {
 				newBracket.beatmaps.push({
 					id: thisMap.id,
 					beatmapId: thisMap.beatmapId,
+					beatmapsetId: thisMap.beatmapsetId,
 					beatmapName: thisMap.beatmapName,
 					beatmapUrl: thisMap.beatmapUrl,
 					modifier: thisMap.modifier,
@@ -260,6 +261,7 @@ export class Mappool {
 
 				newBeatmap.id = thisBracket.beatmaps[beatmap].id;
 				newBeatmap.beatmapId = thisBracket.beatmaps[beatmap].beatmapId;
+				newBeatmap.beatmapsetId = thisBracket.beatmaps[beatmap].beatmapsetId;
 				newBeatmap.beatmapName = thisBracket.beatmaps[beatmap].beatmapName;
 				newBeatmap.beatmapUrl = thisBracket.beatmaps[beatmap].beatmapUrl;
 				newBeatmap.modifier = thisBracket.beatmaps[beatmap].modifier;

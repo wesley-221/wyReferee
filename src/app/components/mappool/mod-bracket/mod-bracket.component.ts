@@ -74,6 +74,8 @@ export class ModBracketComponent implements OnInit {
 			else {
 				beatmap.beatmapName = data.getBeatmapname();
 				beatmap.beatmapUrl = data.getBeatmapUrl();
+				beatmap.beatmapsetId = data.beatmapset_id;
+				beatmap.beatmapId = data.beatmap_id;
 				beatmap.invalid = false;
 			}
 		});
@@ -143,7 +145,7 @@ export class ModBracketComponent implements OnInit {
 	changeModCategory(beatmap: ModBracketMap, event) {
 		const modCategory = this.mappool.getModCategoryByName(event.target.value);
 
-		if(modCategory == undefined) {
+		if (modCategory == undefined) {
 			beatmap.modCategory = undefined;
 		}
 		else {

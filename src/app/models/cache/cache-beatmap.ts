@@ -1,11 +1,13 @@
 export class CacheBeatmap {
-    name: string;
-    beatmap_id: number;
-    beatmapset_id: number
+	name: string;
+	beatmapId: number;
+	beatmapSetId: number
+	beatmapUrl: string;
 
-    constructor(name: string, beatmap_id: number, beatmapset_id: number) {
-        this.name = name;
-        this.beatmap_id = beatmap_id;
-        this.beatmapset_id = beatmapset_id;
-    }
+	constructor(name: string, beatmapId: number, beatmapSetId: number, beatmapUrl: string) {
+		this.name = name;
+		this.beatmapId = beatmapId;
+		this.beatmapSetId = beatmapSetId;
+		this.beatmapUrl = beatmapUrl;
+	}
 }

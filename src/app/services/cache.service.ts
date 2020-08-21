@@ -19,7 +19,7 @@ export class CacheService {
 		const modifierCache = storeService.get('cache.modifiers');
 
 		for (let beatmap in beatmapCache) {
-			this.cachedBeatmaps.push(new CacheBeatmap(beatmapCache[beatmap].name, parseInt(beatmap), parseInt(beatmapCache[beatmap].beatmapset_id)));
+			this.cachedBeatmaps.push(new CacheBeatmap(beatmapCache[beatmap].name, parseInt(beatmap), parseInt(beatmapCache[beatmap].beatmapset_id), `https://osu.ppy.sh/beatmaps/${beatmapCache[beatmap].beatmapset_id}`));
 		}
 
 		for (let user in userCache) {
@@ -40,7 +40,7 @@ export class CacheService {
 		let cachedBeatmap: CacheBeatmap = null;
 
 		for (let beatmap in this.cachedBeatmaps) {
-			if (this.cachedBeatmaps[beatmap].beatmap_id == beatmapId) {
+			if (this.cachedBeatmaps[beatmap].beatmapId == beatmapId) {
 				cachedBeatmap = this.cachedBeatmaps[beatmap];
 				break;
 			}
@@ -53,14 +53,14 @@ export class CacheService {
 	 * Check if the given beatmapId is cached in a mappool
 	 * @param beatmapId the beatmapId to look for
 	 */
-	public getCachedBeatmapFromMappools(beatmapId: number): { beatmapName: string, beatmapUrl: string } {
+	public getCachedBeatmapFromMappools(beatmapId: number): CacheBeatmap {
 		const mappools = this.storeService.get(`cache.mappool`);
 
 		for (let mappool in mappools) {
 			for (let modBracket in mappools[mappool].modBrackets) {
 				for (let beatmap in mappools[mappool].modBrackets[modBracket].beatmaps) {
 					if (mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId == beatmapId) {
-						return { beatmapName: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapName, beatmapUrl: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapUrl };
+						return new CacheBeatmap(mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapName, mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId, mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapsetId, mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapUrl);
 					}
 				}
 			}
@@ -76,7 +76,7 @@ export class CacheService {
 
 		// Find the index of the cached user
 		for (let beatmap in this.cachedBeatmaps) {
-			if (this.cachedBeatmaps[beatmap].beatmap_id == cachedBeatmap.beatmap_id) {
+			if (this.cachedBeatmaps[beatmap].beatmapId == cachedBeatmap.beatmapId) {
 				cachedBeatmapIndex = parseInt(beatmap);
 				break;
 			}
@@ -91,9 +91,9 @@ export class CacheService {
 		}
 
 		// Save it in the store
-		this.storeService.set(`cache.beatmaps.${cachedBeatmap.beatmap_id}`, {
+		this.storeService.set(`cache.beatmaps.${cachedBeatmap.beatmapId}`, {
 			name: cachedBeatmap.name,
-			beatmapset_id: cachedBeatmap.beatmapset_id
+			beatmapset_id: cachedBeatmap.beatmapSetId
 		});
 	}
 

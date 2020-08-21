@@ -5,6 +5,7 @@ export class ModBracketMap {
 	id: number = null;
 	invalid: boolean = false;
 	beatmapId: number = null;
+	beatmapsetId: number = null;
 	beatmapName: string = null;
 	beatmapUrl: string = null;
 	modifier: number = null;
@@ -19,6 +20,7 @@ export class ModBracketMap {
 	public compareTo(modBracketMap: ModBracketMap) {
 		return (
 			this.beatmapId == modBracketMap.beatmapId &&
+			this.beatmapsetId == modBracketMap.beatmapsetId &&
 			this.beatmapName == modBracketMap.beatmapName &&
 			this.beatmapUrl == modBracketMap.beatmapUrl &&
 			this.modifier == modBracketMap.modifier &&
@@ -34,6 +36,7 @@ export class ModBracketMap {
 		return {
 			id: modBracketMap.id,
 			beatmapId: modBracketMap.beatmapId,
+			beatmapsetId: modBracketMap.beatmapsetId,
 			beatmapName: modBracketMap.beatmapName,
 			beatmapUrl: modBracketMap.beatmapUrl,
 			modifier: modBracketMap.modifier,
@@ -53,6 +56,7 @@ export class ModBracketMap {
 		newModBracketMap.id = json.id;
 		newModBracketMap.invalid = false;
 		newModBracketMap.beatmapId = json.beatmapId;
+		newModBracketMap.beatmapsetId = json.beatmapsetId;
 		newModBracketMap.beatmapName = json.beatmapName;
 		newModBracketMap.beatmapUrl = json.beatmapUrl;
 		newModBracketMap.modifier = json.modifier;
@@ -73,6 +77,7 @@ export class ModBracketMap {
 		newModBracketMap.id = bracketMap.id;
 		newModBracketMap.invalid = bracketMap.invalid;
 		newModBracketMap.beatmapId = bracketMap.beatmapId;
+		newModBracketMap.beatmapsetId = bracketMap.beatmapsetId;
 		newModBracketMap.beatmapName = bracketMap.beatmapName;
 		newModBracketMap.beatmapUrl = bracketMap.beatmapUrl;
 		newModBracketMap.modifier = bracketMap.modifier;

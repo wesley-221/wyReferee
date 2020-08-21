@@ -147,7 +147,7 @@ export class MultiplayerLobbiesService {
 				// Check if the beatmap is cached
 				if (cachedBeatmap == null) {
 					this.getBeatmap.getByBeatmapId(multiplayerData.beatmap_id).subscribe(data => {
-						this.cacheService.cacheBeatmap(new CacheBeatmap(`${data.artist} - ${data.title} [${data.version}]`, data.beatmap_id, data.beatmapset_id));
+						this.cacheService.cacheBeatmap(new CacheBeatmap(`${data.artist} - ${data.title} [${data.version}]`, data.beatmap_id, data.beatmapset_id, `https://osu.ppy.sh/beatmaps/${data.beatmap_id}`));
 					});
 				}
 

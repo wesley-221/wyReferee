@@ -12,6 +12,7 @@ import { StoreService } from '../../../services/store.service';
 import { IrcService } from '../../../services/irc.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { WebhookService } from '../../../services/webhook.service';
+import { CacheBeatmap } from '../../../models/cache/cache-beatmap';
 declare var $: any;
 
 @Component({
@@ -249,7 +250,7 @@ export class LobbyViewComponent implements OnInit {
 	 * Get a beatmap from any given mappool
 	 * @param beatmapId the beatmapid
 	 */
-	getBeatmapnameFromMappools(beatmapId: number): { beatmapName: string, beatmapUrl: string } {
+	getBeatmapnameFromMappools(beatmapId: number): CacheBeatmap {
 		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(beatmapId);
 		return (cachedBeatmap != null) ? cachedBeatmap : null;
 	}
@@ -260,7 +261,7 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	getThumbUrl(beatmapId: number) {
 		const cachedBeatmap = this.cacheService.getCachedBeatmap(beatmapId);
-		return (cachedBeatmap != null) ? `url('https://b.ppy.sh/thumb/${cachedBeatmap.beatmapset_id}.jpg')` : ``;
+		return (cachedBeatmap != null) ? `url('https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg')` : ``;
 	}
 
 	/**
