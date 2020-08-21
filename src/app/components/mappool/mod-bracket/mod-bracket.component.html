@@ -82,7 +82,7 @@
 					</div>
 
 					<div [ngClass]="{'col-5': mappool.mappoolType == 2 && mappool.publishId > 0, 'col-8': !mappool.publishId || mappool.mappoolType != 2}">
-						<span *ngIf="beatmap.beatmapName == null" class="has-error">No beatmap found, have you tried synchronizing?</span>
+						<span *ngIf="beatmap.beatmapName == null && beatmap.invalid == false" class="has-error">No beatmap found, have you tried synchronizing?</span>
 						<a [routerLink]="" *ngIf="beatmap.beatmapName && !beatmap.invalid" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a>
 						<span *ngIf="beatmap.invalid" class="has-error">There was no beatmap found with the beatmap id "{{ beatmap.beatmapId }}".</span>
 					</div>
