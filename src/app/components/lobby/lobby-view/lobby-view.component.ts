@@ -389,7 +389,7 @@ export class LobbyViewComponent implements OnInit {
 	 * Send the final result to discord
 	 */
 	sendFinalResult() {
-		this.webhookService.sendFinalResult(this.selectedLobby, this.extraMessage).subscribe(res => {
+		this.webhookService.sendFinalResult(this.selectedLobby, this.extraMessage, this.ircService.authenticatedUser).subscribe(res => {
 			this.toggleModal();
 			this.wbdSelected = false;
 			this.normalResultSelected = false;
@@ -408,7 +408,7 @@ export class LobbyViewComponent implements OnInit {
 	 * Send the WBD message to discord
 	 */
 	sendWinByDefaultResult() {
-		this.webhookService.sendWinByDefaultResult(this.selectedLobby, this.extraMessage, this.wbdWinningTeam, this.wbdLosingTeam).subscribe(res => {
+		this.webhookService.sendWinByDefaultResult(this.selectedLobby, this.extraMessage, this.wbdWinningTeam, this.wbdLosingTeam, this.ircService.authenticatedUser).subscribe(res => {
 			this.toggleModal();
 			this.wbdSelected = false;
 			this.normalResultSelected = false;

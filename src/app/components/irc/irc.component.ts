@@ -315,7 +315,7 @@ export class IrcComponent implements OnInit {
 			this.ircService.sendMessage(this.selectedChannel.channelName, '!mp mods none');
 		}
 
-		this.webhookService.sendPickResult(this.selectedLobby, beatmap).subscribe();
+		this.webhookService.sendPickResult(this.selectedLobby, beatmap, this.ircService.authenticatedUser).subscribe();
 
 		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp mods ${modBit}${freemodEnabled ? " freemod" : ""}`);
 	}
@@ -404,12 +404,12 @@ export class IrcComponent implements OnInit {
 		if (team == 1) {
 			this.selectedLobby.teamOneBans.push(this.popupBannedMap.beatmapId);
 
-			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamOneName, this.popupBannedMap).subscribe();
+			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamOneName, this.popupBannedMap, this.ircService.authenticatedUser).subscribe();
 		}
 		else if (team == 2) {
 			this.selectedLobby.teamTwoBans.push(this.popupBannedMap.beatmapId);
 
-			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamTwoName, this.popupBannedMap).subscribe();
+			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamTwoName, this.popupBannedMap, this.ircService.authenticatedUser).subscribe();
 		}
 
 		this.multiplayerLobbies.update(this.selectedLobby);

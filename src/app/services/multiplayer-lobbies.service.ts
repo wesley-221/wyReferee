@@ -15,6 +15,7 @@ import { MappoolService } from './mappool.service';
 import { Calculate } from '../models/score-calculation/calculate';
 import { AxSCalculation } from '../models/score-calculation/calculation-types/axs-calculation';
 import { BehaviorSubject } from 'rxjs';
+import { WebhookService } from './webhook.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -32,7 +33,8 @@ export class MultiplayerLobbiesService {
 		private cacheService: CacheService,
 		private getUser: GetUser,
 		private getBeatmap: GetBeatmap,
-		private mappoolService: MappoolService) {
+		private mappoolService: MappoolService,
+		private webhookService: WebhookService) {
 		const allLobbies = storeService.get('lobby');
 
 		for (let lobby in allLobbies) {
@@ -118,7 +120,7 @@ export class MultiplayerLobbiesService {
 		}
 	}
 
-	public synchronizeMultiplayerMatch(multiplayerLobby: MultiplayerLobby, showToasts: boolean = true): void {
+	public synchronizeMultiplayerMatch(multiplayerLobby: MultiplayerLobby, showToasts: boolean = true, sendWebhook: boolean = false): void {
 		this.getMultiplayer.get(multiplayerLobby.multiplayerLink).subscribe(data => {
 			multiplayerLobby.teamOneScore = 0;
 			multiplayerLobby.teamTwoScore = 0;
@@ -218,6 +220,12 @@ export class MultiplayerLobbiesService {
 
 			if (showToasts)
 				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');
+
+			if (sendWebhook) {
+				// Get username through storeservice, circular dependency if injecting irc service
+				const ircCredentials = this.storeService.get('irc');
+				this.webhookService.sendMatchFinishedResult(multiplayerLobby, ircCredentials.username).subscribe();
+			}
 		});
 	}
 

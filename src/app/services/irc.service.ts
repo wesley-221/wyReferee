@@ -257,7 +257,7 @@ export class IrcService {
 
 					// A beatmap has finished
 					if(matchFinished) {
-						this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getByIrcLobby(to));
+						this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getByIrcLobby(to), true, true);
 					}
 				}
 				// ===========================================
