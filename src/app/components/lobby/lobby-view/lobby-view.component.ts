@@ -11,7 +11,7 @@ import { MappoolService } from '../../../services/mappool.service';
 import { StoreService } from '../../../services/store.service';
 import { IrcService } from '../../../services/irc.service';
 import { ClipboardService } from 'ngx-clipboard';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { WebhookService } from '../../../services/webhook.service';
 declare var $: any;
 
 @Component({
@@ -42,8 +42,8 @@ export class LobbyViewComponent implements OnInit {
 		private storeService: StoreService,
 		public ircService: IrcService,
 		private clipboardService: ClipboardService,
-		private http: HttpClient,
-		private router: Router) {
+		private router: Router,
+		private webhookService: WebhookService) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
 
@@ -183,80 +183,6 @@ export class LobbyViewComponent implements OnInit {
 		if (this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
 			this.ircService.sendMessage(this.selectedLobby.ircChannel, `Next pick is for ${this.selectedLobby.getNextPickName()}`);
 		}
-	}
-
-	/**
-	 * Send the final result to discord
-	 */
-	sendFinalResult() {
-		const scoreString = (this.selectedLobby.teamOneScore > this.selectedLobby.teamTwoScore) ?
-			`**Score: ${this.selectedLobby.teamOneName}** | **${this.selectedLobby.teamOneScore}** - ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}` :
-			`**Score:** ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} - **${this.selectedLobby.teamTwoScore}** | **${this.selectedLobby.teamTwoName}**`;
-
-		let body = {
-			"embeds": [
-				{
-					"title": `Result of **${this.selectedLobby.teamOneName}** vs. **${this.selectedLobby.teamTwoName}**`,
-					"description": `${scoreString} \n\n**First pick**: ${this.selectedLobby.firstPick} \n\n[${this.selectedLobby.multiplayerLink}](${this.selectedLobby.multiplayerLink})`,
-					"color": 15258703,
-					"timestamp": new Date(),
-					"footer": {
-						"text": `Match referee was ${this.ircService.authenticatedUser}`
-					},
-					"fields": [
-					]
-				}
-			]
-		}
-
-		let teamOneBans: any[] = [],
-			teamTwoBans: any[] = [];
-
-		if (this.selectedLobby.teamOneBans.length > 0) {
-			for (let ban of this.selectedLobby.teamOneBans) {
-				teamOneBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
-			}
-
-			body.embeds[0].fields.push({
-				"name": `**${this.selectedLobby.teamOneName}** bans:`,
-				"value": teamOneBans.join('\n'),
-				"inline": true
-			});
-
-		}
-
-		if (this.selectedLobby.teamTwoBans.length > 0) {
-			for (let ban of this.selectedLobby.teamTwoBans) {
-				teamTwoBans.push(`[${this.getBeatmapnameFromMappools(ban).beatmapName}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
-			}
-
-			body.embeds[0].fields.push({
-				"name": `**${this.selectedLobby.teamTwoName}** bans:`,
-				"value": teamTwoBans.join('\n'),
-				"inline": true
-			});
-		}
-
-		if (this.extraMessage != null) {
-			body.embeds[0].fields.push({
-				"name": `**Additional message by ${this.ircService.authenticatedUser}**`,
-				"value": this.extraMessage,
-			});
-		}
-
-		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(obj => {
-			this.toggleModal();
-			this.wbdSelected = false;
-			this.normalResultSelected = false;
-
-			this.wbdWinningTeam = null;
-			this.wbdLosingTeam = null;
-			this.extraMessage = null;
-
-			this.toastService.addToast(`Successfully send the message to Discord.`);
-
-			console.log(obj);
-		});
 	}
 
 	/**
@@ -459,39 +385,10 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Send the WBD message to discord
+	 * Send the final result to discord
 	 */
-	sendWinByDefaultResult() {
-		let resultDescription = `**Score:** **${this.wbdWinningTeam}** | 1 - 0 | ${this.wbdLosingTeam} \n\n**${this.wbdLosingTeam}** failed to show up.`;
-
-		if (this.wbdWinningTeam == "No-one") {
-			resultDescription = `**Score:** ${this.selectedLobby.teamOneName} | 0 - 0 | ${this.selectedLobby.teamTwoName} \n\nBoth **${this.selectedLobby.teamOneName}** and **${this.selectedLobby.teamTwoName}** failed to show up.`;
-		}
-
-		let body = {
-			"embeds": [
-				{
-					"title": `Result of **${this.selectedLobby.teamOneName}** vs. **${this.selectedLobby.teamTwoName}**`,
-					"description": resultDescription,
-					"color": 15258703,
-					"timestamp": new Date(),
-					"footer": {
-						"text": `Match referee was ${this.ircService.authenticatedUser}`
-					},
-					"fields": [
-					]
-				}
-			]
-		};
-
-		if (this.extraMessage != null) {
-			body.embeds[0].fields.push({
-				"name": `**Additional message by ${this.ircService.authenticatedUser}**`,
-				"value": this.extraMessage,
-			});
-		}
-
-		this.http.post(this.selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(obj => {
+	sendFinalResult() {
+		this.webhookService.sendFinalResult(this.selectedLobby, this.extraMessage).subscribe(res => {
 			this.toggleModal();
 			this.wbdSelected = false;
 			this.normalResultSelected = false;
@@ -502,7 +399,26 @@ export class LobbyViewComponent implements OnInit {
 
 			this.toastService.addToast(`Successfully send the message to Discord.`);
 
-			console.log(obj);
+			console.log(res);
+		});
+	}
+
+	/**
+	 * Send the WBD message to discord
+	 */
+	sendWinByDefaultResult() {
+		this.webhookService.sendWinByDefaultResult(this.selectedLobby, this.extraMessage, this.wbdWinningTeam, this.wbdLosingTeam).subscribe(res => {
+			this.toggleModal();
+			this.wbdSelected = false;
+			this.normalResultSelected = false;
+
+			this.wbdWinningTeam = null;
+			this.wbdLosingTeam = null;
+			this.extraMessage = null;
+
+			this.toastService.addToast(`Successfully send the message to Discord.`);
+
+			console.log(res);
 		});
 	}
 }
