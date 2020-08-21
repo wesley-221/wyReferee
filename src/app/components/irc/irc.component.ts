@@ -15,6 +15,7 @@ import { StoreService } from '../../services/store.service';
 import { MultiplayerLobby } from '../../models/store-multiplayer/multiplayer-lobby';
 import { Mappool } from '../../models/osu-mappool/mappool';
 import { ToastType } from '../../models/toast';
+import { WebhookService } from '../../services/webhook.service';
 declare var $: any;
 
 @Component({
@@ -60,8 +61,16 @@ export class IrcComponent implements OnInit {
 	popupBannedMap: ModBracketMap = null;
 	popupBannedBracket: ModBracket = null;
 
-	constructor(public electronService: ElectronService, public ircService: IrcService, private changeDetector: ChangeDetectorRef, private storeService: StoreService,
-		public mappoolService: MappoolService, private multiplayerLobbies: MultiplayerLobbiesService, private router: Router, private toastService: ToastService) {
+	constructor(
+		public electronService: ElectronService,
+		public ircService: IrcService,
+		private changeDetector: ChangeDetectorRef,
+		private storeService: StoreService,
+		public mappoolService: MappoolService,
+		private multiplayerLobbies: MultiplayerLobbiesService,
+		private router: Router,
+		private toastService: ToastService,
+		private webhookService: WebhookService) {
 		this.channels = ircService.allChannels;
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -306,6 +315,8 @@ export class IrcComponent implements OnInit {
 			this.ircService.sendMessage(this.selectedChannel.channelName, '!mp mods none');
 		}
 
+		this.webhookService.sendPickResult(this.selectedLobby, beatmap).subscribe();
+
 		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp mods ${modBit}${freemodEnabled ? " freemod" : ""}`);
 	}
 
@@ -392,9 +403,13 @@ export class IrcComponent implements OnInit {
 		// Handle banning
 		if (team == 1) {
 			this.selectedLobby.teamOneBans.push(this.popupBannedMap.beatmapId);
+
+			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamOneName, this.popupBannedMap).subscribe();
 		}
 		else if (team == 2) {
 			this.selectedLobby.teamTwoBans.push(this.popupBannedMap.beatmapId);
+
+			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamTwoName, this.popupBannedMap).subscribe();
 		}
 
 		this.multiplayerLobbies.update(this.selectedLobby);
@@ -417,8 +432,12 @@ export class IrcComponent implements OnInit {
 	 * @param bracket
 	 */
 	unbanBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
-		this.selectedLobby.teamOneBans.splice(this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId), 1);
-		this.selectedLobby.teamTwoBans.splice(this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId), 1);
+		if (this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamOneBans.splice(this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId), 1);
+		}
+		else if (this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamTwoBans.splice(this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId), 1);
+		}
 
 		this.multiplayerLobbies.update(this.selectedLobby);
 	}
