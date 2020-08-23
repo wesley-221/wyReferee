@@ -315,8 +315,6 @@ export class IrcComponent implements OnInit {
 			this.ircService.sendMessage(this.selectedChannel.channelName, '!mp mods none');
 		}
 
-		this.webhookService.sendPickResult(this.selectedLobby, beatmap, this.ircService.authenticatedUser).subscribe();
-
 		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp mods ${modBit}${freemodEnabled ? " freemod" : ""}`);
 	}
 

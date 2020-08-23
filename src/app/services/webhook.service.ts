@@ -29,8 +29,8 @@ export class WebhookService {
 	 */
 	sendFinalResult(selectedLobby: MultiplayerLobby, extraMessage: String, referee: String) {
 		const scoreString = (selectedLobby.teamOneScore > selectedLobby.teamTwoScore) ?
-			`**Score: ${selectedLobby.teamOneName}** | **${selectedLobby.teamOneScore}** - ${selectedLobby.teamTwoScore} | ${selectedLobby.teamTwoName}` :
-			`**Score:** ${selectedLobby.teamOneName} | ${selectedLobby.teamOneScore} - **${selectedLobby.teamTwoScore}** | **${selectedLobby.teamTwoName}**`;
+			`**Score:** __${selectedLobby.teamOneName}__ | **${selectedLobby.teamOneScore}** - ${selectedLobby.teamTwoScore} | ${selectedLobby.teamTwoName}` :
+			`**Score:** ${selectedLobby.teamOneName} | ${selectedLobby.teamOneScore} - **${selectedLobby.teamTwoScore}** | __${selectedLobby.teamTwoName}__`;
 
 		let body = {
 			"embeds": [
@@ -96,10 +96,10 @@ export class WebhookService {
 	 * @param referee the referee
 	 */
 	sendWinByDefaultResult(selectedLobby: MultiplayerLobby, extraMessage: String, wbdWinningTeam: String, wbdLosingTeam: String, referee: String) {
-		let resultDescription = `**Score:** **${wbdWinningTeam}** | 1 - 0 | ${wbdLosingTeam} \n\n**${wbdLosingTeam}** failed to show up.`;
+		let resultDescription = `**Score:** __${wbdWinningTeam}__ | 1 - 0 | ${wbdLosingTeam} \n\n__${wbdLosingTeam}__ failed to show up.`;
 
 		if (wbdWinningTeam == "No-one") {
-			resultDescription = `**Score:** ${selectedLobby.teamOneName} | 0 - 0 | ${selectedLobby.teamTwoName} \n\nBoth **${selectedLobby.teamOneName}** and **${selectedLobby.teamTwoName}** failed to show up.`;
+			resultDescription = `**Score:** ${selectedLobby.teamOneName} | 0 - 0 | ${selectedLobby.teamTwoName} \n\nBoth __${selectedLobby.teamOneName}__ and __${selectedLobby.teamTwoName}__ failed to show up.`;
 		}
 
 		let body = {
@@ -162,38 +162,6 @@ export class WebhookService {
 	}
 
 	/**
-	 * Send the pick through a discord webhook
-	 * @param selectedLobby the lobby to get the data from
-	 * @param beatmap the beatmap that was picked
-	 * @param referee the referee
-	 */
-	sendPickResult(selectedLobby: MultiplayerLobby, beatmap: ModBracketMap, referee: String) {
-		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(beatmap.beatmapId);
-
-		let body = {
-			"embeds": [
-				{
-					"title": `📌 Pick update  - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
-					"url": selectedLobby.multiplayerLink,
-					"description": `**${selectedLobby.getNextPickName()}** has picked [**${beatmap.beatmapName}**](${beatmap.beatmapUrl})`,
-					"color": 15258703,
-					"timestamp": new Date(),
-					"footer": {
-						"text": `Match referee was ${referee}`
-					},
-					"thumbnail": {
-						"url": `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
-					},
-					"fields": [
-					]
-				}
-			]
-		};
-
-		return this.http.post(selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) });
-	}
-
-	/**
 	 * Send the result of the last played beatmap to a discord webhook
 	 * @param multiplayerLobby the lobby to get the data from
 	 * @param referee the referee
@@ -207,13 +175,46 @@ export class WebhookService {
 			return null;
 		}
 
-		let resultString = (lastMultiplayerData.team_one_score > lastMultiplayerData.team_two_score) ?
-			`**${multiplayerLobby.teamOneName}** has won on [**${cachedBeatmap.name}**](${cachedBeatmap.beatmapUrl})!\n\n` :
-			`**${multiplayerLobby.teamTwoName}** has won on [**${cachedBeatmap.name}**](${cachedBeatmap.beatmapUrl})!\n\n`;
+		let resultString = "";
+		let embedHeader = "";
+		let lostTheirPick = false;
+
+		// The pick was from team two
+		if (multiplayerLobby.getNextPickName() == multiplayerLobby.teamOneName) {
+			embedHeader += `${multiplayerLobby.teamTwoName} `;
+
+			// Team two has won their pick
+			if (lastMultiplayerData.team_two_score > lastMultiplayerData.team_one_score) {
+				embedHeader += `won their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
+				lostTheirPick = false;
+			}
+			// Team two has lost their pick
+			else {
+				embedHeader += `lost their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
+				lostTheirPick = true;
+			}
+		}
+		// The pick was from team one
+		else {
+			embedHeader += `${multiplayerLobby.teamOneName} `;
+
+			// Team one has won their pick
+			if (lastMultiplayerData.team_one_score > lastMultiplayerData.team_two_score) {
+				embedHeader += `won their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
+				lostTheirPick = false;
+			}
+			// Team one has lost their pick
+			else {
+				embedHeader += `lost their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
+				lostTheirPick = true;
+			}
+		}
+
+		resultString += `[**${cachedBeatmap.name}**](${cachedBeatmap.beatmapUrl})\n\n`;
 
 		resultString += (multiplayerLobby.teamOneScore > multiplayerLobby.teamTwoScore) ?
-			`**Score: ${multiplayerLobby.teamOneName}** | **${multiplayerLobby.teamOneScore}** - ${multiplayerLobby.teamTwoScore} | ${multiplayerLobby.teamTwoName}\n\n` :
-			`**Score:** ${multiplayerLobby.teamOneName} | ${multiplayerLobby.teamOneScore} - **${multiplayerLobby.teamTwoScore}** | **${multiplayerLobby.teamTwoName}**\n\n`;
+			`**Score:** __${multiplayerLobby.teamOneName}__ | **${multiplayerLobby.teamOneScore}** - ${multiplayerLobby.teamTwoScore} | ${multiplayerLobby.teamTwoName}\n\n` :
+			`**Score:** ${multiplayerLobby.teamOneName} | ${multiplayerLobby.teamOneScore} - **${multiplayerLobby.teamTwoScore}** | __${multiplayerLobby.teamTwoName}__\n\n`;
 
 		let highestScorePlayer: MultiplayerDataUser = null;
 		let highestAccuracyPlayer: MultiplayerDataUser = null;
@@ -232,15 +233,17 @@ export class WebhookService {
 		const highestAccuracyPlayerName = this.cacheService.getCachedUser(highestAccuracyPlayer.user).username;
 
 		resultString += `**MVP score**: __${highestScorePlayerName}__ with ${highestScorePlayer.score} points and ${highestScorePlayer.accuracy}% accuracy\n`;
-		resultString += `**MVP accuracy**: __${highestAccuracyPlayerName}__ with ${highestAccuracyPlayer.score} points and ${highestAccuracyPlayer.accuracy}% accuracy`;
+		resultString += `**MVP accuracy**: __${highestAccuracyPlayerName}__ with ${highestAccuracyPlayer.score} points and ${highestAccuracyPlayer.accuracy}% accuracy\n\n`;
+
+		resultString += `Next pick is for __${multiplayerLobby.getNextPickName()}__`;
 
 		let body = {
 			"embeds": [
 				{
-					"title": `🏁 Beatmap result update  - ${multiplayerLobby.teamOneName} vs ${multiplayerLobby.teamTwoName}`,
+					"title": `🏁 ${embedHeader}`,
 					"url": multiplayerLobby.multiplayerLink,
 					"description": resultString,
-					"color": 15258703,
+					"color": lostTheirPick ? 0xad324f : 0x32a852,
 					"timestamp": new Date(),
 					"thumbnail": {
 						"url": `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
@@ -253,8 +256,6 @@ export class WebhookService {
 				}
 			]
 		};
-
-
 
 		return this.http.post(multiplayerLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) });
 	}
