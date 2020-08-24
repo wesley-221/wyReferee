@@ -26,4 +26,13 @@ export class TeamPlayer {
 			username: this.username
 		}
 	}
+
+	/**
+	 * Compare current team player with the given team player
+	 * @param that the team player to compare
+	 * @returns true if equal
+	 */
+	public compareTo(that: TeamPlayer) {
+		return this.username == that.username;
+	}
 }

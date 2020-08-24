@@ -119,4 +119,25 @@ export class Tournament {
 
 		return newTournament;
 	}
+
+	/**
+	 * Compare current tournament with the given tournament
+	 * @param tournament the tournament to compare
+	 * @returns true if equal
+	 */
+	public compareTo(that: Tournament) {
+		for(let team in this.teams) {
+			if(!this.teams[team].compareTo(that.teams[team])) {
+				return false;
+			}
+		}
+
+		return (
+			this.tournamentName == that.tournamentName &&
+			this.acronym == that.acronym &&
+			this.teamSize == that.teamSize &&
+			this.tournamentScoreInterfaceIdentifier == that.tournamentScoreInterfaceIdentifier &&
+			this.teams.length == that.teams.length
+		);
+	}
 }
