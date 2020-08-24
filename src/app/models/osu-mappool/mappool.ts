@@ -94,6 +94,14 @@ export class Mappool {
 	}
 
 	/**
+	 * Remove a mod bracket from the mappool
+	 * @param modBracket
+	 */
+	public removeModBracket(modBracket: ModBracket) {
+		this.modBrackets.splice(this.modBrackets.indexOf(modBracket), 1);
+	}
+
+	/**
 	 * Get a mod category from the given name
 	 * @param categoryName
 	 */

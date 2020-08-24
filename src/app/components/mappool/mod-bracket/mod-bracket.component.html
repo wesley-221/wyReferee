@@ -6,8 +6,12 @@
 				<h3 *ngIf="!modBracket.bracketName">Unnamed bracket</h3>
 			</div>
 
-			<div class="col" *ngIf="withCollapse == true">
-				<button class="btn btn-outline-primary float-right" (click)="collapseBracket(modBracket)">Collapse</button>
+			<div class="col button-spacing" *ngIf="withCollapse == true">
+				<button class="btn btn-outline-danger float-right" (click)="openDialog(modBracket)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+				<button class="btn btn-outline-primary float-right" (click)="collapseBracket(modBracket)">
+					<fa-icon [icon]="['fas', 'angle-up']" *ngIf="!modBracket.collapsed"></fa-icon>
+					<fa-icon [icon]="['fas', 'angle-down']" *ngIf="modBracket.collapsed"></fa-icon>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -92,6 +96,22 @@
 						<button class="btn btn-danger" (click)="removeBeatmap(modBracket, beatmap)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div [id]="'dialog-' + modBracket.id" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog shadow" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Remove a mod bracket from the mappool</h3>
+			</div>
+
+			<div class="modal-body">
+				<p [innerHTML]="dialogMessage"></p>
+
+				<button class="btn btn-primary" style="width: 100%;" (click)="removeModBracket(modBracket)">Remove mod bracket</button>
 			</div>
 		</div>
 	</div>

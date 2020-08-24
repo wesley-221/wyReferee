@@ -8,6 +8,7 @@ import { ToastService } from '../../../services/toast.service';
 import { ToastType } from '../../../models/toast';
 import { Mappool } from '../../../models/osu-mappool/mappool';
 import { ModCategory } from '../../../models/osu-mappool/mod-category';
+declare var $: any;
 
 @Component({
 	selector: 'app-mod-bracket',
@@ -23,6 +24,9 @@ export class ModBracketComponent implements OnInit {
 	selectedMods: { index: number, modValue: any }[] = [];
 	modBracketIndex: number = 0;
 	MAX_BRACKETS: number = 4;
+
+	dialogMessage: string;
+	modBracketToRemove: ModBracket;
 
 	availableMods: { modName: string, modValue: any }[] = [
 		{ modName: 'Nomod', modValue: Mods.None },
@@ -151,5 +155,29 @@ export class ModBracketComponent implements OnInit {
 		else {
 			beatmap.modCategory = ModCategory.makeTrueCopy(this.mappool.getModCategoryByName(event.target.value));
 		}
+	}
+
+	/**
+	 * Open dialog to remove a modbracket
+	 * @param modBracket
+	 */
+	openDialog(modBracket: ModBracket) {
+		this.dialogMessage = `Are you sure you want to remove "${modBracket.bracketName}" from the mappool?`;
+		this.modBracketToRemove = modBracket;
+
+		setTimeout(() => {
+			$(`#dialog-${modBracket.id}`).modal('toggle');
+		}, 1);
+	}
+
+	/**
+	 * Remove the mod bracket from the mappool
+	 * @param modBracket
+	 */
+	removeModBracket(modBracket: ModBracket) {
+		this.mappool.removeModBracket(modBracket);
+		this.toastService.addToast(`Successfully removed "${modBracket.bracketName}" from the mappool.`);
+
+		$(`#dialog-${modBracket.id}`).modal('toggle');
 	}
 }

@@ -62,8 +62,11 @@
 				</div>
 
 				<div class="col button-spacing">
-					<button class="btn btn-outline-primary float-right" (click)="collapseBracket(team)">Collapse</button>
-					<button class="btn btn-outline-danger float-right" (click)="openDialog(team)">Remove team</button>
+					<button class="btn btn-outline-danger float-right" (click)="openDialog(team)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+					<button class="btn btn-outline-primary float-right" (click)="collapseBracket(team)">
+						<fa-icon [icon]="['fas', 'angle-up']" *ngIf="!team.collapsed"></fa-icon>
+						<fa-icon [icon]="['fas', 'angle-down']" *ngIf="team.collapsed"></fa-icon>
+					</button>
 				</div>
 			</div>
 		</div>
