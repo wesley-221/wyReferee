@@ -53,7 +53,7 @@ export class ModBracketComponent implements OnInit {
 	 * Add a new beatmap to the given bracket
 	 * @param bracket the bracket to add the beatmap to
 	 */
-	addBeatmap(bracket: ModBracket) {
+	addBeatmap(bracket: ModBracket): void {
 		bracket.addBeatmap(new ModBracketMap());
 	}
 
@@ -62,7 +62,7 @@ export class ModBracketComponent implements OnInit {
 	 * @param bracket the bracket to remove the beatmap from
 	 * @param beatmap the beatmap to remove
 	 */
-	removeBeatmap(bracket: ModBracket, beatmap: ModBracketMap) {
+	removeBeatmap(bracket: ModBracket, beatmap: ModBracketMap): void {
 		bracket.removeMap(beatmap);
 	}
 
@@ -70,7 +70,7 @@ export class ModBracketComponent implements OnInit {
 	 * Get the data from the given beatmap
 	 * @param beatmap the beatmap to synchronize
 	 */
-	synchronizeBeatmap(beatmap: ModBracketMap) {
+	synchronizeBeatmap(beatmap: ModBracketMap): void {
 		this.getBeatmap.getByBeatmapId(beatmap.beatmapId).subscribe(data => {
 			if (data.beatmap_id == null) {
 				beatmap.invalid = true;
@@ -89,14 +89,14 @@ export class ModBracketComponent implements OnInit {
 	 * Collapse a bracket
 	 * @param bracket the bracket to collapse
 	 */
-	collapseBracket(bracket: ModBracket) {
+	collapseBracket(bracket: ModBracket): void {
 		bracket.collapsed = !bracket.collapsed;
 	}
 
 	/**
 	 * Add a new mod bracket
 	 */
-	addNewMod() {
+	addNewMod(): void {
 		if (this.selectedMods.length + 1 <= this.MAX_BRACKETS) {
 			this.selectedMods.push({ index: this.modBracketIndex + 1, modValue: 0 });
 			this.modBracketIndex++;
@@ -111,7 +111,7 @@ export class ModBracketComponent implements OnInit {
 	 * @param modIndex the index of the mod that has been changed
 	 * @param modValue the new value of the mod
 	 */
-	changeMod(modIndex: number, modValue: any) {
+	changeMod(modIndex: number, modValue: any): void {
 		modValue = modValue.target.value;
 
 		// Reset the mods
@@ -130,7 +130,7 @@ export class ModBracketComponent implements OnInit {
 	 * Delete a mod
 	 * @param modIndex the index of the mod to delete
 	 */
-	deleteMod(modIndex: number) {
+	deleteMod(modIndex: number): void {
 		for (const mod in this.selectedMods) {
 			if (this.selectedMods[mod].index == modIndex) {
 				this.selectedMods.splice(Number(mod), 1);
@@ -146,7 +146,7 @@ export class ModBracketComponent implements OnInit {
 	 * @param beatmap
 	 * @param event
 	 */
-	changeModCategory(beatmap: ModBracketMap, event) {
+	changeModCategory(beatmap: ModBracketMap, event: any): void {
 		const modCategory = this.mappool.getModCategoryByName(event.target.value);
 
 		if (modCategory == undefined) {
@@ -161,7 +161,7 @@ export class ModBracketComponent implements OnInit {
 	 * Open dialog to remove a modbracket
 	 * @param modBracket
 	 */
-	openDialog(modBracket: ModBracket) {
+	openDialog(modBracket: ModBracket): void {
 		this.dialogMessage = `Are you sure you want to remove "${modBracket.bracketName}" from the mappool?`;
 		this.modBracketToRemove = modBracket;
 
@@ -174,7 +174,7 @@ export class ModBracketComponent implements OnInit {
 	 * Remove the mod bracket from the mappool
 	 * @param modBracket
 	 */
-	removeModBracket(modBracket: ModBracket) {
+	removeModBracket(modBracket: ModBracket): void {
 		this.mappool.removeModBracket(modBracket);
 		this.toastService.addToast(`Successfully removed "${modBracket.bracketName}" from the mappool.`);
 

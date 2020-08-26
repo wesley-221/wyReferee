@@ -7,7 +7,6 @@ import { Team } from '../models/tournament/team/team';
 import { TeamPlayer } from '../models/tournament/team/team-player';
 import { Observable } from 'rxjs';
 import { LoggedInUser } from '../models/authentication/logged-in-user';
-import { Misc } from '../models/misc';
 import { Calculate } from '../models/score-calculation/calculate';
 
 @Injectable({
@@ -38,7 +37,7 @@ export class TournamentService {
 					newTournament.updateAvailable = !newTournament.compareTo(updatedTournament);
 
 					this.allTournaments.push(newTournament);
-				}, (err) => {
+				}, () => {
 					this.allTournaments.push(newTournament);
 				});
 			}

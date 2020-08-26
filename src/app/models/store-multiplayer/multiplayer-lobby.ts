@@ -224,7 +224,7 @@ export class MultiplayerLobby {
 		if (this.teamOneScore == Math.ceil(this.bestOf / 2)) {
 			return this.teamOneName;
 		}
-		else if (this.teamOneScore == Math.ceil(this.bestOf / 2)) {
+		else if (this.teamTwoScore == Math.ceil(this.bestOf / 2)) {
 			return this.teamTwoName;
 		}
 

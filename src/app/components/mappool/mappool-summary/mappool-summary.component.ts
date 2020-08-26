@@ -28,7 +28,7 @@ export class MappoolSummaryComponent implements OnInit {
 	 * Update a mappool
 	 * @param mappool the mappool to update
 	 */
-	updateMappool(mappool: Mappool) {
+	updateMappool(mappool: Mappool): void {
 		this.mappoolService.getPublishedMappool(mappool.publishId).subscribe((data) => {
 			const updatedMappool: Mappool = Mappool.serializeJson(data);
 			updatedMappool.publishId = mappool.publishId;
@@ -44,7 +44,7 @@ export class MappoolSummaryComponent implements OnInit {
 	 * Publish a mappool
 	 * @param mappool the mappool to publish
 	 */
-	publishMappool(mappool: Mappool) {
+	publishMappool(mappool: Mappool): void {
 		const publishMappool: Mappool = Mappool.makeTrueCopy(mappool);
 
 		// Reset id
@@ -74,7 +74,7 @@ export class MappoolSummaryComponent implements OnInit {
 	 * Delete a mappool from the bottom of the earth
 	 * @param mappool the mappool
 	 */
-	deleteMappool(mappool: Mappool) {
+	deleteMappool(mappool: Mappool): void {
 		if (this.publish == true) {
 			this.mappoolService.deletePublishedMappool(mappool).subscribe(() => {
 				this.toastService.addToast(`Successfully deleted the published mappool "${mappool.name}".`);
@@ -93,7 +93,7 @@ export class MappoolSummaryComponent implements OnInit {
 	 * @param mappool
 	 * @param dialogAction
 	 */
-	openDialog(mappool: Mappool, dialogAction: number) {
+	openDialog(mappool: Mappool, dialogAction: number): void {
 		this.dialogAction = dialogAction;
 
 		if (dialogAction == 0) {
@@ -123,7 +123,7 @@ export class MappoolSummaryComponent implements OnInit {
 	/**
 	 * Check if the user has sufficient permissions to publish the mappool
 	 */
-	canPublish() {
+	canPublish(): boolean {
 		return this.authService.loggedIn && ((<any>this.authService.loggedInUser.isTournamentHost) == 'true' || this.authService.loggedInUser.isTournamentHost == true || this.authService.loggedInUser.isAdmin);
 	}
 
@@ -131,7 +131,7 @@ export class MappoolSummaryComponent implements OnInit {
 	 * Edit a mappool
 	 * @param mappool the mappool to edit
 	 */
-	editMappool(mappool: Mappool, event) {
+	editMappool(mappool: Mappool, event: any): void {
 		// Check if click wasn't on a button
 		if (event.srcElement.className.indexOf('btn') == -1) {
 			this.router.navigate(['mappool-edit', mappool.id, this.publish]);

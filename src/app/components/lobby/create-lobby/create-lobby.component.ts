@@ -46,7 +46,7 @@ export class CreateLobbyComponent implements OnInit {
 	ngOnInit() {
 		this.validationForm = new FormGroup({
 			'multiplayerLink': new FormControl('', [
-				Validators.pattern(/https\:\/\/osu.ppy.sh\/community\/matches\/[0-9]+/)
+				Validators.pattern(/https:\/\/osu.ppy.sh\/community\/matches\/[0-9]+/)
 			]),
 			'tournamentAcronym': new FormControl('', [
 				Validators.maxLength(10)
@@ -126,16 +126,14 @@ export class CreateLobbyComponent implements OnInit {
 		this.teamOneArray = [];
 		this.teamTwoArray = [];
 
-		let teamSizeVal;
+		let teamSizeVal: number;
 
 		if (teamSize == null || teamSize == undefined) {
-			teamSizeVal = this.getValidation('teamSize').value >= 8 ? 8 : this.getValidation('teamSize').value;
+			teamSizeVal = parseInt(this.getValidation('teamSize').value >= 8 ? 8 : this.getValidation('teamSize').value);
 		}
 		else {
 			teamSizeVal = teamSize >= 8 ? 8 : teamSize;
 		}
-
-		teamSizeVal = parseInt(teamSizeVal);
 
 		for (let i = 1; i < (teamSizeVal + 1); i++) {
 			this.teamOneArray.push(i);

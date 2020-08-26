@@ -28,7 +28,7 @@ export class TournamentSummaryComponent implements OnInit {
 	 * Update a mappool
 	 * @param mappool the mappool to update
 	 */
-	updateTournament(tournament: Tournament) {
+	updateTournament(tournament: Tournament): void {
 		this.tournamentService.getPublishedTournament(tournament.publishId).subscribe((data) => {
 			const updatedTournament: Tournament = this.tournamentService.mapFromJson(data);
 			updatedTournament.id = tournament.id;
@@ -44,7 +44,7 @@ export class TournamentSummaryComponent implements OnInit {
 	 * Edit a tournament
 	 * @param tournament the tournament to edit
 	 */
-	editTournament(tournament: Tournament, event) {
+	editTournament(tournament: Tournament, event: any): void {
 		// Check if click wasn't on a button
 		if (event.srcElement.className.indexOf('btn') == -1) {
 			this.router.navigate(['tournament-edit', tournament.id, this.publish]);
@@ -55,7 +55,7 @@ export class TournamentSummaryComponent implements OnInit {
 	 * Publish a tournament
 	 * @param tournament the tournament to publish
 	 */
-	publishTournament(tournament: Tournament) {
+	publishTournament(tournament: Tournament): void {
 		const publishTournament: Tournament = Tournament.makeTrueCopy(tournament);
 
 		// Reset id
@@ -72,7 +72,7 @@ export class TournamentSummaryComponent implements OnInit {
 			}
 		}
 
-		this.tournamentService.publishTournament(publishTournament).subscribe((data) => {
+		this.tournamentService.publishTournament(publishTournament).subscribe((data: any) => {
 			this.toastService.addToast(`Successfully published the tournament "${data.body.tournamentName}" with the id ${data.body.id}.`);
 		});
 
@@ -84,7 +84,7 @@ export class TournamentSummaryComponent implements OnInit {
 	 * @param tournament
 	 * @param dialogAction
 	 */
-	openDialog(tournament: Tournament, dialogAction: number) {
+	openDialog(tournament: Tournament, dialogAction: number): void {
 		this.dialogAction = dialogAction;
 
 		if (dialogAction == 0) {
@@ -114,7 +114,7 @@ export class TournamentSummaryComponent implements OnInit {
 	/**
 	 * Check if the user has sufficient permissions to publish the tournament
 	 */
-	canPublish() {
+	canPublish(): boolean {
 		return this.authService.loggedIn && ((<any>this.authService.loggedInUser.isTournamentHost) == 'true' || this.authService.loggedInUser.isTournamentHost == true || this.authService.loggedInUser.isAdmin);
 	}
 
@@ -122,7 +122,7 @@ export class TournamentSummaryComponent implements OnInit {
 	 * Delete a tournament from the bottom of the earth
 	 * @param tournament the tournament
 	 */
-	deleteTournament(tournament: Tournament) {
+	deleteTournament(tournament: Tournament): void {
 		if (this.publish == true) {
 			this.tournamentService.deletePublishedTournament(tournament).subscribe(() => {
 				this.toastService.addToast(`Successfully deleted the published tournament "${tournament.tournamentName}".`);

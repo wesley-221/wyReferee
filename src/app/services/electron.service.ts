@@ -72,7 +72,7 @@ export class ElectronService {
 					toastService.addToast(`Something went wrong while trying to update: ${err}`);
 				});
 
-				this.autoUpdater.on('update-downloaded', info => {
+				this.autoUpdater.on('update-downloaded', () => {
 					toastService.addToast('The update has been downloaded and will be installed in 10 seconds. If you close the program immediately, it will install the update right away.', ToastType.Information, 10);
 
 					setTimeout(() => {

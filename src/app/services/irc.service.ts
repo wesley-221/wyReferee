@@ -289,7 +289,7 @@ export class IrcService {
 		/**
 		 * Connect the user
 		 */
-		this.client.connect(0, err => {
+		this.client.connect(0, () => {
 			this.isAuthenticated = true;
 			this.authenticatedUser = username;
 

@@ -166,7 +166,7 @@
 								<div class="buttons">
 									<div class="beatmap-ban">
 										<button class="btn btn-danger form-control" (click)="banBeatmapPopup(beatmap, bracket)" *ngIf="!beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Ban</button>
-										<button class="btn btn-success" (click)="unbanBeatmap(beatmap, bracket)" *ngIf="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Unban</button>
+										<button class="btn btn-success" (click)="unbanBeatmap(beatmap)" *ngIf="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Unban</button>
 									</div>
 
 									<div class="beatmap-pick">

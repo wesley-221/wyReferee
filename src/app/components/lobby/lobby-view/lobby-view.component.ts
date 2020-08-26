@@ -316,7 +316,7 @@ export class LobbyViewComponent implements OnInit {
 	 * @param nStr the string to split
 	 * @param splitter the character to split the string with
 	 */
-	addDot(nStr, splitter) {
+	addDot(nStr: string, splitter: string) {
 		nStr += '';
 		const x = nStr.split('.');
 		let x1 = x[0];

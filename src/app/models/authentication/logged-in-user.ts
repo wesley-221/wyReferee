@@ -20,7 +20,7 @@ export class LoggedInUser {
     /**
      * Convert the user to a json file
      */
-	public convertToJson(): {} {
+	public convertToJson(): { userId: number, username: string, isAdmin: boolean, isTournamentHost: boolean, token: string } {
 		return {
 			userId: this.userId,
 			username: this.username,

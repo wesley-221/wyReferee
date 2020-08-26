@@ -42,7 +42,7 @@ export class MappoolService {
 					newMappool.updateAvailable = !newMappool.comapreTo(updatedMappool);
 
 					this.allMappools.push(newMappool);
-				}, (err) => {
+				}, () => {
 					this.allMappools.push(newMappool);
 				});
 			}

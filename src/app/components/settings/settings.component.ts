@@ -43,7 +43,7 @@ export class SettingsComponent implements OnInit {
 			this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
 		},
 			// Key is invalid
-			err => {
+			() => {
 				this.toastService.addToast('The entered api-key was invalid.', ToastType.Error);
 			});
 	}

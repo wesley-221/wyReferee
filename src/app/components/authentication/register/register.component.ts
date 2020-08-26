@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { RegisterRequest } from '../../../models/authentication/register-request';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -31,10 +31,10 @@ export class RegisterComponent implements OnInit {
 		this.loginForm.setValidators(this.isEqualTo('password', 'password-confirmation'));
 	}
 
-	register() {
-		const username = this.loginForm.get('username');
-		const password = this.loginForm.get('password');
-		const passwordConfirm = this.loginForm.get('password-confirmation');
+	register(): void {
+		const username: AbstractControl = this.loginForm.get('username');
+		const password: AbstractControl = this.loginForm.get('password');
+		const passwordConfirm: AbstractControl = this.loginForm.get('password-confirmation');
 
 		const errors: string[] = [];
 
@@ -68,7 +68,7 @@ export class RegisterComponent implements OnInit {
 			registerUser.password = password.value;
 			registerUser.passwordConfirm = passwordConfirm.value;
 
-			this.authenticateService.register(registerUser).subscribe(data => {
+			this.authenticateService.register(registerUser).subscribe(() => {
 				this.loginErrors = [];
 
 				this.toastService.addToast(`Successfully registered your account with the username "${registerUser.username}".`);

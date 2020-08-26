@@ -44,9 +44,9 @@ export class TournamentEditComponent implements OnInit {
 	/**
 	 * Create the tournament
 	 */
-	udpateTournament(tournament: Tournament) {
+	udpateTournament(tournament: Tournament): void {
 		if (this.publish == true || this.publish == 'true') {
-			this.tournamentService.updatePublishedTournament(tournament).subscribe(res => {
+			this.tournamentService.updatePublishedTournament(tournament).subscribe(() => {
 				this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
 			});
 		}

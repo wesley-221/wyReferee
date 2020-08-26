@@ -52,7 +52,7 @@ import { TournamentSummaryComponent } from './components/tournament/tournament-s
 import { MyPublishedTournamentsComponent } from './components/tournament/my-published-tournaments/my-published-tournaments.component';
 
 // AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient) {
+export function HttpLoaderFactory(http: HttpClient): void {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 

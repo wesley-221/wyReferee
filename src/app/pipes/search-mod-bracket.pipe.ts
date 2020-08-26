@@ -11,7 +11,7 @@ export class SearchModBracketPipe implements PipeTransform {
 			return allModbrackets;
 		}
 
-		const returnModBrackets = [];
+		const returnModBrackets: ModBracket[] = [];
 
 		for (const bracket in allModbrackets) {
 			const currentBracket = ModBracket.makeTrueCopy(allModbrackets[bracket]);

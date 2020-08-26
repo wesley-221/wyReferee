@@ -47,7 +47,7 @@ export class MappoolComponent implements OnInit {
 	/**
 	 * Add a new user to to mappool
 	 */
-	addNewMappicker(user: User) {
+	addNewMappicker(user: User): void {
 		this.allUsers.splice(this.allUsers.indexOf(user), 1);
 		this.mappool.addUser(user);
 	}
@@ -56,7 +56,7 @@ export class MappoolComponent implements OnInit {
 	 * Remove a user from the mappool
 	 * @param user the user to delete
 	 */
-	removeMappicker(user: User) {
+	removeMappicker(user: User): void {
 		this.allUsers.push(user);
 		this.mappool.removeUser(user);
 	}
@@ -65,7 +65,7 @@ export class MappoolComponent implements OnInit {
 	 * Change the gamemode of the mappool
 	 * @param event
 	 */
-	changeGamemode(event) {
+	changeGamemode(event: any): void {
 		this.mappool.gamemodeId = event.target.value;
 	}
 
@@ -73,21 +73,21 @@ export class MappoolComponent implements OnInit {
 	 * Change the availability of the mappool
 	 * @param event
 	 */
-	changeAvailability(event) {
+	changeAvailability(event: any): void {
 		this.mappool.availability = event.target.value;
 	}
 
 	/**
 	 * Create a new bracket
 	 */
-	createNewBracket() {
+	createNewBracket(): void {
 		this.mappool.addBracket(new ModBracket());
 	}
 
 	/**
 	 * Add a new mod category
 	 */
-	addNewCategory() {
+	addNewCategory(): void {
 		const newCategory = new ModCategory();
 		this.mappool.addModCategory(newCategory);
 	}
@@ -96,7 +96,7 @@ export class MappoolComponent implements OnInit {
 	 * Delete a mod category
 	 * @param index the index of the mod category to delete
 	 */
-	deleteCategory(category: ModCategory) {
+	deleteCategory(category: ModCategory): void {
 		this.mappool.removeModCategory(category);
 	}
 }

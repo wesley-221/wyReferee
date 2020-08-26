@@ -244,7 +244,7 @@ export class IrcComponent implements OnInit {
 
 						for (const user in this.ircService.client.chans[this.selectedChannel.channelName].users) {
 							// Remove irc levels
-							const newUser = user.replace(/[\@|\+]/gi, '');
+							const newUser = user.replace(/[@|+]/gi, '');
 
 							if (newUser.toLowerCase().startsWith(lastWordOfSentence.toLowerCase())) {
 								matchedUsers.push(newUser);
@@ -429,7 +429,7 @@ export class IrcComponent implements OnInit {
 	 * @param beatmap
 	 * @param bracket
 	 */
-	unbanBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
+	unbanBeatmap(beatmap: ModBracketMap) {
 		if (this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId) > -1) {
 			this.selectedLobby.teamOneBans.splice(this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId), 1);
 		}

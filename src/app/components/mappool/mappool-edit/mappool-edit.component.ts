@@ -50,9 +50,9 @@ export class MappoolEditComponent implements OnInit {
 	 * Save the bracket to the mappool
 	 * @param bracket the bracket to save
 	 */
-	updateMappool(mappool: Mappool) {
+	updateMappool(mappool: Mappool): void {
 		if (this.publish == true || this.publish == 'true') {
-			this.mappoolService.updatePublishedMappool(mappool.convertToJson()).subscribe(res => {
+			this.mappoolService.updatePublishedMappool(mappool.convertToJson()).subscribe(() => {
 				this.toastService.addToast(`Successfully updated the mappool "${mappool.name}".`);
 			});
 		}
