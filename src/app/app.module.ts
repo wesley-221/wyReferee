@@ -33,7 +33,7 @@ import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.com
 import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
 import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
 import { LoginComponent } from './components/authentication/login/login.component';
-import { AuthInterceptor } from "./components/authentication/token-interceptor";
+import { AuthInterceptor } from './components/authentication/token-interceptor';
 import { IrcComponent } from './components/irc/irc.component';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { SearchModBracketPipe } from './pipes/search-mod-bracket.pipe';

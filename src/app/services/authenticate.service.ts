@@ -13,7 +13,7 @@ import { StoreService } from './store.service';
 export class AuthenticateService {
 	private readonly apiUrl = AppConfig.apiUrl;
 	public loggedInUser: LoggedInUser;
-	public loggedIn: boolean = false;
+	public loggedIn = false;
 
 	constructor(private httpClient: HttpClient, private storeService: StoreService) {
 		const userCredentials = storeService.get('auth');
@@ -55,7 +55,7 @@ export class AuthenticateService {
 		this.loggedIn = false;
 		this.loggedInUser = null;
 
-		this.storeService.delete(`auth`);
+		this.storeService.delete('auth');
 	}
 
 	/**
@@ -63,6 +63,6 @@ export class AuthenticateService {
 	 * @param loggedInUser the loggedin user to cache
 	 */
 	public cacheLoggedInUser(loggedInUser: LoggedInUser) {
-		this.storeService.set(`auth`, loggedInUser.convertToJson());
+		this.storeService.set('auth', loggedInUser.convertToJson());
 	}
 }

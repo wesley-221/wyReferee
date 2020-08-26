@@ -4,7 +4,7 @@ import { StoreService } from '../../services/store.service';
 import { ToastService } from '../../services/toast.service';
 import { ToastType } from '../../models/toast';
 import { ApiKeyValidation } from '../../services/osu-api/api-key-validation.service';
-declare var $: any;
+declare let $: any;
 
 @Component({
 	selector: 'app-settings',
@@ -16,7 +16,7 @@ export class SettingsComponent implements OnInit {
 	@ViewChild('apiKey') apiKey: ElementRef;
 
 	dialogMessage: string;
-	dialogAction: number = 0;
+	dialogAction = 0;
 
 	constructor(
 		public electronService: ElectronService,
@@ -53,9 +53,9 @@ export class SettingsComponent implements OnInit {
 	 */
 	clearCache() {
 		this.storeService.delete('cache');
-		this.toastService.addToast(`Successfully cleared the cache.`);
+		this.toastService.addToast('Successfully cleared the cache.');
 
-		$(`#dialog`).modal('toggle');
+		$('#dialog').modal('toggle');
 	}
 
 	/**
@@ -63,9 +63,9 @@ export class SettingsComponent implements OnInit {
 	 */
 	removeApiKey() {
 		this.storeService.delete('api-key');
-		this.toastService.addToast(`Successfully removed your api key.`);
+		this.toastService.addToast('Successfully removed your api key.');
 
-		$(`#dialog`).modal('toggle');
+		$('#dialog').modal('toggle');
 	}
 
 	/**
@@ -74,14 +74,14 @@ export class SettingsComponent implements OnInit {
 	exportConfigFile() {
 		this.electronService.dialog.showSaveDialog({
 			title: 'Export the config file',
-			defaultPath: "export.json"
+			defaultPath: 'export.json'
 		}).then(file => {
 			// Remove the api key and auth properties
 			let configFile = this.storeService.storage.store;
-			configFile['api-key'] = "redacted";
-			configFile['auth'] = "redacted";
-			configFile['irc']['username'] = "redacted";
-			configFile['irc']['password'] = "redacted";
+			configFile['api-key'] = 'redacted';
+			configFile['auth'] = 'redacted';
+			configFile['irc']['username'] = 'redacted';
+			configFile['irc']['password'] = 'redacted';
 
 			console.log(configFile);
 
@@ -102,14 +102,14 @@ export class SettingsComponent implements OnInit {
 		this.dialogAction = dialogAction;
 
 		if (dialogAction == 0) {
-			this.dialogMessage = `Are you sure you want to clear your cache?`;
+			this.dialogMessage = 'Are you sure you want to clear your cache?';
 		}
 		else if (dialogAction == 1) {
-			this.dialogMessage = `Are you sure you want to remove your api key?`;
+			this.dialogMessage = 'Are you sure you want to remove your api key?';
 		}
 
 		setTimeout(() => {
-			$(`#dialog`).modal('toggle');
+			$('#dialog').modal('toggle');
 		}, 1);
 	}
 }

@@ -22,7 +22,7 @@ export class Misc {
 				return false;
 			}
 
-			return t1 === "object" ? Misc.deepEquals(v1, v2) : true;
+			return t1 === 'object' ? Misc.deepEquals(v1, v2) : true;
 		});
 	}
 }

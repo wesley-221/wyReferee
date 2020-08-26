@@ -1,14 +1,14 @@
-import { MultiplayerGame } from "./multiplayer-game";
+import { MultiplayerGame } from './multiplayer-game';
 
 export class MultiplayerMatch {
-    match_id: number;
-    name: string;
-    start_time: Date;
-    end_time: Date;
+	match_id: number;
+	name: string;
+	start_time: Date;
+	end_time: Date;
 
-    games: MultiplayerGame[];
+	games: MultiplayerGame[];
 
-    constructor() {
-        this.games = [];
-    }
+	constructor() {
+		this.games = [];
+	}
 }

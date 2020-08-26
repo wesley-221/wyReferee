@@ -18,14 +18,14 @@ export class MappoolEditComponent implements OnInit {
 		this.route.params.subscribe(params => {
 			this.publish = params.publish;
 
-			if (this.publish == true || this.publish == "true") {
+			if (this.publish == true || this.publish == 'true') {
 				this.mappoolService.getPublishedMappool(params.mappoolId).subscribe(data => {
 					this.mappool = Mappool.serializeJson(data);
 
 					// Set the publish id for published maps
 					this.mappool.publishId = this.mappool.id;
 
-					for (let bracket in this.mappool.modBrackets) {
+					for (const bracket in this.mappool.modBrackets) {
 						this.mappool.modBrackets[bracket].collapsed = true;
 					}
 
@@ -35,7 +35,7 @@ export class MappoolEditComponent implements OnInit {
 			else {
 				this.mappool = Mappool.makeTrueCopy(mappoolService.getMappool(params.mappoolId));
 
-				for (let bracket in this.mappool.modBrackets) {
+				for (const bracket in this.mappool.modBrackets) {
 					this.mappool.modBrackets[bracket].collapsed = true;
 				}
 
@@ -51,7 +51,7 @@ export class MappoolEditComponent implements OnInit {
 	 * @param bracket the bracket to save
 	 */
 	updateMappool(mappool: Mappool) {
-		if (this.publish == true || this.publish == "true") {
+		if (this.publish == true || this.publish == 'true') {
 			this.mappoolService.updatePublishedMappool(mappool.convertToJson()).subscribe(res => {
 				this.toastService.addToast(`Successfully updated the mappool "${mappool.name}".`);
 			});

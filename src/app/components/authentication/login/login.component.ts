@@ -17,8 +17,8 @@ export class LoginComponent implements OnInit {
 	mappoolPublishForm: FormGroup;
 	ircForm: FormGroup;
 
-	isConnecting: boolean = false;
-	isDisconnecting: boolean = false;
+	isConnecting = false;
+	isDisconnecting = false;
 
 	constructor(public auth: AuthenticateService, private toastService: ToastService, public ircService: IrcService, public electronService: ElectronService) { }
 
@@ -56,8 +56,8 @@ export class LoginComponent implements OnInit {
 	 * Login the user with the given username and password
 	 */
 	loginMappoolPublish() {
-		const username = this.mappoolPublishForm.get('username').value,
-			password = this.mappoolPublishForm.get('password').value;
+		const username = this.mappoolPublishForm.get('username').value;
+		const password = this.mappoolPublishForm.get('password').value;
 
 		const registerUser = new RegisterRequest();
 
@@ -86,15 +86,15 @@ export class LoginComponent implements OnInit {
 
 	logoutMappoolPublish() {
 		this.auth.logout();
-		this.toastService.addToast(`Successfully logged out.`);
+		this.toastService.addToast('Successfully logged out.');
 	}
 
 	/**
 	 * Login to irc with the given credentials
 	 */
 	connectIrc() {
-		const username = this.ircForm.get('username').value,
-			password = this.ircForm.get('password').value;
+		const username = this.ircForm.get('username').value;
+		const password = this.ircForm.get('password').value;
 
 		this.ircService.connect(username, password);
 	}

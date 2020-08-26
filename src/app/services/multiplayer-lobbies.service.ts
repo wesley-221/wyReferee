@@ -23,7 +23,7 @@ import { WebhookService } from './webhook.service';
 
 export class MultiplayerLobbiesService {
 	private allLobbies: MultiplayerLobby[] = [];
-	availableLobbyId: number = 0;
+	availableLobbyId = 0;
 	private synchronizeDone: BehaviorSubject<number>;
 
 	constructor(
@@ -37,7 +37,7 @@ export class MultiplayerLobbiesService {
 		private webhookService: WebhookService) {
 		const allLobbies = storeService.get('lobby');
 
-		for (let lobby in allLobbies) {
+		for (const lobby in allLobbies) {
 			const currentLobby = allLobbies[lobby];
 
 			const newLobby = new MultiplayerLobby();
@@ -84,7 +84,7 @@ export class MultiplayerLobbiesService {
 	 * @param lobbyId the id of the multiplayerlobby to get
 	 */
 	public get(lobbyId: number): MultiplayerLobby {
-		for (let lobby in this.allLobbies) {
+		for (const lobby in this.allLobbies) {
 			if (this.allLobbies[lobby].lobbyId == lobbyId) {
 				return this.allLobbies[lobby];
 			}
@@ -98,7 +98,7 @@ export class MultiplayerLobbiesService {
 	 * @param name the irc channel
 	 */
 	public getByIrcLobby(name: string): MultiplayerLobby {
-		for (let lobby in this.allLobbies) {
+		for (const lobby in this.allLobbies) {
 			if (`#mp_${this.getMultiplayerIdFromLink(this.allLobbies[lobby].multiplayerLink)}` == name) {
 				return this.allLobbies[lobby];
 			}
@@ -110,7 +110,7 @@ export class MultiplayerLobbiesService {
 	 * @param multiplayerLobby the multiplayerlobby to update
 	 */
 	public update(multiplayerLobby: MultiplayerLobby): void {
-		for (let lobby in this.allLobbies) {
+		for (const lobby in this.allLobbies) {
 			if (this.allLobbies[lobby].lobbyId == multiplayerLobby.lobbyId) {
 				this.allLobbies[lobby] = multiplayerLobby;
 
@@ -120,12 +120,12 @@ export class MultiplayerLobbiesService {
 		}
 	}
 
-	public synchronizeMultiplayerMatch(multiplayerLobby: MultiplayerLobby, showToasts: boolean = true, sendWebhook: boolean = false): void {
+	public synchronizeMultiplayerMatch(multiplayerLobby: MultiplayerLobby, showToasts = true, sendWebhook = false): void {
 		this.getMultiplayer.get(multiplayerLobby.multiplayerLink).subscribe(data => {
 			multiplayerLobby.teamOneScore = 0;
 			multiplayerLobby.teamTwoScore = 0;
 
-			for (let game in data.games) {
+			for (const game in data.games) {
 				const currentGame = data.games[game];
 				const multiplayerData = new MultiplayerData();
 
@@ -154,7 +154,7 @@ export class MultiplayerLobbiesService {
 				}
 
 				// Loop through all the scores
-				for (let score in currentGame.scores) {
+				for (const score in currentGame.scores) {
 					const cachedUser: CacheUser = this.cacheService.getCachedUser(currentGame.scores[score].user_id);
 
 					// Check if the user is cached
@@ -164,8 +164,8 @@ export class MultiplayerLobbiesService {
 						});
 					}
 
-					const currentScore = currentGame.scores[score],
-						newMpDataUser = new MultiplayerDataUser();
+					const currentScore = currentGame.scores[score];
+					const newMpDataUser = new MultiplayerDataUser();
 
 					newMpDataUser.user = currentScore.user_id;
 					newMpDataUser.score = currentScore.score;
@@ -186,7 +186,7 @@ export class MultiplayerLobbiesService {
 				scoreInterface.setTeamSize(multiplayerLobby.teamSize);
 				scoreInterface.addUserScores(multiplayerData.getPlayers());
 
-				if (scoreInterface.getIdentifier() == "AxS") {
+				if (scoreInterface.getIdentifier() == 'AxS') {
 					(<AxSCalculation>scoreInterface).setModifier(MODIFIER);
 				}
 

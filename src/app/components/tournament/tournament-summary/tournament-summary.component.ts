@@ -5,7 +5,7 @@ import { TournamentService } from '../../../services/tournament.service';
 import { ToastService } from '../../../services/toast.service';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { ToastType } from '../../../models/toast';
-declare var $: any;
+declare let $: any;
 
 @Component({
 	selector: 'app-tournament-summary',
@@ -14,10 +14,10 @@ declare var $: any;
 })
 export class TournamentSummaryComponent implements OnInit {
 	@Input() tournament: Tournament;
-	@Input() publish: boolean = false;
+	@Input() publish = false;
 
 	dialogMessage: string;
-	dialogAction: number = 0;
+	dialogAction = 0;
 	tournamentToModify: Tournament;
 
 	constructor(private router: Router, private tournamentService: TournamentService, private toastService: ToastService, private authService: AuthenticateService) { }
@@ -56,17 +56,17 @@ export class TournamentSummaryComponent implements OnInit {
 	 * @param tournament the tournament to publish
 	 */
 	publishTournament(tournament: Tournament) {
-		let publishTournament: Tournament = Tournament.makeTrueCopy(tournament);
+		const publishTournament: Tournament = Tournament.makeTrueCopy(tournament);
 
 		// Reset id
 		publishTournament.id = null;
 
 		// Stringify the mods
-		for (let team in publishTournament.teams) {
+		for (const team in publishTournament.teams) {
 			// Reset id
 			publishTournament.teams[team].id = null;
 
-			for (let player in publishTournament.teams[team].teamPlayers) {
+			for (const player in publishTournament.teams[team].teamPlayers) {
 				// Reset id
 				publishTournament.teams[team].teamPlayers[player].id = null;
 			}

@@ -13,7 +13,7 @@ import { ToastService } from './toast.service';
 import { ToastType } from '../models/toast';
 
 @Injectable({
-  	providedIn: 'root'
+	providedIn: 'root'
 })
 
 export class ElectronService {
@@ -27,11 +27,11 @@ export class ElectronService {
 
 	autoUpdater: typeof autoUpdater;
 	log: typeof log;
-  
+
 	get isElectron() {
-	  	return window && window.process && window.process.type;
+		return window && window.process && window.process.type;
 	}
-  
+
 	constructor(private toastService: ToastService) {
 		// Conditional imports
 		if (this.isElectron) {
@@ -40,7 +40,7 @@ export class ElectronService {
 			this.remote = window.require('electron').remote;
 			this.shell = window.require('electron').shell;
 			this.dialog = this.remote.dialog;
-	
+
 			this.childProcess = window.require('child_process');
 			this.fs = window.require('fs');
 
@@ -53,7 +53,7 @@ export class ElectronService {
 			(<any>this.autoUpdater.logger).transports.file.level = 'info';
 			this.autoUpdater.autoDownload = true;
 
-			if(AppConfig.production) {
+			if (AppConfig.production) {
 				this.autoUpdater.checkForUpdates();
 
 				this.autoUpdater.on('checking-for-updates', () => {

@@ -8,7 +8,7 @@ import { ToastService } from '../../../services/toast.service';
 import { ToastType } from '../../../models/toast';
 import { Mappool } from '../../../models/osu-mappool/mappool';
 import { ModCategory } from '../../../models/osu-mappool/mod-category';
-declare var $: any;
+declare let $: any;
 
 @Component({
 	selector: 'app-mod-bracket',
@@ -22,8 +22,8 @@ export class ModBracketComponent implements OnInit {
 	@Input() mappool: Mappool;
 
 	selectedMods: { index: number, modValue: any }[] = [];
-	modBracketIndex: number = 0;
-	MAX_BRACKETS: number = 4;
+	modBracketIndex = 0;
+	MAX_BRACKETS = 4;
 
 	dialogMessage: string;
 	modBracketToRemove: ModBracket;
@@ -38,12 +38,12 @@ export class ModBracketComponent implements OnInit {
 		{ modName: 'Nightcore', modValue: Mods.Nightcore },
 		{ modName: 'Nofail', modValue: Mods.NoFail },
 		{ modName: 'Halftime', modValue: Mods.HalfTime },
-		{ modName: 'Freemod', modValue: "freemod" }
+		{ modName: 'Freemod', modValue: 'freemod' }
 	];
 
 	constructor(private getBeatmap: GetBeatmap, public electronService: ElectronService, private toastService: ToastService) { }
 	ngOnInit() {
-		for (let mod in this.modBracket.mods) {
+		for (const mod in this.modBracket.mods) {
 			this.selectedMods.push({ index: this.modBracketIndex + 1, modValue: this.modBracket.mods[mod].modValue });
 			this.modBracketIndex++;
 		}
@@ -102,7 +102,7 @@ export class ModBracketComponent implements OnInit {
 			this.modBracketIndex++;
 		}
 		else {
-			this.toastService.addToast(`Maximum amount of mods reached.`, ToastType.Warning);
+			this.toastService.addToast('Maximum amount of mods reached.', ToastType.Warning);
 		}
 	}
 
@@ -117,7 +117,7 @@ export class ModBracketComponent implements OnInit {
 		// Reset the mods
 		this.modBracket.mods = [];
 
-		for (let mod in this.selectedMods) {
+		for (const mod in this.selectedMods) {
 			if (this.selectedMods[mod].index == modIndex) {
 				this.selectedMods[mod].modValue = modValue;
 			}
@@ -131,7 +131,7 @@ export class ModBracketComponent implements OnInit {
 	 * @param modIndex the index of the mod to delete
 	 */
 	deleteMod(modIndex: number) {
-		for (let mod in this.selectedMods) {
+		for (const mod in this.selectedMods) {
 			if (this.selectedMods[mod].index == modIndex) {
 				this.selectedMods.splice(Number(mod), 1);
 

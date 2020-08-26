@@ -27,60 +27,60 @@ export class WebhookService {
 	 * @param extraMessage the extra message
 	 * @param referee the referee
 	 */
-	sendFinalResult(selectedLobby: MultiplayerLobby, extraMessage: String, referee: String) {
+	sendFinalResult(selectedLobby: MultiplayerLobby, extraMessage: string, referee: string) {
 		const scoreString = (selectedLobby.teamOneScore > selectedLobby.teamTwoScore) ?
 			`**Score:** __${selectedLobby.teamOneName}__ | **${selectedLobby.teamOneScore}** - ${selectedLobby.teamTwoScore} | ${selectedLobby.teamTwoName}` :
 			`**Score:** ${selectedLobby.teamOneName} | ${selectedLobby.teamOneScore} - **${selectedLobby.teamTwoScore}** | __${selectedLobby.teamTwoName}__`;
 
-		let body = {
-			"embeds": [
+		const body = {
+			'embeds': [
 				{
-					"title": `Result of **${selectedLobby.teamOneName}** vs. **${selectedLobby.teamTwoName}**`,
-					"url": selectedLobby.multiplayerLink,
-					"description": `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n[${selectedLobby.multiplayerLink}](${selectedLobby.multiplayerLink})`,
-					"color": 15258703,
-					"timestamp": new Date(),
-					"footer": {
-						"text": `Match referee was ${referee}`
+					'title': `Result of **${selectedLobby.teamOneName}** vs. **${selectedLobby.teamTwoName}**`,
+					'url': selectedLobby.multiplayerLink,
+					'description': `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n[${selectedLobby.multiplayerLink}](${selectedLobby.multiplayerLink})`,
+					'color': 15258703,
+					'timestamp': new Date(),
+					'footer': {
+						'text': `Match referee was ${referee}`
 					},
-					"fields": [
+					'fields': [
 					]
 				}
 			]
 		}
 
-		let teamOneBans: any[] = [],
-			teamTwoBans: any[] = [];
+		const teamOneBans: any[] = [];
+		const teamTwoBans: any[] = [];
 
 		if (selectedLobby.teamOneBans.length > 0) {
-			for (let ban of selectedLobby.teamOneBans) {
+			for (const ban of selectedLobby.teamOneBans) {
 				teamOneBans.push(`[${this.getBeatmapnameFromMappools(ban).name}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
 			}
 
 			body.embeds[0].fields.push({
-				"name": `**${selectedLobby.teamOneName}** bans:`,
-				"value": teamOneBans.join('\n'),
-				"inline": true
+				'name': `**${selectedLobby.teamOneName}** bans:`,
+				'value': teamOneBans.join('\n'),
+				'inline': true
 			});
 
 		}
 
 		if (selectedLobby.teamTwoBans.length > 0) {
-			for (let ban of selectedLobby.teamTwoBans) {
+			for (const ban of selectedLobby.teamTwoBans) {
 				teamTwoBans.push(`[${this.getBeatmapnameFromMappools(ban).name}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
 			}
 
 			body.embeds[0].fields.push({
-				"name": `**${selectedLobby.teamTwoName}** bans:`,
-				"value": teamTwoBans.join('\n'),
-				"inline": true
+				'name': `**${selectedLobby.teamTwoName}** bans:`,
+				'value': teamTwoBans.join('\n'),
+				'inline': true
 			});
 		}
 
 		if (extraMessage != null) {
 			body.embeds[0].fields.push({
-				"name": `**Additional message by ${referee}**`,
-				"value": extraMessage,
+				'name': `**Additional message by ${referee}**`,
+				'value': extraMessage,
 			});
 		}
 
@@ -95,24 +95,24 @@ export class WebhookService {
 	 * @param wbdLosingTeam the team that has the loss
 	 * @param referee the referee
 	 */
-	sendWinByDefaultResult(selectedLobby: MultiplayerLobby, extraMessage: String, wbdWinningTeam: String, wbdLosingTeam: String, referee: String) {
+	sendWinByDefaultResult(selectedLobby: MultiplayerLobby, extraMessage: string, wbdWinningTeam: string, wbdLosingTeam: string, referee: string) {
 		let resultDescription = `**Score:** __${wbdWinningTeam}__ | 1 - 0 | ${wbdLosingTeam} \n\n__${wbdLosingTeam}__ failed to show up.`;
 
-		if (wbdWinningTeam == "No-one") {
+		if (wbdWinningTeam == 'No-one') {
 			resultDescription = `**Score:** ${selectedLobby.teamOneName} | 0 - 0 | ${selectedLobby.teamTwoName} \n\nBoth __${selectedLobby.teamOneName}__ and __${selectedLobby.teamTwoName}__ failed to show up.`;
 		}
 
-		let body = {
-			"embeds": [
+		const body = {
+			'embeds': [
 				{
-					"title": `Result of **${selectedLobby.teamOneName}** vs. **${selectedLobby.teamTwoName}**`,
-					"description": resultDescription,
-					"color": 15258703,
-					"timestamp": new Date(),
-					"footer": {
-						"text": `Match referee was ${referee}`
+					'title': `Result of **${selectedLobby.teamOneName}** vs. **${selectedLobby.teamTwoName}**`,
+					'description': resultDescription,
+					'color': 15258703,
+					'timestamp': new Date(),
+					'footer': {
+						'text': `Match referee was ${referee}`
 					},
-					"fields": [
+					'fields': [
 					]
 				}
 			]
@@ -120,8 +120,8 @@ export class WebhookService {
 
 		if (extraMessage != null) {
 			body.embeds[0].fields.push({
-				"name": `**Additional message by ${referee}**`,
-				"value": extraMessage,
+				'name': `**Additional message by ${referee}**`,
+				'value': extraMessage,
 			});
 		}
 
@@ -135,24 +135,24 @@ export class WebhookService {
 	 * @param ban the map that was banned
 	 * @param referee the referee
 	 */
-	sendBanResult(selectedLobby: MultiplayerLobby, teamName: String, ban: ModBracketMap, referee: String) {
+	sendBanResult(selectedLobby: MultiplayerLobby, teamName: string, ban: ModBracketMap, referee: string) {
 		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(ban.beatmapId);
 
-		let body = {
-			"embeds": [
+		const body = {
+			'embeds': [
 				{
-					"title": `🔨 Ban update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
-					"url": selectedLobby.multiplayerLink,
-					"description": `**${teamName}** has banned [**${ban.beatmapName}**](${ban.beatmapUrl})`,
-					"color": 15258703,
-					"timestamp": new Date(),
-					"footer": {
-						"text": `Match referee was ${referee}`
+					'title': `🔨 Ban update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					'url': selectedLobby.multiplayerLink,
+					'description': `**${teamName}** has banned [**${ban.beatmapName}**](${ban.beatmapUrl})`,
+					'color': 15258703,
+					'timestamp': new Date(),
+					'footer': {
+						'text': `Match referee was ${referee}`
 					},
-					"thumbnail": {
-						"url": `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
+					'thumbnail': {
+						'url': `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
 					},
-					"fields": [
+					'fields': [
 					]
 				}
 			]
@@ -166,7 +166,7 @@ export class WebhookService {
 	 * @param multiplayerLobby the lobby to get the data from
 	 * @param referee the referee
 	 */
-	sendMatchFinishedResult(multiplayerLobby: MultiplayerLobby, referee: String) {
+	sendMatchFinishedResult(multiplayerLobby: MultiplayerLobby, referee: string) {
 		const lastMultiplayerData = multiplayerLobby.multiplayerData[multiplayerLobby.multiplayerData.length - 1];
 		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(lastMultiplayerData.beatmap_id);
 
@@ -175,8 +175,8 @@ export class WebhookService {
 			return null;
 		}
 
-		let resultString = "";
-		let embedHeader = "";
+		let resultString = '';
+		let embedHeader = '';
 		let lostTheirPick = false;
 
 		// The pick was from team two
@@ -219,7 +219,7 @@ export class WebhookService {
 		let highestScorePlayer: MultiplayerDataUser = null;
 		let highestAccuracyPlayer: MultiplayerDataUser = null;
 
-		for (let user of lastMultiplayerData.getPlayers()) {
+		for (const user of lastMultiplayerData.getPlayers()) {
 			if (highestScorePlayer == null || user.score > highestScorePlayer.score) {
 				highestScorePlayer = user;
 			}
@@ -237,21 +237,21 @@ export class WebhookService {
 
 		resultString += `Next pick is for __${multiplayerLobby.getNextPickName()}__`;
 
-		let body = {
-			"embeds": [
+		const body = {
+			'embeds': [
 				{
-					"title": `🏁 ${embedHeader}`,
-					"url": multiplayerLobby.multiplayerLink,
-					"description": resultString,
-					"color": lostTheirPick ? 0xad324f : 0x32a852,
-					"timestamp": new Date(),
-					"thumbnail": {
-						"url": `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
+					'title': `🏁 ${embedHeader}`,
+					'url': multiplayerLobby.multiplayerLink,
+					'description': resultString,
+					'color': lostTheirPick ? 0xad324f : 0x32a852,
+					'timestamp': new Date(),
+					'thumbnail': {
+						'url': `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
 					},
-					"footer": {
-						"text": `Match referee was ${referee}`
+					'footer': {
+						'text': `Match referee was ${referee}`
 					},
-					"fields": [
+					'fields': [
 					]
 				}
 			]

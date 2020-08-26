@@ -1,6 +1,6 @@
 export class ModCategory {
 	id: number = null;
-	categoryName: String = null;
+	categoryName: string = null;
 
 	/**
 	 * Compare the current modcategory with the given modcategory
@@ -42,7 +42,7 @@ export class ModCategory {
 	public static serializeJson(json: any): ModCategory {
 		const newModCategory = new ModCategory();
 
-		if(json != undefined) {
+		if (json != undefined) {
 			newModCategory.id = json.id;
 			newModCategory.categoryName = json.categoryName;
 		}

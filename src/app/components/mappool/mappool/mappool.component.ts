@@ -22,11 +22,11 @@ export class MappoolComponent implements OnInit {
 		this.mappoolService.mappoolLoaded$.subscribe(response => {
 			if (response == true) {
 				this.auth.getAllUser().subscribe(userArray => {
-					for (let item in userArray) {
+					for (const item in userArray) {
 						const user = User.serializeJson(userArray[item]);
 						let foundUser = false;
 
-						for (let i in this.mappool.availableTo) {
+						for (const i in this.mappool.availableTo) {
 							if (user.id == this.mappool.availableTo[i].id) {
 								foundUser = true;
 							}

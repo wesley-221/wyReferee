@@ -1,8 +1,8 @@
-import { MultiplayerData } from "./multiplayer-data";
-import { MultiplayerDataUser } from "./multiplayer-data-user";
-import { Mappool } from "../osu-mappool/mappool";
-import { ModBracket } from "../osu-mappool/mod-bracket";
-import { ModCategory } from "../osu-mappool/mod-category";
+import { MultiplayerData } from './multiplayer-data';
+import { MultiplayerDataUser } from './multiplayer-data-user';
+import { Mappool } from '../osu-mappool/mappool';
+import { ModBracket } from '../osu-mappool/mod-bracket';
+import { ModCategory } from '../osu-mappool/mod-category';
 
 export class MultiplayerLobby {
 	lobbyId: number;
@@ -11,17 +11,17 @@ export class MultiplayerLobby {
 	tournamentAcronym: string;
 	teamOneName: string;
 	teamTwoName: string;
-	teamOneScore: number = 0;
-	teamTwoScore: number = 0;
+	teamOneScore = 0;
+	teamTwoScore = 0;
 	teamSize: number;
 	webhook: string;
 	mappool: Mappool = null;
 	mappoolId: number = null;
 	ircChannel: string;
-	ircConnected: boolean = false;
+	ircConnected = false;
 	scoreInterfaceIndentifier: string;
 
-	pickedCategories: { modBracketName: String, categories: String[] }[] = [];
+	pickedCategories: { modBracketName: string, categories: string[] }[] = [];
 
 	firstPick: string;
 	bestOf: number;
@@ -40,7 +40,7 @@ export class MultiplayerLobby {
 	}
 
 	existMpData(multiplayerData: MultiplayerData): boolean {
-		for (let mpData in this.multiplayerData)
+		for (const mpData in this.multiplayerData)
 			if (this.multiplayerData[mpData].game_id == multiplayerData.game_id) {
 				return true;
 			}
@@ -49,7 +49,7 @@ export class MultiplayerLobby {
 	}
 
 	updateMpData(multiplayerData: MultiplayerData): void {
-		for (let mpData in this.multiplayerData) {
+		for (const mpData in this.multiplayerData) {
 			if (this.multiplayerData[mpData].game_id == multiplayerData.game_id) {
 				this.multiplayerData[mpData] = multiplayerData;
 				return;
@@ -87,7 +87,7 @@ export class MultiplayerLobby {
 
 		this.mapsCountTowardScore = json.countForScore;
 
-		for (let mpData in json.multiplayerData) {
+		for (const mpData in json.multiplayerData) {
 			const currentMpData = json.multiplayerData[mpData];
 
 			const newMpData = new MultiplayerData();
@@ -110,8 +110,8 @@ export class MultiplayerLobby {
 				}
 			}
 
-			for (let playerData in currentMpData) {
-				if (["beatmap_id", "mods", "players", "team_one_score", "team_two_score"].indexOf(playerData) == -1) {
+			for (const playerData in currentMpData) {
+				if (['beatmap_id', 'mods', 'players', 'team_one_score', 'team_two_score'].indexOf(playerData) == -1) {
 					const newMpDataUser = new MultiplayerDataUser();
 
 					newMpDataUser.accuracy = currentMpData[playerData].accuracy;
@@ -136,43 +136,43 @@ export class MultiplayerLobby {
      */
 	convertToJson(multiplayerLobby: MultiplayerLobby = this): any {
 		const lobby = {
-			"data": {
-				"lobbyId": multiplayerLobby.lobbyId,
-				"description": multiplayerLobby.description,
-				"multiplayerLink": multiplayerLobby.multiplayerLink,
-				"tournamentAcronym": multiplayerLobby.tournamentAcronym,
-				"teamOneName": multiplayerLobby.teamOneName,
-				"teamTwoName": multiplayerLobby.teamTwoName,
-				"teamSize": multiplayerLobby.teamSize,
-				"webhook": multiplayerLobby.webhook,
-				"selectedMappoolId": (multiplayerLobby.mappool == null) ? -1 : multiplayerLobby.mappool.id,
-				"firstPick": multiplayerLobby.firstPick,
-				"bestOf": multiplayerLobby.bestOf,
-				"teamOneBans": multiplayerLobby.teamOneBans,
-				"teamTwoBans": multiplayerLobby.teamTwoBans,
-				"scoreInterfaceIndentifier": multiplayerLobby.scoreInterfaceIndentifier,
-				"pickedCategories": multiplayerLobby.pickedCategories
+			'data': {
+				'lobbyId': multiplayerLobby.lobbyId,
+				'description': multiplayerLobby.description,
+				'multiplayerLink': multiplayerLobby.multiplayerLink,
+				'tournamentAcronym': multiplayerLobby.tournamentAcronym,
+				'teamOneName': multiplayerLobby.teamOneName,
+				'teamTwoName': multiplayerLobby.teamTwoName,
+				'teamSize': multiplayerLobby.teamSize,
+				'webhook': multiplayerLobby.webhook,
+				'selectedMappoolId': (multiplayerLobby.mappool == null) ? -1 : multiplayerLobby.mappool.id,
+				'firstPick': multiplayerLobby.firstPick,
+				'bestOf': multiplayerLobby.bestOf,
+				'teamOneBans': multiplayerLobby.teamOneBans,
+				'teamTwoBans': multiplayerLobby.teamTwoBans,
+				'scoreInterfaceIndentifier': multiplayerLobby.scoreInterfaceIndentifier,
+				'pickedCategories': multiplayerLobby.pickedCategories
 			},
-			"countForScore": {},
-			"multiplayerData": {}
+			'countForScore': {},
+			'multiplayerData': {}
 		};
 
 		if (multiplayerLobby.mapsCountTowardScore !== undefined)
 			lobby.countForScore = multiplayerLobby.mapsCountTowardScore;
 
-		for (let match in multiplayerLobby.multiplayerData) {
+		for (const match in multiplayerLobby.multiplayerData) {
 			const currentMatch = multiplayerLobby.multiplayerData[match];
 			lobby.multiplayerData[currentMatch.game_id] = {};
 			const allPlayers = currentMatch.getPlayers();
 
-			for (let score in allPlayers) {
+			for (const score in allPlayers) {
 				lobby.multiplayerData[currentMatch.game_id][allPlayers[score].slot] = {
-					"user": allPlayers[score].user,
-					"score": allPlayers[score].score,
-					"accuracy": allPlayers[score].accuracy,
-					"passed": allPlayers[score].passed,
-					"mods": allPlayers[score].mods,
-					"caption": allPlayers[score].caption
+					'user': allPlayers[score].user,
+					'score': allPlayers[score].score,
+					'accuracy': allPlayers[score].accuracy,
+					'passed': allPlayers[score].passed,
+					'mods': allPlayers[score].mods,
+					'caption': allPlayers[score].caption
 				}
 			}
 
@@ -239,7 +239,7 @@ export class MultiplayerLobby {
 	pickModCategoryForModBracket(modBracket: ModBracket, modCategory: ModCategory) {
 		let foundBracket = 0;
 
-		for (let mb in this.pickedCategories) {
+		for (const mb in this.pickedCategories) {
 			if (this.pickedCategories[mb].modBracketName == modBracket.bracketName) {
 				this.pickedCategories[mb].categories.push(modCategory.categoryName);
 				foundBracket = 1;

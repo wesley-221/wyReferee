@@ -5,7 +5,7 @@ import { ToastService } from '../../../services/toast.service';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { Router } from '@angular/router';
 import { ToastType } from '../../../models/toast';
-declare var $: any;
+declare let $: any;
 
 @Component({
 	selector: 'app-mappool-summary',
@@ -14,10 +14,10 @@ declare var $: any;
 })
 export class MappoolSummaryComponent implements OnInit {
 	@Input() mappool: Mappool;
-	@Input() publish: boolean = false;
+	@Input() publish = false;
 
 	dialogMessage: string;
-	dialogAction: number = 0;
+	dialogAction = 0;
 	mappoolToModify: Mappool;
 
 	constructor(private mappoolService: MappoolService, private toastService: ToastService, private authService: AuthenticateService, private router: Router) { }
@@ -45,20 +45,20 @@ export class MappoolSummaryComponent implements OnInit {
 	 * @param mappool the mappool to publish
 	 */
 	publishMappool(mappool: Mappool) {
-		let publishMappool: Mappool = Mappool.makeTrueCopy(mappool);
+		const publishMappool: Mappool = Mappool.makeTrueCopy(mappool);
 
 		// Reset id
 		publishMappool.id = null;
 
 		// Stringify the mods
-		for (let modBracket in publishMappool.modBrackets) {
+		for (const modBracket in publishMappool.modBrackets) {
 			// Reset id
 			publishMappool.modBrackets[modBracket].id = null;
 
 			(<any>publishMappool.modBrackets[modBracket]).mods = JSON.stringify(publishMappool.modBrackets[modBracket].mods);
 
 			// Reset id's
-			for (let modBracketMap in publishMappool.modBrackets[modBracket].beatmaps) {
+			for (const modBracketMap in publishMappool.modBrackets[modBracket].beatmaps) {
 				publishMappool.modBrackets[modBracket].beatmaps[modBracketMap].id = null;
 			}
 		}

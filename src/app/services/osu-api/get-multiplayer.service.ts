@@ -9,25 +9,25 @@ import { MultiplayerGame } from '../../models/osu-models/multiplayer-game';
 import { MultiplayerGameScore } from '../../models/osu-models/multiplayer-game-score';
 
 @Injectable({
-  	providedIn: 'root'
+	providedIn: 'root'
 })
 
 export class GetMultiplayerService extends OsuApi {
 	constructor(private httpClient: HttpClient, private storeService: StoreService) {
-        super(OsuApiEndpoints.GetMultiplayer);
+		super(OsuApiEndpoints.GetMultiplayer);
 	}
-	
+
 	/**
      * Get the multiplayerdata from the given url
      * @param multiplayerLink the multiplayerlink
      */
-    public get(multiplayerLink: string): Observable<MultiplayerMatch> {
+	public get(multiplayerLink: string): Observable<MultiplayerMatch> {
 		const multiplayerId = this.getMultiplayerIdFromUrl(multiplayerLink);
 
-        return this.httpClient.get<MultiplayerMatch>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key')}&mp=${multiplayerId}`)
-        .pipe(
-            map((data: any) => this.serializeFromJson(data))
-        );
+		return this.httpClient.get<MultiplayerMatch>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key')}&mp=${multiplayerId}`)
+			.pipe(
+				map((data: any) => this.serializeFromJson(data))
+			);
 	}
 
 	/**
@@ -36,15 +36,15 @@ export class GetMultiplayerService extends OsuApi {
 	 */
 	private serializeFromJson(json: any): MultiplayerMatch {
 		const mp = new MultiplayerMatch();
-		
+
 		mp.name = json.match.name;
 		mp.match_id = json.match.match_id;
 		mp.start_time = json.match.start_time;
 		mp.end_time = json.match.end_time;
 
-		for(let game in json.games) {
-			const 	currentGame = json.games[game], 
-					newGame = new MultiplayerGame();
+		for (const game in json.games) {
+			const currentGame = json.games[game];
+			const newGame = new MultiplayerGame();
 
 			newGame.beatmap_id = currentGame.beatmap_id;
 			newGame.end_time = currentGame.end_time;
@@ -56,9 +56,9 @@ export class GetMultiplayerService extends OsuApi {
 			newGame.start_time = currentGame.start_time;
 			newGame.team_type = currentGame.team_type;
 
-			for(let score in currentGame.scores) {
-				const 	currentScore = currentGame.scores[score],
-						newScore = new MultiplayerGameScore();
+			for (const score in currentGame.scores) {
+				const currentScore = currentGame.scores[score];
+				const newScore = new MultiplayerGameScore();
 
 				newScore.count50 = currentScore.count50
 				newScore.count100 = currentScore.count100
@@ -78,11 +78,11 @@ export class GetMultiplayerService extends OsuApi {
 
 				newGame.scores.push(currentScore);
 			}
-			
+
 			mp.games.push(newGame);
 		}
 
-        return mp;
+		return mp;
 	}
 
 	/**
@@ -90,12 +90,12 @@ export class GetMultiplayerService extends OsuApi {
 	 * @param url the complete url
 	 */
 	private getMultiplayerIdFromUrl(url: string) {
-        const regularExpression = new RegExp(/https:\/\/osu\.ppy\.sh\/community\/matches\/([0-9]+)/).exec(url);
+		const regularExpression = new RegExp(/https:\/\/osu\.ppy\.sh\/community\/matches\/([0-9]+)/).exec(url);
 
-        if(regularExpression) {
-            return regularExpression[1];
-        }
+		if (regularExpression) {
+			return regularExpression[1];
+		}
 
-        return false;
-    }
+		return false;
+	}
 }

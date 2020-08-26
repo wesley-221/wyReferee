@@ -14,7 +14,7 @@ export class MyPublishedTournamentsComponent implements OnInit {
 
 	constructor(private tournamentService: TournamentService, private authService: AuthenticateService) {
 		this.tournamentService.getAllPublishedTournamentsFromUser(authService.loggedInUser).subscribe(data => {
-			for (let tournament in data) {
+			for (const tournament in data) {
 				const newTournament: Tournament = this.tournamentService.mapFromJson(data[tournament]);
 				this.publishedTournaments.push(newTournament);
 			}

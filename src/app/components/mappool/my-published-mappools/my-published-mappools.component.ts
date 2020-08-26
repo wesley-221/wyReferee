@@ -13,7 +13,7 @@ export class MyPublishedMappoolsComponent implements OnInit {
 
 	constructor(private mappoolService: MappoolService, private auth: AuthenticateService) {
 		this.mappoolService.getAllPublishedMappoolsFromUser(auth.loggedInUser).subscribe(data => {
-			for (let mappool in data) {
+			for (const mappool in data) {
 				const newMappool: Mappool = Mappool.serializeJson(data[mappool]);
 				this.publishedMappools.push(newMappool);
 			}

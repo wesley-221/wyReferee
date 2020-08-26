@@ -14,7 +14,7 @@ export class TitlebarComponent implements OnInit {
 
 	constructor(private electronService: ElectronService) { }
 
-	ngOnInit() { 
+	ngOnInit() {
 		this.electronService.remote.getCurrentWindow().on('maximize', () => {
 			this.maximizeButton.icon = faClone;
 			this.maximizeButton.render();
@@ -37,7 +37,7 @@ export class TitlebarComponent implements OnInit {
 	 * (Un)maximize the window
 	 */
 	maximizeWindow(): void {
-		if(this.electronService.remote.getCurrentWindow().isMaximized()) {
+		if (this.electronService.remote.getCurrentWindow().isMaximized()) {
 			this.electronService.remote.getCurrentWindow().unmaximize();
 		}
 		else {

@@ -1,8 +1,8 @@
-import { ModBracket } from "./mod-bracket";
-import { ModBracketMap } from "./mod-bracket-map";
-import { Gamemodes } from "../osu-models/osu";
-import { User } from "../authentication/user";
-import { ModCategory } from "./mod-category";
+import { ModBracket } from './mod-bracket';
+import { ModBracketMap } from './mod-bracket-map';
+import { Gamemodes } from '../osu-models/osu';
+import { User } from '../authentication/user';
+import { ModCategory } from './mod-category';
 
 export enum Availability {
 	ToEveryone = 0,
@@ -21,7 +21,7 @@ export class Mappool {
 	name: string;
 	gamemodeId: Gamemodes = Gamemodes.Osu;
 	publishId: number;
-	updateAvailable: boolean = false;
+	updateAvailable = false;
 	availability: Availability = Availability.ToEveryone;
 	mappoolType: MappoolType = MappoolType.Normal;
 	availableTo: User[] = [];
@@ -52,7 +52,7 @@ export class Mappool {
 	 * @param modBracketId the id of the bracket
 	 */
 	public getModBracketByid(modBracketId: number) {
-		for (let bracket in this.modBrackets) {
+		for (const bracket in this.modBrackets) {
 			if (this.modBrackets[bracket].id == modBracketId) {
 				return this.modBrackets[bracket];
 			}
@@ -105,8 +105,8 @@ export class Mappool {
 	 * Get a mod category from the given name
 	 * @param categoryName
 	 */
-	public getModCategoryByName(categoryName: String) {
-		for (let modCategory in this.modCategories) {
+	public getModCategoryByName(categoryName: string) {
+		for (const modCategory in this.modCategories) {
 			if (this.modCategories[modCategory].categoryName == categoryName) {
 				return this.modCategories[modCategory];
 			}
@@ -130,19 +130,19 @@ export class Mappool {
 			return false;
 		}
 
-		for (let modifier in this.modifiers) {
+		for (const modifier in this.modifiers) {
 			if (this.modifiers[modifier].compareTo(mappool.modifiers[modifier]) == false) {
 				return false;
 			}
 		}
 
-		for (let bracket in this.modBrackets) {
+		for (const bracket in this.modBrackets) {
 			if (this.modBrackets[bracket].compareTo(mappool.modBrackets[bracket]) == false) {
 				return false;
 			}
 		}
 
-		for (let modCategory in this.modCategories) {
+		for (const modCategory in this.modCategories) {
 			if (this.modCategories[modCategory].compareTo(mappool.modCategories[modCategory]) == false) {
 				return false;
 			}
@@ -156,7 +156,7 @@ export class Mappool {
 	 * @param publish
      */
 	public convertToJson(): any {
-		let mappool = {
+		const mappool = {
 			id: this.id,
 			name: this.name,
 			gamemodeId: this.gamemodeId,
@@ -169,17 +169,17 @@ export class Mappool {
 			modifiers: {}
 		};
 
-		for (let bracket in this.modBrackets) {
+		for (const bracket in this.modBrackets) {
 			const thisBracket = this.modBrackets[bracket];
 
-			let newBracket = {
+			const newBracket = {
 				id: (thisBracket.id == null) ? parseInt(bracket) : thisBracket.id,
 				bracketName: thisBracket.bracketName,
 				mods: JSON.stringify(thisBracket.mods),
 				beatmaps: []
 			};
 
-			for (let map in thisBracket.beatmaps) {
+			for (const map in thisBracket.beatmaps) {
 				const thisMap = thisBracket.beatmaps[map];
 				if (thisMap.beatmapId == null) continue;
 
@@ -199,11 +199,11 @@ export class Mappool {
 			mappool.modBrackets.push(newBracket);
 		}
 
-		for (let modCategory in this.modCategories) {
+		for (const modCategory in this.modCategories) {
 			mappool.modCategories.push(ModCategory.convertToJson(this.modCategories[modCategory]));
 		}
 
-		for (let user in this.availableTo) {
+		for (const user in this.availableTo) {
 			mappool.availableTo.push(User.convertToJson(this.availableTo[user]));
 		}
 
@@ -225,15 +225,15 @@ export class Mappool {
 		newMappool.mappoolType = mappool.mappoolType;
 		newMappool.modifiers = mappool.modifiers;
 
-		for (let bracket in mappool.modBrackets) {
+		for (const bracket in mappool.modBrackets) {
 			newMappool.modBrackets.push(ModBracket.makeTrueCopy(mappool.modBrackets[bracket]));
 		}
 
-		for (let user in mappool.availableTo) {
+		for (const user in mappool.availableTo) {
 			newMappool.availableTo.push(User.makeTrueCopy(mappool.availableTo[user]));
 		}
 
-		for (let modCategory in mappool.modCategories) {
+		for (const modCategory in mappool.modCategories) {
 			newMappool.modCategories.push(ModCategory.makeTrueCopy(mappool.modCategories[modCategory]));
 		}
 
@@ -255,16 +255,16 @@ export class Mappool {
 		newMappool.mappoolType = json.mappoolType;
 
 		// Loop through all the brackets in the current mappool
-		for (let bracket in json.modBrackets) {
-			const thisBracket = json.modBrackets[bracket],
-				newBracket = new ModBracket();
+		for (const bracket in json.modBrackets) {
+			const thisBracket = json.modBrackets[bracket];
+			const newBracket = new ModBracket();
 
 			newBracket.id = thisBracket.id;
 			newBracket.mods = JSON.parse(thisBracket.mods);
 			newBracket.bracketName = thisBracket.bracketName;
 
 			// Loop through all the beatmaps in the current bracket
-			for (let beatmap in thisBracket.beatmaps) {
+			for (const beatmap in thisBracket.beatmaps) {
 				const newBeatmap = new ModBracketMap();
 
 				newBeatmap.id = thisBracket.beatmaps[beatmap].id;
@@ -296,11 +296,11 @@ export class Mappool {
 			newMappool.addBracket(newBracket);
 		}
 
-		for (let user in json.availableTo) {
+		for (const user in json.availableTo) {
 			newMappool.availableTo.push(User.serializeJson(json.availableTo[user]));
 		}
 
-		for (let modCategory in json.modCategories) {
+		for (const modCategory in json.modCategories) {
 			newMappool.modCategories.push(ModCategory.serializeJson(json.modCategories[modCategory]));
 		}
 

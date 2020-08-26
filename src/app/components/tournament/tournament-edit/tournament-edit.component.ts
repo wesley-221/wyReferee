@@ -18,12 +18,12 @@ export class TournamentEditComponent implements OnInit {
 		this.route.params.subscribe(params => {
 			this.publish = params.publish;
 
-			if (this.publish == true || this.publish == "true") {
+			if (this.publish == true || this.publish == 'true') {
 				this.tournamentService.getPublishedTournament(params.tournamentId).subscribe(data => {
 					this.tournament = tournamentService.mapFromJson(data);
 
 					// Collapse all teams
-					for (let team in this.tournament.teams) {
+					for (const team in this.tournament.teams) {
 						this.tournament.teams[team].collapsed = true;
 					}
 				});
@@ -32,7 +32,7 @@ export class TournamentEditComponent implements OnInit {
 				this.tournament = Tournament.makeTrueCopy(tournamentService.getTournament(params.tournamentId));
 
 				// Collapse all teams
-				for (let team in this.tournament.teams) {
+				for (const team in this.tournament.teams) {
 					this.tournament.teams[team].collapsed = true;
 				}
 			}
@@ -45,7 +45,7 @@ export class TournamentEditComponent implements OnInit {
 	 * Create the tournament
 	 */
 	udpateTournament(tournament: Tournament) {
-		if (this.publish == true || this.publish == "true") {
+		if (this.publish == true || this.publish == 'true') {
 			this.tournamentService.updatePublishedTournament(tournament).subscribe(res => {
 				this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
 			});

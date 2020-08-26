@@ -1,9 +1,9 @@
-import { Gamemodes } from "../osu-models/osu";
-import { ModCategory } from "./mod-category";
+import { Gamemodes } from '../osu-models/osu';
+import { ModCategory } from './mod-category';
 
 export class ModBracketMap {
 	id: number = null;
-	invalid: boolean = false;
+	invalid = false;
 	beatmapId: number = null;
 	beatmapsetId: number = null;
 	beatmapName: string = null;
@@ -11,7 +11,7 @@ export class ModBracketMap {
 	modifier: number = null;
 	gamemodeId: Gamemodes = Gamemodes.Osu;
 	modCategory: ModCategory = null;
-	picked: boolean = false;
+	picked = false;
 
 	/**
 	 * Compare the current modbracketmap with the given modbracketmap

@@ -4,7 +4,7 @@ import { Tournament } from '../../../models/tournament/tournament';
 import { TeamPlayer } from '../../../models/tournament/team/team-player';
 import { Team } from '../../../models/tournament/team/team';
 import { ToastService } from '../../../services/toast.service';
-declare var $: any;
+declare let $: any;
 
 @Component({
 	selector: 'app-tournament',
@@ -17,7 +17,7 @@ export class TournamentComponent implements OnInit {
 	calculateScoreInterfaces: Calculate;
 
 	dialogMessage: string;
-	dialogAction: number = 0;
+	dialogAction = 0;
 	teamToRemove: Team;
 
 	constructor(private toastService: ToastService) {
@@ -38,7 +38,7 @@ export class TournamentComponent implements OnInit {
 		this.teamToRemove = team;
 
 		setTimeout(() => {
-			$(`#dialog`).modal('toggle');
+			$('#dialog').modal('toggle');
 		}, 1);
 	}
 
@@ -50,7 +50,7 @@ export class TournamentComponent implements OnInit {
 		this.tournament.removeTeam(team);
 		this.toastService.addToast(`Successfully removed the team "${team.teamName}" from the tournament.`);
 
-		$(`#dialog`).modal('toggle');
+		$('#dialog').modal('toggle');
 	}
 
 	/**
@@ -83,7 +83,7 @@ export class TournamentComponent implements OnInit {
 	 * @param event
 	 */
 	changeScoreInterface(event: Event) {
-		let selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface((<any>event.target).value);
+		const selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface((<any>event.target).value);
 		this.tournament.scoreInterface = selectedScoreInterface;
 		this.tournament.teamSize = selectedScoreInterface.getTeamSize();
 	}

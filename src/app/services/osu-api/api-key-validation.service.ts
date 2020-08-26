@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 
 export class ApiKeyValidation {
 	// The best player in osu!
-	userId: number = 2407265;
+	userId = 2407265;
 
 	constructor(private httpClient: HttpClient) { }
 

@@ -13,7 +13,7 @@ import { IrcService } from '../../../services/irc.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { WebhookService } from '../../../services/webhook.service';
 import { CacheBeatmap } from '../../../models/cache/cache-beatmap';
-declare var $: any;
+declare let $: any;
 
 @Component({
 	selector: 'app-lobby-view',
@@ -23,10 +23,10 @@ declare var $: any;
 
 export class LobbyViewComponent implements OnInit {
 	selectedLobby: MultiplayerLobby;
-	settingsTabIsOpened: boolean = false;
+	settingsTabIsOpened = false;
 
-	wbdSelected: boolean = false;
-	normalResultSelected: boolean = false;
+	wbdSelected = false;
+	normalResultSelected = false;
 
 	extraMessage: string;
 
@@ -114,11 +114,11 @@ export class LobbyViewComponent implements OnInit {
 
 			if (match.team_one_score > match.team_two_score) {
 				const teamOneHasWon = (this.selectedLobby.teamOneScore == Math.ceil(this.selectedLobby.bestOf / 2));
-				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, " ")} - ${this.addDot(match.team_two_score, " ")} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, " ")}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamOneHasWon ? "// Next pick is for " + nextPick : ''}` : ''}`);
+				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamOneHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
 			}
 			else {
 				const teamTwoHasWon = (this.selectedLobby.teamTwoScore == Math.ceil(this.selectedLobby.bestOf / 2));
-				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, " ")} - ${this.addDot(match.team_two_score, " ")} // Score difference : ${this.addDot(match.team_two_score - match.team_one_score, " ")}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamTwoHasWon ? "// Next pick is for " + nextPick : ''}` : ''}`);
+				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_two_score - match.team_one_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamTwoHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
 			}
 		}
 	}
@@ -243,7 +243,7 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	getBeatmapname(beatmapId: number) {
 		const cachedBeatmap = this.cacheService.getCachedBeatmap(beatmapId);
-		return (cachedBeatmap != null) ? cachedBeatmap.name : `Unknown beatmap, synchronize the lobby to get the map name.`;
+		return (cachedBeatmap != null) ? cachedBeatmap.name : 'Unknown beatmap, synchronize the lobby to get the map name.';
 	}
 
 	/**
@@ -261,7 +261,7 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	getThumbUrl(beatmapId: number) {
 		const cachedBeatmap = this.cacheService.getCachedBeatmap(beatmapId);
-		return (cachedBeatmap != null) ? `url('https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg')` : ``;
+		return (cachedBeatmap != null) ? `url('https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg')` : '';
 	}
 
 	/**
@@ -270,7 +270,7 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	getUsernameFromUserId(userId: number) {
 		const cachedUser = this.cacheService.getCachedUser(userId);
-		return (cachedUser != null) ? cachedUser.username : "Unknown";
+		return (cachedUser != null) ? cachedUser.username : 'Unknown';
 	}
 
 	/**
@@ -292,7 +292,7 @@ export class LobbyViewComponent implements OnInit {
 	getScore(match: MultiplayerData, slotId: number) {
 		const user: MultiplayerDataUser = match.getPlayer(slotId);
 
-		return (user != undefined) ? this.addDot(user.score % 1 == 0 ? user.score : user.score.toFixed(), " ") : 0;
+		return (user != undefined) ? this.addDot(user.score % 1 == 0 ? user.score : user.score.toFixed(), ' ') : 0;
 	}
 
 	/**
@@ -352,7 +352,7 @@ export class LobbyViewComponent implements OnInit {
 	 * Toggle the modal to send final result to discord
 	 */
 	toggleModal() {
-		$(`#send-final-result`).modal('toggle');
+		$('#send-final-result').modal('toggle');
 	}
 
 	/**
@@ -398,7 +398,7 @@ export class LobbyViewComponent implements OnInit {
 			this.wbdLosingTeam = null;
 			this.extraMessage = null;
 
-			this.toastService.addToast(`Successfully send the message to Discord.`);
+			this.toastService.addToast('Successfully send the message to Discord.');
 
 			console.log(res);
 		});
@@ -417,7 +417,7 @@ export class LobbyViewComponent implements OnInit {
 			this.wbdLosingTeam = null;
 			this.extraMessage = null;
 
-			this.toastService.addToast(`Successfully send the message to Discord.`);
+			this.toastService.addToast('Successfully send the message to Discord.');
 
 			console.log(res);
 		});

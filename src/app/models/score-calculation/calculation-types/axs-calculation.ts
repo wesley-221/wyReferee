@@ -1,8 +1,8 @@
-import { ScoreInterface } from "./score-interface";
-import { MultiplayerDataUser } from "../../store-multiplayer/multiplayer-data-user";
+import { ScoreInterface } from './score-interface';
+import { MultiplayerDataUser } from '../../store-multiplayer/multiplayer-data-user';
 
 export class AxSCalculation extends ScoreInterface {
-	private modifier: number = 0;
+	private modifier = 0;
 
 	constructor(identifier: string, teamSize: number) {
 		super(identifier);
@@ -11,63 +11,63 @@ export class AxSCalculation extends ScoreInterface {
 		this.setDescription(`The score calculation that is used for a tournament called AxS. The team size is set to ${teamSize}, where the first player in the multiplayerlobby is the accuracy player and the second and third are score players.`);
 	}
 
-    public calculatePlayerScore(player: MultiplayerDataUser): number {
-        return Number(player != null ? player.score : 0);
-    }
+	public calculatePlayerScore(player: MultiplayerDataUser): number {
+		return Number(player != null ? player.score : 0);
+	}
 
-    public calculateTeamOneScore() {
-        let users: MultiplayerDataUser[] = [];
+	public calculateTeamOneScore() {
+		const users: MultiplayerDataUser[] = [];
 
-        for(let i = 0; i < this.getTeamSize(); i ++) {
-            let currentUser = this.getUserScoreBySlot(i);
+		for (let i = 0; i < this.getTeamSize(); i++) {
+			const currentUser = this.getUserScoreBySlot(i);
 
-            if(currentUser.slot == 0) {
-                currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));
-                currentUser.caption = "Accuracy player";
-            }
-            else {
-                currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
-                currentUser.caption = "Score player";
-            }
+			if (currentUser.slot == 0) {
+				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));
+				currentUser.caption = 'Accuracy player';
+			}
+			else {
+				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
+				currentUser.caption = 'Score player';
+			}
 
-            users.push(currentUser);
-        }
+			users.push(currentUser);
+		}
 
-        return AxSCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
-    }
+		return AxSCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
+	}
 
-    public calculateTeamTwoScore() {
-        let users: MultiplayerDataUser[] = [];
+	public calculateTeamTwoScore() {
+		const users: MultiplayerDataUser[] = [];
 
-        for(let i = this.getTeamSize(); i < this.getTeamSize() * 2; i ++) {
-            let currentUser = this.getUserScoreBySlot(i);
+		for (let i = this.getTeamSize(); i < this.getTeamSize() * 2; i++) {
+			const currentUser = this.getUserScoreBySlot(i);
 
-            if(currentUser.slot == 3) {
-                currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));
-                currentUser.caption = "Accuracy player";
-            }
-            else {
-                currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
-                currentUser.caption = "Score player";
-            }
+			if (currentUser.slot == 3) {
+				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));
+				currentUser.caption = 'Accuracy player';
+			}
+			else {
+				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
+				currentUser.caption = 'Score player';
+			}
 
-            users.push(currentUser);
-        }
+			users.push(currentUser);
+		}
 
-        return AxSCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
-    }
+		return AxSCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
+	}
 
-    public setModifier(modifier: number) {
-        this.modifier = modifier;
-    }
+	public setModifier(modifier: number) {
+		this.modifier = modifier;
+	}
 
     /**
      * Calculate the score of the accuracy player
      * @param score the full score of the accuracy player
      */
-    private static calculateAccuracyPlayerScore(score: number) {
-        return (score * 0.2);
-    }
+	private static calculateAccuracyPlayerScore(score: number) {
+		return (score * 0.2);
+	}
 
     /**
      * Calculate the score of a score player with the given modifier
@@ -75,9 +75,9 @@ export class AxSCalculation extends ScoreInterface {
      * @param accuracy the accuracy of the player
      * @param modifier the modifier of the map
      */
-    private static calculateScorePlayerScore(score: number, accuracy: number, modifier: number) {
-        return (score * (Math.pow((100 - ((100 - accuracy) / 5)) / 100, modifier)));
-    }
+	private static calculateScorePlayerScore(score: number, accuracy: number, modifier: number) {
+		return (score * (Math.pow((100 - ((100 - accuracy) / 5)) / 100, modifier)));
+	}
 
     /**
      * Calculate the team score with all the given scores and modifier
@@ -87,7 +87,7 @@ export class AxSCalculation extends ScoreInterface {
      * @param accuracy_player_one the accuracy of player one
      * @param modifier the modifier of the map
      */
-    private static calculateTeamScore(score_player_one: number, score_player_two: number, score_player_three: number, accuracy_player_one:number, modifier:number): number {
-        return Number((((score_player_one) + (score_player_two) + (score_player_three)) * (Math.pow(accuracy_player_one / 100, modifier))).toFixed());
-    }
+	private static calculateTeamScore(score_player_one: number, score_player_two: number, score_player_three: number, accuracy_player_one: number, modifier: number): number {
+		return Number((((score_player_one) + (score_player_two) + (score_player_three)) * (Math.pow(accuracy_player_one / 100, modifier))).toFixed());
+	}
 }

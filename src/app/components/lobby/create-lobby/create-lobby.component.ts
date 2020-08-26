@@ -26,9 +26,9 @@ export class CreateLobbyComponent implements OnInit {
 	selectedScoreInterface: ScoreInterface;
 
 	validationForm: FormGroup;
-	lobbyHasBeenCreated: boolean = false;
+	lobbyHasBeenCreated = false;
 
-	ircAuthenticated: boolean = false;
+	ircAuthenticated = false;
 
 	calculateScoreInterfaces: Calculate;
 
@@ -101,7 +101,7 @@ export class CreateLobbyComponent implements OnInit {
 		newLobby.webhook = this.validationForm.get('webhook').value;
 		newLobby.scoreInterfaceIndentifier = this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : this.selectedScoreInterface.getIdentifier();
 
-		if(newLobby.multiplayerLink == '') {
+		if (newLobby.multiplayerLink == '') {
 			this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
 
 			this.ircService.client.say('BanchoBot', `!mp make ${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`);
@@ -128,7 +128,7 @@ export class CreateLobbyComponent implements OnInit {
 
 		let teamSizeVal;
 
-		if(teamSize == null || teamSize == undefined) {
+		if (teamSize == null || teamSize == undefined) {
 			teamSizeVal = this.getValidation('teamSize').value >= 8 ? 8 : this.getValidation('teamSize').value;
 		}
 		else {
@@ -137,11 +137,11 @@ export class CreateLobbyComponent implements OnInit {
 
 		teamSizeVal = parseInt(teamSizeVal);
 
-		for(let i = 1; i < (teamSizeVal + 1); i ++) {
+		for (let i = 1; i < (teamSizeVal + 1); i++) {
 			this.teamOneArray.push(i);
 		}
 
-		for(let i = teamSizeVal + 1; i < ((teamSizeVal * 2) + 1); i ++) {
+		for (let i = teamSizeVal + 1; i < ((teamSizeVal * 2) + 1); i++) {
 			this.teamTwoArray.push(i);
 		}
 	}

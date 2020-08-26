@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { OsuApi, OsuApiEndpoints } from "../../models/osu-models/osu";
-import { StoreService } from "../store.service";
-import { HttpClient } from "@angular/common/http";
-import { OsuUser } from "../../models/osu-models/osu-user";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { OsuApi, OsuApiEndpoints } from '../../models/osu-models/osu';
+import { StoreService } from '../store.service';
+import { HttpClient } from '@angular/common/http';
+import { OsuUser } from '../../models/osu-models/osu-user';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class GetUser extends OsuApi {
      * @param username the username
      * @param gamemode the gamemode
      */
-	public getByUsername(username: string, gamemode: number = 0): Observable<OsuUser> {
+	public getByUsername(username: string, gamemode = 0): Observable<OsuUser> {
 		return this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key')}&u=${username}&type=string&m=${gamemode}`)
 			.pipe(
 				map((data: any) => this.serializeFromJson(data))
@@ -32,7 +32,7 @@ export class GetUser extends OsuApi {
      * @param userid the userid
      * @param gamemode the gamemode
      */
-	public getByUserId(userid: number, gamemode: number = 0): Observable<OsuUser> {
+	public getByUserId(userid: number, gamemode = 0): Observable<OsuUser> {
 		return this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key')}&u=${userid}&type=id&m=${gamemode}`)
 			.pipe(
 				map((data: any) => this.serializeFromJson(data))
