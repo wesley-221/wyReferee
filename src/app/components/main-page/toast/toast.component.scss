@@ -1,0 +1,42 @@
+@import "variables";
+
+.toast-area {
+	position: absolute;
+	z-index: 5000;
+
+	right: 0;
+	top: 0;
+
+	margin: 16px;
+	width: 300px;
+
+	overflow: hidden;
+
+	.toast {
+		padding: 8px;
+		margin-bottom: 3px;
+
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+
+		&:hover {
+			cursor: pointer;
+		}
+
+		&.toast-error {
+			background-color: $danger;
+		}
+
+		&.toast-warning {
+			background-color: $warning;
+		}
+
+		&.toast-information {
+			background-color: $info;
+		}
+	}
+}

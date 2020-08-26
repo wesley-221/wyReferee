@@ -1,0 +1,23 @@
+.options {
+	display: flex;
+	flex-direction: column;
+
+	.option {
+		display: flex;
+
+		padding: 8px;
+
+		.text {
+			width: calc(100% - 180px);
+		}
+
+		.button {
+			display: flex;
+			width: 180px;
+
+			button {
+				width: 100%;
+			}
+		}
+	}
+}

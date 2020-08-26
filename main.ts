@@ -18,8 +18,8 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: true
 		},
-		frame: false,
-		titleBarStyle: 'hidden',
+		// frame: false,
+		// titleBarStyle: 'hidden',
 		icon: `${__dirname}/src/assets/images/icon.png`
 	});
 

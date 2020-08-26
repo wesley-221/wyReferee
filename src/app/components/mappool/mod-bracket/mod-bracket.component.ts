@@ -8,7 +8,7 @@ import { ToastService } from '../../../services/toast.service';
 import { ToastType } from '../../../models/toast';
 import { Mappool } from '../../../models/osu-mappool/mappool';
 import { ModCategory } from '../../../models/osu-mappool/mod-category';
-declare let $: any;
+declare var $: any;
 
 @Component({
 	selector: 'app-mod-bracket',

@@ -13,7 +13,7 @@ import { IrcService } from '../../../services/irc.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { WebhookService } from '../../../services/webhook.service';
 import { CacheBeatmap } from '../../../models/cache/cache-beatmap';
-declare let $: any;
+declare var $: any;
 
 @Component({
 	selector: 'app-lobby-view',
@@ -316,7 +316,7 @@ export class LobbyViewComponent implements OnInit {
 	 * @param nStr the string to split
 	 * @param splitter the character to split the string with
 	 */
-	addDot(nStr: string, splitter: string) {
+	addDot(nStr: any, splitter: any) {
 		nStr += '';
 		const x = nStr.split('.');
 		let x1 = x[0];

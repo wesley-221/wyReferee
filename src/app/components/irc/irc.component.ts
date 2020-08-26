@@ -16,7 +16,7 @@ import { MultiplayerLobby } from '../../models/store-multiplayer/multiplayer-lob
 import { Mappool } from '../../models/osu-mappool/mappool';
 import { ToastType } from '../../models/toast';
 import { WebhookService } from '../../services/webhook.service';
-declare let $: any;
+declare var $: any;
 
 @Component({
 	selector: 'app-irc',

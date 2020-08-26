@@ -1,0 +1,24 @@
+@import "variables";
+
+.container-fluid {
+	padding-left: 0;
+}
+
+.main-container {
+	display: flex;
+
+	height: 100%;
+
+	.sidebar-container {
+		background-color: $sidebar-color;
+	}
+
+	.content-container {
+		width: 100%;
+
+		background-color: $background-color;
+		padding: 8px;
+
+		margin-right: 0;
+	}
+}

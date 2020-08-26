@@ -4,7 +4,8 @@ import { StoreService } from '../../services/store.service';
 import { ToastService } from '../../services/toast.service';
 import { ToastType } from '../../models/toast';
 import { ApiKeyValidation } from '../../services/osu-api/api-key-validation.service';
-declare let $: any;
+import { MatDialog } from '@angular/material/dialog';
+import { RemoveSettingsComponent } from '../dialogs/remove-settings/remove-settings.component';
 
 @Component({
 	selector: 'app-settings',
@@ -22,7 +23,8 @@ export class SettingsComponent implements OnInit {
 		public electronService: ElectronService,
 		private storeService: StoreService,
 		private toastService: ToastService,
-		private apiKeyValidation: ApiKeyValidation
+		private apiKeyValidation: ApiKeyValidation,
+		private dialog: MatDialog
 	) { }
 	ngOnInit() { }
 
@@ -54,8 +56,6 @@ export class SettingsComponent implements OnInit {
 	clearCache() {
 		this.storeService.delete('cache');
 		this.toastService.addToast('Successfully cleared the cache.');
-
-		$('#dialog').modal('toggle');
 	}
 
 	/**
@@ -64,8 +64,6 @@ export class SettingsComponent implements OnInit {
 	removeApiKey() {
 		this.storeService.delete('api-key');
 		this.toastService.addToast('Successfully removed your api key.');
-
-		$('#dialog').modal('toggle');
 	}
 
 	/**
@@ -99,17 +97,30 @@ export class SettingsComponent implements OnInit {
 	}
 
 	openDialog(dialogAction: number) {
-		this.dialogAction = dialogAction;
+		let dialogMessage: string = null;
 
 		if (dialogAction == 0) {
-			this.dialogMessage = 'Are you sure you want to clear your cache?';
+			dialogMessage = 'Are you sure you want to clear your cache?';
 		}
 		else if (dialogAction == 1) {
-			this.dialogMessage = 'Are you sure you want to remove your api key?';
+			dialogMessage = 'Are you sure you want to remove your api key?';
 		}
 
-		setTimeout(() => {
-			$('#dialog').modal('toggle');
-		}, 1);
+		const dialogRef = this.dialog.open(RemoveSettingsComponent, {
+			data: {
+				message: dialogMessage
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(res => {
+			if(res == true) {
+				if (dialogAction == 0) {
+					this.clearCache();
+				}
+				else if (dialogAction == 1) {
+					this.removeApiKey();
+				}
+			}
+		});
 	}
 }

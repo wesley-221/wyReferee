@@ -1,66 +1,48 @@
-<div class=row>
-    <div class=col-12>
-        <div class=form-group>
-            <h2>API key</h2>
-            <p>Enter your osu!API key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The API key can be found <a [routerLink]="" (click)="electronService.openLink('https://old.ppy.sh/p/api');">here</a>.</p>
-            <input #apiKey type="password" class="form-control" placeholder="osu!API key" value="{{ getApiKey() }}" />
-        </div>
+<div class="row">
+	<div class="col">
+		<h2>API key</h2>
+		<p>Enter your osu!API key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The API key can be found <a [routerLink]="" (click)="electronService.openLink('https://old.ppy.sh/p/api');">here</a>.</p>
 
-        <button type="button" class="btn btn-primary float-right" (click)="saveApiKey()">Save</button>
-    </div>
+		<mat-form-field class="full-width">
+			<mat-label>osu! API key</mat-label>
+			<input matInput #apiKey type="password" class="full-width" [value]="getApiKey()">
+		</mat-form-field>
+
+		<button mat-raised-button color="primary" (click)="saveApiKey()">Save</button>
+	</div>
 </div>
 
 <hr />
 
-<table class="table table-hover table-border">
-    <tbody>
-        <tr>
-            <td>
-                This will export the config file and save it as a file in case you need to share it with someone. <br />
-                <b>Note:</b> It will not export the API key in the file <br />
-            </td>
+<div class="options">
+	<div class="option">
+		<div class="text">
+			This will export the config file and save it as a file in case you need to share it with someone. <br />
+			<b>Note:</b> It will not export the API key in the file <br />
+		</div>
 
-            <td>
-                <button type="button" class="btn btn-primary form-control" (click)="exportConfigFile()">Export config file</button>
-            </td>
-        </tr>
+		<div class="button">
+			<button mat-raised-button color="primary" (click)="exportConfigFile()">Export config file</button>
+		</div>
+	</div>
 
-        <tr>
-            <td>
-                This will clear all the cache.
-            </td>
+	<div class="option">
+		<div class="text">
+			This will clear all the cache.
+		</div>
 
-            <td>
-                <button type="button" class="btn btn-primary form-control" (click)="openDialog(0)">Clear cache</button>
-            </td>
-        </tr>
+		<div class="button">
+			<button mat-raised-button color="primary" (click)="openDialog(0)">Clear cache</button>
+		</div>
+	</div>
 
-        <tr>
-            <td>
-                This will remove the API key.
-            </td>
+	<div class="option">
+		<div class="text">
+			This will remove the API key.
+		</div>
 
-            <td>
-                <button type="button" class="btn btn-primary form-control" (click)="openDialog(1)">Remove API key</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<div id="dialog" class="modal fade" tabindex="-1" role="dialog">
-	<div class="modal-dialog shadow" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h3 class="modal-title" *ngIf="dialogAction == 0">Clear cache</h3>
-				<h3 class="modal-title" *ngIf="dialogAction == 1">Remove API key</h3>
-			</div>
-
-			<div class="modal-body">
-				<p [innerHTML]="dialogMessage"></p>
-
-				<button class="btn btn-danger" style="width: 100%;" (click)="clearCache()" *ngIf="dialogAction == 0">Clear cache</button>
-				<button class="btn btn-danger" style="width: 100%;" (click)="removeApiKey()" *ngIf="dialogAction == 1">Remove API key</button>
-			</div>
+		<div class="button">
+			<button mat-raised-button color="primary" (click)="openDialog(1)">Remove API key</button>
 		</div>
 	</div>
 </div>

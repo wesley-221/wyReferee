@@ -5,7 +5,7 @@ import { TournamentService } from '../../../services/tournament.service';
 import { ToastService } from '../../../services/toast.service';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { ToastType } from '../../../models/toast';
-declare let $: any;
+declare var $: any;
 
 @Component({
 	selector: 'app-tournament-summary',

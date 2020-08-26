@@ -1,11 +1,13 @@
-<app-titlebar></app-titlebar>
+<!-- <app-titlebar></app-titlebar> -->
 
-<div class="container">
-    <app-sidebar></app-sidebar>
+<div class="main-container container-fluid">
+	<app-toast></app-toast>
 
-    <app-toast></app-toast>
+	<div class="sidebar-container">
+		<app-sidebar></app-sidebar>
+	</div>
 
-    <div class="mainContent">
-        <router-outlet></router-outlet>
-    </div>
+	<div class="content-container">
+		<router-outlet></router-outlet>
+	</div>
 </div>

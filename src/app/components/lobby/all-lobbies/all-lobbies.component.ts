@@ -5,7 +5,7 @@ import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies
 import { ToastService } from '../../../services/toast.service';
 import { Router } from '@angular/router';
 import { ElectronService } from '../../../services/electron.service';
-declare let $: any;
+declare var $: any;
 
 @Component({
 	selector: 'app-all-lobbies',

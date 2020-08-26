@@ -20,7 +20,8 @@
 							"src/assets"
 						],
 						"styles": [
-							"src/styles.scss"
+							"src/styles.scss",
+							"src/assets/styles/bootstrap/scss/bootstrap-grid.scss"
 						],
 						"scripts": [
 							"src/assets/js/electron-js.js",
@@ -30,7 +31,7 @@
 						],
 						"stylePreprocessorOptions": {
 							"includePaths": [
-								"src/app/styles"
+								"src/assets/styles"
 							]
 						}
 					},
@@ -119,7 +120,8 @@
 							"src/assets/js/bootstrap.min.js"
 						],
 						"styles": [
-							"src/styles.scss"
+							"src/styles.scss",
+							"src/assets/styles/bootstrap/scss/bootstrap-grid.scss"
 						]
 					}
 				},

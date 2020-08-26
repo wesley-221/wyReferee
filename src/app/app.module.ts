@@ -5,13 +5,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AngularMaterialModule } from './angular-material-module';
 
 import { AppRoutingModule } from './app-routing.module';
 
 // NG Translate
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ClipboardModule } from 'ngx-clipboard';
 
@@ -50,11 +49,7 @@ import { MappoolEditComponent } from './components/mappool/mappool-edit/mappool-
 import { MappoolComponent } from './components/mappool/mappool/mappool.component';
 import { TournamentSummaryComponent } from './components/tournament/tournament-summary/tournament-summary.component';
 import { MyPublishedTournamentsComponent } from './components/tournament/my-published-tournaments/my-published-tournaments.component';
-
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient): void {
-	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
 
 @NgModule({
 	declarations: [
@@ -86,7 +81,8 @@ export function HttpLoaderFactory(http: HttpClient): void {
 		MappoolEditComponent,
 		MappoolComponent,
 		TournamentSummaryComponent,
-		MyPublishedTournamentsComponent
+		MyPublishedTournamentsComponent,
+		RemoveSettingsComponent
 	],
 	imports: [
 		BrowserModule,
@@ -94,18 +90,12 @@ export function HttpLoaderFactory(http: HttpClient): void {
 		ReactiveFormsModule,
 		HttpClientModule,
 		AppRoutingModule,
-		TranslateModule.forRoot({
-			loader: {
-				provide: TranslateLoader,
-				useFactory: HttpLoaderFactory,
-				deps: [HttpClient]
-			}
-		}),
 		FontAwesomeModule,
 		DragDropModule,
 		VirtualScrollerModule,
 		BrowserAnimationsModule,
-		ClipboardModule
+		ClipboardModule,
+		AngularMaterialModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

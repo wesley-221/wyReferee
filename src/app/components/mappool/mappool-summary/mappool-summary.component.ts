@@ -5,7 +5,7 @@ import { ToastService } from '../../../services/toast.service';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { Router } from '@angular/router';
 import { ToastType } from '../../../models/toast';
-declare let $: any;
+declare var $: any;
 
 @Component({
 	selector: 'app-mappool-summary',

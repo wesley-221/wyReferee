@@ -1,656 +1,102 @@
-// =============================
-// Overwrite framework variables
-// =============================
-$font-family:       'Montserrat', 'Open Sans', Arial, Helvetica, sans-serif;
-$primary:           #fb9678;
-$info:              #4C63C7;
-$enable-rounded:    false;
+@import "~@angular/material/theming";
+@import "variables";
+@include mat-core($typography);
+@include angular-material-theme($final-theme);
 
-// =================
-// Import frameworks
-// =================
-@import "assets/scss/bootstrap/bootstrap.scss";
+html,
+body {
+	font-family: $font-family;
+	background-color: $background-color;
+	color: white;
 
-$background-color:          #3C4452;
+	height: 100%;
+	margin: 0;
+	padding: 0;
 
-$sidebar-background-color:  #353C48;
-$sidebar-color:             #adb5bd;
-$sidebar-color-hover:       #fb9678;
-$sidebar-hr-color:          #4C545C;
-$sidebar-scroll-color:      #808080;
-$sidebar-width:             280px;
-$sidebar-logo-width:        75px;
+	::-webkit-scrollbar {
+		width: 10px;
+	}
 
-$header-background-color:   #303641;
-$header-height:             50px;
+	::-webkit-scrollbar-track {
+		background: $sidebar-color;
+	}
 
-$btn-sb-menu-color:         #36393E;
+	::-webkit-scrollbar-thumb {
+		background: $sidebar-color-hover;
+	}
 
-$users-background-default:  grey;
-$users-background-hover:    darken($users-background-default, 5%);
-
-$navbar-height: 22px;
-
-html, body {
-    background-color:   $background-color;
-	color:              white;
-    font-family: 		$font-family;
-
-    height: 100%;
-    width: 100%;
-
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: $sidebar-color;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: $sidebar-color-hover;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: darken($sidebar-color-hover, 5%);
-    }
+	::-webkit-scrollbar-thumb:hover {
+		background: darken($sidebar-color-hover, 5%);
+	}
+}
+body {
+	min-height: 100%;
+	margin: 0;
+	padding: 0;
 }
 
-.toast-area {
-    position: absolute;
-    z-index: 5000;
-
-    right: 0;
-    top: 0;
-
-    margin: 50px;
-    width: 300px;
-
-    .toast {
-        padding: 8px;
-
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-
-        &:hover {
-            cursor: pointer;
-        }
-
-        &.toast-error {
-            background-color: $danger;
-        }
-
-        &.toast-warning {
-            background-color: $warning;
-        }
-
-        &.toast-information {
-            background-color: $info;
-        }
-    }
-}
-
-.titleBar {
-    position: fixed;
-
-    height: $navbar-height;
-    width: 100%;
-
-    margin: 0;
-
-    -webkit-app-region: drag;
-
-    background-color: $sidebar-color-hover;
-
-    .buttons-right {
-        float: right;
-
-        height: $navbar-height;
-
-        -webkit-app-region: no-drag;
-
-        .navButton {
-            float: left;
-
-            z-index: 10000;
-
-            min-height: $navbar-height;
-            height: $navbar-height;
-            line-height: $navbar-height;
-
-            width: 47px;
-
-            margin: 0;
-            padding-left: 4px;
-            padding-right: 4px;
-
-            text-align: center;
-
-            &:hover {
-                background-color: darken($sidebar-color-hover, 15%);
-                cursor: pointer;
-            }
-        }
-    }
-}
-
-.container {
-    width:      100%;
-    max-width:  100%;
-
-    .sideBar {
-        position:   fixed;
-        width:      $sidebar-width;
-        z-index:    1000;
-
-        top:        $navbar-height;
-        bottom:     0;
-        left:       0;
-
-        padding:    0;
-
-        overflow-x: hidden;
-        overflow-y: auto;
-
-        background-color: $sidebar-background-color;
-
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-
-        .sb-old-version {
-            display: none;
-            width: 100%;
-            background-color: #991010;
-
-            padding: 3px;
-
-            &.in {
-                display: block;
-            }
-        }
-
-        .sb-header {
-            margin-top:     7px;
-            padding-top:    7px;
-            padding-left:   15px;
-            padding-right:  15px;
-            overflow:       hidden;
-
-            .sb-header-img {
-                float:              left;
-                margin-top:         5px;
-
-                width:              $sidebar-logo-width;
-                height:             $sidebar-logo-width;
-                line-height:        $sidebar-logo-width;
-
-                border-radius:      50%;
-                border:             1px solid $sidebar-hr-color;
-
-                background-image: url("assets/images/icon.png");
-                background-size: cover;
-            }
-
-            .sb-header-text {
-                padding:        5px;
-
-                width:          calc(100% - #{$sidebar-logo-width});
-
-                color:          white;
-                float:          left;
-
-                border-top:     1px solid $sidebar-hr-color;
-                border-bottom:  1px solid $sidebar-hr-color;
-            }
-
-            hr {
-                display:    block;
-                height:     1px;
-                border:     0;
-                border-top: 1px solid $sidebar-hr-color;
-                margin:     1em 0;
-                padding:    0;
-            }
-        }
-
-        .sb-navigation {
-            float: left;
-            width: 100%;
-
-            margin-top: 15px;
-
-            .sb-nav-column {
-                display:            block;
-                text-align:         left;
-
-                color:              $sidebar-color;
-                background:         none;
-                border:             0;
-                border-left:        3px solid $sidebar-background-color;
-
-                margin-bottom:      1px;
-                padding-left:       5px;
-                padding-right:      5px;
-                padding-top:        3px;
-                padding-bottom:     3px;
-
-                width:              100%;
-
-                text-decoration:    none;
-                transition:         all 0.1s ease-out;
-
-                &.in {
-                    color:          $sidebar-color-hover;
-                    border-left:    3px solid $sidebar-color-hover;
-                }
-
-                &:hover {
-                    color:          $sidebar-color-hover;
-                    border-left:    3px solid $sidebar-color-hover;
-
-                    cursor:         pointer;
-                }
-
-                &:active, &:focus {
-                    outline: 0;
-                }
-            }
-
-            .sb-nav-column-expand {
-                display:        none;
-
-                &.in {
-                    display: block;
-                }
-
-                .sb-nav-column {
-                    color:          $sidebar-color;
-                    border-left:    0;
-                    margin-left:    30px;
-                    transition:     all 0.1s ease-out;
-
-                    &.active {
-                        color:          $sidebar-color-hover;
-                        border-left:    0;
-                    }
-
-                    &:hover {
-                        color:          $sidebar-color-hover;
-                        border-left:    0;
-                    }
-                }
-            }
-        }
-
-        // ================
-        // Custom scrollbar
-        scrollbar-face-color: $sidebar-scroll-color;
-        scrollbar-track-color: $sidebar-background-color;
-
-        &::-webkit-scrollbar {
-            width:  8px;
-            height: 8px;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: $sidebar-scroll-color;
-        }
-
-        &::-webkit-scrollbar-track {
-            background: $sidebar-background-color;
-        }
-    }
-
-    .mainContent {
-        z-index: 100;
-
-        position:   fixed;
-        width:      calc(100% - 15px);
-        height:     calc(100% - #{$navbar-height});
-        max-height: calc(100% - #{$navbar-height});
-
-        padding-left: $sidebar-width;
-        padding-right: 16px;
-
-        margin-top: $navbar-height;
-
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing:    border-box;
-        box-sizing:         border-box;
-
-        .scroll {
-            height:         100%;
-            max-height:     100%;
-
-            padding-right:  16px;
-            padding-left:   16px;
-
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        &.no-right-padding {
-            padding-right: 0;
-        }
-
-        .multiplayerLobby {
-            width: 100%;
-
-            .body {
-                overflow: hidden;
-                border: 1px solid darken($background-color, 15%);
-                margin: 7px;
-
-                text-align: center;
-
-                height: $grid-gutter-width * 4;
-
-                -webkit-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-                -moz-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-                box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-
-                &:hover {
-                    border: 1px solid white;
-                    cursor: pointer;
-
-                    -webkit-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
-                    -moz-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
-                    box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
-                }
-
-                &.disabled {
-                    border: 1px solid red;
-                    cursor: not-allowed;
-                }
-
-                .multiplayerClose {
-                    float: right;
-                    padding: $grid-gutter-width / 4;
-                }
-            }
-        }
-
-        .multiMatch {
-            position: relative;
-            border: 1px solid darken($background-color, 15%);
-            padding: 7px;
-            margin-bottom: 7px;
-            overflow: hidden;
-
-            -webkit-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-            -moz-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-            box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-
-            .mapPicture {
-                float: left;
-                width: 160px;
-                height: 160px;
-
-                background-size: contain;
-                background-repeat: no-repeat;
-            }
-
-            .mapContent {
-                float: left;
-                padding-left: $grid-gutter-width;
-
-                width: calc(100% - 160px);
-
-                .mapTitle {
-                    font-weight: bold;
-                    text-align: center;
-                }
-
-                .mapModifier {
-                    font-weight: bold;
-                    text-align: center;
-                }
-            }
-
-            .mapButtons {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-
-                padding: 7px;
-
-                div {
-                    display: none;
-
-                    margin-bottom: 7px;
-                    padding: 7px;
-                    background-color: $sidebar-background-color;
-
-                    -webkit-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-                    -moz-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-                    box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-
-                    &.in {
-                        display: block;
-                    }
-                }
-            }
-
-            &:hover {
-                border: 1px solid white;
-
-                -webkit-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
-                -moz-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
-                box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
-            }
-		}
-
-        .createLobbyTeamRow {
-			.team-select {
-				overflow: hidden;
-
-				display: flex;
-				flex-direction: row;
-
-				.teamOne, .teamTwo {
-					display: flex;
-					flex-direction: column;
-
-					justify-content: space-between;
-
-					width: 50%;
-					padding-right: 5px;
-				}
-			}
-        }
-
-        .teamWin {
-            color: green;
-        }
-
-        .teamLoss {
-            color: red;
-        }
-
-        .matchHeader {
-            position: fixed;
-
-            left: 0;
-            margin-left: $sidebar-width;
-            width: calc(100% - #{$sidebar-width});
-
-            z-index: 50;
-
-            height: 120px;
-
-            background-color: $background-color;
-
-            .header-content {
-                padding-left: 14px;
-                padding-right: 14px;
-            }
-
-            &.settings-active {
-                height: auto;
-            }
-
-            .settings-tab {
-                display: none;
-                opacity: 0;
-
-                padding: 16px;
-
-                border-bottom: 1px solid black;
-
-                &.active {
-                    display: block;
-                    opacity: 1;
-                }
-            }
-        }
-
-        .allMaps {
-            height:     calc(100% - #{$navbar-height} - 111px);
-            max-height: calc(100% - #{$navbar-height} - 111px);
-
-            margin-top: 134px;
-
-            padding-right: 16px;
-            padding-bottom: 16px;
-
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-    }
-}
-
-.btn-sb-menu {
-    @include button-outline-variant(lighten($btn-sb-menu-color, 15%), white, lighten($btn-sb-menu-color, 15%), lighten($btn-sb-menu-color, 15%));
-    border-radius:  0;
-    color:          white;
-
-    box-shadow: none;
-
-    &.in, &:active, &:focus, &:active:focus, &:hover {
-        color: $primary !important;
-        border-color: $primary !important;
-        background-color: transparent !important;
-
-        box-shadow: none !important;
-    }
-}
-
-.btn-group-xs > .btn, .btn-xs {
-    padding:        .25rem .4rem;
-    font-size:      .875rem;
-    line-height:    .5;
-    border-radius:  .2rem;
-}
-
-.btn-primary {
-    color: white;
-
-    &:hover {
-        color: white;
-    }
-
-    &:disabled {
-        color: white;
-    }
-}
-
-.badge-primary {
-    color: white;
+.full-width {
+	width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: $primary;
+	color: $primary;
+
+	margin-top: 0;
 }
 
-.blue-text {
-    color: #2299bb;
-}
+a {
+	color: $primary;
+	text-decoration: none;
 
-.red-text {
-    color: #E94F64;
-}
-
-.green-text {
-    color: #81a50e;
-}
-
-.table-border {
-    tr {
-        td {
-            border-top: 1px solid $sidebar-hr-color;
-        }
-    }
-}
-
-input {
-    &.has-error {
-        border: 1px solid #E94F64;
-        color: black;
-
-        &:focus {
-            border: 1px solid #E94F64;
-            box-shadow: 0 0 0 0.2rem rgba(233, 79, 100, 0.25);
-        }
-    }
-}
-
-.alert {
-	&.alert-info {
-		background-color: lighten($info, 5%);
-		border-color: darken($info, 5%);
-		color: white;
+	&:hover {
+		color: darken($primary, 10%);
+		text-decoration: underline;
 	}
 }
 
-.has-error {
-    color: #E94F64;
+hr {
+	box-sizing: content-box;
+	height: 0;
+	overflow: visible;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	border: 0;
+	border-top: 1px solid lighten($background-color, 15%);
 }
 
-// Get rid of backdrop because of bootstrap position fixed issues
-.modal-backdrop {
-    display: none;
-}
-
-.modal {
-    .modal-dialog {
-        .modal-content {
-            background-color: $background-color;
-
-            .modal-header {
-                border-bottom: 1px solid lighten($background-color, 15%);
-            }
-        }
-    }
-}
-
-.background-area {
-	overflow: hidden;
-	border: 1px solid darken($background-color, 15%);
-	background-color: $background-color;
-	padding: 8px;
+.alert {
+	width: 100%;
 
 	margin: 20px auto 20px;
+	padding: 30px 20px 30px 10px;
 
-	-webkit-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-	-moz-box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
-	box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+	vertical-align: middle;
+	line-height: 1.2;
 
-	.item {
-		padding: 8px;
-		margin-bottom: 3px;
+	color: #fff;
 
-		border: 1px solid rgba(0,0,0,0.75);
+	&.alert-info {
+		background-color: $info;
+	}
 
-		-webkit-box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
-		-moz-box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
-		box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
+	&.alert-warning {
+		background-color: $warning;
+	}
+
+	&.alert-danger {
+		background-color: $danger;
+	}
+
+	&.alert-success {
+		background-color: darken($success, 10%);
+
+		a {
+			color: lighten($success, 30%);
+		}
+
+		h1, h2, h3, h4, h5, h6 {
+			color: lighten($success, 30%);
+		}
 	}
 }

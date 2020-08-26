@@ -4,7 +4,7 @@ import { Tournament } from '../../../models/tournament/tournament';
 import { TeamPlayer } from '../../../models/tournament/team/team-player';
 import { Team } from '../../../models/tournament/team/team';
 import { ToastService } from '../../../services/toast.service';
-declare let $: any;
+declare var $: any;
 
 @Component({
 	selector: 'app-tournament',

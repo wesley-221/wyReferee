@@ -1,21 +1,10 @@
-<div class="sideBar">
-	<div class=sb-header>
-		<div class=sb-header-img></div>
-
-		<div class=sb-header-text>
-			wyReferee
-			<hr />
-			<button type="button" class="btn btn-sb-menu btn-xs mr-1" title="Settings" [routerLink]="['/settings']" routerLinkActive="in" ><fa-icon [icon]="['fas', 'cogs']"></fa-icon></button>
-			<button type="button" class="btn btn-sb-menu btn-xs" title="Login" [routerLink]="['/login']" routerLinkActive="in"><fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon></button>
-		</div>
-	</div>
-
-	<div class=sb-navigation>
-		<button type="button" [routerLink]="['/information']" routerLinkActive="in"  class="sb-nav-column"><fa-icon [icon]="['fas', 'info']"></fa-icon> Information</button>
-		<button type="button" [routerLink]="['/lobby-overview']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['fas', 'bars']"></fa-icon> Lobby overview</button>
-		<button type="button" [routerLink]="['/create-lobby']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['far', 'plus-square']"></fa-icon> Create a lobby</button>
-		<button type="button" [routerLink]="['/mappool-overview']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['far', 'times-circle']"></fa-icon> Mappool</button>
-		<button type="button" [routerLink]="['/tournament-overview']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['fas', 'trophy']"></fa-icon> Tournaments</button>
-		<button type="button" [routerLink]="['/irc']" routerLinkActive="in" class="sb-nav-column"><fa-icon [icon]="['fas', 'comment-dots']"></fa-icon> Irc</button>
-	</div>
-</div>
+<mat-list>
+	<a [routerLink]="[navigationItem.link]" routerLinkActive="active" *ngFor="let navigationItem of allNavigations" class="sidebar-link">
+		<mat-list-item class="sidebar-item">
+			<mat-icon matListIcon>{{ navigationItem.icon }}</mat-icon>
+			<p matLine>
+				<span>{{ navigationItem.header }}</span>
+			</p>
+		</mat-list-item>
+	</a>
+</mat-list>
