@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"angular-electron": {
+		"wy-referee": {
 			"root": "",
 			"sourceRoot": "src",
 			"projectType": "application",
@@ -11,7 +11,6 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:browser",
 					"options": {
-						"aot": true,
 						"outputPath": "dist",
 						"index": "src/index.html",
 						"main": "src/main.ts",
@@ -20,15 +19,20 @@
 						"assets": [
 							"src/assets"
 						],
+						"styles": [
+							"src/styles.scss"
+						],
 						"scripts": [
 							"src/assets/js/electron-js.js",
 							"src/assets/js/jquery-3.4.1.min.js",
 							"src/assets/js/popper.min.js",
 							"src/assets/js/bootstrap.min.js"
 						],
-						"styles": [
-							"src/styles.scss"
-						]
+						"stylePreprocessorOptions": {
+							"includePaths": [
+								"src/app/styles"
+							]
+						}
 					},
 					"configurations": {
 						"dev": {
@@ -82,21 +86,21 @@
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"options": {
-						"browserTarget": "angular-electron:build"
+						"browserTarget": "wy-referee:build"
 					},
 					"configurations": {
 						"dev": {
-							"browserTarget": "angular-electron:build:dev"
+							"browserTarget": "wy-referee:build:dev"
 						},
 						"production": {
-							"browserTarget": "angular-electron:build:production"
+							"browserTarget": "wy-referee:build:production"
 						}
 					}
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"browserTarget": "angular-electron:build"
+						"browserTarget": "wy-referee:build"
 					}
 				},
 				"test": {
@@ -107,7 +111,7 @@
 						"tsConfig": "src/tsconfig.spec.json",
 						"karmaConfig": "src/karma.conf.js",
 						"assets": [
-							"src/assets"
+							"src/assets/images"
 						],
 						"scripts": [
 							"src/assets/js/jquery-3.4.1.min.js",
@@ -133,7 +137,7 @@
 				}
 			}
 		},
-		"angular-electron-e2e": {
+		"wy-referee-e2e": {
 			"root": "e2e",
 			"projectType": "application",
 			"architect": {
@@ -151,7 +155,7 @@
 			}
 		}
 	},
-	"defaultProject": "angular-electron",
+	"defaultProject": "wy-referee",
 	"schematics": {
 		"@schematics/angular:component": {
 			"prefix": "app",
