@@ -50,6 +50,7 @@ import { MappoolComponent } from './components/mappool/mappool/mappool.component
 import { TournamentSummaryComponent } from './components/tournament/tournament-summary/tournament-summary.component';
 import { MyPublishedTournamentsComponent } from './components/tournament/my-published-tournaments/my-published-tournaments.component';
 import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
+import { DeleteLobbyComponent } from './components/dialogs/delete-lobby/delete-lobby.component';
 
 @NgModule({
 	declarations: [
@@ -82,7 +83,8 @@ import { RemoveSettingsComponent } from './components/dialogs/remove-settings/re
 		MappoolComponent,
 		TournamentSummaryComponent,
 		MyPublishedTournamentsComponent,
-		RemoveSettingsComponent
+		RemoveSettingsComponent,
+		DeleteLobbyComponent
 	],
 	imports: [
 		BrowserModule,

@@ -13,8 +13,7 @@ export class SidebarComponent implements OnInit {
 		{ icon: 'info', header: 'information', link: 'information' },
 		{ icon: 'settings', header: 'settings', link: 'settings' },
 		{ icon: 'account_circle', header: 'login', link: 'login' },
-		{ icon: 'list', header: 'lobby overview', link: 'lobby-overview' },
-		{ icon: 'add_circle', header: 'create a lobby', link: 'create-lobby' },
+		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
 		{ icon: 'map', header: 'mappool', link: 'mappool-overview' },
 		{ icon: 'highlight', header: 'tournament', link: 'tournament-overview' },
 		{ icon: 'chat', header: 'irc', link: 'irc' }

@@ -1,41 +1,31 @@
-<div class="scroll">
-	<div class="allLobbies">
-		<div class="alert alert-info extra-spacing-top" *ngIf="allLobbies.length == 0">
-			There are currently no lobbies available.
-		</div>
+<div class="create-lobby">
+	<h2>Create a new multiplayer lobby</h2>
+	<p>In order to referee a match, you have to create a multiplayer lobby. With a couple of easy steps you can setup a multiplayer lobby for a tournament without any hassle!</p>
 
-		<div *ngFor="let lobby of allLobbies" (click)="openLobby(lobby, $event)" class="multiplayerLobby">
-			<div class="body">
-				<div class="row">
-					<div class="col-11">
-						<span class="multiplayerId">
-							<h1>{{ lobby.description }}</h1>
-						</span>
-						<span class="multiplayerDesc">{{ lobby.teamOneName }} vs {{ lobby.teamTwoName }}</span>
-					</div>
+	<button mat-raised-button [routerLink]="['/create-lobby']" color="primary"><mat-icon>add</mat-icon> create new mutliplayer lobby</button>
 
-					<div class="col-1">
-						<div class="multiplayerClose">
-							<button type="button" (click)="openDialog(lobby)" class="btn btn-danger">Delete</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<hr />
 </div>
 
-<div id="dialog" class="modal fade" tabindex="-1" role="dialog">
-	<div class="modal-dialog shadow" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h3 class="modal-title">Deleting lobby</h3>
+<div class="all-lobbies">
+	<div class="alert alert-info" *ngIf="allLobbies.length == 0">
+		There are currently no lobbies available.
+	</div>
+
+	<div *ngFor="let lobby of allLobbies" (click)="navigateLobby(lobby, $event)" class="lobby">
+		<div class="body">
+			<div class="information">
+				<div class="multiplayerId">
+					<h1>{{ lobby.tournamentAcronym }}: {{ lobby.description }}</h1>
+				</div>
+
+				<div class="multiplayerDesc">
+					{{ lobby.teamOneName }} vs {{ lobby.teamTwoName }}
+				</div>
 			</div>
 
-			<div class="modal-body">
-				<p [innerHTML]="dialogMessage"></p>
-
-				<button class="btn btn-danger" style="width: 100%;" (click)="deleteLobby(deleteMultiplayerLobby)">Delete lobby</button>
+			<div class="delete-lobby">
+				<button mat-mini-fab color="primary" (click)="deleteLobby(lobby)"><mat-icon>delete</mat-icon></button>
 			</div>
 		</div>
 	</div>

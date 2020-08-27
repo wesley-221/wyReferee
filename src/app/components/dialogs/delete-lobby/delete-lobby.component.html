@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Remove settings</h2>
+
+<mat-dialog-content class="mat-typography">
+	Are you sure you want to delete "{{ data.multiplayerLobby.tournamentAcronym }}: {{ data.multiplayerLobby.description }}"?
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="data.multiplayerLobby" cdkFocusInitial color="warn">Delete</button>
+</mat-dialog-actions>

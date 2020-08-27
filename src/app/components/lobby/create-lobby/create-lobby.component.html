@@ -1,205 +1,238 @@
-<div class="scroll">
-    <form [formGroup]="validationForm">
-        <div class="form-group">
-            <h2>Multiplayer link</h2>
-            <div>
-                Enter a multiplayer link in here for the match you want to calculate the scores off. <br /><br />
-                Accepted URL's: <br />
-                <ul>
-                    <li>https://osu.ppy.sh/community/matches/46358686</li>
-                </ul>
+<div class="container scroll">
+	<form [formGroup]="validationForm">
+		<div class="row">
+			<div class="col">
+				<h2>Multiplayer link</h2>
 
-                <div class="alert alert-info">
-                    You only have to fill in the multiplayer link when you want to use an old multiplayer lobby. If you leave this blank, it will create a <b>NEW</b> multiplayer lobby on osu!.
-                </div>
-            </div>
+				<mat-form-field class="full-width">
+					<mat-label>Multiplayer link</mat-label>
+					<input matInput formControlName="multiplayer-link" />
 
-            <input formControlName="multiplayerLink" type="text" class="form-control" placeholder="Multiplayer link"
-                    [ngClass]="{'has-error': getValidation('multiplayerLink').errors && (getValidation('multiplayerLink').touched || getValidation('multiplayerLink').dirty)}" />
+					<mat-error *ngIf="getValidation('multiplayer-link').errors && getValidation('multiplayer-link').errors.pattern">
+						Invalid multiplayerlink provided. Accepted format: https://osu.ppy.sh/community/matches/46358686
+					</mat-error>
+				</mat-form-field>
 
-            <div class="has-error" *ngIf="getValidation('multiplayerLink').errors && getValidation('multiplayerLink').errors.pattern">
-                Invalid multiplayer link given. <br /><b>Accepted format:</b> https://osu.ppy.sh/community/matches/46358686
-			</div>
-
-			<h2>Select a tournament</h2>
-			<div>
-				Select a tournament for which you will be making a multiplayer match for. <br />
-				<div class="alert alert-info">
-					You can leave this empty if you want to manually enter all the data.
-				</div>
-			</div>
-
-			<select class="form-control" formControlName="selectedTournament" (change)="changeTournament()">
-				<option></option>
-				<option *ngFor="let tournament of tournamentService.allTournaments" [value]="tournament.tournamentName">{{ tournament.tournamentName }}</option>
-			</select>
-
-			<div class="tournament-acronym" *ngIf="selectedTournament == null">
-				<h2>Tournament acronym</h2>
 				<div>
-					Enter an acronym that will be used to create the multiplayer match.
-				</div>
+					Enter a multiplayer link in here for the match you want to calculate the scores off.
 
-				<div class="alert alert-info">
-					You only have to fill in the tournament acronym when you want to create a <b>NEW</b> multiplayer lobby on osu!.
-				</div>
-
-				<input formControlName="tournamentAcronym" type="text" class="form-control" placeholder="Tournament acronym"
-						[ngClass]="{'has-error': getValidation('tournamentAcronym').errors && (getValidation('tournamentAcronym').touched || getValidation('tournamentAcronym').dirty)}" />
-
-				<div class="has-error"
-					*ngIf="getValidation('tournamentAcronym').errors && getValidation('tournamentAcronym').errors.maxlength &&
-							(getValidation('tournamentAcronym').touched || getValidation('tournamentAcronym').dirty)">
-					The tournament acronym can have a maximum of 10 characters
+					<div class="alert alert-info">
+						You only have to fill in the multiplayer link when you want to use an old multiplayer lobby. If you
+						leave this blank, it will create a <b>NEW</b> multiplayer lobby on osu!.
+					</div>
 				</div>
 			</div>
-        </div>
+		</div>
 
-        <hr />
+		<hr />
 
-        <div class="createLobbyTeamRow">
-			<div class="form-group" *ngIf="selectedTournament == null">
+		<div class="row">
+			<div class="col">
+				<h2>Select a tournament</h2>
+
+				<mat-form-field class="full-width">
+					<mat-label>Select a tournament</mat-label>
+					<mat-select formControlName="selected-tournament" (selectionChange)="changeTournament()">
+						<mat-option value=""></mat-option>
+						<mat-option *ngFor="let tournament of tournamentService.allTournaments" [value]="tournament.tournamentName">
+							{{ tournament.tournamentName }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<div>
+					Select a tournament for which you will be making a multiplayer match for. <br />
+					<div class="alert alert-info">
+						You can leave this empty if you want to manually enter all the data.
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<hr />
+
+		<div class="row">
+			<div class="col" *ngIf="selectedTournament == null">
+				<div class="tournament-acronym">
+					<h2>Tournament acronym</h2>
+
+					<mat-form-field class="full-width">
+						<mat-label>Tournament acronym</mat-label>
+						<input matInput formControlName="tournament-acronym" />
+
+						<mat-error *ngIf="getValidation('tournament-acronym').errors && getValidation('tournament-acronym').errors.maxlength && (getValidation('tournament-acronym').touched || getValidation('tournament-acronym').dirty)">
+							This field can have a maximum of 10 characters
+						</mat-error>
+					</mat-form-field>
+
+					<div>
+						Enter an acronym that will be used to create the multiplayer match.
+					</div>
+
+					<div class="alert alert-warning">
+						You only have to fill in the tournament acronym when you want to create a <b>NEW</b> multiplayer lobby on osu!.
+					</div>
+				</div>
+			</div>
+
+			<div class="col" *ngIf="selectedTournament == null">
 				<h2>Score system</h2>
+
+				<mat-form-field class="full-width">
+					<mat-label>Select a score system</mat-label>
+					<mat-select formControlName="score-interface" (selectionChange)="changeScoreInterface($event)">
+						<mat-option *ngFor="let scoreInterface of this.calculateScoreInterfaces.getAllScoreInterfaces()" [value]="scoreInterface.getIdentifier()">{{ scoreInterface.getIdentifier() }}</mat-option>
+					</mat-select>
+
+					<mat-error *ngIf="getValidation('score-interface').errors && (getValidation('score-interface').touched || getValidation('score-interface').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
 				<p>
 					Enter the score system that is being used for the multiplayer game
 				</p>
 
-				<select formControlName="scoreInterface" class="form-control" (change)="changeScoreInterface($event)">
-					<option></option>
-					<option *ngFor="let scoreInterface of this.calculateScoreInterfaces.getAllScoreInterfaces()">{{ scoreInterface.getIdentifier() }}</option>
-				</select>
-
-				<br />
-
-				<div class="alert alert-primary" *ngIf="this.selectedScoreInterface">
+				<div class="alert alert-info" *ngIf="this.selectedScoreInterface">
 					{{ this.selectedScoreInterface.getDescription() }}
 				</div>
 			</div>
 
-            <div class="form-group" *ngIf="selectedTournament == null && (this.teamSize == 0 || this.teamSize == null)">
-                <h2>Team size</h2>
-                <p>
-                    Enter the amount of players that are allowed to play in a team.
-                </p>
+			<div class="col" *ngIf="selectedTournament == null && (this.teamSize == 0 || this.teamSize == null)">
+				<h2>Team size</h2>
 
-                <input formControlName="teamSize" type="text" class="form-control" placeholder="Team size"
-                        [ngClass]="{'has-error': getValidation('teamSize').errors && (getValidation('teamSize').touched || getValidation('teamSize').dirty)  }" (keyup)="changeTeamSize()" />
+				<mat-form-field class="full-width">
+					<mat-label>Team size</mat-label>
+					<input matInput formControlName="team-size" (change)="changeTeamSize()" />
 
-                <div class="has-error"
-                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.min &&
-                        (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
-                    The team size must have at least a size of 1
-                </div>
+					<mat-error *ngIf="getValidation('team-size').errors && (getValidation('team-size').touched || getValidation('team-size').dirty)">
+						This field is required
+					</mat-error>
 
-                <div class="has-error"
-                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.max &&
-                        (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
-                    The team size can not be higher than 6
-                </div>
+					<mat-error *ngIf="getValidation('team-size').errors && getValidation('team-size').errors.min && (getValidation('team-size').touched || getValidation('team-size').dirty)">
+						The team size must have at least a size of 1
+					</mat-error>
 
-                <div class="has-error"
-                    *ngIf="getValidation('teamSize').errors && getValidation('teamSize').errors.pattern &&
-                        (getValidation('teamSize').touched || getValidation('teamSize').dirty)">
-                    The team size can only be a number
-                </div>
+					<mat-error *ngIf="getValidation('team-size').errors && getValidation('team-size').errors.max && (getValidation('team-size').touched || getValidation('team-size').dirty)">
+						The team size can not be higher than 8
+					</mat-error>
+
+					<mat-error *ngIf="getValidation('team-size').errors && getValidation('team-size').errors.pattern && (getValidation('team-size').touched || getValidation('team-size').dirty)">
+						The team size can only be a number
+					</mat-error>
+				</mat-form-field>
+
+				<p>
+					Enter the amount of players that are allowed to play in a team.
+				</p>
+			</div>
+		</div>
+
+		<hr *ngIf="selectedTournament == null" />
+
+		<div class="row" *ngIf="selectedTournament == null">
+			<div class="col">
+				<h2>Team one name</h2>
+
+				<mat-form-field class="full-width">
+					<mat-label>Team one name</mat-label>
+					<input matInput formControlName="team-one-name" />
+
+					<mat-error *ngIf="getValidation('team-one-name').errors && (getValidation('team-one-name').touched || getValidation('team-one-name').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>
+					Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot {{ teamOneArray.join(", ") }}.
+				</p>
 			</div>
 
-			<div class="team-select">
-				<div class="teamOne form-group" *ngIf="selectedTournament == null">
-					<div>
-						<h2>Team one name</h2>
-						<p>
-							Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot {{ teamOneArray.join(", ") }}.
-						</p>
-					</div>
+			<div class="col">
+				<h2>Team two name</h2>
 
-					<div>
-						<input formControlName="teamOneName" type="text" class="form-control" placeholder="Team one name"
-								[ngClass]="{'has-error': getValidation('teamOneName').errors && (getValidation('teamOneName').touched || getValidation('teamOneName').dirty)  }" />
+				<mat-form-field class="full-width">
+					<mat-label>Team two name</mat-label>
+					<input matInput formControlName="team-two-name" />
 
-						<div class="has-error"
-							*ngIf="getValidation('teamOneName').errors && getValidation('teamOneName').errors.required &&
-								(getValidation('teamOneName').touched || getValidation('teamOneName').dirty)">
-							This field is required
-						</div>
-					</div>
-				</div>
+					<mat-error *ngIf="getValidation('team-two-name').errors && (getValidation('team-two-name').touched || getValidation('team-two-name').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
 
-				<div class="teamOne form-group" *ngIf="selectedTournament != null">
-					<div>
-						<h2>Team one name</h2>
-						<p>
-							Select the first team. This will be team <span class="red-text">red</span> and has slot {{ teamOneArray.join(", ") }}.
-						</p>
-					</div>
+				<p>
+					Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot {{ teamTwoArray.join(", ") }}.
+				</p>
+			</div>
+		</div>
 
-					<div>
-						<select class="form-control" formControlName="teamOneName" *ngIf="selectedTournament">
-							<option></option>
-							<option *ngFor="let team of selectedTournament.teams" [value]="team.teamName">{{ team.teamName }}</option>
-						</select>
-					</div>
-				</div>
+		<div class="row" *ngIf="selectedTournament != null">
+			<div class="col">
+				<h2>Team one name</h2>
 
-				<div class="teamTwo form-group" *ngIf="selectedTournament == null">
-					<div>
-						<h2>Team two name</h2>
-						<p>
-							Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot {{ teamTwoArray.join(", ") }}.
-						</p>
-					</div>
+				<mat-form-field class="full-width">
+					<mat-label>Team one name</mat-label>
+					<mat-select formControlName="team-one-name">
+						<mat-option *ngFor="let team of selectedTournament.teams" [value]="team.teamName">{{ team.teamName }}</mat-option>
+					</mat-select>
 
-					<div>
-						<input formControlName="teamTwoName" type="text" class="form-control" placeholder="Team two name"
-								[ngClass]="{'has-error': getValidation('teamTwoName').errors && (getValidation('teamTwoName').touched || getValidation('teamTwoName').dirty)  }" />
+					<mat-error *ngIf="getValidation('team-one-name').errors && (getValidation('team-one-name').touched || getValidation('team-one-name').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
 
-						<div class="has-error"
-							*ngIf="getValidation('teamTwoName').errors && getValidation('teamTwoName').errors.required &&
-								(getValidation('teamTwoName').touched || getValidation('teamTwoName').dirty)">
-							This field is required
-						</div>
-					</div>
-				</div>
-
-				<div class="teamTwo form-group" *ngIf="selectedTournament != null">
-					<div>
-						<h2>Team two name</h2>
-						<p>
-							Select the second team. This will be team <span class="blue-text">blue</span> and has {{ teamTwoArray.join(", ") }}.
-						</p>
-					</div>
-
-					<div>
-						<select class="form-control" formControlName="teamTwoName" *ngIf="selectedTournament">
-							<option></option>
-							<option *ngFor="let team of selectedTournament.teams" [value]="team.teamName">{{ team.teamName }}</option>
-						</select>
-					</div>
-				</div>
+				<p>
+					Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot {{ teamOneArray.join(", ") }}.
+				</p>
 			</div>
 
-            <div class="form-group">
-                <h2>Webhook</h2>
-                <i>NOTE: this field is optional</i>
-                <p>In order for scores to appear in a discord channel, you have to enter a webhook so it knows where to send the messages to.</p>
+			<div class="col">
+				<h2>Team two name</h2>
 
-                <h5>How to create a Discord webhook:</h5>
-                <i>NOTE: this step is only required when there is no webhook available yet.</i>
-                <ul>
-                    <li>Go to the server you want the messages to be send to</li>
-                    <li>Right click on the channel you want the messages to be send to</li>
-                    <li>Click on "Edit Channel"</li>
-                    <li>Click on "Webhooks"</li>
-                    <li>Click on "Create Webhook"</li>
-                    <li>Fill in the fields and finally copy the "Webhook url"</li>
-                </ul>
+				<mat-form-field class="full-width">
+					<mat-label>Team two name</mat-label>
+					<mat-select formControlName="team-two-name">
+						<mat-option *ngFor="let team of selectedTournament.teams" [value]="team.teamName">{{ team.teamName }}</mat-option>
+					</mat-select>
 
-                <input formControlName="webhook" type="text" class="form-control" placeholder="Webhook" />
-            </div>
-        </div>
+					<mat-error *ngIf="getValidation('team-two-name').errors && (getValidation('team-two-name').touched || getValidation('team-two-name').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
 
-        <hr />
+				<p>
+					Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot {{ teamTwoArray.join(", ") }}.
+				</p>
+			</div>
+		</div>
 
-		<button type="button" (click)="createLobby()" class="btn btn-primary float-right mb-2" [disabled]="validationForm.invalid || lobbyHasBeenCreated || !ircAuthenticated">Create</button>
-    </form>
+		<h2>Webhook</h2>
+
+		<mat-form-field class="full-width">
+			<mat-label>Webhook</mat-label>
+			<input matInput formControlName="webhook" />
+		</mat-form-field>
+
+		<div class="alert alert-info">
+			For the client to send status messages to a Discord channel, you have to setup a webhook. Currently the following statuses will be send to Discord:
+			<ul>
+				<li>When a referee bans a map for either team</li>
+				<li>When a map finishes</li>
+				<li>When the referee sends the final result</li>
+			</ul>
+
+			<div class="discord-webhook-header">How to create a Discord webhook:</div>
+			<i>NOTE: this step is only required when there is no webhook available.</i>
+			<ul>
+				<li>Go to the server you want the messages to be send to</li>
+				<li>Right click on the channel you want the messages to be send to</li>
+				<li>Click on "Edit Channel"</li>
+				<li>Click on "Integrations"</li>
+				<li>Click on "Create Webhook"</li>
+				<li>Fill in the fields and finally copy the "Webhook url"</li>
+			</ul>
+		</div>
+
+		<button mat-raised-button color="primary" class="success-button" (click)="createLobby()" [disabled]="!ircAuthenticated">Create</button>
+	</form>
 </div>

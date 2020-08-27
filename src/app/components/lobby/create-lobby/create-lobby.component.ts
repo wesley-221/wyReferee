@@ -8,6 +8,7 @@ import { ScoreInterface } from '../../../models/score-calculation/calculation-ty
 import { Calculate } from '../../../models/score-calculation/calculate';
 import { TournamentService } from '../../../services/tournament.service';
 import { Tournament } from '../../../models/tournament/tournament';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -41,81 +42,87 @@ export class CreateLobbyComponent implements OnInit {
 		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
 			this.ircAuthenticated = isAuthenticated;
 		});
-	}
 
-	ngOnInit() {
 		this.validationForm = new FormGroup({
-			'multiplayerLink': new FormControl('', [
+			'multiplayer-link': new FormControl('', [
 				Validators.pattern(/https:\/\/osu.ppy.sh\/community\/matches\/[0-9]+/)
 			]),
-			'tournamentAcronym': new FormControl('', [
+			'tournament-acronym': new FormControl('', [
 				Validators.maxLength(10)
 			]),
-			'scoreInterface': new FormControl('', [
+			'score-interface': new FormControl('', [
 				Validators.required
 			]),
-			'teamSize': new FormControl('', [
+			'team-size': new FormControl('', [
+				Validators.required,
 				Validators.min(1),
 				Validators.max(8),
 				Validators.pattern(/^\d+$/)
 			]),
-			'teamOneName': new FormControl('', [
+			'team-one-name': new FormControl('', [
 				Validators.required
 			]),
-			'teamTwoName': new FormControl('', [
+			'team-two-name': new FormControl('', [
 				Validators.required
 			]),
 			'webhook': new FormControl(),
-			'selectedTournament': new FormControl()
+			'selected-tournament': new FormControl()
 		});
 	}
 
+	ngOnInit() { }
+
 	changeTournament() {
-		this.selectedTournament = this.tournamentService.getTournamentByName(this.validationForm.get('selectedTournament').value);
+		this.selectedTournament = this.tournamentService.getTournamentByName(this.validationForm.get('selected-tournament').value);
 		this.changeTeamSize(this.selectedTournament != null ? this.selectedTournament.teamSize : null);
 
 		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : null);
 		this.teamSize = this.selectedScoreInterface ? this.selectedScoreInterface.getTeamSize() : null;
-		this.validationForm.get('teamSize').setValue(this.selectedTournament != null ? this.selectedTournament.teamSize : this.teamSize);
-		this.validationForm.get('tournamentAcronym').setValue(this.selectedTournament != null ? this.selectedTournament.acronym : null);
-		this.validationForm.get('scoreInterface').setValue(this.selectedScoreInterface ? this.selectedScoreInterface.getIdentifier() : null);
+		this.validationForm.get('team-size').setValue(this.selectedTournament != null ? this.selectedTournament.teamSize : this.teamSize);
+		this.validationForm.get('tournament-acronym').setValue(this.selectedTournament != null ? this.selectedTournament.acronym : null);
+		this.validationForm.get('score-interface').setValue(this.selectedScoreInterface ? this.selectedScoreInterface.getIdentifier() : null);
 	}
 
-	changeScoreInterface(event: Event) {
-		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface((<any>event.target).value);
+	changeScoreInterface(event: MatSelectChange) {
+		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(event.value);
 
 		this.teamSize = this.selectedScoreInterface.getTeamSize();
-		this.validationForm.get('teamSize').setValue(this.teamSize);
+		this.validationForm.get('team-size').setValue(this.teamSize);
 	}
 
 	createLobby() {
-		const newLobby = new MultiplayerLobby();
+		if (this.validationForm.valid) {
+			const newLobby = new MultiplayerLobby();
 
-		newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
-		newLobby.teamOneName = this.validationForm.get('teamOneName').value;
-		newLobby.teamTwoName = this.validationForm.get('teamTwoName').value;
-		newLobby.teamSize = this.validationForm.get('teamSize').value;
-		newLobby.multiplayerLink = this.validationForm.get('multiplayerLink').value;
-		newLobby.tournamentAcronym = this.validationForm.get('tournamentAcronym').value;
-		newLobby.description = `${this.validationForm.get('teamOneName').value} vs ${this.validationForm.get('teamTwoName').value}`;
-		newLobby.webhook = this.validationForm.get('webhook').value;
-		newLobby.scoreInterfaceIndentifier = this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : this.selectedScoreInterface.getIdentifier();
+			newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
+			newLobby.teamOneName = this.validationForm.get('team-one-name').value;
+			newLobby.teamTwoName = this.validationForm.get('team-two-name').value;
+			newLobby.teamSize = this.validationForm.get('team-size').value;
+			newLobby.multiplayerLink = this.validationForm.get('multiplayer-link').value;
+			newLobby.tournamentAcronym = this.validationForm.get('tournament-acronym').value;
+			newLobby.description = `${this.validationForm.get('team-one-name').value} vs ${this.validationForm.get('team-two-name').value}`;
+			newLobby.webhook = this.validationForm.get('webhook').value;
+			newLobby.scoreInterfaceIndentifier = this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : this.selectedScoreInterface.getIdentifier();
 
-		if (newLobby.multiplayerLink == '') {
-			this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
+			if (newLobby.multiplayerLink == '') {
+				this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
 
-			this.ircService.client.say('BanchoBot', `!mp make ${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`);
+				this.ircService.client.say('BanchoBot', `!mp make ${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`);
+			}
+
+			this.lobbyHasBeenCreated = true;
+
+			setTimeout(() => {
+				this.lobbyHasBeenCreated = false;
+			}, 3000);
+
+			this.multiplayerLobbies.add(newLobby);
+
+			this.toastService.addToast(`Successfully created the multiplayer lobby ${newLobby.description}!`);
 		}
-
-		this.lobbyHasBeenCreated = true;
-
-		setTimeout(() => {
-			this.lobbyHasBeenCreated = false;
-		}, 3000);
-
-		this.multiplayerLobbies.add(newLobby);
-
-		this.toastService.addToast(`Successfully created the multiplayer lobby ${newLobby.description}!`);
+		else {
+			this.validationForm.markAllAsTouched();
+		}
 	}
 
 	getValidation(key: string): any {
@@ -126,14 +133,16 @@ export class CreateLobbyComponent implements OnInit {
 		this.teamOneArray = [];
 		this.teamTwoArray = [];
 
-		let teamSizeVal: number;
+		let teamSizeVal: any;
 
 		if (teamSize == null || teamSize == undefined) {
-			teamSizeVal = parseInt(this.getValidation('teamSize').value >= 8 ? 8 : this.getValidation('teamSize').value);
+			teamSizeVal = parseInt(this.getValidation('team-size').value >= 8 ? 8 : this.getValidation('team-size').value);
 		}
 		else {
 			teamSizeVal = teamSize >= 8 ? 8 : teamSize;
 		}
+
+		teamSizeVal = parseInt(teamSizeVal);
 
 		for (let i = 1; i < (teamSizeVal + 1); i++) {
 			this.teamOneArray.push(i);

@@ -121,6 +121,15 @@ hr {
 
 	background: rgb(64, 49, 188);
 	background: linear-gradient(0deg, rgba(64, 49, 188, 1) 0%, rgba(49, 129, 229, 1) 100%);
+
+	&:disabled {
+		color: black !important;
+
+		background: rgb(255, 255, 255);
+		background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(139, 118, 117, 1) 100%);
+
+		cursor: not-allowed !important;
+	}
 }
 
 .success-button {
@@ -133,6 +142,15 @@ hr {
 
 	background: rgb(29, 157, 78);
 	background: linear-gradient(0deg, rgba(29, 157, 78, 1) 0%, rgba(104, 198, 144, 1) 100%);
+
+	&:disabled {
+		color: black !important;
+
+		background: rgb(255, 255, 255);
+		background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(139, 118, 117, 1) 100%);
+
+		cursor: not-allowed !important;
+	}
 }
 
 .danger-button {
@@ -143,6 +161,15 @@ hr {
 	padding: 8px !important;
 	margin-top: 8px !important;
 
-	background: rgb(255,50,41);
-	background: linear-gradient(0deg, rgba(255,50,41,1) 0%, rgba(255,160,155,1) 100%);
+	background: rgb(255, 50, 41);
+	background: linear-gradient(0deg, rgba(255, 50, 41, 1) 0%, rgba(255, 160, 155, 1) 100%);
+
+	&:disabled {
+		color: black !important;
+
+		background: rgb(255, 255, 255);
+		background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(139, 118, 117, 1) 100%);
+
+		cursor: not-allowed !important;
+	}
 }
