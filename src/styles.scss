@@ -39,7 +39,12 @@ body {
 	width: 100%;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	color: $primary;
 
 	margin-top: 0;
@@ -95,8 +100,49 @@ hr {
 			color: lighten($success, 30%);
 		}
 
-		h1, h2, h3, h4, h5, h6 {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
 			color: lighten($success, 30%);
 		}
 	}
+}
+
+.primary-button {
+	border-radius: 35px !important;
+
+	color: white !important;
+
+	padding: 8px !important;
+	margin-top: 8px !important;
+
+	background: rgb(64, 49, 188);
+	background: linear-gradient(0deg, rgba(64, 49, 188, 1) 0%, rgba(49, 129, 229, 1) 100%);
+}
+
+.success-button {
+	border-radius: 35px !important;
+
+	color: white !important;
+
+	padding: 8px !important;
+	margin-top: 8px !important;
+
+	background: rgb(29, 157, 78);
+	background: linear-gradient(0deg, rgba(29, 157, 78, 1) 0%, rgba(104, 198, 144, 1) 100%);
+}
+
+.danger-button {
+	border-radius: 35px !important;
+
+	color: white !important;
+
+	padding: 8px !important;
+	margin-top: 8px !important;
+
+	background: rgb(255,50,41);
+	background: linear-gradient(0deg, rgba(255,50,41,1) 0%, rgba(255,160,155,1) 100%);
 }

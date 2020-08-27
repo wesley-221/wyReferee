@@ -11,12 +11,11 @@ import { ToastService } from '../../../services/toast.service';
 	styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-	loginForm: FormGroup;
+	registrationForm: FormGroup;
 	loginErrors: string[] = [];
 
-	constructor(private authenticateService: AuthenticateService, private toastService: ToastService) { }
-	ngOnInit() {
-		this.loginForm = new FormGroup({
+	constructor(private authenticateService: AuthenticateService, private toastService: ToastService) {
+		this.registrationForm = new FormGroup({
 			'username': new FormControl('', [
 				Validators.required
 			]),
@@ -28,40 +27,17 @@ export class RegisterComponent implements OnInit {
 			])
 		});
 
-		this.loginForm.setValidators(this.isEqualTo('password', 'password-confirmation'));
+		this.registrationForm.setValidators(this.isEqualTo('password', 'password-confirmation'));
 	}
 
+	ngOnInit() { }
+
 	register(): void {
-		const username: AbstractControl = this.loginForm.get('username');
-		const password: AbstractControl = this.loginForm.get('password');
-		const passwordConfirm: AbstractControl = this.loginForm.get('password-confirmation');
+		if (this.registrationForm.valid) {
+			const username: AbstractControl = this.registrationForm.get('username');
+			const password: AbstractControl = this.registrationForm.get('password');
+			const passwordConfirm: AbstractControl = this.registrationForm.get('password-confirmation');
 
-		const errors: string[] = [];
-
-		if (username.invalid) {
-			errors.push('You have to fill in a username in order to register.');
-		}
-
-		if (password.invalid) {
-			if (password.errors.required) {
-				errors.push('You have to enter a password in order to register.');
-			}
-		}
-
-		if (passwordConfirm.invalid) {
-			if (passwordConfirm.errors.required) {
-				errors.push('You have to enter the password confirmation in order to register.');
-			}
-
-			if (passwordConfirm.errors.notEquivalent) {
-				errors.push('The passwords you have entered do not match.');
-			}
-		}
-
-		if (errors.length > 0) {
-			this.loginErrors = errors;
-		}
-		else {
 			const registerUser = new RegisterRequest();
 
 			registerUser.username = username.value;
@@ -78,6 +54,9 @@ export class RegisterComponent implements OnInit {
 				this.loginErrors.push(err.error.message);
 			});
 		}
+		else {
+			this.registrationForm.markAllAsTouched();
+		}
 	}
 
 	private isEqualTo(type1: any, type2: any): ValidatorFn {
@@ -85,7 +64,7 @@ export class RegisterComponent implements OnInit {
 			const v1 = checkForm.controls[type1];
 			const v2 = checkForm.controls[type2];
 
-			return v1.value === v2.value ? v2.setErrors(null) : v2.setErrors({ notEquivalent: true });
+			return v1.value === v2.value ? null : v2.setErrors({ notEquivalent: true });
 		}
 	}
 }

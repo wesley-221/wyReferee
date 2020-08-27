@@ -1,68 +1,62 @@
-$sidebar-logo-width: 150px;
-$sidebar-hr-color: #4c545c;
-$background-color: #3c4452;
+@import "variables";
+
+$container-height: 400px;
 
 .login-container {
-	display: flex;
-	justify-content: center;
+	background-color: $tile-background-color;
+	overflow: hidden;
 
-	.login {
-		width: 700px;
+	.login-icon-container {
+		display: flex;
 
-		margin-top: 18px;
-		margin-right: 18px;
-		padding: 9px;
+		align-items: center;
+		justify-content: center;
 
-		background-color: #4c5769;
-		border: 1px solid darken($background-color, 15%);
-		-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-		-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-		box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+		height: $container-height / 2;
 
-		.header {
-			display: flex;
-			justify-content: center;
+		background: rgb(64, 49, 188);
+		background: linear-gradient(0deg, rgba(64, 49, 188, 1) 0%, rgba(49, 129, 229, 1) 100%);
 
-			.header-image {
-				width: $sidebar-logo-width;
-				height: $sidebar-logo-width;
-				line-height: $sidebar-logo-width;
+		.icon {
+			width: 150px;
+			height: 150px;
+			line-height: 150px;
+			border-radius: 50%;
 
-				margin-bottom: 8px;
-
-				border-radius: 50%;
-				border: 1px solid $sidebar-hr-color;
-
-				background-repeat: no-repeat;
+			&.osu {
+				background-image: url("~assets/images/osulogo.png");
 				background-size: cover;
+				background-repeat: no-repeat;
+			}
+
+			&.web {
 				background-image: url("~assets/images/icon.png");
+				background-size: cover;
+				background-repeat: no-repeat;
 			}
 		}
+	}
 
-		.title {
-			margin-bottom: 16px;
-			text-align: center;
-		}
+	.login-content {
+		margin: 38px;
 
-		.body {
-			.spacing {
-				margin-top: 18px;
+		.login-form {
+			background-color: darken($tile-background-color, 5%);
 
-				&.half {
-					margin-top: 9px;
-				}
+			padding: 8px;
+
+			-webkit-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+			-moz-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+			box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+
+			.header {
+				text-align: center;
 			}
 
-			.center {
-				display: flex;
-				justify-content: center;
+			.footer {
+				margin-top: 8px;
 
-				.custom-btn {
-					padding-left: 48px;
-					padding-right: 48px;
-
-					border-radius: 50px;
-				}
+				text-align: center;
 			}
 		}
 	}

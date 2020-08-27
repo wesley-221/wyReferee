@@ -15,7 +15,7 @@ import { ToastType } from '../../../models/toast';
 })
 export class LoginComponent implements OnInit {
 	mappoolPublishForm: FormGroup;
-	ircForm: FormGroup;
+	ircLoginForm: FormGroup;
 
 	isConnecting = false;
 	isDisconnecting = false;
@@ -32,11 +32,11 @@ export class LoginComponent implements OnInit {
 			])
 		});
 
-		this.ircForm = new FormGroup({
-			'username': new FormControl('', [
+		this.ircLoginForm = new FormGroup({
+			'irc-username': new FormControl('', [
 				Validators.required
 			]),
-			'password': new FormControl('', [
+			'irc-password': new FormControl('', [
 				Validators.required
 			])
 		});
@@ -93,8 +93,8 @@ export class LoginComponent implements OnInit {
 	 * Login to irc with the given credentials
 	 */
 	connectIrc() {
-		const username = this.ircForm.get('username').value;
-		const password = this.ircForm.get('password').value;
+		const username = this.ircLoginForm.get('username').value;
+		const password = this.ircLoginForm.get('password').value;
 
 		this.ircService.connect(username, password);
 	}
