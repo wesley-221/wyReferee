@@ -28,12 +28,12 @@
 							</mat-error>
 						</mat-form-field>
 
-						<button mat-raised-button color="primary" class="success-button full-width" (click)="loginMappoolPublish()">Login</button>
+						<button mat-raised-button color="primary" class="full-width margin-button" (click)="loginMappoolPublish()">Login</button>
 					</form>
 
 					<div class="footer" *ngIf="auth.loggedIn">
 						Logged in as&nbsp;<b>{{ auth.loggedInUser.username }}</b>
-						<button mat-raised-button color="primary" class="danger-button full-width" (click)="logoutMappoolPublish()">Logout</button>
+						<button mat-raised-button color="warn" class="full-width margin-button" (click)="logoutMappoolPublish()">Logout</button>
 					</div>
 
 					<div class="footer">
@@ -73,7 +73,7 @@
 							</mat-error>
 						</mat-form-field>
 
-						<button mat-raised-button color="primary" class="success-button full-width align-spinner" (click)="connectIrc()">Connect</button>
+						<button mat-raised-button color="primary" class="full-width align-spinner margin-button" (click)="connectIrc()">Connect</button>
 
 						<div class="center" *ngIf="isConnecting">
 							<mat-spinner [diameter]="40"></mat-spinner>
@@ -84,7 +84,7 @@
 					<div class="footer" *ngIf="ircService.isAuthenticated">
 						Logged in as&nbsp;<b>{{ ircService.authenticatedUser }}</b>
 
-						<button mat-raised-button color="primary" class="danger-button full-width" (click)="disconnectIrc()">Disconnect</button>
+						<button mat-raised-button color="warn" class="full-width margin-button" (click)="disconnectIrc()">Disconnect</button>
 					</div>
 
 					<div class="footer">
