@@ -58,7 +58,7 @@ export class TournamentSummaryComponent implements OnInit {
 	editTournament(tournament: Tournament, event: any): void {
 		// Check if click wasn't on a button
 		if (event.srcElement.className.search(/mat-icon|mat-mini-fab|mat-button-wrapper/)) {
-			this.router.navigate(['/tournament-management/tournament-edit', tournament.id, this.publish]);
+			this.router.navigate(['/tournament-management/tournament-overview/tournament-edit', tournament.id, this.publish]);
 		}
 	}
 

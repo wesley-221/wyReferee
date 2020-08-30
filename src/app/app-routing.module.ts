@@ -34,14 +34,14 @@ const routes: Routes = [
 			{
 				path: 'tournament-management', component: ManagementRouterComponent, children: [
 					{ path: 'mappool-overview', component: MappoolOverviewComponent },
-					{ path: 'mappool-create', component: MappoolCreateComponent },
-					{ path: 'mappool-edit/:mappoolId/:publish', component: MappoolEditComponent },
-					{ path: 'my-published-mappools', component: MyPublishedMappoolsComponent },
+					{ path: 'mappool-overview/mappool-create', component: MappoolCreateComponent },
+					{ path: 'mappool-overview/mappool-edit/:mappoolId/:publish', component: MappoolEditComponent },
+					{ path: 'mappool-overview/my-published-mappools', component: MyPublishedMappoolsComponent },
 
 					{ path: 'tournament-overview', component: TournamentOverviewComponent },
-					{ path: 'tournament-create', component: TournamentCreateComponent },
-					{ path: 'tournament-edit/:tournamentId/:publish', component: TournamentEditComponent },
-					{ path: 'my-published-tournaments', component: MyPublishedTournamentsComponent },
+					{ path: 'tournament-overview/tournament-create', component: TournamentCreateComponent },
+					{ path: 'tournament-overview/tournament-edit/:tournamentId/:publish', component: TournamentEditComponent },
+					{ path: 'tournament-overview/my-published-tournaments', component: MyPublishedTournamentsComponent },
 				]
 			},
 			{ path: 'irc', component: IrcComponent },

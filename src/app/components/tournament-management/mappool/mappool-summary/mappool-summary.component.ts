@@ -130,7 +130,7 @@ export class MappoolSummaryComponent implements OnInit {
 	editMappool(mappool: Mappool, event: any): void {
 		// Check if click wasn't on a button
 		if (event.srcElement.className.search(/mat-icon|mat-mini-fab|mat-button-wrapper/) == -1) {
-			this.router.navigate(['/tournament-management/mappool-edit', mappool.id, this.publish]);
+			this.router.navigate(['/tournament-management/mappool-overview/mappool-edit', mappool.id, this.publish]);
 		}
 	}
 }
