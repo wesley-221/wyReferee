@@ -9,9 +9,8 @@ import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lob
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 import { MappoolOverviewComponent } from './components/tournament-management/mappool/mappool-overview/mappool-overview.component';
 import { MappoolCreateComponent } from './components/tournament-management/mappool/mappool-create/mappool-create.component';
-import { LoginComponent } from './components/authentication/login/login.component';
 import { IrcComponent } from './components/irc/irc.component';
-import { RegisterComponent } from './components/authentication/register/register.component';
+import { RegisterComponent } from './components/register/register.component';
 import { TournamentCreateComponent } from './components/tournament-management/tournament/tournament-create/tournament-create.component';
 import { TournamentOverviewComponent } from './components/tournament-management/tournament/tournament-overview/tournament-overview.component';
 import { TournamentEditComponent } from './components/tournament-management/tournament/tournament-edit/tournament-edit.component';
@@ -28,11 +27,10 @@ const routes: Routes = [
 			{ path: '', component: InformationComponent },
 			{ path: 'information', component: InformationComponent },
 			{ path: 'settings', component: SettingsComponent },
-			{ path: 'login', component: LoginComponent },
 			{ path: 'register', component: RegisterComponent },
 			{ path: 'lobby-overview', component: AllLobbiesComponent },
-			{ path: 'create-lobby', component: CreateLobbyComponent },
-			{ path: 'lobby-view/:id', component: LobbyViewComponent },
+			{ path: 'lobby-overview/create-lobby', component: CreateLobbyComponent },
+			{ path: 'lobby-overview/lobby-view/:id', component: LobbyViewComponent },
 			{
 				path: 'tournament-management', component: ManagementRouterComponent, children: [
 					{ path: 'mappool-overview', component: MappoolOverviewComponent },

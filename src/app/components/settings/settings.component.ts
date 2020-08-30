@@ -6,6 +6,11 @@ import { ToastType } from '../../models/toast';
 import { ApiKeyValidation } from '../../services/osu-api/api-key-validation.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RemoveSettingsComponent } from '../dialogs/remove-settings/remove-settings.component';
+import { AuthenticateService } from 'app/services/authenticate.service';
+import { IrcService } from 'app/services/irc.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { RegisterRequest } from 'app/models/authentication/register-request';
+import { LoggedInUser } from 'app/models/authentication/logged-in-user';
 
 @Component({
 	selector: 'app-settings',
@@ -19,14 +24,102 @@ export class SettingsComponent implements OnInit {
 	dialogMessage: string;
 	dialogAction = 0;
 
+	mappoolPublishForm: FormGroup;
+	ircLoginForm: FormGroup;
+
+	isConnecting = false;
+	isDisconnecting = false;
+
 	constructor(
 		public electronService: ElectronService,
 		private storeService: StoreService,
 		private toastService: ToastService,
 		private apiKeyValidation: ApiKeyValidation,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		public auth: AuthenticateService,
+		public ircService: IrcService
 	) { }
-	ngOnInit() { }
+
+	ngOnInit() {
+		this.mappoolPublishForm = new FormGroup({
+			'username': new FormControl('', [
+				Validators.required
+			]),
+			'password': new FormControl('', [
+				Validators.required
+			])
+		});
+
+		this.ircLoginForm = new FormGroup({
+			'irc-username': new FormControl('', [
+				Validators.required
+			]),
+			'irc-password': new FormControl('', [
+				Validators.required
+			])
+		});
+
+		// Subscribe to the isConnecting variable to show/hide the spinner
+		this.ircService.getIsConnecting().subscribe(value => {
+			this.isConnecting = value;
+		});
+
+		// Subscribe to the isConnecting variable to show/hide the spinner
+		this.ircService.getIsDisconnecting().subscribe(value => {
+			this.isDisconnecting = value;
+		});
+	}
+
+	/**
+	 * Login the user with the given username and password
+	 */
+	loginMappoolPublish() {
+		const username = this.mappoolPublishForm.get('username').value;
+		const password = this.mappoolPublishForm.get('password').value;
+
+		const registerUser = new RegisterRequest();
+
+		registerUser.username = username;
+		registerUser.password = password;
+
+		this.auth.login(registerUser).subscribe(data => {
+			const loggedInUser: LoggedInUser = new LoggedInUser();
+
+			loggedInUser.userId = data.body.userId;
+			loggedInUser.username = data.body.username;
+			loggedInUser.isAdmin = data.body.admin;
+			loggedInUser.token = data.headers.get('Authorization');
+			loggedInUser.isTournamentHost = data.body.tournament_host;
+
+			this.auth.loggedInUser = loggedInUser;
+			this.auth.loggedIn = true;
+
+			this.auth.cacheLoggedInUser(loggedInUser);
+
+			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser.username}"!`);
+		}, (err) => {
+			this.toastService.addToast(`${err.error.message}`, ToastType.Error);
+		});
+	}
+
+	logoutMappoolPublish() {
+		this.auth.logout();
+		this.toastService.addToast('Successfully logged out.');
+	}
+
+	/**
+	 * Login to irc with the given credentials
+	 */
+	connectIrc() {
+		const username = this.ircLoginForm.get('username').value;
+		const password = this.ircLoginForm.get('password').value;
+
+		this.ircService.connect(username, password);
+	}
+
+	disconnectIrc() {
+		this.ircService.disconnect();
+	}
 
 	/**
 	 * Get the api key

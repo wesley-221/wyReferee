@@ -54,7 +54,7 @@ export class AllLobbiesComponent implements OnInit {
 	 */
 	navigateLobby(multiplayerLobby: MultiplayerLobby, event: any) {
 		if (event.srcElement.className.search(/mat-icon|mat-mini-fab|mat-button-wrapper/) == -1) {
-			this.router.navigate(['lobby-view', multiplayerLobby.lobbyId]);
+			this.router.navigate(['lobby-overview/lobby-view', multiplayerLobby.lobbyId]);
 		}
 	}
 }

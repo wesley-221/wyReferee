@@ -1,10 +1,10 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { AuthenticateService } from '../../services/authenticate.service';
-import { catchError } from 'rxjs/operators';
-import { ToastService } from '../../services/toast.service';
-import { ToastType } from '../../models/toast';
+import { Injectable } from "@angular/core";
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from "@angular/common/http";
+import { AuthenticateService } from "./services/authenticate.service";
+import { ToastService } from "./services/toast.service";
+import { Observable, of, throwError } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { ToastType } from "./models/toast";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

@@ -31,13 +31,12 @@ import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lob
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 import { MappoolOverviewComponent } from './components/tournament-management/mappool/mappool-overview/mappool-overview.component';
 import { MappoolCreateComponent } from './components/tournament-management/mappool/mappool-create/mappool-create.component';
-import { LoginComponent } from './components/authentication/login/login.component';
-import { AuthInterceptor } from './components/authentication/token-interceptor';
+import { AuthInterceptor } from './token-interceptor';
 import { IrcComponent } from './components/irc/irc.component';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { SearchModBracketPipe } from './pipes/search-mod-bracket.pipe';
 import { SearchPipe } from './pipes/search.pipe';
-import { RegisterComponent } from './components/authentication/register/register.component';
+import { RegisterComponent } from './components/register/register.component';
 import { TournamentCreateComponent } from './components/tournament-management/tournament/tournament-create/tournament-create.component';
 import { TournamentOverviewComponent } from './components/tournament-management/tournament/tournament-overview/tournament-overview.component';
 import { TournamentEditComponent } from './components/tournament-management/tournament/tournament-edit/tournament-edit.component';
@@ -77,7 +76,6 @@ import { SendFinalResultComponent } from './components/dialogs/send-final-result
 		LobbyViewComponent,
 		MappoolOverviewComponent,
 		MappoolCreateComponent,
-		LoginComponent,
 		IrcComponent,
 		SearchModBracketPipe,
 		SearchPipe,
