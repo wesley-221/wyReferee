@@ -1,0 +1,27 @@
+<div class="main">
+	<div class="tiles container">
+		<div class="tile" routerLink='/tournament-management/mappool-overview' routerLinkActive="active">
+			<div class="icon">
+				<mat-icon class="icon-2x">map</mat-icon>
+			</div>
+
+			<div class="header">
+				Mappool overview
+			</div>
+		</div>
+
+		<div class="tile" routerLink='/tournament-management/tournament-overview' routerLinkActive="active">
+			<div class="icon">
+				<mat-icon class="icon-2x">highlight</mat-icon>
+			</div>
+
+			<div class="header">
+				Tournament overview
+			</div>
+		</div>
+	</div>
+
+	<div class="content container">
+		<router-outlet></router-outlet>
+	</div>
+</div>

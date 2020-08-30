@@ -7,17 +7,18 @@ import { InformationComponent } from './components/information/information.compo
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
 import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
-import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
-import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
+import { MappoolOverviewComponent } from './components/tournament-management/mappool/mappool-overview/mappool-overview.component';
+import { MappoolCreateComponent } from './components/tournament-management/mappool/mappool-create/mappool-create.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { IrcComponent } from './components/irc/irc.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
-import { TournamentCreateComponent } from './components/tournament/tournament-create/tournament-create.component';
-import { TournamentOverviewComponent } from './components/tournament/tournament-overview/tournament-overview.component';
-import { TournamentEditComponent } from './components/tournament/tournament-edit/tournament-edit.component';
-import { MyPublishedMappoolsComponent } from './components/mappool/my-published-mappools/my-published-mappools.component';
-import { MappoolEditComponent } from './components/mappool/mappool-edit/mappool-edit.component';
-import { MyPublishedTournamentsComponent } from './components/tournament/my-published-tournaments/my-published-tournaments.component';
+import { TournamentCreateComponent } from './components/tournament-management/tournament/tournament-create/tournament-create.component';
+import { TournamentOverviewComponent } from './components/tournament-management/tournament/tournament-overview/tournament-overview.component';
+import { TournamentEditComponent } from './components/tournament-management/tournament/tournament-edit/tournament-edit.component';
+import { MyPublishedMappoolsComponent } from './components/tournament-management/mappool/my-published-mappools/my-published-mappools.component';
+import { MappoolEditComponent } from './components/tournament-management/mappool/mappool-edit/mappool-edit.component';
+import { MyPublishedTournamentsComponent } from './components/tournament-management/tournament/my-published-tournaments/my-published-tournaments.component';
+import { ManagementRouterComponent } from './components/tournament-management/management-router/management-router.component';
 
 const routes: Routes = [
 	{
@@ -26,23 +27,25 @@ const routes: Routes = [
 		children: [
 			{ path: '', component: InformationComponent },
 			{ path: 'information', component: InformationComponent },
-			{ path: 'settings', component: SettingsComponent},
+			{ path: 'settings', component: SettingsComponent },
 			{ path: 'login', component: LoginComponent },
 			{ path: 'register', component: RegisterComponent },
 			{ path: 'lobby-overview', component: AllLobbiesComponent },
 			{ path: 'create-lobby', component: CreateLobbyComponent },
 			{ path: 'lobby-view/:id', component: LobbyViewComponent },
+			{
+				path: 'tournament-management', component: ManagementRouterComponent, children: [
+					{ path: 'mappool-overview', component: MappoolOverviewComponent },
+					{ path: 'mappool-create', component: MappoolCreateComponent },
+					{ path: 'mappool-edit/:mappoolId/:publish', component: MappoolEditComponent },
+					{ path: 'my-published-mappools', component: MyPublishedMappoolsComponent },
 
-			{ path: 'mappool-overview', component: MappoolOverviewComponent },
-			{ path: 'mappool-create', component: MappoolCreateComponent },
-			{ path: 'mappool-edit/:mappoolId/:publish', component: MappoolEditComponent },
-			{ path: 'my-published-mappools', component: MyPublishedMappoolsComponent },
-
-			{ path: 'tournament-overview', component: TournamentOverviewComponent },
-			{ path: 'tournament-create', component: TournamentCreateComponent },
-			{ path: 'tournament-edit/:tournamentId/:publish', component: TournamentEditComponent },
-			{ path: 'my-published-tournaments', component: MyPublishedTournamentsComponent },
-
+					{ path: 'tournament-overview', component: TournamentOverviewComponent },
+					{ path: 'tournament-create', component: TournamentCreateComponent },
+					{ path: 'tournament-edit/:tournamentId/:publish', component: TournamentEditComponent },
+					{ path: 'my-published-tournaments', component: MyPublishedTournamentsComponent },
+				]
+			},
 			{ path: 'irc', component: IrcComponent },
 			{ path: '**', component: ErrorComponent }
 		]
@@ -54,4 +57,4 @@ const routes: Routes = [
 	exports: [RouterModule]
 })
 
-export class AppRoutingModule {}
+export class AppRoutingModule { }

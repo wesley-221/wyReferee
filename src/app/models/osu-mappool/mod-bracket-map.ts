@@ -12,6 +12,7 @@ export class ModBracketMap {
 	gamemodeId: Gamemodes = Gamemodes.Osu;
 	modCategory: ModCategory = null;
 	picked = false;
+	isSynchronizing = false;
 
 	/**
 	 * Compare the current modbracketmap with the given modbracketmap

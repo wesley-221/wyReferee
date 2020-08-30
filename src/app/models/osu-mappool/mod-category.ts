@@ -1,5 +1,6 @@
 export class ModCategory {
 	id: number = null;
+	validateIndex = 0;
 	categoryName: string = null;
 
 	/**

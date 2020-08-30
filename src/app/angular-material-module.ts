@@ -20,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const modules: any[] = [
 	LayoutModule,
@@ -40,7 +41,8 @@ const modules: any[] = [
 	MatTooltipModule,
 	MatExpansionModule,
 	MatSidenavModule,
-	MatListModule
+	MatListModule,
+	MatSlideToggleModule
 ];
 
 @NgModule({

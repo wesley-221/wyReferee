@@ -29,8 +29,8 @@ import { ToastComponent } from './components/main-page/toast/toast.component';
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
 import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
-import { MappoolOverviewComponent } from './components/mappool/mappool-overview/mappool-overview.component';
-import { MappoolCreateComponent } from './components/mappool/mappool-create/mappool-create.component';
+import { MappoolOverviewComponent } from './components/tournament-management/mappool/mappool-overview/mappool-overview.component';
+import { MappoolCreateComponent } from './components/tournament-management/mappool/mappool-create/mappool-create.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { AuthInterceptor } from './components/authentication/token-interceptor';
 import { IrcComponent } from './components/irc/irc.component';
@@ -38,19 +38,23 @@ import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { SearchModBracketPipe } from './pipes/search-mod-bracket.pipe';
 import { SearchPipe } from './pipes/search.pipe';
 import { RegisterComponent } from './components/authentication/register/register.component';
-import { TournamentCreateComponent } from './components/tournament/tournament-create/tournament-create.component';
-import { TournamentOverviewComponent } from './components/tournament/tournament-overview/tournament-overview.component';
-import { TournamentEditComponent } from './components/tournament/tournament-edit/tournament-edit.component';
-import { TournamentComponent } from './components/tournament/tournament/tournament.component';
-import { ModBracketComponent } from './components/mappool/mod-bracket/mod-bracket.component';
-import { MyPublishedMappoolsComponent } from './components/mappool/my-published-mappools/my-published-mappools.component';
-import { MappoolSummaryComponent } from './components/mappool/mappool-summary/mappool-summary.component';
-import { MappoolEditComponent } from './components/mappool/mappool-edit/mappool-edit.component';
-import { MappoolComponent } from './components/mappool/mappool/mappool.component';
-import { TournamentSummaryComponent } from './components/tournament/tournament-summary/tournament-summary.component';
-import { MyPublishedTournamentsComponent } from './components/tournament/my-published-tournaments/my-published-tournaments.component';
+import { TournamentCreateComponent } from './components/tournament-management/tournament/tournament-create/tournament-create.component';
+import { TournamentOverviewComponent } from './components/tournament-management/tournament/tournament-overview/tournament-overview.component';
+import { TournamentEditComponent } from './components/tournament-management/tournament/tournament-edit/tournament-edit.component';
+import { TournamentComponent } from './components/tournament-management/tournament/tournament/tournament.component';
+import { ModBracketComponent } from './components/tournament-management/mappool/mod-bracket/mod-bracket.component';
+import { MyPublishedMappoolsComponent } from './components/tournament-management/mappool/my-published-mappools/my-published-mappools.component';
+import { MappoolSummaryComponent } from './components/tournament-management/mappool/mappool-summary/mappool-summary.component';
+import { MappoolEditComponent } from './components/tournament-management/mappool/mappool-edit/mappool-edit.component';
+import { MappoolComponent } from './components/tournament-management/mappool/mappool/mappool.component';
+import { TournamentSummaryComponent } from './components/tournament-management/tournament/tournament-summary/tournament-summary.component';
+import { MyPublishedTournamentsComponent } from './components/tournament-management/tournament/my-published-tournaments/my-published-tournaments.component';
 import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
 import { DeleteLobbyComponent } from './components/dialogs/delete-lobby/delete-lobby.component';
+import { ManagementRouterComponent } from './components/tournament-management/management-router/management-router.component';
+import { PublishMappoolComponent } from './components/dialogs/publish-mappool/publish-mappool.component';
+import { DeleteMappoolComponent } from './components/dialogs/delete-mappool/delete-mappool.component';
+import { DeleteModBracketComponent } from './components/dialogs/delete-mod-bracket/delete-mod-bracket.component';
 
 @NgModule({
 	declarations: [
@@ -84,7 +88,11 @@ import { DeleteLobbyComponent } from './components/dialogs/delete-lobby/delete-l
 		TournamentSummaryComponent,
 		MyPublishedTournamentsComponent,
 		RemoveSettingsComponent,
-		DeleteLobbyComponent
+		DeleteLobbyComponent,
+		ManagementRouterComponent,
+		PublishMappoolComponent,
+		DeleteMappoolComponent,
+		DeleteModBracketComponent
 	],
 	imports: [
 		BrowserModule,

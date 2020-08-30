@@ -225,8 +225,15 @@ export class Mappool {
 		newMappool.mappoolType = mappool.mappoolType;
 		newMappool.modifiers = mappool.modifiers;
 
+		let modBracketCounter = 0;
+
 		for (const bracket in mappool.modBrackets) {
-			newMappool.modBrackets.push(ModBracket.makeTrueCopy(mappool.modBrackets[bracket]));
+			const newModbracket = ModBracket.makeTrueCopy(mappool.modBrackets[bracket]);
+			newModbracket.validateIndex = modBracketCounter;
+
+			newMappool.modBrackets.push(newModbracket);
+
+			modBracketCounter ++;
 		}
 
 		for (const user in mappool.availableTo) {
@@ -254,6 +261,8 @@ export class Mappool {
 		newMappool.availability = json.availability;
 		newMappool.mappoolType = json.mappoolType;
 
+		let modBracketCounter = 0;
+
 		// Loop through all the brackets in the current mappool
 		for (const bracket in json.modBrackets) {
 			const thisBracket = json.modBrackets[bracket];
@@ -262,6 +271,9 @@ export class Mappool {
 			newBracket.id = thisBracket.id;
 			newBracket.mods = JSON.parse(thisBracket.mods);
 			newBracket.bracketName = thisBracket.bracketName;
+			newBracket.validateIndex = modBracketCounter;
+
+			modBracketCounter ++;
 
 			// Loop through all the beatmaps in the current bracket
 			for (const beatmap in thisBracket.beatmaps) {

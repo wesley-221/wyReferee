@@ -14,8 +14,10 @@ export class SidebarComponent implements OnInit {
 		{ icon: 'settings', header: 'settings', link: 'settings' },
 		{ icon: 'account_circle', header: 'login', link: 'login' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
-		{ icon: 'map', header: 'mappool', link: 'mappool-overview' },
-		{ icon: 'highlight', header: 'tournament', link: 'tournament-overview' },
+		{ icon: 'list', header: 'management', link: 'tournament-management' },
+
+		// { icon: 'map', header: 'mappool', link: 'mappool-overview' },
+		// { icon: 'highlight', header: 'tournament', link: 'tournament-overview' },
 		{ icon: 'chat', header: 'irc', link: 'irc' }
 	];
 

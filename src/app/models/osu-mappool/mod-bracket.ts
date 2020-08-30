@@ -7,6 +7,7 @@ export class ModBracket {
 	mods: any[] = [];
 	beatmaps: ModBracketMap[] = [];
 	collapsed = false; // Used for showing/hiding the body when creating a bracket
+	validateIndex: number = 0;
 
 	getBeatmaps() {
 		return this.beatmaps;
