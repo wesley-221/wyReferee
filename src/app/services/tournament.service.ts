@@ -24,9 +24,6 @@ export class TournamentService {
 
 		const storeAllTournaments = this.storeService.get('cache.tournaments');
 
-		console.log(storeAllTournaments);
-
-
 		for (const tournament in storeAllTournaments) {
 			const thisMappool = storeAllTournaments[tournament];
 			const newTournament = Tournament.serializeJson(thisMappool);
