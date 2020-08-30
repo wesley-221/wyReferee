@@ -59,6 +59,8 @@ import { DeleteTournamentComponent } from './components/dialogs/delete-tournamen
 import { PublishTournamentComponent } from './components/dialogs/publish-tournament/publish-tournament.component';
 import { TeamComponent } from './components/tournament-management/tournament/team/team.component';
 import { DeleteTeamComponent } from './components/dialogs/delete-team/delete-team.component';
+import { MultiplayerLobbySettingsComponent } from './components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
+import { SendFinalResultComponent } from './components/dialogs/send-final-result/send-final-result.component';
 
 @NgModule({
 	declarations: [
@@ -100,7 +102,9 @@ import { DeleteTeamComponent } from './components/dialogs/delete-team/delete-tea
 		DeleteTournamentComponent,
 		PublishTournamentComponent,
 		TeamComponent,
-		DeleteTeamComponent
+		DeleteTeamComponent,
+		MultiplayerLobbySettingsComponent,
+		SendFinalResultComponent
 	],
 	imports: [
 		BrowserModule,

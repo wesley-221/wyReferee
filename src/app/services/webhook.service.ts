@@ -98,7 +98,7 @@ export class WebhookService {
 	sendWinByDefaultResult(selectedLobby: MultiplayerLobby, extraMessage: string, wbdWinningTeam: string, wbdLosingTeam: string, referee: string) {
 		let resultDescription = `**Score:** __${wbdWinningTeam}__ | 1 - 0 | ${wbdLosingTeam} \n\n__${wbdLosingTeam}__ failed to show up.`;
 
-		if (wbdWinningTeam == 'No-one') {
+		if (wbdWinningTeam == 'no-one') {
 			resultDescription = `**Score:** ${selectedLobby.teamOneName} | 0 - 0 | ${selectedLobby.teamTwoName} \n\nBoth __${selectedLobby.teamOneName}__ and __${selectedLobby.teamTwoName}__ failed to show up.`;
 		}
 

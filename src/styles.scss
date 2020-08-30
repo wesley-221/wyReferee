@@ -105,6 +105,11 @@ hr {
 
 	color: #fff;
 
+	&.center {
+		display: flex;
+		align-items: center;
+	}
+
 	&.alert-info {
 		background-color: $info;
 	}

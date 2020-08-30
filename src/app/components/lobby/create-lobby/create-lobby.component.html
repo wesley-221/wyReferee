@@ -1,4 +1,4 @@
-<div class="container scroll">
+<div class="container-fluid scroll">
 	<form [formGroup]="validationForm">
 		<div class="row">
 			<div class="col">
@@ -33,7 +33,6 @@
 				<mat-form-field class="full-width">
 					<mat-label>Select a tournament</mat-label>
 					<mat-select formControlName="selected-tournament" (selectionChange)="changeTournament()">
-						<mat-option value=""></mat-option>
 						<mat-option *ngFor="let tournament of tournamentService.allTournaments" [value]="tournament.tournamentName">
 							{{ tournament.tournamentName }}
 						</mat-option>

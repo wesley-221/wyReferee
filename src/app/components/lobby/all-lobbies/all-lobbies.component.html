@@ -12,11 +12,11 @@
 		There are currently no lobbies available.
 	</div>
 
-	<div *ngFor="let lobby of allLobbies" (click)="navigateLobby(lobby, $event)" class="lobby">
+	<div *ngFor="let lobby of allLobbies.slice().reverse()" (click)="navigateLobby(lobby, $event)" class="lobby">
 		<div class="body">
 			<div class="information">
 				<div class="multiplayerId">
-					<h1>{{ lobby.tournamentAcronym }}: {{ lobby.description }}</h1>
+					<h1>{{ lobby.getLobbyName() }}</h1>
 				</div>
 
 				<div class="multiplayerDesc">

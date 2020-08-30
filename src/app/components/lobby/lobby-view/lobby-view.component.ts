@@ -13,7 +13,24 @@ import { IrcService } from '../../../services/irc.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { WebhookService } from '../../../services/webhook.service';
 import { CacheBeatmap } from '../../../models/cache/cache-beatmap';
-declare var $: any;
+import { MatDialog } from '@angular/material/dialog';
+import { MultiplayerLobbySettingsComponent } from 'app/components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
+import { SendFinalResultComponent } from 'app/components/dialogs/send-final-result/send-final-result.component';
+
+export interface MultiplayerLobbySettingsDialogData {
+	multiplayerLobby: MultiplayerLobby;
+}
+
+export interface MultiplayerLobbySendFinalMessageDialogData {
+	multiplayerLobby: MultiplayerLobby;
+
+	winByDefault: boolean;
+
+	winningTeam: string;
+	losingTeam: string;
+
+	extraMessage: string;
+}
 
 @Component({
 	selector: 'app-lobby-view',
@@ -44,7 +61,8 @@ export class LobbyViewComponent implements OnInit {
 		public ircService: IrcService,
 		private clipboardService: ClipboardService,
 		private router: Router,
-		private webhookService: WebhookService) {
+		private webhookService: WebhookService,
+		private dialog: MatDialog) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.get(params.id);
 
@@ -160,31 +178,49 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Copy the result of the beatmap to the clipboard
+	 * Open a dialog for the multiplayer lobby settings
+	 * @param selectedLobby
 	 */
-	copyNextPick() {
-		const totalMapsPlayed = this.selectedLobby.teamOneScore + this.selectedLobby.teamTwoScore;
-		let nextPick = '';
+	openSettings(selectedLobby: MultiplayerLobby) {
+		const dialogRef = this.dialog.open(MultiplayerLobbySettingsComponent, {
+			data: {
+				multiplayerLobby: selectedLobby
+			}
+		});
 
-		// First pick goes to .firstPick
-		if (totalMapsPlayed % 2 == 0) {
-			nextPick = this.selectedLobby.firstPick;
-		}
-		else {
-			nextPick = this.selectedLobby.firstPick == this.selectedLobby.teamOneName ? this.selectedLobby.teamTwoName : this.selectedLobby.teamOneName;
-		}
-
-		this.clipboardService.copyFromContent(`Next pick is for ${nextPick}`);
+		dialogRef.afterClosed().subscribe((result: MultiplayerLobby) => {
+			if (result != null) {
+				this.multiplayerLobbies.update(result);
+			}
+		});
 	}
 
-	/**
-	 * Send the result of the beatmap to irc if connected
-	 */
-	sendNextPick() {
-		if (this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
-			this.ircService.sendMessage(this.selectedLobby.ircChannel, `Next pick is for ${this.selectedLobby.getNextPickName()}`);
-		}
-	}
+	// /**
+	//  * Copy the result of the beatmap to the clipboard
+	//  */
+	// copyNextPick() {
+	// 	const totalMapsPlayed = this.selectedLobby.teamOneScore + this.selectedLobby.teamTwoScore;
+	// 	let nextPick = '';
+
+	// 	// First pick goes to .firstPick
+	// 	if (totalMapsPlayed % 2 == 0) {
+	// 		nextPick = this.selectedLobby.firstPick;
+	// 	}
+	// 	else {
+	// 		nextPick = this.selectedLobby.firstPick == this.selectedLobby.teamOneName ? this.selectedLobby.teamTwoName : this.selectedLobby.teamOneName;
+	// 	}
+
+	// 	this.clipboardService.copyFromContent(`Next pick is for ${nextPick}`);
+	// }
+
+	// /**
+	//  * Send the result of the beatmap to irc if connected
+	//  */
+	// sendNextPick() {
+	// 	if (this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
+	// 		this.ircService.sendMessage(this.selectedLobby.ircChannel, `Next pick is for ${this.selectedLobby.getNextPickName()}`);
+	// 	}
+	// }
 
 	/**
 	 * Gets called when the webhook changes
@@ -256,12 +292,12 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Get the beatmap image
+	 * Get the cover image
 	 * @param beatmapId the beatmapid
 	 */
-	getThumbUrl(beatmapId: number) {
+	getBeatmapCoverUrl(beatmapId: number): string {
 		const cachedBeatmap = this.cacheService.getCachedBeatmap(beatmapId);
-		return (cachedBeatmap != null) ? `url('https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg')` : '';
+		return (cachedBeatmap != null) ? `https://assets.ppy.sh/beatmaps/${cachedBeatmap.beatmapSetId}/covers/cover.jpg` : '';
 	}
 
 	/**
@@ -293,22 +329,6 @@ export class LobbyViewComponent implements OnInit {
 		const user: MultiplayerDataUser = match.getPlayer(slotId);
 
 		return (user != undefined) ? this.addDot(user.score % 1 == 0 ? user.score : user.score.toFixed(), ' ') : 0;
-	}
-
-	/**
-	 * Change various settings for the lobby
-	 * @param element
-	 * @param event
-	 */
-	change(element: string, event: Event) {
-		if (element == 'firstPick') {
-			this.selectedLobby.firstPick = (<any>event.currentTarget).value;
-		}
-		else if (element == 'bestOf') {
-			this.selectedLobby.bestOf = (<any>event.currentTarget).value;
-		}
-
-		this.multiplayerLobbies.update(this.selectedLobby);
 	}
 
 	/**
@@ -349,13 +369,6 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Toggle the modal to send final result to discord
-	 */
-	toggleModal() {
-		$('#send-final-result').modal('toggle');
-	}
-
-	/**
 	 * Toggle the WBD options
 	 */
 	toggleWBD() {
@@ -388,38 +401,24 @@ export class LobbyViewComponent implements OnInit {
 	/**
 	 * Send the final result to discord
 	 */
-	sendFinalResult() {
-		this.webhookService.sendFinalResult(this.selectedLobby, this.extraMessage, this.ircService.authenticatedUser).subscribe(res => {
-			this.toggleModal();
-			this.wbdSelected = false;
-			this.normalResultSelected = false;
-
-			this.wbdWinningTeam = null;
-			this.wbdLosingTeam = null;
-			this.extraMessage = null;
-
-			this.toastService.addToast('Successfully send the message to Discord.');
-
-			console.log(res);
+	sendFinalResult(multiplayerLobby: MultiplayerLobby) {
+		const dialogRef = this.dialog.open(SendFinalResultComponent, {
+			data: {
+				multiplayerLobby: multiplayerLobby
+			}
 		});
-	}
 
-	/**
-	 * Send the WBD message to discord
-	 */
-	sendWinByDefaultResult() {
-		this.webhookService.sendWinByDefaultResult(this.selectedLobby, this.extraMessage, this.wbdWinningTeam, this.wbdLosingTeam, this.ircService.authenticatedUser).subscribe(res => {
-			this.toggleModal();
-			this.wbdSelected = false;
-			this.normalResultSelected = false;
-
-			this.wbdWinningTeam = null;
-			this.wbdLosingTeam = null;
-			this.extraMessage = null;
-
-			this.toastService.addToast('Successfully send the message to Discord.');
-
-			console.log(res);
+		dialogRef.afterClosed().subscribe((result: MultiplayerLobbySendFinalMessageDialogData) => {
+			if (result.winByDefault) {
+				this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser).subscribe(() => {
+					this.toastService.addToast(`Successfully send the message to Discord.`);
+				});
+			}
+			else {
+				this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser).subscribe(() => {
+					this.toastService.addToast('Successfully send the message to Discord.');
+				})
+			}
 		});
 	}
 }

@@ -250,4 +250,11 @@ export class MultiplayerLobby {
 			this.pickedCategories.push({ modBracketName: modBracket.bracketName, categories: [modCategory.categoryName] });
 		}
 	}
+
+	/**
+	 * Get the name of the lobby
+	 */
+	getLobbyName() {
+		return `${this.tournamentAcronym}: ${this.teamOneName} vs ${this.teamTwoName}`;
+	}
 }
