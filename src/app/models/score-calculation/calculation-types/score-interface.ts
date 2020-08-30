@@ -7,6 +7,7 @@ export abstract class ScoreInterface {
 	private identifier: string;
 	private description: string;
 	private teamSize: number;
+	private soloTournament: boolean;
 	private allUsers: MultiplayerDataUser[];
 
     /**
@@ -35,6 +36,7 @@ export abstract class ScoreInterface {
 	constructor(identifier: string) {
 		this.identifier = identifier;
 		this.allUsers = [];
+		this.soloTournament = null;
 	}
 
     /**
@@ -124,5 +126,20 @@ export abstract class ScoreInterface {
 	 */
 	public setDescription(description: string): void {
 		this.description = description;
+	}
+
+	/**
+	 * Check if the tournament is a solo tournament or a team tournament
+	 */
+	public isSoloTournament(): boolean {
+		return this.soloTournament;
+	}
+
+	/**
+	 * Set the format of the tournament
+	 * @param solo true for solo, false for teams
+	 */
+	public setSoloTournament(solo: boolean): void {
+		this.soloTournament = solo;
 	}
 }

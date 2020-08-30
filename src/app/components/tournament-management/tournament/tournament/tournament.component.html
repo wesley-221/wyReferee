@@ -1,115 +1,121 @@
 <div *ngIf="tournament">
-	<div class="row">
-		<div class="col">
-			<h3>Tournament name</h3>
-			<input type="text" class="form-control" placeholder="Tournament name" [(ngModel)]="tournament.tournamentName" />
-		</div>
+	<form [formGroup]="validationForm">
+		<div class="row">
+			<div class="col">
+				<h3>Tournament name</h3>
 
-		<div class="col">
-			<h3>Tournament acronym</h3>
-			<input type="text" class="form-control" placeholder="Tournament acronym" [(ngModel)]="tournament.acronym" />
-		</div>
-	</div>
+				<mat-form-field class="full-width">
+					<mat-label>Tournament name</mat-label>
+					<input matInput formControlName="tournament-name" (change)="changeInput()" />
 
-	<div class="row">
-		<div class="col">
-			<h3>Score system</h3>
-			<p>
-				Select the score system that is being used for the multiplayer game.
-			</p>
+					<mat-error *ngIf="getValidation('tournament-name').errors && (getValidation('tournament-name').touched || getValidation('tournament-name').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
 
-			<select class="form-control" (change)="changeScoreInterface($event)" [(ngModel)]="this.tournament.tournamentScoreInterfaceIdentifier">
-				<option></option>
-				<option *ngFor="let scoreInterface of this.calculateScoreInterfaces.getAllScoreInterfaces()" [value]="scoreInterface.getIdentifier()">{{ scoreInterface.getIdentifier() }}</option>
-			</select>
+				<p>The name of the tournament</p>
+			</div>
 
-			<br />
+			<div class="col">
+				<h3>Tournament acronym</h3>
 
-			<div class="alert alert-primary" *ngIf="this.tournament.scoreInterface">
-				{{ this.tournament.scoreInterface.getDescription() }}
+				<mat-form-field class="full-width">
+					<mat-label>Tournament acronym</mat-label>
+					<input matInput formControlName="tournament-acronym" (change)="changeInput()" />
+
+					<mat-error *ngIf="getValidation('tournament-acronym').errors && (getValidation('tournament-acronym').touched || getValidation('tournament-acronym').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>The acronym of the tournament</p>
 			</div>
 		</div>
-	</div>
 
-	<div class="row">
-		<div class="col">
-			<div class="form-group" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.getTeamSize() == null">
+		<div class="row">
+			<div class="col">
+				<h3>Score system</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Score system</mat-label>
+					<mat-select formControlName="tournament-score-system" (selectionChange)="changeScoreInterface($event)">
+						<mat-option *ngFor="let scoreInterface of this.calculateScoreInterfaces.getAllScoreInterfaces()" [value]="scoreInterface.getIdentifier()">{{ scoreInterface.getIdentifier() }}</mat-option>
+					</mat-select>
+
+					<mat-error *ngIf="getValidation('tournament-score-system').errors && (getValidation('tournament-score-system').touched || getValidation('tournament-score-system').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>Select the score system that is being used for the multiplayer game.</p>
+
+				<div class="alert alert-info" *ngIf="this.tournament.scoreInterface">
+					{{ this.tournament.scoreInterface.getDescription() }}
+				</div>
+			</div>
+
+			<div class="col" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.isSoloTournament() == null">
+				<h3>Tournament format</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Tournament format</mat-label>
+					<mat-select formControlName="tournament-format" (selectionChange)="changeTournamentFormat($event)">
+						<mat-option value="solo">Solo</mat-option>
+						<mat-option value="teams">Teams</mat-option>
+					</mat-select>
+
+					<mat-error *ngIf="getValidation('tournament-format').errors && (getValidation('tournament-format').touched || getValidation('tournament-format').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>The tournament format, teams or solo</p>
+			</div>
+
+			<div class="col" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.getTeamSize() == null && !tournament.isSoloTournament()">
 				<h2>Team size</h2>
+
+				<mat-form-field class="full-width">
+					<mat-label>Team size</mat-label>
+					<input matInput formControlName="tournament-team-size" (change)="changeInput()" />
+
+					<mat-error *ngIf="getValidation('tournament-team-size').errors && getValidation('tournament-team-size').errors.required && (getValidation('tournament-team-size').touched || getValidation('tournament-team-size').dirty)">
+						This field is required
+					</mat-error>
+
+					<mat-error *ngIf="getValidation('tournament-team-size').errors && getValidation('tournament-team-size').errors.min && (getValidation('tournament-team-size').touched || getValidation('tournament-team-size').dirty)">
+						The minimum team size is 1
+					</mat-error>
+
+					<mat-error *ngIf="getValidation('tournament-team-size').errors && getValidation('tournament-team-size').errors.max && (getValidation('tournament-team-size').touched || getValidation('tournament-team-size').dirty)">
+						The maximum team size is 8
+					</mat-error>
+				</mat-form-field>
+
 				<p>
 					Enter the amount of players that are allowed to play in a team.
 				</p>
-
-				<input type="text" class="form-control" placeholder="Team size" [(ngModel)]="tournament.teamSize" />
-			</div>
-		</div>
-	</div>
-
-	<hr />
-
-	<h3>Teams</h3>
-	<p>Add a team to the tournament.</p>
-
-	<button class="btn btn-primary" (click)="addTeam()">Create new team</button>
-
-	<hr />
-
-	<div class="team" *ngFor="let team of tournament.getTeams()">
-		<div class="header">
-			<div class="row">
-				<div class="col">
-					<h3 *ngIf="team.teamName">{{ team.teamName }}</h3>
-					<h3 *ngIf="!team.teamName">Unnamed team</h3>
-				</div>
-
-				<div class="col button-spacing">
-					<button class="btn btn-outline-danger float-right" (click)="openDialog(team)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
-					<button class="btn btn-outline-primary float-right" (click)="collapseBracket(team)">
-						<fa-icon [icon]="['fas', 'angle-up']" *ngIf="!team.collapsed"></fa-icon>
-						<fa-icon [icon]="['fas', 'angle-down']" *ngIf="team.collapsed"></fa-icon>
-					</button>
-				</div>
 			</div>
 		</div>
 
-		<div [ngClass]="{'hide': team.collapsed}" class="body">
-			<h3>Create a new team</h3>
-			<p>Enter the name for the team</p>
-			<div class="team-name">
-				<input type="text" class="form-control mb-2" [(ngModel)]="team.teamName" placeholder="Team name" />
-			</div>
+		<hr />
 
-			<h3>Manage players</h3>
-			<p>Add or remove players from the given team</p>
+		<div *ngIf="!tournament.isSoloTournament()">
+			<h3>Teams</h3>
+			<p>Add a team to the tournament.</p>
 
-			<button class="btn btn-primary" (click)="addNewPlayer(team)">Add new player</button>
-
-			<div class="team-players">
-				<div class="player" *ngFor="let player of team.getPlayers()">
-					<div class="player-name">
-						<input type="text" class="form-control mb-2" [(ngModel)]="player.username" placeholder="Player name" />
-					</div>
-
-					<div class="manage-buttons">
-						<button class="btn btn-danger" (click)="removePlayer(team, player)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
-					</div>
-				</div>
-			</div>
+			<button mat-raised-button (click)="addTeam()" color="primary"><mat-icon>add</mat-icon> add new team</button>
 		</div>
-	</div>
-</div>
 
-<div id="dialog" class="modal fade" tabindex="-1" role="dialog">
-	<div class="modal-dialog shadow" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h3 class="modal-title">Remove a team from the tournament</h3>
-			</div>
+		<div *ngIf="tournament.isSoloTournament()">
+			<h3>Players</h3>
+			<p>Add a player to the tournament.</p>
 
-			<div class="modal-body">
-				<p [innerHTML]="dialogMessage"></p>
-
-				<button class="btn btn-primary" style="width: 100%;" (click)="deleteTeam(teamToRemove)">Remove team</button>
-			</div>
+			<button mat-raised-button (click)="addTeam()" color="primary"><mat-icon>add</mat-icon> add new player</button>
 		</div>
-	</div>
+
+		<hr />
+
+		<app-team [team]="team" [tournament]="tournament" [validationForm]="validationForm" *ngFor="let team of tournament.getTeams()"></app-team>
+	</form>
 </div>

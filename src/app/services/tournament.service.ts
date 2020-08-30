@@ -24,6 +24,9 @@ export class TournamentService {
 
 		const storeAllTournaments = this.storeService.get('cache.tournaments');
 
+		console.log(storeAllTournaments);
+
+
 		for (const tournament in storeAllTournaments) {
 			const thisMappool = storeAllTournaments[tournament];
 			const newTournament = Tournament.serializeJson(thisMappool);
@@ -215,9 +218,12 @@ export class TournamentService {
 		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
 		newTournament.publishId = json.id;
 
+		let validateIndex = 0;
+
 		for (const team in json.teams) {
 			const newTeam = new Team();
 			newTeam.teamName = json.teams[team].teamName;
+			newTeam.validateIndex = validateIndex;
 
 			for (const player in json.teams[team].teamPlayers) {
 				const newPlayer = new TeamPlayer();
@@ -227,6 +233,7 @@ export class TournamentService {
 			}
 
 			newTournament.addTeam(newTeam);
+			validateIndex ++;
 		}
 
 		return newTournament;

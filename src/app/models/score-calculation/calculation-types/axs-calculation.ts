@@ -9,6 +9,7 @@ export class AxSCalculation extends ScoreInterface {
 
 		this.setTeamSize(teamSize);
 		this.setDescription(`The score calculation that is used for a tournament called AxS. The team size is set to ${teamSize}, where the first player in the multiplayerlobby is the accuracy player and the second and third are score players.`);
+		this.setSoloTournament(false);
 	}
 
 	public calculatePlayerScore(player: MultiplayerDataUser): number {

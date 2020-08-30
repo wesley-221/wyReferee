@@ -55,6 +55,10 @@ import { ManagementRouterComponent } from './components/tournament-management/ma
 import { PublishMappoolComponent } from './components/dialogs/publish-mappool/publish-mappool.component';
 import { DeleteMappoolComponent } from './components/dialogs/delete-mappool/delete-mappool.component';
 import { DeleteModBracketComponent } from './components/dialogs/delete-mod-bracket/delete-mod-bracket.component';
+import { DeleteTournamentComponent } from './components/dialogs/delete-tournament/delete-tournament.component';
+import { PublishTournamentComponent } from './components/dialogs/publish-tournament/publish-tournament.component';
+import { TeamComponent } from './components/tournament-management/tournament/team/team.component';
+import { DeleteTeamComponent } from './components/dialogs/delete-team/delete-team.component';
 
 @NgModule({
 	declarations: [
@@ -92,7 +96,11 @@ import { DeleteModBracketComponent } from './components/dialogs/delete-mod-brack
 		ManagementRouterComponent,
 		PublishMappoolComponent,
 		DeleteMappoolComponent,
-		DeleteModBracketComponent
+		DeleteModBracketComponent,
+		DeleteTournamentComponent,
+		PublishTournamentComponent,
+		TeamComponent,
+		DeleteTeamComponent
 	],
 	imports: [
 		BrowserModule,

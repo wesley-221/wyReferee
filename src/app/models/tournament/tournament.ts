@@ -3,11 +3,17 @@ import { TeamPlayer } from './team/team-player';
 import { ScoreInterface } from '../score-calculation/calculation-types/score-interface';
 import { Calculate } from '../score-calculation/calculate';
 
+export enum TournamentFormat {
+	Solo = "solo",
+	Teams = "teams"
+}
+
 export class Tournament {
 	id: number;
 	tournamentName: string;
 	acronym: string;
 	teams: Team[];
+	format: TournamentFormat;
 	tournamentScoreInterfaceIdentifier: string;
 	scoreInterface: ScoreInterface;
 	teamSize: number;
@@ -42,6 +48,13 @@ export class Tournament {
 	}
 
 	/**
+	 * Check if the tournament is a solo tournament
+	 */
+	isSoloTournament() {
+		return this.format == TournamentFormat.Solo;
+	}
+
+	/**
 	 * Convert the object to a json object
 	 */
 	convertToJson(): any {
@@ -50,6 +63,7 @@ export class Tournament {
 			tournamentName: this.tournamentName,
 			acronym: this.acronym,
 			teamSize: this.teamSize,
+			format: this.format,
 			scoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
 			tournamentScoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
 			teams: [],
@@ -75,6 +89,7 @@ export class Tournament {
 		newTournament.tournamentName = tournament.tournamentName;
 		newTournament.acronym = tournament.acronym;
 		newTournament.teamSize = tournament.teamSize;
+		newTournament.format = tournament.format;
 		newTournament.tournamentScoreInterfaceIdentifier = tournament.tournamentScoreInterfaceIdentifier;
 		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
 		newTournament.publishId = tournament.publishId;
@@ -99,6 +114,7 @@ export class Tournament {
 		newTournament.tournamentName = thisTournament.tournamentName;
 		newTournament.acronym = thisTournament.acronym;
 		newTournament.teamSize = thisTournament.teamSize;
+		newTournament.format = thisTournament.format;
 		newTournament.tournamentScoreInterfaceIdentifier = thisTournament.scoreInterfaceIdentifier;
 		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
 		newTournament.publishId = thisTournament.publishId;
@@ -136,6 +152,7 @@ export class Tournament {
 			this.tournamentName == that.tournamentName &&
 			this.acronym == that.acronym &&
 			this.teamSize == that.teamSize &&
+			this.format == that.format &&
 			this.tournamentScoreInterfaceIdentifier == that.tournamentScoreInterfaceIdentifier &&
 			this.teams.length == that.teams.length
 		);

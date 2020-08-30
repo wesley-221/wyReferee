@@ -1,11 +1,17 @@
-<div class="scroll">
-	<app-tournament [tournament]="tournament"></app-tournament>
+<div class="scroll" *ngIf="tournament">
+	<app-tournament [tournament]="tournament" [validationForm]="validationForm"></app-tournament>
 
-    <div *ngIf="tournament != null && tournament.getTeams().length > 0">
-        <hr />
+	<div *ngIf="tournament.teams.length <= 0">
+		<div class="alert alert-warning">
+			<span *ngIf="!tournament.isSoloTournament()"><b>Note:</b> You haven't created any teams yet. Make sure to create a team in order for teams to show up.</span>
+			<span *ngIf="tournament.isSoloTournament()"><b>Note:</b> You haven't created any players yet. Make sure to create a player in order for players to show up.</span>
+		</div>
+		<hr />
+	</div>
 
-		<h3>Updating the tournament</h3>
-		<p>Now that you have made your changes to the tournament, you have to save it so it can be used. Press the update button to finalize the tournament.</p>
-        <button class="btn btn-primary" (click)="udpateTournament(tournament)">Update</button>
-    </div>
+	<h3>Updating the tournament</h3>
+	<p *ngIf="!tournament.isSoloTournament()">Now that you have made your changes to the tournament, you have to save it so it can be used. Press the update button to finalize the tournament.</p>
+	<p *ngIf="tournament.isSoloTournament()">Now that you have made your changes to the tournament, you have to save it so it can be used. Press the update button to finalize the tournament.</p>
+
+	<button mat-raised-button color="primary" (click)="udpateTournament(tournament)">Update</button>
 </div>

@@ -5,6 +5,7 @@ export class Team {
 	teamName: string;
 	collapsed = false;
 	teamPlayers: TeamPlayer[];
+	validateIndex = 0;
 
 	constructor() {
 		this.teamPlayers = [];

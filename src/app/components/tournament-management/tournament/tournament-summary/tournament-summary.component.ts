@@ -1,11 +1,21 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Tournament } from '../../../../models/tournament/tournament';
 import { Router } from '@angular/router';
 import { TournamentService } from '../../../../services/tournament.service';
 import { ToastService } from '../../../../services/toast.service';
 import { AuthenticateService } from '../../../../services/authenticate.service';
 import { ToastType } from '../../../../models/toast';
-declare var $: any;
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteTournamentComponent } from 'app/components/dialogs/delete-tournament/delete-tournament.component';
+import { PublishTournamentComponent } from 'app/components/dialogs/publish-tournament/publish-tournament.component';
+
+export interface DeleteTournamentDialogData {
+	tournament: Tournament;
+}
+
+export interface PublishTournamentDialogData {
+	tournament: Tournament;
+}
 
 @Component({
 	selector: 'app-tournament-summary',
@@ -16,12 +26,13 @@ export class TournamentSummaryComponent implements OnInit {
 	@Input() tournament: Tournament;
 	@Input() publish = false;
 
+	@Output("deleteTournament") deleteTournamentEvent$: EventEmitter<any> = new EventEmitter();
+
 	dialogMessage: string;
 	dialogAction = 0;
 	tournamentToModify: Tournament;
 
-	constructor(private router: Router, private tournamentService: TournamentService, private toastService: ToastService, private authService: AuthenticateService) { }
-
+	constructor(private router: Router, private tournamentService: TournamentService, private toastService: ToastService, private authService: AuthenticateService, private dialog: MatDialog) { }
 	ngOnInit(): void { }
 
 	/**
@@ -46,8 +57,8 @@ export class TournamentSummaryComponent implements OnInit {
 	 */
 	editTournament(tournament: Tournament, event: any): void {
 		// Check if click wasn't on a button
-		if (event.srcElement.className.indexOf('btn') == -1) {
-			this.router.navigate(['tournament-edit', tournament.id, this.publish]);
+		if (event.srcElement.className.search(/mat-icon|mat-mini-fab|mat-button-wrapper/)) {
+			this.router.navigate(['/tournament-management/tournament-edit', tournament.id, this.publish]);
 		}
 	}
 
@@ -56,59 +67,35 @@ export class TournamentSummaryComponent implements OnInit {
 	 * @param tournament the tournament to publish
 	 */
 	publishTournament(tournament: Tournament): void {
-		const publishTournament: Tournament = Tournament.makeTrueCopy(tournament);
-
-		// Reset id
-		publishTournament.id = null;
-
-		// Stringify the mods
-		for (const team in publishTournament.teams) {
-			// Reset id
-			publishTournament.teams[team].id = null;
-
-			for (const player in publishTournament.teams[team].teamPlayers) {
-				// Reset id
-				publishTournament.teams[team].teamPlayers[player].id = null;
+		const dialogRef = this.dialog.open(PublishTournamentComponent, {
+			data: {
+				tournament
 			}
-		}
-
-		this.tournamentService.publishTournament(publishTournament).subscribe((data: any) => {
-			this.toastService.addToast(`Successfully published the tournament "${data.body.tournamentName}" with the id ${data.body.id}.`);
 		});
 
-		$(`#dialog${this.tournamentToModify.id}`).modal('toggle');
-	}
+		dialogRef.afterClosed().subscribe(result => {
+			if (result != null) {
+				const publishTournament: Tournament = Tournament.makeTrueCopy(tournament);
 
-	/**
-	 * Open dialog
-	 * @param tournament
-	 * @param dialogAction
-	 */
-	openDialog(tournament: Tournament, dialogAction: number): void {
-		this.dialogAction = dialogAction;
+				// Reset id
+				publishTournament.id = null;
 
-		if (dialogAction == 0) {
-			this.dialogMessage = `Are you sure you want to publish "${tournament.tournamentName}"?`;
-			this.tournamentToModify = tournament;
+				// Stringify the mods
+				for (const team in publishTournament.teams) {
+					// Reset id
+					publishTournament.teams[team].id = null;
 
-			setTimeout(() => {
-				$(`#dialog${this.tournamentToModify.id}`).modal('toggle');
-			}, 1);
-		}
-		else if (dialogAction == 1) {
-			if (this.publish == true) {
-				this.dialogMessage = `Are you sure you want to delete "${tournament.tournamentName}"? <br><br><b>NOTE:</b> No one will be able to import it any longer if you continue. <br><b>NOTE:</b> This action is permanent. Once the lobby has been deleted, this can not be retrieved anymore.`;
+					for (const player in publishTournament.teams[team].teamPlayers) {
+						// Reset id
+						publishTournament.teams[team].teamPlayers[player].id = null;
+					}
+				}
+
+				this.tournamentService.publishTournament(publishTournament).subscribe((data: any) => {
+					this.toastService.addToast(`Successfully published the tournament "${data.body.tournamentName}" with the id ${data.body.id}.`);
+				});
 			}
-			else {
-				this.dialogMessage = `Are you sure you want to delete "${tournament.tournamentName}"? <br><br><b>NOTE:</b> This action is permanent. Once the lobby has been deleted, this can not be retrieved anymore.`;
-			}
-
-			this.tournamentToModify = tournament;
-
-			setTimeout(() => {
-				$(`#dialog${this.tournamentToModify.id}`).modal('toggle');
-			}, 1);
-		}
+		});
 	}
 
 	/**
@@ -123,16 +110,28 @@ export class TournamentSummaryComponent implements OnInit {
 	 * @param tournament the tournament
 	 */
 	deleteTournament(tournament: Tournament): void {
-		if (this.publish == true) {
-			this.tournamentService.deletePublishedTournament(tournament).subscribe(() => {
-				this.toastService.addToast(`Successfully deleted the published tournament "${tournament.tournamentName}".`);
-			}, (err) => {
-				console.log(err);
-			});
-		}
-		else {
-			this.tournamentService.deleteTournament(tournament);
-			this.toastService.addToast(`Successfully deleted the published tournament "${tournament.tournamentName}".`);
-		}
+		const dialogRef = this.dialog.open(DeleteTournamentComponent, {
+			data: {
+				tournament
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(result => {
+			if (result != null) {
+				if (this.publish == true) {
+					this.tournamentService.deletePublishedTournament(tournament).subscribe(() => {
+						this.toastService.addToast(`Successfully deleted the published tournament "${tournament.tournamentName}".`);
+
+						this.deleteTournamentEvent$.emit(true);
+					}, (err) => {
+						console.log(err);
+					});
+				}
+				else {
+					this.tournamentService.deleteTournament(tournament);
+					this.toastService.addToast(`Successfully deleted the published tournament "${tournament.tournamentName}".`);
+				}
+			}
+		});
 	}
 }

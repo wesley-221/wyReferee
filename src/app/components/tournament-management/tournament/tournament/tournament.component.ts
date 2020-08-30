@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Calculate } from '../../../../models/score-calculation/calculate';
-import { Tournament } from '../../../../models/tournament/tournament';
-import { TeamPlayer } from '../../../../models/tournament/team/team-player';
+import { Tournament, TournamentFormat } from '../../../../models/tournament/tournament';
 import { Team } from '../../../../models/tournament/team/team';
 import { ToastService } from '../../../../services/toast.service';
-declare var $: any;
+import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
 	selector: 'app-tournament',
@@ -13,12 +13,15 @@ declare var $: any;
 })
 export class TournamentComponent implements OnInit {
 	@Input() tournament: Tournament;
+	@Input() validationForm: FormGroup;
 
 	calculateScoreInterfaces: Calculate;
 
 	dialogMessage: string;
 	dialogAction = 0;
 	teamToRemove: Team;
+
+	validateIndex = 0;
 
 	constructor(private toastService: ToastService) {
 		this.calculateScoreInterfaces = new Calculate();
@@ -30,61 +33,52 @@ export class TournamentComponent implements OnInit {
 	 * Add a team to the tournament
 	 */
 	addTeam() {
-		this.tournament.addTeam(new Team());
-	}
+		const newTeam = new Team();
+		newTeam.validateIndex = this.validateIndex;
+		this.tournament.addTeam(newTeam);
 
-	openDialog(team: Team) {
-		this.dialogMessage = `Are you sure you want to remove "${team.teamName}" from the tournament?`;
-		this.teamToRemove = team;
+		this.validateIndex++;
 
-		setTimeout(() => {
-			$('#dialog').modal('toggle');
-		}, 1);
-	}
-
-	/**
-	 * Delete a team from the tournament
-	 * @param team the team to remove
-	 */
-	deleteTeam(team: Team) {
-		this.tournament.removeTeam(team);
-		this.toastService.addToast(`Successfully removed the team "${team.teamName}" from the tournament.`);
-
-		$('#dialog').modal('toggle');
-	}
-
-	/**
-	 * Collapse a team bracket
-	 * @param team the team bracket to collapse
-	 */
-	collapseBracket(team: Team) {
-		team.collapsed = !team.collapsed;
-	}
-
-	/**
-	 * Add a player to the given team
-	 * @param team the team to add the player to
-	 */
-	addNewPlayer(team: Team) {
-		team.addPlayer(new TeamPlayer());
-	}
-
-	/**
-	 * Remove a player from the given team
-	 * @param team the team to remove a player from
-	 * @param player the player to remove from the team
-	 */
-	removePlayer(team: Team, player: TeamPlayer) {
-		team.removePlayer(player);
+		this.validationForm.addControl(`tournament-team-name-${newTeam.validateIndex}`, new FormControl('', Validators.required));
 	}
 
 	/**
 	 * Change the score interface
 	 * @param event
 	 */
-	changeScoreInterface(event: Event) {
-		const selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface((<any>event.target).value);
+	changeScoreInterface(event: MatSelectChange) {
+		const selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(event.value);
 		this.tournament.scoreInterface = selectedScoreInterface;
 		this.tournament.teamSize = selectedScoreInterface.getTeamSize();
+		this.tournament.format = (selectedScoreInterface.isSoloTournament() != null && selectedScoreInterface.isSoloTournament() == true ? TournamentFormat.Solo : TournamentFormat.Teams);
+		this.tournament.tournamentScoreInterfaceIdentifier = selectedScoreInterface.getIdentifier();
+
+		// scoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
+		// tournamentScoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
+	}
+
+	/**
+	 * Set the proper tournament format on change
+	 * @param event
+	 */
+	changeTournamentFormat(event: MatSelectChange) {
+		this.tournament.format = event.value;
+
+		if (event.value == TournamentFormat.Solo) {
+			this.tournament.teamSize = 1;
+		}
+	}
+
+	/**
+	 * Set the tournament name and acronym on change
+	 */
+	changeInput() {
+		this.tournament.tournamentName = this.validationForm.get('tournament-name').value;
+		this.tournament.acronym = this.validationForm.get('tournament-acronym').value;
+		this.tournament.teamSize = parseInt(this.validationForm.get('tournament-team-size').value);
+	}
+
+	getValidation(key: string): any {
+		return this.validationForm.get(key);
 	}
 }

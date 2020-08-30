@@ -1,22 +1,19 @@
-<div class="scroll">
-    <div class="row">
-        <div class="col-7">
-			<button [routerLink]="['/tournament-create']" class="btn btn-primary mt-4">Create a new tournament</button>
-			<button [routerLink]="['/my-published-tournaments']" class="btn btn-primary ml-2 mt-4" *ngIf="canPublish()">My published tournaments</button>
-        </div>
+<div class="header">
+	<div class="buttons">
+		<button mat-raised-button [routerLink]="['/tournament-management/tournament-create']" color="primary"><mat-icon>add</mat-icon> create a new tournament</button>
+		<button mat-raised-button [routerLink]="['/tournament-management/my-published-tournaments']" color="primary" *ngIf="canPublish()"><mat-icon>cloud_upload</mat-icon> my published tournaments</button>
+	</div>
 
-        <div class="col-5">
-            <div class="input-group mt-4">
-                <input type="text" class="form-control" placeholder="Tournament id" [(ngModel)]="tournamentId" />
+	<div class="import">
+		<mat-form-field class="example-full-width">
+			<mat-label>Import tournament by id</mat-label>
+			<input type="tel" matInput placeholder="Tournament id" [(ngModel)]="tournamentId">
+		</mat-form-field>
 
-                <div class="input-group-append">
-                    <button class="btn btn-primary" (click)="importTournament()">Import</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-	<hr />
-
-	<app-tournament-summary [tournament]="tournament" *ngFor="let tournament of tournamentService.allTournaments"></app-tournament-summary>
+		<button mat-mini-fab (click)="importTournament()" color="primary" matSuffix><mat-icon [color]="'white'">cloud_download</mat-icon></button>
+	</div>
 </div>
+
+<hr />
+
+<app-tournament-summary [tournament]="tournament" *ngFor="let tournament of tournamentService.allTournaments"></app-tournament-summary>

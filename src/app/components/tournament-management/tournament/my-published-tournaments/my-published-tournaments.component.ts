@@ -13,12 +13,22 @@ export class MyPublishedTournamentsComponent implements OnInit {
 	publishedTournaments: Tournament[] = [];
 
 	constructor(private tournamentService: TournamentService, private authService: AuthenticateService) {
-		this.tournamentService.getAllPublishedTournamentsFromUser(authService.loggedInUser).subscribe(data => {
+		this.initialize();
+	}
+	ngOnInit(): void { }
+
+	onTournamentDelete() {
+		this.initialize();
+	}
+
+	initialize() {
+		this.publishedTournaments = [];
+
+		this.tournamentService.getAllPublishedTournamentsFromUser(this.authService.loggedInUser).subscribe(data => {
 			for (const tournament in data) {
 				const newTournament: Tournament = this.tournamentService.mapFromJson(data[tournament]);
 				this.publishedTournaments.push(newTournament);
 			}
 		});
 	}
-	ngOnInit(): void { }
 }
