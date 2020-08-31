@@ -9,8 +9,7 @@
 			</div>
 		</div>
 
-		<!-- <div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)"> -->
-		<div class="all-channels" cdkDropList (cdkDropListDropped)="dropChannel($event)">
+		<div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
 			<div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="all-channels"
 								[ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages }">
 				<div class="channel-name" (click)="changeChannel(channel.channelName)">
