@@ -1,31 +1,37 @@
 <div class="irc">
-    <div class="channels">
-        <div class="header">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#join-channel" (click)="openModal('join-channel')" [disabled]="!ircService.isAuthenticated">Join channel</button>
-        </div>
+	<div class="channels">
+		<div class="header">
+			<button mat-flat-button class="full-width" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">Join channel</button>
 
-        <div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
-            <div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="all-channels"
-                                [ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages }">
-                <div class="channel-name" (click)="changeChannel(channel.channelName)">
-                    {{ channel.channelName }}
-                </div>
+			<div class="connect-area" *ngIf="isAttemptingToJoin">
+				<div><mat-spinner [diameter]="40"></mat-spinner></div>
+				Attempting to join {{ attemptingToJoinChannel }}
+			</div>
+		</div>
 
-                <div class="side-button">
-                    <div class="button not-muted" (click)="playSound(channel, false)" *ngIf="channel.playSoundOnMessage">
-                        <fa-icon [icon]="['fas', 'volume-up']"></fa-icon>
-                    </div>
+		<!-- <div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)"> -->
+		<div class="all-channels" cdkDropList (cdkDropListDropped)="dropChannel($event)">
+			<div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="all-channels"
+								[ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages }">
+				<div class="channel-name" (click)="changeChannel(channel.channelName)">
+					{{ channel.channelName }}
+				</div>
 
-                    <div class="button muted" (click)="playSound(channel, true)" *ngIf="!channel.playSoundOnMessage">
-                        <fa-icon [icon]="['fas', 'volume-mute']"></fa-icon>
-                    </div>
+				<div class="side-button">
+					<div class="button not-muted" (click)="playSound(channel, false)" *ngIf="channel.playSoundOnMessage">
+						<mat-icon>volume_up</mat-icon>
+					</div>
 
-                    <div class="button red" (click)="partChannel(channel.channelName)">
-                        <fa-icon [icon]="['fas', 'times']"></fa-icon>
-                    </div>
-                </div>
-            </div>
-        </div>
+					<div class="button muted" (click)="playSound(channel, true)" *ngIf="!channel.playSoundOnMessage">
+						<mat-icon>volume_off</mat-icon>
+					</div>
+
+					<div class="button red" (click)="partChannel(channel.channelName)">
+						<fa-icon [icon]="['fas', 'times']"></fa-icon>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="chat-container">
@@ -42,8 +48,8 @@
 		</div>
 
 		<virtual-scroller class="messages" [items]="chats" [stripedTable]="true" (vsUpdate)="viewPortItems = $event">
-			<div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning mr-3 ml-3 mt-3">There are no messages yet.</div>
-			<div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning mr-3 ml-3 mt-3">There is no selected channel.</div>
+			<div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning alert-spacing">There are no messages yet.</div>
+			<div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning alert-spacing">There is no selected channel.</div>
 
 			<div class="chat" *ngFor="let chat of viewPortItems">
 				<div class="chat-content divider" *ngIf="!chat.isADivider">
@@ -51,9 +57,7 @@
 						{{ chat.time }}
 					</div>
 
-					<div class="author"
-							[ngClass]="{'me': chat.author == ircService.authenticatedUser, 'bancho': chat.author == 'BanchoBot'}"
-							(click)="openUserpage(chat.author)">
+					<div class="author" [ngClass]="{'me': chat.author == ircService.authenticatedUser, 'bancho': chat.author == 'BanchoBot'}" (click)="openUserpage(chat.author)">
 						{{ chat.author }}
 					</div>
 
@@ -75,18 +79,10 @@
 		</virtual-scroller>
 
 		<div class="send-message">
-			<form>
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Message..." #chatMessage (keyup.Tab)="onKey($event, 'up'); false;" (keydown.Tab)="onKey($event, 'down'); false;" [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" />
-
-					<div class="input-group-append">
-						<button class="btn btn-primary" (click)="sendMessage()" [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)">Send</button>
-					</div>
-				</div>
-			</form>
+			<input type="text" placeholder="Message..." #chatMessage [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" (keyup.Tab)="onKey($event, 'up'); false;" (keydown.Tab)="onKey($event, 'down'); false;" (keypress)="sendMessage($event)" />
 		</div>
 
-		<div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
+		<!-- <div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
 			<div class="side-menu-button">
 				<button class="btn btn-primary" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><fa-icon [icon]="['fas', 'cog']"></fa-icon></button>
 				<button class="btn btn-info" (click)="navigateLobbyOverview(selectedChannel.channelName)"><fa-icon [icon]="['fas', 'bars']"></fa-icon></button>
@@ -178,11 +174,11 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </div>
 
-<div class="modal fade" id="join-channel" tabindex="-1" role="dialog">
+<!-- <div class="modal fade" id="join-channel" tabindex="-1" role="dialog">
     <div class="modal-dialog shadow" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -229,4 +225,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

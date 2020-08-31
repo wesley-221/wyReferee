@@ -16,6 +16,8 @@ import { MultiplayerLobby } from '../../models/store-multiplayer/multiplayer-lob
 import { Mappool } from '../../models/osu-mappool/mappool';
 import { ToastType } from '../../models/toast';
 import { WebhookService } from '../../services/webhook.service';
+import { MatDialog } from '@angular/material/dialog';
+import { JoinIrcChannelComponent } from '../dialogs/join-irc-channel/join-irc-channel.component';
 declare var $: any;
 
 @Component({
@@ -40,6 +42,7 @@ export class IrcComponent implements OnInit {
 	keyPressed = false;
 
 	isAttemptingToJoin = false;
+	attemptingToJoinChannel: string;
 
 	isOptionMenuMinimized = true;
 
@@ -70,7 +73,8 @@ export class IrcComponent implements OnInit {
 		private multiplayerLobbies: MultiplayerLobbiesService,
 		private router: Router,
 		private toastService: ToastService,
-		private webhookService: WebhookService) {
+		private webhookService: WebhookService,
+		private dialog: MatDialog) {
 		this.channels = ircService.allChannels;
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -181,7 +185,12 @@ export class IrcComponent implements OnInit {
 	 * Attempt to join a channel
 	 */
 	joinChannel() {
-		this.ircService.joinChannel(this.channelName.nativeElement.value);
+		const dialogRef = this.dialog.open(JoinIrcChannelComponent);
+
+		dialogRef.afterClosed().subscribe(result => {
+			this.attemptingToJoinChannel = result;
+			this.ircService.joinChannel(result);
+		});
 	}
 
 	/**
@@ -200,9 +209,13 @@ export class IrcComponent implements OnInit {
 	/**
 	 * Send the entered message to the selected channel
 	 */
-	sendMessage() {
-		this.ircService.sendMessage(this.selectedChannel.channelName, this.chatMessage.nativeElement.value);
-		this.chatMessage.nativeElement.value = '';
+	sendMessage(event: KeyboardEvent) {
+		if (event.key == 'Enter') {
+			if (this.chatMessage.nativeElement.value != "") {
+				this.ircService.sendMessage(this.selectedChannel.channelName, this.chatMessage.nativeElement.value);
+				this.chatMessage.nativeElement.value = '';
+			}
+		}
 	}
 
 	/**

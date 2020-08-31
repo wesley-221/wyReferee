@@ -60,6 +60,7 @@ import { TeamComponent } from './components/tournament-management/tournament/tea
 import { DeleteTeamComponent } from './components/dialogs/delete-team/delete-team.component';
 import { MultiplayerLobbySettingsComponent } from './components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { SendFinalResultComponent } from './components/dialogs/send-final-result/send-final-result.component';
+import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/join-irc-channel.component';
 
 @NgModule({
 	declarations: [
@@ -102,7 +103,8 @@ import { SendFinalResultComponent } from './components/dialogs/send-final-result
 		TeamComponent,
 		DeleteTeamComponent,
 		MultiplayerLobbySettingsComponent,
-		SendFinalResultComponent
+		SendFinalResultComponent,
+		JoinIrcChannelComponent
 	],
 	imports: [
 		BrowserModule,
