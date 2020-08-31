@@ -18,10 +18,10 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: true
 		},
-		frame: false,
-		titleBarStyle: 'hidden',
 		icon: `${__dirname}/src/assets/images/icon.png`
 	});
+
+	win.removeMenu();
 
 	if (serve) {
 		require('electron-reload')(__dirname, {

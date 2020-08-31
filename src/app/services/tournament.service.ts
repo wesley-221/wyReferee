@@ -7,7 +7,6 @@ import { Team } from '../models/tournament/team/team';
 import { TeamPlayer } from '../models/tournament/team/team-player';
 import { Observable } from 'rxjs';
 import { LoggedInUser } from '../models/authentication/logged-in-user';
-import { Misc } from '../models/misc';
 import { Calculate } from '../models/score-calculation/calculate';
 
 @Injectable({
@@ -18,16 +17,16 @@ export class TournamentService {
 	private readonly apiUrl = AppConfig.apiUrl;
 
 	allTournaments: Tournament[];
-	availableTournamentId: number = 0;
+	availableTournamentId = 0;
 
 	constructor(private storeService: StoreService, private httpClient: HttpClient) {
 		this.allTournaments = [];
 
-		const storeAllTournaments = this.storeService.get(`cache.tournaments`);
+		const storeAllTournaments = this.storeService.get('cache.tournaments');
 
-		for (let tournament in storeAllTournaments) {
-			const thisMappool = storeAllTournaments[tournament],
-				newTournament = Tournament.serializeJson(thisMappool);
+		for (const tournament in storeAllTournaments) {
+			const thisMappool = storeAllTournaments[tournament];
+			const newTournament = Tournament.serializeJson(thisMappool);
 
 			newTournament.id = thisMappool.id;
 			this.availableTournamentId = newTournament.id + 1;
@@ -38,7 +37,7 @@ export class TournamentService {
 					newTournament.updateAvailable = !newTournament.compareTo(updatedTournament);
 
 					this.allTournaments.push(newTournament);
-				}, (err) => {
+				}, () => {
 					this.allTournaments.push(newTournament);
 				});
 			}
@@ -55,7 +54,7 @@ export class TournamentService {
 	getTournament(tournamentId: number): Tournament {
 		let returnTournamentl: Tournament = null;
 
-		for (let i in this.allTournaments) {
+		for (const i in this.allTournaments) {
 			if (this.allTournaments[i].id == tournamentId) {
 				returnTournamentl = this.allTournaments[i];
 				break;
@@ -70,7 +69,7 @@ export class TournamentService {
 	 * @param tournament the tournament to save
 	 */
 	public saveTournament(tournament: Tournament): void {
-		tournament.id = this.availableTournamentId ++;
+		tournament.id = this.availableTournamentId++;
 
 		this.allTournaments.push(tournament);
 		this.storeService.set(`cache.tournaments.${tournament.id}`, tournament.convertToJson());
@@ -81,7 +80,7 @@ export class TournamentService {
 	 * @param tournament the tournament to update
 	 */
 	updateTournament(tournament: Tournament): void {
-		for (let i in this.allTournaments) {
+		for (const i in this.allTournaments) {
 			if (this.allTournaments[i].id == tournament.id) {
 				this.allTournaments[i] = tournament;
 
@@ -96,7 +95,7 @@ export class TournamentService {
 	 * @param tournament the tournament to update
 	 */
 	public updatePublishedTournament(tournament: Tournament) {
-		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament/update`, tournament, { observe: "response" });
+		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament/update`, tournament, { observe: 'response' });
 	}
 
 	/**
@@ -105,7 +104,7 @@ export class TournamentService {
 	 * @param updatedTournament the tournament with the new values
 	 */
 	public replaceTournament(originalTournament: Tournament, updatedTournament: Tournament) {
-		for (let i in this.allTournaments) {
+		for (const i in this.allTournaments) {
 			if (this.allTournaments[i].id == originalTournament.id) {
 				updatedTournament.id = originalTournament.id;
 				this.allTournaments[i] = updatedTournament;
@@ -130,7 +129,7 @@ export class TournamentService {
 	 * @param tournament the tournament to publish
 	 */
 	publishTournament(tournament: Tournament): Observable<any> {
-		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament/create`, tournament, { observe: "response" });
+		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament/create`, tournament, { observe: 'response' });
 	}
 
 	/**
@@ -162,7 +161,7 @@ export class TournamentService {
 	 * @param tournamentName the tournament name
 	 */
 	getTournamentByName(tournamentName: string): Tournament {
-		for (let tournament of this.allTournaments) {
+		for (const tournament of this.allTournaments) {
 			if (tournament.tournamentName == tournamentName) {
 				return tournament;
 			}
@@ -176,7 +175,7 @@ export class TournamentService {
 	 * @param acronym the tournament acronym
 	 */
 	getTournamentByAcronym(acronym: string): Tournament {
-		for (let tournament of this.allTournaments) {
+		for (const tournament of this.allTournaments) {
 			if (tournament.acronym == acronym) {
 				return tournament;
 			}
@@ -191,7 +190,7 @@ export class TournamentService {
 	 * @param teamName the team to search for
 	 */
 	getTeamFromTournamentByName(tournament: Tournament, teamName: string) {
-		for (let team of tournament.teams) {
+		for (const team of tournament.teams) {
 			if (team.teamName == teamName) {
 				return team;
 			}
@@ -205,8 +204,8 @@ export class TournamentService {
 	 * @param json the json to map
 	 */
 	mapFromJson(json: any) {
-		const newTournament = new Tournament(),
-			calc = new Calculate();
+		const newTournament = new Tournament();
+		const calc = new Calculate();
 
 		newTournament.id = json.id;
 		newTournament.tournamentName = json.tournamentName;
@@ -216,11 +215,14 @@ export class TournamentService {
 		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
 		newTournament.publishId = json.id;
 
-		for (let team in json.teams) {
+		let validateIndex = 0;
+
+		for (const team in json.teams) {
 			const newTeam = new Team();
 			newTeam.teamName = json.teams[team].teamName;
+			newTeam.validateIndex = validateIndex;
 
-			for (let player in json.teams[team].teamPlayers) {
+			for (const player in json.teams[team].teamPlayers) {
 				const newPlayer = new TeamPlayer();
 				newPlayer.username = json.teams[team].teamPlayers[player].username;
 
@@ -228,6 +230,7 @@ export class TournamentService {
 			}
 
 			newTournament.addTeam(newTeam);
+			validateIndex ++;
 		}
 
 		return newTournament;

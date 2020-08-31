@@ -4,7 +4,13 @@ import { StoreService } from '../../services/store.service';
 import { ToastService } from '../../services/toast.service';
 import { ToastType } from '../../models/toast';
 import { ApiKeyValidation } from '../../services/osu-api/api-key-validation.service';
-declare var $: any;
+import { MatDialog } from '@angular/material/dialog';
+import { RemoveSettingsComponent } from '../dialogs/remove-settings/remove-settings.component';
+import { AuthenticateService } from 'app/services/authenticate.service';
+import { IrcService } from 'app/services/irc.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { RegisterRequest } from 'app/models/authentication/register-request';
+import { LoggedInUser } from 'app/models/authentication/logged-in-user';
 
 @Component({
 	selector: 'app-settings',
@@ -16,15 +22,104 @@ export class SettingsComponent implements OnInit {
 	@ViewChild('apiKey') apiKey: ElementRef;
 
 	dialogMessage: string;
-	dialogAction: number = 0;
+	dialogAction = 0;
+
+	mappoolPublishForm: FormGroup;
+	ircLoginForm: FormGroup;
+
+	isConnecting = false;
+	isDisconnecting = false;
 
 	constructor(
 		public electronService: ElectronService,
 		private storeService: StoreService,
 		private toastService: ToastService,
-		private apiKeyValidation: ApiKeyValidation
+		private apiKeyValidation: ApiKeyValidation,
+		private dialog: MatDialog,
+		public auth: AuthenticateService,
+		public ircService: IrcService
 	) { }
-	ngOnInit() { }
+
+	ngOnInit() {
+		this.mappoolPublishForm = new FormGroup({
+			'username': new FormControl('', [
+				Validators.required
+			]),
+			'password': new FormControl('', [
+				Validators.required
+			])
+		});
+
+		this.ircLoginForm = new FormGroup({
+			'irc-username': new FormControl('', [
+				Validators.required
+			]),
+			'irc-password': new FormControl('', [
+				Validators.required
+			])
+		});
+
+		// Subscribe to the isConnecting variable to show/hide the spinner
+		this.ircService.getIsConnecting().subscribe(value => {
+			this.isConnecting = value;
+		});
+
+		// Subscribe to the isConnecting variable to show/hide the spinner
+		this.ircService.getIsDisconnecting().subscribe(value => {
+			this.isDisconnecting = value;
+		});
+	}
+
+	/**
+	 * Login the user with the given username and password
+	 */
+	loginMappoolPublish() {
+		const username = this.mappoolPublishForm.get('username').value;
+		const password = this.mappoolPublishForm.get('password').value;
+
+		const registerUser = new RegisterRequest();
+
+		registerUser.username = username;
+		registerUser.password = password;
+
+		this.auth.login(registerUser).subscribe(data => {
+			const loggedInUser: LoggedInUser = new LoggedInUser();
+
+			loggedInUser.userId = data.body.userId;
+			loggedInUser.username = data.body.username;
+			loggedInUser.isAdmin = data.body.admin;
+			loggedInUser.token = data.headers.get('Authorization');
+			loggedInUser.isTournamentHost = data.body.tournament_host;
+
+			this.auth.loggedInUser = loggedInUser;
+			this.auth.loggedIn = true;
+
+			this.auth.cacheLoggedInUser(loggedInUser);
+
+			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser.username}"!`);
+		}, (err) => {
+			this.toastService.addToast(`${err.error.message}`, ToastType.Error);
+		});
+	}
+
+	logoutMappoolPublish() {
+		this.auth.logout();
+		this.toastService.addToast('Successfully logged out.');
+	}
+
+	/**
+	 * Login to irc with the given credentials
+	 */
+	connectIrc() {
+		const username = this.ircLoginForm.get('username').value;
+		const password = this.ircLoginForm.get('password').value;
+
+		this.ircService.connect(username, password);
+	}
+
+	disconnectIrc() {
+		this.ircService.disconnect();
+	}
 
 	/**
 	 * Get the api key
@@ -43,7 +138,7 @@ export class SettingsComponent implements OnInit {
 			this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
 		},
 			// Key is invalid
-			err => {
+			() => {
 				this.toastService.addToast('The entered api-key was invalid.', ToastType.Error);
 			});
 	}
@@ -53,9 +148,7 @@ export class SettingsComponent implements OnInit {
 	 */
 	clearCache() {
 		this.storeService.delete('cache');
-		this.toastService.addToast(`Successfully cleared the cache.`);
-
-		$(`#dialog`).modal('toggle');
+		this.toastService.addToast('Successfully cleared the cache.');
 	}
 
 	/**
@@ -63,9 +156,7 @@ export class SettingsComponent implements OnInit {
 	 */
 	removeApiKey() {
 		this.storeService.delete('api-key');
-		this.toastService.addToast(`Successfully removed your api key.`);
-
-		$(`#dialog`).modal('toggle');
+		this.toastService.addToast('Successfully removed your api key.');
 	}
 
 	/**
@@ -74,14 +165,14 @@ export class SettingsComponent implements OnInit {
 	exportConfigFile() {
 		this.electronService.dialog.showSaveDialog({
 			title: 'Export the config file',
-			defaultPath: "export.json"
+			defaultPath: 'export.json'
 		}).then(file => {
 			// Remove the api key and auth properties
 			let configFile = this.storeService.storage.store;
-			configFile['api-key'] = "redacted";
-			configFile['auth'] = "redacted";
-			configFile['irc']['username'] = "redacted";
-			configFile['irc']['password'] = "redacted";
+			configFile['api-key'] = 'redacted';
+			configFile['auth'] = 'redacted';
+			configFile['irc']['username'] = 'redacted';
+			configFile['irc']['password'] = 'redacted';
 
 			console.log(configFile);
 
@@ -99,17 +190,30 @@ export class SettingsComponent implements OnInit {
 	}
 
 	openDialog(dialogAction: number) {
-		this.dialogAction = dialogAction;
+		let dialogMessage: string = null;
 
 		if (dialogAction == 0) {
-			this.dialogMessage = `Are you sure you want to clear your cache?`;
+			dialogMessage = 'Are you sure you want to clear your cache?';
 		}
 		else if (dialogAction == 1) {
-			this.dialogMessage = `Are you sure you want to remove your api key?`;
+			dialogMessage = 'Are you sure you want to remove your api key?';
 		}
 
-		setTimeout(() => {
-			$(`#dialog`).modal('toggle');
-		}, 1);
+		const dialogRef = this.dialog.open(RemoveSettingsComponent, {
+			data: {
+				message: dialogMessage
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(res => {
+			if(res == true) {
+				if (dialogAction == 0) {
+					this.clearCache();
+				}
+				else if (dialogAction == 1) {
+					this.removeApiKey();
+				}
+			}
+		});
 	}
 }

@@ -1,0 +1,19 @@
+<div class="header">
+	<div class="buttons">
+		<button mat-raised-button [routerLink]="['/tournament-management/tournament-overview/tournament-create']" color="primary"><mat-icon>add</mat-icon> create a new tournament</button>
+		<button mat-raised-button [routerLink]="['/tournament-management/tournament-overview/my-published-tournaments']" color="primary" *ngIf="canPublish()"><mat-icon>cloud_upload</mat-icon> my published tournaments</button>
+	</div>
+
+	<div class="import">
+		<mat-form-field class="example-full-width">
+			<mat-label>Import tournament by id</mat-label>
+			<input type="tel" matInput placeholder="Tournament id" [(ngModel)]="tournamentId">
+		</mat-form-field>
+
+		<button mat-mini-fab (click)="importTournament()" color="primary" matSuffix><mat-icon [color]="'white'">cloud_download</mat-icon></button>
+	</div>
+</div>
+
+<hr />
+
+<app-tournament-summary [tournament]="tournament" *ngFor="let tournament of tournamentService.allTournaments"></app-tournament-summary>

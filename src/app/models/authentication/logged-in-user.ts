@@ -1,32 +1,32 @@
 export class LoggedInUser {
-    userId: number;
-    username: string;
+	userId: number;
+	username: string;
 	isAdmin: boolean;
 	isTournamentHost: boolean
-    token: string;
+	token: string;
 
-    public static mapFromJson(json: any): LoggedInUser {
-        const loggedInUser = new LoggedInUser();
+	public static mapFromJson(json: any): LoggedInUser {
+		const loggedInUser = new LoggedInUser();
 
-        loggedInUser.userId = json.userId;
-        loggedInUser.username = json.username;
-        loggedInUser.isAdmin = (<any>json.isAdmin) == 'true' ? true : false;
-		loggedInUser.isTournamentHost = (<any>json.isTournamentHost) == 'true' ? true : false;
-        loggedInUser.token = json.token;
+		loggedInUser.userId = json.userId;
+		loggedInUser.username = json.username;
+		loggedInUser.isAdmin = (json.isAdmin) == 'true' ? true : false;
+		loggedInUser.isTournamentHost = (json.isTournamentHost) == 'true' ? true : false;
+		loggedInUser.token = json.token;
 
-        return loggedInUser;
-    }
+		return loggedInUser;
+	}
 
     /**
      * Convert the user to a json file
      */
-    public convertToJson(): {} {
-        return {
-            userId: this.userId,
-            username: this.username,
+	public convertToJson(): { userId: number, username: string, isAdmin: boolean, isTournamentHost: boolean, token: string } {
+		return {
+			userId: this.userId,
+			username: this.username,
 			isAdmin: this.isAdmin,
 			isTournamentHost: this.isTournamentHost,
-            token: this.token
-        }
-    }
+			token: this.token
+		}
+	}
 }

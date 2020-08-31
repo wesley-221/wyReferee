@@ -1,0 +1,25 @@
+@import "variables";
+
+.title-bar {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+
+	// height: $title-bar-height;
+
+	background-color: $primary;
+
+	-webkit-app-region: drag;
+
+	.nav-button {
+		display: flex;
+
+		align-items: center;
+		justify-content: center;
+
+		background-color: red;
+		width: 47px;
+
+		-webkit-app-region: no-drag;
+	}
+}

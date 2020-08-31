@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticateService } from '../../../services/authenticate.service';
-import { ToastService } from '../../../services/toast.service';
 
 @Component({
 	selector: 'app-sidebar',
@@ -9,6 +7,14 @@ import { ToastService } from '../../../services/toast.service';
 })
 
 export class SidebarComponent implements OnInit {
-	constructor(public authService: AuthenticateService, private toastService: ToastService) { }
+	allNavigations: { icon: string; header: string; link: string }[] = [
+		{ icon: 'info', header: 'information', link: 'information' },
+		{ icon: 'settings', header: 'settings', link: 'settings' },
+		{ icon: 'dashboard', header: 'management', link: 'tournament-management' },
+		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
+		{ icon: 'chat', header: 'irc', link: 'irc' }
+	];
+
+	constructor() { }
 	ngOnInit() { }
 }

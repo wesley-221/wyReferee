@@ -1,10 +1,11 @@
-import { TeamPlayer } from "./team-player";
+import { TeamPlayer } from './team-player';
 
 export class Team {
 	id: number;
 	teamName: string;
-	collapsed: boolean = false;
+	collapsed = false;
 	teamPlayers: TeamPlayer[];
+	validateIndex = 0;
 
 	constructor() {
 		this.teamPlayers = [];
@@ -37,9 +38,9 @@ export class Team {
      * Get all the players in an array
      */
 	public getPlayersAsArray(): string[] {
-		let returnArray: string[] = [];
+		const returnArray: string[] = [];
 
-		for (let player of this.teamPlayers) {
+		for (const player of this.teamPlayers) {
 			returnArray.push(player.username);
 		}
 
@@ -56,7 +57,7 @@ export class Team {
 		newTeam.id = team.id;
 		newTeam.teamName = team.teamName;
 
-		for (let player in team.teamPlayers) {
+		for (const player in team.teamPlayers) {
 			newTeam.addPlayer(TeamPlayer.makeTrueCopy(team.teamPlayers[player]));
 		}
 
@@ -67,13 +68,13 @@ export class Team {
 	 * Convert the object to a json object
 	 */
 	convertToJson() {
-		let team = {
+		const team = {
 			id: this.id,
 			teamName: this.teamName,
 			teamPlayers: []
 		}
 
-		for (let player in this.teamPlayers) {
+		for (const player in this.teamPlayers) {
 			team.teamPlayers.push(this.teamPlayers[player].convertToJson());
 		}
 
@@ -86,8 +87,8 @@ export class Team {
 	 * @returns true if equal
 	 */
 	public compareTo(that: Team) {
-		for(let teamPlayer in this.teamPlayers) {
-			if(this.teamPlayers[teamPlayer].username != that.teamPlayers[teamPlayer].username) {
+		for (const teamPlayer in this.teamPlayers) {
+			if (this.teamPlayers[teamPlayer].username != that.teamPlayers[teamPlayer].username) {
 				return false;
 			}
 		}

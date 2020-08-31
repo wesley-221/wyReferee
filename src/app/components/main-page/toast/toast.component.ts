@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastService } from '../../../services/toast.service';
 import { Toast, ToastType } from '../../../models/toast';
-import { trigger, state, style, animate, transition } from "@angular/animations";
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
 	selector: 'app-toast',
@@ -10,13 +10,13 @@ import { trigger, state, style, animate, transition } from "@angular/animations"
 	animations: [
 		trigger('simpleFadeAnimation', [
 			state('in', style({
-				opacity: 1 
+				opacity: 1
 			})),
 
 			transition(':enter', [
 				style({
-					opacity: 0, transform: 'translateY(-40px)' 
-				}), 
+					opacity: 0, transform: 'translateY(-40px)'
+				}),
 				animate(400)
 			]),
 
@@ -32,7 +32,7 @@ export class ToastComponent implements OnInit {
 
 	toastType;
 
-	constructor(private toastService: ToastService) { 
+	constructor(private toastService: ToastService) {
 		this.allToasts = toastService.getAllToasts();
 
 		this.toastType = ToastType;

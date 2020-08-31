@@ -1,0 +1,47 @@
+<div class="mappool" (click)="editMappool(mappool, $event)">
+	<div class="row" *ngIf="mappool.updateAvailable">
+		<div class="col">
+			<div class="alert alert-info">
+				Looks like this mappool isn't up to date. Click on the update button to get the latest version.
+			</div>
+		</div>
+	</div>
+
+	<div class="header">
+		<div class="information">
+			<h1>{{ mappool.name }}</h1>
+			<span><b>Mappool id:</b> {{ mappool.id }}</span>
+		</div>
+
+		<div class="buttons">
+			<button mat-mini-fab color="accent" matTooltip="Click to update this mappool with the latest version" [matTooltipPosition]="'above'" (click)="updateMappool(mappool)" *ngIf="mappool.updateAvailable"><mat-icon>update</mat-icon></button>
+			<button mat-mini-fab color="primary" matTooltip="Publish this mappool" [matTooltipPosition]="'above'" (click)="publishMappool(mappool)" *ngIf="canPublish() && publish != true"><mat-icon>cloud_upload</mat-icon></button>
+			<button mat-mini-fab color="warn" matTooltip="Delete this mappool" [matTooltipPosition]="'above'" (click)="deleteMappool(mappool)"><mat-icon>delete</mat-icon></button>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<div class="alert alert-info" *ngIf="mappool.mappoolType == 2">
+				This is a mystery tournament. Maps will not show up and will be randomly send when a modbracket has been picked.
+			</div>
+		</div>
+	</div>
+
+	<hr />
+
+	<h3>Mod brackets</h3>
+	<div class="modbrackets">
+		<div class="bracket" *ngFor="let bracket of mappool.modBrackets">
+			<div><h4>{{ bracket.bracketName }}</h4></div>
+			<div>{{ bracket.beatmaps.length }} map<span *ngIf="bracket.beatmaps.length != 1">s</span></div>
+			<div><h5>Mods</h5></div>
+
+			<div class="mods">
+				<div class="mod" *ngFor="let mod of bracket.getFullMods()">
+					{{ mod }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

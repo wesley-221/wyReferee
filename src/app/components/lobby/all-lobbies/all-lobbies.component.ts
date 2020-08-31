@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { StoreService } from '../../../services/store.service';
 import { MultiplayerLobby } from '../../../models/store-multiplayer/multiplayer-lobby';
 import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies.service';
 import { ToastService } from '../../../services/toast.service';
 import { Router } from '@angular/router';
-import { ElectronService } from '../../../services/electron.service';
-declare var $: any;
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteLobbyComponent } from 'app/components/dialogs/delete-lobby/delete-lobby.component';
+
+export interface MultiplayerLobbyDeleteDialogData {
+	multiplayerLobby: MultiplayerLobby;
+}
 
 @Component({
 	selector: 'app-all-lobbies',
@@ -19,29 +22,39 @@ export class AllLobbiesComponent implements OnInit {
 	dialogMessage: string;
 	deleteMultiplayerLobby: MultiplayerLobby;
 
-	constructor(private storeService: StoreService, private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService, private router: Router, private electronService: ElectronService) {
+	constructor(private dialog: MatDialog, private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService, private router: Router) {
 		this.allLobbies = multiplayerLobbies.getAllLobbies();
 	}
 
 	ngOnInit() { }
 
-	openDialog(multiplayerLobby: MultiplayerLobby) {
-		this.dialogMessage = `Are you sure you want to delete the multiplayer lobby "${multiplayerLobby.description}"? <br><br><b>NOTE:</b> This action is permanent. Once the lobby has been deleted, this can not be retrieved anymore.`;
-		this.deleteMultiplayerLobby = multiplayerLobby;
-
-		$(`#dialog`).modal('toggle');
-	}
-
+	/**
+	 * Delete a multiplayer lobby
+	 * @param multiplayerLobby
+	 */
 	deleteLobby(multiplayerLobby: MultiplayerLobby) {
-		this.multiplayerLobbies.remove(multiplayerLobby);
-		this.toastService.addToast(`Successfully deleted the multiplayer lobby "${multiplayerLobby.description}".`);
+		const dialogRef = this.dialog.open(DeleteLobbyComponent, {
+			data: {
+				multiplayerLobby: multiplayerLobby
+			}
+		});
 
-		$(`#dialog`).modal('toggle');
+		dialogRef.afterClosed().subscribe(result => {
+			if (result != null) {
+				this.multiplayerLobbies.remove(multiplayerLobby);
+				this.toastService.addToast(`Successfully deleted the multiplayer lobby "${multiplayerLobby.description}".`);
+			}
+		});
 	}
 
-	openLobby(multiplayerLobby: MultiplayerLobby, event: any) {
-		if(event.srcElement.type != "button") {
-			this.router.navigate(['lobby-view', multiplayerLobby.lobbyId]);
+	/**
+	 * Navigate to the selected multiplayer lobby
+	 * @param multiplayerLobby
+	 * @param event
+	 */
+	navigateLobby(multiplayerLobby: MultiplayerLobby, event: any) {
+		if (event.srcElement.className.search(/mat-icon|mat-mini-fab|mat-button-wrapper/) == -1) {
+			this.router.navigate(['lobby-overview/lobby-view', multiplayerLobby.lobbyId]);
 		}
 	}
 }

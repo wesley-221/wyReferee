@@ -16,7 +16,18 @@ import { MultiplayerLobby } from '../../models/store-multiplayer/multiplayer-lob
 import { Mappool } from '../../models/osu-mappool/mappool';
 import { ToastType } from '../../models/toast';
 import { WebhookService } from '../../services/webhook.service';
-declare var $: any;
+import { MatDialog } from '@angular/material/dialog';
+import { JoinIrcChannelComponent } from '../dialogs/join-irc-channel/join-irc-channel.component';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { BanBeatmapComponent } from '../dialogs/ban-beatmap/ban-beatmap.component';
+
+export interface BanBeatmapDialogData {
+	beatmap: ModBracketMap;
+	modBracket: ModBracket;
+	multiplayerLobby: MultiplayerLobby;
+
+	banForTeam: string;
+}
 
 @Component({
 	selector: 'app-irc',
@@ -36,24 +47,25 @@ export class IrcComponent implements OnInit {
 	chats: Message[] = [];
 	viewPortItems: Message[];
 
-	chatLength: number = 0;
-	keyPressed: boolean = false;
+	chatLength = 0;
+	keyPressed = false;
 
-	isAttemptingToJoin: boolean = false;
+	isAttemptingToJoin = false;
+	attemptingToJoinChannel: string;
 
-	isOptionMenuMinimized: boolean = true;
+	isOptionMenuMinimized = true;
 
-	@ViewChild('teamMode') teamMode: ElementRef;
-	@ViewChild('winCondition') winCondition: ElementRef;
-	@ViewChild('players') players: ElementRef;
+	@ViewChild('teamMode') teamMode: MatSelect;
+	@ViewChild('winCondition') winCondition: MatSelect;
+	@ViewChild('players') players: MatSelect;
 
 	searchValue: string;
 
-	roomSettingGoingOn: boolean = false;
-	roomSettingDelay: number = 2;
+	roomSettingGoingOn = false;
+	roomSettingDelay = 2;
 
-	teamOneScore: number = 0;
-	teamTwoScore: number = 0;
+	teamOneScore = 0;
+	teamTwoScore = 0;
 	nextPick: string = null;
 	breakpoint: string = null;
 	hasWon: string = null;
@@ -70,13 +82,14 @@ export class IrcComponent implements OnInit {
 		private multiplayerLobbies: MultiplayerLobbiesService,
 		private router: Router,
 		private toastService: ToastService,
-		private webhookService: WebhookService) {
+		private webhookService: WebhookService,
+		private dialog: MatDialog) {
 		this.channels = ircService.allChannels;
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
 			// Check if the user was authenticated
 			if (isAuthenticated) {
-				for (let channel in this.channels) {
+				for (const channel in this.channels) {
 					// Change the channel if it was the last active channel
 					if (this.channels[channel].lastActiveChannel) {
 						this.changeChannel(this.channels[channel].channelName, true);
@@ -112,7 +125,7 @@ export class IrcComponent implements OnInit {
 	 * Change the channel
 	 * @param channel the channel to change to
 	 */
-	changeChannel(channel: string, delayScroll: boolean = false) {
+	changeChannel(channel: string, delayScroll = false) {
 		if (this.selectedChannel != undefined) {
 			this.selectedChannel.lastActiveChannel = false;
 			this.ircService.changeLastActiveChannel(this.selectedChannel, false);
@@ -152,7 +165,7 @@ export class IrcComponent implements OnInit {
 		}
 
 		// Reset search bar
-		this.searchValue = "";
+		this.searchValue = '';
 
 		// Channel was changed to a multiplayer lobby
 		if (channel.startsWith('#mp_') && this.selectedChannel.active) {
@@ -164,24 +177,15 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
-	 * Open the modal to join a channel
-	 */
-	openModal(modalName: string) {
-		$(`#${modalName}`).modal('toggle');
-	}
-
-	/**
-	 * Hide the modal
-	 */
-	hideModal(modalName: string) {
-		$(`#${modalName}`).modal('toggle');
-	}
-
-	/**
 	 * Attempt to join a channel
 	 */
 	joinChannel() {
-		this.ircService.joinChannel(this.channelName.nativeElement.value);
+		const dialogRef = this.dialog.open(JoinIrcChannelComponent);
+
+		dialogRef.afterClosed().subscribe(result => {
+			this.attemptingToJoinChannel = result;
+			this.ircService.joinChannel(result);
+		});
 	}
 
 	/**
@@ -200,9 +204,13 @@ export class IrcComponent implements OnInit {
 	/**
 	 * Send the entered message to the selected channel
 	 */
-	sendMessage() {
-		this.ircService.sendMessage(this.selectedChannel.channelName, this.chatMessage.nativeElement.value);
-		this.chatMessage.nativeElement.value = '';
+	sendMessage(event: KeyboardEvent) {
+		if (event.key == 'Enter') {
+			if (this.chatMessage.nativeElement.value != "") {
+				this.ircService.sendMessage(this.selectedChannel.channelName, this.chatMessage.nativeElement.value);
+				this.chatMessage.nativeElement.value = '';
+			}
+		}
 	}
 
 	/**
@@ -224,27 +232,27 @@ export class IrcComponent implements OnInit {
 		event.preventDefault();
 
 		// Check if the pressed key was tab
-		if (event.key === "Tab") {
+		if (event.key === 'Tab') {
 			this.changeDetector.detectChanges();
 			this.chatMessage.nativeElement.focus();
 
 			// The key is being hold
-			if (eventName == "down") {
+			if (eventName == 'down') {
 				if (this.keyPressed == false) {
 					// Check if there is a selected channel
 					if (this.selectedChannel != undefined) {
 						// Check if the object exists
 						if (!this.ircService.client.chans.hasOwnProperty(this.selectedChannel.channelName)) return;
 
-						const lastWordOfSentence = this.chatMessage.nativeElement.value.split(" ").pop();
-						let matchedUsers = [];
+						const lastWordOfSentence = this.chatMessage.nativeElement.value.split(' ').pop();
+						const matchedUsers = [];
 
 						// Prevent 0 letter autocompletion
 						if (lastWordOfSentence.length < 1) return;
 
-						for (let user in this.ircService.client.chans[this.selectedChannel.channelName].users) {
+						for (const user in this.ircService.client.chans[this.selectedChannel.channelName].users) {
 							// Remove irc levels
-							const newUser = user.replace(/[\@|\+]/gi, '');
+							const newUser = user.replace(/[@|+]/gi, '');
 
 							if (newUser.toLowerCase().startsWith(lastWordOfSentence.toLowerCase())) {
 								matchedUsers.push(newUser);
@@ -283,9 +291,9 @@ export class IrcComponent implements OnInit {
 	 * Change the current mappool
 	 * @param event
 	 */
-	onMappoolChange(event: Event) {
-		this.selectedLobby.mappool = this.mappoolService.getMappool((<any>event.currentTarget).value);
-		this.selectedLobby.mappoolId = this.mappoolService.getMappool((<any>event.currentTarget).value).id;
+	onMappoolChange(event: MatSelectChange) {
+		this.selectedLobby.mappool = this.mappoolService.getMappool(event.value);
+		this.selectedLobby.mappoolId = this.mappoolService.getMappool(event.value).id;
 
 		this.multiplayerLobbies.update(this.selectedLobby);
 	}
@@ -298,11 +306,11 @@ export class IrcComponent implements OnInit {
 	pickBeatmap(beatmap: ModBracketMap, bracket: ModBracket, gamemode: number = null) {
 		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp map ${beatmap.beatmapId} ${(gamemode != null ? gamemode : beatmap.gamemodeId)}`);
 
-		let modBit = 0,
-			freemodEnabled = false;
+		let modBit = 0;
+		let freemodEnabled = false;
 
-		for (let mod in bracket.mods) {
-			if (bracket.mods[mod].modValue != "freemod") {
+		for (const mod in bracket.mods) {
+			if (bracket.mods[mod].modValue != 'freemod') {
 				modBit += parseInt(bracket.mods[mod].modValue);
 			}
 			else {
@@ -315,7 +323,7 @@ export class IrcComponent implements OnInit {
 			this.ircService.sendMessage(this.selectedChannel.channelName, '!mp mods none');
 		}
 
-		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp mods ${modBit}${freemodEnabled ? " freemod" : ""}`);
+		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
 	}
 
 	/**
@@ -323,14 +331,14 @@ export class IrcComponent implements OnInit {
 	 */
 	onRoomSettingChange() {
 		if (!this.roomSettingGoingOn) {
-			let timer =
+			const timer =
 				setInterval(() => {
 					if (this.roomSettingDelay == 0) {
-						this.ircService.sendMessage(this.selectedChannel.channelName, `!mp set ${this.teamMode.nativeElement.value} ${this.winCondition.nativeElement.value} ${this.players.nativeElement.value}`);
+						this.ircService.sendMessage(this.selectedChannel.channelName, `!mp set ${this.teamMode.value} ${this.winCondition.value} ${this.players.value}`);
 
-						this.ircService.getChannelByName(this.selectedChannel.channelName).teamMode = this.teamMode.nativeElement.value;
-						this.ircService.getChannelByName(this.selectedChannel.channelName).winCondition = this.winCondition.nativeElement.value;
-						this.ircService.getChannelByName(this.selectedChannel.channelName).players = this.players.nativeElement.value;
+						this.ircService.getChannelByName(this.selectedChannel.channelName).teamMode = this.teamMode.value;
+						this.ircService.getChannelByName(this.selectedChannel.channelName).winCondition = this.winCondition.value;
+						this.ircService.getChannelByName(this.selectedChannel.channelName).players = this.players.value;
 
 						this.roomSettingGoingOn = false;
 						clearInterval(timer);
@@ -352,10 +360,10 @@ export class IrcComponent implements OnInit {
 		const lobbyId = this.multiplayerLobbies.getByIrcLobby(this.selectedChannel.channelName).lobbyId;
 
 		if (lobbyId) {
-			this.router.navigate(['lobby-view', lobbyId]);
+			this.router.navigate(['/lobby-overview/lobby-view', lobbyId]);
 		}
 		else {
-			this.toastService.addToast(`No lobby overview found for this irc channel`);
+			this.toastService.addToast('No lobby overview found for this irc channel');
 		}
 	}
 
@@ -379,40 +387,35 @@ export class IrcComponent implements OnInit {
 	playSound(channel: Channel, status: boolean) {
 		channel.playSoundOnMessage = status;
 		this.storeService.set(`irc.channels.${channel.channelName}.playSoundOnMessage`, status);
-		this.toastService.addToast(`${channel.channelName} will ${status == false ? "no longer beep on message" : "now beep on message"}.`);
-	}
-
-	/**
-	 * When trying to ban a map show a modal
-	 * @param beatmap
-	 * @param bracket
-	 */
-	banBeatmapPopup(beatmap: ModBracketMap, bracket: ModBracket) {
-		this.popupBannedMap = beatmap;
-		this.popupBannedBracket = bracket;
-
-		this.hideModal('ban-a-map');
+		this.toastService.addToast(`${channel.channelName} will ${status == false ? 'no longer beep on message' : 'now beep on message'}.`);
 	}
 
 	/**
 	 * Ban a beatmap
 	 */
-	banBeatmap(team: number) {
-		// Handle banning
-		if (team == 1) {
-			this.selectedLobby.teamOneBans.push(this.popupBannedMap.beatmapId);
+	banBeatmap(beatmap: ModBracketMap, modBracket: ModBracket, multiplayerLobby: MultiplayerLobby) {
+		const dialogRef = this.dialog.open(BanBeatmapComponent, {
+			data: {
+				beatmap: beatmap,
+				modBracket: modBracket,
+				multiplayerLobby: multiplayerLobby
+			}
+		});
 
-			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamOneName, this.popupBannedMap, this.ircService.authenticatedUser).subscribe();
-		}
-		else if (team == 2) {
-			this.selectedLobby.teamTwoBans.push(this.popupBannedMap.beatmapId);
+		dialogRef.afterClosed().subscribe((result: BanBeatmapDialogData) => {
+			if(result != null) {
+				if(result.banForTeam == result.multiplayerLobby.teamOneName) {
+					this.selectedLobby.teamOneBans.push(result.beatmap.beatmapId);
+					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser).subscribe();
+				}
+				else {
+					this.selectedLobby.teamTwoBans.push(result.beatmap.beatmapId);
+					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser).subscribe();
+				}
 
-			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamTwoName, this.popupBannedMap, this.ircService.authenticatedUser).subscribe();
-		}
-
-		this.multiplayerLobbies.update(this.selectedLobby);
-
-		this.hideModal('ban-a-map');
+				this.multiplayerLobbies.update(this.selectedLobby);
+			}
+		});
 	}
 
 	/**
@@ -429,7 +432,7 @@ export class IrcComponent implements OnInit {
 	 * @param beatmap
 	 * @param bracket
 	 */
-	unbanBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
+	unbanBeatmap(beatmap: ModBracketMap) {
 		if (this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId) > -1) {
 			this.selectedLobby.teamOneBans.splice(this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId), 1);
 		}

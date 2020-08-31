@@ -1,0 +1,14 @@
+<div class="scroll">
+	<div class="row">
+		<div class="col">
+			<h3>Published mappools</h3>
+			<p>The mappools located here can be imported by anyone. Update or delete them here to directly push those updates to anyone.</p>
+		</div>
+	</div>
+
+	<hr />
+
+	<div *ngFor="let mappool of publishedMappools">
+		<app-mappool-summary *ngIf="mappool" [mappool]="mappool" [publish]="true"></app-mappool-summary>
+	</div>
+</div>

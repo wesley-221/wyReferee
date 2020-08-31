@@ -1,0 +1,72 @@
+@import "variables";
+
+$tiles-height: 110px;
+
+.main {
+	height: 100%;
+
+	.tiles {
+		display: flex;
+		flex-direction: row;
+
+		height: $tiles-height;
+
+		.tile {
+			display: flex;
+			flex-direction: column;
+
+			flex: 1;
+
+			background-color: $sidebar-color;
+			border: 1px solid black;
+
+			padding: 16px;
+			margin: 8px;
+
+			justify-items: center;
+			text-decoration: none;
+
+			align-items: center;
+
+			.icon {
+				margin-bottom: 8px;
+
+				.icon-2x {
+					transform: scale(2);
+				}
+			}
+
+			.header {
+				font-size: 24px;
+			}
+
+			&:hover {
+				cursor: pointer;
+				border: 1px solid $primary;
+
+				-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+				-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+				box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+			}
+
+			&.active {
+				border: 1px solid $primary;
+
+				.header {
+					color: $primary;
+				}
+			}
+
+			&:focus {
+				outline: 0;
+			}
+		}
+	}
+
+	.content {
+		height: calc(100% - #{$tiles-height});
+		overflow-y: auto;
+
+		padding-right: 16px;
+	}
+}

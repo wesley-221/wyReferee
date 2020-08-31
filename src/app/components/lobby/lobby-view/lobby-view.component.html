@@ -1,221 +1,152 @@
-<div class="matchHeader" [ngClass]="{'settings-active': settingsTabIsOpened}">
-    <div class="header-content">
-        <h2>{{ selectedLobby.description }}</h2>
-        <div class="row">
-            <div class="col-7">
-                Multiplayer link: <a [routerLink]="" (click)="electronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a><br />
+<div class="lobby">
+	<div class="match-header">
+		<div class="header">
+			<h2>{{ selectedLobby.getLobbyName() }}</h2>
 
-                <span id="scoreString"><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="{'teamWin': selectedLobby.teamOneScore > selectedLobby.teamTwoScore, 'teamLoss': selectedLobby.teamTwoScore > selectedLobby.teamOneScore}">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="{'teamWin': selectedLobby.teamTwoScore > selectedLobby.teamOneScore, 'teamLoss': selectedLobby.teamOneScore > selectedLobby.teamTwoScore}">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span></span>
-            </div>
+			<div class="information">
+				<div class="column">
+					Multiplayer link: <a [routerLink]="" (click)="electronService.openLink(selectedLobby.multiplayerLink)">{{ selectedLobby.multiplayerLink }}</a>
+				</div>
 
-            <div class="col-5">
-                <div class="btn-group float-right">
-                    <button class="btn btn-primary" (click)="goToIrc()"><fa-icon [icon]="['fas', 'comment']"></fa-icon> IRC</button>
-                    <button class="btn btn-primary" (click)="settingsTabIsOpened = !settingsTabIsOpened"><fa-icon [icon]="['fas', 'cogs']"></fa-icon> Settings</button>
-                    <button type="button" (click)="copyNextPick()" *ngIf="!selectedLobby.ircConnected" class="btn btn-info"><fa-icon [icon]="['far', 'envelope-open']"></fa-icon> Copy next pick</button>
-                    <button type="button" (click)="sendNextPick()" *ngIf="selectedLobby.ircConnected" class="btn btn-info" [disabled]="!ircService.isAuthenticated"><fa-icon [icon]="['far', 'envelope-open']"></fa-icon> Send next pick</button>
-                    <button type="button" (click)="synchronizeMp()" class="btn btn-success" title="Synchronize multiplayer data"><fa-icon [icon]="['fas', 'sync']"></fa-icon></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="settings-tab" [ngClass]="{'active': settingsTabIsOpened}">
-		<div class="row">
-			<div class="col">
-				<h5>First pick</h5>
-				<select class="form-control" (change)="change('firstPick', $event)" [value]="selectedLobby.firstPick">
-					<option></option>
-					<option [value]="selectedLobby.teamOneName">{{ selectedLobby.teamOneName }}</option>
-					<option [value]="selectedLobby.teamTwoName">{{ selectedLobby.teamTwoName }}</option>
-				</select>
-			</div>
-
-			<div class="col">
-				<h5>Best of</h5>
-				<select class="form-control" (change)="change('bestOf', $event)" [value]="selectedLobby.bestOf">
-					<option [value]="item" *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">{{ item }}</option>
-				</select>
+				<div class="column">
+					<span class="red-team">{{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="selectedLobby.teamOneScore > selectedLobby.teamTwoScore ? 'win' : 'lose'">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="selectedLobby.teamTwoScore > selectedLobby.teamOneScore ? 'win' : 'lose'">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-team">{{ selectedLobby.teamTwoName }}</span>
+				</div>
 			</div>
 		</div>
 
-        <div class="row">
-            <div class="col">
-                <h5>Webhook</h5>
-                <input type="text" class="form-control" placeholder="Webhook" (change)="changeWebhook($event)" [value]="selectedLobby.webhook" />
-            </div>
-        </div>
+		<div class="settings-warning" *ngIf="selectedLobby.bestOf == null || selectedLobby.firstPick == null">
+			<div class="alert alert-danger">
+				You haven't set the First pick and the Best of the match yet. Make sure to go to the settings and select them.
+			</div>
+		</div>
 
-        <hr />
+		<div class="buttons">
+			<div class="button-row">
+				<button mat-mini-fab color="basic" matTooltip="Connect to multiplayer lobby" [disabled]="!ircService.isAuthenticated" (click)="joinIrc()"><mat-icon>chat</mat-icon></button>
+				<!-- <button mat-mini-fab color="basic" matTooltip="Connect to multiplayer lobby"><mat-icon>?</mat-icon></button> -->
+				<button mat-mini-fab color="accent" matTooltip="Send final result to Discord webhook" (click)="sendFinalResult(selectedLobby)"><mat-icon>send</mat-icon></button>
+			</div>
 
-        <button type="button" (click)="joinIrc()" class="btn btn-info" title="Join irc channel" [disabled]="!ircService.isAuthenticated"><fa-icon [icon]="['fas', 'comment-dots']"></fa-icon> Join irc channel</button>
-        <button type="button" (click)="copyMatchResult()" *ngIf="!selectedLobby.ircConnected" class="btn btn-info" title="Copy match score"><fa-icon icon="copy"></fa-icon> Copy match score</button>
-        <button type="button" (click)="sendMatchResult()" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated" class="btn btn-info" title="Send match score to irc"><fa-icon icon="copy"></fa-icon> Send match score</button>
-        &nbsp;
-        <button type="button" (click)="toggleModal()" class="btn btn-info" *ngIf="selectedLobby.webhook">Send final result to Discord</button>
-    </div>
-</div>
+			<div class="button-row">
+				<button mat-mini-fab color="basic" matTooltip="Go to IRC" (click)="goToIrc()"><mat-icon>chat</mat-icon></button>
+				<button mat-mini-fab color="basic" matTooltip="Open the multiplayer lobby settings" (click)="openSettings(selectedLobby)"><mat-icon>settings</mat-icon></button>
+				<button mat-mini-fab color="accent" matTooltip="Synchronize the scores of this multiplayer lobby" (click)="synchronizeMp()"><mat-icon>sync</mat-icon></button>
+			</div>
+		</div>
+	</div>
 
-<div class="allMaps">
-    <div *ngFor="let match of selectedLobby.multiplayerData" class="multiMatch">
-        <div class="mapPicture" [ngStyle]="{ 'background-image': getThumbUrl(match.beatmap_id) }"></div>
+	<div class="all-maps">
+		<div class="map" *ngFor="let match of selectedLobby.multiplayerData">
+			<div class="img" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + getBeatmapCoverUrl(match.beatmap_id) + ')' }">
+				<div class="column">
+					<h2>{{ getBeatmapname(match.beatmap_id) }}</h2>
 
-        <div class="mapContent">
-            <div class="mapTitle mb-2">
-                <div class="row">
-                    <div class="col-10">
-                        <h4>{{ getBeatmapname(match.beatmap_id) }}</h4>
-                    </div>
+					<div class="modifier" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == true && selectedLobby.scoreInterfaceIndentifier == 'AxS'">
+						<div class="alert alert-danger center" *ngIf="getModifier(match.beatmap_id) == null"><mat-icon>warning</mat-icon> There was no modifier set for this map. Have you selected a mappool yet?</div>
+						<h6 *ngIf="getModifier(match.beatmap_id) != null">Beatmap modifier: {{ getModifier(match.beatmap_id) }}</h6>
+					</div>
 
-                    <div class="col-2">
-                        <button type="button" class="btn float-right" [ngClass]="{'btn-danger': selectedLobby.mapsCountTowardScore[match.game_id] == true, 'btn-success': selectedLobby.mapsCountTowardScore[match.game_id] == false}" (click)="markAsInvalid(match)">Mark as <span *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == true">in</span>valid</button>
-                    </div>
-                </div>
-            </div>
+					<div class="modifier" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == false">
+						<div class="alert alert-warning center"><mat-icon>warning</mat-icon> This map does not count towards the team score (could be a warmup map/invalid score)</div>
+					</div>
 
-            <div class="mapModifier" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == true">
-                <div class="alert alert-danger" *ngIf="getModifier(match.beatmap_id) == null"><fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon> There was no modifier set for this map. Have you selected a mappool yet?</div>
-                <h6 *ngIf="getModifier(match.beatmap_id) != null">Beatmap modifier: {{ getModifier(match.beatmap_id) }}</h6>
-            </div>
+					<div class="team-scores">
+						<h4>Team {{ selectedLobby.teamOneName }}</h4>
 
-            <div class="mapModifier" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == false">
-                <div class="alert alert-warning"><fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon> This map does not count towards the team score (could be a warmup map/invalid score)</div>
-            </div>
+						<div class="score-table">
+							<div class="score" *ngFor="let slot of selectedLobby.teamOneSlotArray">
+								<div class="column">
+									<b>{{ getUsernameFromUserId(match.getPlayer(slot).user) }}</b>
+								</div>
 
-            <hr />
+								<div class="column">
+									<s class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
+										{{ getScore(match, slot) }}
+									</s>
 
-            <div class="mapScore">
-                <h5>Team {{ selectedLobby.teamOneName }}</h5>
-                <table>
-                    <tr *ngFor="let slot of selectedLobby.teamOneSlotArray">
-                        <td><b>{{ getUsernameFromUserId(match.getPlayer(slot).user) }}</b></td>
-                        <td>&emsp;</td>
-                        <td>
-							<s *ngIf="match.getPlayer(slot).passed == 0">
-								{{ getScore(match, slot) }}
-							</s>
+									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
+										{{ getScore(match, slot) }}
+									</div>
 
-							<div *ngIf="match.getPlayer(slot).passed == 1">
-								{{ getScore(match, slot) }}
+									<s class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
+										({{ getAccuracy(match, slot) }}%)
+									</s>
+
+									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
+										({{ getAccuracy(match, slot) }}%)
+									</div>
+								</div>
 							</div>
-						</td>
-                        <td>&emsp;</td>
-                        <td>
-							<s *ngIf="match.getPlayer(slot).passed == 0">
-								({{ getAccuracy(match, slot) }}%)
-							</s>
 
-							<div *ngIf="match.getPlayer(slot).passed == 1">
-								({{ getAccuracy(match, slot) }}%)
+							<div class="score">
+								<div class="column">
+									<b>Team score</b>
+								</div>
+
+								<div class="column">
+									{{ addDot(match.team_one_score, " ") }}
+								</div>
 							</div>
-						</td>
-                        <td>&emsp;</td>
-                        <td *ngIf="match.getPlayer(slot).caption && match.getPlayer(slot).caption.length > 0">({{ match.getPlayer(slot).caption }})</td>
-                    </tr>
-                </table>
+						</div>
 
-                <hr />
+						<hr />
 
-                <h5>Team {{ selectedLobby.teamTwoName }}</h5>
-                <table>
-                    <tr *ngFor="let slot of selectedLobby.teamTwoSlotArray">
-                        <td><b>{{ getUsernameFromUserId(match.getPlayer(slot).user) }}</b></td>
-                        <td>&emsp;</td>
-                        <td>{{ getScore(match, slot) }}</td>
-                        <td>&emsp;</td>
-                        <td>({{ getAccuracy(match, slot) }}%)</td>
-                        <td>&emsp;</td>
-                        <td *ngIf="match.getPlayer(slot).caption && match.getPlayer(slot).caption.length > 0">({{ match.getPlayer(slot).caption }})</td>
-                    </tr>
-                </table>
+						<h4>Team {{ selectedLobby.teamTwoName }}</h4>
 
-                <hr />
+						<div class="score-table">
+							<div class="score" *ngFor="let slot of selectedLobby.teamTwoSlotArray">
+								<div class="column">
+									<b>{{ getUsernameFromUserId(match.getPlayer(slot).user) }}</b>
+								</div>
 
-                <div class="red-text">Team {{ selectedLobby.teamOneName }} score: {{ addDot(match.team_one_score, " ") }}</div>
-                <div class="blue-text">Team {{ selectedLobby.teamTwoName }} score: {{ addDot(match.team_two_score, " ") }}</div>
+								<div class="column">
+									<s class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
+										{{ getScore(match, slot) }}
+									</s>
 
-                <br />
+									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
+										{{ getScore(match, slot) }}
+									</div>
 
-                <div *ngIf="match.team_one_score > match.team_two_score">
-                    <h3><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> has won.</h3><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score: {{ addDot(match.team_one_score, " ")}} | <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span> score: {{ addDot(match.team_two_score, " ") }} | Score difference: {{ addDot(match.team_one_score - match.team_two_score, " ") }}
-                </div>
+									<s class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
+										({{ getAccuracy(match, slot) }}%)
+									</s>
 
-                <div *ngIf="match.team_two_score > match.team_one_score">
-                    <h3><span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span> has won.</h3><span class="red-text">Team {{ selectedLobby.teamOneName }}</span> score: {{ addDot(match.team_one_score, " ")}} | <span class="blue-text">Team {{ selectedLobby.teamTwoName }}</span> score: {{ addDot(match.team_two_score, " ") }} | Score difference: {{ addDot(match.team_two_score - match.team_one_score, " ") }}
-                </div>
-            </div>
-        </div>
+									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
+										({{ getAccuracy(match, slot) }}%)
+									</div>
+								</div>
+							</div>
 
-        <div class="mapButtons">
-            <button type="button" class="btn btn-primary" (click)="sendBeatmapResult(match)" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated">Send result</button>
-            <button type="button" class="btn btn-primary" (click)="copyBeatmapResult(match)" *ngIf="!selectedLobby.ircConnected">Copy result</button>
-        </div>
-    </div>
-</div>
+							<div class="score">
+								<div class="column">
+									<b>Team score</b>
+								</div>
 
-<div class="modal fade" id="send-final-result" tabindex="-1" role="dialog">
-	<div class="modal-dialog shadow" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h3 class="modal-title">Send final result</h3>
-				</div>
+								<div class="column">
+									{{ addDot(match.team_two_score, " ") }}
+								</div>
+							</div>
+						</div>
 
-				<div class="modal-body">
-				<p>Select the outcome of the match.</p>
+						<hr />
 
-				<ul>
-					<li>"Win by default" is for when one of both teams/players didn't show up.</li>
-					<li>"Normal result" is for when the match finished as it's supposed to be.</li>
-				</ul>
+						<div *ngIf="match.team_one_score > match.team_two_score">
+							<h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> | Score difference: {{ addDot(match.team_one_score - match.team_two_score, " ") }}
+						</div>
 
-
-				<div class="row">
-					<div class="col">
-						<button class="btn btn-success" style="width: 100%;" (click)="toggleWBD()">Win by default</button>
-					</div>
-
-					<div class="col">
-						<button class="btn btn-success" style="width: 100%;" (click)="toggleNormalResult()">Normal result</button>
+						<div *ngIf="match.team_two_score > match.team_one_score">
+							<h3><span class="blue-text">{{ selectedLobby.teamTwoName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> {{ addDot(match.team_two_score, " ") }} | Score difference: {{ addDot(match.team_two_score - match.team_one_score, " ") }}
+						</div>
 					</div>
 				</div>
 
-				<div *ngIf="wbdSelected == true">
-					<hr />
+				<div class="column buttons">
+					<button mat-mini-fab color="accent" matTooltip="Mark as invalid" (click)="markAsInvalid(match)" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == true"><mat-icon>thumb_up</mat-icon></button>
+					<button mat-mini-fab color="warn" matTooltip="Mark as valid" (click)="markAsInvalid(match)" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == false"><mat-icon>thumb_down</mat-icon></button>
 
-					<p>Select which team/player has "won" the match. Use "No-one" if both teams/players didn't show up.</p>
-					<div class="row">
-						<div class="col">
-							<button class="btn btn-primary" style="width: 100%;" (click)="selectWBDTeam('No-one', 'Everyone :(')" [ngClass]="{'active': wbdWinningTeam == 'No-one'}">No-one</button>
-						</div>
-
-						<div class="col">
-							<button class="btn btn-primary" style="width: 100%;" (click)="selectWBDTeam(selectedLobby.teamOneName, selectedLobby.teamTwoName)" [ngClass]="{'active': wbdWinningTeam == selectedLobby.teamOneName}">{{ selectedLobby.teamOneName }}</button>
-						</div>
-
-						<div class="col">
-							<button class="btn btn-primary" style="width: 100%;" (click)="selectWBDTeam(selectedLobby.teamTwoName, selectedLobby.teamOneName)" [ngClass]="{'active': wbdWinningTeam == selectedLobby.teamTwoName}">{{ selectedLobby.teamTwoName }}</button>
-						</div>
-					</div>
-
-					<hr />
-
-					<p>Add an extra message to the final result. This field is optional</p>
-					<input id="extra-message" type="text" class="form-control mb-2" placeholder="Extra message" [(ngModel)]="extraMessage" />
-
-					<hr />
-
-					<button class="btn btn-success" style="width: 100%;" (click)="sendWinByDefaultResult()">Send win by default message</button>
-				</div>
-
-				<div *ngIf="normalResultSelected == true">
-					<hr />
-
-					<p>Add an extra message to the final result. This field is optional</p>
-					<input id="extra-message" type="text" class="form-control mb-2" placeholder="Extra message" [(ngModel)]="extraMessage" />
-
-					<hr />
-
-					<button class="btn btn-success" style="width: 100%;" (click)="sendFinalResult()">Send normal result message</button>
+					<button mat-mini-fab color="primary" matTooltip="Send beatmap result to multiplayer lobby" (click)="sendBeatmapResult(match)" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated"><mat-icon>send</mat-icon></button>
+					<button mat-mini-fab color="primary" matTooltip="Copy beatmap result" (click)="copyBeatmapResult(match)" *ngIf="!selectedLobby.ircConnected"><mat-icon>content_copy</mat-icon></button>
 				</div>
 			</div>
 		</div>

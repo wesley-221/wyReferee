@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Settings {{ data.multiplayerLobby.getLobbyName() }}</h2>
+
+<mat-dialog-content class="mat-typography">
+	<h3>First pick</h3>
+	<mat-form-field class="full-width">
+		<mat-label>First pick</mat-label>
+		<mat-select (selectionChange)="change('firstPick', $event)" [value]="data.multiplayerLobby.firstPick">
+			<mat-option [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-option>
+			<mat-option [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<p>The team or player that picks first</p>
+	<hr />
+
+	<h3>Best of</h3>
+	<mat-form-field class="full-width">
+		<mat-label>Best of</mat-label>
+		<mat-select (selectionChange)="change('bestOf', $event)" [value]="data.multiplayerLobby.bestOf">
+			<mat-option [value]="item" *ngFor="let item of [3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25]">{{ item }}</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<p>The "Best of" of the match</p>
+	<hr />
+
+	<h3>Webhook</h3>
+	<mat-form-field class="full-width">
+		<mat-label>Webhook</mat-label>
+		<input matInput [(ngModel)]="data.multiplayerLobby.webhook" />
+	</mat-form-field>
+	<p>The match feed will be send to this webhook</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="data.multiplayerLobby" cdkFocusInitial color="accent">Update settings</button>
+</mat-dialog-actions>

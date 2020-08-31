@@ -18,20 +18,20 @@ export class MappoolService {
 	creationMappool: Mappool;
 
 	allMappools: Mappool[] = [];
-	availableMappoolId: number = 0;
+	availableMappoolId = 0;
 
-	mappoolLoaded$: BehaviorSubject<Boolean>;
+	mappoolLoaded$: BehaviorSubject<boolean>;
 
 	constructor(private storeService: StoreService, private httpClient: HttpClient) {
-		this.mappoolLoaded$ = new BehaviorSubject<Boolean>(false);
+		this.mappoolLoaded$ = new BehaviorSubject<boolean>(false);
 		this.creationMappool = new Mappool();
 
 		const storeAllMappools = storeService.get('cache.mappool');
 
 		// Loop through all the mappools
-		for (let mappool in storeAllMappools) {
-			const thisMappool = storeAllMappools[mappool],
-				newMappool = Mappool.serializeJson(thisMappool);
+		for (const mappool in storeAllMappools) {
+			const thisMappool = storeAllMappools[mappool];
+			const newMappool = Mappool.serializeJson(thisMappool);
 
 			this.availableMappoolId = newMappool.id + 1;
 
@@ -42,7 +42,7 @@ export class MappoolService {
 					newMappool.updateAvailable = !newMappool.comapreTo(updatedMappool);
 
 					this.allMappools.push(newMappool);
-				}, (err) => {
+				}, () => {
 					this.allMappools.push(newMappool);
 				});
 			}
@@ -59,7 +59,7 @@ export class MappoolService {
 	public getMappool(mappoolId: number): Mappool {
 		let returnMappool: Mappool = null;
 
-		for (let i in this.allMappools) {
+		for (const i in this.allMappools) {
 			if (this.allMappools[i].id == mappoolId) {
 				returnMappool = this.allMappools[i];
 				break;
@@ -83,7 +83,7 @@ export class MappoolService {
 	 * @param mappool the mappool to update
 	 */
 	public updateMappool(mappool: Mappool): void {
-		for (let i in this.allMappools) {
+		for (const i in this.allMappools) {
 			if (this.allMappools[i].id == mappool.id) {
 				this.allMappools[i] = mappool;
 
@@ -98,7 +98,7 @@ export class MappoolService {
 	 * @param mappool the mappool to update
 	 */
 	public updatePublishedMappool(mappool: Mappool) {
-		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool`, mappool, { observe: "response" });
+		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool`, mappool, { observe: 'response' });
 	}
 
 	/**
@@ -107,7 +107,7 @@ export class MappoolService {
 	 * @param updatedMappool the mappool with the new values
 	 */
 	public replaceMappool(originalMappool: Mappool, updatedMappool: Mappool) {
-		for (let i in this.allMappools) {
+		for (const i in this.allMappools) {
 			if (this.allMappools[i].id == originalMappool.id) {
 				updatedMappool.id = originalMappool.id;
 				this.allMappools[i] = updatedMappool;
@@ -132,7 +132,7 @@ export class MappoolService {
 	 * @param mappool the mappool to publish
 	 */
 	public publishMappool(mappool: Mappool): Observable<any> {
-		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool`, mappool, { observe: "response" });
+		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool`, mappool, { observe: 'response' });
 	}
 
 	/**
@@ -164,7 +164,7 @@ export class MappoolService {
 	 * @param mappool the mappool to get the mystery map from
 	 * @param modBracket the modbracket to get the mystery map from
 	 */
-	public pickMysteryMap(mappool: Mappool, modBracket: ModBracket, lobby: MultiplayerLobby, refereeName: String) {
+	public pickMysteryMap(mappool: Mappool, modBracket: ModBracket, lobby: MultiplayerLobby, refereeName: string) {
 		const mysteryMappoolHelper = new MysteryMappoolHelper(mappool.publishId, modBracket.id, lobby, refereeName, lobby.pickedCategories);
 		return this.httpClient.post<MysteryMappoolHelper>(`${this.apiUrl}mappool/mystery/get`, mysteryMappoolHelper);
 	}

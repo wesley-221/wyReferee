@@ -1,154 +1,171 @@
-$border-color: #3C4452;
-$background-color: #4C5769;
-$primary: #fb9678;
-$info: #4C63C7;
-$send-message-height: 38px;
+@import "variables";
+
+$background-color-irc: #282828;
+$bancho-chat-colour: #df96c0;
+$me-chat-colour: #ffffff;
+
+$hyperlink-background-color: #2b4576;
 
 .irc {
 	display: flex;
 	flex-direction: row;
 
-    height: calc(100% - 32px);
+	height: calc(100% - 8px);
 
-    margin-top: 16px;
-    margin-bottom: 16px;
+	background-color: $background-color-irc;
 
-    background-color: $background-color;
-    border: 1px solid darken($border-color, 15%);
+	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
 
-    .channels {
-        float: left;
+	.channels {
+		display: flex;
+		flex-direction: column;
+		flex: 1 0 21%;
 
-        width: 20%;
-        height: 100%;
+		background-color: darken($background-color-irc, 5%);
 
-        background-color: darken($background-color, 5%);
+		.header {
+			.btn {
+				width: 100%;
+			}
 
-        .header {
-            height: $send-message-height;
+			.connect-area {
+				display: flex;
+				flex-direction: row;
 
-            .btn {
-                width: 100%;
-            }
-        }
+				align-items: center;
 
-        .all-channels {
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
+				padding: 8px;
 
-            .channel {
-                user-select: none;
+				background-color: $info;
 
-                width: 100%;
-                height: 40px;
+				* {
+					margin-right: 4px;
+				}
+			}
+		}
 
-                border-left: 3px solid transparent;
+		.all-channels {
+			.channel {
+				display: flex;
+				flex-direction: row;
 
-                &:hover, &.cdk-drag-preview {
-                    .channel-name {
-                        width: calc(100% - 80px);
-                    }
+				user-select: none;
 
-                    .side-button {
-                        width: 80px;
+				width: 100%;
+				height: 40px;
 
-                        display: inline-block;
-                    }
-                }
+				border-left: 3px solid transparent;
 
-                .channel-name {
-                    float: left;
-                    width: 100%;
+				.channel-name {
+					display: flex;
+					align-items: center;
 
-                    padding: 8px;
-                }
+					padding: 8px;
+				}
 
-                .side-button {
-                    display: none;
+				.side-button {
+					display: none;
 
-                    float: right;
-                    text-align: center;
+					align-items: center;
 
-                    width: 80px;
-                    height: 40px;
-                    line-height: 40px;
+					width: 80px;
+					height: 40px;
+					line-height: 40px;
 
-                    .button {
-                        float: left;
-                        width: 40px;
-                        height: 40px;
-                        line-height: 40px;
+					.button {
+						display: flex;
 
-                        &:hover {
-                            cursor: pointer;
-                        }
+						justify-content: center;
+						align-items: center;
 
-                        &.blue {
-                            background-color: #4C63C7;
-                        }
+						width: 40px;
+						height: 40px;
+						line-height: 40px;
 
-                        &.red {
-                            background-color: red;
+						&:hover {
+							cursor: pointer;
+						}
 
-                            &:hover {
-                                background-color: darken(red, 5%);
-                            }
-                        }
+						&.blue {
+							background-color: #4c63c7;
+						}
 
-                        &.muted {
-                            background-color: red;
+						&.red {
+							background-color: $danger;
 
-                            &:hover {
-                                background-color: darken(red, 5%);
-                            }
-                        }
+							&:hover {
+								background-color: darken($danger, 5%);
+							}
+						}
 
-                        &.not-muted {
-                            background-color: green;
+						&.muted {
+							background-color: $danger;
 
-                            &:hover {
-                                background-color: darken(green, 5%);
-                            }
-                        }
-                    }
-                }
+							&:hover {
+								background-color: darken($danger, 5%);
+							}
+						}
 
-                &.inactive {
-                    border-left: 3px solid transparent;
+						&.not-muted {
+							background-color: $success;
 
-                    color: white;
-                    background-color: rgba(255, 0, 0, 0.3);
+							&:hover {
+								background-color: darken($success, 5%);
+							}
+						}
+					}
+				}
 
-                    &.active {
-                        border-left: 3px solid $primary;
-                    }
-                }
+				&:hover,
+				&.cdk-drag-preview {
+					.channel-name {
+						width: calc(100% - 80px);
+					}
 
-                &.active {
-                    color: $primary;
-                    font-weight: bold;
+					.side-button {
+						display: flex;
 
-                    border-left: 3px solid $primary;
-                }
+						width: 80px;
+					}
+				}
 
-                &:hover {
-                    cursor: pointer;
+				&.inactive {
+					border-left: 3px solid transparent;
 
-                    border-left: 3px solid $primary;
-                    color: $primary;
+					color: white;
+					background-color: rgba(255, 0, 0, 0.3);
 
-                    .side-button {
-                        color: white;
-                    }
-                }
+					&.active {
+						border-left: 3px solid $primary;
+					}
+				}
 
-                &.unread {
-                    background-color: $info;
-                    color: white;
-                }
-            }
-        }
+				&.active {
+					color: $primary;
+					font-weight: bold;
+
+					border-left: 3px solid $primary;
+				}
+
+				&:hover {
+					cursor: pointer;
+
+					border-left: 3px solid $primary;
+					color: $primary;
+
+					.side-button {
+						color: white;
+					}
+				}
+
+				&.unread {
+					background-color: $info;
+					color: white;
+				}
+			}
+		}
 	}
 
 	.chat-container {
@@ -159,13 +176,18 @@ $send-message-height: 38px;
 		.match-header {
 			border-bottom: 3px solid $primary;
 			text-align: center;
+
+			.warning {
+				background-color: $danger;
+			}
 		}
 
 		.messages {
 			float: left;
 
 			width: 100%;
-			height: calc(100% - #{$send-message-height});
+			// height: calc(100% - #{$send-message-height});
+			height: 100%;
 
 			overflow-y: auto;
 
@@ -186,7 +208,7 @@ $send-message-height: 38px;
 						border-bottom: 3px solid $primary;
 
 						span {
-							background-color: $background-color;
+							background-color: $background-color-irc;
 							color: $primary;
 
 							font-weight: bold;
@@ -222,10 +244,10 @@ $send-message-height: 38px;
 						border-radius: 50px;
 
 						&.bancho {
-							background-color: #df96c0;
+							background-color: $bancho-chat-colour;
 
 							&:hover {
-								background-color: darken(#df96c0, 15%);
+								background-color: darken($bancho-chat-colour, 15%);
 							}
 						}
 
@@ -238,11 +260,11 @@ $send-message-height: 38px;
 						}
 
 						&.me {
-							background-color: #ffffff;
+							background-color: $me-chat-colour;
 							color: #000000;
 
 							&:hover {
-								background-color: darken(#ffffff, 15%);
+								background-color: darken($me-chat-colour, 15%);
 							}
 						}
 
@@ -265,7 +287,7 @@ $send-message-height: 38px;
 
 							.link {
 								.url {
-									background-color: #2b4576;
+									background-color: $hyperlink-background-color;
 									padding: 5px;
 								}
 
@@ -273,7 +295,7 @@ $send-message-height: 38px;
 									cursor: pointer;
 
 									.url {
-										background-color: #acd6eb;
+										background-color: lighten($hyperlink-background-color, 15%);
 									}
 								}
 							}
@@ -283,64 +305,86 @@ $send-message-height: 38px;
 
 				&:nth-child(odd) {
 					.message {
-						background-color: darken($background-color, 5%);
+						background-color: darken($background-color-irc, 5%);
 					}
 				}
 			}
 		}
 
 		.send-message {
-			height: $send-message-height;
+			// height: $send-message-height;
+
+			input {
+				width: 100%;
+				height: 100%;
+
+				box-sizing: border-box;
+
+				padding: 12px 20px;
+
+				font-size: 16px;
+
+				background-color: $background-color;
+				color: white;
+
+				border: 1px solid darken($background-color, 15%);
+				outline: 0;
+			}
 		}
 
 		.side-menu {
+			display: flex;
+			flex-direction: row;
+
 			position: absolute;
+			float: right;
 
 			width: 40px;
+			height: 88px;
 
-			right: 17px;
-			top: 17px;
-			bottom: 56px;
-
-			transition: width 0.4s ease;
+			right: 0;
+			top: 0;
+			bottom: 0;
 
 			.side-menu-button {
-				float: left;
-
 				width: 40px;
+				height: 88px;
 
-				z-index: 55;
+				margin-top: 8px;
+
+				z-index: 70;
 
 				button {
 					float: right;
 
 					width: 40px;
 					height: 40px;
+
+					margin-bottom: 4px;
 				}
 			}
 
 			.side-menu-content {
+				display: flex;
+				flex-direction: column;
+
 				float: right;
 
-				width: calc(100% - 40px);
+				width: 0;
 				height: 100%;
 
 				opacity: 0;
 
-				background-color: darken($background-color, 5%);
-				box-shadow: -1px 0px 7px 0px rgba(0,0,0,0.75);
+				background-color: darken($background-color-irc, 5%);
+				box-shadow: -1px 0px 7px 0px rgba(0, 0, 0, 0.75);
 
 				overflow: hidden;
 
-				transition: opacity 0.4s ease;
-
 				.header {
-					height: 290px;
 					padding: 16px;
 				}
 
 				.mappool {
-					height: calc(100% - 290px);
 					padding-left: 16px;
 
 					overflow-y: auto;
@@ -359,18 +403,17 @@ $send-message-height: 38px;
 						}
 
 						.map {
-							width: 100%;
-							background-color: $background-color;
+							display: flex;
+							flex-direction: row;
+							justify-content: space-between;
+
+							background-color: $background-color-irc;
 
 							overflow: hidden;
 
 							padding: 4px;
 
 							.name {
-								float: left;
-
-								width: calc(100% - 141px);
-
 								overflow: hidden;
 								word-wrap: none;
 
@@ -392,22 +435,17 @@ $send-message-height: 38px;
 							}
 
 							.buttons {
-								float: right;
-								width: 141px;
+								display: flex;
+								flex-direction: row;
 
-								.beatmap-ban {
-									display: inline-block;
-									width: 81px;
-								}
-
-								.beatmap-pick {
-									display: inline-block;
-									width: 60px;
+								button {
+									box-sizing: border-box;
+									margin-right: 4px;
 								}
 							}
 
 							&:nth-child(even) {
-								background-color: lighten($background-color, 5%);
+								background-color: lighten($background-color-irc, 5%);
 							}
 						}
 					}
@@ -416,8 +454,15 @@ $send-message-height: 38px;
 
 			&.in {
 				width: 30%;
+				height: 100%;
+
+				.side-menu-button {
+					position: absolute;
+					margin-left: -30px;
+				}
 
 				.side-menu-content {
+					width: 100%;
 					opacity: 1;
 				}
 			}
@@ -433,38 +478,37 @@ $send-message-height: 38px;
 }
 
 .cdk-drag-preview {
-    color: $primary;
-    background-color: darken($background-color, 5%);
-    cursor: pointer;
+	color: $primary;
+	background-color: darken($background-color-irc, 5%);
+	cursor: pointer;
 
-    padding-left: 11px;
-    padding-top: 8px;
-    border-top: 3px solid $primary;
+	padding-left: 11px;
+	padding-top: 8px;
+	border-top: 3px solid $primary;
 
-    box-sizing: border-box;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+	box-sizing: border-box;
+	box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+		0 3px 14px 2px rgba(0, 0, 0, 0.12);
 
-    .delete-button {
-        display: none;
-    }
+	.delete-button {
+		display: none;
+	}
 
-    .side-button {
-        display: none;
-    }
+	.side-button {
+		display: none;
+	}
 }
 
 .cdk-drag-placeholder {
-    opacity: 0;
+	opacity: 0;
 }
 
 .cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+	transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .cdk-drop-list-dragging {
-    .cdk-drag {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-    }
+	.cdk-drag {
+		transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+	}
 }

@@ -1,0 +1,46 @@
+<div class="tournament" (click)="editTournament(tournament, $event)">
+	<div class="row" *ngIf="tournament.updateAvailable">
+		<div class="col">
+			<div class="alert alert-info">
+				Looks like this tournament isn't up to date. Click on the update button to get the latest version.
+			</div>
+		</div>
+	</div>
+
+	<div class="header">
+		<div class="information">
+			<h1>{{ tournament.tournamentName }}</h1>
+			<span><b>Tournament id:</b> {{ tournament.id }}</span>
+		</div>
+
+		<div class="buttons">
+			<button mat-mini-fab color="accent" matTooltip="Click to update this tournament with the latest version" [matTooltipPosition]="'above'" (click)="updateTournament(tournament)" *ngIf="tournament.updateAvailable"><mat-icon>update</mat-icon></button>
+			<button mat-mini-fab color="primary" matTooltip="Publish this tournament" [matTooltipPosition]="'above'" (click)="publishTournament(tournament)" *ngIf="canPublish() && publish != true"><mat-icon>cloud_upload</mat-icon></button>
+			<button mat-mini-fab color="warn" matTooltip="Delete this tournament" [matTooltipPosition]="'above'" (click)="deleteTournament(tournament)"><mat-icon>delete</mat-icon></button>
+		</div>
+	</div>
+
+	<hr />
+
+	<div *ngIf="!tournament.isSoloTournament()">
+		<h4>Teams</h4>
+
+		<div class="tournament-teams">
+			<div class="team" *ngFor="let team of tournament.getTeams()">
+				<h5>{{ team.teamName }}</h5>
+
+				{{ team.getPlayers().length }} player<span *ngIf="team.getPlayers().length > 1">s</span>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="tournament.isSoloTournament()">
+		<h4>Players</h4>
+
+		<div class="tournament-players">
+			<div class="player" *ngFor="let team of tournament.getTeams()">
+				<h5>{{ team.teamName }}</h5>
+			</div>
+		</div>
+	</div>
+</div>

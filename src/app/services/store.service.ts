@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from './electron.service';
 
 @Injectable({
-  	providedIn: 'root'
+	providedIn: 'root'
 })
 
 export class StoreService {
 	storage: any;
-	
-	constructor(private electronService: ElectronService) { 
-		if(electronService.isElectron) {
+
+	constructor(private electronService: ElectronService) {
+		if (electronService.isElectron) {
 			const Store = window.require('electron-store');
 			this.storage = new Store();
 		}
 	}
-	
+
 	/**
 	 * Get data out of the storage with the given key
 	 * @param key the key you want to get

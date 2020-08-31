@@ -20,7 +20,8 @@
 							"src/assets"
 						],
 						"styles": [
-							"src/styles.scss"
+							"src/styles.scss",
+							"src/assets/styles/bootstrap/scss/bootstrap-grid.scss"
 						],
 						"scripts": [
 							"src/assets/js/electron-js.js",
@@ -30,7 +31,7 @@
 						],
 						"stylePreprocessorOptions": {
 							"includePaths": [
-								"src/app/styles"
+								"src/assets/styles"
 							]
 						}
 					},
@@ -119,13 +120,15 @@
 							"src/assets/js/bootstrap.min.js"
 						],
 						"styles": [
-							"src/styles.scss"
+							"src/styles.scss",
+							"src/assets/styles/bootstrap/scss/bootstrap-grid.scss"
 						]
 					}
 				},
 				"lint": {
-					"builder": "@angular-devkit/build-angular:tslint",
+					"builder": "@angular-eslint/builder:lint",
 					"options": {
+						"eslintConfig": "src/eslintrc.config.json",
 						"tsConfig": [
 							"src/tsconfig.app.json",
 							"src/tsconfig.spec.json"
@@ -142,8 +145,9 @@
 			"projectType": "application",
 			"architect": {
 				"lint": {
-					"builder": "@angular-devkit/build-angular:tslint",
+					"builder": "@angular-eslint/builder:lint",
 					"options": {
+						"eslintConfig": "e2e/eslintrc.e2e.json",
 						"tsConfig": [
 							"e2e/tsconfig.e2e.json"
 						],

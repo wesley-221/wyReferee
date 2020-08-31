@@ -5,14 +5,51 @@
 	just a single click on a button.
 </p>
 
+<h1>How to use the client</h1>
+<p>
+	Visit <a routerLink="" (click)="electronService.openLink('https://github.com/wesley-221/wyReferee/wiki')">Github</a>
+	for a detailed guide on how to use this client. Know your way around already, but forgot how to set it all up again?
+	Simply follow the steps listed below and you're good to go!
+</p>
+
+<hr />
+
+<h1>Help! I found a bug/I want to request a new feature</h1>
+<p>
+	Head on over to <a routerLink=""
+		(click)="electronService.openLink('https://github.com/wesley-221/wyReferee/issues')">Github</a> and create an
+	issue.
+</p>
+
+<hr />
+
 <h1>Getting started</h1>
 <p>
-	In order to get started, you have to set up a couple of things. First off we are set the API key for osu!. This can
-	be done This can be done <a [routerLink]="['/settings']">here</a>, or by clicking on cogwheels (<fa-icon
-		[icon]="['fas', 'cogs']"></fa-icon>) on the left. <br />
-	After you have set your API key, we are gonna set up the IRC connection. This is so that the results will be posted
-	to the multiplayer lobby. This can be done <a [routerLink]="['/login']">here</a>, or by clicking on <fa-icon
-		[icon]="['fas', 'sign-in-alt']"></fa-icon> on the left. <br /><br />
-	After these two steps, you are pretty much ready to go. Go to "Create a lobby" in the left sidebar to create a lobby
-	and "Lobby overview" to view all the created lobbies.
+	Head on over to <a [routerLink]="['settings']">Settings</a> where all the general settings are located.
+</p>
+
+<h2>wyBin tournament host</h2>
+<p>
+	This is the login that allows you to publish a tournament and mappool. When a tournament or mappool has been
+	published, other people are able to import these to their own client.
+</p>
+
+<p>
+	Even if you have an account doesn't mean you will be able to publish your tournaments or mappools. To request access
+	for publishing tournaments or mappools you have to send a request to Wesley#2772 on Discord (somewhat manual process
+	right now, will try to improve this in the future).
+</p>
+
+<h2>osu! irc</h2>
+<p>
+	Probably the single most important feature of this client. The irc connection is used to create multiplayer lobbies,
+	as well as communicate in those multiplayer lobbies. Get your irc credentials by clicking on the link just below the
+	Connect button.
+</p>
+
+<h2>osu!api key</h2>
+<p>
+	This client requires you to set your api key to get various data from the osu server. In order for the client to
+	show everything properly, we have to get data from the osu! servers. This way we will be able to get all multiplayer
+	match data and beatmap data.
 </p>

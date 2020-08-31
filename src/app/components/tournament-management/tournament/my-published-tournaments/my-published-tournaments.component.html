@@ -1,0 +1,12 @@
+<div class="scroll">
+	<div class="row">
+		<div class="col">
+			<h3>Published tournaments</h3>
+			<p>The tournaments located here can be imported by anyone. Update or delete them here to directly push those updates to anyone.</p>
+		</div>
+	</div>
+
+	<hr />
+
+	<app-tournament-summary [tournament]="tournament" [publish]="true" *ngFor="let tournament of publishedTournaments" (deleteTournament)="onTournamentDelete()"></app-tournament-summary>
+</div>

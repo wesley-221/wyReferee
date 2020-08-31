@@ -1,0 +1,17 @@
+<div class="scroll">
+	<app-tournament [tournament]="tournamentCreate" [validationForm]="validationForm"></app-tournament>
+
+	<div *ngIf="tournamentCreate.teams.length <= 0">
+		<div class="alert alert-warning">
+			<span *ngIf="!tournamentCreate.isSoloTournament()"><b>Note:</b> You haven't created any teams yet. Make sure to create a team in order for teams to show up.</span>
+			<span *ngIf="tournamentCreate.isSoloTournament()"><b>Note:</b> You haven't created any players yet. Make sure to create a player in order for players to show up.</span>
+		</div>
+		<hr />
+	</div>
+
+	<h3>Saving the tournament</h3>
+	<p *ngIf="!tournamentCreate.isSoloTournament()">Now that you have created at least one team in the tournament, you have to save it so it can be used. Press the create button to finalize the tournament.</p>
+	<p *ngIf="tournamentCreate.isSoloTournament()">Now that you have created at least one player in the tournament, you have to save it so it can be used. Press the create button to finalize the tournament.</p>
+
+	<button mat-raised-button color="primary" (click)="createTournament()">Create</button>
+</div>

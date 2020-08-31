@@ -1,12 +1,13 @@
-import { ModBracketMap } from "./mod-bracket-map";
-import { OsuHelper } from "../osu-models/osu";
+import { ModBracketMap } from './mod-bracket-map';
+import { OsuHelper } from '../osu-models/osu';
 
 export class ModBracket {
 	id: number;
 	bracketName: string;
 	mods: any[] = [];
 	beatmaps: ModBracketMap[] = [];
-	collapsed: boolean = false; // Used for showing/hiding the body when creating a bracket
+	collapsed = false; // Used for showing/hiding the body when creating a bracket
+	validateIndex: number = 0;
 
 	getBeatmaps() {
 		return this.beatmaps;
@@ -32,15 +33,15 @@ export class ModBracket {
 	 * Get a list with the mods from the bracket
 	 */
 	public getFullMods(): string[] {
-		let modBit = 0,
-			freemodEnabled = false,
-			mods = [];
+		let modBit = 0;
+		let freemodEnabled = false;
+		let mods = [];
 
-		for (let mod in this.mods) {
+		for (const mod in this.mods) {
 			if (!isNaN(this.mods[mod].modValue)) {
 				modBit += Number(this.mods[mod].modValue);
 			}
-			else if (this.mods[mod].modValue == "freemod") {
+			else if (this.mods[mod].modValue == 'freemod') {
 				freemodEnabled = true;
 			}
 		}
@@ -49,7 +50,7 @@ export class ModBracket {
 
 		// Check if freemod is enabled
 		if (freemodEnabled)
-			mods.push("freemod");
+			mods.push('freemod');
 
 		return mods;
 	}
@@ -63,13 +64,13 @@ export class ModBracket {
 			return false;
 		}
 
-		for (let mod in this.mods) {
+		for (const mod in this.mods) {
 			if (this.mods[mod].modValue != modBracket.mods[mod].modValue) {
 				return false;
 			}
 		}
 
-		for (let map in this.beatmaps) {
+		for (const map in this.beatmaps) {
 			if (this.beatmaps[map].compareTo(modBracket.beatmaps[map]) == false) {
 				return false;
 			}
@@ -90,7 +91,7 @@ export class ModBracket {
 		newBracket.mods = bracket.mods
 
 		// Make true copies of the beatmaps
-		for (let beatmap in bracket.beatmaps) {
+		for (const beatmap in bracket.beatmaps) {
 			newBracket.beatmaps.push(ModBracketMap.makeTrueCopy(bracket.beatmaps[beatmap]));
 		}
 
@@ -104,14 +105,14 @@ export class ModBracket {
 	 * @param bracket
      */
 	public static convertToJson(bracket: ModBracket): any {
-		let modBracket = {
+		const modBracket = {
 			id: bracket.id,
 			bracketName: bracket.bracketName,
 			mods: JSON.stringify(bracket.mods),
 			beatmaps: []
 		};
 
-		for (let map in bracket.beatmaps) {
+		for (const map in bracket.beatmaps) {
 			const thisMap = ModBracketMap.convertToJson(bracket.beatmaps[map]);
 			modBracket.beatmaps.push(thisMap);
 		}
@@ -126,7 +127,7 @@ export class ModBracket {
 		newBracket.mods = JSON.parse(json.mods);
 		newBracket.bracketName = json.bracketName;
 
-		for (let beatmap in json.beatmaps) {
+		for (const beatmap in json.beatmaps) {
 			newBracket.beatmaps.push(ModBracketMap.serializeJson(json.beatmaps[beatmap]));
 		}
 

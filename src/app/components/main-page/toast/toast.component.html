@@ -1,16 +1,16 @@
 <div class="toast-area">
-    <div *ngFor="let toast of allToasts" (click)="removeToast(toast)" class="toast mb-2 shadow row" [@simpleFadeAnimation]="'in'"
-            [ngClass]="{'toast-information': toast.toastType == toastType.Information, 
-                        'toast-warning': toast.toastType == toastType.Warning, 
-                        'toast-error': toast.toastType == toastType.Error }">
-        <div class="col-1">
-            <fa-icon *ngIf="toast.toastType == toastType.Information" icon="info-circle" size="lg"></fa-icon>
-            <fa-icon *ngIf="toast.toastType == toastType.Warning" icon="exclamation-circle" size="lg"></fa-icon>
-            <fa-icon *ngIf="toast.toastType == toastType.Error" icon="exclamation-circle" size="lg"></fa-icon>
-        </div>
+	<div *ngFor="let toast of allToasts" (click)="removeToast(toast)" class="toast row" [@simpleFadeAnimation]="'in'"
+			[ngClass]="{'toast-information': toast.toastType == toastType.Information,
+						'toast-warning': toast.toastType == toastType.Warning,
+						'toast-error': toast.toastType == toastType.Error }">
+		<div class="col-1">
+			<mat-icon *ngIf="toast.toastType == toastType.Information">info</mat-icon>
+			<mat-icon *ngIf="toast.toastType == toastType.Warning">error</mat-icon>
+			<mat-icon *ngIf="toast.toastType == toastType.Error">error</mat-icon>
+		</div>
 
-        <div class="col">
-            {{ toast.message }}
-        </div>
-    </div>
+		<div class="col">
+			{{ toast.message }}
+		</div>
+	</div>
 </div>

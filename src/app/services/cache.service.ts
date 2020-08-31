@@ -18,15 +18,15 @@ export class CacheService {
 		const userCache = storeService.get('cache.users');
 		const modifierCache = storeService.get('cache.modifiers');
 
-		for (let beatmap in beatmapCache) {
+		for (const beatmap in beatmapCache) {
 			this.cachedBeatmaps.push(new CacheBeatmap(beatmapCache[beatmap].name, parseInt(beatmap), parseInt(beatmapCache[beatmap].beatmapset_id), `https://osu.ppy.sh/beatmaps/${beatmapCache[beatmap].beatmapset_id}`));
 		}
 
-		for (let user in userCache) {
+		for (const user in userCache) {
 			this.cachedUsers.push(new CacheUser(parseInt(user), userCache[user]));
 		}
 
-		for (let modifier in modifierCache) {
+		for (const modifier in modifierCache) {
 			this.cachedModifiers.push(new CacheModifier(modifierCache[modifier].beatmap_name, parseInt(modifier), modifierCache[modifier].modifier));
 		}
 	}
@@ -39,7 +39,7 @@ export class CacheService {
 	public getCachedBeatmap(beatmapId: number): CacheBeatmap {
 		let cachedBeatmap: CacheBeatmap = null;
 
-		for (let beatmap in this.cachedBeatmaps) {
+		for (const beatmap in this.cachedBeatmaps) {
 			if (this.cachedBeatmaps[beatmap].beatmapId == beatmapId) {
 				cachedBeatmap = this.cachedBeatmaps[beatmap];
 				break;
@@ -54,11 +54,11 @@ export class CacheService {
 	 * @param beatmapId the beatmapId to look for
 	 */
 	public getCachedBeatmapFromMappools(beatmapId: number): CacheBeatmap {
-		const mappools = this.storeService.get(`cache.mappool`);
+		const mappools = this.storeService.get('cache.mappool');
 
-		for (let mappool in mappools) {
-			for (let modBracket in mappools[mappool].modBrackets) {
-				for (let beatmap in mappools[mappool].modBrackets[modBracket].beatmaps) {
+		for (const mappool in mappools) {
+			for (const modBracket in mappools[mappool].modBrackets) {
+				for (const beatmap in mappools[mappool].modBrackets[modBracket].beatmaps) {
 					if (mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId == beatmapId) {
 						return new CacheBeatmap(mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapName, mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId, mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapsetId, mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapUrl);
 					}
@@ -75,7 +75,7 @@ export class CacheService {
 		let cachedBeatmapIndex: number = null;
 
 		// Find the index of the cached user
-		for (let beatmap in this.cachedBeatmaps) {
+		for (const beatmap in this.cachedBeatmaps) {
 			if (this.cachedBeatmaps[beatmap].beatmapId == cachedBeatmap.beatmapId) {
 				cachedBeatmapIndex = parseInt(beatmap);
 				break;
@@ -105,7 +105,7 @@ export class CacheService {
 	public getCachedUser(userId: number): CacheUser {
 		let cachedUser: CacheUser = null;
 
-		for (let user in this.cachedUsers) {
+		for (const user in this.cachedUsers) {
 			if (this.cachedUsers[user].user_id == userId) {
 				cachedUser = this.cachedUsers[user];
 				break;
@@ -123,7 +123,7 @@ export class CacheService {
 		let cachedUserIndex: number = null;
 
 		// Find the index of the cached user
-		for (let user in this.cachedUsers) {
+		for (const user in this.cachedUsers) {
 			if (this.cachedUsers[user].user_id == cachedUser.user_id) {
 				cachedUserIndex = parseInt(user);
 				break;

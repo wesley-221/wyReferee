@@ -1,0 +1,19 @@
+<div class="header">
+	<div class="buttons">
+		<button mat-raised-button [routerLink]="['/tournament-management/mappool-overview/mappool-create']" color="primary"><mat-icon>add</mat-icon> create a new mappool</button>
+		<button mat-raised-button [routerLink]="['/tournament-management/mappool-overview/my-published-mappools']" color="primary" *ngIf="canPublish()"><mat-icon>cloud_upload</mat-icon> my published mappools</button>
+	</div>
+
+	<div class="import">
+		<mat-form-field class="example-full-width">
+			<mat-label>Import mappool by id</mat-label>
+			<input type="tel" matInput placeholder="Mappool id" [(ngModel)]="mappoolId">
+		</mat-form-field>
+
+		<button mat-mini-fab (click)="importMappool()" color="primary" matSuffix><mat-icon [color]="'white'">cloud_download</mat-icon></button>
+	</div>
+</div>
+
+<hr />
+
+<app-mappool-summary [mappool]="mappool" *ngFor="let mappool of mappoolService.allMappools"></app-mappool-summary>

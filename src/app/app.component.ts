@@ -15,8 +15,8 @@ export class AppComponent {
 		const apiKey = storeService.get('api-key');
 
 		// Check if the api key is set
-		if(apiKey == undefined || apiKey == '') {
-			toastService.addToast(`The api key wasn't set, make sure to set the api key before continuing.`, ToastType.Error, 20);
+		if (apiKey == undefined || apiKey == '') {
+			toastService.addToast('The api key wasn\'t set, make sure to set the api key before continuing.', ToastType.Error, 20);
 		}
 	}
 }

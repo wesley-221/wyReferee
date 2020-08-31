@@ -1,66 +1,148 @@
-<div class=row>
-    <div class=col-12>
-        <div class=form-group>
-            <h2>API key</h2>
-            <p>Enter your osu!API key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The API key can be found <a [routerLink]="" (click)="electronService.openLink('https://old.ppy.sh/p/api');">here</a>.</p>
-            <input #apiKey type="password" class="form-control" placeholder="osu!API key" value="{{ getApiKey() }}" />
-        </div>
+<div class="row">
+	<div class="col">
+		<div class="login-container">
+			<div class="login-icon-container">
+				<div class="icon web"></div>
+			</div>
 
-        <button type="button" class="btn btn-primary float-right" (click)="saveApiKey()">Save</button>
-    </div>
+			<div class="login-content">
+				<div class="login-form">
+					<h3 class="header">wyBin tournament host</h3>
+
+					<form [formGroup]="mappoolPublishForm" *ngIf="!auth.loggedIn">
+						<mat-form-field class="full-width">
+							<mat-label>Username</mat-label>
+							<input matInput placeholder="Username" formControlName="username">
+
+							<mat-error *ngIf="mappoolPublishForm.get('username').invalid && (mappoolPublishForm.get('username').dirty || mappoolPublishForm.get('username').touched)">
+								This field is required.
+							</mat-error>
+						</mat-form-field>
+
+						<mat-form-field class="full-width">
+							<mat-label>Password</mat-label>
+							<input matInput type="password" formControlName="password">
+
+							<mat-error *ngIf="mappoolPublishForm.get('password').invalid && (mappoolPublishForm.get('password').dirty || mappoolPublishForm.get('password').touched)">
+								This field is required.
+							</mat-error>
+						</mat-form-field>
+
+						<button mat-raised-button color="primary" class="full-width margin-button" (click)="loginMappoolPublish()">Login</button>
+					</form>
+
+					<div class="footer" *ngIf="auth.loggedIn">
+						Logged in as&nbsp;<b>{{ auth.loggedInUser.username }}</b>
+						<button mat-raised-button color="warn" class="full-width margin-button" (click)="logoutMappoolPublish()">Logout</button>
+					</div>
+
+					<div class="footer">
+						<a [routerLink]="['/register']" *ngIf="!auth.loggedIn">No account yet? Click here</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col">
+		<div class="login-container">
+			<div class="login-icon-container">
+				<div class="icon osu"></div>
+			</div>
+
+			<div class="login-content">
+				<div class="login-form">
+					<h3 class="header">osu! irc</h3>
+
+					<form [formGroup]="ircLoginForm" *ngIf="!ircService.isAuthenticated">
+						<mat-form-field class="full-width">
+							<mat-label>Username</mat-label>
+							<input matInput placeholder="Username" formControlName="irc-username">
+
+							<mat-error *ngIf="ircLoginForm.get('irc-username').invalid && (ircLoginForm.get('irc-username').dirty || ircLoginForm.get('irc-username').touched)">
+								This field is required.
+							</mat-error>
+						</mat-form-field>
+
+						<mat-form-field class="full-width">
+							<mat-label>Password</mat-label>
+							<input matInput type="password" formControlName="irc-password">
+
+							<mat-error *ngIf="ircLoginForm.get('irc-password').invalid && (ircLoginForm.get('irc-password').dirty || ircLoginForm.get('irc-password').touched)">
+								This field is required.
+							</mat-error>
+						</mat-form-field>
+
+						<button mat-raised-button color="primary" class="full-width align-spinner margin-button" (click)="connectIrc()">Connect</button>
+
+						<div class="center" *ngIf="isConnecting">
+							<mat-spinner [diameter]="40"></mat-spinner>
+							<div class="text">Attempting to login...</div>
+						</div>
+					</form>
+
+					<div class="footer" *ngIf="ircService.isAuthenticated">
+						Logged in as&nbsp;<b>{{ ircService.authenticatedUser }}</b>
+
+						<button mat-raised-button color="warn" class="full-width margin-button" (click)="disconnectIrc()">Disconnect</button>
+					</div>
+
+					<div class="footer">
+						<a [routerLink]="" (click)="electronService.openLink('https://osu.ppy.sh/p/irc')" *ngIf="!ircService.isAuthenticated">Lookup your irc credentials</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <hr />
 
-<table class="table table-hover table-border">
-    <tbody>
-        <tr>
-            <td>
-                This will export the config file and save it as a file in case you need to share it with someone. <br />
-                <b>Note:</b> It will not export the API key in the file <br />
-            </td>
+<div class="row">
+	<div class="col">
+		<h2>osu!api key</h2>
+		<p>Enter your osu!api key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The api key can be found <a [routerLink]="" (click)="electronService.openLink('https://old.ppy.sh/p/api');">here</a>.</p>
 
-            <td>
-                <button type="button" class="btn btn-primary form-control" (click)="exportConfigFile()">Export config file</button>
-            </td>
-        </tr>
+		<mat-form-field class="full-width">
+			<mat-label>osu!api key</mat-label>
+			<input matInput #apiKey type="password" class="full-width" [value]="getApiKey()">
+		</mat-form-field>
 
-        <tr>
-            <td>
-                This will clear all the cache.
-            </td>
+		<button mat-raised-button color="primary" (click)="saveApiKey()">Save</button>
+	</div>
+</div>
 
-            <td>
-                <button type="button" class="btn btn-primary form-control" (click)="openDialog(0)">Clear cache</button>
-            </td>
-        </tr>
+<hr />
 
-        <tr>
-            <td>
-                This will remove the API key.
-            </td>
+<div class="options">
+	<div class="option">
+		<div class="text">
+			This will export the config file and save it as a file in case you need to share it with someone. <br />
+			<b>Note:</b> It will not export the API key in the file <br />
+		</div>
 
-            <td>
-                <button type="button" class="btn btn-primary form-control" (click)="openDialog(1)">Remove API key</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+		<div class="button">
+			<button mat-raised-button color="primary" (click)="exportConfigFile()">Export config file</button>
+		</div>
+	</div>
 
-<div id="dialog" class="modal fade" tabindex="-1" role="dialog">
-	<div class="modal-dialog shadow" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h3 class="modal-title" *ngIf="dialogAction == 0">Clear cache</h3>
-				<h3 class="modal-title" *ngIf="dialogAction == 1">Remove API key</h3>
-			</div>
+	<div class="option">
+		<div class="text">
+			This will clear all the cache.
+		</div>
 
-			<div class="modal-body">
-				<p [innerHTML]="dialogMessage"></p>
+		<div class="button">
+			<button mat-raised-button color="primary" (click)="openDialog(0)">Clear cache</button>
+		</div>
+	</div>
 
-				<button class="btn btn-danger" style="width: 100%;" (click)="clearCache()" *ngIf="dialogAction == 0">Clear cache</button>
-				<button class="btn btn-danger" style="width: 100%;" (click)="removeApiKey()" *ngIf="dialogAction == 1">Remove API key</button>
-			</div>
+	<div class="option">
+		<div class="text">
+			This will remove the API key.
+		</div>
+
+		<div class="button">
+			<button mat-raised-button color="primary" (click)="openDialog(1)">Remove API key</button>
 		</div>
 	</div>
 </div>
