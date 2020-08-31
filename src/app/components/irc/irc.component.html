@@ -44,6 +44,10 @@
 			<div *ngIf="selectedChannel != null && this.hasWon != null">
 				<b>{{ this.hasWon }}</b> has won the match, GG and wp!
 			</div>
+
+			<div class="warning" *ngIf="selectedLobby.firstPick == null || selectedLobby.bestOf == null">
+				You haven't set the <b>First pick</b> and the <b>Best of</b> the match yet. Make sure to go to the settings and select them.
+			</div>
 		</div>
 
 		<virtual-scroller class="messages" [items]="chats" [stripedTable]="true" (vsUpdate)="viewPortItems = $event">
@@ -83,8 +87,8 @@
 
 		<div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
 			<div class="side-menu-button">
-				<button mat-mini-fab color="primary" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><mat-icon>settings</mat-icon></button>
-				<button mat-mini-fab color="primary" (click)="navigateLobbyOverview(selectedChannel.channelName)"><mat-icon>list</mat-icon></button>
+				<button mat-mini-fab color="primary" matTooltip="Open referee settings" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><mat-icon>settings</mat-icon></button>
+				<button mat-mini-fab color="primary" matTooltip="Go to multiplayer lobby match overview" (click)="navigateLobbyOverview(selectedChannel.channelName)"><mat-icon>list</mat-icon></button>
 			</div>
 
 			<div class="side-menu-content">

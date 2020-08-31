@@ -176,6 +176,10 @@ $hyperlink-background-color: #2b4576;
 		.match-header {
 			border-bottom: 3px solid $primary;
 			text-align: center;
+
+			.warning {
+				background-color: $danger;
+			}
 		}
 
 		.messages {

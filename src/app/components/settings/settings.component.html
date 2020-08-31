@@ -7,7 +7,7 @@
 
 			<div class="login-content">
 				<div class="login-form">
-					<h3 class="header">Mappool publishing</h3>
+					<h3 class="header">wyBin tournament host</h3>
 
 					<form [formGroup]="mappoolPublishForm" *ngIf="!auth.loggedIn">
 						<mat-form-field class="full-width">
@@ -52,7 +52,7 @@
 
 			<div class="login-content">
 				<div class="login-form">
-					<h3 class="header">Login</h3>
+					<h3 class="header">osu! irc</h3>
 
 					<form [formGroup]="ircLoginForm" *ngIf="!ircService.isAuthenticated">
 						<mat-form-field class="full-width">
@@ -100,11 +100,11 @@
 
 <div class="row">
 	<div class="col">
-		<h2>API key</h2>
-		<p>Enter your osu!API key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The API key can be found <a [routerLink]="" (click)="electronService.openLink('https://old.ppy.sh/p/api');">here</a>.</p>
+		<h2>osu!api key</h2>
+		<p>Enter your osu!api key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The api key can be found <a [routerLink]="" (click)="electronService.openLink('https://old.ppy.sh/p/api');">here</a>.</p>
 
 		<mat-form-field class="full-width">
-			<mat-label>osu! API key</mat-label>
+			<mat-label>osu!api key</mat-label>
 			<input matInput #apiKey type="password" class="full-width" [value]="getApiKey()">
 		</mat-form-field>
 

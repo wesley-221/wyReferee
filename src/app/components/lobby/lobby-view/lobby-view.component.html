@@ -14,6 +14,12 @@
 			</div>
 		</div>
 
+		<div class="settings-warning" *ngIf="selectedLobby.bestOf == null || selectedLobby.firstPick == null">
+			<div class="alert alert-danger">
+				You haven't set the First pick and the Best of the match yet. Make sure to go to the settings and select them.
+			</div>
+		</div>
+
 		<div class="buttons">
 			<div class="button-row">
 				<button mat-mini-fab color="basic" matTooltip="Connect to multiplayer lobby" [disabled]="!ircService.isAuthenticated" (click)="joinIrc()"><mat-icon>chat</mat-icon></button>
@@ -23,7 +29,7 @@
 
 			<div class="button-row">
 				<button mat-mini-fab color="basic" matTooltip="Go to IRC" (click)="goToIrc()"><mat-icon>chat</mat-icon></button>
-				<button mat-mini-fab color="basic" matTooltip="Open the settings tab" (click)="openSettings(selectedLobby)"><mat-icon>settings</mat-icon></button>
+				<button mat-mini-fab color="basic" matTooltip="Open the multiplayer lobby settings" (click)="openSettings(selectedLobby)"><mat-icon>settings</mat-icon></button>
 				<button mat-mini-fab color="accent" matTooltip="Synchronize the scores of this multiplayer lobby" (click)="synchronizeMp()"><mat-icon>sync</mat-icon></button>
 			</div>
 		</div>

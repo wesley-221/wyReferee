@@ -30,6 +30,11 @@ $match-header-height: 100px;
 
 		height: $match-header-height;
 
+		.settings-warning {
+			padding-left: 18px;
+			padding-right: 18px;
+		}
+
 		.buttons {
 			.button-row {
 				display: flex;

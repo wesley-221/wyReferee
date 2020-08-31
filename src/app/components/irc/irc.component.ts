@@ -18,7 +18,7 @@ import { ToastType } from '../../models/toast';
 import { WebhookService } from '../../services/webhook.service';
 import { MatDialog } from '@angular/material/dialog';
 import { JoinIrcChannelComponent } from '../dialogs/join-irc-channel/join-irc-channel.component';
-import { MatSelectChange } from '@angular/material/select';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { BanBeatmapComponent } from '../dialogs/ban-beatmap/ban-beatmap.component';
 
 export interface BanBeatmapDialogData {
@@ -55,9 +55,9 @@ export class IrcComponent implements OnInit {
 
 	isOptionMenuMinimized = true;
 
-	@ViewChild('teamMode') teamMode: ElementRef;
-	@ViewChild('winCondition') winCondition: ElementRef;
-	@ViewChild('players') players: ElementRef;
+	@ViewChild('teamMode') teamMode: MatSelect;
+	@ViewChild('winCondition') winCondition: MatSelect;
+	@ViewChild('players') players: MatSelect;
 
 	searchValue: string;
 
@@ -334,11 +334,11 @@ export class IrcComponent implements OnInit {
 			const timer =
 				setInterval(() => {
 					if (this.roomSettingDelay == 0) {
-						this.ircService.sendMessage(this.selectedChannel.channelName, `!mp set ${this.teamMode.nativeElement.value} ${this.winCondition.nativeElement.value} ${this.players.nativeElement.value}`);
+						this.ircService.sendMessage(this.selectedChannel.channelName, `!mp set ${this.teamMode.value} ${this.winCondition.value} ${this.players.value}`);
 
-						this.ircService.getChannelByName(this.selectedChannel.channelName).teamMode = this.teamMode.nativeElement.value;
-						this.ircService.getChannelByName(this.selectedChannel.channelName).winCondition = this.winCondition.nativeElement.value;
-						this.ircService.getChannelByName(this.selectedChannel.channelName).players = this.players.nativeElement.value;
+						this.ircService.getChannelByName(this.selectedChannel.channelName).teamMode = this.teamMode.value;
+						this.ircService.getChannelByName(this.selectedChannel.channelName).winCondition = this.winCondition.value;
+						this.ircService.getChannelByName(this.selectedChannel.channelName).players = this.players.value;
 
 						this.roomSettingGoingOn = false;
 						clearInterval(timer);
@@ -360,7 +360,7 @@ export class IrcComponent implements OnInit {
 		const lobbyId = this.multiplayerLobbies.getByIrcLobby(this.selectedChannel.channelName).lobbyId;
 
 		if (lobbyId) {
-			this.router.navigate(['lobby-view', lobbyId]);
+			this.router.navigate(['/lobby-overview/lobby-view', lobbyId]);
 		}
 		else {
 			this.toastService.addToast('No lobby overview found for this irc channel');

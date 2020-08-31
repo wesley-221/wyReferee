@@ -9,6 +9,7 @@ import { Calculate } from '../../../models/score-calculation/calculate';
 import { TournamentService } from '../../../services/tournament.service';
 import { Tournament } from '../../../models/tournament/tournament';
 import { MatSelectChange } from '@angular/material/select';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -36,7 +37,7 @@ export class CreateLobbyComponent implements OnInit {
 	teamOneArray: number[] = [];
 	teamTwoArray: number[] = [];
 
-	constructor(private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService, private ircService: IrcService, public tournamentService: TournamentService) {
+	constructor(private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService, private ircService: IrcService, public tournamentService: TournamentService, private router: Router) {
 		this.calculateScoreInterfaces = new Calculate();
 
 		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -119,6 +120,8 @@ export class CreateLobbyComponent implements OnInit {
 			this.multiplayerLobbies.add(newLobby);
 
 			this.toastService.addToast(`Successfully created the multiplayer lobby ${newLobby.description}!`);
+
+			this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
 		}
 		else {
 			this.validationForm.markAllAsTouched();
