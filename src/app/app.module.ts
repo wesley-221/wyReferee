@@ -61,6 +61,7 @@ import { DeleteTeamComponent } from './components/dialogs/delete-team/delete-tea
 import { MultiplayerLobbySettingsComponent } from './components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { SendFinalResultComponent } from './components/dialogs/send-final-result/send-final-result.component';
 import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/join-irc-channel.component';
+import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatmap.component';
 
 @NgModule({
 	declarations: [
@@ -104,7 +105,8 @@ import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/j
 		DeleteTeamComponent,
 		MultiplayerLobbySettingsComponent,
 		SendFinalResultComponent,
-		JoinIrcChannelComponent
+		JoinIrcChannelComponent,
+		BanBeatmapComponent
 	],
 	imports: [
 		BrowserModule,

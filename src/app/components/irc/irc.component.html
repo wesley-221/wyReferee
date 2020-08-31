@@ -26,7 +26,7 @@
 					</div>
 
 					<div class="button red" (click)="partChannel(channel.channelName)">
-						<fa-icon [icon]="['fas', 'times']"></fa-icon>
+						<mat-icon>close</mat-icon>
 					</div>
 				</div>
 			</div>
@@ -81,63 +81,71 @@
 			<input type="text" placeholder="Message..." #chatMessage [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" (keyup.Tab)="onKey($event, 'up'); false;" (keydown.Tab)="onKey($event, 'down'); false;" (keypress)="sendMessage($event)" />
 		</div>
 
-		<!-- <div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
+		<div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
 			<div class="side-menu-button">
-				<button class="btn btn-primary" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><fa-icon [icon]="['fas', 'cog']"></fa-icon></button>
-				<button class="btn btn-info" (click)="navigateLobbyOverview(selectedChannel.channelName)"><fa-icon [icon]="['fas', 'bars']"></fa-icon></button>
+				<button mat-mini-fab color="primary" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><mat-icon>settings</mat-icon></button>
+				<button mat-mini-fab color="primary" (click)="navigateLobbyOverview(selectedChannel.channelName)"><mat-icon>list</mat-icon></button>
 			</div>
 
 			<div class="side-menu-content">
 				<div class="header">
 					<div class="row">
 						<div class="col">
-							<h6>Team mode</h6>
-							<select class="form-control" #teamMode (change)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
-								<option></option>
-								<option value="0">Head To Head</option>
-								<option value="1">Tag Coop</option>
-								<option value="2">Team Vs</option>
-								<option value="3">Tag Team Vs</option>
-							</select>
+							<mat-form-field class="full-width">
+								<mat-label>Team mode</mat-label>
+								<mat-select #teamMode (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
+									<mat-option></mat-option>
+									<mat-option [value]="0">Head To Head</mat-option>
+									<mat-option [value]="1">Tag Coop</mat-option>
+									<mat-option [value]="2">Team Vs</mat-option>
+									<mat-option [value]="3">Tag Team Vs</mat-option>
+								</mat-select>
+							</mat-form-field>
 						</div>
 
 						<div class="col">
-							<h6>Win condition</h6>
-							<select class="form-control" #winCondition (change)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
-								<option></option>
-								<option value="0">Score</option>
-								<option value="1">Accuracy</option>
-								<option value="2">Combo</option>
-								<option value="3">Score V2</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="row mt-2">
-						<div class="col">
-							<h6>Players</h6>
-
-							<select class="form-control" #players (change)="onRoomSettingChange()" [value]="selectedChannel.players">
-								<option></option>
-								<option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">{{ number }}</option>
-							</select>
+							<mat-form-field class="full-width">
+								<mat-label>Team mode</mat-label>
+								<mat-select #winCondition (change)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
+									<mat-option value="0">Score</mat-option>
+									<mat-option value="1">Accuracy</mat-option>
+									<mat-option value="2">Combo</mat-option>
+									<mat-option value="3">Score V2</mat-option>
+								</mat-select>
+							</mat-form-field>
 						</div>
 					</div>
 
-					<div class="row mt-2">
+					<div class="row">
 						<div class="col">
-							<h6>Mappool</h6>
-
-							<select class="form-control" (change)="onMappoolChange($event)" [value]="selectedLobby != undefined && selectedLobby.mappool != undefined && selectedLobby.mappool.id">
-								<option value=""></option>
-								<option *ngFor="let mappool of mappoolService.allMappools" [value]="mappool.id">{{ mappool.name }}</option>
-							</select>
+							<mat-form-field class="full-width">
+								<mat-label>Players</mat-label>
+								<mat-select #players (change)="onRoomSettingChange()" [value]="selectedChannel.players">
+									<mat-option></mat-option>
+									<mat-option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">{{ number }}</mat-option>
+								</mat-select>
+							</mat-form-field>
 						</div>
 					</div>
 
-					<div class="row mt-2" *ngIf="selectedLobby.mappool != null">
+					<div class="row">
 						<div class="col">
-							<input type="text" class="form-control" placeholder="Search for beatmap..." [(ngModel)]="searchValue" />
+							<mat-form-field class="full-width">
+								<mat-label>Mappool</mat-label>
+								<mat-select (selectionChange)="onMappoolChange($event)" [value]="selectedLobby != undefined && selectedLobby.mappool != undefined && selectedLobby.mappool.id">
+									<mat-option></mat-option>
+									<mat-option *ngFor="let mappool of mappoolService.allMappools" [value]="mappool.id">{{ mappool.name }}</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+					</div>
+
+					<div class="row" *ngIf="selectedLobby.mappool != null">
+						<div class="col">
+							<mat-form-field class="full-width">
+								<mat-label>Search for beatmap...</mat-label>
+								<input matInput [(ngModel)]="searchValue" />
+							</mat-form-field>
 						</div>
 					</div>
 				</div>
@@ -149,7 +157,7 @@
 						<hr />
 
 						<div class="pick-random-map" *ngIf="selectedLobby.mappool.mappoolType == 2">
-							<button class="btn btn-primary" (click)="pickMysteryMap(selectedLobby.mappool, bracket)" [disabled]="!selectedChannel.active">Pick random map</button>
+							<button mat-raised-button color="primary" (click)="pickMysteryMap(selectedLobby.mappool, bracket)" [disabled]="!selectedChannel.active">Pick random map</button>
 						</div>
 
 						<div *ngIf="selectedLobby.mappool.mappoolType != 2">
@@ -159,69 +167,15 @@
 								</div>
 
 								<div class="buttons">
-									<div class="beatmap-ban">
-										<button class="btn btn-danger form-control" (click)="banBeatmapPopup(beatmap, bracket)" *ngIf="!beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Ban</button>
-										<button class="btn btn-success" (click)="unbanBeatmap(beatmap)" *ngIf="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Unban</button>
-									</div>
-
-									<div class="beatmap-pick">
-										<button class="btn btn-primary" (click)="pickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)">Pick</button>
-									</div>
+									<button mat-mini-fab color="warn" matTooltip="Ban this beatmap" (click)="banBeatmap(beatmap, bracket, selectedLobby)" *ngIf="!beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon class="tmp">report_off</mat-icon></button>
+									<button mat-mini-fab color="accent" matTooltip="Unban this beatmap" (click)="unbanBeatmap(beatmap)" *ngIf="beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon class="tmp">report</mat-icon></button>
+									<button mat-mini-fab color="primary" matTooltip="Pick this beatmap" (click)="pickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon class="tmp">push_pin</mat-icon></button>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div> -->
+		</div>
 	</div>
 </div>
-
-<!-- <div class="modal fade" id="join-channel" tabindex="-1" role="dialog">
-    <div class="modal-dialog shadow" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Join a channel</h3>
-            </div>
-
-            <div class="modal-body">
-                <p>Enter the channel name below to join that channel. </p>
-                <ul>
-                    <li>If you want to join a channel, make sure to enter the <b>#</b> as well (<b>#osu, #taiko, #ctb, #mania, etc.</b>)</li>
-                    <li>If you want to message a player, enter just their name (<b>Wesley, Sartan, Porojax, etc.</b>)</li>
-                    <li>To join a multiplayer lobby, enter "#mp_" followed by the multiplayerlobby id (<b>#mp_53809297, #mp_55519658, etc.</b>)</li>
-                </ul>
-
-                <form>
-                    <label for="channel-name">Channel name</label>
-                    <input id="channel-name" type="text" class="form-control mb-2" placeholder="Channel name" #channelName />
-                    <button class="btn btn-primary" style="width: 100%;" (click)="joinChannel()">Attempt to join <fa-icon *ngIf="isAttemptingToJoin" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="ban-a-map" tabindex="-1" role="dialog">
-    <div class="modal-dialog shadow" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Ban a map</h3>
-            </div>
-
-            <div class="modal-body">
-				<p>Select the team that wants to ban the following map</p>
-
-				<div class="beatmap" *ngIf="popupBannedMap">
-					{{ popupBannedMap.beatmapName }}
-				</div>
-
-                <div class="float-right">
-                    <button class="btn btn-danger mr-2" (click)="hideModal('ban-a-map')">Cancel</button>
-                    <button class="btn btn-success mr-2" (click)="banBeatmap(1)" *ngIf="selectedLobby">{{ selectedLobby.teamOneName }}</button>
-                    <button class="btn btn-success" (click)="banBeatmap(2)" *ngIf="selectedLobby">{{ selectedLobby.teamTwoName }}</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->

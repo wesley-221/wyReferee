@@ -10,7 +10,7 @@ $hyperlink-background-color: #2b4576;
 	display: flex;
 	flex-direction: row;
 
-	height: 100%;
+	height: calc(100% - 8px);
 
 	background-color: $background-color-irc;
 
@@ -329,35 +329,44 @@ $hyperlink-background-color: #2b4576;
 		}
 
 		.side-menu {
+			display: flex;
+			flex-direction: row;
+
 			position: absolute;
+			float: right;
 
 			width: 40px;
+			height: 88px;
 
-			right: 17px;
-			top: 17px;
-			bottom: 56px;
-
-			transition: width 0.4s ease;
+			right: 0;
+			top: 0;
+			bottom: 0;
 
 			.side-menu-button {
-				float: left;
-
 				width: 40px;
+				height: 88px;
 
-				z-index: 55;
+				margin-top: 8px;
+
+				z-index: 70;
 
 				button {
 					float: right;
 
 					width: 40px;
 					height: 40px;
+
+					margin-bottom: 4px;
 				}
 			}
 
 			.side-menu-content {
+				display: flex;
+				flex-direction: column;
+
 				float: right;
 
-				width: calc(100% - 40px);
+				width: 0;
 				height: 100%;
 
 				opacity: 0;
@@ -367,15 +376,11 @@ $hyperlink-background-color: #2b4576;
 
 				overflow: hidden;
 
-				transition: opacity 0.4s ease;
-
 				.header {
-					height: 290px;
 					padding: 16px;
 				}
 
 				.mappool {
-					height: calc(100% - 290px);
 					padding-left: 16px;
 
 					overflow-y: auto;
@@ -394,7 +399,10 @@ $hyperlink-background-color: #2b4576;
 						}
 
 						.map {
-							width: 100%;
+							display: flex;
+							flex-direction: row;
+							justify-content: space-between;
+
 							background-color: $background-color-irc;
 
 							overflow: hidden;
@@ -402,10 +410,6 @@ $hyperlink-background-color: #2b4576;
 							padding: 4px;
 
 							.name {
-								float: left;
-
-								width: calc(100% - 141px);
-
 								overflow: hidden;
 								word-wrap: none;
 
@@ -427,17 +431,12 @@ $hyperlink-background-color: #2b4576;
 							}
 
 							.buttons {
-								float: right;
-								width: 141px;
+								display: flex;
+								flex-direction: row;
 
-								.beatmap-ban {
-									display: inline-block;
-									width: 81px;
-								}
-
-								.beatmap-pick {
-									display: inline-block;
-									width: 60px;
+								button {
+									box-sizing: border-box;
+									margin-right: 4px;
 								}
 							}
 
@@ -451,8 +450,15 @@ $hyperlink-background-color: #2b4576;
 
 			&.in {
 				width: 30%;
+				height: 100%;
+
+				.side-menu-button {
+					position: absolute;
+					margin-left: -30px;
+				}
 
 				.side-menu-content {
+					width: 100%;
 					opacity: 1;
 				}
 			}

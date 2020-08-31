@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ElectronService } from '../../../services/electron.service';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faSquare, faClone } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
 	selector: 'app-titlebar',
@@ -10,21 +8,17 @@ import { faSquare, faClone } from '@fortawesome/free-regular-svg-icons';
 })
 
 export class TitlebarComponent implements OnInit {
-	@ViewChild('maximizeButton') maximizeButton: FaIconComponent;
+	isMinimized: boolean;
 
-	constructor(private electronService: ElectronService) { }
+	constructor(private electronService: ElectronService) {
+		this.isMinimized = this.electronService.remote.getCurrentWindow().isMinimized();
 
-	ngOnInit() {
-		this.electronService.remote.getCurrentWindow().on('maximize', () => {
-			this.maximizeButton.icon = faClone;
-			this.maximizeButton.render();
-		});
-
-		this.electronService.remote.getCurrentWindow().on('unmaximize', () => {
-			this.maximizeButton.icon = faSquare;
-			this.maximizeButton.render();
-		});
+		this.electronService.remote.getCurrentWindow().on('move', () => {
+			this.isMinimized = true;
+		})
 	}
+
+	ngOnInit() { }
 
 	/**
 	 * Minimize the window
@@ -39,9 +33,11 @@ export class TitlebarComponent implements OnInit {
 	maximizeWindow(): void {
 		if (this.electronService.remote.getCurrentWindow().isMaximized()) {
 			this.electronService.remote.getCurrentWindow().unmaximize();
+			this.isMinimized = true;
 		}
 		else {
 			this.electronService.remote.getCurrentWindow().maximize();
+			this.isMinimized = false;
 		}
 	}
 

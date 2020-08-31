@@ -10,6 +10,8 @@
 	height: 100%;
 
 	.sidebar-container {
+		display: flex;
+		flex: 1 0 15%;
 		background-color: $sidebar-color;
 	}
 
@@ -20,7 +22,6 @@
 
 		padding-left: 8px;
 		padding-top: 8px;
-		padding-bottom: 8px;
 
 		margin-right: 0;
 	}

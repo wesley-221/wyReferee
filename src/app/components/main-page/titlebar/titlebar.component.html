@@ -1,7 +1,6 @@
-<div class="titleBar">
-    <div class="buttons-right">
-        <div class="navButton" (click)="minimizeWindow();"><fa-icon icon="window-minimize"></fa-icon></div>
-        <div class="navButton" (click)="maximizeWindow();"><fa-icon #maximizeButton [icon]="['far', 'clone']"></fa-icon></div>
-        <div class="navButton" (click)="closeWindow();"><fa-icon icon="times"></fa-icon></div>
-    </div>
+<div class="title-bar">
+	<div class="nav-button" (click)="minimizeWindow();"><mat-icon>minimize</mat-icon></div>
+	<div class="nav-button" (click)="maximizeWindow();" *ngIf="isMinimized"><mat-icon>crop_square</mat-icon></div>
+	<div class="nav-button" (click)="maximizeWindow();" *ngIf="!isMinimized"><mat-icon>filter_none</mat-icon></div>
+	<div class="nav-button" (click)="closeWindow();"><mat-icon>close</mat-icon></div>
 </div>

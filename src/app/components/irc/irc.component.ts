@@ -18,7 +18,16 @@ import { ToastType } from '../../models/toast';
 import { WebhookService } from '../../services/webhook.service';
 import { MatDialog } from '@angular/material/dialog';
 import { JoinIrcChannelComponent } from '../dialogs/join-irc-channel/join-irc-channel.component';
-declare var $: any;
+import { MatSelectChange } from '@angular/material/select';
+import { BanBeatmapComponent } from '../dialogs/ban-beatmap/ban-beatmap.component';
+
+export interface BanBeatmapDialogData {
+	beatmap: ModBracketMap;
+	modBracket: ModBracket;
+	multiplayerLobby: MultiplayerLobby;
+
+	banForTeam: string;
+}
 
 @Component({
 	selector: 'app-irc',
@@ -168,20 +177,6 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
-	 * Open the modal to join a channel
-	 */
-	openModal(modalName: string) {
-		$(`#${modalName}`).modal('toggle');
-	}
-
-	/**
-	 * Hide the modal
-	 */
-	hideModal(modalName: string) {
-		$(`#${modalName}`).modal('toggle');
-	}
-
-	/**
 	 * Attempt to join a channel
 	 */
 	joinChannel() {
@@ -296,9 +291,9 @@ export class IrcComponent implements OnInit {
 	 * Change the current mappool
 	 * @param event
 	 */
-	onMappoolChange(event: Event) {
-		this.selectedLobby.mappool = this.mappoolService.getMappool((<any>event.currentTarget).value);
-		this.selectedLobby.mappoolId = this.mappoolService.getMappool((<any>event.currentTarget).value).id;
+	onMappoolChange(event: MatSelectChange) {
+		this.selectedLobby.mappool = this.mappoolService.getMappool(event.value);
+		this.selectedLobby.mappoolId = this.mappoolService.getMappool(event.value).id;
 
 		this.multiplayerLobbies.update(this.selectedLobby);
 	}
@@ -396,36 +391,31 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
-	 * When trying to ban a map show a modal
-	 * @param beatmap
-	 * @param bracket
-	 */
-	banBeatmapPopup(beatmap: ModBracketMap, bracket: ModBracket) {
-		this.popupBannedMap = beatmap;
-		this.popupBannedBracket = bracket;
-
-		this.hideModal('ban-a-map');
-	}
-
-	/**
 	 * Ban a beatmap
 	 */
-	banBeatmap(team: number) {
-		// Handle banning
-		if (team == 1) {
-			this.selectedLobby.teamOneBans.push(this.popupBannedMap.beatmapId);
+	banBeatmap(beatmap: ModBracketMap, modBracket: ModBracket, multiplayerLobby: MultiplayerLobby) {
+		const dialogRef = this.dialog.open(BanBeatmapComponent, {
+			data: {
+				beatmap: beatmap,
+				modBracket: modBracket,
+				multiplayerLobby: multiplayerLobby
+			}
+		});
 
-			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamOneName, this.popupBannedMap, this.ircService.authenticatedUser).subscribe();
-		}
-		else if (team == 2) {
-			this.selectedLobby.teamTwoBans.push(this.popupBannedMap.beatmapId);
+		dialogRef.afterClosed().subscribe((result: BanBeatmapDialogData) => {
+			if(result != null) {
+				if(result.banForTeam == result.multiplayerLobby.teamOneName) {
+					this.selectedLobby.teamOneBans.push(result.beatmap.beatmapId);
+					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser).subscribe();
+				}
+				else {
+					this.selectedLobby.teamTwoBans.push(result.beatmap.beatmapId);
+					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser).subscribe();
+				}
 
-			this.webhookService.sendBanResult(this.selectedLobby, this.selectedLobby.teamTwoName, this.popupBannedMap, this.ircService.authenticatedUser).subscribe();
-		}
-
-		this.multiplayerLobbies.update(this.selectedLobby);
-
-		this.hideModal('ban-a-map');
+				this.multiplayerLobbies.update(this.selectedLobby);
+			}
+		});
 	}
 
 	/**
