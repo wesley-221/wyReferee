@@ -19,9 +19,6 @@ import { TitlebarComponent } from './components/main-page/titlebar/titlebar.comp
 import { MainComponent } from './components/main-page/main/main.component';
 import { SidebarComponent } from './components/main-page/sidebar/sidebar.component';
 
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
 import { InformationComponent } from './components/information/information.component';
@@ -114,7 +111,6 @@ import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatma
 		ReactiveFormsModule,
 		HttpClientModule,
 		AppRoutingModule,
-		FontAwesomeModule,
 		DragDropModule,
 		VirtualScrollerModule,
 		BrowserAnimationsModule,
@@ -128,7 +124,5 @@ import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatma
 })
 
 export class AppModule {
-	constructor(library: FaIconLibrary) {
-		library.addIconPacks(fas, far);
-	}
+	constructor() { }
 }
