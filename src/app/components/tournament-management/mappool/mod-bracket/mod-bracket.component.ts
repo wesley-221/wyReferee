@@ -171,6 +171,7 @@ export class ModBracketComponent implements OnInit {
 				this.selectedMods.splice(Number(mod), 1);
 
 				this.modBracket.mods = this.selectedMods;
+				this.validationForm.removeControl(`mod-bracket-mod-index-${this.modBracket.validateIndex}-${this.modBracketIndex}`);
 				return;
 			}
 		}
@@ -214,6 +215,8 @@ export class ModBracketComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
+				this.validationForm.removeControl(`mod-bracket-name-${modBracket.id}`);
+
 				this.mappool.removeModBracket(modBracket);
 				this.toastService.addToast(`Successfully removed "${modBracket.bracketName}" from the mappool.`);
 			}

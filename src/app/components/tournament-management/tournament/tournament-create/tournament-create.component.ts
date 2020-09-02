@@ -3,6 +3,7 @@ import { Tournament } from '../../../../models/tournament/tournament';
 import { TournamentService } from '../../../../services/tournament.service';
 import { ToastService } from '../../../../services/toast.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ToastType } from 'app/models/toast';
 
 @Component({
 	selector: 'app-tournament-create',
@@ -44,9 +45,15 @@ export class TournamentCreateComponent implements OnInit {
 	 * Create the tournament
 	 */
 	createTournament() {
-		this.tournamentService.saveTournament(this.tournamentCreate);
-		this.toastService.addToast(`Successfully created the tournament "${this.tournamentCreate.tournamentName}" with a total of ${this.tournamentCreate.getTeams().length} team(s).`);
+		if (this.validationForm.valid) {
+			this.tournamentService.saveTournament(this.tournamentCreate);
+			this.toastService.addToast(`Successfully created the tournament "${this.tournamentCreate.tournamentName}" with a total of ${this.tournamentCreate.getTeams().length} team(s).`);
 
-		this.tournamentCreate = new Tournament();
+			this.tournamentCreate = new Tournament();
+		}
+		else {
+			this.toastService.addToast(`The tournament wasn't filled in correctly. Look for the marked fields to see what you did wrong.`, ToastType.Warning);
+			this.validationForm.markAllAsTouched();
+		}
 	}
 }

@@ -4,6 +4,7 @@ import { Tournament } from '../../../../models/tournament/tournament';
 import { TournamentService } from '../../../../services/tournament.service';
 import { ToastService } from '../../../../services/toast.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ToastType } from 'app/models/toast';
 
 @Component({
 	selector: 'app-tournament-edit',
@@ -49,7 +50,7 @@ export class TournamentEditComponent implements OnInit {
 						])
 					});
 
-					for(const team of this.tournament.teams) {
+					for (const team of this.tournament.teams) {
 						this.validationForm.addControl(`tournament-team-name-${team.validateIndex}`, new FormControl(team.teamName, Validators.required))
 					}
 				});
@@ -82,7 +83,7 @@ export class TournamentEditComponent implements OnInit {
 					])
 				});
 
-				for(const team of this.tournament.teams) {
+				for (const team of this.tournament.teams) {
 					this.validationForm.addControl(`tournament-team-name-${team.validateIndex}`, new FormControl(team.teamName, Validators.required))
 				}
 			}
@@ -95,14 +96,20 @@ export class TournamentEditComponent implements OnInit {
 	 * Create the tournament
 	 */
 	udpateTournament(tournament: Tournament): void {
-		if (this.publish == true || this.publish == 'true') {
-			this.tournamentService.updatePublishedTournament(tournament).subscribe(() => {
+		if (this.validationForm.valid) {
+			if (this.publish == true || this.publish == 'true') {
+				this.tournamentService.updatePublishedTournament(tournament).subscribe(() => {
+					this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
+				});
+			}
+			else {
+				this.tournamentService.updateTournament(this.tournament);
 				this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
-			});
+			}
 		}
 		else {
-			this.tournamentService.updateTournament(this.tournament);
-			this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
+			this.toastService.addToast(`The tournament wasn't filled in correctly. Look for the marked fields to see what you did wrong.`, ToastType.Warning);
+			this.validationForm.markAllAsTouched();
 		}
 	}
 }

@@ -52,9 +52,6 @@ export class TournamentComponent implements OnInit {
 		this.tournament.teamSize = selectedScoreInterface.getTeamSize();
 		this.tournament.format = (selectedScoreInterface.isSoloTournament() != null && selectedScoreInterface.isSoloTournament() == true ? TournamentFormat.Solo : TournamentFormat.Teams);
 		this.tournament.tournamentScoreInterfaceIdentifier = selectedScoreInterface.getIdentifier();
-
-		// scoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
-		// tournamentScoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
 	}
 
 	/**
