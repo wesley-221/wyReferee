@@ -62,6 +62,7 @@ export class TournamentComponent implements OnInit {
 		this.tournament.format = event.value;
 
 		if (event.value == TournamentFormat.Solo) {
+			this.validationForm.get('tournament-team-size').setValue(1);
 			this.tournament.teamSize = 1;
 		}
 	}
