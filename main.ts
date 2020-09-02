@@ -16,12 +16,13 @@ function createWindow() {
 		width: size.width / 0.5,
 		height: size.height / 0.5,
 		webPreferences: {
-			nodeIntegration: true
+			nodeIntegration: true,
+			preload: path.join(__dirname, 'preload.js')
 		},
-		icon: `${__dirname}/src/assets/images/icon.png`
+		icon: `${__dirname}/src/assets/images/icon.png`,
+		frame: false,
+		titleBarStyle: 'hidden'
 	});
-
-	win.removeMenu();
 
 	if (serve) {
 		require('electron-reload')(__dirname, {

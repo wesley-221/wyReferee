@@ -15,7 +15,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { AppComponent } from './app.component';
-import { TitlebarComponent } from './components/main-page/titlebar/titlebar.component';
 import { MainComponent } from './components/main-page/main/main.component';
 import { SidebarComponent } from './components/main-page/sidebar/sidebar.component';
 
@@ -63,7 +62,6 @@ import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatma
 @NgModule({
 	declarations: [
 		AppComponent,
-		TitlebarComponent,
 		MainComponent,
 		SidebarComponent,
 		SettingsComponent,
