@@ -111,8 +111,8 @@ export class SettingsComponent implements OnInit {
 	 * Login to irc with the given credentials
 	 */
 	connectIrc() {
-		const username = this.ircLoginForm.get('username').value;
-		const password = this.ircLoginForm.get('password').value;
+		const username = this.ircLoginForm.get('irc-username').value;
+		const password = this.ircLoginForm.get('irc-password').value;
 
 		this.ircService.connect(username, password);
 	}
