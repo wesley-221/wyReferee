@@ -51,7 +51,7 @@
 					</div>
 
 					<div class="team-scores">
-						<h4>Team {{ selectedLobby.teamOneName }}</h4>
+						<h4>{{ selectedLobby.teamOneName }}</h4>
 
 						<div class="score-table">
 							<div class="score" *ngFor="let slot of selectedLobby.teamOneSlotArray">
@@ -80,7 +80,7 @@
 
 							<div class="score">
 								<div class="column">
-									<b>Team score</b>
+									<b>Total score</b>
 								</div>
 
 								<div class="column">
@@ -91,7 +91,7 @@
 
 						<hr />
 
-						<h4>Team {{ selectedLobby.teamTwoName }}</h4>
+						<h4>{{ selectedLobby.teamTwoName }}</h4>
 
 						<div class="score-table">
 							<div class="score" *ngFor="let slot of selectedLobby.teamTwoSlotArray">
@@ -120,7 +120,7 @@
 
 							<div class="score">
 								<div class="column">
-									<b>Team score</b>
+									<b>Total score</b>
 								</div>
 
 								<div class="column">

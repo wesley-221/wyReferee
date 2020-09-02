@@ -195,33 +195,6 @@ export class LobbyViewComponent implements OnInit {
 		});
 	}
 
-	// /**
-	//  * Copy the result of the beatmap to the clipboard
-	//  */
-	// copyNextPick() {
-	// 	const totalMapsPlayed = this.selectedLobby.teamOneScore + this.selectedLobby.teamTwoScore;
-	// 	let nextPick = '';
-
-	// 	// First pick goes to .firstPick
-	// 	if (totalMapsPlayed % 2 == 0) {
-	// 		nextPick = this.selectedLobby.firstPick;
-	// 	}
-	// 	else {
-	// 		nextPick = this.selectedLobby.firstPick == this.selectedLobby.teamOneName ? this.selectedLobby.teamTwoName : this.selectedLobby.teamOneName;
-	// 	}
-
-	// 	this.clipboardService.copyFromContent(`Next pick is for ${nextPick}`);
-	// }
-
-	// /**
-	//  * Send the result of the beatmap to irc if connected
-	//  */
-	// sendNextPick() {
-	// 	if (this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
-	// 		this.ircService.sendMessage(this.selectedLobby.ircChannel, `Next pick is for ${this.selectedLobby.getNextPickName()}`);
-	// 	}
-	// }
-
 	/**
 	 * Gets called when the webhook changes
 	 * @param event
