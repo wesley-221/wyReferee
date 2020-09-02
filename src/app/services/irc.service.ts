@@ -232,7 +232,7 @@ export class IrcService {
 					const matchFinished = Regex.matchFinished.run(message);
 
 					// Initialize the channel with the correct teammode and wincondition
-					if (multiplayerInitialization != null) {
+					if (multiplayerInitialization) {
 						this.getChannelByName(to).teamMode = TeamMode[multiplayerInitialization.teamMode];
 						this.getChannelByName(to).winCondition = WinCondition[multiplayerInitialization.winCondition];
 					}

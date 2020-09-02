@@ -62,7 +62,7 @@ export class IrcComponent implements OnInit {
 	searchValue: string;
 
 	roomSettingGoingOn = false;
-	roomSettingDelay = 2;
+	roomSettingDelay = 3;
 
 	teamOneScore = 0;
 	teamTwoScore = 0;

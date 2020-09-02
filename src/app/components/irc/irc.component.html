@@ -110,11 +110,11 @@
 						<div class="col">
 							<mat-form-field class="full-width">
 								<mat-label>Team mode</mat-label>
-								<mat-select #winCondition (change)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
-									<mat-option value="0">Score</mat-option>
-									<mat-option value="1">Accuracy</mat-option>
-									<mat-option value="2">Combo</mat-option>
-									<mat-option value="3">Score V2</mat-option>
+								<mat-select #winCondition (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
+									<mat-option [value]="0">Score</mat-option>
+									<mat-option [value]="1">Accuracy</mat-option>
+									<mat-option [value]="2">Combo</mat-option>
+									<mat-option [value]="3">Score V2</mat-option>
 								</mat-select>
 							</mat-form-field>
 						</div>
@@ -124,7 +124,7 @@
 						<div class="col">
 							<mat-form-field class="full-width">
 								<mat-label>Players</mat-label>
-								<mat-select #players (change)="onRoomSettingChange()" [value]="selectedChannel.players">
+								<mat-select #players (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.players">
 									<mat-option></mat-option>
 									<mat-option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">{{ number }}</mat-option>
 								</mat-select>
