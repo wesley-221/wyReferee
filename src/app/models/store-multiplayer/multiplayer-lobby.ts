@@ -3,6 +3,7 @@ import { MultiplayerDataUser } from './multiplayer-data-user';
 import { Mappool } from '../osu-mappool/mappool';
 import { ModBracket } from '../osu-mappool/mod-bracket';
 import { ModCategory } from '../osu-mappool/mod-category';
+import { MultiplayerLobbyPlayers } from '../mutliplayer-lobby-players/multiplayer-lobby-players';
 
 export class MultiplayerLobby {
 	lobbyId: number;
@@ -35,8 +36,11 @@ export class MultiplayerLobby {
 	teamOneSlotArray: number[] = [];
 	teamTwoSlotArray: number[] = [];
 
+	multiplayerLobbyPlayers: MultiplayerLobbyPlayers;
+
 	constructor() {
 		this.multiplayerData = [];
+		this.multiplayerLobbyPlayers = new MultiplayerLobbyPlayers();
 	}
 
 	existMpData(multiplayerData: MultiplayerData): boolean {

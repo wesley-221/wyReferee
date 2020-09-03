@@ -20,6 +20,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { JoinIrcChannelComponent } from '../dialogs/join-irc-channel/join-irc-channel.component';
 import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { BanBeatmapComponent } from '../dialogs/ban-beatmap/ban-beatmap.component';
+import { MultiplayerLobbyPlayersPlayer } from 'app/models/mutliplayer-lobby-players/multiplayer-lobby-players-player';
+import { MultiplayerLobbyMovePlayerComponent } from '../dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
+import { MultiplayerLobbyPlayers } from 'app/models/mutliplayer-lobby-players/multiplayer-lobby-players';
 
 export interface BanBeatmapDialogData {
 	beatmap: ModBracketMap;
@@ -27,6 +30,12 @@ export interface BanBeatmapDialogData {
 	multiplayerLobby: MultiplayerLobby;
 
 	banForTeam: string;
+}
+
+export interface MultiplayerLobbyMovePlayerDialogData {
+	allPlayers: MultiplayerLobbyPlayers;
+	movePlayer: MultiplayerLobbyPlayersPlayer;
+	moveToSlot: number;
 }
 
 @Component({
@@ -54,6 +63,7 @@ export class IrcComponent implements OnInit {
 	attemptingToJoinChannel: string;
 
 	isOptionMenuMinimized = true;
+	isPlayerManagementMinimized = true;
 
 	@ViewChild('teamMode') teamMode: MatSelect;
 	@ViewChild('winCondition') winCondition: MatSelect;
@@ -106,7 +116,7 @@ export class IrcComponent implements OnInit {
 			}
 
 			if (this.viewPortItems[this.viewPortItems.length - 1] === this.chats[this.chats.length - 2]) {
-				this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+				this.scrollToTop();
 			}
 
 			if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.channelName).hasUnreadMessages) {
@@ -157,11 +167,11 @@ export class IrcComponent implements OnInit {
 		// Scroll to the bottom - delay it by 500 ms or do it instantly
 		if (delayScroll) {
 			setTimeout(() => {
-				this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+				this.scrollToTop();
 			}, 500);
 		}
 		else {
-			this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+			this.scrollToTop();
 		}
 
 		// Reset search bar
@@ -403,8 +413,8 @@ export class IrcComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe((result: BanBeatmapDialogData) => {
-			if(result != null) {
-				if(result.banForTeam == result.multiplayerLobby.teamOneName) {
+			if (result != null) {
+				if (result.banForTeam == result.multiplayerLobby.teamOneName) {
 					this.selectedLobby.teamOneBans.push(result.beatmap.beatmapId);
 					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser).subscribe();
 				}
@@ -462,5 +472,67 @@ export class IrcComponent implements OnInit {
 				this.multiplayerLobbies.update(this.selectedLobby);
 			}
 		});
+	}
+
+	/**
+	 * Toggle the player management tab
+	 */
+	togglePlayerManagement() {
+		this.isPlayerManagementMinimized = !this.isPlayerManagementMinimized
+
+		if (!this.isPlayerManagementMinimized) {
+			this.scrollToTop();
+		}
+	}
+
+	/**
+	 * Change the host to a different player
+	 * @param player
+	 */
+	setHost(player: MultiplayerLobbyPlayersPlayer) {
+		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp host ${player.username}`);
+	}
+
+	/**
+	 * Kick the player from the match
+	 * @param player
+	 */
+	kickPlayer(player: MultiplayerLobbyPlayersPlayer) {
+		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp kick ${player.username}`);
+	}
+
+	/**
+	 * Move the player to a different slot
+	 * @param player
+	 */
+	movePlayer(player: MultiplayerLobbyPlayersPlayer) {
+		const dialogRef = this.dialog.open(MultiplayerLobbyMovePlayerComponent, {
+			data: {
+				movePlayer: player,
+				allPlayers: this.selectedLobby.multiplayerLobbyPlayers
+			}
+		});
+
+		dialogRef.afterClosed().subscribe((result: MultiplayerLobbyMovePlayerDialogData) => {
+			if (result != undefined) {
+				this.ircService.sendMessage(this.selectedChannel.channelName, `!mp move ${result.movePlayer.username} ${result.moveToSlot}`);
+			}
+		});
+	}
+
+	/**
+	 * Change the colour of the current player
+	 * @param player
+	 */
+	changeTeam(player: MultiplayerLobbyPlayersPlayer) {
+		const newTeamColour = player.team == 'Red' ? 'blue' : 'red';
+		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp team ${player.username} ${newTeamColour}`);
+	}
+
+	/**
+	 * Scroll irc chat to top
+	 */
+	scrollToTop() {
+		this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
 	}
 }

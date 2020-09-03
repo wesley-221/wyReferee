@@ -21,7 +21,7 @@ $hyperlink-background-color: #2b4576;
 	.channels {
 		display: flex;
 		flex-direction: column;
-		flex: 1 0 21%;
+		flex: 0 0 21%;
 
 		background-color: darken($background-color-irc, 5%);
 
@@ -168,303 +168,394 @@ $hyperlink-background-color: #2b4576;
 		}
 	}
 
-	.chat-container {
+	.chat-content {
 		display: flex;
 		flex-direction: column;
-		width: 100%;
 
-		.match-header {
-			border-bottom: 3px solid $primary;
-			text-align: center;
+		flex: 1 1 auto;
 
-			.warning {
-				background-color: $danger;
-			}
-		}
-
-		.messages {
-			float: left;
-
-			width: 100%;
-			// height: calc(100% - #{$send-message-height});
-			height: 100%;
-
+		.player-management {
+			display: none;
+			flex: 1 1 auto;
 			overflow-y: auto;
 
-			.chat {
-				.chat-content {
-					display: flex;
-					align-items: flex-start;
-					flex-flow: row wrap;
+			background-color: $background-color-irc;
 
-					width: 100%;
-
-					.divider {
-						width: 100%;
-						line-height: 0.1em;
-						margin: 25px 0 25px;
-
-						text-align: center;
-						border-bottom: 3px solid $primary;
-
-						span {
-							background-color: $background-color-irc;
-							color: $primary;
-
-							font-weight: bold;
-							font-size: 20px;
-
-							padding: 0 10px;
-						}
-					}
-
-					.time {
-						width: 50px;
-
-						margin-left: 6px;
-						margin-right: 6px;
-						padding: 3px;
-
-						text-align: center;
-					}
-
-					.author {
-						flex: 1 0 0;
-
-						margin-left: 6px;
-						margin-right: 6px;
-						padding: 3px;
-
-						text-align: center;
-						font-weight: bold;
-
-						background-color: #ffff00;
-						color: black;
-
-						border-radius: 50px;
-
-						&.bancho {
-							background-color: $bancho-chat-colour;
-
-							&:hover {
-								background-color: darken($bancho-chat-colour, 15%);
-							}
-						}
-
-						&.highlighted {
-							background-color: #36f027;
-
-							&:hover {
-								background-color: darken(#36f027, 15%);
-							}
-						}
-
-						&.me {
-							background-color: $me-chat-colour;
-							color: #000000;
-
-							&:hover {
-								background-color: darken($me-chat-colour, 15%);
-							}
-						}
-
-						&:hover {
-							cursor: pointer;
-							background-color: darken(#ffff00, 10%);
-						}
-					}
-
-					.message {
-						flex: 5 0px;
-						width: calc(100% - (80px + 12px));
-
-						padding: 8px;
-
-						word-break: break-all;
-
-						.message-piece {
-							display: inline-block;
-
-							.link {
-								.url {
-									background-color: $hyperlink-background-color;
-									padding: 5px;
-								}
-
-								&:hover {
-									cursor: pointer;
-
-									.url {
-										background-color: lighten($hyperlink-background-color, 15%);
-									}
-								}
-							}
-						}
-					}
-				}
-
-				&:nth-child(odd) {
-					.message {
-						background-color: darken($background-color-irc, 5%);
-					}
-				}
-			}
-		}
-
-		.send-message {
-			// height: $send-message-height;
-
-			input {
-				width: 100%;
-				height: 100%;
-
-				box-sizing: border-box;
-
-				padding: 12px 20px;
-
-				font-size: 16px;
-
-				background-color: $background-color;
-				color: white;
-
-				border: 1px solid darken($background-color, 15%);
-				outline: 0;
-			}
-		}
-
-		.side-menu {
-			display: flex;
-			flex-direction: row;
-
-			position: absolute;
-			float: right;
-
-			width: 40px;
-			height: 88px;
-
-			right: 0;
-			top: 0;
-			bottom: 0;
-
-			.side-menu-button {
-				width: 40px;
-				height: 88px;
-
-				margin-top: 8px;
-
-				z-index: 70;
-
-				button {
-					float: right;
-
-					width: 40px;
-					height: 40px;
-
-					margin-bottom: 4px;
-				}
-			}
-
-			.side-menu-content {
+			.players {
 				display: flex;
-				flex-direction: column;
+				flex: 1 1 auto;
+				flex-flow: row wrap;
 
-				float: right;
+				.player {
+					display: flex;
+					flex-direction: column;
+					flex: 1 0 33%;
 
-				width: 0;
-				height: 100%;
+					padding: 8px;
+					margin: 4px;
 
-				opacity: 0;
+					background-color: rgba(0, 0, 0, 0.10);
 
-				background-color: darken($background-color-irc, 5%);
-				box-shadow: -1px 0px 7px 0px rgba(0, 0, 0, 0.75);
+					.top-row {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
 
-				overflow: hidden;
+						margin-bottom: 3px;
 
-				.header {
-					padding: 16px;
-				}
-
-				.mappool {
-					padding-left: 16px;
-
-					overflow-y: auto;
-
-					width: 100%;
-
-					.mod-bracket {
-						width: 100%;
-
-						margin-bottom: 16px;
-
-						.pick-random-map {
-							button {
-								width: calc(100% - 16px);
-							}
-						}
-
-						.map {
+						.column {
 							display: flex;
-							flex-direction: row;
-							justify-content: space-between;
+							padding-right: 4px;
 
-							background-color: $background-color-irc;
+							button {
+								margin-right: 4px;
 
-							overflow: hidden;
-
-							padding: 4px;
-
-							.name {
-								overflow: hidden;
-								word-wrap: none;
-
-								&:hover {
-									cursor: pointer;
-									color: $primary;
-									font-weight: bold;
+								&:last-child {
+									margin-right: 0px;
 								}
-
-								&.beatmapBanned {
-									background-color: #730101;
-									text-decoration: line-through;
-
-									&:hover {
-										color: white;
-										font-weight: normal;
-									}
-								}
-							}
-
-							.buttons {
-								display: flex;
-								flex-direction: row;
-
-								button {
-									box-sizing: border-box;
-									margin-right: 4px;
-								}
-							}
-
-							&:nth-child(even) {
-								background-color: lighten($background-color-irc, 5%);
 							}
 						}
+					}
+
+					.second-row {
+						display: flex;
+						justify-content: space-between;
+
+						align-items: center;
+
+						.column {
+							.red {
+								color: red;
+								text-shadow: 1px 1px black;
+							}
+
+							.green {
+								color: green;
+								text-shadow: 1px 1px black;
+							}
+						}
+					}
+
+					&.red {
+						background-color: rgba(255, 0, 0, 0.10);
+					}
+
+					&.blue {
+						background-color: rgba(0, 0, 255, 0.10);
 					}
 				}
 			}
 
 			&.in {
-				width: 30%;
+				display: flex;
+				height: 40%;
+			}
+		}
+
+		.chat-container {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			height: 100%;
+
+			.match-header {
+				border-bottom: 3px solid $primary;
+				text-align: center;
+
+				.warning {
+					background-color: $danger;
+				}
+			}
+
+			.messages {
+				float: left;
+
+				width: 100%;
 				height: 100%;
 
+				overflow-y: auto;
+
+				.chat {
+					.chat-content {
+						display: flex;
+						align-items: flex-start;
+						flex-flow: row wrap;
+
+						width: 100%;
+
+						.divider {
+							width: 100%;
+							line-height: 0.1em;
+							margin: 25px 0 25px;
+
+							text-align: center;
+							border-bottom: 3px solid $primary;
+
+							span {
+								background-color: $background-color-irc;
+								color: $primary;
+
+								font-weight: bold;
+								font-size: 20px;
+
+								padding: 0 10px;
+							}
+						}
+
+						.time {
+							width: 50px;
+
+							margin-left: 6px;
+							margin-right: 6px;
+							padding: 3px;
+
+							text-align: center;
+						}
+
+						.author {
+							flex: 1 0 0;
+
+							margin-left: 6px;
+							margin-right: 6px;
+							padding: 3px;
+
+							text-align: center;
+							font-weight: bold;
+
+							background-color: #ffff00;
+							color: black;
+
+							border-radius: 50px;
+
+							&.bancho {
+								background-color: $bancho-chat-colour;
+
+								&:hover {
+									background-color: darken($bancho-chat-colour, 15%);
+								}
+							}
+
+							&.highlighted {
+								background-color: #36f027;
+
+								&:hover {
+									background-color: darken(#36f027, 15%);
+								}
+							}
+
+							&.me {
+								background-color: $me-chat-colour;
+								color: #000000;
+
+								&:hover {
+									background-color: darken($me-chat-colour, 15%);
+								}
+							}
+
+							&:hover {
+								cursor: pointer;
+								background-color: darken(#ffff00, 10%);
+							}
+						}
+
+						.message {
+							flex: 5 0px;
+							width: calc(100% - (80px + 12px));
+
+							padding: 8px;
+
+							word-break: break-all;
+
+							.message-piece {
+								display: inline-block;
+
+								.link {
+									.url {
+										background-color: $hyperlink-background-color;
+										padding: 5px;
+									}
+
+									&:hover {
+										cursor: pointer;
+
+										.url {
+											background-color: lighten($hyperlink-background-color, 15%);
+										}
+									}
+								}
+							}
+						}
+					}
+
+					&:nth-child(odd) {
+						.message {
+							background-color: darken($background-color-irc, 5%);
+						}
+					}
+				}
+			}
+
+			.send-message {
+				// height: $send-message-height;
+
+				input {
+					width: 100%;
+					height: 100%;
+
+					box-sizing: border-box;
+
+					padding: 12px 20px;
+
+					font-size: 16px;
+
+					background-color: $background-color;
+					color: white;
+
+					border: 1px solid darken($background-color, 15%);
+					outline: 0;
+				}
+			}
+
+			.side-menu {
+				display: flex;
+				flex-direction: row;
+
+				position: absolute;
+				float: right;
+
+				width: 40px;
+				height: 88px;
+
+				right: 0;
+				top: 0;
+				bottom: 0;
+
+				z-index: 55;
+
 				.side-menu-button {
-					position: absolute;
-					margin-left: -30px;
+					width: 40px;
+					height: 88px;
+
+					margin-top: 8px;
+
+					z-index: 70;
+
+					button {
+						float: right;
+
+						width: 40px;
+						height: 40px;
+
+						margin-bottom: 4px;
+					}
 				}
 
 				.side-menu-content {
-					width: 100%;
-					opacity: 1;
+					display: flex;
+					flex-direction: column;
+
+					float: right;
+
+					width: 0;
+					height: 100%;
+
+					opacity: 0;
+
+					background-color: darken($background-color-irc, 5%);
+					box-shadow: -1px 0px 7px 0px rgba(0, 0, 0, 0.75);
+
+					overflow: hidden;
+
+					.header {
+						padding: 16px;
+					}
+
+					.mappool {
+						padding-left: 16px;
+
+						overflow-y: auto;
+
+						width: 100%;
+
+						.mod-bracket {
+							width: 100%;
+
+							margin-bottom: 16px;
+
+							.pick-random-map {
+								button {
+									width: calc(100% - 16px);
+								}
+							}
+
+							.map {
+								display: flex;
+								flex-direction: row;
+								justify-content: space-between;
+
+								background-color: $background-color-irc;
+
+								overflow: hidden;
+
+								padding: 4px;
+
+								.name {
+									overflow: hidden;
+									word-wrap: none;
+
+									&:hover {
+										cursor: pointer;
+										color: $primary;
+										font-weight: bold;
+									}
+
+									&.beatmapBanned {
+										background-color: #730101;
+										text-decoration: line-through;
+
+										&:hover {
+											color: white;
+											font-weight: normal;
+										}
+									}
+								}
+
+								.buttons {
+									display: flex;
+									flex-direction: row;
+
+									button {
+										box-sizing: border-box;
+										margin-right: 4px;
+									}
+								}
+
+								&:nth-child(even) {
+									background-color: lighten($background-color-irc, 5%);
+								}
+							}
+						}
+					}
 				}
+
+				&.in {
+					width: 30%;
+					height: 100%;
+
+					.side-menu-button {
+						position: absolute;
+						margin-left: -30px;
+					}
+
+					.side-menu-content {
+						width: 100%;
+						opacity: 1;
+					}
+				}
+			}
+
+			&.in {
+				height: 60%;
 			}
 		}
 	}

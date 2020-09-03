@@ -1,7 +1,7 @@
 export class Regex {
 	static isLink = {
 		regex: /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*))/g,
-		run: (message) => {
+		run: (message: string) => {
 			const isLinkRegex = RegExp(Regex.isLink.regex).exec(message);
 
 			if (isLinkRegex !== null) {
@@ -15,7 +15,7 @@ export class Regex {
 	static isEmbedLink = {
 		regexFullEmbed: /(\[https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*) .+\])/g,
 		regexSplit: /\[(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)) (.+)\]/g,
-		run: (message) => {
+		run: (message: string) => {
 			const isEmbedLinkRegex = RegExp(Regex.isEmbedLink.regexFullEmbed).exec(message);
 
 			if (isEmbedLinkRegex != null) {
@@ -28,7 +28,7 @@ export class Regex {
 
 	static isListeningTo = {
 		regex: /^(is listening to) \[(https:\/\/osu\.ppy\.sh\/[b|s]\/\d+) (.+)\]/,
-		run: (message): { message: string, link: string, name: string } => {
+		run: (message: string): { message: string, link: string, name: string } => {
 			const isListeningToRegex = RegExp(Regex.isListeningTo.regex).exec(message);
 
 			if (isListeningToRegex !== null) {
@@ -41,7 +41,7 @@ export class Regex {
 
 	static isEditing = {
 		regex: /^(is editing) \[(https:\/\/osu\.ppy\.sh\/[b|s]\/\d+) (.+)\]/,
-		run: (message): { message: string, link: string, name: string } => {
+		run: (message: string): { message: string, link: string, name: string } => {
 			const isEditingRegex = RegExp(Regex.isEditing.regex).exec(message);
 
 			if (isEditingRegex !== null) {
@@ -54,7 +54,7 @@ export class Regex {
 
 	static isPlaying = {
 		regex: /^(is playing) \[(https:\/\/osu\.ppy\.sh\/[b|s]\/\d+) (.+)\](.+)?/,
-		run: (message): { message: string, link: string, name: string } => {
+		run: (message: string): { message: string, link: string, name: string } => {
 			const isPlayingRegex = RegExp(Regex.isPlaying.regex).exec(message);
 
 			if (isPlayingRegex !== null) {
@@ -67,7 +67,7 @@ export class Regex {
 
 	static isWatching = {
 		regex: /^(is watching) \[(https:\/\/osu\.ppy\.sh\/[b|s]\/\d+) (.+)\] .+/,
-		run: (message): { message: string, link: string, name: string } => {
+		run: (message: string): { message: string, link: string, name: string } => {
 			const isWatchingChangeRegex = RegExp(Regex.isWatching.regex).exec(message);
 
 			if (isWatchingChangeRegex !== null) {
@@ -80,7 +80,7 @@ export class Regex {
 
 	static playerBeatmapChange = {
 		regex: /^(Beatmap changed to:) (.+) \((https:\/\/osu\.ppy\.sh\/b\/\d+)\)/,
-		run: (message): { message: string, link: string, name: string } => {
+		run: (message: string): { message: string, link: string, name: string } => {
 			const playerBeatmapChangeRegex = RegExp(Regex.playerBeatmapChange.regex).exec(message);
 
 			if (playerBeatmapChangeRegex !== null) {
@@ -93,7 +93,7 @@ export class Regex {
 
 	static multiplayerInitialization = {
 		regex: /^Team mode: (.+), Win condition: (.+)/,
-		run: (message): { teamMode: string, winCondition: string } => {
+		run: (message: string): { teamMode: string, winCondition: string } => {
 			const multiplayerInitializationRegex = RegExp(Regex.multiplayerInitialization.regex).exec(message);
 
 			if (multiplayerInitializationRegex !== null) {
@@ -106,7 +106,7 @@ export class Regex {
 
 	static multiplayerMatchSize = {
 		regex: /^Changed match to size ([0-9][0-9]?)/,
-		run: (message): { size: number } => {
+		run: (message: string): { size: number } => {
 			const multiplayerMatchSizeRegex = RegExp(Regex.multiplayerMatchSize.regex).exec(message);
 
 			if (multiplayerMatchSizeRegex !== null) {
@@ -119,7 +119,7 @@ export class Regex {
 
 	static multiplayerSettingsChange = {
 		regex: /Changed match settings to ([0-9][0-9]?) slots, (.+), (.+)/,
-		run: (message): { size: number, teamMode: string, winCondition: string } => {
+		run: (message: string): { size: number, teamMode: string, winCondition: string } => {
 			const multiplayerSettingsChange = RegExp(Regex.multiplayerSettingsChange.regex).exec(message);
 
 			if (multiplayerSettingsChange !== null) {
@@ -132,7 +132,7 @@ export class Regex {
 
 	static tournamentMatchCreated = {
 		regex: /^Created the tournament match https:\/\/osu\.ppy\.sh\/mp\/(\d+).+/,
-		run: (message): { multiplayerId: string } => {
+		run: (message: string): { multiplayerId: string } => {
 			const tournamentMatchCreated = RegExp(Regex.tournamentMatchCreated.regex).exec(message);
 
 			if (tournamentMatchCreated !== null) {
@@ -157,5 +157,116 @@ export class Regex {
 		}
 	}
 
-	// TODO: refereeBeatmapChange
+	static playerInSlot = {
+		regexTeam: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[Team\s+(Blue|Red)\s?\]/,
+		regexTeamHost: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)\s+\/\s+Team\s+(Blue|Red)\s?\]/,
+		regexTeamHostMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)\s+\/\s+Team\s+(Blue|Red)\s+\/\s+(.*)\]/,
+		regexTeamMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[Team\s+(Blue|Red)\s+\/\s+(.*)\]/,
+		run: (message: string): { type: string, slotId: number, status: string, username: string, host: boolean, team: string, mods: string } => {
+			const regexTeamRegex = RegExp(Regex.playerInSlot.regexTeam).exec(message);
+
+			if (regexTeamRegex !== null) {
+				return { type: 'regexTeam', slotId: parseInt(regexTeamRegex[1]), status: regexTeamRegex[2], username: regexTeamRegex[3], team: regexTeamRegex[4], host: false, mods: 'none' };
+			}
+
+			const regexTeamModsRegex = RegExp(Regex.playerInSlot.regexTeamMods).exec(message);
+
+			if (regexTeamModsRegex !== null) {
+				return { type: 'regexTeamMods', slotId: parseInt(regexTeamModsRegex[1]), status: regexTeamModsRegex[2], username: regexTeamModsRegex[3], team: regexTeamModsRegex[4], mods: regexTeamModsRegex[5], host: false };
+			}
+
+			const regexTeamHostRegex = RegExp(Regex.playerInSlot.regexTeamHost).exec(message);
+
+			if (regexTeamHostRegex !== null) {
+				return { type: 'regexTeamHost', slotId: parseInt(regexTeamHostRegex[1]), status: regexTeamHostRegex[2], username: regexTeamHostRegex[3], team: regexTeamHostRegex[5], host: true, mods: 'none' };
+			}
+
+			const regexTeamHostModsRegex = RegExp(Regex.playerInSlot.regexTeamHostMods).exec(message);
+
+			if (regexTeamHostModsRegex !== null) {
+				return { type: 'regexTeamHost', slotId: parseInt(regexTeamHostModsRegex[1]), status: regexTeamHostModsRegex[2], username: regexTeamHostModsRegex[3], team: regexTeamHostModsRegex[5], host: true, mods: regexTeamHostModsRegex[6] };
+			}
+
+			return null;
+		}
+	}
+
+	static playerHasMoved = {
+		regex: /^(.*) moved to slot (\d+)/,
+		run: (message: string): { slotId: number, username: string } => {
+			const playerHasMovedRegex = RegExp(Regex.playerHasMoved.regex).exec(message);
+
+			if (playerHasMovedRegex !== null) {
+				return { slotId: parseInt(playerHasMovedRegex[2]), username: playerHasMovedRegex[1] };
+			}
+
+			return null;
+		}
+	}
+
+	static hostChanged = {
+		regex: /^Changed match host to (.*)/,
+		run: (message: string): { newHost: string } => {
+			const hostChangedRegex = RegExp(Regex.hostChanged.regex).exec(message);
+
+			if (hostChangedRegex !== null) {
+				return { newHost: hostChangedRegex[1] };
+			}
+
+			return null;
+		}
+	}
+
+	static playerHasChangedTeam = {
+		regex: /^(.*) changed to (Red|Blue)/,
+		run: (message: string): { username: string, team: string } => {
+			const playerHasChangedTeamRegex = RegExp(Regex.playerHasChangedTeam.regex).exec(message);
+
+			if (playerHasChangedTeamRegex !== null) {
+				return { username: playerHasChangedTeamRegex[1], team: playerHasChangedTeamRegex[2] };
+			}
+
+			return null;
+		}
+	}
+
+	static clearMatchHost = {
+		regex: /^Cleared match host/,
+		run: (message: string): boolean => {
+			const clearMatchHostRegex = RegExp(Regex.clearMatchHost.regex).exec(message);
+
+			if (clearMatchHostRegex !== null) {
+				return true;
+			}
+
+			return null;
+		}
+	}
+
+	static playerLeft = {
+		regex: /^(.*) left the game/,
+		run: (message: string): { username: string } => {
+			const playerLeftRegex = RegExp(Regex.playerLeft.regex).exec(message);
+
+			if (playerLeftRegex !== null) {
+				return { username: playerLeftRegex[1] };
+			}
+
+			return null;
+		}
+	}
+
+	static playerJoined = {
+		regex: /^(.*) joined in slot (\d) for team (blue|red)./,
+		run: (message: string): { username: string, slot: number, team: string } => {
+			const playerJoinedRegex = RegExp(Regex.playerJoined.regex).exec(message);
+
+			if (playerJoinedRegex !== null) {
+				let team = playerJoinedRegex[3] == 'blue' ? 'Blue' : 'Red';
+				return { username: playerJoinedRegex[1], slot: parseInt(playerJoinedRegex[2]), team: team };
+			}
+
+			return null;
+		}
+	}
 }

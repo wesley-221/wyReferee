@@ -58,6 +58,7 @@ import { MultiplayerLobbySettingsComponent } from './components/dialogs/multipla
 import { SendFinalResultComponent } from './components/dialogs/send-final-result/send-final-result.component';
 import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/join-irc-channel.component';
 import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatmap.component';
+import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
 
 @NgModule({
 	declarations: [
@@ -101,7 +102,8 @@ import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatma
 		MultiplayerLobbySettingsComponent,
 		SendFinalResultComponent,
 		JoinIrcChannelComponent,
-		BanBeatmapComponent
+		BanBeatmapComponent,
+		MultiplayerLobbyMovePlayerComponent
 	],
 	imports: [
 		BrowserModule,

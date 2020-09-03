@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Delete tournament</h2>
+
+<mat-dialog-content class="mat-typography">
+	Select the slot where you want to move {{ data.movePlayer.username }} to:
+
+	<div class="all-players">
+		<div class="player" *ngFor="let player of data.allPlayers.players" (click)="selectSlot(player)" [ngClass]="{'active': player.slot == selectedSlot, 'disabled': player.username != 'Open'}">
+			<b>Slot {{ player.slot }}</b>: {{ player.username }}
+		</div>
+	</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="getData()" color="primary" [disabled]="selectedSlot == null">Move player</button>
+</mat-dialog-actions>

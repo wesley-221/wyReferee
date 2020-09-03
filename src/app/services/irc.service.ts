@@ -231,6 +231,14 @@ export class IrcService {
 					const matchClosed = Regex.closedMatch.run(message);
 					const matchFinished = Regex.matchFinished.run(message);
 
+					const playerInSlot = Regex.playerInSlot.run(message);
+					const playerHasMoved = Regex.playerHasMoved.run(message);
+					const hostChanged = Regex.hostChanged.run(message);
+					const playerHasChangedTeam = Regex.playerHasChangedTeam.run(message);
+					const clearMatchHost = Regex.clearMatchHost.run(message);
+					const playerLeft = Regex.playerLeft.run(message);
+					const playerJoined = Regex.playerJoined.run(message);
+
 					// Initialize the channel with the correct teammode and wincondition
 					if (multiplayerInitialization) {
 						this.getChannelByName(to).teamMode = TeamMode[multiplayerInitialization.teamMode];
@@ -258,6 +266,41 @@ export class IrcService {
 					// A beatmap has finished
 					if (matchFinished) {
 						this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getByIrcLobby(to), true, true);
+					}
+
+					// Gets called when !mp settings is ran
+					if (playerInSlot) {
+						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.playerChanged(playerInSlot);
+					}
+
+					// Gets called when a player moves around
+					if (playerHasMoved) {
+						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.movePlayerToSlot(playerHasMoved);
+					}
+
+					// Gets called when the host gets changed
+					if (hostChanged) {
+						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.changeHost(hostChanged);
+					}
+
+					// Gets called when a player changes teams
+					if (playerHasChangedTeam) {
+						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.playerChangedTeam(playerHasChangedTeam);
+					}
+
+					// Gets called when match host gets cleared
+					if (clearMatchHost) {
+						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.clearMatchHost();
+					}
+
+					// Gets called when a user leaves
+					if (playerLeft) {
+						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.playerLeft(playerLeft);
+					}
+
+					// Gets called when a user joins
+					if (playerJoined) {
+						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.playerJoined(playerJoined);
 					}
 				}
 				// ===========================================

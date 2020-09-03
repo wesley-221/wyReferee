@@ -1,0 +1,28 @@
+@import 'variables';
+
+.all-players {
+	display: flex;
+	flex-direction: column;
+
+	.player {
+		display: flex;
+		background-color: $primary;
+
+		margin: 1px;
+		padding: 4px;
+
+		&.active {
+			background-color: darken($primary, 15%);
+		}
+
+		&:hover {
+			cursor: pointer;
+			background-color: darken($primary, 15%);
+		}
+
+		&.disabled {
+			background-color: $sidebar-color;
+			cursor: not-allowed;
+		}
+	}
+}
