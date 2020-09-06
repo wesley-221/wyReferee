@@ -22,13 +22,11 @@
 
 		<div class="buttons">
 			<div class="button-row">
-				<button mat-mini-fab color="basic" matTooltip="Connect to multiplayer lobby" [disabled]="!ircService.isAuthenticated" (click)="joinIrc()"><mat-icon>chat</mat-icon></button>
-				<!-- <button mat-mini-fab color="basic" matTooltip="Connect to multiplayer lobby"><mat-icon>?</mat-icon></button> -->
+				<button mat-mini-fab color="basic" matTooltip="Go to IRC page" (click)="goToIrc()"><mat-icon>chat</mat-icon></button>
 				<button mat-mini-fab color="accent" matTooltip="Send final result to Discord webhook" (click)="sendFinalResult(selectedLobby)"><mat-icon>send</mat-icon></button>
 			</div>
 
 			<div class="button-row">
-				<button mat-mini-fab color="basic" matTooltip="Go to IRC" (click)="goToIrc()"><mat-icon>chat</mat-icon></button>
 				<button mat-mini-fab color="basic" matTooltip="Open the multiplayer lobby settings" (click)="openSettings(selectedLobby)"><mat-icon>settings</mat-icon></button>
 				<button mat-mini-fab color="accent" matTooltip="Synchronize the scores of this multiplayer lobby" (click)="synchronizeMp()"><mat-icon>sync</mat-icon></button>
 			</div>

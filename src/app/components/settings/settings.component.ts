@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../../services/electron.service';
 import { StoreService } from '../../services/store.service';
 import { ToastService } from '../../services/toast.service';
@@ -19,7 +19,7 @@ import { LoggedInUser } from 'app/models/authentication/logged-in-user';
 })
 
 export class SettingsComponent implements OnInit {
-	@ViewChild('apiKey') apiKey: ElementRef;
+	apiKey: string;
 
 	dialogMessage: string;
 	dialogAction = 0;
@@ -30,6 +30,8 @@ export class SettingsComponent implements OnInit {
 	isConnecting = false;
 	isDisconnecting = false;
 
+	apiKeyIsValid = false;
+
 	constructor(
 		public electronService: ElectronService,
 		private storeService: StoreService,
@@ -38,7 +40,13 @@ export class SettingsComponent implements OnInit {
 		private dialog: MatDialog,
 		public auth: AuthenticateService,
 		public ircService: IrcService
-	) { }
+	) {
+		this.apiKey = this.storeService.get('api-key');
+
+		if (this.apiKey.length > 0) {
+			this.apiKeyIsValid = true;
+		}
+	}
 
 	ngOnInit() {
 		this.mappoolPublishForm = new FormGroup({
@@ -133,9 +141,11 @@ export class SettingsComponent implements OnInit {
 	 */
 	saveApiKey() {
 		// Key is valid
-		this.apiKeyValidation.validate(this.apiKey.nativeElement.value).subscribe(() => {
-			this.storeService.set('api-key', this.apiKey.nativeElement.value);
+		this.apiKeyValidation.validate(this.apiKey).subscribe(() => {
+			this.storeService.set('api-key', this.apiKey);
 			this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
+
+			this.apiKeyIsValid = true;
 		},
 			// Key is invalid
 			() => {
@@ -174,8 +184,6 @@ export class SettingsComponent implements OnInit {
 			configFile['irc']['username'] = 'redacted';
 			configFile['irc']['password'] = 'redacted';
 
-			console.log(configFile);
-
 			configFile = JSON.stringify(configFile, null, '\t');
 
 			this.electronService.fs.writeFile(file.filePath, configFile, err => {
@@ -206,7 +214,7 @@ export class SettingsComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(res => {
-			if(res == true) {
+			if (res == true) {
 				if (dialogAction == 0) {
 					this.clearCache();
 				}

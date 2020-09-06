@@ -17,7 +17,7 @@ export class ApiKeyValidation {
 	 * Validate an api key by making a call to the osu! api
 	 * @param apiKey the api key to validate
 	 */
-	validate(apiKey: number): Observable<OsuUser> {
+	validate(apiKey: string): Observable<OsuUser> {
 		return this.httpClient.get<OsuUser>(`https://osu.ppy.sh/api/get_user?k=${apiKey}&u=${this.userId}&type=id`);
 	}
 }

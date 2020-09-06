@@ -86,7 +86,6 @@ export class IrcComponent implements OnInit {
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
-		private changeDetector: ChangeDetectorRef,
 		private storeService: StoreService,
 		public mappoolService: MappoolService,
 		private multiplayerLobbies: MultiplayerLobbiesService,
@@ -176,14 +175,6 @@ export class IrcComponent implements OnInit {
 
 		// Reset search bar
 		this.searchValue = '';
-
-		// Channel was changed to a multiplayer lobby
-		if (channel.startsWith('#mp_') && this.selectedChannel.active) {
-			// Check if either the team mode or win condition isn't set
-			if (this.selectedChannel.teamMode == undefined || this.selectedChannel.winCondition == undefined && this.selectedChannel.active) {
-				this.ircService.sendMessage(channel, '!mp settings');
-			}
-		}
 	}
 
 	/**
@@ -193,8 +184,10 @@ export class IrcComponent implements OnInit {
 		const dialogRef = this.dialog.open(JoinIrcChannelComponent);
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.attemptingToJoinChannel = result;
-			this.ircService.joinChannel(result);
+			if (result) {
+				this.attemptingToJoinChannel = result;
+				this.ircService.joinChannel(result);
+			}
 		});
 	}
 
@@ -231,62 +224,6 @@ export class IrcComponent implements OnInit {
 		moveItemInArray(this.channels, event.previousIndex, event.currentIndex);
 
 		this.ircService.rearrangeChannels(this.channels);
-	}
-
-	/**
-	 * When a key was pressed
-	 * @param event
-	 * @param eventName up or down (for key up/down)
-	 */
-	onKey(event: KeyboardEvent, eventName: string) {
-		event.preventDefault();
-
-		// Check if the pressed key was tab
-		if (event.key === 'Tab') {
-			this.changeDetector.detectChanges();
-			this.chatMessage.nativeElement.focus();
-
-			// The key is being hold
-			if (eventName == 'down') {
-				if (this.keyPressed == false) {
-					// Check if there is a selected channel
-					if (this.selectedChannel != undefined) {
-						// Check if the object exists
-						if (!this.ircService.client.chans.hasOwnProperty(this.selectedChannel.channelName)) return;
-
-						const lastWordOfSentence = this.chatMessage.nativeElement.value.split(' ').pop();
-						const matchedUsers = [];
-
-						// Prevent 0 letter autocompletion
-						if (lastWordOfSentence.length < 1) return;
-
-						for (const user in this.ircService.client.chans[this.selectedChannel.channelName].users) {
-							// Remove irc levels
-							const newUser = user.replace(/[@|+]/gi, '');
-
-							if (newUser.toLowerCase().startsWith(lastWordOfSentence.toLowerCase())) {
-								matchedUsers.push(newUser);
-							}
-						}
-
-						// Show the matched users
-						if (matchedUsers.length > 1) {
-							this.ircService.addMessageToChannel(this.selectedChannel.channelName, 'BanchoBot', `Matched users: ${matchedUsers.join(', ')}`);
-						}
-						// Replace the autocompleted user
-						else if (matchedUsers.length == 1) {
-							this.chatMessage.nativeElement.value = this.chatMessage.nativeElement.value.replace(lastWordOfSentence, matchedUsers[0]);
-						}
-					}
-
-					this.keyPressed = true;
-				}
-			}
-			// The key was released
-			else {
-				this.keyPressed = false;
-			}
-		}
 	}
 
 	/**

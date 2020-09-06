@@ -17,7 +17,7 @@ export enum WinCondition {
 export class Channel {
 	channelName: string;
 	active = true;
-	allMessages: Message[] = [];
+	allMessages: Message[];
 	lastActiveChannel = false;
 	isPrivateChannel = false;
 	hasUnreadMessages = false;
@@ -31,5 +31,6 @@ export class Channel {
 		this.channelName = channelName;
 		this.isPrivateChannel = isPrivateChannel;
 		this.playSoundOnMessage = false;
+		this.allMessages = [];
 	}
 }

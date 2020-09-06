@@ -10,6 +10,8 @@ import { TournamentService } from '../../../services/tournament.service';
 import { Tournament } from '../../../models/tournament/tournament';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
+import { from } from 'rxjs';
+import { BanchoMultiplayerChannel } from 'bancho.js';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -108,20 +110,25 @@ export class CreateLobbyComponent implements OnInit {
 			if (newLobby.multiplayerLink == '') {
 				this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
 
-				this.ircService.client.say('BanchoBot', `!mp make ${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`);
+				from(this.ircService.client.createLobby(`${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
+					this.lobbyHasBeenCreated = true;
+
+					this.ircService.joinChannel(multiplayerChannel.name);
+					this.ircService.initializeChannelListeners(multiplayerChannel);
+
+					setTimeout(() => {
+						this.lobbyHasBeenCreated = false;
+					}, 3000);
+
+					newLobby.multiplayerLink = `https://osu.ppy.sh/community/matches/${multiplayerChannel.lobby.id}`;
+
+					this.multiplayerLobbies.add(newLobby);
+
+					this.toastService.addToast(`Successfully created the multiplayer lobby ${newLobby.description}!`);
+
+					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
+				});
 			}
-
-			this.lobbyHasBeenCreated = true;
-
-			setTimeout(() => {
-				this.lobbyHasBeenCreated = false;
-			}, 3000);
-
-			this.multiplayerLobbies.add(newLobby);
-
-			this.toastService.addToast(`Successfully created the multiplayer lobby ${newLobby.description}!`);
-
-			this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
 		}
 		else {
 			this.validationForm.markAllAsTouched();
