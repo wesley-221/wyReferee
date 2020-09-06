@@ -106,7 +106,12 @@ export class SettingsComponent implements OnInit {
 
 			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser.username}"!`);
 		}, (err) => {
-			this.toastService.addToast(`${err.error.message}`, ToastType.Error);
+			if(err.status == 0) {
+				this.toastService.addToast(`${err.statusText}. Server might be offline due to maintenance.`, ToastType.Error);
+			}
+			else {
+				this.toastService.addToast(`${err.error.message}`, ToastType.Error);
+			}
 		});
 	}
 
@@ -167,6 +172,9 @@ export class SettingsComponent implements OnInit {
 	removeApiKey() {
 		this.storeService.delete('api-key');
 		this.toastService.addToast('Successfully removed your api key.');
+
+		this.apiKeyIsValid = false;
+		this.apiKey = null;
 	}
 
 	/**
