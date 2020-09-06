@@ -1,15 +1,15 @@
 <div class="toast-area">
-	<div *ngFor="let toast of allToasts" (click)="removeToast(toast)" class="toast row" [@simpleFadeAnimation]="'in'"
+	<div *ngFor="let toast of allToasts" (click)="removeToast(toast)" class="toast" [@simpleFadeAnimation]="'in'"
 			[ngClass]="{'toast-information': toast.toastType == toastType.Information,
 						'toast-warning': toast.toastType == toastType.Warning,
 						'toast-error': toast.toastType == toastType.Error }">
-		<div class="col-1">
+		<div class="icon">
 			<mat-icon *ngIf="toast.toastType == toastType.Information">info</mat-icon>
 			<mat-icon *ngIf="toast.toastType == toastType.Warning">error</mat-icon>
 			<mat-icon *ngIf="toast.toastType == toastType.Error">error</mat-icon>
 		</div>
 
-		<div class="col">
+		<div class="message">
 			{{ toast.message }}
 		</div>
 	</div>
