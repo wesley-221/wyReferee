@@ -43,7 +43,7 @@ export class SettingsComponent implements OnInit {
 	) {
 		this.apiKey = this.storeService.get('api-key');
 
-		if (this.apiKey.length > 0) {
+		if (this.apiKey && this.apiKey.length > 0) {
 			this.apiKeyIsValid = true;
 		}
 	}
