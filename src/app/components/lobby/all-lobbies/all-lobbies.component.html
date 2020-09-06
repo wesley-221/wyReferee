@@ -1,31 +1,33 @@
-<div class="create-lobby">
-	<h2>Create a new multiplayer lobby</h2>
-	<p>In order to referee a match, you have to create a multiplayer lobby. With a couple of easy steps you can setup a multiplayer lobby for a tournament without any hassle!</p>
+<div class="lobby-interface">
+	<div class="create-lobby">
+		<h2>Create a new multiplayer lobby</h2>
+		<p>In order to referee a match, you have to create a multiplayer lobby. With a couple of easy steps you can setup a multiplayer lobby for a tournament without any hassle!</p>
 
-	<button mat-raised-button [routerLink]="['/lobby-overview/create-lobby']" color="primary"><mat-icon>add</mat-icon> create new mutliplayer lobby</button>
+		<button mat-raised-button [routerLink]="['/lobby-overview/create-lobby']" color="primary"><mat-icon>add</mat-icon> create new mutliplayer lobby</button>
 
-	<hr />
-</div>
-
-<div class="all-lobbies">
-	<div class="alert alert-info" *ngIf="allLobbies.length == 0">
-		There are currently no lobbies available.
+		<hr />
 	</div>
 
-	<div *ngFor="let lobby of allLobbies.slice().reverse()" (click)="navigateLobby(lobby, $event)" class="lobby">
-		<div class="body">
-			<div class="information">
-				<div class="multiplayerId">
-					<h1>{{ lobby.getLobbyName() }}</h1>
+	<div class="all-lobbies">
+		<div class="alert alert-info" *ngIf="allLobbies.length == 0">
+			There are currently no lobbies available.
+		</div>
+
+		<div *ngFor="let lobby of allLobbies.slice().reverse()" (click)="navigateLobby(lobby, $event)" class="lobby">
+			<div class="body">
+				<div class="information">
+					<div class="multiplayerId">
+						<h1>{{ lobby.getLobbyName() }}</h1>
+					</div>
+
+					<div class="multiplayerDesc">
+						{{ lobby.teamOneName }} vs {{ lobby.teamTwoName }}
+					</div>
 				</div>
 
-				<div class="multiplayerDesc">
-					{{ lobby.teamOneName }} vs {{ lobby.teamTwoName }}
+				<div class="delete-lobby">
+					<button mat-mini-fab color="warn" (click)="deleteLobby(lobby)"><mat-icon>delete</mat-icon></button>
 				</div>
-			</div>
-
-			<div class="delete-lobby">
-				<button mat-mini-fab color="warn" (click)="deleteLobby(lobby)"><mat-icon>delete</mat-icon></button>
 			</div>
 		</div>
 	</div>
