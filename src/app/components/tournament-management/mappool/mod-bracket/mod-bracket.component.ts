@@ -57,6 +57,7 @@ export class ModBracketComponent implements OnInit {
 		for (const mod in this.modBracket.mods) {
 			const modValue = this.modBracket.mods[mod].modValue;
 			this.selectedMods.push({ index: this.modBracketIndex + 1, modValue: modValue });
+			this.validationForm.addControl(`mod-bracket-mod-index-${this.modBracket.validateIndex}-${this.modBracketIndex + 1}`, new FormControl(modValue, Validators.required));
 
 			this.modBracketIndex++;
 		}
@@ -216,6 +217,10 @@ export class ModBracketComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
 				this.validationForm.removeControl(`mod-bracket-name-${modBracket.id}`);
+
+				for (const mod in this.selectedMods) {
+					this.validationForm.removeControl(`mod-bracket-mod-index-${this.modBracket.validateIndex}-${this.selectedMods[mod]}`);
+				}
 
 				this.mappool.removeModBracket(modBracket);
 				this.toastService.addToast(`Successfully removed "${modBracket.bracketName}" from the mappool.`);
