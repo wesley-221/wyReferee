@@ -100,18 +100,6 @@ export class LobbyViewComponent implements OnInit {
 		// console.timeEnd('synchronize-lobby');
 	}
 
-	joinIrc() {
-		const ircName = `#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`;
-
-		if (this.ircService.getChannelByName(ircName) != null) {
-			this.toastService.addToast(`You are already in channel "${ircName}"`);
-		}
-		else {
-			this.toastService.addToast(`Attempting to join channel "${ircName}"...`);
-			this.ircService.joinChannel(ircName);
-		}
-	}
-
 	/**
 	 * Send the result of the beatmap to irc if connected
 	 * @param match

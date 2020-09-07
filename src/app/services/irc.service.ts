@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import * as irc from 'irc-upd';
+import { BanchoClient, PrivateMessage, ChannelMessage, BanchoChannel, BanchoMultiplayerChannel, BanchoLobbyPlayer } from 'bancho.js';
 import { ToastService } from './toast.service';
-import { ToastType } from '../models/toast';
 import { StoreService } from './store.service';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Channel, WinCondition, TeamMode } from '../models/irc/channel';
+import { BehaviorSubject, Observable, from } from 'rxjs';
+import { Channel, TeamMode, WinCondition } from '../models/irc/channel';
 import { Message } from '../models/irc/message';
 import { Regex } from '../models/irc/regex';
 import { MessageBuilder, MessageType } from '../models/irc/message-builder';
@@ -16,8 +15,7 @@ import { Howl } from 'howler';
 })
 
 export class IrcService {
-	irc: typeof irc;
-	client: typeof irc.Client;
+	client: BanchoClient;
 
 	/**
 	 * Whether or not the user is authenticated to irc
@@ -45,8 +43,6 @@ export class IrcService {
 	private soundIsPlaying = false;
 
 	constructor(private toastService: ToastService, private storeService: StoreService, private multiplayerLobbiesService: MultiplayerLobbiesService) {
-		this.irc = require('irc-upd');
-
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
@@ -136,203 +132,65 @@ export class IrcService {
 	 * @param password the password to connect with
 	 */
 	connect(username: string, password: string) {
-		const ircSettings = {
-			password: password,
-			autoConnect: false,
-			autoRejoin: true,
-			debug: false,
-			showErrors: false
-		};
-
 		const allJoinedChannels = this.storeService.get('irc.channels');
+		const apiKey = this.storeService.get('api-key')
 
-		// Check if the user already has joined channels
-		if (allJoinedChannels !== undefined) {
-			ircSettings['channels'] = [];
-
-			for (const channel in allJoinedChannels) {
-				ircSettings['channels'].push(allJoinedChannels[channel].name);
-			}
-		}
-
-		this.client = new irc.Client('irc.ppy.sh', username, ircSettings);
+		this.client = new BanchoClient({ username: username, password: password, apiKey: apiKey });
 
 		this.isConnecting$.next(true);
 
 		/**
-		 * Error handlers
-		 */
-		this.client.addListener('error', error => {
-			// Get rid of error, hasn't been fixed by irc-upd devs yet
-			if (error.message == 'Cannot read property \'trim\' of undefined')
-				return;
-
-			// Invalid password given
-			if (error.command == 'err_passwdmismatch') {
-				this.isConnecting$.next(false);
-				this.toastService.addToast('Invalid password given. Please try again', ToastType.Error);
-			}
-			// Invalid channel given
-			else if (error.command === 'err_nosuchchannel') {
-				const channelName = error.args[1];
-
-				if (!channelName.startsWith('#')) { }
-				else if (!channelName.startsWith('#mp_')) {
-					this.toastService.addToast('The channel you are trying to join does not exist.', ToastType.Error);
-					this.isJoiningChannel$.next(false);
-				}
-				else {
-					if (this.getChannelByName(channelName) != null) {
-						this.getChannelByName(channelName).active = false;
-						this.changeActiveChannel(this.getChannelByName(channelName), false);
-					}
-				}
-			}
-			// User is not online
-			else if (error.command == 'err_nosuchnick') {
-				this.toastService.addToast(`"${error.args[1]}" is not online.`, ToastType.Error);
-			}
-			// Unhandled error
-			else {
-				console.log(error);
-
-				this.toastService.addToast('Unknown error given! Check the console for more information.', ToastType.Error);
-			}
-		});
-
-		this.client.addListener('netError', (exception) => {
-			console.log('@@@@@@@@@@@@@@@');
-			console.log('netError found:');
-			console.log(exception);
-			console.log('@@@@@@@@@@@@@@@');
-		});
-
-		this.client.addListener('unhandled', (message) => {
-			console.log('@@@@@@@@@@@@@@@@@@@@@@');
-			console.log('Unhandled error found:');
-			console.log(message);
-			console.log('@@@@@@@@@@@@@@@@@@@@@@');
-		});
-
-		/**
 		 * Message handler
 		 */
-		this.client.addListener('message', (from: string, to: string, message: string) => {
-			this.addMessageToChannel(to, from, message, !to.startsWith('#'));
+		this.client.on('PM', (message: PrivateMessage) => {
+			if (message.self != true)
+				this.addMessageToChannel(message.user.ircUsername, message.recipient.ircUsername, message.content, false);
+		});
 
-			// Check if message was send by banchobot
-			if (from == 'BanchoBot') {
-				// =============================================
-				// The messages were send in a multiplayer lobby
-				if (to.startsWith('#mp_')) {
-					const multiplayerInitialization = Regex.multiplayerInitialization.run(message);
-					const multiplayerMatchSize = Regex.multiplayerMatchSize.run(message);
-					const multiplayerSettingsChange = Regex.multiplayerSettingsChange.run(message);
-					const matchClosed = Regex.closedMatch.run(message);
-					const matchFinished = Regex.matchFinished.run(message);
+		this.client.on('CM', (message: ChannelMessage) => {
+			this.sendChannelMessage(message);
 
-					const playerInSlot = Regex.playerInSlot.run(message);
-					const playerHasMoved = Regex.playerHasMoved.run(message);
-					const hostChanged = Regex.hostChanged.run(message);
-					const playerHasChangedTeam = Regex.playerHasChangedTeam.run(message);
-					const clearMatchHost = Regex.clearMatchHost.run(message);
-					const playerLeft = Regex.playerLeft.run(message);
-					const playerJoined = Regex.playerJoined.run(message);
+			// Make sure message is send in a multiplayer channel as well as by BanchoBot
+			if (message.channel.name.startsWith('#mp_') && message.user.ircUsername == 'BanchoBot') {
+				const multiplayerInitialization = Regex.multiplayerInitialization.run(message.message);
+				const multiplayerSettingsChange = Regex.multiplayerSettingsChange.run(message.message);
+				const matchClosed = Regex.closedMatch.run(message.message);
+				const playerInSlot = Regex.playerInSlot.run(message.message);
 
-					// Initialize the channel with the correct teammode and wincondition
-					if (multiplayerInitialization) {
-						this.getChannelByName(to).teamMode = TeamMode[multiplayerInitialization.teamMode];
-						this.getChannelByName(to).winCondition = WinCondition[multiplayerInitialization.winCondition];
-					}
-
-					// The team size was changed with "!mp size x"
-					if (multiplayerMatchSize) {
-						this.getChannelByName(to).players = multiplayerMatchSize.size;
-					}
-
-					// The room was changed by "!mp set x x x"
-					if (multiplayerSettingsChange) {
-						this.getChannelByName(to).players = multiplayerSettingsChange.size;
-						this.getChannelByName(to).teamMode = TeamMode[multiplayerSettingsChange.teamMode];
-						this.getChannelByName(to).winCondition = WinCondition[multiplayerSettingsChange.winCondition];
-					}
-
-					// The match was closed
-					if (matchClosed) {
-						this.changeActiveChannel(this.getChannelByName(to), false);
-						this.getChannelByName(to).active = false;
-					}
-
-					// A beatmap has finished
-					if (matchFinished) {
-						this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getByIrcLobby(to), true, true);
-					}
-
-					// Gets called when !mp settings is ran
-					if (playerInSlot) {
-						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.playerChanged(playerInSlot);
-					}
-
-					// Gets called when a player moves around
-					if (playerHasMoved) {
-						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.movePlayerToSlot(playerHasMoved);
-					}
-
-					// Gets called when the host gets changed
-					if (hostChanged) {
-						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.changeHost(hostChanged);
-					}
-
-					// Gets called when a player changes teams
-					if (playerHasChangedTeam) {
-						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.playerChangedTeam(playerHasChangedTeam);
-					}
-
-					// Gets called when match host gets cleared
-					if (clearMatchHost) {
-						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.clearMatchHost();
-					}
-
-					// Gets called when a user leaves
-					if (playerLeft) {
-						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.playerLeft(playerLeft);
-					}
-
-					// Gets called when a user joins
-					if (playerJoined) {
-						this.multiplayerLobbiesService.getByIrcLobby(to).multiplayerLobbyPlayers.playerJoined(playerJoined);
-					}
+				// Initialize the channel with the correct teammode and wincondition
+				if (multiplayerInitialization) {
+					this.getChannelByName(message.channel.name).teamMode = TeamMode[multiplayerInitialization.teamMode];
+					this.getChannelByName(message.channel.name).winCondition = WinCondition[multiplayerInitialization.winCondition];
 				}
-				// ===========================================
-				// The messages were send as a private message
-				else {
-					const tournamentMatchCreated = Regex.tournamentMatchCreated.run(message);
 
-					// A tournament match was created
-					if (tournamentMatchCreated) {
-						// Check if the match is created for a specific multiplayer lobby
-						if (this.isCreatingMultiplayerLobby != -1) {
-							this.multiplayerLobbiesService.get(this.isCreatingMultiplayerLobby).multiplayerLink = `https://osu.ppy.sh/community/matches/${tournamentMatchCreated.multiplayerId}`;
-							this.multiplayerLobbiesService.update(this.multiplayerLobbiesService.get(this.isCreatingMultiplayerLobby));
+				// The room was changed by "!mp set x x x"
+				if (multiplayerSettingsChange) {
+					this.getChannelByName(message.channel.name).players = multiplayerSettingsChange.size;
+					this.getChannelByName(message.channel.name).teamMode = TeamMode[multiplayerSettingsChange.teamMode];
+					this.getChannelByName(message.channel.name).winCondition = WinCondition[multiplayerSettingsChange.winCondition];
+				}
 
-							this.isCreatingMultiplayerLobby = -1;
-						}
-					}
+				// The match was closed
+				if (matchClosed) {
+					this.changeActiveChannel(this.getChannelByName(message.channel.name), false);
+					this.getChannelByName(message.channel.name).active = false;
+				}
+
+				// Gets called when !mp settings is ran
+				if (playerInSlot) {
+					this.multiplayerLobbiesService.getByIrcLobby(message.channel.name).multiplayerLobbyPlayers.playerChanged(playerInSlot);
 				}
 			}
 		});
 
-		/**
-		 * "/me" handler
-		 */
-		this.client.addListener('action', (from, to, message) => {
-			this.addMessageToChannel(to, from, message);
+		this.client.on('nochannel', (channel: BanchoChannel) => {
+			if (this.getChannelByName(channel.name) != null) {
+				this.getChannelByName(channel.name).active = false;
+				this.changeActiveChannel(this.getChannelByName(channel.name), false);
+			}
 		});
 
-		/**
-		 * Connect the user
-		 */
-		this.client.connect(0, () => {
+		from(this.client.connect()).subscribe(() => {
 			this.isAuthenticated = true;
 			this.authenticatedUser = username;
 
@@ -345,6 +203,55 @@ export class IrcService {
 			this.isAuthenticated$.next(true);
 
 			this.toastService.addToast('Successfully connected to irc!');
+
+			// Initialize multiplayer channels after restart
+			for (const ircChannel in allJoinedChannels) {
+				if (allJoinedChannels[ircChannel].isPrivateChannel == false) {
+					const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
+					from(channel.join()).subscribe(() => {
+						this.initializeChannelListeners(channel);
+					});
+				}
+			}
+		});
+	}
+
+	/**
+	 * Initialize the channel listeners when connecting to a channel
+	 * @param channel
+	 */
+	initializeChannelListeners(channel: BanchoMultiplayerChannel) {
+		channel.lobby.on('playerMoved', (obj: { player: BanchoLobbyPlayer, slot: number }) => {
+			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.movePlayerToSlot(obj);
+		});
+
+		channel.lobby.on('playerJoined', (obj: { player: BanchoLobbyPlayer, slot: number, team: string }) => {
+			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.playerJoined(obj);
+		});
+
+		channel.lobby.on('playerLeft', (player: BanchoLobbyPlayer) => {
+			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.playerLeft(player);
+		})
+
+		channel.lobby.on('playerChangedTeam', (obj: { player: BanchoLobbyPlayer, team: string }) => {
+			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.playerChangedTeam(obj);
+		});
+
+		channel.lobby.on('hostCleared', () => {
+			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.clearMatchHost();
+		});
+
+		channel.lobby.on('host', (player: BanchoLobbyPlayer) => {
+			console.log(`Host changed to ${player.user.ircUsername}`);
+			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.changeHost(player);
+		});
+
+		channel.lobby.on('matchFinished', () => {
+			this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getByIrcLobby(channel.name), true, true);
+		});
+
+		channel.lobby.on('size', (size: number) => {
+			this.getChannelByName(channel.name).players = size;
 		});
 	}
 
@@ -357,17 +264,17 @@ export class IrcService {
 
 			this.isDisconnecting$.next(true);
 
-			this.client.disconnect('', () => {
-				this.isAuthenticated = false;
-				this.authenticatedUser = 'none';
+			this.client.disconnect();
 
-				// Delete the credentials
-				this.storeService.delete('irc');
+			this.isAuthenticated = false;
+			this.authenticatedUser = 'none';
 
-				this.isDisconnecting$.next(false);
+			// Delete the credentials
+			this.storeService.delete('irc');
 
-				this.toastService.addToast('Successfully disconnected from irc.');
-			});
+			this.isDisconnecting$.next(false);
+
+			this.toastService.addToast('Successfully disconnected from irc.');
 		}
 	}
 
@@ -388,31 +295,55 @@ export class IrcService {
 	}
 
 	/**
-	 * Add a message to the given channel. Will not send the message to irc
-	 * @param channelName the channel to add the message to
-	 * @param author the author of the message
-	 * @param message the message itself
-	 * @param isPM if the message came from a PM
+	 * Add a message to the appropriate channel
+	 * @param user the user that is sending the message
+	 * @param recipient the user that is receiving the message
+	 * @param message the message it self
+	 * @param isSending if the message is being send or being received
 	 */
-	addMessageToChannel(channelName: string, author: string, message: string, isPM = false) {
+	addMessageToChannel(user: string, recipient: string, message: string, isSending: boolean) {
 		const date = new Date();
 		const timeFormat = `${(date.getHours() <= 9 ? '0' : '')}${date.getHours()}:${(date.getMinutes() <= 9 ? '0' : '')}${date.getMinutes()}`;
 		const dateFormat = `${(date.getDate() <= 9 ? '0' : '')}${date.getDate()}/${(date.getMonth() <= 9 ? '0' : '')}${date.getMonth()}/${date.getFullYear()}`;
 
-		let newMessage;
+		let newMessage: Message;
 
-		if (isPM) {
-			if (this.getChannelByName(author) == null) {
-				this.joinChannel(author);
+		// ===============================
+		// The user is sending the message
+		if (isSending == true) {
+			// Join channel if you haven't joined it yet
+			if (this.getChannelByName(recipient) == null) {
+				this.joinChannel(recipient);
 			}
 
-			newMessage = new Message(Object.keys(this.getChannelByName(author).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false);
+			newMessage = new Message(Object.keys(this.getChannelByName(recipient).allMessages).length + 1, dateFormat, timeFormat, user, this.buildMessage(message), false);
 
-			this.getChannelByName(author).allMessages.push(newMessage);
-			this.getChannelByName(author).hasUnreadMessages = true;
-			this.saveMessageToHistory(author, newMessage);
+			this.getChannelByName(recipient).allMessages.push(newMessage);
+			this.getChannelByName(recipient).hasUnreadMessages = true;
+			this.saveMessageToHistory(recipient, newMessage);
+		}
+		// =============================
+		// The message is being received
+		else {
+			const messageId = this.getChannelByName(user) == null ? 0 : Object.keys(this.getChannelByName(user).allMessages).length + 1;
 
-			if (this.getChannelByName(author).playSoundOnMessage) {
+			if (user.startsWith('#mp_')) {
+				newMessage = new Message(messageId, dateFormat, timeFormat, recipient, this.buildMessage(message), false);
+			}
+			else {
+				newMessage = new Message(messageId, dateFormat, timeFormat, user, this.buildMessage(message), false);
+			}
+
+			// Join channel if you haven't joined it yet
+			if (this.getChannelByName(user) == null) {
+				this.joinChannel(user);
+			}
+
+			this.getChannelByName(user).allMessages.push(newMessage);
+			this.getChannelByName(user).hasUnreadMessages = true;
+			this.saveMessageToHistory(user, newMessage);
+
+			if (this.getChannelByName(user).playSoundOnMessage) {
 				const sound = new Howl({
 					src: ['assets/stairs.mp3'],
 				});
@@ -427,37 +358,13 @@ export class IrcService {
 				});
 			}
 		}
-		else {
-			newMessage = new Message(Object.keys(this.getChannelByName(channelName).allMessages).length + 1, dateFormat, timeFormat, author, this.buildMessage(message), false);
-
-			this.getChannelByName(channelName).allMessages.push(newMessage);
-			this.getChannelByName(channelName).hasUnreadMessages = true;
-			this.saveMessageToHistory(channelName, newMessage);
-
-			if (author != this.authenticatedUser) {
-				if (this.getChannelByName(channelName).playSoundOnMessage) {
-					const sound = new Howl({
-						src: ['assets/stairs.mp3'],
-					});
-
-					if (!this.soundIsPlaying) {
-						sound.play();
-						this.soundIsPlaying = true;
-					}
-
-					sound.on('end', () => {
-						this.soundIsPlaying = false;
-					});
-				}
-			}
-		}
 
 		this.messageHasBeenSend$.next(true);
 	}
 
 	/**
-	 * Join a channel
-	 * @param channelName the channel to join
+	 * Join a
+	 * @param channelName
 	 */
 	joinChannel(channelName: string) {
 		const allJoinedChannels = this.storeService.get('irc.channels');
@@ -470,12 +377,29 @@ export class IrcService {
 			return;
 		}
 
-		if (!channelName.startsWith('#')) {
+		// ===================================
+		// Joining a multiplayer match channel
+		if (channelName.startsWith('#mp_')) {
+			this.storeService.set(`irc.channels.${channelName}`, {
+				name: channelName,
+				active: true,
+				messageHistory: [],
+				lastActiveChannel: false,
+				isPrivateChannel: false,
+				playSoundOnMessage: false
+			});
+
+			this.allChannels.push(new Channel(channelName));
+			this.toastService.addToast(`Joined channel "${channelName}".`);
+
+			this.isJoiningChannel$.next(false);
+		}
+		// =======================================
+		// Joining a non multiplayer match channel
+		else {
 			const getChannel = this.getChannelByName(channelName);
 
 			if (getChannel == null) {
-				this.allChannels.push(new Channel(channelName, true));
-
 				this.storeService.set(`irc.channels.${channelName}`, {
 					name: channelName,
 					active: true,
@@ -485,28 +409,22 @@ export class IrcService {
 					playSoundOnMessage: false
 				});
 
+				this.allChannels.push(new Channel(channelName, true));
 				this.toastService.addToast(`Opened private message channel with "${channelName}".`);
 			}
 
 			this.isJoiningChannel$.next(false);
 		}
-		else {
-			this.client.join(channelName, () => {
-				this.storeService.set(`irc.channels.${channelName}`, {
-					name: channelName,
-					active: true,
-					messageHistory: [],
-					lastActiveChannel: false,
-					isPrivateChannel: false,
-					playSoundOnMessage: false
-				});
+	}
 
-				this.isJoiningChannel$.next(false);
-
-				this.allChannels.push(new Channel(channelName));
-
-				this.toastService.addToast(`Joined channel "${channelName}".`);
-			});
+	/**
+	 * Send a message to the given channelmessage
+	 * @param message
+	 */
+	sendChannelMessage(message: ChannelMessage) {
+		// Message is send from ingame
+		if (message.self == false) {
+			this.addMessageToChannel(message.channel.name, message.user.ircUsername, message.message, false);
 		}
 	}
 
@@ -526,7 +444,7 @@ export class IrcService {
 			}
 
 			if (channelName.startsWith('#')) {
-				this.client.part(channelName);
+				this.client.getChannel(channelName).leave();
 			}
 
 			delete allJoinedChannels[channelName];
@@ -541,9 +459,15 @@ export class IrcService {
 	 * @param channelName the channel to send the message in
 	 * @param message the message to send
 	 */
-	sendMessage(channelName: string, message: string, isPM = false) {
-		this.addMessageToChannel(channelName, this.authenticatedUser, message, isPM);
-		this.client.say(channelName, message);
+	sendMessage(channelName: string, message: string) {
+		this.addMessageToChannel(this.authenticatedUser, channelName, message, true);
+
+		if (channelName.startsWith('#')) {
+			this.client.getChannel(channelName).sendMessage(message);
+		}
+		else {
+			this.client.getUser(channelName).sendMessage(message);
+		}
 	}
 
 	/**

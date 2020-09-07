@@ -83,7 +83,7 @@
 			</virtual-scroller>
 
 			<div class="send-message">
-				<input type="text" placeholder="Message..." #chatMessage [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" (keyup.Tab)="onKey($event, 'up'); false;" (keydown.Tab)="onKey($event, 'down'); false;" (keypress)="sendMessage($event)" />
+				<input type="text" placeholder="Message..." #chatMessage [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" (keypress)="sendMessage($event)" />
 			</div>
 
 			<div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized }" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">

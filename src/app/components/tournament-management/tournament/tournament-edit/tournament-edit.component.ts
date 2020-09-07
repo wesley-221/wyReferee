@@ -99,12 +99,12 @@ export class TournamentEditComponent implements OnInit {
 		if (this.validationForm.valid) {
 			if (this.publish == true || this.publish == 'true') {
 				this.tournamentService.updatePublishedTournament(tournament).subscribe(() => {
-					this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
+					this.toastService.addToast(`Successfully updated the tournament "${tournament.tournamentName}".`);
 				});
 			}
 			else {
 				this.tournamentService.updateTournament(this.tournament);
-				this.toastService.addToast(`Successfully updated the mappool "${tournament.tournamentName}".`);
+				this.toastService.addToast(`Successfully updated the tournament "${tournament.tournamentName}".`);
 			}
 		}
 		else {

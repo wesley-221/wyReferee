@@ -214,6 +214,7 @@ export class TournamentService {
 		newTournament.tournamentScoreInterfaceIdentifier = json.tournamentScoreInterfaceIdentifier;
 		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
 		newTournament.publishId = json.id;
+		newTournament.format = json.format;
 
 		let validateIndex = 0;
 

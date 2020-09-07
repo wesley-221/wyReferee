@@ -5,22 +5,16 @@ import { ToastService } from "./services/toast.service";
 import { Observable, of, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { ToastType } from "./models/toast";
+import { AppConfig } from "environments/environment";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-	// The ips that don't have to be checked by the interceptor
-	private ignoreInterceptorFor = [
-		'https://osu.ppy.sh'
-	];
-
 	constructor(private authService: AuthenticateService, private toastService: ToastService) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		// Check if we can ignore an ip
-		for (const ip of this.ignoreInterceptorFor) {
-			if (req.url.startsWith(ip)) {
-				return next.handle(req);
-			}
+		// Only use this interceptor for the wyBin api
+		if (!req.url.startsWith(AppConfig.apiUrl)) {
+			return next.handle(req);
 		}
 
 		let token: string;

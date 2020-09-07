@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../../services/electron.service';
 import { StoreService } from '../../services/store.service';
 import { ToastService } from '../../services/toast.service';
@@ -19,7 +19,7 @@ import { LoggedInUser } from 'app/models/authentication/logged-in-user';
 })
 
 export class SettingsComponent implements OnInit {
-	@ViewChild('apiKey') apiKey: ElementRef;
+	apiKey: string;
 
 	dialogMessage: string;
 	dialogAction = 0;
@@ -30,6 +30,14 @@ export class SettingsComponent implements OnInit {
 	isConnecting = false;
 	isDisconnecting = false;
 
+	apiKeyIsValid = false;
+
+	allOptions: { icon: string, message: string, buttonText: string, action: any }[] = [
+		{ icon: 'settings', message: 'This will export the config file and save it as a file in case you need to share it with someone. <br /><b>Note:</b> It will not export the API key in the file <br />', buttonText: 'Export config file', action: () => this.exportConfigFile() },
+		{ icon: 'cached', message: 'This will clear all the cache.', buttonText: 'Clear cache', action: () => this.openDialog(0) },
+		{ icon: 'api', message: 'This will remove the API key.', buttonText: 'Remove API key', action: () => this.openDialog(1) }
+	];
+
 	constructor(
 		public electronService: ElectronService,
 		private storeService: StoreService,
@@ -38,7 +46,13 @@ export class SettingsComponent implements OnInit {
 		private dialog: MatDialog,
 		public auth: AuthenticateService,
 		public ircService: IrcService
-	) { }
+	) {
+		this.apiKey = this.storeService.get('api-key');
+
+		if (this.apiKey && this.apiKey.length > 0) {
+			this.apiKeyIsValid = true;
+		}
+	}
 
 	ngOnInit() {
 		this.mappoolPublishForm = new FormGroup({
@@ -98,7 +112,12 @@ export class SettingsComponent implements OnInit {
 
 			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser.username}"!`);
 		}, (err) => {
-			this.toastService.addToast(`${err.error.message}`, ToastType.Error);
+			if (err.status == 0) {
+				this.toastService.addToast(`${err.statusText}. Server might be offline due to maintenance.`, ToastType.Error);
+			}
+			else {
+				this.toastService.addToast(`${err.error.message}`, ToastType.Error);
+			}
 		});
 	}
 
@@ -133,9 +152,11 @@ export class SettingsComponent implements OnInit {
 	 */
 	saveApiKey() {
 		// Key is valid
-		this.apiKeyValidation.validate(this.apiKey.nativeElement.value).subscribe(() => {
-			this.storeService.set('api-key', this.apiKey.nativeElement.value);
+		this.apiKeyValidation.validate(this.apiKey).subscribe(() => {
+			this.storeService.set('api-key', this.apiKey);
 			this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
+
+			this.apiKeyIsValid = true;
 		},
 			// Key is invalid
 			() => {
@@ -157,6 +178,9 @@ export class SettingsComponent implements OnInit {
 	removeApiKey() {
 		this.storeService.delete('api-key');
 		this.toastService.addToast('Successfully removed your api key.');
+
+		this.apiKeyIsValid = false;
+		this.apiKey = null;
 	}
 
 	/**
@@ -173,8 +197,6 @@ export class SettingsComponent implements OnInit {
 			configFile['auth'] = 'redacted';
 			configFile['irc']['username'] = 'redacted';
 			configFile['irc']['password'] = 'redacted';
-
-			console.log(configFile);
 
 			configFile = JSON.stringify(configFile, null, '\t');
 
@@ -206,7 +228,7 @@ export class SettingsComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(res => {
-			if(res == true) {
+			if (res == true) {
 				if (dialogAction == 0) {
 					this.clearCache();
 				}

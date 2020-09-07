@@ -1,109 +1,54 @@
 @import "variables";
 
-$one-line-breakpoint: 1454px;
-$two-line-breakpoint: 1352px;
-$three-line-breakpoint: 774px;
-$four-line-breakpoint: 610px;
-
-$create-lobby-height: 180px;
-
-$one-line-lobby-height: 133px;
-$two-line-lobby-height: 153px;
-$three-line-lobby-height: 173px;
-$four-line-lobby-height: 193px;
-
-@media only screen and (min-width: $one-line-breakpoint) {
-	.create-lobby {
-		height: $one-line-lobby-height;
-	}
-
-	.all-lobbies {
-		height: calc(100% - #{$one-line-lobby-height});
-	}
-}
-
-@media only screen and (max-width: $one-line-breakpoint) {
-	.create-lobby {
-		height: $one-line-lobby-height;
-	}
-
-	.all-lobbies {
-		height: calc(100% - #{$one-line-lobby-height});
-	}
-}
-
-@media only screen and (max-width: $two-line-breakpoint) {
-	.create-lobby {
-		height: $two-line-lobby-height;
-	}
-
-	.all-lobbies {
-		height: calc(100% - #{$two-line-lobby-height});
-	}
-}
-
-@media only screen and (max-width: $three-line-breakpoint) {
-	.create-lobby {
-		height: $three-line-lobby-height;
-	}
-
-	.all-lobbies {
-		height: calc(100% - #{$three-line-lobby-height});
-	}
-}
-
-@media only screen and (max-width: $four-line-breakpoint) {
-	.create-lobby {
-		height: $four-line-lobby-height;
-	}
-
-	.all-lobbies {
-		height: calc(100% - #{$four-line-lobby-height});
-	}
-}
-
-.all-lobbies {
+.lobby-interface {
 	display: flex;
 	flex-direction: column;
 
-	overflow-y: auto;
+	height: 100%;
 
-	.lobby {
-		.body {
-			display: flex;
-			flex-direction: row;
+	.all-lobbies {
+		display: flex;
+		flex-direction: column;
 
-			overflow: hidden;
-			border: 1px solid darken($background-color, 15%);
-			margin: 7px;
+		overflow-y: auto;
 
-			padding: 8px;
+		.lobby {
+			.body {
+				display: flex;
+				flex-direction: row;
 
-			text-align: center;
+				overflow: hidden;
+				border: 1px solid darken($background-color, 15%);
+				margin: 7px;
 
-			-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-			-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-			box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+				padding: 8px;
 
-			.information {
-				width: calc(100% - 50px);
-			}
+				text-align: center;
 
-			.delete-lobby {
-				width: 50px;
+				-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+				-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+				box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
 
-				button {
-					color: white;
+				.information {
+					width: calc(100% - 50px);
 				}
-			}
 
-			&:hover {
-				border: 1px solid white;
-				cursor: pointer;
+				.delete-lobby {
+					width: 50px;
 
-				-webkit-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
-				-moz-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
-				box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
+					button {
+						color: white;
+					}
+				}
+
+				&:hover {
+					border: 1px solid white;
+					cursor: pointer;
+
+					-webkit-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
+					-moz-box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
+					box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.75);
+				}
 			}
 		}
 	}

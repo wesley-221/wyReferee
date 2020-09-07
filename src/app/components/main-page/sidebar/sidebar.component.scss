@@ -7,6 +7,8 @@
 	&.active {
 		.sidebar-item {
 			color: $primary;
+			background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+			border-radius: 0px 6px 6px 0px;
 		}
 	}
 
@@ -15,6 +17,8 @@
 
 		.sidebar-item {
 			color: $primary;
+			background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+			border-radius: 0px 6px 6px 0px;
 		}
 	}
 }

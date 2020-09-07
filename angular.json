@@ -23,12 +23,6 @@
 							"src/styles.scss",
 							"src/assets/styles/bootstrap/scss/bootstrap-grid.scss"
 						],
-						"scripts": [
-							"src/assets/js/electron-js.js",
-							"src/assets/js/jquery-3.4.1.min.js",
-							"src/assets/js/popper.min.js",
-							"src/assets/js/bootstrap.min.js"
-						],
 						"stylePreprocessorOptions": {
 							"includePaths": [
 								"src/assets/styles"
@@ -113,11 +107,6 @@
 						"karmaConfig": "src/karma.conf.js",
 						"assets": [
 							"src/assets/images"
-						],
-						"scripts": [
-							"src/assets/js/jquery-3.4.1.min.js",
-							"src/assets/js/popper.min.js",
-							"src/assets/js/bootstrap.min.js"
 						],
 						"styles": [
 							"src/styles.scss",

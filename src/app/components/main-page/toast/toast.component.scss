@@ -13,6 +13,8 @@
 	overflow: hidden;
 
 	.toast {
+		display: flex;
+
 		padding: 8px;
 		margin-bottom: 3px;
 
@@ -22,6 +24,13 @@
 		-moz-user-select: none;
 		-ms-user-select: none;
 		user-select: none;
+
+		.icon, .message {
+			display: flex;
+			align-items: center;
+
+			margin: 4px;
+		}
 
 		&:hover {
 			cursor: pointer;

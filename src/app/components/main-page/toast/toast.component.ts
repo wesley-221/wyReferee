@@ -28,13 +28,11 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 })
 
 export class ToastComponent implements OnInit {
-	allToasts;
-
-	toastType;
+	allToasts: Toast[];
+	toastType: any;
 
 	constructor(private toastService: ToastService) {
 		this.allToasts = toastService.getAllToasts();
-
 		this.toastType = ToastType;
 	}
 
