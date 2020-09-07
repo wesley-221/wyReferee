@@ -32,6 +32,12 @@ export class SettingsComponent implements OnInit {
 
 	apiKeyIsValid = false;
 
+	allOptions: { icon: string, message: string, buttonText: string, action: any }[] = [
+		{ icon: 'settings', message: 'This will export the config file and save it as a file in case you need to share it with someone. <br /><b>Note:</b> It will not export the API key in the file <br />', buttonText: 'Export config file', action: () => this.exportConfigFile() },
+		{ icon: 'cached', message: 'This will clear all the cache.', buttonText: 'Clear cache', action: () => this.openDialog(0) },
+		{ icon: 'api', message: 'This will remove the API key.', buttonText: 'Remove API key', action: () => this.openDialog(1) }
+	];
+
 	constructor(
 		public electronService: ElectronService,
 		private storeService: StoreService,
@@ -106,7 +112,7 @@ export class SettingsComponent implements OnInit {
 
 			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser.username}"!`);
 		}, (err) => {
-			if(err.status == 0) {
+			if (err.status == 0) {
 				this.toastService.addToast(`${err.statusText}. Server might be offline due to maintenance.`, ToastType.Error);
 			}
 			else {

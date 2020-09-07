@@ -124,37 +124,20 @@
 		</div>
 	</div>
 
-	<hr />
-
 	<div class="options">
-		<div class="option">
-			<div class="text">
-				This will export the config file and save it as a file in case you need to share it with someone. <br />
-				<b>Note:</b> It will not export the API key in the file <br />
+		<div class="option" *ngFor="let option of allOptions">
+			<div class="content">
+				<div class="icon">
+					<mat-icon>{{ option.icon }}</mat-icon>
+				</div>
+
+				<div class="text">
+					<span [innerHTML]="option.message"></span>
+				</div>
 			</div>
 
 			<div class="button">
-				<button mat-raised-button color="primary" (click)="exportConfigFile()">Export config file</button>
-			</div>
-		</div>
-
-		<div class="option">
-			<div class="text">
-				This will clear all the cache.
-			</div>
-
-			<div class="button">
-				<button mat-raised-button color="primary" (click)="openDialog(0)">Clear cache</button>
-			</div>
-		</div>
-
-		<div class="option">
-			<div class="text">
-				This will remove the API key.
-			</div>
-
-			<div class="button">
-				<button mat-raised-button color="primary" (click)="openDialog(1)">Remove API key</button>
+				<button mat-raised-button color="primary" (click)="option.action()">{{ option.buttonText }}</button>
 			</div>
 		</div>
 	</div>

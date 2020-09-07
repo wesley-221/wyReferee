@@ -9,18 +9,38 @@
 	display: flex;
 	flex-direction: column;
 
+	border-top: 1px solid lighten($background-color, 15%);
+
+	margin-top: 16px;
+
 	.option {
 		display: flex;
+		justify-content: space-between;
 
 		padding: 8px;
 
-		.text {
-			width: calc(100% - 180px);
+		border-bottom: 1px solid lighten($background-color, 15%);
+
+		.content {
+			display: flex;
+
+			.icon {
+				display: flex;
+				align-items: center;
+
+				padding: 8px;
+				padding-right: 16px;
+			}
+
+			.text {
+				display: flex;
+				align-items: center;
+			}
 		}
 
 		.button {
 			display: flex;
-			width: 180px;
+			align-items: flex-end;
 
 			button {
 				width: 100%;
@@ -47,8 +67,8 @@ $container-height: 400px;
 
 		height: $container-height / 2;
 
-		background: rgb(64,49,188);
-		background: linear-gradient(0deg, rgba(64,49,188,1) 0%, rgba(49,129,229,1) 100%);
+		background: rgb(64, 49, 188);
+		background: linear-gradient(0deg, rgba(64, 49, 188, 1) 0%, rgba(49, 129, 229, 1) 100%);
 
 		.icon {
 			width: 150px;
@@ -57,13 +77,13 @@ $container-height: 400px;
 			border-radius: 50%;
 
 			&.osu {
-				background-image: url('~assets/images/osulogo.png');
+				background-image: url("~assets/images/osulogo.png");
 				background-size: cover;
 				background-repeat: no-repeat;
 			}
 
 			&.web {
-				background-image: url('~assets/images/icon.png');
+				background-image: url("~assets/images/icon.png");
 				background-size: cover;
 				background-repeat: no-repeat;
 			}
@@ -78,9 +98,9 @@ $container-height: 400px;
 
 			padding: 8px;
 
-			-webkit-box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
-			-moz-box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
-			box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+			-webkit-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+			-moz-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+			box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
 
 			.header {
 				text-align: center;
