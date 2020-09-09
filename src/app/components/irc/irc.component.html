@@ -173,9 +173,9 @@
 									</div>
 
 									<div class="buttons">
-										<button mat-mini-fab color="warn" matTooltip="Ban this beatmap" (click)="banBeatmap(beatmap, bracket, selectedLobby)" *ngIf="!beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon class="tmp">report_off</mat-icon></button>
-										<button mat-mini-fab color="accent" matTooltip="Unban this beatmap" (click)="unbanBeatmap(beatmap)" *ngIf="beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon class="tmp">report</mat-icon></button>
-										<button mat-mini-fab color="primary" matTooltip="Pick this beatmap" (click)="pickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon class="tmp">push_pin</mat-icon></button>
+										<button mat-mini-fab color="warn" matTooltip="Ban this beatmap" (click)="banBeatmap(beatmap, bracket, selectedLobby)" *ngIf="!beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon svgIcon="hammer"></mat-icon></button>
+										<button mat-mini-fab color="accent" matTooltip="Unban this beatmap" (click)="unbanBeatmap(beatmap)" *ngIf="beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon>thumb_up</mat-icon></button>
+										<button mat-mini-fab color="primary" matTooltip="Pick this beatmap" (click)="pickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
 									</div>
 								</div>
 							</div>

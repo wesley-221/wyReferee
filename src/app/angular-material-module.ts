@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { LayoutModule } from '@angular/cdk/layout';
 
-import { MatIconModule } from '@angular/material/icon'
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon'
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -23,6 +23,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { DomSanitizer } from '@angular/platform-browser';
 
 const modules: any[] = [
 	LayoutModule,
@@ -53,4 +54,10 @@ const modules: any[] = [
 	imports: [...modules],
 	exports: [...modules]
 })
-export class AngularMaterialModule { }
+export class AngularMaterialModule {
+	constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+		this.matIconRegistry
+			.addSvgIcon('trophy', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/trophy.svg'))
+			.addSvgIcon('hammer', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/hammer.svg'));
+	}
+}
