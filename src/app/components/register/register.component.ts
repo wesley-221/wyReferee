@@ -1,9 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from "@angular/forms";
-import { AuthenticateService } from "app/services/authenticate.service";
-import { ToastService } from "app/services/toast.service";
-import { RegisterRequest } from "app/models/authentication/register-request";
-import { HttpErrorResponse } from "@angular/common/http";
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { AuthenticateService } from 'app/services/authenticate.service';
+import { ToastService } from 'app/services/toast.service';
+import { RegisterRequest } from 'app/models/authentication/register-request';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	selector: 'app-register',

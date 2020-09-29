@@ -26,7 +26,7 @@ export class MyPublishedTournamentsComponent implements OnInit {
 
 		this.tournamentService.getAllPublishedTournamentsFromUser(this.authService.loggedInUser).subscribe(data => {
 			for (const tournament in data) {
-				const newTournament: Tournament = this.tournamentService.mapFromJson(data[tournament]);
+				const newTournament: Tournament = Tournament.serializeJson(data[tournament]);
 				this.publishedTournaments.push(newTournament);
 			}
 		});

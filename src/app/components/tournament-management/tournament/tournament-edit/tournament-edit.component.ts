@@ -23,7 +23,7 @@ export class TournamentEditComponent implements OnInit {
 
 			if (this.publish == true || this.publish == 'true') {
 				this.tournamentService.getPublishedTournament(params.tournamentId).subscribe(data => {
-					this.tournament = tournamentService.mapFromJson(data);
+					this.tournament = Tournament.serializeJson(data);
 
 					// Collapse all teams
 					for (const team in this.tournament.teams) {
@@ -47,11 +47,17 @@ export class TournamentEditComponent implements OnInit {
 						]),
 						'tournament-format': new FormControl(this.tournament.format, [
 							Validators.required
+						]),
+						'challonge-integration': new FormControl(this.tournament.challongeIntegration, [
+							Validators.required
 						])
 					});
 
+					let validateIndex = 0;
+
 					for (const team of this.tournament.teams) {
-						this.validationForm.addControl(`tournament-team-name-${team.validateIndex}`, new FormControl(team.teamName, Validators.required))
+						this.validationForm.addControl(`tournament-team-name-${validateIndex}`, new FormControl(team.teamName, Validators.required))
+						team.validateIndex = validateIndex++;
 					}
 				});
 			}
@@ -80,11 +86,17 @@ export class TournamentEditComponent implements OnInit {
 					]),
 					'tournament-format': new FormControl(this.tournament.format, [
 						Validators.required
+					]),
+					'challonge-integration': new FormControl(this.tournament.challongeIntegration, [
+						Validators.required
 					])
 				});
 
+				let validateIndex = 0;
+
 				for (const team of this.tournament.teams) {
-					this.validationForm.addControl(`tournament-team-name-${team.validateIndex}`, new FormControl(team.teamName, Validators.required))
+					this.validationForm.addControl(`tournament-team-name-${validateIndex}`, new FormControl(team.teamName, Validators.required))
+					team.validateIndex = validateIndex++;
 				}
 			}
 		});
@@ -108,7 +120,7 @@ export class TournamentEditComponent implements OnInit {
 			}
 		}
 		else {
-			this.toastService.addToast(`The tournament wasn't filled in correctly. Look for the marked fields to see what you did wrong.`, ToastType.Warning);
+			this.toastService.addToast('The tournament wasn\'t filled in correctly. Look for the marked fields to see what you did wrong.', ToastType.Warning);
 			this.validationForm.markAllAsTouched();
 		}
 	}

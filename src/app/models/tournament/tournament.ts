@@ -2,10 +2,11 @@ import { Team } from './team/team';
 import { TeamPlayer } from './team/team-player';
 import { ScoreInterface } from '../score-calculation/calculation-types/score-interface';
 import { Calculate } from '../score-calculation/calculate';
+import { User } from '../authentication/user';
 
 export enum TournamentFormat {
-	Solo = "solo",
-	Teams = "teams"
+	Solo = 'solo',
+	Teams = 'teams'
 }
 
 export class Tournament {
@@ -17,6 +18,10 @@ export class Tournament {
 	tournamentScoreInterfaceIdentifier: string;
 	scoreInterface: ScoreInterface;
 	teamSize: number;
+	challongeIntegration: number;
+	challongeApiKey: string;
+	challongeTournamentId: number;
+	availableTo: User[] = [];
 	publishId: number;
 	updateAvailable = false;
 
@@ -48,6 +53,22 @@ export class Tournament {
 	}
 
 	/**
+	 * Allow the user to view the mappool
+	 * @param user
+	 */
+	public addUser(user: User) {
+		this.availableTo.push(user);
+	}
+
+	/**
+	 * Remove the permissions for the user to view the mappool
+	 * @param user
+	 */
+	public removeUser(user: User) {
+		this.availableTo.splice(this.availableTo.indexOf(user), 1);
+	}
+
+	/**
 	 * Check if the tournament is a solo tournament
 	 */
 	isSoloTournament() {
@@ -67,11 +88,19 @@ export class Tournament {
 			scoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
 			tournamentScoreInterfaceIdentifier: this.tournamentScoreInterfaceIdentifier,
 			teams: [],
-			publishId: this.publishId
+			challongeIntegration: this.challongeIntegration,
+			challongeApiKey: this.challongeApiKey,
+			challongeTournamentId: this.challongeTournamentId,
+			publishId: this.publishId,
+			availableTo: []
 		};
 
 		for (const team in this.teams) {
 			tournament.teams.push(this.teams[team].convertToJson());
+		}
+
+		for (const user in this.availableTo) {
+			tournament.availableTo.push(User.convertToJson(this.availableTo[user]));
 		}
 
 		return tournament;
@@ -92,10 +121,17 @@ export class Tournament {
 		newTournament.format = tournament.format;
 		newTournament.tournamentScoreInterfaceIdentifier = tournament.tournamentScoreInterfaceIdentifier;
 		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
+		newTournament.challongeIntegration = tournament.challongeIntegration;
+		newTournament.challongeApiKey = tournament.challongeApiKey;
+		newTournament.challongeTournamentId = tournament.challongeTournamentId;
 		newTournament.publishId = tournament.publishId;
 
 		for (const team in tournament.teams) {
 			newTournament.teams.push(Team.makeTrueCopy(tournament.teams[team]));
+		}
+
+		for (const user in tournament.availableTo) {
+			newTournament.availableTo.push(User.makeTrueCopy(tournament.availableTo[user]));
 		}
 
 		return newTournament;
@@ -110,27 +146,37 @@ export class Tournament {
 		const newTournament = new Tournament();
 		const calc = new Calculate();
 
-		newTournament.id = thisTournament.tournamentId;
+		newTournament.id = thisTournament.id;
 		newTournament.tournamentName = thisTournament.tournamentName;
 		newTournament.acronym = thisTournament.acronym;
 		newTournament.teamSize = thisTournament.teamSize;
 		newTournament.format = thisTournament.format;
-		newTournament.tournamentScoreInterfaceIdentifier = thisTournament.scoreInterfaceIdentifier;
+		newTournament.tournamentScoreInterfaceIdentifier = thisTournament.tournamentScoreInterfaceIdentifier;
 		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
+		newTournament.challongeIntegration = thisTournament.challongeIntegration;
+		newTournament.challongeApiKey = thisTournament.challongeApiKey;
+		newTournament.challongeTournamentId = thisTournament.challongeTournamentId;
 		newTournament.publishId = thisTournament.publishId;
 
 		for (const team in thisTournament.teams) {
 			const newTeam = new Team();
+
+			newTeam.id = thisTournament.teams[team].id;
 			newTeam.teamName = thisTournament.teams[team].teamName;
 
 			for (const player in thisTournament.teams[team].teamPlayers) {
 				const newPlayer = new TeamPlayer();
+				newPlayer.id = thisTournament.teams[team].teamPlayers[player].id;
 				newPlayer.username = thisTournament.teams[team].teamPlayers[player].username;
 
 				newTeam.addPlayer(newPlayer);
 			}
 
 			newTournament.addTeam(newTeam);
+		}
+
+		for (const user in json.availableTo) {
+			newTournament.availableTo.push(User.serializeJson(thisTournament.availableTo[user]));
 		}
 
 		return newTournament;
@@ -148,13 +194,18 @@ export class Tournament {
 			}
 		}
 
+		// Ignore the challongeApiKey for comparing, since that'll only be available in the backend
+		// unless you are the creator of the tournament
 		return (
 			this.tournamentName == that.tournamentName &&
 			this.acronym == that.acronym &&
 			this.teamSize == that.teamSize &&
 			this.format == that.format &&
 			this.tournamentScoreInterfaceIdentifier == that.tournamentScoreInterfaceIdentifier &&
-			this.teams.length == that.teams.length
+			this.challongeIntegration == that.challongeIntegration &&
+			this.challongeTournamentId == that.challongeTournamentId &&
+			this.teams.length == that.teams.length &&
+			this.availableTo.length == that.availableTo.length
 		);
 	}
 }

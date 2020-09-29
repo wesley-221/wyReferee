@@ -95,7 +95,7 @@ export class TournamentService {
 	 * @param tournament the tournament to update
 	 */
 	public updatePublishedTournament(tournament: Tournament) {
-		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament/update`, tournament, { observe: 'response' });
+		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament`, tournament, { observe: 'response' });
 	}
 
 	/**
@@ -129,7 +129,7 @@ export class TournamentService {
 	 * @param tournament the tournament to publish
 	 */
 	publishTournament(tournament: Tournament): Observable<any> {
-		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament/create`, tournament, { observe: 'response' });
+		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament`, tournament, { observe: 'response' });
 	}
 
 	/**
@@ -137,7 +137,7 @@ export class TournamentService {
 	 * @param tournamentId the id of the tournament that was published
 	 */
 	getPublishedTournament(tournamentId: number): Observable<Tournament> {
-		return this.httpClient.get<Tournament>(`${this.apiUrl}tournament/get/${tournamentId}`);
+		return this.httpClient.get<Tournament>(`${this.apiUrl}tournament/${tournamentId}`);
 	}
 
 	/**
@@ -231,7 +231,7 @@ export class TournamentService {
 			}
 
 			newTournament.addTeam(newTeam);
-			validateIndex ++;
+			validateIndex++;
 		}
 
 		return newTournament;

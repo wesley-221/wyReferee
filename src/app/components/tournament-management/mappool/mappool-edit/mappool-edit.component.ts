@@ -47,15 +47,15 @@ export class MappoolEditComponent implements OnInit {
 						])
 					});
 
-					for (let modBracket of this.mappool.modBrackets) {
+					for (const modBracket of this.mappool.modBrackets) {
 						this.validationForm.addControl(`mod-bracket-name-${modBracket.id}`, new FormControl(modBracket.bracketName, Validators.required));
 
-						for (let mod of modBracket.mods) {
-							this.validationForm.addControl(`mod-bracket-mod-index-${modBracket.validateIndex}-${mod.index}`, new FormControl((mod.modValue == "freemod") ? mod.modValue : parseInt(mod.modValue), Validators.required));
+						for (const mod of modBracket.mods) {
+							this.validationForm.addControl(`mod-bracket-mod-index-${modBracket.validateIndex}-${mod.index}`, new FormControl((mod.modValue == 'freemod') ? mod.modValue : parseInt(mod.modValue), Validators.required));
 						}
 					}
 
-					for (let modCategory of this.mappool.modCategories) {
+					for (const modCategory of this.mappool.modCategories) {
 						this.validationForm.addControl(`category-name-${modCategory.validateIndex}`, new FormControl(modCategory.categoryName, Validators.required));
 					}
 
@@ -108,7 +108,7 @@ export class MappoolEditComponent implements OnInit {
 			}
 		}
 		else {
-			this.toastService.addToast(`The mappool wasn't filled in correctly. Look for the marked fields to see what you did wrong.`, ToastType.Warning);
+			this.toastService.addToast('The mappool wasn\'t filled in correctly. Look for the marked fields to see what you did wrong.', ToastType.Warning);
 			this.validationForm.markAllAsTouched();
 		}
 	}

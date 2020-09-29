@@ -38,9 +38,9 @@ export class TeamComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
+				this.validationForm.removeControl(`tournament-team-name-${team.validateIndex}`);
 				this.tournament.removeTeam(team);
 				this.toastService.addToast(`Successfully removed the team "${team.teamName}" from the tournament.`);
-				this.validationForm.removeControl(`tournament-team-name-${team.validateIndex}`);
 			}
 		});
 	}

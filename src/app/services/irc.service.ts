@@ -242,7 +242,6 @@ export class IrcService {
 		});
 
 		channel.lobby.on('host', (player: BanchoLobbyPlayer) => {
-			console.log(`Host changed to ${player.user.ircUsername}`);
 			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.changeHost(player);
 		});
 

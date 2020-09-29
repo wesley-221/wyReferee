@@ -26,7 +26,7 @@
 
 				<input matInput [formControlName]="'tournament-team-name-' + team.validateIndex" (change)="changeTeamName(team, $event)" />
 
-				<mat-error *ngIf="getValidation('tournament-team-name-' + team.validateIndex).errors && (getValidation('tournament-team-name-' + team.validateIndex).touched || getValidation('tournament-team-name-' + team.validateIndex).dirty)">
+				<mat-error *ngIf="getValidation('tournament-team-name-' + team.validateIndex) != null && getValidation('tournament-team-name-' + team.validateIndex).errors && (getValidation('tournament-team-name-' + team.validateIndex).touched || getValidation('tournament-team-name-' + team.validateIndex).dirty)">
 					This field is required
 				</mat-error>
 			</mat-form-field>

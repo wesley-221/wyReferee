@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { IrcService } from '../../services/irc.service';
 import { Channel } from '../../models/irc/channel';
 import { Message } from '../../models/irc/message';
@@ -209,7 +209,7 @@ export class IrcComponent implements OnInit {
 	 */
 	sendMessage(event: KeyboardEvent) {
 		if (event.key == 'Enter') {
-			if (this.chatMessage.nativeElement.value != "") {
+			if (this.chatMessage.nativeElement.value != '') {
 				this.ircService.sendMessage(this.selectedChannel.channelName, this.chatMessage.nativeElement.value);
 				this.chatMessage.nativeElement.value = '';
 			}

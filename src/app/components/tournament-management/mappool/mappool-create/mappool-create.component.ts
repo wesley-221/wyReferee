@@ -58,7 +58,7 @@ export class MappoolCreateComponent implements OnInit {
 			this.toastService.addToast(`Successfully created the mappool "${this.creationMappool.name}"!`);
 		}
 		else {
-			this.toastService.addToast(`The mappool wasn't filled in correctly. Look for the marked fields to see what you did wrong.`, ToastType.Warning);
+			this.toastService.addToast('The mappool wasn\'t filled in correctly. Look for the marked fields to see what you did wrong.', ToastType.Warning);
 			this.validationForm.markAllAsTouched();
 		}
 	}

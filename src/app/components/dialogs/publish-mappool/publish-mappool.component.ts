@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MultiplayerLobbyDeleteDialogData } from 'app/components/lobby/all-lobbies/all-lobbies.component';
 import { PublishMappoolDialogData } from 'app/components/tournament-management/mappool/mappool-summary/mappool-summary.component';
 
 @Component({

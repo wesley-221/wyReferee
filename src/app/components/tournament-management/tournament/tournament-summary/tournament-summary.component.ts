@@ -26,7 +26,7 @@ export class TournamentSummaryComponent implements OnInit {
 	@Input() tournament: Tournament;
 	@Input() publish = false;
 
-	@Output("deleteTournament") deleteTournamentEvent$: EventEmitter<any> = new EventEmitter();
+	@Output('deleteTournament') deleteTournamentEvent$: EventEmitter<any> = new EventEmitter();
 
 	dialogMessage: string;
 	dialogAction = 0;
@@ -41,7 +41,7 @@ export class TournamentSummaryComponent implements OnInit {
 	 */
 	updateTournament(tournament: Tournament): void {
 		this.tournamentService.getPublishedTournament(tournament.publishId).subscribe((data) => {
-			const updatedTournament: Tournament = this.tournamentService.mapFromJson(data);
+			const updatedTournament: Tournament = Tournament.serializeJson(data);
 			updatedTournament.id = tournament.id;
 			updatedTournament.updateAvailable = false;
 

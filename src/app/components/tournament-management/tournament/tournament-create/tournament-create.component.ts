@@ -35,6 +35,9 @@ export class TournamentCreateComponent implements OnInit {
 			]),
 			'tournament-format': new FormControl('', [
 				Validators.required
+			]),
+			'challonge-integration': new FormControl('', [
+				Validators.required
 			])
 		});
 	}
@@ -52,7 +55,7 @@ export class TournamentCreateComponent implements OnInit {
 			this.tournamentCreate = new Tournament();
 		}
 		else {
-			this.toastService.addToast(`The tournament wasn't filled in correctly. Look for the marked fields to see what you did wrong.`, ToastType.Warning);
+			this.toastService.addToast('The tournament wasn\'t filled in correctly. Look for the marked fields to see what you did wrong.', ToastType.Warning);
 			this.validationForm.markAllAsTouched();
 		}
 	}

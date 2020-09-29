@@ -100,6 +100,105 @@
 
 		<hr />
 
+		<h3>Challonge integration</h3>
+		<mat-form-field class="full-width">
+			<mat-label>Challonge integration</mat-label>
+			<mat-select formControlName="challonge-integration" (valueChange)="changeChallongeIntegration($event)">
+				<mat-option [value]="0">Disabled</mat-option>
+				<mat-option [value]="1">Enabled</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<p>In order for matches to be updated live on Challonge, you have to set up a few things. This step is fully optional and not required in any way.</p>
+		<p>Challonge integration will set scores on Challonge when a map finished, making it so you don't have to update all the matches by hand. Once the score changes, it will automatically update on Challonge.</p>
+
+		<div *ngIf="tournament.challongeIntegration == 1">
+			<h3>Available to</h3>
+			<p>To prevent everyone being able to change the scores on Challonge, you have to select which users are able to import this tournament. Only the users that are listed on the right side will have access to the tournament.</p>
+
+			<div class="users">
+				<mat-form-field class="full-width">
+					<mat-label>Search</mat-label>
+					<input matInput class="full-width" [(ngModel)]="searchValue" [ngModelOptions]="{ standalone: true }" />
+				</mat-form-field>
+
+				<div class="row">
+					<div class="col">
+						<div class="background-area all-users">
+							<div class="user" *ngFor="let user of (allUsers | search: searchValue )">
+								<div class="username">
+									<p>{{ user.username }}</p>
+								</div>
+
+								<div class="buttons">
+									<button mat-mini-fab (click)="addNewUser(user)"><mat-icon>add</mat-icon></button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="background-area all-users">
+							<div *ngIf="tournament.availableTo.length == 0" class="alert alert-danger full-width">
+								You haven't added a user yet. This tournament will only be available for yourself.
+							</div>
+
+							<div class="user" *ngFor="let user of tournament.availableTo">
+								<div class="username">
+									<p>{{ user.username }}</p>
+								</div>
+
+								<div class="buttons">
+									<button mat-mini-fab (click)="removeUser(user)" color="warn"><mat-icon>remove</mat-icon></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<h2>Api key</h2>
+
+			<mat-form-field class="full-width">
+				<mat-label>Challonge api key</mat-label>
+				<input matInput type="password" formControlName="tournament-challonge-api-key" />
+
+				<mat-error *ngIf="getValidation('tournament-challonge-api-key').errors && getValidation('tournament-challonge-api-key').errors.required && (getValidation('tournament-challonge-api-key').touched || getValidation('tournament-challonge-api-key').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
+
+			<p>In order for the client to get information from Challonge, you have to enter an api key generated from Challonge. <a [routerLink]="" (click)="electronService.openLink('https://challonge.com/settings/developer')">Click here</a> to generate/get your api key.</p>
+
+			<button mat-raised-button color="primary" (click)="validateChallongeApiKey()">Validate api key</button>
+
+			<div class="alert alert-danger" *ngIf="apiKeyValidationProcess == API_KEY_INCORRECT">
+				The api key you entered was invalid.
+			</div>
+
+			<div class="alert alert-success" *ngIf="apiKeyValidationProcess == API_KEY_CORRECT">
+				The api key you entered was valid!
+			</div>
+
+			<div *ngIf="apiKeyValidationProcess == API_KEY_CORRECT">
+				<h2>Select a tournament</h2>
+
+				<mat-form-field class="full-width">
+					<mat-label>Tournament</mat-label>
+
+					<mat-select formControlName="tournament-challonge-tournament-selected" (selectionChange)="changeSelectedChallongeTournament($event)">
+						<mat-option [value]="tournament.id" *ngFor="let tournament of allChallongeTournaments">{{ tournament.name }}</mat-option>
+					</mat-select>
+
+					<mat-error *ngIf="getValidation('tournament-challonge-tournament-selected').errors && getValidation('tournament-challonge-tournament-selected').errors.required && (getValidation('tournament-challonge-tournament-selected').touched || getValidation('tournament-challonge-tournament-selected').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+			</div>
+		</div>
+
+		<hr />
+
 		<div *ngIf="!tournament.isSoloTournament()">
 			<h3>Teams</h3>
 			<p>Add a team to the tournament.</p>

@@ -110,7 +110,7 @@ export class ModBracketComponent implements OnInit {
 	synchronizeAll(modBracket: ModBracket): void {
 		this.synchAllDisabled = true;
 
-		for(let beatmap of modBracket.beatmaps) {
+		for (const beatmap of modBracket.beatmaps) {
 			this.synchronizeBeatmap(beatmap);
 		}
 
