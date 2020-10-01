@@ -1,5 +1,9 @@
 @import "variables";
 
+:host {
+	width: 95%;
+}
+
 .sidebar-link {
 	user-select: none;
 	text-decoration: none;
