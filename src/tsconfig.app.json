@@ -4,7 +4,10 @@
 		"outDir": "../out-tsc/app",
 		"module": "es2015",
 		"baseUrl": "",
-		"types": []
+		"types": [],
+		"typeRoots": [
+			"./typings.d.ts"
+		]
 	},
 	"exclude": [
 		"**/*.spec.ts"

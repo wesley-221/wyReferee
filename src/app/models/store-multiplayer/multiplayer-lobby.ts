@@ -21,6 +21,8 @@ export class MultiplayerLobby {
 	ircChannel: string;
 	ircConnected = false;
 	scoreInterfaceIndentifier: string;
+	challongeTournamentId: number;
+	challongeMatchId: number;
 
 	pickedCategories: { modBracketName: string, categories: string[] }[] = [];
 
@@ -65,10 +67,10 @@ export class MultiplayerLobby {
 		this.multiplayerData.push(multiplayerData);
 	}
 
-    /**
-     * Initialize the class from the given json file
-     * @param json the json file we're loading from
-     */
+	/**
+	 * Initialize the class from the given json file
+	 * @param json the json file we're loading from
+	 */
 	loadFromJson(json: any) {
 		this.lobbyId = json.data.lobbyId;
 		this.description = json.data.description;
@@ -80,6 +82,8 @@ export class MultiplayerLobby {
 		this.webhook = json.data.webhook;
 		this.mappoolId = json.data.selectedMappoolId;
 		this.scoreInterfaceIndentifier = json.data.scoreInterfaceIndentifier;
+		this.challongeTournamentId = json.data.challongeTournamentId;
+		this.challongeMatchId = json.data.challongeMatchId;
 
 		this.firstPick = json.data.firstPick;
 		this.bestOf = json.data.bestOf;
@@ -134,10 +138,10 @@ export class MultiplayerLobby {
 		}
 	}
 
-    /**
-     * Convert a MultiplayerLobby to json file
-     * @param multiplayerLobby the lobby to convert
-     */
+	/**
+	 * Convert a MultiplayerLobby to json file
+	 * @param multiplayerLobby the lobby to convert
+	 */
 	convertToJson(multiplayerLobby: MultiplayerLobby = this): any {
 		const lobby = {
 			'data': {
@@ -155,7 +159,9 @@ export class MultiplayerLobby {
 				'teamOneBans': multiplayerLobby.teamOneBans,
 				'teamTwoBans': multiplayerLobby.teamTwoBans,
 				'scoreInterfaceIndentifier': multiplayerLobby.scoreInterfaceIndentifier,
-				'pickedCategories': multiplayerLobby.pickedCategories
+				'pickedCategories': multiplayerLobby.pickedCategories,
+				'challongeTournamentId': multiplayerLobby.challongeTournamentId,
+				'challongeMatchId': multiplayerLobby.challongeMatchId
 			},
 			'countForScore': {},
 			'multiplayerData': {}

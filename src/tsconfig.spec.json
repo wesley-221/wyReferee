@@ -6,6 +6,9 @@
 		"types": [
 			"jasmine",
 			"node"
+		],
+		"typeRoots": [
+			"typings.d.ts"
 		]
 	},
 	"files": [

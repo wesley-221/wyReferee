@@ -12,6 +12,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { from } from 'rxjs';
 import { BanchoMultiplayerChannel } from 'bancho.js';
+import { ChallongeService } from 'app/services/challonge.service';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -39,7 +40,16 @@ export class CreateLobbyComponent implements OnInit {
 	teamOneArray: number[] = [];
 	teamTwoArray: number[] = [];
 
-	constructor(private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService, private ircService: IrcService, public tournamentService: TournamentService, private router: Router) {
+	challongeMatches: ChallongeMatch[] = [];
+	checkingChallongeIntegration = false;
+
+	constructor(
+		private multiplayerLobbies: MultiplayerLobbiesService,
+		private toastService: ToastService,
+		private ircService: IrcService,
+		public tournamentService: TournamentService,
+		private router: Router,
+		private challongeService: ChallongeService) {
 		this.calculateScoreInterfaces = new Calculate();
 
 		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -84,6 +94,40 @@ export class CreateLobbyComponent implements OnInit {
 		this.validationForm.get('team-size').setValue(this.selectedTournament != null ? this.selectedTournament.teamSize : this.teamSize);
 		this.validationForm.get('tournament-acronym').setValue(this.selectedTournament != null ? this.selectedTournament.acronym : null);
 		this.validationForm.get('score-interface').setValue(this.selectedScoreInterface ? this.selectedScoreInterface.getIdentifier() : null);
+
+		// Make sure to reset challonge matches
+		this.challongeMatches = [];
+
+		this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
+		this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
+
+		this.validationForm.removeControl('challonge-match');
+		this.validationForm.removeControl('challonge-tournament');
+
+		this.checkingChallongeIntegration = true;
+
+		this.challongeService.getChallongeMatchups(this.selectedTournament).subscribe((result: any) => {
+			if (result == null) {
+				this.checkingChallongeIntegration = false;
+				return;
+			}
+
+			this.challongeMatches = this.challongeService.parseChallongeEndpoint(result);
+
+			if (this.challongeMatches.length > 0) {
+				this.challongeMatches.sort((firstMatch, secondMatch) => firstMatch.suggested_play_order - secondMatch.suggested_play_order);
+
+				this.validationForm.removeControl('team-one-name');
+				this.validationForm.removeControl('team-two-name');
+
+				this.validationForm.addControl('challonge-match', new FormControl('', Validators.required));
+				this.validationForm.addControl('challonge-tournament', new FormControl());
+			}
+
+			this.checkingChallongeIntegration = false;
+		}, () => {
+			this.checkingChallongeIntegration = false;
+		});
 	}
 
 	changeScoreInterface(event: MatSelectChange) {
@@ -93,19 +137,39 @@ export class CreateLobbyComponent implements OnInit {
 		this.validationForm.get('team-size').setValue(this.teamSize);
 	}
 
+	changeChallongeMatch(event: MatSelectChange) {
+		const match = this.challongeMatches.find(match => match.id == event.value);
+
+		this.validationForm.get('challonge-match').setValue(match.id);
+		this.validationForm.get('challonge-tournament').setValue(match.tournament_id);
+	}
+
 	createLobby() {
 		if (this.validationForm.valid) {
 			const newLobby = new MultiplayerLobby();
 
 			newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
-			newLobby.teamOneName = this.validationForm.get('team-one-name').value;
-			newLobby.teamTwoName = this.validationForm.get('team-two-name').value;
 			newLobby.teamSize = this.validationForm.get('team-size').value;
 			newLobby.multiplayerLink = this.validationForm.get('multiplayer-link').value;
 			newLobby.tournamentAcronym = this.validationForm.get('tournament-acronym').value;
-			newLobby.description = `${this.validationForm.get('team-one-name').value} vs ${this.validationForm.get('team-two-name').value}`;
 			newLobby.webhook = this.validationForm.get('webhook').value;
 			newLobby.scoreInterfaceIndentifier = this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : this.selectedScoreInterface.getIdentifier();
+
+			if (this.challongeMatches.length > 0) {
+				newLobby.challongeMatchId = this.validationForm.get('challonge-match').value;
+				newLobby.challongeTournamentId = this.validationForm.get('challonge-tournament').value;
+
+				const match = this.challongeMatches.find(match => match.id == newLobby.challongeMatchId);
+
+				newLobby.teamOneName = match.getPlayer1Name();
+				newLobby.teamTwoName = match.getPlayer2Name();
+			}
+			else {
+				newLobby.teamOneName = this.validationForm.get('team-one-name').value;
+				newLobby.teamTwoName = this.validationForm.get('team-two-name').value;
+			}
+
+			newLobby.description = `${newLobby.teamOneName} vs ${newLobby.teamTwoName}`;
 
 			if (newLobby.multiplayerLink == '') {
 				this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
