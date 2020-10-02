@@ -170,6 +170,10 @@
 
 			<p>In order for the client to get information from Challonge, you have to enter an api key generated from Challonge. <a [routerLink]="" (click)="electronService.openLink('https://challonge.com/settings/developer')">Click here</a> to generate/get your api key.</p>
 
+			<div class="alert alert-warning">
+				The Challonge api key will be saved on a remote server so the api key won't be visible to anyone except yourself.
+			</div>
+
 			<button mat-raised-button color="primary" (click)="validateChallongeApiKey()">Validate api key</button>
 
 			<div class="alert alert-danger" *ngIf="apiKeyValidationProcess == API_KEY_INCORRECT">
@@ -181,19 +185,95 @@
 			</div>
 
 			<div *ngIf="apiKeyValidationProcess == API_KEY_CORRECT">
-				<h2>Select a tournament</h2>
+				<div class="double-buttons">
+					<div class="button" (click)="changeChallongeCreation(1)" [ngClass]="{'active': challongeCreationType == 1}">
+						Create a new Challonge tournament
+					</div>
 
-				<mat-form-field class="full-width">
-					<mat-label>Tournament</mat-label>
+					<div class="button" (click)="changeChallongeCreation(2)" [ngClass]="{'active': challongeCreationType == 2}">
+						Select an existing Challonge tournament
+					</div>
+				</div>
 
-					<mat-select formControlName="tournament-challonge-tournament-selected" (selectionChange)="changeSelectedChallongeTournament($event)">
-						<mat-option [value]="tournament.id" *ngFor="let tournament of allChallongeTournaments">{{ tournament.name }}</mat-option>
-					</mat-select>
+				<div *ngIf="challongeCreationType == 1">
+					<p>In order to create a new Challonge tournament, you have to fill in the fields below. Once these fields have been validated, you can continue. Once you have filled in the fields, press the button to create the tournament. The teams or players created below will be added to the Challonge tournament once you finalize the tournament in the client.</p>
+					<p>After this process is done, you have to go to the Challonge website itself and order the matches to your actual bracket there. Once they are ordered and started, the matches will show up when creating a new multiplayer lobby through this client.</p>
 
-					<mat-error *ngIf="getValidation('tournament-challonge-tournament-selected').errors && getValidation('tournament-challonge-tournament-selected').errors.required && (getValidation('tournament-challonge-tournament-selected').touched || getValidation('tournament-challonge-tournament-selected').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
+					<div class="row">
+						<div class="col">
+							<h3>Challonge tournament name</h3>
+
+							<mat-form-field class="full-width">
+								<mat-label>Challonge tournament name</mat-label>
+								<input matInput type="text" formControlName="tournament-challonge-name" />
+
+								<mat-error *ngIf="getValidation('tournament-challonge-name').errors && getValidation('tournament-challonge-name').errors.required && (getValidation('tournament-challonge-name').touched || getValidation('tournament-challonge-name').dirty)">
+									This field is required
+								</mat-error>
+							</mat-form-field>
+
+							<p>The name of the tournament that will be shown on Challonge.</p>
+						</div>
+
+						<div class="col">
+							<h3>Challonge tournament url</h3>
+
+							<mat-form-field class="full-width">
+								<mat-label>Challonge tournament url</mat-label>
+								<input matInput type="text" formControlName="tournament-challonge-url" />
+
+								<mat-error *ngIf="getValidation('tournament-challonge-url').errors && getValidation('tournament-challonge-url').errors.required && (getValidation('tournament-challonge-url').touched || getValidation('tournament-challonge-url').dirty)">
+									This field is required
+								</mat-error>
+							</mat-form-field>
+
+							<p>The url of the Challonge tournament. <br />Example: https://www.challonge.com/url_here</p>
+						</div>
+
+						<div class="col">
+							<h3>Challonge tournament type</h3>
+
+							<mat-form-field class="full-width">
+								<mat-label>Challonge tournament type</mat-label>
+
+								<mat-select formControlName="tournament-challonge-type">
+									<mat-option [value]="'single elimination'">Single elimination</mat-option>
+									<mat-option [value]="'double elimination'">Double elimination</mat-option>
+									<mat-option [value]="'round robin'">Round robin</mat-option>
+									<mat-option [value]="'swiss'">Swiss</mat-option>
+								</mat-select>
+
+								<mat-error *ngIf="getValidation('tournament-challonge-type').errors && getValidation('tournament-challonge-type').errors.required && (getValidation('tournament-challonge-type').touched || getValidation('tournament-challonge-type').dirty)">
+									This field is required
+								</mat-error>
+							</mat-form-field>
+
+							<p>The type of the Challonge Tournament.</p>
+						</div>
+					</div>
+
+					<button mat-raised-button color="primary" (click)="createChallongeTournament()">Create challonge tournament</button>
+
+					<div *ngIf="challongeCreatedMessage != null" class='alert' [ngClass]="{'alert-danger': challongeCreatedAlertType == 'error', 'alert-success': challongeCreatedAlertType == 'success'}" [innerHTML]="challongeCreatedMessage"></div>
+				</div>
+
+				<div *ngIf="challongeCreationType == 2">
+					<p>Select a tournament which will be used to get all the matches from. Once the tournament on Challonge has been started, the matches will show up when creating a new multiplayer lobby through this client.</p>
+
+					<mat-form-field class="full-width">
+						<mat-label>Tournament</mat-label>
+
+						<mat-select formControlName="tournament-challonge-tournament-selected" (selectionChange)="changeSelectedChallongeTournament($event)">
+							<mat-option [value]="tournament.id" *ngFor="let tournament of allChallongeTournaments">{{ tournament.name }}</mat-option>
+						</mat-select>
+
+						<mat-error *ngIf="getValidation('tournament-challonge-tournament-selected').errors && getValidation('tournament-challonge-tournament-selected').errors.required && (getValidation('tournament-challonge-tournament-selected').touched || getValidation('tournament-challonge-tournament-selected').dirty)">
+							This field is required
+						</mat-error>
+					</mat-form-field>
+
+					<p>The Challonge tournament that will be used to create matches from.</p>
+				</div>
 			</div>
 		</div>
 

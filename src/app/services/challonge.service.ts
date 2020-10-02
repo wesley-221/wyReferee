@@ -120,4 +120,20 @@ export class ChallongeService {
 			winner: winner
 		});
 	}
+
+	/**
+	 * Endpoint to create a tournament through Challonge
+	 * @param apiKey the api key for Challonge
+	 * @param name the name of the tournament
+	 * @param url the url of the tournament
+	 * @param type the type of the tournament
+	 */
+	public createTournament(apiKey: string, name: string, url: string, type: string) {
+		return this.httpClient.post(`${this.apiUrl}challonge-create`, {
+			'apiKey': apiKey,
+			'tournamentName': name,
+			'tournamentUrl': url,
+			'tournamentTournamentType': type
+		});
+	}
 }

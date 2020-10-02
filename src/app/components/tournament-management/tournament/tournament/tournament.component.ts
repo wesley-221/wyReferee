@@ -8,7 +8,6 @@ import { MatSelectChange } from '@angular/material/select';
 import { ChallongeService } from 'app/services/challonge.service';
 import { ElectronService } from 'app/services/electron.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChallongeTournament } from 'app/models/challonge/challonge-tournament';
 import { User } from 'app/models/authentication/user';
 import { AuthenticateService } from 'app/services/authenticate.service';
 
@@ -37,6 +36,10 @@ export class TournamentComponent implements OnInit {
 	allChallongeTournaments: ChallongeTournament[] = [];
 	allUsers: User[] = [];
 	searchValue: string;
+
+	challongeCreationType: number = 0;
+	challongeCreatedMessage: string = null;
+	challongeCreatedAlertType: string = null;
 
 	constructor(private toastService: ToastService, private challongeService: ChallongeService, public electronService: ElectronService, private auth: AuthenticateService) {
 		this.calculateScoreInterfaces = new Calculate();
@@ -193,5 +196,55 @@ export class TournamentComponent implements OnInit {
 				this.tournament.challongeTournamentId = tournament.id;
 			}
 		}
+	}
+
+	/**
+	 * Change the challonge creation type
+	 * @param creationType 1 for creating new, 2 for existing
+	 */
+	changeChallongeCreation(creationType: number) {
+		this.challongeCreationType = creationType;
+
+		if (creationType == 1) {
+			this.validationForm.addControl('tournament-challonge-name', new FormControl('', Validators.required));
+			this.validationForm.addControl('tournament-challonge-url', new FormControl('', Validators.required));
+			this.validationForm.addControl('tournament-challonge-type', new FormControl('', Validators.required));
+		}
+		else if (creationType == 2) {
+			this.validationForm.removeControl('tournament-challonge-name');
+			this.validationForm.removeControl('tournament-challonge-url');
+			this.validationForm.removeControl('tournament-challonge-type');
+		}
+	}
+
+	/**
+	 * Create (attempt to) a tournament through Challonge
+	 */
+	createChallongeTournament() {
+		const apiKey = this.getValidation('tournament-challonge-api-key').value;
+		const name = this.getValidation('tournament-challonge-name').value;
+		const url = this.getValidation('tournament-challonge-url').value;
+		const type = this.getValidation('tournament-challonge-type').value;
+
+		this.challongeService.createTournament(apiKey, name, url, type).subscribe((result: any) => {
+			if (result.hasOwnProperty('errors')) {
+				this.challongeCreatedAlertType = 'error';
+
+				this.challongeCreatedMessage = '<b>Something went wrong while trying to create the Challonge tournament!</b><ul>';
+
+				for (const error of result.errors) {
+					this.challongeCreatedMessage += `<li>${error}</li>`;
+				}
+
+				this.challongeCreatedMessage += '</ul>';
+			}
+			else {
+				this.challongeCreatedAlertType = 'success';
+				this.challongeCreatedMessage = `Successfully created the Challonge tournament!`;
+
+				const tournament: ChallongeTournament = result.tournament;
+				this.validationForm.get('tournament-challonge-tournament-selected').setValue(tournament.id);
+			}
+		})
 	}
 }
