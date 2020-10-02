@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { from } from 'rxjs';
 import { BanchoMultiplayerChannel } from 'bancho.js';
 import { ChallongeService } from 'app/services/challonge.service';
+import { OsuHelper } from 'app/models/osu-models/osu';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -61,6 +62,7 @@ export class CreateLobbyComponent implements OnInit {
 				Validators.pattern(/https:\/\/osu.ppy.sh\/community\/matches\/[0-9]+/)
 			]),
 			'tournament-acronym': new FormControl('', [
+				Validators.required,
 				Validators.maxLength(10)
 			]),
 			'score-interface': new FormControl('', [
@@ -151,7 +153,7 @@ export class CreateLobbyComponent implements OnInit {
 			newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
 			newLobby.teamSize = this.validationForm.get('team-size').value;
 			newLobby.multiplayerLink = this.validationForm.get('multiplayer-link').value;
-			newLobby.tournamentId = this.selectedTournament.publishId;
+			newLobby.tournamentId = this.selectedTournament != undefined && this.selectedTournament.publishId != undefined ? this.selectedTournament.publishId : null;
 			newLobby.tournamentAcronym = this.validationForm.get('tournament-acronym').value;
 			newLobby.webhook = this.validationForm.get('webhook').value;
 			newLobby.scoreInterfaceIndentifier = this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : this.selectedScoreInterface.getIdentifier();
@@ -175,18 +177,15 @@ export class CreateLobbyComponent implements OnInit {
 
 			newLobby.description = `${newLobby.teamOneName} vs ${newLobby.teamTwoName}`;
 
+			this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
+
+			// Create a new lobby
 			if (newLobby.multiplayerLink == '') {
-				this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
-
 				from(this.ircService.client.createLobby(`${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
-					this.lobbyHasBeenCreated = true;
-
 					this.ircService.joinChannel(multiplayerChannel.name);
 					this.ircService.initializeChannelListeners(multiplayerChannel);
 
-					setTimeout(() => {
-						this.lobbyHasBeenCreated = false;
-					}, 3000);
+					this.lobbyHasBeenCreatedTrigger();
 
 					newLobby.multiplayerLink = `https://osu.ppy.sh/community/matches/${multiplayerChannel.lobby.id}`;
 
@@ -197,10 +196,36 @@ export class CreateLobbyComponent implements OnInit {
 					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
 				});
 			}
+			// Join an existing channel
+			else {
+				const multiplayerId = OsuHelper.getMultiplayerIdFromLink(newLobby.multiplayerLink);
+				const multiplayerChannel = this.ircService.client.getChannel(`#mp_${multiplayerId}`) as BanchoMultiplayerChannel;
+
+				from(multiplayerChannel.join()).subscribe(() => {
+					this.ircService.joinChannel(multiplayerChannel.name);
+					this.ircService.initializeChannelListeners(multiplayerChannel);
+
+					this.lobbyHasBeenCreatedTrigger();
+
+					this.multiplayerLobbies.add(newLobby);
+
+					this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}!`);
+
+					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
+				});
+			}
 		}
 		else {
 			this.validationForm.markAllAsTouched();
 		}
+	}
+
+	lobbyHasBeenCreatedTrigger() {
+		this.lobbyHasBeenCreated = true;
+
+		setTimeout(() => {
+			this.lobbyHasBeenCreated = false;
+		}, 3000);
 	}
 
 	getValidation(key: string): any {

@@ -63,10 +63,10 @@ export class OsuApi {
 }
 
 export class OsuHelper {
-    /**
-     * Get the bit from the given mod strings
-     * @param mods the mods in an array
-     */
+	/**
+	 * Get the bit from the given mod strings
+	 * @param mods the mods in an array
+	 */
 	public static getBitFromMods(mods: string[]) {
 		mods = mods.map((str: string) => str.replace(/\s/g, ''));
 
@@ -83,7 +83,7 @@ export class OsuHelper {
 		return bit;
 	}
 
-    /**
+	/**
 	 * Get all mods from the given bit
 	 * @param bit the mods
 	 */
@@ -97,5 +97,13 @@ export class OsuHelper {
 		}
 
 		return allMods;
+	}
+
+	/**
+	 * Get the multiplayer id from the given multiplayer link
+	 * @param link the multiplayer link
+	 */
+	public static getMultiplayerIdFromLink(link: string) {
+		return link.replace('https://osu.ppy.sh/community/matches/', '');
 	}
 }

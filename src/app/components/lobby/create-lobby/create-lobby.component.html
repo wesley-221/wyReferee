@@ -59,6 +59,10 @@
 						<mat-label>Tournament acronym</mat-label>
 						<input matInput formControlName="tournament-acronym" />
 
+						<mat-error *ngIf="getValidation('tournament-acronym').errors && (getValidation('tournament-acronym').touched || getValidation('tournament-acronym').dirty)">
+							This field is required
+						</mat-error>
+
 						<mat-error *ngIf="getValidation('tournament-acronym').errors && getValidation('tournament-acronym').errors.maxlength && (getValidation('tournament-acronym').touched || getValidation('tournament-acronym').dirty)">
 							This field can have a maximum of 10 characters
 						</mat-error>
@@ -66,10 +70,6 @@
 
 					<div>
 						Enter an acronym that will be used to create the multiplayer match.
-					</div>
-
-					<div class="alert alert-warning">
-						You only have to fill in the tournament acronym when you want to create a <b>NEW</b> multiplayer lobby on osu!.
 					</div>
 				</div>
 			</div>
