@@ -100,4 +100,24 @@ export class ChallongeService {
 
 		return allMatches;
 	}
+
+	/**
+	 * Update the score on challonge
+	 * @param tournamentId the id of the published tournament
+	 * @param challongeTournamentId the id of the tournament to update
+	 * @param challongeMatchId the id of the match to update
+	 * @param scorePlayer1 the score of the first player/team
+	 * @param scorePlayer2 the score of the first player/team
+	 * @param winner the id of the winner if there is a winner
+	 */
+	public updateChallonge(tournamentId: number, challongeTournamentId: number, challongeMatchId: number, scorePlayer1: number, scorePlayer2: number, winner: number = null) {
+		return this.httpClient.post(`${this.apiUrl}challonge-update`, {
+			tournamentId: tournamentId,
+			challongeTournamentId: challongeTournamentId,
+			challongeMatchId: challongeMatchId,
+			scorePlayer1: scorePlayer1,
+			scorePlayer2: scorePlayer2,
+			winner: winner
+		});
+	}
 }

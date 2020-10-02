@@ -9,6 +9,7 @@ export class MultiplayerLobby {
 	lobbyId: number;
 	description: string;
 	multiplayerLink: string;
+	tournamentId: number;
 	tournamentAcronym: string;
 	teamOneName: string;
 	teamTwoName: string;
@@ -23,6 +24,8 @@ export class MultiplayerLobby {
 	scoreInterfaceIndentifier: string;
 	challongeTournamentId: number;
 	challongeMatchId: number;
+	challongePlayerOneId: number;
+	challongePlayerTwoId: number;
 
 	pickedCategories: { modBracketName: string, categories: string[] }[] = [];
 
@@ -75,6 +78,7 @@ export class MultiplayerLobby {
 		this.lobbyId = json.data.lobbyId;
 		this.description = json.data.description;
 		this.multiplayerLink = json.data.multiplayerLink;
+		this.tournamentId = json.data.tournamentId;
 		this.tournamentAcronym = json.data.tournamentAcronym;
 		this.teamOneName = json.data.teamOneName;
 		this.teamTwoName = json.data.teamTwoName;
@@ -84,6 +88,8 @@ export class MultiplayerLobby {
 		this.scoreInterfaceIndentifier = json.data.scoreInterfaceIndentifier;
 		this.challongeTournamentId = json.data.challongeTournamentId;
 		this.challongeMatchId = json.data.challongeMatchId;
+		this.challongePlayerOneId = json.data.challongePlayerOneId;
+		this.challongePlayerTwoId = json.data.challongePlayerTwoId;
 
 		this.firstPick = json.data.firstPick;
 		this.bestOf = json.data.bestOf;
@@ -148,6 +154,7 @@ export class MultiplayerLobby {
 				'lobbyId': multiplayerLobby.lobbyId,
 				'description': multiplayerLobby.description,
 				'multiplayerLink': multiplayerLobby.multiplayerLink,
+				'tournamentId': multiplayerLobby.tournamentId,
 				'tournamentAcronym': multiplayerLobby.tournamentAcronym,
 				'teamOneName': multiplayerLobby.teamOneName,
 				'teamTwoName': multiplayerLobby.teamTwoName,
@@ -161,7 +168,9 @@ export class MultiplayerLobby {
 				'scoreInterfaceIndentifier': multiplayerLobby.scoreInterfaceIndentifier,
 				'pickedCategories': multiplayerLobby.pickedCategories,
 				'challongeTournamentId': multiplayerLobby.challongeTournamentId,
-				'challongeMatchId': multiplayerLobby.challongeMatchId
+				'challongeMatchId': multiplayerLobby.challongeMatchId,
+				'challongePlayerOneId': multiplayerLobby.challongePlayerOneId,
+				'challongePlayerTwoId': multiplayerLobby.challongePlayerTwoId
 			},
 			'countForScore': {},
 			'multiplayerData': {}

@@ -16,6 +16,9 @@ import { Calculate } from '../models/score-calculation/calculate';
 import { AxSCalculation } from '../models/score-calculation/calculation-types/axs-calculation';
 import { BehaviorSubject } from 'rxjs';
 import { WebhookService } from './webhook.service';
+import { ChallongeService } from './challonge.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastType } from 'app/models/toast';
 
 @Injectable({
 	providedIn: 'root'
@@ -34,7 +37,8 @@ export class MultiplayerLobbiesService {
 		private getUser: GetUser,
 		private getBeatmap: GetBeatmap,
 		private mappoolService: MappoolService,
-		private webhookService: WebhookService) {
+		private webhookService: WebhookService,
+		private challongeService: ChallongeService) {
 		const allLobbies = storeService.get('lobby');
 
 		for (const lobby in allLobbies) {
@@ -217,6 +221,29 @@ export class MultiplayerLobbiesService {
 
 			// Save multiplayerLobby
 			this.update(multiplayerLobby);
+
+			// Send challonge updates
+			if (multiplayerLobby.challongeTournamentId != null && multiplayerLobby.challongeMatchId != null) {
+				const hasWinner = multiplayerLobby.getHasWon();
+				let winnerId = null;
+
+				if (hasWinner != null) {
+					console.log(multiplayerLobby);
+
+					if (hasWinner == multiplayerLobby.teamOneName) {
+						winnerId = multiplayerLobby.challongePlayerOneId;
+					}
+
+					if (hasWinner == multiplayerLobby.teamTwoName) {
+						winnerId = multiplayerLobby.challongePlayerTwoId;
+					}
+				}
+
+				this.challongeService.updateChallonge(multiplayerLobby.tournamentId, multiplayerLobby.challongeTournamentId, multiplayerLobby.challongeMatchId, multiplayerLobby.teamOneScore, multiplayerLobby.teamTwoScore, winnerId).subscribe(() => { },
+					(err: HttpErrorResponse) => {
+						this.toastService.addToast(`Something went wrong with updating scores to Challonge. \nMessage: ${err.message}`, ToastType.Error);
+					});
+			}
 
 			if (showToasts)
 				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');

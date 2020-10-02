@@ -151,6 +151,7 @@ export class CreateLobbyComponent implements OnInit {
 			newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
 			newLobby.teamSize = this.validationForm.get('team-size').value;
 			newLobby.multiplayerLink = this.validationForm.get('multiplayer-link').value;
+			newLobby.tournamentId = this.selectedTournament.publishId;
 			newLobby.tournamentAcronym = this.validationForm.get('tournament-acronym').value;
 			newLobby.webhook = this.validationForm.get('webhook').value;
 			newLobby.scoreInterfaceIndentifier = this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : this.selectedScoreInterface.getIdentifier();
@@ -163,6 +164,9 @@ export class CreateLobbyComponent implements OnInit {
 
 				newLobby.teamOneName = match.getPlayer1Name();
 				newLobby.teamTwoName = match.getPlayer2Name();
+
+				newLobby.challongePlayerOneId = match.player1_id;
+				newLobby.challongePlayerTwoId = match.player2_id;
 			}
 			else {
 				newLobby.teamOneName = this.validationForm.get('team-one-name').value;
