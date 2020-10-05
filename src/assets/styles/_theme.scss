@@ -1,0 +1,13 @@
+@import '~@angular/material/theming';
+@import 'variables';
+
+// Change the font for the angular components
+$typography: mat-typography-config(
+	$font-family
+);
+
+@include angular-material-typography($typography);
+$final-theme: mat-dark-theme($theme-primary, $theme-success, $theme-danger);
+
+@include mat-core($typography);
+@include angular-material-theme($final-theme);
