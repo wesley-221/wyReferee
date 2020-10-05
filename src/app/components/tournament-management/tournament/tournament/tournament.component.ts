@@ -37,7 +37,6 @@ export class TournamentComponent implements OnInit {
 	allUsers: User[] = [];
 	searchValue: string;
 
-	challongeCreationType: number = 0;
 	challongeCreatedMessage: string = null;
 	challongeCreatedAlertType: string = null;
 
@@ -203,7 +202,7 @@ export class TournamentComponent implements OnInit {
 	 * @param creationType 1 for creating new, 2 for existing
 	 */
 	changeChallongeCreation(creationType: number) {
-		this.challongeCreationType = creationType;
+		this.tournament.challongeCreationType = creationType;
 
 		if (creationType == 1) {
 			this.validationForm.addControl('tournament-challonge-name', new FormControl('', Validators.required));
@@ -244,6 +243,7 @@ export class TournamentComponent implements OnInit {
 
 				const tournament: ChallongeTournament = result.tournament;
 				this.validationForm.get('tournament-challonge-tournament-selected').setValue(tournament.id);
+				this.tournament.challongeTournamentId = tournament.id;
 			}
 		})
 	}

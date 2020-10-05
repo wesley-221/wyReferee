@@ -186,16 +186,16 @@
 
 			<div *ngIf="apiKeyValidationProcess == API_KEY_CORRECT">
 				<div class="double-buttons">
-					<div class="button" (click)="changeChallongeCreation(1)" [ngClass]="{'active': challongeCreationType == 1}">
+					<div class="button" (click)="changeChallongeCreation(1)" [ngClass]="{'active': tournament.challongeCreationType == 1}">
 						Create a new Challonge tournament
 					</div>
 
-					<div class="button" (click)="changeChallongeCreation(2)" [ngClass]="{'active': challongeCreationType == 2}">
+					<div class="button" (click)="changeChallongeCreation(2)" [ngClass]="{'active': tournament.challongeCreationType == 2}">
 						Select an existing Challonge tournament
 					</div>
 				</div>
 
-				<div *ngIf="challongeCreationType == 1">
+				<div *ngIf="tournament.challongeCreationType == 1">
 					<p>In order to create a new Challonge tournament, you have to fill in the fields below. Once these fields have been validated, you can continue. Once you have filled in the fields, press the button to create the tournament. The teams or players created below will be added to the Challonge tournament once you finalize the tournament in the client.</p>
 					<p>After this process is done, you have to go to the Challonge website itself and order the matches to your actual bracket there. Once they are ordered and started, the matches will show up when creating a new multiplayer lobby through this client.</p>
 
@@ -257,7 +257,7 @@
 					<div *ngIf="challongeCreatedMessage != null" class='alert' [ngClass]="{'alert-danger': challongeCreatedAlertType == 'error', 'alert-success': challongeCreatedAlertType == 'success'}" [innerHTML]="challongeCreatedMessage"></div>
 				</div>
 
-				<div *ngIf="challongeCreationType == 2">
+				<div *ngIf="tournament.challongeCreationType == 2">
 					<p>Select a tournament which will be used to get all the matches from. Once the tournament on Challonge has been started, the matches will show up when creating a new multiplayer lobby through this client.</p>
 
 					<mat-form-field class="full-width">

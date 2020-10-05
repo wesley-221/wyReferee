@@ -21,6 +21,7 @@ export class Tournament {
 	challongeIntegration: number;
 	challongeApiKey: string;
 	challongeTournamentId: number;
+	challongeCreationType: number;
 	availableTo: User[] = [];
 	publishId: number;
 	updateAvailable = false;

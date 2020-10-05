@@ -130,10 +130,23 @@ export class ChallongeService {
 	 */
 	public createTournament(apiKey: string, name: string, url: string, type: string) {
 		return this.httpClient.post(`${this.apiUrl}challonge-create`, {
-			'apiKey': apiKey,
-			'tournamentName': name,
-			'tournamentUrl': url,
-			'tournamentTournamentType': type
+			apiKey: apiKey,
+			tournamentName: name,
+			tournamentUrl: url,
+			tournamentTournamentType: type
+		});
+	}
+
+	/**
+	 * Bulk add all given participants to the tournament
+	 * @param tournament the tournament to add the participants to
+	 * @param participants the participants to add to the tournament
+	 */
+	public bulkAddParticipants(tournament: number, participants: string[], apiKey: string) {
+		return this.httpClient.post(`${this.apiUrl}challonge-bulk-add`, {
+			tournament: tournament,
+			participants: participants,
+			apiKey: apiKey
 		});
 	}
 }
