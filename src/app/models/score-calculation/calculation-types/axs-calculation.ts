@@ -20,7 +20,7 @@ export class AxSCalculation extends ScoreInterface {
 		const users: MultiplayerDataUser[] = [];
 
 		for (let i = 0; i < this.getTeamSize(); i++) {
-			const currentUser = this.getUserScoreBySlot(i);
+			const currentUser = this.getUserBySlot(i);
 
 			if (currentUser.slot == 0) {
 				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));
@@ -41,7 +41,7 @@ export class AxSCalculation extends ScoreInterface {
 		const users: MultiplayerDataUser[] = [];
 
 		for (let i = this.getTeamSize(); i < this.getTeamSize() * 2; i++) {
-			const currentUser = this.getUserScoreBySlot(i);
+			const currentUser = this.getUserBySlot(i);
 
 			if (currentUser.slot == 3) {
 				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));

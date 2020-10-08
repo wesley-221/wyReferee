@@ -16,7 +16,7 @@ export class TeamVsCalculation extends ScoreInterface {
 		let teamScore = 0;
 
 		for (let i = 0; i < this.getTeamSize(); i++) {
-			teamScore += this.calculatePlayerScore(this.getUserScoreBySlot(i));
+			teamScore += this.calculatePlayerScore(this.getUserBySlot(i));
 		}
 
 		return teamScore;
@@ -26,7 +26,7 @@ export class TeamVsCalculation extends ScoreInterface {
 		let teamScore = 0;
 
 		for (let i = this.getTeamSize(); i < this.getTeamSize() * 2; i++) {
-			teamScore += this.calculatePlayerScore(this.getUserScoreBySlot(i));
+			teamScore += this.calculatePlayerScore(this.getUserBySlot(i));
 		}
 
 		return teamScore;

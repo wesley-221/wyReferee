@@ -13,18 +13,18 @@ export class MultiplayerData {
 		this.players = [];
 	}
 
-    /**
-     * Add a player to the MultiplayerData
-     * @param player the player to add
-     */
+	/**
+	 * Add a player to the MultiplayerData
+	 * @param player the player to add
+	 */
 	addPlayer(player: MultiplayerDataUser) {
 		this.players[player.slot] = player;
 	}
 
-    /**
-     * Get a specific player from the given slot
-     * @param slot the slot of the player
-     */
+	/**
+	 * Get a specific player from the given slot
+	 * @param slot the slot of the player
+	 */
 	getPlayer(slot: number) {
 		const player = new MultiplayerDataUser();
 
@@ -39,16 +39,16 @@ export class MultiplayerData {
 		return (this.players[slot] == undefined) ? player : this.players[slot];
 	}
 
-    /**
-     * Return all the players
-     */
+	/**
+	 * Return all the players
+	 */
 	getPlayers(): MultiplayerDataUser[] {
 		return this.players;
 	}
 
-    /**
-     * Get the player count
-     */
+	/**
+	 * Get the player count
+	 */
 	getPlayerCount() {
 		return Object.keys(this.players).length;
 	}

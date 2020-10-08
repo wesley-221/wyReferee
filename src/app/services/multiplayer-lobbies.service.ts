@@ -176,6 +176,7 @@ export class MultiplayerLobbiesService {
 					newMpDataUser.accuracy = Calculations.getAccuracyOfScore(currentScore);
 					newMpDataUser.passed = currentScore.pass;
 					newMpDataUser.slot = currentScore.slot;
+					newMpDataUser.mods = currentScore.enabled_mods;
 
 					if (!multiplayerLobby.mapsCountTowardScore.hasOwnProperty(currentGame.game_id)) {
 						multiplayerLobby.mapsCountTowardScore[currentGame.game_id] = true;
@@ -228,8 +229,6 @@ export class MultiplayerLobbiesService {
 				let winnerId = null;
 
 				if (hasWinner != null) {
-					console.log(multiplayerLobby);
-
 					if (hasWinner == multiplayerLobby.teamOneName) {
 						winnerId = multiplayerLobby.challongePlayerOneId;
 					}

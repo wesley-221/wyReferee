@@ -70,7 +70,7 @@ export abstract class ScoreInterface {
 	 * Get a user by the given slot
 	 * @param slot
 	 */
-	public getUserScoreBySlot(slot: number): MultiplayerDataUser {
+	public getUserBySlot(slot: number): MultiplayerDataUser {
 		for (const user of this.allUsers) {
 			if (user.slot == slot) {
 				return user;
@@ -82,6 +82,7 @@ export abstract class ScoreInterface {
 		newUser.score = 0;
 		newUser.passed = 0;
 		newUser.accuracy = 0;
+		newUser.mods = null;
 
 		return newUser;
 	}
@@ -102,7 +103,7 @@ export abstract class ScoreInterface {
 
 		// Initialize the array with empty users
 		for (let i = 0; i < this.teamSize * 2; i++) {
-			this.addUserScore(this.getUserScoreBySlot(i));
+			this.addUserScore(this.getUserBySlot(i));
 		}
 	}
 
