@@ -1,0 +1,24 @@
+@import "variables";
+
+.update {
+	position: absolute;
+
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+
+	z-index: 4999;
+
+	min-width: 300px;
+	width: 25%;
+
+	padding: 8px;
+	background-color: $info;
+
+	text-align: center;
+
+	.header {
+		font-weight: bold;
+	}
+}

@@ -156,3 +156,9 @@ declare class ChallongeParticipant {
 	group_player_ids: any;
 	has_irrelevant_seed: boolean;
 }
+
+declare class ElectronDownloadProgression {
+	transferred: number;
+	total: number;
+	percent: number;
+}

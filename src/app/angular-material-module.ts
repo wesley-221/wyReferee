@@ -24,6 +24,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const modules: any[] = [
 	LayoutModule,
@@ -47,7 +48,8 @@ const modules: any[] = [
 	MatListModule,
 	MatSlideToggleModule,
 	MatStepperModule,
-	MatButtonToggleModule
+	MatButtonToggleModule,
+	MatProgressBarModule
 ];
 
 @NgModule({

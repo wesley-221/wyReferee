@@ -59,6 +59,7 @@ import { SendFinalResultComponent } from './components/dialogs/send-final-result
 import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/join-irc-channel.component';
 import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatmap.component';
 import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
+import { UpdaterComponent } from './components/main-page/updater/updater.component';
 
 @NgModule({
 	declarations: [
@@ -103,7 +104,8 @@ import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multip
 		SendFinalResultComponent,
 		JoinIrcChannelComponent,
 		BanBeatmapComponent,
-		MultiplayerLobbyMovePlayerComponent
+		MultiplayerLobbyMovePlayerComponent,
+		UpdaterComponent
 	],
 	imports: [
 		BrowserModule,

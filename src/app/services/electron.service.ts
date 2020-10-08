@@ -6,11 +6,7 @@ import { ipcRenderer, webFrame, remote, shell, dialog } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
-import { AppConfig } from '../../environments/environment';
 import { ToastService } from './toast.service';
-import { ToastType } from '../models/toast';
 
 @Injectable({
 	providedIn: 'root'
@@ -24,9 +20,6 @@ export class ElectronService {
 	fs: typeof fs;
 	shell: typeof shell;
 	dialog: typeof dialog;
-
-	autoUpdater: typeof autoUpdater;
-	log: typeof log;
 
 	get isElectron() {
 		return window && window.process && window.process.type;
@@ -43,43 +36,6 @@ export class ElectronService {
 
 			this.childProcess = window.require('child_process');
 			this.fs = window.require('fs');
-
-			// Autoupdater
-			this.autoUpdater = this.remote.require('electron-updater').autoUpdater;
-			this.log = this.remote.require('electron-log');
-			this.log.info('App starting');
-
-			this.autoUpdater.logger = this.log;
-			(<any>this.autoUpdater.logger).transports.file.level = 'info';
-			this.autoUpdater.autoDownload = true;
-
-			if (AppConfig.production) {
-				this.autoUpdater.checkForUpdates();
-
-				this.autoUpdater.on('checking-for-updates', () => {
-					console.log('Checking for updates');
-				});
-
-				this.autoUpdater.on('update-not-available', () => {
-					console.log('No updates were found');
-				});
-
-				this.autoUpdater.on('update-available', () => {
-					toastService.addToast('A new update is available. The download will start in the background.');
-				});
-
-				this.autoUpdater.on('error', err => {
-					toastService.addToast(`Something went wrong while trying to update: ${err}`);
-				});
-
-				this.autoUpdater.on('update-downloaded', () => {
-					toastService.addToast('The update has been downloaded and will be installed in 10 seconds. If you close the program immediately, it will install the update right away.', ToastType.Information, 10);
-
-					setTimeout(() => {
-						this.autoUpdater.quitAndInstall();
-					}, 10000);
-				});
-			}
 		}
 	}
 
