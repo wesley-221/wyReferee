@@ -147,6 +147,7 @@ export class MultiplayerLobbiesService {
 
 				multiplayerData.game_id = currentGame.game_id;
 				multiplayerData.beatmap_id = currentGame.beatmap_id;
+				multiplayerData.mods = currentGame.mods;
 
 				const cachedBeatmap: CacheBeatmap = this.cacheService.getCachedBeatmap(multiplayerData.beatmap_id);
 

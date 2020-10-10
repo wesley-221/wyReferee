@@ -1,6 +1,6 @@
 @import "variables";
 
-$match-header-height: 100px;
+$match-header-height: 120px;
 
 .red-team,
 .red-text {
@@ -79,6 +79,10 @@ $match-header-height: 100px;
 						}
 					}
 
+					.align-right {
+						text-align: right;
+					}
+
 					.team-scores {
 						background-color: #0000004d;
 						padding: 8px;
@@ -94,10 +98,33 @@ $match-header-height: 100px;
 
 								.column {
 									display: flex;
-									flex-direction: row;
+									flex-direction: column;
+
+									justify-content: space-between;
+
+									.user {
+										font-weight: bold;
+										font-size: 18px;
+
+										margin-bottom: 4px;
+									}
 
 									.extra-spacing {
 										margin-right: 4px;
+										margin-bottom: 4px;
+
+										&.mods {
+											display: flex;
+											align-items: flex-end;
+										}
+
+										&.align-right {
+											text-align: right;
+										}
+
+										&:last-child {
+											margin-bottom: 0;
+										}
 									}
 								}
 

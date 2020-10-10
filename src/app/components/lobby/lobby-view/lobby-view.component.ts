@@ -16,6 +16,7 @@ import { CacheBeatmap } from '../../../models/cache/cache-beatmap';
 import { MatDialog } from '@angular/material/dialog';
 import { MultiplayerLobbySettingsComponent } from 'app/components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { SendFinalResultComponent } from 'app/components/dialogs/send-final-result/send-final-result.component';
+import { OsuHelper } from 'app/models/osu-models/osu';
 
 export interface MultiplayerLobbySettingsDialogData {
 	multiplayerLobby: MultiplayerLobby;
@@ -290,6 +291,40 @@ export class LobbyViewComponent implements OnInit {
 		const user: MultiplayerDataUser = match.getPlayer(slotId);
 
 		return (user != undefined) ? this.addDot(user.score % 1 == 0 ? user.score : user.score.toFixed(), ' ') : 0;
+	}
+
+	/**
+	 * Get the mods of the player in the given slot
+	 * @param match the MultiplayerData
+	 * @param slotId the slot you want the mods from
+	 */
+	getMods(match: MultiplayerData, slotId: number): string[] {
+		const user: MultiplayerDataUser = match.getPlayer(slotId);
+		let mods: string[] = [];
+
+		const selectedMods = OsuHelper.getModsFromBit(user.mods);
+
+		for (const mod of selectedMods) {
+			mods.push(OsuHelper.getModAbbreviation(mod));
+		}
+
+		return (user != undefined || user.mods != undefined) ? mods : [];
+	}
+
+	/**
+	 * Get the mods of the multiplayer lobby
+	 * @param modBit the mods as bit
+	 */
+	getModsFromBit(modBit: number): string[] {
+		let mods: string[] = [];
+
+		const selectedMods = OsuHelper.getModsFromBit(modBit);
+
+		for (const mod of selectedMods) {
+			mods.push(OsuHelper.getModAbbreviation(mod));
+		}
+
+		return mods;
 	}
 
 	/**

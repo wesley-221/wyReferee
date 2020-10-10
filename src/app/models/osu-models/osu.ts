@@ -106,4 +106,44 @@ export class OsuHelper {
 	public static getMultiplayerIdFromLink(link: string) {
 		return link.replace('https://osu.ppy.sh/community/matches/', '');
 	}
+
+	/**
+	 * Get mod abbreviations from the given mods array
+	 * @param mod the mod to get the abbreviation from
+	 */
+	public static getModAbbreviation(mod: string): string {
+		const allMods: ModAbbreviation[] = [
+			new ModAbbreviation(Mods.HardRock, 'hr'),
+			new ModAbbreviation(Mods.Hidden, 'hd'),
+			new ModAbbreviation(Mods.DoubleTime, 'dt'),
+			new ModAbbreviation(Mods.Easy, 'ez'),
+			new ModAbbreviation(Mods.Flashlight, 'fl'),
+			new ModAbbreviation(Mods.HalfTime, 'ht'),
+			new ModAbbreviation(Mods.Nightcore, 'nc'),
+			new ModAbbreviation(Mods.Relax, 'rx'),
+			new ModAbbreviation(Mods.NoFail, 'nf'),
+			new ModAbbreviation(Mods.Perfect, 'pf'),
+			new ModAbbreviation(Mods.SuddenDeath, 'sd')
+		];
+
+		let modAbbreviations: string = null;
+
+		for (const abbreviation of allMods) {
+			if (abbreviation.fullModName.toString().toLowerCase() == mod) {
+				modAbbreviations = abbreviation.abbreviationModName;
+			}
+		}
+
+		return modAbbreviations;
+	}
+}
+
+class ModAbbreviation {
+	fullModName: string;
+	abbreviationModName: string;
+
+	constructor(fullModName: Mods, abbreviationModName: string) {
+		this.fullModName = Mods[fullModName];
+		this.abbreviationModName = abbreviationModName;
+	}
 }

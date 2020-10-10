@@ -39,6 +39,10 @@
 				<div class="column">
 					<h2>{{ getBeatmapname(match.beatmap_id) }}</h2>
 
+					<div class="align-right">
+						<img *ngFor="let mod of getModsFromBit(match.mods)" [src]="'assets/osu-mods/' + mod + '.png'" />
+					</div>
+
 					<div class="modifier" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == true && selectedLobby.scoreInterfaceIndentifier == 'AxS'">
 						<div class="alert alert-danger center" *ngIf="getModifier(match.beatmap_id) == null"><mat-icon>warning</mat-icon> There was no modifier set for this map. Have you selected a mappool yet?</div>
 						<h6 *ngIf="getModifier(match.beatmap_id) != null">Beatmap modifier: {{ getModifier(match.beatmap_id) }}</h6>
@@ -54,24 +58,30 @@
 						<div class="score-table">
 							<div class="score" *ngFor="let slot of selectedLobby.teamOneSlotArray">
 								<div class="column">
-									<b>{{ getUsernameFromUserId(match.getPlayer(slot).user) }}</b>
+									<div class="user">
+										{{ getUsernameFromUserId(match.getPlayer(slot).user) }}
+									</div>
+
+									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
+										<s>Score: {{ getScore(match, slot) }}</s>
+									</div>
+
+									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
+										Score: {{ getScore(match, slot) }}
+									</div>
 								</div>
 
 								<div class="column">
-									<s class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
-										{{ getScore(match, slot) }}
-									</s>
-
-									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
-										{{ getScore(match, slot) }}
+									<div class="extra-spacing mods">
+										<img *ngFor="let mod of getMods(match, slot)" [src]="'assets/osu-mods/' + mod + '.png'" />
 									</div>
 
-									<s class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
-										({{ getAccuracy(match, slot) }}%)
+									<s class="extra-spacing align-right" *ngIf="match.getPlayer(slot).passed == 0">
+										{{ getAccuracy(match, slot) }}%
 									</s>
 
-									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
-										({{ getAccuracy(match, slot) }}%)
+									<div class="extra-spacing align-right" *ngIf="match.getPlayer(slot).passed == 1">
+										{{ getAccuracy(match, slot) }}%
 									</div>
 								</div>
 							</div>
@@ -94,24 +104,30 @@
 						<div class="score-table">
 							<div class="score" *ngFor="let slot of selectedLobby.teamTwoSlotArray">
 								<div class="column">
-									<b>{{ getUsernameFromUserId(match.getPlayer(slot).user) }}</b>
+									<div class="user">
+										{{ getUsernameFromUserId(match.getPlayer(slot).user) }}
+									</div>
+
+									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
+										<s>Score: {{ getScore(match, slot) }}</s>
+									</div>
+
+									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
+										Score: {{ getScore(match, slot) }}
+									</div>
 								</div>
 
 								<div class="column">
-									<s class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
-										{{ getScore(match, slot) }}
-									</s>
-
-									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
-										{{ getScore(match, slot) }}
+									<div class="extra-spacing mods">
+										<img *ngFor="let mod of getMods(match, slot)" [src]="'assets/osu-mods/' + mod + '.png'" />
 									</div>
 
-									<s class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 0">
-										({{ getAccuracy(match, slot) }}%)
+									<s class="extra-spacing align-right" *ngIf="match.getPlayer(slot).passed == 0">
+										{{ getAccuracy(match, slot) }}%
 									</s>
 
-									<div class="extra-spacing" *ngIf="match.getPlayer(slot).passed == 1">
-										({{ getAccuracy(match, slot) }}%)
+									<div class="extra-spacing align-right" *ngIf="match.getPlayer(slot).passed == 1">
+										{{ getAccuracy(match, slot) }}%
 									</div>
 								</div>
 							</div>
