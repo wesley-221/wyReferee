@@ -24,5 +24,10 @@
 		padding-top: 8px;
 
 		margin-right: 0;
+
+		&.no-padding {
+			padding-left: 0;
+			padding-top: 0;
+		}
 	}
 }
