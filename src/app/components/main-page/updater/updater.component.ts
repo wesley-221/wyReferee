@@ -18,7 +18,11 @@ export class UpdaterComponent implements OnInit {
 		const log = require('electron-log');
 
 		this.remote = window.require('electron').remote;
-		this.autoUpdater = this.remote.require('@imjs/electron-differential-updater').autoUpdater;
+		this.autoUpdater = this.remote.require('electron-updater').autoUpdater;
+
+		// TODO: Enable this once useAppSupportCache has been fixed
+		// See https://github.com/imjsElectron/electron-differential-updater/issues/18
+		// this.autoUpdater = this.remote.require('@imjs/electron-differential-updater').autoUpdater;
 
 		log.transports.file.level = 'debug';
 		this.autoUpdater.logger = log;
@@ -36,12 +40,16 @@ export class UpdaterComponent implements OnInit {
 				this.updateWasFound = true;
 			});
 
-			this.autoUpdater.on('download-progress', (progress: ElectronDownloadProgression) => {
-				this.downloadPercentage = Math.round(progress.percent);
-				ref.detectChanges();
-			});
+			// TODO: See TODO above
+			// this.autoUpdater.on('download-progress', (progress: ElectronDownloadProgression) => {
+			// 	this.downloadPercentage = Math.round(progress.percent);
+			// 	ref.detectChanges();
+			// });
 
 			this.autoUpdater.on('update-downloaded', () => {
+				// TODO: Remove this, see TODO above
+				toastService.addToast(`The update has been downloaded and will be installed in 10 seconds. If you close the client, it will install the update right away.`);
+
 				setTimeout(() => {
 					this.autoUpdater.quitAndInstall();
 				}, 10000);
