@@ -9,8 +9,17 @@
 
 	<div class="header">
 		<div class="information">
-			<h1>{{ tournament.tournamentName }}</h1>
-			<span><b>Tournament id:</b> {{ tournament.id }}</span>
+			<div class="id" matTooltip="Tournament import id" *ngIf="tournament.publishId != null">
+				{{ tournament.publishId }}
+			</div>
+
+			<div class="id" matTooltip="Tournament import id" *ngIf="publish == true">
+				{{ tournament.id }}
+			</div>
+
+			<div class="name">
+				{{ tournament.tournamentName }}
+			</div>
 		</div>
 
 		<div class="buttons">

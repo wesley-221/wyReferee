@@ -149,6 +149,13 @@ export class TournamentService {
 	}
 
 	/**
+	 * Get all published tournaments
+	 */
+	getAllPublishedTournaments() {
+		return this.httpClient.get<Tournament[]>(`${this.apiUrl}tournament`);
+	}
+
+	/**
 	 * Delete a tournament
 	 * @param tournament the tournament to delete
 	 */

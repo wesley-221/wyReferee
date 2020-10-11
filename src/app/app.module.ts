@@ -62,6 +62,8 @@ import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multip
 import { UpdaterComponent } from './components/main-page/updater/updater.component';
 import { AllPublishedMappoolsComponent } from './components/tournament-management/mappool/all-published-mappools/all-published-mappools.component';
 import { FilterMappoolPipe } from './pipes/filter-mappool.pipe';
+import { AllPublishedTournamentsComponent } from './components/tournament-management/tournament/all-published-tournaments/all-published-tournaments.component';
+import { FilterTournamentPipe } from './pipes/filter-tournament.pipe';
 
 @NgModule({
 	declarations: [
@@ -109,7 +111,9 @@ import { FilterMappoolPipe } from './pipes/filter-mappool.pipe';
 		MultiplayerLobbyMovePlayerComponent,
 		UpdaterComponent,
 		AllPublishedMappoolsComponent,
-		FilterMappoolPipe
+		FilterMappoolPipe,
+		AllPublishedTournamentsComponent,
+		FilterTournamentPipe
 	],
 	imports: [
 		BrowserModule,

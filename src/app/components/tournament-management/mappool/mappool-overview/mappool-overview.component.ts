@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MappoolService } from '../../../../services/mappool.service';
-import { AuthenticateService } from '../../../../services/authenticate.service';
 
 @Component({
 	selector: 'app-mappool-overview',
@@ -9,8 +8,6 @@ import { AuthenticateService } from '../../../../services/authenticate.service';
 })
 
 export class MappoolOverviewComponent implements OnInit {
-	mappoolId: number;
-
-	constructor(public mappoolService: MappoolService, public authService: AuthenticateService) { }
+	constructor(public mappoolService: MappoolService) { }
 	ngOnInit() { }
 }

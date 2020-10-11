@@ -19,6 +19,7 @@ import { MappoolEditComponent } from './components/tournament-management/mappool
 import { MyPublishedTournamentsComponent } from './components/tournament-management/tournament/my-published-tournaments/my-published-tournaments.component';
 import { ManagementRouterComponent } from './components/tournament-management/management-router/management-router.component';
 import { AllPublishedMappoolsComponent } from './components/tournament-management/mappool/all-published-mappools/all-published-mappools.component';
+import { AllPublishedTournamentsComponent } from './components/tournament-management/tournament/all-published-tournaments/all-published-tournaments.component';
 
 const routes: Routes = [
 	{
@@ -44,6 +45,7 @@ const routes: Routes = [
 					{ path: 'tournament-overview/tournament-create', component: TournamentCreateComponent },
 					{ path: 'tournament-overview/tournament-edit/:tournamentId/:publish', component: TournamentEditComponent },
 					{ path: 'tournament-overview/my-published-tournaments', component: MyPublishedTournamentsComponent },
+					{ path: 'tournament-overview/all-published-tournaments', component: AllPublishedTournamentsComponent }
 				]
 			},
 			{ path: 'irc', component: IrcComponent },

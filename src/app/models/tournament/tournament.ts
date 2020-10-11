@@ -25,6 +25,7 @@ export class Tournament {
 	availableTo: User[] = [];
 	publishId: number;
 	updateAvailable = false;
+	createdByUser: { id: number, slug: string, username: string; };
 
 	constructor() {
 		this.teams = [];
@@ -93,7 +94,12 @@ export class Tournament {
 			challongeApiKey: this.challongeApiKey,
 			challongeTournamentId: this.challongeTournamentId,
 			publishId: this.publishId,
-			availableTo: []
+			availableTo: [],
+			createdByUser: {
+				id: this.createdByUser.id,
+				slug: this.createdByUser.slug,
+				username: this.createdByUser.username
+			}
 		};
 
 		for (const team in this.teams) {
@@ -127,6 +133,14 @@ export class Tournament {
 		newTournament.challongeTournamentId = tournament.challongeTournamentId;
 		newTournament.publishId = tournament.publishId;
 
+		if (tournament.createdByUser) {
+			newTournament.createdByUser = {
+				id: tournament.createdByUser.id,
+				slug: tournament.createdByUser.slug,
+				username: tournament.createdByUser.username
+			}
+		}
+
 		for (const team in tournament.teams) {
 			newTournament.teams.push(Team.makeTrueCopy(tournament.teams[team]));
 		}
@@ -158,6 +172,14 @@ export class Tournament {
 		newTournament.challongeApiKey = thisTournament.challongeApiKey;
 		newTournament.challongeTournamentId = thisTournament.challongeTournamentId;
 		newTournament.publishId = thisTournament.publishId;
+
+		if (json.createdByUser) {
+			newTournament.createdByUser = {
+				id: json.createdByUser.id,
+				slug: json.createdByUser.slug,
+				username: json.createdByUser.username
+			}
+		}
 
 		for (const team in thisTournament.teams) {
 			const newTeam = new Team();
@@ -206,7 +228,12 @@ export class Tournament {
 			this.challongeIntegration == that.challongeIntegration &&
 			this.challongeTournamentId == that.challongeTournamentId &&
 			this.teams.length == that.teams.length &&
-			this.availableTo.length == that.availableTo.length
+			this.availableTo.length == that.availableTo.length,
+			(this.createdByUser != null ?
+				this.createdByUser.id == that.createdByUser.id &&
+				this.createdByUser.slug == that.createdByUser.slug &&
+				this.createdByUser.username == that.createdByUser.username
+				: true)
 		);
 	}
 }
