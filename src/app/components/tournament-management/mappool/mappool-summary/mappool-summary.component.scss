@@ -1,4 +1,13 @@
+@import "variables";
+
+.extra-spacing {
+	padding: 4px;
+}
+
 .mappool {
+	display: flex;
+	flex-direction: column;
+
 	margin-bottom: 8px;
 	padding: 16px;
 
@@ -10,9 +19,26 @@
 
 	.header {
 		display: flex;
-		flex-direction: row;
-
 		justify-content: space-between;
+
+		.information {
+			display: flex;
+			align-items: center;
+
+			.id {
+				background-color: $primary;
+				color: black;
+
+				border-radius: 9px;
+
+				padding: 2px 16px 2px 16px;
+				margin-right: 8px;
+			}
+
+			.name {
+				font-size: 18px;
+			}
+		}
 
 		.buttons {
 			button {

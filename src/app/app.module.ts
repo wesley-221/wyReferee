@@ -60,6 +60,8 @@ import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/j
 import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatmap.component';
 import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
 import { UpdaterComponent } from './components/main-page/updater/updater.component';
+import { AllPublishedMappoolsComponent } from './components/tournament-management/mappool/all-published-mappools/all-published-mappools.component';
+import { FilterMappoolPipe } from './pipes/filter-mappool.pipe';
 
 @NgModule({
 	declarations: [
@@ -105,7 +107,9 @@ import { UpdaterComponent } from './components/main-page/updater/updater.compone
 		JoinIrcChannelComponent,
 		BanBeatmapComponent,
 		MultiplayerLobbyMovePlayerComponent,
-		UpdaterComponent
+		UpdaterComponent,
+		AllPublishedMappoolsComponent,
+		FilterMappoolPipe
 	],
 	imports: [
 		BrowserModule,

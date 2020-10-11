@@ -9,8 +9,17 @@
 
 	<div class="header">
 		<div class="information">
-			<h1>{{ mappool.name }}</h1>
-			<span><b>Mappool id:</b> {{ mappool.id }}</span>
+			<div class="id" matTooltip="Mappool import id" *ngIf="mappool.publishId != null">
+				{{ mappool.publishId }}
+			</div>
+
+			<div class="id" matTooltip="Mappool import id" *ngIf="publish == true">
+				{{ mappool.id }}
+			</div>
+
+			<div class="name">
+				{{ mappool.name }}
+			</div>
 		</div>
 
 		<div class="buttons">
@@ -20,17 +29,18 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row" *ngIf="mappool.mappoolType == 2">
 		<div class="col">
-			<div class="alert alert-info" *ngIf="mappool.mappoolType == 2">
+			<div class="alert alert-info">
 				This is a mystery tournament. Maps will not show up and will be randomly send when a modbracket has been picked.
 			</div>
 		</div>
 	</div>
 
-	<hr />
+	<div class="extra-spacing"></div>
+	<mat-divider ></mat-divider>
+	<div class="extra-spacing"></div>
 
-	<h3>Mod brackets</h3>
 	<div class="modbrackets">
 		<div class="bracket" *ngFor="let bracket of mappool.modBrackets">
 			<div><h4>{{ bracket.bracketName }}</h4></div>

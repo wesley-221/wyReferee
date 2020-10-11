@@ -29,20 +29,21 @@ export class Mappool {
 	modifiers: {} = {};
 	allBeatmaps: any[] = [];
 	modCategories: ModCategory[] = [];
+	createdByUser: { id: number, slug: string, username: string; };
 
 	constructor() { }
 
-    /**
-     * Get all the mod brackets
-     */
+	/**
+	 * Get all the mod brackets
+	 */
 	public getAllBrackets() {
 		return this.modBrackets;
 	}
 
-    /**
-     * Add a modbracket to the mappool
-     * @param modBracket the modbracket to add
-     */
+	/**
+	 * Add a modbracket to the mappool
+	 * @param modBracket the modbracket to add
+	 */
 	public addBracket(modBracket: ModBracket) {
 		this.modBrackets.push(modBracket);
 	}
@@ -125,7 +126,12 @@ export class Mappool {
 			Object.keys(this.modifiers).length == Object.keys(mappool.modifiers).length &&
 			this.availability == mappool.availability &&
 			this.mappoolType == mappool.mappoolType &&
-			this.modCategories.length == mappool.modCategories.length
+			this.modCategories.length == mappool.modCategories.length &&
+			(this.createdByUser != null ?
+				this.createdByUser.id == mappool.createdByUser.id &&
+				this.createdByUser.slug == mappool.createdByUser.slug &&
+				this.createdByUser.username == mappool.createdByUser.username
+				: true)
 		) == false) {
 			return false;
 		}
@@ -151,10 +157,10 @@ export class Mappool {
 		return true;
 	}
 
-    /**
-     * Convert the mappool object to json format
+	/**
+	 * Convert the mappool object to json format
 	 * @param publish
-     */
+	 */
 	public convertToJson(): any {
 		const mappool = {
 			id: this.id,
@@ -166,7 +172,12 @@ export class Mappool {
 			availableTo: [],
 			modBrackets: [],
 			modCategories: [],
-			modifiers: {}
+			modifiers: {},
+			createdByUser: {
+				id: this.createdByUser.id,
+				slug: this.createdByUser.slug,
+				username: this.createdByUser.username
+			}
 		};
 
 		for (const bracket in this.modBrackets) {
@@ -210,10 +221,10 @@ export class Mappool {
 		return mappool;
 	}
 
-    /**
-     * Make a true copy of the given mappool
-     * @param mappool the mappool
-     */
+	/**
+	 * Make a true copy of the given mappool
+	 * @param mappool the mappool
+	 */
 	public static makeTrueCopy(mappool: Mappool): Mappool {
 		const newMappool = new Mappool();
 
@@ -225,6 +236,14 @@ export class Mappool {
 		newMappool.mappoolType = mappool.mappoolType;
 		newMappool.modifiers = mappool.modifiers;
 
+		if (mappool.createdByUser) {
+			newMappool.createdByUser = {
+				id: mappool.createdByUser.id,
+				slug: mappool.createdByUser.slug,
+				username: mappool.createdByUser.username
+			}
+		}
+
 		let modBracketCounter = 0;
 
 		for (const bracket in mappool.modBrackets) {
@@ -233,7 +252,7 @@ export class Mappool {
 
 			newMappool.modBrackets.push(newModbracket);
 
-			modBracketCounter ++;
+			modBracketCounter++;
 		}
 
 		for (const user in mappool.availableTo) {
@@ -247,10 +266,10 @@ export class Mappool {
 		return newMappool;
 	}
 
-    /**
-     * Serialize the json so that it gives back a mappool object
-     * @param json the json to serialize
-     */
+	/**
+	 * Serialize the json so that it gives back a mappool object
+	 * @param json the json to serialize
+	 */
 	public static serializeJson(json: any): Mappool {
 		const newMappool = new Mappool();
 
@@ -260,6 +279,14 @@ export class Mappool {
 		newMappool.publishId = json.publishId;
 		newMappool.availability = json.availability;
 		newMappool.mappoolType = json.mappoolType;
+
+		if (json.createdByUser) {
+			newMappool.createdByUser = {
+				id: json.createdByUser.id,
+				slug: json.createdByUser.slug,
+				username: json.createdByUser.username
+			}
+		}
 
 		let modBracketCounter = 0;
 
@@ -273,7 +300,7 @@ export class Mappool {
 			newBracket.bracketName = thisBracket.bracketName;
 			newBracket.validateIndex = modBracketCounter;
 
-			modBracketCounter ++;
+			modBracketCounter++;
 
 			// Loop through all the beatmaps in the current bracket
 			for (const beatmap in thisBracket.beatmaps) {

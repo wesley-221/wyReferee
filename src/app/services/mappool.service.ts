@@ -144,6 +144,13 @@ export class MappoolService {
 	}
 
 	/**
+	 * Get all published mappools
+	 */
+	public getAllPublishedMappools(): Observable<Mappool[]> {
+		return this.httpClient.get<Mappool[]>(`${this.apiUrl}mappool`);
+	}
+
+	/**
 	 * Get all the published mappools from the given user
 	 * @param user the user to get all the mappools from
 	 */

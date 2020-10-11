@@ -18,6 +18,7 @@ import { MyPublishedMappoolsComponent } from './components/tournament-management
 import { MappoolEditComponent } from './components/tournament-management/mappool/mappool-edit/mappool-edit.component';
 import { MyPublishedTournamentsComponent } from './components/tournament-management/tournament/my-published-tournaments/my-published-tournaments.component';
 import { ManagementRouterComponent } from './components/tournament-management/management-router/management-router.component';
+import { AllPublishedMappoolsComponent } from './components/tournament-management/mappool/all-published-mappools/all-published-mappools.component';
 
 const routes: Routes = [
 	{
@@ -37,6 +38,7 @@ const routes: Routes = [
 					{ path: 'mappool-overview/mappool-create', component: MappoolCreateComponent },
 					{ path: 'mappool-overview/mappool-edit/:mappoolId/:publish', component: MappoolEditComponent },
 					{ path: 'mappool-overview/my-published-mappools', component: MyPublishedMappoolsComponent },
+					{ path: 'mappool-overview/all-published-mappools', component: AllPublishedMappoolsComponent },
 
 					{ path: 'tournament-overview', component: TournamentOverviewComponent },
 					{ path: 'tournament-overview/tournament-create', component: TournamentCreateComponent },
