@@ -173,12 +173,16 @@ export class Mappool {
 			modBrackets: [],
 			modCategories: [],
 			modifiers: {},
-			createdByUser: {
+			createdByUser: {}
+		};
+
+		if (this.createdByUser) {
+			mappool.createdByUser = {
 				id: this.createdByUser.id,
 				slug: this.createdByUser.slug,
 				username: this.createdByUser.username
 			}
-		};
+		}
 
 		for (const bracket in this.modBrackets) {
 			const thisBracket = this.modBrackets[bracket];
