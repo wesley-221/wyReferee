@@ -33,7 +33,7 @@ export class TournamentService {
 
 			if (newTournament.publishId != undefined) {
 				this.getPublishedTournament(newTournament.publishId).subscribe((data) => {
-					const updatedTournament: Tournament = this.mapFromJson(data);
+					const updatedTournament: Tournament = Tournament.serializeJson(data);
 					newTournament.updateAvailable = !newTournament.compareTo(updatedTournament);
 
 					this.allTournaments.push(newTournament);
@@ -204,44 +204,6 @@ export class TournamentService {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Map the given json to a tournament object
-	 * @param json the json to map
-	 */
-	mapFromJson(json: any) {
-		const newTournament = new Tournament();
-		const calc = new Calculate();
-
-		newTournament.id = json.id;
-		newTournament.tournamentName = json.tournamentName;
-		newTournament.acronym = json.acronym;
-		newTournament.teamSize = json.teamSize;
-		newTournament.tournamentScoreInterfaceIdentifier = json.tournamentScoreInterfaceIdentifier;
-		newTournament.scoreInterface = calc.getScoreInterface(newTournament.tournamentScoreInterfaceIdentifier);
-		newTournament.publishId = json.id;
-		newTournament.format = json.format;
-
-		let validateIndex = 0;
-
-		for (const team in json.teams) {
-			const newTeam = new Team();
-			newTeam.teamName = json.teams[team].teamName;
-			newTeam.validateIndex = validateIndex;
-
-			for (const player in json.teams[team].teamPlayers) {
-				const newPlayer = new TeamPlayer();
-				newPlayer.username = json.teams[team].teamPlayers[player].username;
-
-				newTeam.addPlayer(newPlayer);
-			}
-
-			newTournament.addTeam(newTeam);
-			validateIndex++;
-		}
-
-		return newTournament;
 	}
 }
 

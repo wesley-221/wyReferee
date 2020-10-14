@@ -69,7 +69,8 @@ export class AllPublishedTournamentsComponent implements OnInit {
 	 */
 	importTournament(tournament: Tournament) {
 		this.tournamentService.getPublishedTournament(tournament.id).subscribe((data) => {
-			const newTournament: Tournament = this.tournamentService.mapFromJson(data);
+			const newTournament: Tournament = Tournament.serializeJson(data);
+			newTournament.publishId = newTournament.id;
 			newTournament.id = this.tournamentService.availableTournamentId;
 			this.tournamentService.availableTournamentId++;
 

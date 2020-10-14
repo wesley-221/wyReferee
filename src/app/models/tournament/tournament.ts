@@ -95,7 +95,11 @@ export class Tournament {
 			challongeTournamentId: this.challongeTournamentId,
 			publishId: this.publishId,
 			availableTo: [],
-			createdByUser: {
+			createdByUser: {}
+		};
+
+		if (this.createdByUser) {
+			tournament.createdByUser = {
 				id: this.createdByUser.id,
 				slug: this.createdByUser.slug,
 				username: this.createdByUser.username
@@ -230,9 +234,9 @@ export class Tournament {
 			this.teams.length == that.teams.length &&
 			this.availableTo.length == that.availableTo.length,
 			(this.createdByUser != null ?
-				this.createdByUser.id == that.createdByUser.id &&
-				this.createdByUser.slug == that.createdByUser.slug &&
-				this.createdByUser.username == that.createdByUser.username
+				this.createdByUser.id && this.createdByUser.id == that.createdByUser.id &&
+				this.createdByUser.slug && this.createdByUser.slug == that.createdByUser.slug &&
+				this.createdByUser.username && this.createdByUser.username == that.createdByUser.username
 				: true)
 		);
 	}
