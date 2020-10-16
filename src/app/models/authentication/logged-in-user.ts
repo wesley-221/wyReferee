@@ -1,32 +1,29 @@
 export class LoggedInUser {
-	userId: number;
+	id: number;
 	username: string;
-	isAdmin: boolean;
-	isTournamentHost: boolean
-	token: string;
+	admin: boolean;
+	tournamentHost: boolean
 
 	public static mapFromJson(json: any): LoggedInUser {
 		const loggedInUser = new LoggedInUser();
 
-		loggedInUser.userId = json.userId;
+		loggedInUser.id = json.id;
 		loggedInUser.username = json.username;
-		loggedInUser.isAdmin = (json.isAdmin) == 'true' ? true : false;
-		loggedInUser.isTournamentHost = (json.isTournamentHost) == 'true' ? true : false;
-		loggedInUser.token = json.token;
+		loggedInUser.admin = json.admin;
+		loggedInUser.tournamentHost = json.tournamentHost;
 
 		return loggedInUser;
 	}
 
-    /**
-     * Convert the user to a json file
-     */
-	public convertToJson(): { userId: number, username: string, isAdmin: boolean, isTournamentHost: boolean, token: string } {
+	/**
+	 * Convert the user to a json file
+	 */
+	public convertToJson(): { id: number, username: string, admin: boolean, tournamentHost: boolean } {
 		return {
-			userId: this.userId,
+			id: this.id,
 			username: this.username,
-			isAdmin: this.isAdmin,
-			isTournamentHost: this.isTournamentHost,
-			token: this.token
+			admin: this.admin,
+			tournamentHost: this.tournamentHost,
 		}
 	}
 }

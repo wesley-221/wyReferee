@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { AuthenticateService } from './services/authenticate.service';
 import { ToastService } from './services/toast.service';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ToastType } from './models/toast';
 import { AppConfig } from 'environments/environment';
+import { OauthService } from './services/oauth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-	constructor(private authService: AuthenticateService, private toastService: ToastService) { }
+	constructor(private oauthService: OauthService, private toastService: ToastService) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		// Only use this interceptor for the wyBin api
@@ -19,8 +19,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
 		let token: string;
 
-		if (this.authService.loggedIn) {
-			token = this.authService.loggedInUser.token;
+		if (this.oauthService.oauth) {
+			token = this.oauthService.oauth.access_token;
 		}
 
 		if (token) {
@@ -28,13 +28,6 @@ export class AuthInterceptor implements HttpInterceptor {
 		}
 
 		return next.handle(req).pipe(catchError((error: HttpErrorResponse): Observable<any> => {
-			// Logout the user if the token has expired
-			if (error.status === 403) {
-				if (this.authService.loggedInUser != null) {
-					this.authService.logout();
-				}
-			}
-
 			// Show the generic known errors, have to figure out the other errors over time
 			if (error.status === 401 || error.status === 403) {
 				this.toastService.addToast(error.error.message, ToastType.Error);

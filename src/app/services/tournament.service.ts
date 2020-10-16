@@ -3,11 +3,8 @@ import { AppConfig } from '../../environments/environment';
 import { Tournament } from '../models/tournament/tournament';
 import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
-import { Team } from '../models/tournament/team/team';
-import { TeamPlayer } from '../models/tournament/team/team-player';
 import { Observable } from 'rxjs';
 import { LoggedInUser } from '../models/authentication/logged-in-user';
-import { Calculate } from '../models/score-calculation/calculate';
 
 @Injectable({
 	providedIn: 'root'
@@ -145,7 +142,7 @@ export class TournamentService {
 	 * @param user the user to get all the tournaments from
 	 */
 	getAllPublishedTournamentsFromUser(user: LoggedInUser) {
-		return this.httpClient.get<Tournament[]>(`${this.apiUrl}tournament/created_by/${user.userId}`);
+		return this.httpClient.get<Tournament[]>(`${this.apiUrl}tournament/created_by/${user.id}`);
 	}
 
 	/**
