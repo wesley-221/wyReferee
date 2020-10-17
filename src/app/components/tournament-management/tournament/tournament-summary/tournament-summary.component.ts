@@ -25,14 +25,16 @@ export interface PublishTournamentDialogData {
 export class TournamentSummaryComponent implements OnInit {
 	@Input() tournament: Tournament;
 	@Input() publish = false;
-
-	@Output('deleteTournament') deleteTournamentEvent$: EventEmitter<any> = new EventEmitter();
+	@Output() onTournamentDeleted: EventEmitter<Boolean>;
 
 	dialogMessage: string;
 	dialogAction = 0;
 	tournamentToModify: Tournament;
 
-	constructor(private router: Router, private tournamentService: TournamentService, private toastService: ToastService, private authService: AuthenticateService, private dialog: MatDialog) { }
+	constructor(private router: Router, private tournamentService: TournamentService, private toastService: ToastService, private authService: AuthenticateService, private dialog: MatDialog) {
+		this.onTournamentDeleted = new EventEmitter();
+	}
+
 	ngOnInit(): void { }
 
 	/**
@@ -102,7 +104,7 @@ export class TournamentSummaryComponent implements OnInit {
 	 * Check if the user has sufficient permissions to publish the tournament
 	 */
 	canPublish(): boolean {
-		return this.authService.loggedIn && ((<any>this.authService.loggedInUser.tournamentHost) == 'true' || this.authService.loggedInUser.tournamentHost == true || this.authService.loggedInUser.admin);
+		return this.authService.loggedIn && (this.authService.loggedInUser.tournamentHost == true || this.authService.loggedInUser.admin == true);
 	}
 
 	/**
@@ -122,7 +124,7 @@ export class TournamentSummaryComponent implements OnInit {
 					this.tournamentService.deletePublishedTournament(tournament).subscribe(() => {
 						this.toastService.addToast(`Successfully deleted the published tournament "${tournament.tournamentName}".`);
 
-						this.deleteTournamentEvent$.emit(true);
+						this.onTournamentDeleted.emit(true);
 					}, (err) => {
 						console.log(err);
 					});
@@ -130,6 +132,7 @@ export class TournamentSummaryComponent implements OnInit {
 				else {
 					this.tournamentService.deleteTournament(tournament);
 					this.toastService.addToast(`Successfully deleted the published tournament "${tournament.tournamentName}".`);
+					this.onTournamentDeleted.emit(true);
 				}
 			}
 		});

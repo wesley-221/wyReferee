@@ -9,6 +9,6 @@
 	<hr />
 
 	<div *ngFor="let mappool of publishedMappools">
-		<app-mappool-summary *ngIf="mappool" [mappool]="mappool" [publish]="true"></app-mappool-summary>
+		<app-mappool-summary *ngIf="mappool" [mappool]="mappool" [publish]="true" (onMappoolDeleted)="mappoolHasBeenDeleted($event)"></app-mappool-summary>
 	</div>
 </div>
