@@ -216,15 +216,19 @@ export class WebhookService {
 			`**Score:** __${multiplayerLobby.teamOneName}__ | **${multiplayerLobby.teamOneScore}** - ${multiplayerLobby.teamTwoScore} | ${multiplayerLobby.teamTwoName}\n\n` :
 			`**Score:** ${multiplayerLobby.teamOneName} | ${multiplayerLobby.teamOneScore} - **${multiplayerLobby.teamTwoScore}** | __${multiplayerLobby.teamTwoName}__\n\n`;
 
-		let highestScorePlayer: MultiplayerDataUser = null;
-		let highestAccuracyPlayer: MultiplayerDataUser = null;
+		let highestScorePlayer: MultiplayerDataUser = new MultiplayerDataUser();
+		let highestAccuracyPlayer: MultiplayerDataUser = new MultiplayerDataUser();
 
 		for (const user of lastMultiplayerData.getPlayers()) {
-			if (highestScorePlayer == null || user.score > highestScorePlayer.score) {
+			// Cast score and accuracy to actual int and float to prevent string comparison
+			user.score = parseInt(user.score as any);
+			user.accuracy = parseFloat(user.accuracy as any);
+
+			if (user.score > highestScorePlayer.score) {
 				highestScorePlayer = user;
 			}
 
-			if (highestAccuracyPlayer == null || user.accuracy > highestAccuracyPlayer.accuracy) {
+			if (user.accuracy > highestAccuracyPlayer.accuracy) {
 				highestAccuracyPlayer = user;
 			}
 		}
