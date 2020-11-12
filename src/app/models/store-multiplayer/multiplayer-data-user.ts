@@ -8,4 +8,9 @@ export class MultiplayerDataUser {
 	user: number;
 	slot: number;
 	caption: string;
+
+	constructor() {
+		this.score = 0;
+		this.accuracy = 0;
+	}
 }
