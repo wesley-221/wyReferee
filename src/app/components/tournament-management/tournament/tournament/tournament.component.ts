@@ -172,7 +172,11 @@ export class TournamentComponent implements OnInit {
 
 			for (const i in result) {
 				const tournament: ChallongeTournament = result[i].tournament;
-				this.allChallongeTournaments.push(tournament);
+
+				// Only list tournaments that have been started
+				if (tournament.state == "underway") {
+					this.allChallongeTournaments.push(tournament);
+				}
 			}
 		}, (error: HttpErrorResponse) => {
 			if (error.status == 401) {
