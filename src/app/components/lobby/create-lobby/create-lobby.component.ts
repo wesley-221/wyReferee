@@ -212,6 +212,13 @@ export class CreateLobbyComponent implements OnInit {
 					this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}!`);
 
 					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
+				}, () => {
+					this.lobbyHasBeenCreatedTrigger();
+					this.multiplayerLobbies.add(newLobby);
+
+					this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}! Unable to connect to the irc channel, lobby is most likely closed already.`);
+
+					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
 				});
 			}
 		}
