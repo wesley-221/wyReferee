@@ -316,7 +316,7 @@ export class Mappool {
 				newBeatmap.beatmapName = thisBracket.beatmaps[beatmap].beatmapName;
 				newBeatmap.beatmapUrl = thisBracket.beatmaps[beatmap].beatmapUrl;
 				newBeatmap.modifier = thisBracket.beatmaps[beatmap].modifier;
-				newBeatmap.gamemodeId = thisBracket.beatmaps[beatmap].gamemode;
+				newBeatmap.gamemodeId = json.gamemodeId;
 				newBeatmap.picked = thisBracket.beatmaps[beatmap].picked;
 
 				if (thisBracket.beatmaps[beatmap].modCategory != null) {
