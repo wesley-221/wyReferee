@@ -30,6 +30,12 @@ $match-header-height: 120px;
 
 		height: $match-header-height;
 
+		h2 {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+
 		.settings-warning {
 			padding-left: 18px;
 			padding-right: 18px;
@@ -73,6 +79,10 @@ $match-header-height: 120px;
 				padding: 16px;
 
 				.column {
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+
 					.modifier {
 						.alert-warning {
 							background-color: #{$warning}4d;
