@@ -111,10 +111,14 @@ export class TournamentComponent implements OnInit {
 	 */
 	changeScoreInterface(event: MatSelectChange) {
 		const selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(event.value);
+
 		this.tournament.scoreInterface = selectedScoreInterface;
 		this.tournament.teamSize = selectedScoreInterface.getTeamSize();
 		this.tournament.format = (selectedScoreInterface.isSoloTournament() != null && selectedScoreInterface.isSoloTournament() == true ? TournamentFormat.Solo : TournamentFormat.Teams);
 		this.tournament.tournamentScoreInterfaceIdentifier = selectedScoreInterface.getIdentifier();
+
+		this.validationForm.get('tournament-team-size').setValue(this.tournament.teamSize);
+		this.validationForm.get('tournament-format').setValue(this.tournament.format);
 	}
 
 	/**
