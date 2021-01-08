@@ -83,7 +83,11 @@
 							<div class="column" *ngIf="mappool.mappoolType == 1">
 								<mat-form-field class="full-width">
 									<mat-label>Modifier</mat-label>
-									<input matInput />
+									<input matInput [formControlName]="'beatmap-modifier-' + modBracket.validateIndex + '-' + beatmap.index" [(ngModel)]="beatmap.modifier" />
+
+									<mat-error *ngIf="getValidation('beatmap-modifier-' + modBracket.validateIndex + '-' +beatmap.index).errors && (getValidation('beatmap-modifier-' + modBracket.validateIndex + '-' + beatmap.index).touched || getValidation('beatmap-modifier-' + modBracket.validateIndex + '-' + beatmap.index).dirty)">
+										This field is required
+									</mat-error>
 								</mat-form-field>
 							</div>
 

@@ -114,7 +114,8 @@ export class CreateLobbyComponent implements OnInit {
 				return;
 			}
 
-			this.challongeMatches = this.challongeService.parseChallongeEndpoint(result);
+			// TODO: add check for Group stage matches, ignore those
+			// this.challongeMatches = this.challongeService.parseChallongeEndpoint(result);
 
 			if (this.challongeMatches.length > 0) {
 				this.challongeMatches.sort((firstMatch, secondMatch) => firstMatch.suggested_play_order - secondMatch.suggested_play_order);

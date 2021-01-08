@@ -6,7 +6,7 @@ import { ElectronService } from '../../../../services/electron.service';
 import { Mods } from '../../../../models/osu-models/osu';
 import { ToastService } from '../../../../services/toast.service';
 import { ToastType } from '../../../../models/toast';
-import { Mappool } from '../../../../models/osu-mappool/mappool';
+import { Mappool, MappoolType } from '../../../../models/osu-mappool/mappool';
 import { ModCategory } from '../../../../models/osu-mappool/mod-category';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteModBracketComponent } from 'app/components/dialogs/delete-mod-bracket/delete-mod-bracket.component';
@@ -31,6 +31,7 @@ export class ModBracketComponent implements OnInit {
 
 	selectedMods: { index: number, modValue: any }[] = [];
 	modBracketIndex = 0;
+	beatmapIndex = 0;
 	MAX_BRACKETS = 4;
 
 	dialogMessage: string;
@@ -68,7 +69,15 @@ export class ModBracketComponent implements OnInit {
 	 * @param bracket the bracket to add the beatmap to
 	 */
 	addBeatmap(bracket: ModBracket): void {
-		bracket.addBeatmap(new ModBracketMap());
+		const modBracketMap = new ModBracketMap();
+		modBracketMap.index = this.beatmapIndex;
+		this.beatmapIndex++;
+
+		bracket.addBeatmap(modBracketMap);
+
+		if (this.mappool.mappoolType == MappoolType.AxS) {
+			this.validationForm.addControl(`beatmap-modifier-${this.modBracket.validateIndex}-${modBracketMap.index}`, new FormControl('', Validators.required));
+		}
 	}
 
 	/**
@@ -78,6 +87,10 @@ export class ModBracketComponent implements OnInit {
 	 */
 	removeBeatmap(bracket: ModBracket, beatmap: ModBracketMap): void {
 		bracket.removeMap(beatmap);
+
+		if (this.mappool.mappoolType == MappoolType.AxS) {
+			this.validationForm.removeControl(`beatmap-modifier-${this.modBracket.validateIndex}-${beatmap.index}`);
+		}
 	}
 
 	/**
@@ -220,6 +233,10 @@ export class ModBracketComponent implements OnInit {
 
 				for (const mod in this.selectedMods) {
 					this.validationForm.removeControl(`mod-bracket-mod-index-${this.modBracket.validateIndex}-${this.selectedMods[mod]}`);
+				}
+
+				for (const beatmap in this.modBracket.beatmaps) {
+					this.validationForm.removeControl(`beatmap-modifier-${this.modBracket.validateIndex}-${this.modBracket.beatmaps[beatmap].index}`);
 				}
 
 				this.mappool.removeModBracket(modBracket);

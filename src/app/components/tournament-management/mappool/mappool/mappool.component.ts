@@ -55,6 +55,15 @@ export class MappoolComponent implements OnInit {
 				for (const mod of modBracket.mods) {
 					this.validationForm.addControl(`mod-bracket-mod-index-${modBracket.validateIndex}-${mod.index}`, new FormControl((mod.modValue == 'freemod') ? mod.modValue : parseInt(mod.modValue), Validators.required));
 				}
+
+				let beatmapIndex = 0;
+
+				for (const beatmap of modBracket.beatmaps) {
+					beatmap.index = beatmapIndex;
+					beatmapIndex++;
+
+					this.validationForm.addControl(`beatmap-modifier-${modBracket.validateIndex}-${beatmap.index}`, new FormControl(beatmap.modifier, Validators.required));
+				}
 			}
 
 			for (const modCategory of this.mappool.modCategories) {

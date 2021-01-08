@@ -3,6 +3,7 @@ import { ModCategory } from './mod-category';
 
 export class ModBracketMap {
 	id: number = null;
+	index: number;
 	invalid = false;
 	beatmapId: number = null;
 	beatmapsetId: number = null;
@@ -30,9 +31,9 @@ export class ModBracketMap {
 	}
 
 	/**
-     * Convert the object to a json format
+	 * Convert the object to a json format
 	 * @param modBracketMap
-     */
+	 */
 	public static convertToJson(modBracketMap: ModBracketMap): any {
 		return {
 			id: modBracketMap.id,
@@ -68,10 +69,10 @@ export class ModBracketMap {
 		return newModBracketMap;
 	}
 
-    /**
-     * Make a true copy of the given bracketmap
-     * @param bracketMap the bracketmap
-     */
+	/**
+	 * Make a true copy of the given bracketmap
+	 * @param bracketMap the bracketmap
+	 */
 	public static makeTrueCopy(bracketMap: ModBracketMap): ModBracketMap {
 		const newModBracketMap = new ModBracketMap();
 

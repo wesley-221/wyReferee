@@ -41,7 +41,7 @@
 
 				<div>
 					Select a tournament for which you will be making a multiplayer match for. <br />
-					<div class="alert alert-info">
+					<div class="alert alert-info" *ngIf="selectedTournament == null">
 						You can leave this empty if you want to manually enter all the data.
 					</div>
 				</div>
