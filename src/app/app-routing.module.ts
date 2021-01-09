@@ -20,6 +20,7 @@ import { MyPublishedTournamentsComponent } from './components/tournament-managem
 import { ManagementRouterComponent } from './components/tournament-management/management-router/management-router.component';
 import { AllPublishedMappoolsComponent } from './components/tournament-management/mappool/all-published-mappools/all-published-mappools.component';
 import { AllPublishedTournamentsComponent } from './components/tournament-management/tournament/all-published-tournaments/all-published-tournaments.component';
+import { AxsCalculatorComponent } from './components/axs-calculator/axs-calculator.component';
 
 const routes: Routes = [
 	{
@@ -49,6 +50,7 @@ const routes: Routes = [
 				]
 			},
 			{ path: 'irc', component: IrcComponent },
+			{ path: 'axs-calculator', component: AxsCalculatorComponent },
 			{ path: '**', component: ErrorComponent }
 		]
 	}

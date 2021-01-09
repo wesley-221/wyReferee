@@ -1,0 +1,138 @@
+<div class="teams">
+	<div class="team background-area">
+		<h1>Team 1</h1>
+		<hr />
+
+		<div class="players">
+			<div class="player">
+				<h1>Player one (accuracy player)</h1>
+				<div class="accracy">
+					<mat-form-field>
+						<mat-label>Accuracy</mat-label>
+						<input matInput placeholder="Accuracy" [(ngModel)]="playerOneAccuracy" (keyup)="onChange()" (keydown)="onChange()">
+					</mat-form-field>
+				</div>
+
+				<div class="score">
+					<mat-form-field>
+						<mat-label>Score</mat-label>
+						<input matInput placeholder="Score" [(ngModel)]="playerOneScore" (keyup)="onChange()" (keydown)="onChange()">
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div class="score-players">
+				<div class="player">
+					<h1>Player two (score player 1)</h1>
+					<div class="accracy">
+						<mat-form-field>
+							<mat-label>Accuracy</mat-label>
+							<input matInput placeholder="Accuracy" [(ngModel)]="playerTwoAccuracy" (keyup)="onChange()" (keydown)="onChange()">
+						</mat-form-field>
+					</div>
+
+					<div class="score">
+						<mat-form-field>
+							<mat-label>Score</mat-label>
+							<input matInput placeholder="Score" [(ngModel)]="playerTwoScore" (keyup)="onChange()" (keydown)="onChange()">
+						</mat-form-field>
+					</div>
+				</div>
+
+				<div class="player">
+					<h1>Player two (score player 2)</h1>
+					<div class="accracy">
+						<mat-form-field>
+							<mat-label>Accuracy</mat-label>
+							<input matInput placeholder="Accuracy" [(ngModel)]="playerThreeAccuracy" (keyup)="onChange()" (keydown)="onChange()">
+						</mat-form-field>
+					</div>
+
+					<div class="score">
+						<mat-form-field>
+							<mat-label>Score</mat-label>
+							<input matInput placeholder="Score" [(ngModel)]="playerThreeScore" (keyup)="onChange()" (keydown)="onChange()">
+						</mat-form-field>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="team background-area">
+		<h1>Team 2</h1>
+		<hr />
+
+		<div class="players">
+			<div class="player">
+				<h1>Player one (accuracy player)</h1>
+				<div class="accracy">
+					<mat-form-field>
+						<mat-label>Accuracy</mat-label>
+						<input matInput placeholder="Accuracy" [(ngModel)]="playerFourAccuracy" (keyup)="onChange()" (keydown)="onChange()">
+					</mat-form-field>
+				</div>
+
+				<div class="score">
+					<mat-form-field>
+						<mat-label>Score</mat-label>
+						<input matInput placeholder="Score" [(ngModel)]="playerFourScore" (keyup)="onChange()" (keydown)="onChange()">
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div class="score-players">
+				<div class="player">
+					<h1>Player two (score player 1)</h1>
+					<div class="accracy">
+						<mat-form-field>
+							<mat-label>Accuracy</mat-label>
+							<input matInput placeholder="Accuracy" [(ngModel)]="playerFiveAccuracy" (keyup)="onChange()" (keydown)="onChange()">
+						</mat-form-field>
+					</div>
+
+					<div class="score">
+						<mat-form-field>
+							<mat-label>Score</mat-label>
+							<input matInput placeholder="Score" [(ngModel)]="playerFiveScore" (keyup)="onChange()" (keydown)="onChange()">
+						</mat-form-field>
+					</div>
+				</div>
+
+				<div class="player">
+					<h1>Player two (score player 2)</h1>
+					<div class="accracy">
+						<mat-form-field>
+							<mat-label>Accuracy</mat-label>
+							<input matInput placeholder="Accuracy" [(ngModel)]="playerSixAccuracy" (keyup)="onChange()" (keydown)="onChange()">
+						</mat-form-field>
+					</div>
+
+					<div class="score">
+						<mat-form-field>
+							<mat-label>Score</mat-label>
+							<input matInput placeholder="Score" [(ngModel)]="playerSixScore" (keyup)="onChange()" (keydown)="onChange()">
+						</mat-form-field>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modifier background-area">
+	<mat-form-field>
+		<mat-label>Modifier</mat-label>
+		<input matInput placeholder="Modifier" [(ngModel)]="modifier" (keyup)="onChange()" (keydown)="onChange()">
+	</mat-form-field>
+</div>
+
+<div class="score-area background-area">
+	<div>
+		<b>Team one: </b> {{ teamOneScore }}
+	</div>
+
+	<div>
+		<b>Team two: </b> {{ teamTwoScore }}
+	</div>
+</div>

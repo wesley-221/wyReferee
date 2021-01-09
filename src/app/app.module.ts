@@ -64,6 +64,7 @@ import { AllPublishedMappoolsComponent } from './components/tournament-managemen
 import { FilterMappoolPipe } from './pipes/filter-mappool.pipe';
 import { AllPublishedTournamentsComponent } from './components/tournament-management/tournament/all-published-tournaments/all-published-tournaments.component';
 import { FilterTournamentPipe } from './pipes/filter-tournament.pipe';
+import { AxsCalculatorComponent } from './components/axs-calculator/axs-calculator.component';
 
 @NgModule({
 	declarations: [
@@ -113,7 +114,8 @@ import { FilterTournamentPipe } from './pipes/filter-tournament.pipe';
 		AllPublishedMappoolsComponent,
 		FilterMappoolPipe,
 		AllPublishedTournamentsComponent,
-		FilterTournamentPipe
+		FilterTournamentPipe,
+		AxsCalculatorComponent
 	],
 	imports: [
 		BrowserModule,

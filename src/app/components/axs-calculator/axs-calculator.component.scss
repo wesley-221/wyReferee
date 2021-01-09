@@ -1,0 +1,23 @@
+.teams {
+	display: flex;
+	justify-content: space-between;
+
+	.team {
+		margin: 8px;
+
+		.players {
+			display: flex;
+			flex-direction: column;
+
+			.score-players {
+				display: flex;
+				flex-direction: row;
+			}
+		}
+	}
+}
+
+.modifier,
+.score-area {
+	margin: 8px;
+}
