@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Send beatmap result</h2>
+
+<mat-dialog-content class="mat-typography">
+	<div *ngFor="let match of data.multiplayerLobby.multiplayerData | reverse">
+		<div class="img" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + getBeatmapCoverUrl(match.beatmap_id) + ')' }">
+			<h2>{{ getBeatmapname(match.beatmap_id) }}</h2>
+
+			<div class="teams">
+				<div class="red-team">
+					<span class="team-name">{{ data.multiplayerLobby.teamOneName }}</span>: {{ match.team_one_score }}
+				</div>
+
+				<div class="blue-team">
+					<span class="team-name">{{ data.multiplayerLobby.teamTwoName }}</span>: {{ match.team_two_score }}
+				</div>
+			</div>
+
+			<div class="send-button">
+				<button mat-mini-fab color="accent" (click)="sendBeatmapResult(match)"><mat-icon>send</mat-icon></button>
+			</div>
+		</div>
+	</div>
+</mat-dialog-content>

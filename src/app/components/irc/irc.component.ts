@@ -23,6 +23,7 @@ import { BanBeatmapComponent } from '../dialogs/ban-beatmap/ban-beatmap.componen
 import { MultiplayerLobbyPlayersPlayer } from 'app/models/mutliplayer-lobby-players/multiplayer-lobby-players-player';
 import { MultiplayerLobbyMovePlayerComponent } from '../dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
 import { MultiplayerLobbyPlayers } from 'app/models/mutliplayer-lobby-players/multiplayer-lobby-players';
+import { SendBeatmapResultComponent } from '../dialogs/send-beatmap-result/send-beatmap-result.component';
 
 export interface BanBeatmapDialogData {
 	beatmap: ModBracketMap;
@@ -36,6 +37,11 @@ export interface MultiplayerLobbyMovePlayerDialogData {
 	allPlayers: MultiplayerLobbyPlayers;
 	movePlayer: MultiplayerLobbyPlayersPlayer;
 	moveToSlot: number;
+}
+
+export interface SendBeatmapResultDialogData {
+	multiplayerLobby: MultiplayerLobby;
+	ircChannel: string;
 }
 
 @Component({
@@ -471,5 +477,19 @@ export class IrcComponent implements OnInit {
 	 */
 	scrollToTop() {
 		this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+	}
+
+	/**
+	 * Open a dialog to easily send result to the multiplayer lobby
+	 */
+	sendMatchResult() {
+		const selectedMultiplayerLobby = this.multiplayerLobbies.getByIrcLobby(this.selectedChannel.channelName);
+
+		this.dialog.open(SendBeatmapResultComponent, {
+			data: {
+				multiplayerLobby: selectedMultiplayerLobby,
+				ircChannel: this.selectedChannel.channelName
+			}
+		});
 	}
 }

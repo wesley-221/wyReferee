@@ -34,7 +34,7 @@
 	</div>
 
 	<div class="all-maps">
-		<div class="map" *ngFor="let match of selectedLobby.multiplayerData">
+		<div class="map" *ngFor="let match of selectedLobby.multiplayerData | reverse">
 			<div class="img" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + getBeatmapCoverUrl(match.beatmap_id) + ')' }">
 				<div class="column">
 					<h2>{{ getBeatmapname(match.beatmap_id) }}</h2>

@@ -1,0 +1,35 @@
+.img {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	background-position: center;
+	background-size: cover;
+
+	padding: 16px;
+
+	margin: 8px;
+
+	.teams {
+		background-color: #0000004d;
+		padding: 8px;
+		margin: 8px;
+
+		.red-team {
+			.team-name {
+				color: #e94f64;
+			}
+		}
+
+		.blue-team {
+			.team-name {
+				color: #29b;
+			}
+		}
+	}
+
+	.send-button {
+		display: flex;
+		justify-content: flex-end;
+	}
+}

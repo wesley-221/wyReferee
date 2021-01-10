@@ -103,6 +103,8 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Send the result of the beatmap to irc if connected
+	 * NOTE: Update in send-beatmap-result.component.ts as well
+	 *
 	 * @param match
 	 */
 	sendBeatmapResult(match: MultiplayerData) {
