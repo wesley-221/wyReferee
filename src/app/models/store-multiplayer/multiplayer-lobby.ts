@@ -35,6 +35,9 @@ export class MultiplayerLobby {
 	teamOneBans: number[] = [];
 	teamTwoBans: number[] = [];
 
+	teamOnePicks: number[] = [];
+	teamTwoPicks: number[] = [];
+
 	mapsCountTowardScore: {} = {};
 	multiplayerData: MultiplayerData[];
 
@@ -96,6 +99,9 @@ export class MultiplayerLobby {
 
 		this.teamOneBans = json.data.teamOneBans;
 		this.teamTwoBans = json.data.teamTwoBans;
+
+		this.teamOnePicks = json.data.teamOnePicks;
+		this.teamTwoPicks = json.data.teamTwoPicks;
 
 		this.pickedCategories = json.data.pickedCategories;
 
@@ -165,6 +171,8 @@ export class MultiplayerLobby {
 				'bestOf': multiplayerLobby.bestOf,
 				'teamOneBans': multiplayerLobby.teamOneBans,
 				'teamTwoBans': multiplayerLobby.teamTwoBans,
+				'teamOnePicks': multiplayerLobby.teamOnePicks,
+				'teamTwoPicks': multiplayerLobby.teamTwoPicks,
 				'scoreInterfaceIndentifier': multiplayerLobby.scoreInterfaceIndentifier,
 				'pickedCategories': multiplayerLobby.pickedCategories,
 				'challongeTournamentId': multiplayerLobby.challongeTournamentId,
@@ -223,9 +231,9 @@ export class MultiplayerLobby {
 	}
 
 	/**
-	 * Check if a team is on a breakpoint
+	 * Check if a team is on a matchpoint
 	 */
-	getBreakpoint() {
+	getMatchpoint() {
 		if (this.teamOneScore == Math.floor(this.bestOf / 2)) {
 			return this.teamOneName
 		}

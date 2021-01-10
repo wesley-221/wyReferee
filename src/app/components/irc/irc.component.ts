@@ -83,7 +83,7 @@ export class IrcComponent implements OnInit {
 	teamOneScore = 0;
 	teamTwoScore = 0;
 	nextPick: string = null;
-	breakpoint: string = null;
+	matchpoint: string = null;
 	hasWon: string = null;
 
 	popupBannedMap: ModBracketMap = null;
@@ -165,7 +165,7 @@ export class IrcComponent implements OnInit {
 			this.teamOneScore = this.selectedLobby.teamOneScore;
 			this.teamTwoScore = this.selectedLobby.teamTwoScore;
 			this.nextPick = this.selectedLobby.getNextPickName();
-			this.breakpoint = this.selectedLobby.getBreakpoint();
+			this.matchpoint = this.selectedLobby.getMatchpoint();
 			this.hasWon = this.selectedLobby.getHasWon();
 		}
 
@@ -271,12 +271,65 @@ export class IrcComponent implements OnInit {
 			}
 		}
 
+		// Add an extra null check
+		if (this.selectedLobby.teamOnePicks == null) {
+			this.selectedLobby.teamOnePicks = [];
+		}
+
+		if (this.selectedLobby.teamTwoPicks == null) {
+			this.selectedLobby.teamTwoPicks = [];
+		}
+
+		// Update picks
+		if (this.selectedLobby.teamOneName == this.nextPick) {
+			this.selectedLobby.teamOnePicks.push(beatmap.beatmapId);
+		}
+		else {
+			this.selectedLobby.teamTwoPicks.push(beatmap.beatmapId);
+		}
+
+		this.multiplayerLobbies.update(this.selectedLobby);
+
 		// Reset all mods if the freemod is being enabled
 		if (freemodEnabled) {
 			this.ircService.sendMessage(this.selectedChannel.channelName, '!mp mods none');
 		}
 
 		this.ircService.sendMessage(this.selectedChannel.channelName, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
+	}
+
+	/**
+	 * Unpick a beatmap
+	 * @param beatmap
+	 * @param bracket
+	 */
+	unpickBeatmap(beatmap: ModBracketMap, bracket: ModBracket) {
+		if (this.selectedLobby.teamOnePicks.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamOnePicks.splice(this.selectedLobby.teamOnePicks.indexOf(beatmap.beatmapId), 1);
+		}
+		else if (this.selectedLobby.teamTwoPicks.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamTwoPicks.splice(this.selectedLobby.teamTwoPicks.indexOf(beatmap.beatmapId), 1);
+		}
+
+		this.multiplayerLobbies.update(this.selectedLobby);
+	}
+
+	/**
+	 * Change what team picked the map
+	 * @param beatmap
+	 * @param bracket
+	 */
+	changePickedBy(beatmap: ModBracketMap, bracket: ModBracket) {
+		if (this.selectedLobby.teamOnePicks.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamOnePicks.splice(this.selectedLobby.teamOnePicks.indexOf(beatmap.beatmapId), 1);
+			this.selectedLobby.teamTwoPicks.push(beatmap.beatmapId);
+		}
+		else if (this.selectedLobby.teamTwoPicks.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamTwoPicks.splice(this.selectedLobby.teamTwoPicks.indexOf(beatmap.beatmapId), 1);
+			this.selectedLobby.teamOnePicks.push(beatmap.beatmapId);
+		}
+
+		this.multiplayerLobbies.update(this.selectedLobby);
 	}
 
 	/**
@@ -328,7 +381,7 @@ export class IrcComponent implements OnInit {
 		this.teamOneScore = multiplayerLobby.teamOneScore;
 		this.teamTwoScore = multiplayerLobby.teamTwoScore;
 		this.nextPick = multiplayerLobby.getNextPickName();
-		this.breakpoint = multiplayerLobby.getBreakpoint();
+		this.matchpoint = multiplayerLobby.getMatchpoint();
 		this.hasWon = multiplayerLobby.getHasWon();
 	}
 
@@ -378,6 +431,52 @@ export class IrcComponent implements OnInit {
 	 */
 	beatmapIsBanned(multiplayerLobby: MultiplayerLobby, beatmapId: number) {
 		return multiplayerLobby.teamOneBans.indexOf(beatmapId) > -1 || multiplayerLobby.teamTwoBans.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if the beatmap is banned by team one
+	 * @param multiplayerLobby the multiplayerlobby to check from
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsBannedByTeamOne(multiplayerLobby: MultiplayerLobby, beatmapId: number) {
+		return multiplayerLobby.teamOneBans.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if the beatmap is banned by team two
+	 * @param multiplayerLobby the multiplayerlobby to check from
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsBannedByTeamTwo(multiplayerLobby: MultiplayerLobby, beatmapId: number) {
+		return multiplayerLobby.teamTwoBans.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if a beatmap has been picked in the current lobby
+	 * @param multiplayerLobby the multiplayerlobby to check from
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsPicked(multiplayerLobby: MultiplayerLobby, beatmapId: number) {
+		return multiplayerLobby.teamOnePicks != null && multiplayerLobby.teamTwoPicks != null &&
+			(multiplayerLobby.teamOnePicks.indexOf(beatmapId) > -1 || multiplayerLobby.teamTwoPicks.indexOf(beatmapId) > -1);
+	}
+
+	/**
+	 * Check if a beatmap has been picked by team one in the current lobby
+	 * @param multiplayerLobby the multiplayerlobby to check from
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsPickedByTeamOne(multiplayerLobby: MultiplayerLobby, beatmapId: number) {
+		return multiplayerLobby.teamOnePicks != null && multiplayerLobby.teamOnePicks.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if a beatmap has been picked by team two in the current lobby
+	 * @param multiplayerLobby the multiplayerlobby to check from
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsPickedByTeamTwo(multiplayerLobby: MultiplayerLobby, beatmapId: number) {
+		return multiplayerLobby.teamTwoPicks != null && multiplayerLobby.teamTwoPicks.indexOf(beatmapId) > -1;
 	}
 
 	/**

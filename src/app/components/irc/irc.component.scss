@@ -194,7 +194,7 @@ $hyperlink-background-color: #2b4576;
 					padding: 8px;
 					margin: 4px;
 
-					background-color: rgba(0, 0, 0, 0.10);
+					background-color: rgba(0, 0, 0, 0.1);
 
 					.top-row {
 						display: flex;
@@ -237,11 +237,11 @@ $hyperlink-background-color: #2b4576;
 					}
 
 					&.red {
-						background-color: rgba(255, 0, 0, 0.10);
+						background-color: rgba(255, 0, 0, 0.1);
 					}
 
 					&.blue {
-						background-color: rgba(0, 0, 255, 0.10);
+						background-color: rgba(0, 0, 255, 0.1);
 					}
 				}
 			}
@@ -490,6 +490,7 @@ $hyperlink-background-color: #2b4576;
 
 							.map {
 								display: flex;
+								position: relative;
 								flex-direction: row;
 								justify-content: space-between;
 
@@ -498,6 +499,65 @@ $hyperlink-background-color: #2b4576;
 								overflow: hidden;
 
 								padding: 4px;
+
+								.has-been-picked {
+									display: none;
+									position: absolute;
+									top: 0;
+									left: 0;
+									bottom: 0;
+									right: calc(132px + 8px);
+
+									justify-content: center;
+									align-items: center;
+
+									flex-direction: column;
+
+									.text {
+										color: white;
+
+										padding: 4px;
+
+										background-color: rgba(0, 0, 0, 0.589);
+									}
+
+									&.beatmap-picked-team-one {
+										display: flex;
+										background-color: #e94f647c;
+									}
+
+									&.beatmap-picked-team-two {
+										display: flex;
+										background-color: #229abb7c;
+									}
+								}
+
+								.has-been-banned {
+									display: none;
+									position: absolute;
+									top: 0;
+									left: 0;
+									bottom: 0;
+									right: calc(88px + 8px);
+
+									justify-content: center;
+									align-items: center;
+
+									background-color: rgba(128, 128, 128, 0.637);
+
+									.text {
+										color: white;
+
+										padding: 4px;
+
+										background-color: rgba(0, 0, 0, 0.589);
+									}
+
+									&.is-banned-one,
+									&.is-banned-two {
+										display: flex;
+									}
+								}
 
 								.name {
 									overflow: hidden;
