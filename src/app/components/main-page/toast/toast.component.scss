@@ -1,51 +1,113 @@
 @import "variables";
 
+$toast-background-color: #000000da;
+$toast-border-height: 4px;
+
 .toast-area {
 	position: absolute;
 	z-index: 5000;
 
+	left: 0;
 	right: 0;
 	top: 0;
 
-	margin: 16px;
+	margin-left: auto;
+	margin-right: auto;
+
 	width: 300px;
+
+	padding-top: 16px;
 
 	overflow: hidden;
 
 	.toast {
-		display: flex;
+		.border {
+			background-color: lighten($toast-background-color, 30%);
+			height: $toast-border-height;
 
-		padding: 8px;
-		margin-bottom: 3px;
+			.inner-border {
+				background-color: $danger;
+				height: $toast-border-height;
 
-		-webkit-touch-callout: none;
-		-webkit-user-select: none;
-		-khtml-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-
-		.icon, .message {
-			display: flex;
-			align-items: center;
-
-			margin: 4px;
+				width: 100%;
+			}
 		}
 
-		&:hover {
-			cursor: pointer;
+		&.in {
+			.border {
+				.inner-border {
+					width: 0%;
+				}
+			}
+		}
+
+		.toast-container {
+			display: flex;
+
+			padding: 8px;
+			margin-bottom: 3px;
+
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+
+			background-color: $toast-background-color;
+
+			justify-content: space-between;
+
+			.icon {
+				display: flex;
+				align-self: center;
+			}
+
+			&:hover {
+				cursor: pointer;
+			}
 		}
 
 		&.toast-error {
-			background-color: $danger;
+			.border {
+				.inner-border {
+					background-color: $danger;
+				}
+			}
+
+			.toast-container {
+				.icon {
+					color: $danger;
+				}
+			}
 		}
 
 		&.toast-warning {
-			background-color: $warning;
+			.border {
+				.inner-border {
+					background-color: $warning;
+				}
+			}
+
+			.toast-container {
+				.icon {
+					color: $warning;
+				}
+			}
 		}
 
 		&.toast-information {
-			background-color: $info;
+			.border {
+				.inner-border {
+					background-color: $info;
+				}
+			}
+
+			.toast-container {
+				.icon {
+					color: $info;
+				}
+			}
 		}
 	}
 }

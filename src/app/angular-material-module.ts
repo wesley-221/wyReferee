@@ -62,6 +62,9 @@ export class AngularMaterialModule {
 	constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
 		this.matIconRegistry
 			.addSvgIcon('trophy', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/trophy.svg'))
-			.addSvgIcon('hammer', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/hammer.svg'));
+			.addSvgIcon('hammer', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/hammer.svg'))
+			.addSvgIcon('info-circle', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/info-circle.svg'))
+			.addSvgIcon('exclamation-circle', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/exclamation-circle.svg'))
+			.addSvgIcon('exclamation-triangle', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/exclamation-triangle.svg'));
 	}
 }

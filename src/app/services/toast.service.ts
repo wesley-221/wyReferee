@@ -19,7 +19,7 @@ export class ToastService {
 	 * @param duration how long the toast should stay alive (in seconds)
 	 */
 	addToast(message: string, toastType: ToastType = ToastType.Information, duration = 5): void {
-		const newToast = new Toast(this.lastId + 1, message, toastType);
+		const newToast = new Toast(this.lastId + 1, message, toastType, duration);
 
 		this.allToasts.unshift(newToast);
 		this.lastId++;

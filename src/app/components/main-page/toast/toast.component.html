@@ -1,16 +1,24 @@
 <div class="toast-area">
-	<div *ngFor="let toast of allToasts" (click)="removeToast(toast)" class="toast" [@simpleFadeAnimation]="'in'"
-			[ngClass]="{'toast-information': toast.toastType == toastType.Information,
+	<div *ngFor="let toast of allToasts" (click)="removeToast(toast)" class="toast"
+	[@simpleFadeAnimation]="'in'"
+	(@simpleFadeAnimation.start)="onAnimationEvent($event)"
+		[ngClass]="{'toast-information': toast.toastType == toastType.Information,
 						'toast-warning': toast.toastType == toastType.Warning,
 						'toast-error': toast.toastType == toastType.Error }">
-		<div class="icon">
-			<mat-icon *ngIf="toast.toastType == toastType.Information">info</mat-icon>
-			<mat-icon *ngIf="toast.toastType == toastType.Warning">error</mat-icon>
-			<mat-icon *ngIf="toast.toastType == toastType.Error">error</mat-icon>
+		<div class="border">
+			<div class="inner-border" [ngStyle]="{ 'transition': 'width ' + (toast.duration * 1000) + 'ms linear'}"></div>
 		</div>
 
-		<div class="message">
-			{{ toast.message }}
+		<div class="toast-container">
+			<div class="message">
+				{{ toast.message }}
+			</div>
+
+			<div class="icon">
+				<mat-icon *ngIf="toast.toastType == toastType.Information" [svgIcon]="'info-circle'"></mat-icon>
+				<mat-icon *ngIf="toast.toastType == toastType.Warning" [svgIcon]="'exclamation-circle'"></mat-icon>
+				<mat-icon *ngIf="toast.toastType == toastType.Error" [svgIcon]="'exclamation-triangle'"></mat-icon>
+			</div>
 		</div>
 	</div>
 </div>
