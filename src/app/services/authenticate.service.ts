@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RegisterRequest } from '../models/authentication/register-request';
 import { AppConfig } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { LoggedInUser } from '../models/authentication/logged-in-user';
 import { StoreService } from './store.service';
+import { User } from 'app/models/authentication/user';
+import { OauthService } from './oauth.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,21 +18,38 @@ export class AuthenticateService {
 	public loggedInUser: LoggedInUser;
 	public loggedIn = false;
 
-	constructor(private httpClient: HttpClient, private storeService: StoreService) {
-		const userCredentials = storeService.get('auth');
+	private loggedInUserLoaded$: BehaviorSubject<Boolean>;
 
-		if (userCredentials != undefined) {
-			this.loggedInUser = LoggedInUser.mapFromJson(storeService.get('auth'));
-			this.loggedIn = true;
-		}
+	constructor(private httpClient: HttpClient, private storeService: StoreService, private oauthService: OauthService, private toastService: ToastService) {
+		this.loggedInUserLoaded$ = new BehaviorSubject(false);
+
+		this.oauthService.hasOauthBeenLoaded().subscribe((hasLoaded: boolean) => {
+			if (hasLoaded == true) {
+				this.me().subscribe((user: LoggedInUser) => {
+					this.loggedInUser = LoggedInUser.mapFromJson(user);
+					this.loggedIn = true;
+
+					this.loggedInUserLoaded$.next(true);
+
+					this.toastService.addToast(`Successfully logged in, welcome ${this.loggedInUser.username}!`);
+				});
+			}
+		})
+	}
+
+	/**
+	 * Get the userdata of the currently logged in user
+	 */
+	public me(): Observable<LoggedInUser> {
+		return this.httpClient.get<LoggedInUser>(`${this.apiUrl}me`);
 	}
 
 	/**
 	 * Register a new user
 	 * @param registerRequest
 	 */
-	public register(registerRequest: RegisterRequest): Observable<any> {
-		return this.httpClient.post<RegisterRequest>(`${this.apiUrl}register`, registerRequest);
+	public register(registerRequest: RegisterRequest): Observable<User> {
+		return this.httpClient.post<User>(`${this.apiUrl}register`, registerRequest);
 	}
 
 	/**
@@ -38,7 +58,7 @@ export class AuthenticateService {
 	 * @param password the password to login with
 	 */
 	public login(registerRequest: RegisterRequest): Observable<any> {
-		return this.httpClient.post<RegisterRequest>(`${this.apiUrl}login`, registerRequest, { observe: 'response' });
+		return this.httpClient.post<RegisterRequest>(`${this.apiUrl}login`, registerRequest);
 	}
 
 	/**
@@ -49,20 +69,27 @@ export class AuthenticateService {
 	}
 
 	/**
+	 * Check if the logged in user has loaded
+	 */
+	public hasLoggedInUserLoaded(): Observable<Boolean> {
+		return this.loggedInUserLoaded$;
+	}
+
+	/**
+	 * Set logged in user as loaded or not loaded
+	 * @param loaded
+	 */
+	public setLoggedInUserLoaded(loaded: boolean): void {
+		this.loggedInUserLoaded$.next(loaded);
+	}
+
+	/**
 	 * Logout the current loggedin user
 	 */
 	public logout() {
 		this.loggedIn = false;
 		this.loggedInUser = null;
 
-		this.storeService.delete('auth');
-	}
-
-	/**
-	 * Cache the data of a user
-	 * @param loggedInUser the loggedin user to cache
-	 */
-	public cacheLoggedInUser(loggedInUser: LoggedInUser) {
-		this.storeService.set('auth', loggedInUser.convertToJson());
+		this.storeService.delete('oauth');
 	}
 }

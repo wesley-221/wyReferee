@@ -155,7 +155,7 @@ export class MappoolService {
 	 * @param user the user to get all the mappools from
 	 */
 	public getAllPublishedMappoolsFromUser(user: LoggedInUser) {
-		return this.httpClient.get<Mappool[]>(`${this.apiUrl}mappool/created_by/${user.userId}`);
+		return this.httpClient.get<Mappool[]>(`${this.apiUrl}mappool/created_by/${user.id}`);
 	}
 
 	/**

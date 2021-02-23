@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Mappool } from '../../../../models/osu-mappool/mappool';
 import { MappoolService } from '../../../../services/mappool.service';
 import { ToastService } from '../../../../services/toast.service';
@@ -25,12 +25,15 @@ export interface DeleteMappoolDialogData {
 export class MappoolSummaryComponent implements OnInit {
 	@Input() mappool: Mappool;
 	@Input() publish = false;
+	@Output() onMappoolDeleted: EventEmitter<Boolean>;
 
 	dialogMessage: string;
 	dialogAction = 0;
 	mappoolToModify: Mappool;
 
-	constructor(private mappoolService: MappoolService, private toastService: ToastService, private authService: AuthenticateService, private router: Router, private dialog: MatDialog) { }
+	constructor(private mappoolService: MappoolService, private toastService: ToastService, private authService: AuthenticateService, private router: Router, private dialog: MatDialog) {
+		this.onMappoolDeleted = new EventEmitter();
+	}
 
 	ngOnInit(): void { }
 
@@ -104,6 +107,7 @@ export class MappoolSummaryComponent implements OnInit {
 				if (this.publish == true) {
 					this.mappoolService.deletePublishedMappool(mappool).subscribe(() => {
 						this.toastService.addToast(`Successfully deleted the published mappool "${mappool.name}".`);
+						this.onMappoolDeleted.emit(true);
 					}, (err) => {
 						console.log(err);
 					});
@@ -111,6 +115,7 @@ export class MappoolSummaryComponent implements OnInit {
 				else {
 					this.mappoolService.deleteMappool(mappool);
 					this.toastService.addToast(`Successfully deleted the mappool "${mappool.name}".`);
+					this.onMappoolDeleted.emit(true);
 				}
 			}
 		});
@@ -120,7 +125,7 @@ export class MappoolSummaryComponent implements OnInit {
 	 * Check if the user has sufficient permissions to publish the mappool
 	 */
 	canPublish(): boolean {
-		return this.authService.loggedIn && ((<any>this.authService.loggedInUser.isTournamentHost) == 'true' || this.authService.loggedInUser.isTournamentHost == true || this.authService.loggedInUser.isAdmin);
+		return this.authService.loggedIn && (this.authService.loggedInUser.tournamentHost == true || this.authService.loggedInUser.admin == true);
 	}
 
 	/**

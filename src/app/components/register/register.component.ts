@@ -4,6 +4,7 @@ import { AuthenticateService } from 'app/services/authenticate.service';
 import { ToastService } from 'app/services/toast.service';
 import { RegisterRequest } from 'app/models/authentication/register-request';
 import { HttpErrorResponse } from '@angular/common/http';
+import { User } from 'app/models/authentication/user';
 
 @Component({
 	selector: 'app-register',
@@ -44,10 +45,10 @@ export class RegisterComponent implements OnInit {
 			registerUser.password = password.value;
 			registerUser.passwordConfirm = passwordConfirm.value;
 
-			this.authenticateService.register(registerUser).subscribe(() => {
+			this.authenticateService.register(registerUser).subscribe((user: User) => {
 				this.loginErrors = [];
 
-				this.toastService.addToast(`Successfully registered your account with the username "${registerUser.username}".`);
+				this.toastService.addToast(`Successfully registered the account ${user.username}!`);
 			}, (err: HttpErrorResponse) => {
 				this.loginErrors = [];
 

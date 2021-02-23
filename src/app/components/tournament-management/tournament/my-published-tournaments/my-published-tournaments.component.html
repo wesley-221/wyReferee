@@ -8,5 +8,5 @@
 
 	<hr />
 
-	<app-tournament-summary [tournament]="tournament" [publish]="true" *ngFor="let tournament of publishedTournaments" (deleteTournament)="onTournamentDelete()"></app-tournament-summary>
+	<app-tournament-summary [tournament]="tournament" [publish]="true" *ngFor="let tournament of publishedTournaments" (onTournamentDeleted)="tournamentHasBeenDeleted($event)"></app-tournament-summary>
 </div>

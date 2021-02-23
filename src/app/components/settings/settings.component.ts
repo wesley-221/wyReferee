@@ -10,7 +10,8 @@ import { AuthenticateService } from 'app/services/authenticate.service';
 import { IrcService } from 'app/services/irc.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RegisterRequest } from 'app/models/authentication/register-request';
-import { LoggedInUser } from 'app/models/authentication/logged-in-user';
+import { OauthService } from 'app/services/oauth.service';
+import { Oauth } from 'app/models/authentication/oauth';
 
 @Component({
 	selector: 'app-settings',
@@ -45,7 +46,8 @@ export class SettingsComponent implements OnInit {
 		private apiKeyValidation: ApiKeyValidation,
 		private dialog: MatDialog,
 		public auth: AuthenticateService,
-		public ircService: IrcService
+		public ircService: IrcService,
+		private oauthService: OauthService
 	) {
 		this.apiKey = this.storeService.get('api-key');
 
@@ -96,21 +98,11 @@ export class SettingsComponent implements OnInit {
 		registerUser.username = username;
 		registerUser.password = password;
 
-		this.auth.login(registerUser).subscribe(data => {
-			const loggedInUser: LoggedInUser = new LoggedInUser();
+		this.auth.login(registerUser).subscribe((oauth: Oauth) => {
+			this.oauthService.cacheOauth(oauth);
+			this.oauthService.oauth = oauth;
 
-			loggedInUser.userId = data.body.userId;
-			loggedInUser.username = data.body.username;
-			loggedInUser.isAdmin = data.body.admin;
-			loggedInUser.token = data.headers.get('Authorization');
-			loggedInUser.isTournamentHost = data.body.tournament_host;
-
-			this.auth.loggedInUser = loggedInUser;
-			this.auth.loggedIn = true;
-
-			this.auth.cacheLoggedInUser(loggedInUser);
-
-			this.toastService.addToast(`Successfully logged in with the username "${this.auth.loggedInUser.username}"!`);
+			this.oauthService.setOauthHasBeenLoaded(true);
 		}, (err) => {
 			if (err.status == 0) {
 				this.toastService.addToast(`${err.statusText}. Server might be offline due to maintenance.`, ToastType.Error);
@@ -194,7 +186,8 @@ export class SettingsComponent implements OnInit {
 			// Remove the api key and auth properties
 			let configFile = this.storeService.storage.store;
 			configFile['api-key'] = 'redacted';
-			configFile['auth'] = 'redacted';
+			configFile['auth'] = 'redacted'; // Authentication details from older versions
+			configFile['oauth'] = 'redacted';
 			configFile['irc']['username'] = 'redacted';
 			configFile['irc']['password'] = 'redacted';
 

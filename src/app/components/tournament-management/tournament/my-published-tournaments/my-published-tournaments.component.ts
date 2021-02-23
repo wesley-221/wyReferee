@@ -13,15 +13,29 @@ export class MyPublishedTournamentsComponent implements OnInit {
 	publishedTournaments: Tournament[] = [];
 
 	constructor(private tournamentService: TournamentService, private authService: AuthenticateService) {
-		this.initialize();
+		this.authService.hasLoggedInUserLoaded().subscribe((hasLoaded: boolean) => {
+			if (hasLoaded == true) {
+				this.populateTournaments();
+			}
+		});
+
 	}
 	ngOnInit(): void { }
 
-	onTournamentDelete() {
-		this.initialize();
+	/**
+	 * Gets called when a tournament has been deleted
+	 * @param deleted
+	 */
+	public tournamentHasBeenDeleted(deleted: boolean): void {
+		if (deleted == true) {
+			this.populateTournaments();
+		}
 	}
 
-	initialize() {
+	/**
+	 * Populate the tournaments array with your published tournaments
+	 */
+	populateTournaments() {
 		this.publishedTournaments = [];
 
 		this.tournamentService.getAllPublishedTournamentsFromUser(this.authService.loggedInUser).subscribe(data => {

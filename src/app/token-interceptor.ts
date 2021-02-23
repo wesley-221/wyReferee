@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { AuthenticateService } from './services/authenticate.service';
-import { ToastService } from './services/toast.service';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ToastType } from './models/toast';
 import { AppConfig } from 'environments/environment';
+import { OauthService } from './services/oauth.service';
+import { Oauth } from './models/authentication/oauth';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-	constructor(private authService: AuthenticateService, private toastService: ToastService) { }
+	private isRefreshing = false;
+
+	constructor(private oauthService: OauthService, private http: HttpClient) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		// Only use this interceptor for the wyBin api
@@ -17,27 +18,33 @@ export class AuthInterceptor implements HttpInterceptor {
 			return next.handle(req);
 		}
 
-		let token: string;
+		let accessToken: string;
+		let refreshToken: string;
 
-		if (this.authService.loggedIn) {
-			token = this.authService.loggedInUser.token;
+		if (this.oauthService.oauth) {
+			accessToken = this.oauthService.oauth.access_token;
+			refreshToken = this.oauthService.oauth.refresh_token;
 		}
 
-		if (token) {
-			req = req.clone({ setHeaders: { Authorization: `${token}` }, withCredentials: true });
+		if (accessToken) {
+			req = req.clone({ setHeaders: { Authorization: `${accessToken}` }, withCredentials: true });
 		}
 
 		return next.handle(req).pipe(catchError((error: HttpErrorResponse): Observable<any> => {
-			// Logout the user if the token has expired
-			if (error.status === 403) {
-				if (this.authService.loggedInUser != null) {
-					this.authService.logout();
-				}
-			}
+			// Access token expired, request new access token
+			if (error.status === 401) {
+				if (!this.isRefreshing) {
+					if (refreshToken !== '') {
+						this.http.post(`${AppConfig.apiUrl}refresh-token`, refreshToken).subscribe((oauth: Oauth) => {
+							this.oauthService.cacheOauth(oauth);
+							this.oauthService.oauth = oauth;
 
-			// Show the generic known errors, have to figure out the other errors over time
-			if (error.status === 401 || error.status === 403) {
-				this.toastService.addToast(error.error.message, ToastType.Error);
+							this.oauthService.setOauthHasBeenLoaded(true);
+
+							this.isRefreshing = false;
+						});
+					}
+				}
 
 				return of(error.error.message);
 			}
