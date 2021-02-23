@@ -7,13 +7,15 @@ import { StoreService } from './store.service';
 	providedIn: 'root'
 })
 export class OauthService {
+	public static readonly oauthName = 'oauth';
+
 	public oauth: Oauth;
 	private oauthLoaded$: BehaviorSubject<Boolean>;
 
 	constructor(private storeService: StoreService) {
 		this.oauthLoaded$ = new BehaviorSubject(false);
 
-		const oauthCredentials: Oauth = storeService.get('oauth');
+		const oauthCredentials: Oauth = storeService.get(OauthService.oauthName);
 
 		if (oauthCredentials != undefined) {
 			this.oauth = oauthCredentials;
@@ -27,7 +29,7 @@ export class OauthService {
 	 * @param oauth the oauth data
 	 */
 	public cacheOauth(oauth: Oauth) {
-		this.storeService.set('oauth', oauth);
+		this.storeService.set(OauthService.oauthName, oauth);
 	}
 
 	/**
