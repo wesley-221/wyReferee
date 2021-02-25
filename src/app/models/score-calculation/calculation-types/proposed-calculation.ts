@@ -1,14 +1,29 @@
 import { ScoreInterface } from './score-interface';
 import { MultiplayerDataUser } from '../../store-multiplayer/multiplayer-data-user';
 
-export class AxSCalculation extends ScoreInterface {
+/**
+ * This class is used to calculate scores using a custom formula.
+ *
+ * The following 2 methods are used to return the scores of the teams. You probably don't have to change these, so they can stay as is
+ * - calculateTeamOneScore(): used to calculate the score of team one
+ * - calculateTeamTwoScore(): used to calculate the score of team two
+ *
+ * The following methods are the actual formulas to calculate scores. These methods are the ones you want to change in order for scores to be affected
+ * - calculateAccuracyPlayerScore(): used to calculate the score of the accuracy player. This is the player in slot 0 and 3
+ * - calculateScorePlayerScore(): used to calculate the score of the score player. This is the player in slot 1, 2, 4, 5
+ * - calculateTeamScore(): used to calculate the score of the full team
+ *
+ * These changes will be shown in `axs-formula.component`
+ * In `axs-formula.component.ts` you will be able to change the modifier, look for `calculateScores()`, there you will be able to call the value inside of the `setModifier()`
+ */
+export class ProposedCalculation extends ScoreInterface {
 	private modifier = 0;
 
 	constructor(identifier: string, teamSize: number) {
 		super(identifier);
 
 		this.setTeamSize(teamSize);
-		this.setDescription(`The score calculation that is used for a tournament called AxS. The team size is set to ${teamSize}, where the first player in the multiplayerlobby is the accuracy player and the second and third are score players.`);
+		this.setDescription(`Proposed changes for AxS score, mess around and see what it does!`);
 		this.setSoloTournament(false);
 	}
 
@@ -23,18 +38,18 @@ export class AxSCalculation extends ScoreInterface {
 			const currentUser = this.getUserBySlot(i);
 
 			if (currentUser.slot == 0) {
-				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));
+				currentUser.score = (currentUser.passed == 0 ? 0 : ProposedCalculation.calculateAccuracyPlayerScore(currentUser.score));
 				currentUser.caption = 'Accuracy player';
 			}
 			else {
-				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
+				currentUser.score = (currentUser.passed == 0 ? 0 : ProposedCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
 				currentUser.caption = 'Score player';
 			}
 
 			users.push(currentUser);
 		}
 
-		return AxSCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
+		return ProposedCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
 	}
 
 	public calculateTeamTwoScore() {
@@ -44,18 +59,18 @@ export class AxSCalculation extends ScoreInterface {
 			const currentUser = this.getUserBySlot(i);
 
 			if (currentUser.slot == 3) {
-				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));
+				currentUser.score = (currentUser.passed == 0 ? 0 : ProposedCalculation.calculateAccuracyPlayerScore(currentUser.score));
 				currentUser.caption = 'Accuracy player';
 			}
 			else {
-				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
+				currentUser.score = (currentUser.passed == 0 ? 0 : ProposedCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
 				currentUser.caption = 'Score player';
 			}
 
 			users.push(currentUser);
 		}
 
-		return AxSCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
+		return ProposedCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
 	}
 
 	public getModifier() {

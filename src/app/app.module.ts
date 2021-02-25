@@ -69,6 +69,7 @@ import { SendBeatmapResultComponent } from './components/dialogs/send-beatmap-re
 import { ReversePipe } from './pipes/reverse.pipe';
 import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
 import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
+import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
 
 @NgModule({
 	declarations: [
@@ -123,7 +124,8 @@ import { AxsRouterComponent } from './components/axs/axs-router/axs-router.compo
 		SendBeatmapResultComponent,
 		ReversePipe,
 		AxsInformationComponent,
-		AxsRouterComponent
+		AxsRouterComponent,
+		AxsFormulaComponent
 	],
 	imports: [
 		BrowserModule,

@@ -9,7 +9,8 @@ import { SidebarItem } from 'app/models/sidebar-item';
 export class AxsRouterComponent implements OnInit {
 	sidebarMenu: SidebarItem[] = [
 		new SidebarItem({ name: 'Information', logo: 'map', link: '/axs/information' }),
-		new SidebarItem({ name: 'Manual calculation', logo: 'add', link: '/axs/manual-calculator' })
+		new SidebarItem({ name: 'Manual calculation', logo: 'add', link: '/axs/manual-calculator' }),
+		new SidebarItem({ name: 'Formula development', logo: 'code', link: '/axs/axs-formula' })
 	];
 
 	constructor() { }

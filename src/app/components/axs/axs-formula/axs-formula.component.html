@@ -1,0 +1,80 @@
+<h1>Formula development</h1>
+<p>To make changes to the formula, go to
+	<code>src\app\models\score-calculation\calculation-types\proposed-calculation.ts</code> and read the comment on top
+	of the class. This should give you an indication of what to do to make changes to the formula.</p>
+<hr />
+
+<mat-form-field class="full-width">
+	<mat-label>Multiplayer link</mat-label>
+
+	<input matInput [(ngModel)]="multiplayerLink" />
+</mat-form-field>
+
+<button mat-raised-button color="primary" (click)="calculateMultiplayer()">Calculate</button>
+<hr />
+
+<div class="games" *ngIf="calculatedScores">
+	<div class="game" *ngFor="let game of calculatedScores">
+		<h1>{{ game.beatmapId }}</h1>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Slot</th>
+					<th>Standard score</th>
+					<th>AxS 6th edition score</th>
+					<th>Proposed score</th>
+					<th>Accuracy</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr *ngFor="let score of game.scores">
+					<td>{{ score.slot }}</td>
+					<td>{{ addDot(score.normal_score, ' ') }}</td>
+					<td>{{ addDot(score.axs_score, ' ') }}</td>
+					<td>{{ addDot(score.proposed_score, ' ') }}</td>
+					<td>{{ score.accuracy }}%</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h3 class="no-margin">Team one score</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Standard score</th>
+					<th>AxS score</th>
+					<th>Proposed score</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td>{{ addDot(game.team_one_score, ' ' ) }}</td>
+					<td>{{ addDot(game.axs_team_one_score, ' ' ) }}</td>
+					<td>{{ addDot(game.proposed_team_one_score, ' ') }}</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h3 class="no-margin">Team two score</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Standard score</th>
+					<th>AxS score</th>
+					<th>Proposed score</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td>{{ addDot(game.team_two_score, ' ' ) }}</td>
+					<td>{{ addDot(game.axs_team_two_score, ' ' ) }}</td>
+					<td>{{ addDot(game.proposed_team_two_score, ' ') }}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

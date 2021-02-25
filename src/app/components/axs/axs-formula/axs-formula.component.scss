@@ -1,0 +1,35 @@
+:host {
+	width: 100%;
+}
+
+.no-margin {
+	margin: 0;
+}
+
+.game {
+	border: 1px solid darken(#3c4452, 15%);
+
+	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+
+	padding: 8px;
+	margin-bottom: 8px;
+}
+
+.table {
+	border: 1px solid darken(#3c4452, 15%);
+
+	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	padding: 8px;
+
+	width: 100%;
+
+	thead {
+		th {
+			text-align: left;
+		}
+	}
+}

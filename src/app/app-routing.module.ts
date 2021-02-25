@@ -23,6 +23,7 @@ import { AllPublishedTournamentsComponent } from './components/tournament-manage
 import { AxsCalculatorComponent } from './components/axs/axs-calculator/axs-calculator.component';
 import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
 import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
+import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
 
 const routes: Routes = [
 	{
@@ -55,6 +56,7 @@ const routes: Routes = [
 				path: 'axs', component: AxsRouterComponent, children: [
 					{ path: 'information', component: AxsInformationComponent },
 					{ path: 'manual-calculator', component: AxsCalculatorComponent },
+					{ path: 'axs-formula', component: AxsFormulaComponent },
 					{ path: '**', component: AxsInformationComponent }
 				]
 			},
