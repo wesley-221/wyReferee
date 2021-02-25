@@ -1,18 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { SidebarItem } from 'app/models/sidebar-item';
 import { AuthenticateService } from 'app/services/authenticate.service';
-
-class SidebarItem {
-	name: string;
-	logo: string;
-	svgIcon: string;
-	link: string;
-	subMenuItem: boolean;
-	onlyShowAsTournamentHost: boolean;
-
-	constructor(init?: Partial<SidebarItem>) {
-		Object.assign(this, init);
-	}
-}
 
 @Component({
 	selector: 'app-management-router',

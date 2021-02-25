@@ -1,0 +1,94 @@
+@import "variables";
+
+$tiles-height: 110px;
+
+.main {
+	height: 100%;
+
+	display: flex;
+	flex: 1 0 auto;
+
+	.sidebar {
+		display: flex;
+		flex-direction: column;
+
+		margin-right: 8px;
+
+		background-color: rgba(lighten($sidebar-color, 8%), 0.2);
+
+		.item {
+			display: flex;
+
+			align-items: center;
+			justify-content: left;
+
+			padding: 16px;
+			margin-right: 8px;
+
+			.logo {
+				display: flex;
+				align-items: center;
+			}
+
+			.title {
+				display: flex;
+				align-items: center;
+
+				padding: 0 0 0 16px;
+			}
+
+			&.active,
+			&:hover {
+				color: $primary;
+				background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+				border-radius: 6px;
+
+				cursor: pointer;
+				outline: none;
+			}
+		}
+
+		.sub-item {
+			display: flex;
+
+			align-items: center;
+			justify-content: left;
+
+			padding: 8px;
+			margin-right: 6px;
+			margin-left: 16px;
+
+			.logo {
+				display: flex;
+				align-items: center;
+			}
+
+			.title {
+				display: flex;
+				align-items: center;
+
+				padding: 0 0 0 16px;
+			}
+
+			&.active,
+			&:hover {
+				color: $primary;
+				background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+				border-radius: 6px;
+
+				cursor: pointer;
+				outline: none;
+			}
+		}
+	}
+
+	.content {
+		display: flex;
+		flex: 1;
+
+		height: 100%;
+		overflow-y: auto;
+		padding-right: 16px;
+		padding-top: 8px;
+	}
+}

@@ -1,0 +1,23 @@
+<div class="main">
+	<div class="sidebar">
+		<div *ngFor="let sidebarItem of sidebarMenu">
+			<div *ngIf="sidebarItem.onlyShowAsTournamentHost == true ? authenticateService.loggedInUser && (authenticateService.loggedInUser.admin == true || authenticateService.loggedInUser.tournamentHost == true) : true"
+				[ngClass]="{ 'item': sidebarItem.subMenuItem == null || sidebarItem.subMenuItem != true,
+			'sub-item': sidebarItem.subMenuItem != null && sidebarItem.subMenuItem == true}" [routerLink]="sidebarItem.link"
+				routerLinkActive="active">
+				<div class="logo">
+					<mat-icon class="icon-2x" *ngIf="sidebarItem.logo">{{ sidebarItem.logo }}</mat-icon>
+					<mat-icon class="icon-2x" *ngIf="sidebarItem.svgIcon" [svgIcon]="sidebarItem.svgIcon"></mat-icon>
+				</div>
+
+				<div class="title">
+					{{ sidebarItem.name }}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content fluid-container">
+		<router-outlet></router-outlet>
+	</div>
+</div>

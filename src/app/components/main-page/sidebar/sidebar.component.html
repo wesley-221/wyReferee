@@ -1,10 +1,12 @@
 <mat-list>
-	<a [routerLink]="[navigationItem.link]" routerLinkActive="active" *ngFor="let navigationItem of allNavigations" class="sidebar-link">
-		<mat-list-item class="sidebar-item">
-			<mat-icon matListIcon>{{ navigationItem.icon }}</mat-icon>
-			<p matLine>
-				<span>{{ navigationItem.header }}</span>
-			</p>
-		</mat-list-item>
-	</a>
+	<div *ngFor="let navigationItem of allNavigations">
+		<a [routerLink]="[navigationItem.link]" routerLinkActive="active" class="sidebar-link" *ngIf="navigationItem.showIf == undefined || navigationItem.showIf == true">
+			<mat-list-item class="sidebar-item">
+				<mat-icon matListIcon>{{ navigationItem.icon }}</mat-icon>
+				<p matLine>
+					<span>{{ navigationItem.header }}</span>
+				</p>
+			</mat-list-item>
+		</a>
+	</div>
 </mat-list>

@@ -20,7 +20,9 @@ import { MyPublishedTournamentsComponent } from './components/tournament-managem
 import { ManagementRouterComponent } from './components/tournament-management/management-router/management-router.component';
 import { AllPublishedMappoolsComponent } from './components/tournament-management/mappool/all-published-mappools/all-published-mappools.component';
 import { AllPublishedTournamentsComponent } from './components/tournament-management/tournament/all-published-tournaments/all-published-tournaments.component';
-import { AxsCalculatorComponent } from './components/axs-calculator/axs-calculator.component';
+import { AxsCalculatorComponent } from './components/axs/axs-calculator/axs-calculator.component';
+import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
+import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
 
 const routes: Routes = [
 	{
@@ -49,8 +51,14 @@ const routes: Routes = [
 					{ path: 'tournament-overview/all-published-tournaments', component: AllPublishedTournamentsComponent }
 				]
 			},
+			{
+				path: 'axs', component: AxsRouterComponent, children: [
+					{ path: 'information', component: AxsInformationComponent },
+					{ path: 'manual-calculator', component: AxsCalculatorComponent },
+					{ path: '**', component: AxsInformationComponent }
+				]
+			},
 			{ path: 'irc', component: IrcComponent },
-			{ path: 'axs-calculator', component: AxsCalculatorComponent },
 			{ path: '**', component: ErrorComponent }
 		]
 	}

@@ -12,6 +12,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RegisterRequest } from 'app/models/authentication/register-request';
 import { OauthService } from 'app/services/oauth.service';
 import { Oauth } from 'app/models/authentication/oauth';
+import { GenericService } from 'app/services/generic.service';
 
 @Component({
 	selector: 'app-settings',
@@ -33,10 +34,13 @@ export class SettingsComponent implements OnInit {
 
 	apiKeyIsValid = false;
 
+	axsMenuStatus: boolean;
+
 	allOptions: { icon: string, message: string, buttonText: string, action: any }[] = [
-		{ icon: 'settings', message: 'This will export the config file and save it as a file in case you need to share it with someone. <br /><b>Note:</b> It will not export the API key in the file <br />', buttonText: 'Export config file', action: () => this.exportConfigFile() },
+		{ icon: 'settings', message: 'This will export the config file and save it as a file in case you need to share it with someone. <br /><b>Note:</b> This will not export any authentication data such as login information or API keys <br />', buttonText: 'Export config file', action: () => this.exportConfigFile() },
 		{ icon: 'cached', message: 'This will clear all the cache.', buttonText: 'Clear cache', action: () => this.openDialog(0) },
-		{ icon: 'api', message: 'This will remove the API key.', buttonText: 'Remove API key', action: () => this.openDialog(1) }
+		{ icon: 'api', message: 'This will remove the API key.', buttonText: 'Remove API key', action: () => this.openDialog(1) },
+		{ icon: 'settings', message: 'Show or hide the AxS menu item.', buttonText: 'Toggle', action: () => this.toggleAxSMenu() }
 	];
 
 	constructor(
@@ -47,13 +51,18 @@ export class SettingsComponent implements OnInit {
 		private dialog: MatDialog,
 		public auth: AuthenticateService,
 		public ircService: IrcService,
-		private oauthService: OauthService
+		private oauthService: OauthService,
+		private genericService: GenericService
 	) {
 		this.apiKey = this.storeService.get('api-key');
 
 		if (this.apiKey && this.apiKey.length > 0) {
 			this.apiKeyIsValid = true;
 		}
+
+		this.genericService.getAxSMenuStatus().subscribe(status => {
+			this.axsMenuStatus = status;
+		});
 	}
 
 	ngOnInit() {
@@ -230,5 +239,10 @@ export class SettingsComponent implements OnInit {
 				}
 			}
 		});
+	}
+
+	toggleAxSMenu(): void {
+		this.axsMenuStatus = !this.axsMenuStatus;
+		this.genericService.setAxSMenu(this.axsMenuStatus);
 	}
 }

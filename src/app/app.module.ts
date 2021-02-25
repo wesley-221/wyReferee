@@ -64,9 +64,11 @@ import { AllPublishedMappoolsComponent } from './components/tournament-managemen
 import { FilterMappoolPipe } from './pipes/filter-mappool.pipe';
 import { AllPublishedTournamentsComponent } from './components/tournament-management/tournament/all-published-tournaments/all-published-tournaments.component';
 import { FilterTournamentPipe } from './pipes/filter-tournament.pipe';
-import { AxsCalculatorComponent } from './components/axs-calculator/axs-calculator.component';
+import { AxsCalculatorComponent } from './components/axs/axs-calculator/axs-calculator.component';
 import { SendBeatmapResultComponent } from './components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { ReversePipe } from './pipes/reverse.pipe';
+import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
+import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
 
 @NgModule({
 	declarations: [
@@ -119,7 +121,9 @@ import { ReversePipe } from './pipes/reverse.pipe';
 		FilterTournamentPipe,
 		AxsCalculatorComponent,
 		SendBeatmapResultComponent,
-		ReversePipe
+		ReversePipe,
+		AxsInformationComponent,
+		AxsRouterComponent
 	],
 	imports: [
 		BrowserModule,
