@@ -92,7 +92,7 @@ export class TournamentService {
 	 * @param tournament the tournament to update
 	 */
 	public updatePublishedTournament(tournament: Tournament) {
-		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament`, tournament, { observe: 'response' });
+		return this.httpClient.post<Tournament>(`${this.apiUrl}wyreferee/tournament`, tournament, { observe: 'response' });
 	}
 
 	/**
@@ -126,7 +126,7 @@ export class TournamentService {
 	 * @param tournament the tournament to publish
 	 */
 	publishTournament(tournament: Tournament): Observable<any> {
-		return this.httpClient.post<Tournament>(`${this.apiUrl}tournament`, tournament, { observe: 'response' });
+		return this.httpClient.post<Tournament>(`${this.apiUrl}wyreferee/tournament`, tournament, { observe: 'response' });
 	}
 
 	/**
@@ -134,7 +134,7 @@ export class TournamentService {
 	 * @param tournamentId the id of the tournament that was published
 	 */
 	getPublishedTournament(tournamentId: number): Observable<Tournament> {
-		return this.httpClient.get<Tournament>(`${this.apiUrl}tournament/${tournamentId}`);
+		return this.httpClient.get<Tournament>(`${this.apiUrl}wyreferee/tournament/${tournamentId}`);
 	}
 
 	/**
@@ -142,14 +142,14 @@ export class TournamentService {
 	 * @param user the user to get all the tournaments from
 	 */
 	getAllPublishedTournamentsFromUser(user: LoggedInUser) {
-		return this.httpClient.get<Tournament[]>(`${this.apiUrl}tournament/created_by/${user.id}`);
+		return this.httpClient.get<Tournament[]>(`${this.apiUrl}wyreferee/tournament/created_by/${user.id}`);
 	}
 
 	/**
 	 * Get all published tournaments
 	 */
 	getAllPublishedTournaments() {
-		return this.httpClient.get<Tournament[]>(`${this.apiUrl}tournament`);
+		return this.httpClient.get<Tournament[]>(`${this.apiUrl}wyreferee/tournament`);
 	}
 
 	/**
@@ -157,7 +157,7 @@ export class TournamentService {
 	 * @param tournament the tournament to delete
 	 */
 	deletePublishedTournament(tournament: Tournament) {
-		return this.httpClient.delete<Tournament>(`${this.apiUrl}tournament/${tournament.id}`);
+		return this.httpClient.delete<Tournament>(`${this.apiUrl}wyreferee/tournament/${tournament.id}`);
 	}
 
 	/**

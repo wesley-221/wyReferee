@@ -98,7 +98,7 @@ export class MappoolService {
 	 * @param mappool the mappool to update
 	 */
 	public updatePublishedMappool(mappool: Mappool) {
-		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool`, mappool, { observe: 'response' });
+		return this.httpClient.post<Mappool>(`${this.apiUrl}wyreferee/mappool`, mappool, { observe: 'response' });
 	}
 
 	/**
@@ -132,7 +132,7 @@ export class MappoolService {
 	 * @param mappool the mappool to publish
 	 */
 	public publishMappool(mappool: Mappool): Observable<any> {
-		return this.httpClient.post<Mappool>(`${this.apiUrl}mappool`, mappool, { observe: 'response' });
+		return this.httpClient.post<Mappool>(`${this.apiUrl}wyreferee/mappool`, mappool, { observe: 'response' });
 	}
 
 	/**
@@ -140,14 +140,14 @@ export class MappoolService {
 	 * @param mappool_id the id of the mappool that was published
 	 */
 	public getPublishedMappool(mappool_id: number): Observable<Mappool> {
-		return this.httpClient.get<Mappool>(`${this.apiUrl}mappool/${mappool_id}`);
+		return this.httpClient.get<Mappool>(`${this.apiUrl}wyreferee/mappool/${mappool_id}`);
 	}
 
 	/**
 	 * Get all published mappools
 	 */
 	public getAllPublishedMappools(): Observable<Mappool[]> {
-		return this.httpClient.get<Mappool[]>(`${this.apiUrl}mappool`);
+		return this.httpClient.get<Mappool[]>(`${this.apiUrl}wyreferee/mappool`);
 	}
 
 	/**
@@ -155,7 +155,7 @@ export class MappoolService {
 	 * @param user the user to get all the mappools from
 	 */
 	public getAllPublishedMappoolsFromUser(user: LoggedInUser) {
-		return this.httpClient.get<Mappool[]>(`${this.apiUrl}mappool/created_by/${user.id}`);
+		return this.httpClient.get<Mappool[]>(`${this.apiUrl}wyreferee/mappool/created_by/${user.id}`);
 	}
 
 	/**
@@ -163,7 +163,7 @@ export class MappoolService {
 	 * @param mappool the mappool to delete
 	 */
 	public deletePublishedMappool(mappool: Mappool) {
-		return this.httpClient.delete<Mappool>(`${this.apiUrl}mappool/${mappool.id}`);
+		return this.httpClient.delete<Mappool>(`${this.apiUrl}wyreferee/mappool/${mappool.id}`);
 	}
 
 	/**
@@ -173,6 +173,6 @@ export class MappoolService {
 	 */
 	public pickMysteryMap(mappool: Mappool, modBracket: ModBracket, lobby: MultiplayerLobby, refereeName: string) {
 		const mysteryMappoolHelper = new MysteryMappoolHelper(mappool.publishId, modBracket.id, lobby, refereeName, lobby.pickedCategories);
-		return this.httpClient.post<MysteryMappoolHelper>(`${this.apiUrl}mappool/mystery/get`, mysteryMappoolHelper);
+		return this.httpClient.post<MysteryMappoolHelper>(`${this.apiUrl}wyreferee/mappool/mystery/get`, mysteryMappoolHelper);
 	}
 }
