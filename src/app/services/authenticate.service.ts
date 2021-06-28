@@ -8,6 +8,8 @@ import { StoreService } from './store.service';
 import { User } from 'app/models/authentication/user';
 import { OauthService } from './oauth.service';
 import { ToastService } from './toast.service';
+import { ElectronService } from './electron.service';
+import { Oauth } from 'app/models/authentication/oauth';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,18 +17,20 @@ import { ToastService } from './toast.service';
 
 export class AuthenticateService {
 	private readonly apiUrl = AppConfig.apiUrl;
-	public loggedInUser: LoggedInUser;
+	public loggedInUser: User;
 	public loggedIn = false;
 
 	private loggedInUserLoaded$: BehaviorSubject<Boolean>;
+	private oauthResponse$: BehaviorSubject<Oauth>;
 
-	constructor(private httpClient: HttpClient, private storeService: StoreService, private oauthService: OauthService, private toastService: ToastService) {
+	constructor(private httpClient: HttpClient, private storeService: StoreService, private oauthService: OauthService, private toastService: ToastService, private electronService: ElectronService) {
 		this.loggedInUserLoaded$ = new BehaviorSubject(false);
+		this.oauthResponse$ = new BehaviorSubject(null);
 
-		this.oauthService.hasOauthBeenLoaded().subscribe((hasLoaded: boolean) => {
+		this.oauthService.hasOsuOauthBeenLoaded().subscribe(hasLoaded => {
 			if (hasLoaded == true) {
-				this.me().subscribe((user: LoggedInUser) => {
-					this.loggedInUser = LoggedInUser.mapFromJson(user);
+				this.getMeData().subscribe(user => {
+					this.loggedInUser = User.makeTrueCopy(user);
 					this.loggedIn = true;
 
 					this.loggedInUserLoaded$.next(true);
@@ -34,7 +38,7 @@ export class AuthenticateService {
 					this.toastService.addToast(`Successfully logged in, welcome ${this.loggedInUser.username}!`);
 				});
 			}
-		})
+		});
 	}
 
 	/**
@@ -91,5 +95,77 @@ export class AuthenticateService {
 		this.loggedInUser = null;
 
 		this.storeService.delete('oauth');
+	}
+
+	/**
+	 * Get the authorization url of the mappicker app
+	 * @returns authorization url of the mappicker app
+	 */
+	private getOsuOauthUrl(): string {
+		const parameters = [
+			{ parameterName: 'client_id', value: AppConfig.osu.client_id },
+			{ parameterName: 'redirect_uri', value: AppConfig.osu.redirect_uri },
+			{ parameterName: 'response_type', value: 'code' },
+			{ parameterName: 'scope', value: 'identify%20public' }
+		];
+
+		let finalLink = 'https://osu.ppy.sh/oauth/authorize?'
+
+		if (parameters != null) {
+			parameters.forEach(parameter => {
+				finalLink += `${parameter.parameterName}=${parameter.value}&`
+			});
+
+			finalLink = finalLink.substring(0, finalLink.length - 1);
+		}
+
+		return finalLink;
+	}
+
+	/**
+	 * Open a window for the osu oauth process
+	 */
+	private openOsuBrowserWindow(): void {
+		const oldWindow = this.electronService.remote.getCurrentWindow();
+
+		const win = new this.electronService.remote.BrowserWindow({
+			icon: `src/assets/images/icon.png`,
+			modal: true,
+			parent: oldWindow
+		});
+
+		win.loadURL(this.getOsuOauthUrl());
+
+		const contents = win.webContents
+		contents.on('will-redirect', (_, url) => {
+			const oauthToken = url.replace(`${AppConfig.osu.redirect_uri}?code=`, '');
+
+			win.close();
+
+			this.httpClient.post<Oauth>(`${AppConfig.apiUrl}request-osu-oauth-token`, oauthToken).subscribe(response => {
+				this.oauthResponse$.next(response);
+				oldWindow.reload();
+			}, (err) => {
+				console.log(err);
+				oldWindow.reload();
+			});
+		});
+	}
+
+	/**
+	 * Get the oauth token for osu
+	 * @returns observable that contains the oauth token
+	 */
+	public startOsuOauthProcess(): Observable<Oauth> {
+		this.openOsuBrowserWindow();
+
+		return this.oauthResponse$;
+	}
+
+	/**
+	 * Get the public osu data of the current logged in user
+	 */
+	public getMeData(): Observable<any> {
+		return this.httpClient.get<any>(`${AppConfig.apiUrl}osu/me`);
 	}
 }

@@ -104,7 +104,7 @@ export class TournamentSummaryComponent implements OnInit {
 	 * Check if the user has sufficient permissions to publish the tournament
 	 */
 	canPublish(): boolean {
-		return this.authService.loggedIn && (this.authService.loggedInUser.tournamentHost == true || this.authService.loggedInUser.admin == true);
+		return this.authService.loggedIn && (this.authService.loggedInUser.isTournamentManager == true || this.authService.loggedInUser.isAdmin == true);
 	}
 
 	/**

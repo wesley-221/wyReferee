@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { ElectronService } from './services/electron.service';
-import { ToastService } from './services/toast.service';
 import { IrcService } from './services/irc.service';
+import { AuthenticateService } from './services/authenticate.service';
 
 @Component({
 	selector: 'app-root',
@@ -9,5 +8,5 @@ import { IrcService } from './services/irc.service';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	constructor(public electronService: ElectronService, private toastService: ToastService, private ircService: IrcService) { }
+	constructor(private ircService: IrcService, private auth: AuthenticateService) { }
 }

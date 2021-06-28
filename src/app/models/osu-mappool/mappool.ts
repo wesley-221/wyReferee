@@ -219,7 +219,7 @@ export class Mappool {
 		}
 
 		for (const user in this.availableTo) {
-			mappool.availableTo.push(User.convertToJson(this.availableTo[user]));
+			mappool.availableTo.push(User.makeTrueCopy(this.availableTo[user]));
 		}
 
 		return mappool;

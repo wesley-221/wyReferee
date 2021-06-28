@@ -111,7 +111,7 @@ export class Tournament {
 		}
 
 		for (const user in this.availableTo) {
-			tournament.availableTo.push(User.convertToJson(this.availableTo[user]));
+			tournament.availableTo.push(User.makeTrueCopy(this.availableTo[user]));
 		}
 
 		return tournament;

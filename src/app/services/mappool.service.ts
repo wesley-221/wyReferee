@@ -4,10 +4,10 @@ import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { AppConfig } from '../../environments/environment';
-import { LoggedInUser } from '../models/authentication/logged-in-user';
 import { ModBracket } from '../models/osu-mappool/mod-bracket';
 import { MysteryMappoolHelper } from '../models/osu-mappool/mystery-mappool-helper';
 import { MultiplayerLobby } from '../models/store-multiplayer/multiplayer-lobby';
+import { User } from 'app/models/authentication/user';
 
 @Injectable({
 	providedIn: 'root'
@@ -154,7 +154,7 @@ export class MappoolService {
 	 * Get all the published mappools from the given user
 	 * @param user the user to get all the mappools from
 	 */
-	public getAllPublishedMappoolsFromUser(user: LoggedInUser) {
+	public getAllPublishedMappoolsFromUser(user: User) {
 		return this.httpClient.get<Mappool[]>(`${this.apiUrl}wyreferee/mappool/created_by/${user.id}`);
 	}
 

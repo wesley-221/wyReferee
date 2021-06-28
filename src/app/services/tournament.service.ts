@@ -4,7 +4,7 @@ import { Tournament } from '../models/tournament/tournament';
 import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoggedInUser } from '../models/authentication/logged-in-user';
+import { User } from 'app/models/authentication/user';
 
 @Injectable({
 	providedIn: 'root'
@@ -141,7 +141,7 @@ export class TournamentService {
 	 * Get all the published tournaments from the given user
 	 * @param user the user to get all the tournaments from
 	 */
-	getAllPublishedTournamentsFromUser(user: LoggedInUser) {
+	getAllPublishedTournamentsFromUser(user: User) {
 		return this.httpClient.get<Tournament[]>(`${this.apiUrl}wyreferee/tournament/created_by/${user.id}`);
 	}
 

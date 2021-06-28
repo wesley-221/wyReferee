@@ -8,19 +8,31 @@ import { StoreService } from './store.service';
 })
 export class OauthService {
 	public static readonly oauthName = 'oauth';
+	public static readonly osuOauthName = 'osu-oauth';
 
 	public oauth: Oauth;
+	public osuOauth: Oauth;
+
 	private oauthLoaded$: BehaviorSubject<Boolean>;
+	private osuOauthLoaded$: BehaviorSubject<Boolean>;
 
 	constructor(private storeService: StoreService) {
 		this.oauthLoaded$ = new BehaviorSubject(false);
+		this.osuOauthLoaded$ = new BehaviorSubject(false);
 
 		const oauthCredentials: Oauth = storeService.get(OauthService.oauthName);
+		const osuOauthCredentials: Oauth = storeService.get(OauthService.osuOauthName);
 
 		if (oauthCredentials != undefined) {
 			this.oauth = oauthCredentials;
 
 			this.oauthLoaded$.next(true);
+		}
+
+		if (osuOauthCredentials != undefined) {
+			this.osuOauth = osuOauthCredentials;
+
+			this.osuOauthLoaded$.next(true);
 		}
 	}
 
@@ -33,10 +45,26 @@ export class OauthService {
 	}
 
 	/**
+	 * Cache the osu oauth data from the user
+	 * @param oauth the oauth data
+	 */
+	public cacheOsuOauth(oauth: Oauth) {
+		this.storeService.set(OauthService.osuOauthName, oauth);
+		this.osuOauth = oauth;
+	}
+
+	/**
 	 * Check if oauth has been loaded from memory or from login request
 	 */
 	public hasOauthBeenLoaded(): Observable<Boolean> {
 		return this.oauthLoaded$;
+	}
+
+	/**
+	 * Check if osu oauth has been loaded
+	 */
+	public hasOsuOauthBeenLoaded(): Observable<Boolean> {
+		return this.osuOauthLoaded$;
 	}
 
 	/**

@@ -59,6 +59,8 @@ $container-height: 400px;
 	background-color: $tile-background-color;
 	overflow: hidden;
 
+	height: 100%;
+
 	.login-icon-container {
 		display: flex;
 

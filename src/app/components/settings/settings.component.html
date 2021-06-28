@@ -24,43 +24,30 @@
 		<div class="col">
 			<div class="login-container">
 				<div class="login-icon-container">
-					<div class="icon web"></div>
+					<div class="icon osu"></div>
 				</div>
 
 				<div class="login-content">
-					<div class="login-form">
-						<h3 class="header">wyBin tournament host</h3>
+					<div class="login-form" *ngIf="!auth.loggedIn">
+						<h3 class="header">osu! authentication</h3>
+						<button mat-raised-button color="primary" class="full-width margin-button" (click)="authenticateOsu()">Login</button>
 
-						<form [formGroup]="mappoolPublishForm" *ngIf="!auth.loggedIn">
-							<mat-form-field class="full-width">
-								<mat-label>Username</mat-label>
-								<input matInput placeholder="Username" formControlName="username">
+						<div class="alert alert-info authentication-message" *ngIf="isAuthenticating == true">
+							<div class="spinner-container">
+								<mat-spinner [diameter]="32" class="spinner"></mat-spinner>
+							</div>
 
-								<mat-error *ngIf="mappoolPublishForm.get('username').invalid && (mappoolPublishForm.get('username').dirty || mappoolPublishForm.get('username').touched)">
-									This field is required.
-								</mat-error>
-							</mat-form-field>
-
-							<mat-form-field class="full-width">
-								<mat-label>Password</mat-label>
-								<input matInput type="password" formControlName="password">
-
-								<mat-error *ngIf="mappoolPublishForm.get('password').invalid && (mappoolPublishForm.get('password').dirty || mappoolPublishForm.get('password').touched)">
-									This field is required.
-								</mat-error>
-							</mat-form-field>
-
-							<button mat-raised-button color="primary" class="full-width margin-button" (click)="loginMappoolPublish()">Login</button>
-						</form>
-
-						<div class="footer" *ngIf="auth.loggedIn">
-							Logged in as&nbsp;<b>{{ auth.loggedInUser.username }}</b>
-							<button mat-raised-button color="warn" class="full-width margin-button" (click)="logoutMappoolPublish()">Logout</button>
+							<div class="text">
+								<p>Attempting to login, hold on tight!</p>
+							</div>
 						</div>
+					</div>
 
-						<div class="footer">
-							<a [routerLink]="['/register']" *ngIf="!auth.loggedIn">No account yet? Click here</a>
-						</div>
+					<div class="login-form" *ngIf="auth.loggedIn">
+						<h3 class="header">osu! authentication</h3>
+						<p align="center">Logged in as {{ auth.loggedInUser.username }}</p>
+
+						<button mat-raised-button color="warn" class="full-width margin-button" (click)="logoutOsu()">Logout</button>
 					</div>
 				</div>
 			</div>

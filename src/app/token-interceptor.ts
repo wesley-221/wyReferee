@@ -21,13 +21,29 @@ export class AuthInterceptor implements HttpInterceptor {
 		let accessToken: string;
 		let refreshToken: string;
 
+		let osuOauth: Oauth;
+
 		if (this.oauthService.oauth) {
 			accessToken = this.oauthService.oauth.access_token;
 			refreshToken = this.oauthService.oauth.refresh_token;
 		}
 
+		if (this.oauthService.osuOauth) {
+			osuOauth = this.oauthService.osuOauth;
+
+			req = req.clone({
+				setHeaders: {
+					OSU_ACCESS_TOKEN: osuOauth.access_token
+				}, withCredentials: true
+			});
+		}
+
 		if (accessToken) {
-			req = req.clone({ setHeaders: { Authorization: `${accessToken}` }, withCredentials: true });
+			req = req.clone({
+				setHeaders: {
+					Authorization: `${accessToken}`
+				}, withCredentials: true
+			});
 		}
 
 		return next.handle(req).pipe(catchError((error: HttpErrorResponse): Observable<any> => {

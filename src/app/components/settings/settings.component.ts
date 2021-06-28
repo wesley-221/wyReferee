@@ -9,10 +9,9 @@ import { RemoveSettingsComponent } from '../dialogs/remove-settings/remove-setti
 import { AuthenticateService } from 'app/services/authenticate.service';
 import { IrcService } from 'app/services/irc.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { RegisterRequest } from 'app/models/authentication/register-request';
 import { OauthService } from 'app/services/oauth.service';
-import { Oauth } from 'app/models/authentication/oauth';
 import { GenericService } from 'app/services/generic.service';
+import { User } from 'app/models/authentication/user';
 
 @Component({
 	selector: 'app-settings',
@@ -22,6 +21,7 @@ import { GenericService } from 'app/services/generic.service';
 
 export class SettingsComponent implements OnInit {
 	apiKey: string;
+	isAuthenticating: boolean;
 
 	dialogMessage: string;
 	dialogAction = 0;
@@ -52,9 +52,11 @@ export class SettingsComponent implements OnInit {
 		public auth: AuthenticateService,
 		public ircService: IrcService,
 		private oauthService: OauthService,
-		private genericService: GenericService
+		private genericService: GenericService,
+		private authenticateService: AuthenticateService
 	) {
 		this.apiKey = this.storeService.get('api-key');
+		this.isAuthenticating = false;
 
 		if (this.apiKey && this.apiKey.length > 0) {
 			this.apiKeyIsValid = true;
@@ -96,35 +98,33 @@ export class SettingsComponent implements OnInit {
 	}
 
 	/**
-	 * Login the user with the given username and password
+	 * Start osu authentication process
 	 */
-	loginMappoolPublish() {
-		const username = this.mappoolPublishForm.get('username').value;
-		const password = this.mappoolPublishForm.get('password').value;
+	authenticateOsu(): void {
+		this.isAuthenticating = true;
 
-		const registerUser = new RegisterRequest();
+		this.authenticateService.startOsuOauthProcess().subscribe(token => {
+			if (token != null) {
+				this.oauthService.cacheOsuOauth(token);
 
-		registerUser.username = username;
-		registerUser.password = password;
+				this.auth.getMeData().subscribe(data => {
+					this.auth.loggedInUser = User.makeTrueCopy(data);
+					this.auth.loggedIn = true;
 
-		this.auth.login(registerUser).subscribe((oauth: Oauth) => {
-			this.oauthService.cacheOauth(oauth);
-			this.oauthService.oauth = oauth;
-
-			this.oauthService.setOauthHasBeenLoaded(true);
-		}, (err) => {
-			if (err.status == 0) {
-				this.toastService.addToast(`${err.statusText}. Server might be offline due to maintenance.`, ToastType.Error);
+					this.toastService.addToast(`Successfully logged in, welcome ${this.auth.loggedInUser.username}!`);
+				});
 			}
-			else {
-				this.toastService.addToast(`${err.error.message}`, ToastType.Error);
-			}
+
+			this.isAuthenticating = false;
 		});
 	}
 
-	logoutMappoolPublish() {
-		this.auth.logout();
-		this.toastService.addToast('Successfully logged out.');
+	logoutOsu(): void {
+		this.storeService.delete('osu-oauth');
+		this.auth.loggedIn = false;
+		this.auth.loggedInUser = null;
+
+		this.toastService.addToast('You have been logged out.');
 	}
 
 	/**
@@ -197,6 +197,7 @@ export class SettingsComponent implements OnInit {
 			configFile['api-key'] = 'redacted';
 			configFile['auth'] = 'redacted'; // Authentication details from older versions
 			configFile['oauth'] = 'redacted';
+			configFile['osu-oauth'] = 'redacted';
 			configFile['irc']['username'] = 'redacted';
 			configFile['irc']['password'] = 'redacted';
 
