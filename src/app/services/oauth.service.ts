@@ -74,4 +74,12 @@ export class OauthService {
 	public setOauthHasBeenLoaded(loaded: boolean): void {
 		this.oauthLoaded$.next(loaded);
 	}
+
+	/**
+	 * Set osu oauth as loaded or not loaded
+	 * @param loaded
+	 */
+	 public setOsuOauthHasBeenLoaded(loaded: boolean): void {
+		this.osuOauthLoaded$.next(loaded);
+	}
 }

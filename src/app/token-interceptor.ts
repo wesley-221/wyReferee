@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { concatMap, delay, retryWhen } from 'rxjs/operators';
 import { AppConfig } from 'environments/environment';
 import { OauthService } from './services/oauth.service';
 import { Oauth } from './models/authentication/oauth';
@@ -9,6 +9,7 @@ import { Oauth } from './models/authentication/oauth';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 	private isRefreshing = false;
+	private OSU_OAUTH_EXPIRED_MESSAGE = 'Your osu! oauth token has expired.';
 
 	constructor(private oauthService: OauthService, private http: HttpClient) { }
 
@@ -36,6 +37,12 @@ export class AuthInterceptor implements HttpInterceptor {
 					OSU_ACCESS_TOKEN: osuOauth.access_token
 				}, withCredentials: true
 			});
+
+			req = req.clone({
+				setHeaders: {
+					OSU_REFRESH_TOKEN: osuOauth.refresh_token
+				}
+			});
 		}
 
 		if (accessToken) {
@@ -46,26 +53,43 @@ export class AuthInterceptor implements HttpInterceptor {
 			});
 		}
 
-		return next.handle(req).pipe(catchError((error: HttpErrorResponse): Observable<any> => {
-			// Access token expired, request new access token
-			if (error.status === 401) {
-				if (!this.isRefreshing) {
-					if (refreshToken !== '') {
-						this.http.post(`${AppConfig.apiUrl}refresh-token`, refreshToken).subscribe((oauth: Oauth) => {
-							this.oauthService.cacheOauth(oauth);
-							this.oauthService.oauth = oauth;
+		return next.handle(req).pipe(
+			retryWhen(errors => errors
+				.pipe(
+					concatMap((error, count) => {
+						if (count < 2 && error.status == 401) {
+							if (error.error.message == this.OSU_OAUTH_EXPIRED_MESSAGE) {
+								osuOauth.wyReferee = true;
 
-							this.oauthService.setOauthHasBeenLoaded(true);
+								this.http.post(`${AppConfig.apiUrl}osu/refresh-token`, osuOauth).subscribe((oauth: Oauth) => {
+									this.oauthService.cacheOsuOauth(oauth);
+									this.oauthService.osuOauth = oauth;
 
-							this.isRefreshing = false;
-						});
-					}
-				}
+									this.oauthService.setOsuOauthHasBeenLoaded(true);
+								});
+							}
+							else {
+								if (!this.isRefreshing) {
+									if (refreshToken !== '') {
+										this.http.post(`${AppConfig.apiUrl}refresh-token`, refreshToken).subscribe((oauth: Oauth) => {
+											this.oauthService.cacheOauth(oauth);
+											this.oauthService.oauth = oauth;
 
-				return of(error.error.message);
-			}
+											this.oauthService.setOauthHasBeenLoaded(true);
 
-			return throwError(error);
-		}));
+											this.isRefreshing = false;
+										});
+									}
+								}
+							}
+
+							return of(error.status);
+						}
+
+						return throwError(error);
+					}),
+					delay(1500)
+				))
+		);
 	}
 }
