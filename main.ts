@@ -17,12 +17,16 @@ function createWindow() {
 		height: size.height / 0.5,
 		webPreferences: {
 			nodeIntegration: true,
-			preload: path.join(__dirname, 'preload.js')
+			contextIsolation: false,
+			enableRemoteModule: true,
+			// preload: path.join(__dirname, 'preload.js')
 		},
 		icon: `${__dirname}/src/assets/images/icon.png`,
-		frame: false,
-		titleBarStyle: 'hidden'
+		// frame: false,
+		// titleBarStyle: 'hidden'
 	});
+
+	win.setMenuBarVisibility(false);
 
 	if (serve) {
 		require('electron-reload')(__dirname, {
