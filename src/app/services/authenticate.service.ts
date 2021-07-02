@@ -29,9 +29,14 @@ export class AuthenticateService {
 
 		this.oauthService.hasOsuOauthBeenLoaded().subscribe(hasLoaded => {
 			if (hasLoaded == true) {
-				this.getMeData(false).subscribe(user => {
+				this.getMeData(this.oauthService.oauth == undefined).subscribe(user => {
 					this.loggedInUser = User.makeTrueCopy(user.user);
 					this.loggedIn = true;
+
+					if (user.oauthToken != null) {
+						this.oauthService.cacheOauth(user.oauthToken);
+						this.oauthService.oauth = user.oauthToken;
+					}
 
 					this.loggedInUserLoaded$.next(true);
 
@@ -166,7 +171,7 @@ export class AuthenticateService {
 	 * Get the public osu data of the current logged in user
 	 */
 	public getMeData(withOauth?: boolean): Observable<any> {
-		if(withOauth && withOauth == true) {
+		if (withOauth && withOauth == true) {
 			return this.httpClient.get<any>(`${AppConfig.apiUrl}osu/me/oauth`);
 		}
 		else {
