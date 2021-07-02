@@ -29,6 +29,8 @@ export class ModBracketComponent implements OnInit {
 	@Input() mappool: Mappool;
 	@Input() validationForm: FormGroup;
 
+	bulkBeatmaps: string;
+
 	selectedMods: { index: number, modValue: any }[] = [];
 	modBracketIndex = 0;
 	beatmapIndex = 0;
@@ -78,6 +80,27 @@ export class ModBracketComponent implements OnInit {
 		if (this.mappool.mappoolType == MappoolType.AxS) {
 			this.validationForm.addControl(`beatmap-modifier-${this.modBracket.validateIndex}-${modBracketMap.index}`, new FormControl('', Validators.required));
 		}
+	}
+
+	/**
+	 * Add all beatmaps to the given bracket
+	 * @param modBracket the bracket to add the beatmaps to
+	 */
+	addBulkBeatmaps(modBracket: ModBracket): void {
+		const allBeatmaps = this.bulkBeatmaps.split(',');
+
+		allBeatmaps.forEach(beatmapId => {
+			const modBracketMap = new ModBracketMap();
+			modBracketMap.index = this.beatmapIndex;
+			this.beatmapIndex++;
+			modBracketMap.beatmapId = parseInt(beatmapId.trim());
+
+			modBracket.addBeatmap(modBracketMap);
+
+			if (this.mappool.mappoolType == MappoolType.AxS) {
+				this.validationForm.addControl(`beatmap-modifier-${this.modBracket.validateIndex}-${modBracketMap.index}`, new FormControl('', Validators.required));
+			}
+		});
 	}
 
 	/**

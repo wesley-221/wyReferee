@@ -2,19 +2,19 @@ export class TeamPlayer {
 	id: number;
 	username: string;
 
-    constructor() { }
+	constructor() { }
 
 	/**
 	 * Create a true copy of the object
 	 * @param teamPlayer the object to copy
 	 */
-    static makeTrueCopy(teamPlayer: TeamPlayer): TeamPlayer {
-        const newTeamPlayer = new TeamPlayer();
+	static makeTrueCopy(teamPlayer: TeamPlayer): TeamPlayer {
+		const newTeamPlayer = new TeamPlayer();
 
 		newTeamPlayer.id = teamPlayer.id;
-        newTeamPlayer.username = teamPlayer.username;
+		newTeamPlayer.username = teamPlayer.username;
 
-        return newTeamPlayer;
+		return newTeamPlayer;
 	}
 
 	/**

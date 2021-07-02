@@ -21,6 +21,8 @@ export class TeamComponent implements OnInit {
 	@Input() tournament: Tournament;
 	@Input() validationForm: FormGroup;
 
+	usersToAdd: string;
+
 	constructor(private toastService: ToastService, private dialog: MatDialog) { }
 
 	ngOnInit(): void { }
@@ -59,6 +61,21 @@ export class TeamComponent implements OnInit {
 	 */
 	addNewPlayer(team: Team) {
 		team.addPlayer(new TeamPlayer());
+	}
+
+	/**
+	 * Bulk add players to the given team
+	 * @param team the team to add the players to
+	 */
+	addBulkPlayers(team: Team) {
+		const allUsers = this.usersToAdd.split(',');
+
+		allUsers.forEach(user => {
+			const teamPlayer = new TeamPlayer();
+			teamPlayer.username = user.trim();
+
+			team.addPlayer(teamPlayer);
+		});
 	}
 
 	/**

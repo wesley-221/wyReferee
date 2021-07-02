@@ -67,8 +67,14 @@
 
 				<div class="modify-buttons">
 					<button mat-raised-button (click)="addBeatmap(modBracket)" color="primary"><mat-icon>add</mat-icon> add new beatmap</button>
+					<button mat-raised-button (click)="addBulkBeatmaps(modBracket)" color="primary" [disabled]="bulkBeatmaps == null || bulkBeatmaps.length <= 0"><mat-icon>add</mat-icon> add bulk beatmaps</button>
 					<button mat-raised-button (click)="synchronizeAll(modBracket)" color="primary" [disabled]="synchAllDisabled"><mat-icon>sync</mat-icon> synchronize all beatmaps</button>
 				</div>
+
+				<mat-form-field class="full-width">
+					<mat-label>Beatmap list divided by a comma (10101, 20202, 30303)</mat-label>
+					<textarea matInput [(ngModel)]="bulkBeatmaps" [ngModelOptions]="{standalone: true}"></textarea>
+				</mat-form-field>
 
 				<div class="all-beatmaps">
 					<div class="beatmap" *ngFor="let beatmap of modBracket.getBeatmaps()">
@@ -94,7 +100,7 @@
 							<div class="column" *ngIf="mappool.mappoolType == 2 && mappool.publishId != null">
 								<mat-form-field class="full-width">
 									<mat-label>Mod category</mat-label>
-									<mat-select (selectionChange)="changeModCategory(beatmap, $event)" [value]="beatmap.modCategory.categoryName">
+									<mat-select (selectionChange)="changeModCategory(beatmap, $event)" [value]="beatmap.modCategory != null ? beatmap.modCategory.categoryName : null">
 										<mat-option [value]="modCategory.categoryName" *ngFor="let modCategory of mappool.modCategories">{{ modCategory.categoryName }}</mat-option>
 									</mat-select>
 								</mat-form-field>

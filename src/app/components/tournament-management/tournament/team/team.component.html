@@ -38,7 +38,13 @@
 				<h3>Manage players</h3>
 				<p>Add or remove players from the given team</p>
 
-				<button mat-raised-button (click)="addNewPlayer(team)" color="primary"><mat-icon>add</mat-icon> add new player</button>
+				<button mat-raised-button (click)="addNewPlayer(team)" color="primary"><mat-icon>add</mat-icon> add new player</button>&nbsp;
+				<button mat-raised-button (click)="addBulkPlayers(team)" color="primary" [disabled]="usersToAdd == null || usersToAdd.length <= 0"><mat-icon>add</mat-icon> add bulk players</button>
+
+				<mat-form-field class="full-width">
+					<mat-label>User list divided by a comma (User1, user2, user3)</mat-label>
+					<textarea matInput [(ngModel)]="usersToAdd" [ngModelOptions]="{standalone: true}"></textarea>
+				</mat-form-field>
 
 				<div class="team-players">
 					<div class="player" *ngFor="let player of team.getPlayers()">
