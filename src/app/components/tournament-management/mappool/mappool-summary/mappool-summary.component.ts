@@ -31,7 +31,7 @@ export class MappoolSummaryComponent implements OnInit {
 	dialogAction = 0;
 	mappoolToModify: Mappool;
 
-	constructor(private mappoolService: MappoolService, private toastService: ToastService, private authService: AuthenticateService, private router: Router, private dialog: MatDialog) {
+	constructor(private mappoolService: MappoolService, private toastService: ToastService, public authService: AuthenticateService, private router: Router, private dialog: MatDialog) {
 		this.onMappoolDeleted = new EventEmitter();
 	}
 

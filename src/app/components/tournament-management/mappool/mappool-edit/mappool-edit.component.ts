@@ -55,7 +55,12 @@ export class MappoolEditComponent implements OnInit {
 						}
 					}
 
+					let validateIndex = 0;
+
 					for (const modCategory of this.mappool.modCategories) {
+						modCategory.validateIndex = validateIndex;
+						validateIndex++;
+
 						this.validationForm.addControl(`category-name-${modCategory.validateIndex}`, new FormControl(modCategory.categoryName, Validators.required));
 					}
 

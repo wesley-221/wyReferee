@@ -196,14 +196,14 @@ export class ModBracketComponent implements OnInit {
 	 * @param beatmap
 	 * @param event
 	 */
-	changeModCategory(beatmap: ModBracketMap, event: any): void {
-		const modCategory = this.mappool.getModCategoryByName(event.target.value);
+	changeModCategory(beatmap: ModBracketMap, event: MatSelectChange): void {
+		const modCategory = this.mappool.getModCategoryByName(event.value);
 
 		if (modCategory == undefined) {
 			beatmap.modCategory = undefined;
 		}
 		else {
-			beatmap.modCategory = ModCategory.makeTrueCopy(this.mappool.getModCategoryByName(event.target.value));
+			beatmap.modCategory = ModCategory.makeTrueCopy(this.mappool.getModCategoryByName(event.value));
 		}
 	}
 

@@ -107,9 +107,11 @@ export class SettingsComponent implements OnInit {
 			if (token != null) {
 				this.oauthService.cacheOsuOauth(token);
 
-				this.auth.getMeData().subscribe(data => {
-					this.auth.loggedInUser = User.makeTrueCopy(data);
+				this.auth.getMeData(true).subscribe(data => {
+					this.auth.loggedInUser = User.makeTrueCopy(data.user);
 					this.auth.loggedIn = true;
+
+					this.oauthService.cacheOauth(data.oauthToken);
 
 					this.toastService.addToast(`Successfully logged in, welcome ${this.auth.loggedInUser.username}!`);
 				});

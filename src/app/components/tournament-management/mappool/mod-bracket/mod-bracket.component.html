@@ -94,12 +94,12 @@
 							<div class="column" *ngIf="mappool.mappoolType == 2 && mappool.publishId != null">
 								<mat-form-field class="full-width">
 									<mat-label>Mod category</mat-label>
-									<mat-select (selectionChange)="changeModCategory(beatmap, $event)">
+									<mat-select (selectionChange)="changeModCategory(beatmap, $event)" [value]="beatmap.modCategory.categoryName">
 										<mat-option [value]="modCategory.categoryName" *ngFor="let modCategory of mappool.modCategories">{{ modCategory.categoryName }}</mat-option>
 									</mat-select>
 								</mat-form-field>
 
-								<mat-slide-toggle>Beatmap can be picked</mat-slide-toggle>
+								<mat-slide-toggle [disabled]="true">Beatmap can be picked</mat-slide-toggle>
 							</div>
 						</div>
 

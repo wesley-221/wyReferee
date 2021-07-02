@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Mappool } from '../../../../models/osu-mappool/mappool';
+import { Mappool, MappoolType } from '../../../../models/osu-mappool/mappool';
 import { ModBracket } from '../../../../models/osu-mappool/mod-bracket';
 import { AuthenticateService } from '../../../../services/authenticate.service';
 import { User } from '../../../../models/authentication/user';
@@ -58,16 +58,25 @@ export class MappoolComponent implements OnInit {
 
 				let beatmapIndex = 0;
 
-				for (const beatmap of modBracket.beatmaps) {
-					beatmap.index = beatmapIndex;
-					beatmapIndex++;
+				if (this.mappool.mappoolType == MappoolType.AxS) {
+					for (const beatmap of modBracket.beatmaps) {
+						beatmap.index = beatmapIndex;
+						beatmapIndex++;
 
-					this.validationForm.addControl(`beatmap-modifier-${modBracket.validateIndex}-${beatmap.index}`, new FormControl(beatmap.modifier, Validators.required));
+						this.validationForm.addControl(`beatmap-modifier-${modBracket.validateIndex}-${beatmap.index}`, new FormControl(beatmap.modifier, Validators.required));
+					}
 				}
 			}
 
-			for (const modCategory of this.mappool.modCategories) {
-				this.validationForm.addControl(`category-name-${modCategory.validateIndex}`, new FormControl(modCategory.categoryName, Validators.required));
+			if (this.mappool.mappoolType == MappoolType.MysteryTournament) {
+				let beatmapIndex = 0;
+
+				for (const modCategory of this.mappool.modCategories) {
+					modCategory.validateIndex = beatmapIndex;
+					beatmapIndex++;
+
+					this.validationForm.addControl(`category-name-${modCategory.validateIndex}`, new FormControl(modCategory.categoryName, Validators.required));
+				}
 			}
 		}
 	}
@@ -142,6 +151,15 @@ export class MappoolComponent implements OnInit {
 	deleteCategory(category: ModCategory): void {
 		this.mappool.removeModCategory(category);
 		this.validationForm.addControl(`category-name-${category.validateIndex}`, new FormControl('', Validators.required));
+	}
+
+	/**
+	 * When a category gets changed
+	 * @param category the category that was changed
+	 * @param event the event
+	 */
+	onCategoryChange(category: ModCategory, event: Event) {
+		category.categoryName = (event.target as any).value
 	}
 
 	getValidation(key: string): any {

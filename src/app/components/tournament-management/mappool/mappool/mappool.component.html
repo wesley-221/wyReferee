@@ -146,7 +146,7 @@
 					<div class="category-name">
 						<mat-form-field class="full-width">
 							<mat-label>Category name</mat-label>
-							<input matInput class="full-width" [formControlName]="'category-name-' + category.validateIndex" />
+							<input matInput class="full-width" [formControlName]="'category-name-' + category.validateIndex" (change)="onCategoryChange(category, $event)" />
 
 							<mat-error *ngIf="getValidation('category-name-' + category.validateIndex).errors && (getValidation('category-name-' + category.validateIndex).touched || getValidation('category-name-' + category.validateIndex).dirty)">
 								This field is required
