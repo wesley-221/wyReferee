@@ -173,6 +173,6 @@ export class MappoolService {
 	 */
 	public pickMysteryMap(mappool: Mappool, modBracket: ModBracket, lobby: MultiplayerLobby, refereeName: string) {
 		const mysteryMappoolHelper = new MysteryMappoolHelper(mappool.publishId, modBracket.id, lobby, refereeName, lobby.pickedCategories);
-		return this.httpClient.post<MysteryMappoolHelper>(`${this.apiUrl}wyreferee/mappool/mystery/get`, mysteryMappoolHelper);
+		return this.httpClient.post<MysteryMappoolHelper>(`${this.apiUrl}wyreferee/mystery-mappool`, mysteryMappoolHelper);
 	}
 }
