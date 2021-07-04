@@ -1,0 +1,93 @@
+import { User } from "../authentication/user";
+import { Calculate } from "../score-calculation/calculate";
+import { ScoreInterface } from "../score-calculation/calculation-types/score-interface";
+import { WyMappool } from "./mappool/wy-mappool";
+import { WyTeam } from "./wy-team";
+
+export enum TournamentFormat {
+	Solo = 'solo',
+	Teams = 'teams'
+}
+
+export class WyTournament {
+	id: number;
+	publishId: number;
+	name: string;
+	acronym: string;
+	teamSize: number;
+	format: TournamentFormat;
+
+	teams: WyTeam[];
+	mappools: WyMappool[];
+
+	scoreInterfaceIdentifier: string;
+	scoreInterface: ScoreInterface;
+
+	challongeIntegration: number;
+	challongeApiKey: string;
+	challongeTournamentId: number;
+	challongeCreationType: number;
+
+	availableTo: User[];
+
+	administrators: User[];
+	createdBy: User;
+
+	constructor(init?: Partial<WyTournament>) {
+		this.teams = [];
+		this.mappools = [];
+		this.availableTo = [];
+		this.administrators = [];
+
+		Object.assign(this, init);
+	}
+
+	/**
+	 * Check if the tournament is a solo tournament
+	 */
+	isSoloTournament() {
+		return this.format == TournamentFormat.Solo;
+	}
+
+	/**
+	 * Create a true copy of the object
+	 * @param tournament the object to copy
+	 */
+	public static makeTrueCopy(tournament: WyTournament): WyTournament {
+		const calc = new Calculate();
+
+		const newTournament = new WyTournament({
+			id: tournament.id,
+			publishId: tournament.publishId,
+			name: tournament.name,
+			acronym: tournament.acronym,
+			teamSize: tournament.teamSize,
+			format: tournament.format,
+			teams: tournament.teams,
+			scoreInterface: calc.getScoreInterface(tournament.scoreInterfaceIdentifier),
+			scoreInterfaceIdentifier: tournament.scoreInterfaceIdentifier,
+			challongeIntegration: tournament.challongeIntegration,
+			challongeApiKey: tournament.challongeApiKey,
+			challongeTournamentId: tournament.challongeTournamentId,
+			challongeCreationType: tournament.challongeCreationType,
+		});
+
+		for (const team in tournament.teams) {
+			newTournament.teams.push(WyTeam.makeTrueCopy(tournament.teams[team]));
+		}
+
+		for (const mappool in tournament.mappools) {
+			newTournament.mappools.push(WyMappool.makeTrueCopy(tournament.mappools[mappool]));
+		}
+
+		for (const administrator in tournament.administrators) {
+			newTournament.administrators.push(User.makeTrueCopy(tournament.administrators[administrator]));
+		}
+
+		if (tournament.createdBy) {
+			newTournament.createdBy = User.makeTrueCopy(tournament.createdBy);
+		}
+
+		return newTournament;
+	}
+}
