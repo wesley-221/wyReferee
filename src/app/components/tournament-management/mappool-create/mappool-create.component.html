@@ -1,0 +1,23 @@
+<div class="container-fluid">
+	<button mat-raised-button color="accent" (click)="createNewMappool()"><fa-icon [icon]="['fas', 'plus']"></fa-icon> create new mappool</button>
+
+	<div class="mappool-spacing" *ngIf="tournament.mappools.length > 0"></div>
+
+	<div class="alert alert-warning" *ngIf="tournament.mappools.length == 0">
+		There are no mappools yet.
+	</div>
+
+	<mat-accordion class="mappools" *ngIf="tournament.mappools.length > 0">
+		<mat-expansion-panel *ngFor="let mappool of tournament.mappools">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					{{ mappool.name }}
+				</mat-panel-title>
+			</mat-expansion-panel-header>
+
+			<app-mappool [tournament]="tournament" [mappool]="mappool"></app-mappool>
+		</mat-expansion-panel>
+	</mat-accordion>
+
+	<div class="mappool-spacing" *ngIf="tournament.mappools.length > 0"></div>
+</div>

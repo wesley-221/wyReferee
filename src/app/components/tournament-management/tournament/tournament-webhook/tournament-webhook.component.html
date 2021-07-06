@@ -1,0 +1,55 @@
+<form [formGroup]="validationForm">
+	<div class="container-fluid">
+		<h3>What is a webhook?</h3>
+		<p>To put it simple, a webhook is a link to a channel where this client sends a message to. The messages being send currently to that channel are:</p>
+
+		<ul>
+			<li>When a referee bans a map for either team</li>
+			<li>When a map finishes</li>
+			<li>When the referee sends the final result</li>
+		</ul>
+
+		<h3>How to create a Discord webhook</h3>
+		<i>NOTE: this step is only required when there is no webhook available.</i>
+		<ul>
+			<li>Go to the server you want the messages to be send to</li>
+			<li>Right click on the channel you want the messages to be send to</li>
+			<li>Click on "Edit Channel"</li>
+			<li>Click on "Integrations"</li>
+			<li>Click on "Create Webhook"</li>
+			<li>Fill in the fields and finally copy the "Webhook url"</li>
+		</ul>
+
+		<div class="row">
+			<div class="col">
+				<h3>Webhook</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Webhook</mat-label>
+					<input matInput formControlName="webhook" />
+
+					<mat-error *ngIf="validationForm.get('webhook').errors && (validationForm.get('webhook').touched || validationForm.get('webhook').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>The webhook where all the messages will be send to</p>
+			</div>
+
+			<div class="col">
+				<h3>Test webhook</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Test webhook</mat-label>
+					<input matInput formControlName="test-webhook" />
+
+					<mat-error *ngIf="validationForm.get('test-webhook').errors && (validationForm.get('test-webhook').touched || validationForm.get('test-webhook').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>The webhook that can be used to test around with (for example a staff-only channel)</p>
+			</div>
+		</div>
+	</div>
+</form>

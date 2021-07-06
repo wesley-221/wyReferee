@@ -1,0 +1,27 @@
+<div class="container-fluid">
+	<h3>Administrator</h3>
+	<p>Manage the users that you want to give full permission to. They will be able to change data, which will then trigger an update for all the users that have imported the tournament.</p>
+	<button mat-raised-button color="accent" (click)="addUserAsAdministrator()"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new administrator</button>
+
+	<div class="all-users">
+		<div class="user" *ngFor="let administrator of tournament.administrators">
+			<a class="link" (click)="electronService.openLink(administrator.getOsuProfileUrl())">{{ administrator.username }}</a>
+
+			<button mat-mini-fab color="warn" (click)="removeAdministrator(administrator)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+		</div>
+	</div>
+
+	<hr />
+
+	<h3>Tournament access</h3>
+	<p>Manage the users that you want to have access to the tournament. They will be able to import the tournament and mappools so they have access to all the data.</p>
+	<button mat-raised-button color="accent" (click)="addNewUser()"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new user</button>
+
+	<div class="all-users">
+		<div class="user" *ngFor="let user of tournament.availableTo">
+			<a class="link" (click)="electronService.openLink(user.getOsuProfileUrl())">{{ user.username }}</a>
+
+			<button mat-mini-fab color="warn" (click)="removeUser(user)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+		</div>
+	</div>
+</div>

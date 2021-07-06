@@ -1,0 +1,121 @@
+<div class="container-fluid">
+	<form [formGroup]="validationForm">
+		<div class="row">
+			<div class="col">
+				<h3>Tournament name</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Tournament name</mat-label>
+					<input matInput formControlName="tournament-name" />
+
+					<mat-error *ngIf="validationForm.get('tournament-name').errors && (validationForm.get('tournament-name').touched || validationForm.get('tournament-name').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>The name of the tournament</p>
+			</div>
+
+			<div class="col">
+				<h3>Tournament acronym</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Tournament acronym</mat-label>
+					<input matInput formControlName="tournament-acronym" />
+
+					<mat-error *ngIf="validationForm.get('tournament-acronym').errors && (validationForm.get('tournament-acronym').touched || validationForm.get('tournament-acronym').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>The acronym of the tournament</p>
+			</div>
+
+			<div class="col">
+				<h3>Gamemode</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Gamemode</mat-label>
+					<mat-select formControlName="tournament-gamemode">
+						<mat-option [value]="0">osu!</mat-option>
+						<mat-option [value]="1">osu!taiko</mat-option>
+						<mat-option [value]="2">osu!catch</mat-option>
+						<mat-option [value]="3">osu!mania</mat-option>
+					</mat-select>
+
+					<mat-error *ngIf="validationForm.get('tournament-gamemode').errors && (validationForm.get('tournament-gamemode').touched || validationForm.get('tournament-gamemode').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>The gamemode that will be used for all the beatmaps when picking</p>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<h3>Score system</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Score system</mat-label>
+					<mat-select formControlName="tournament-score-system" (selectionChange)="changeScoreInterface($event)">
+						<mat-option *ngFor="let scoreInterface of this.calculateScoreInterfaces.getAllScoreInterfaces()" [value]="scoreInterface.getIdentifier()">{{ scoreInterface.getIdentifier() }}</mat-option>
+					</mat-select>
+
+					<mat-error *ngIf="validationForm.get('tournament-score-system').errors && (validationForm.get('tournament-score-system').touched || validationForm.get('tournament-score-system').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>Select the score system that is being used for the multiplayer game.</p>
+
+				<div class="alert alert-info" *ngIf="this.tournament.scoreInterface">
+					{{ this.tournament.scoreInterface.getDescription() }}
+				</div>
+			</div>
+
+			<div class="col" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.isSoloTournament() == null">
+				<h3>Tournament format</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Tournament format</mat-label>
+					<mat-select formControlName="tournament-format">
+						<mat-option value="solo">Solo</mat-option>
+						<mat-option value="teams">Teams</mat-option>
+					</mat-select>
+
+					<mat-error *ngIf="validationForm.get('tournament-format').errors && (validationForm.get('tournament-format').touched || validationForm.get('tournament-format').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>The tournament format, teams or solo</p>
+			</div>
+
+			<div class="col" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.getTeamSize() == null && !tournament.isSoloTournament()">
+				<h2>Team size</h2>
+
+				<mat-form-field class="full-width">
+					<mat-label>Team size</mat-label>
+					<input matInput formControlName="tournament-team-size" />
+
+					<mat-error *ngIf="validationForm.get('tournament-team-size').errors && validationForm.get('tournament-team-size').errors.required && (validationForm.get('tournament-team-size').touched || validationForm.get('tournament-team-size').dirty)">
+						This field is required
+					</mat-error>
+
+					<mat-error *ngIf="validationForm.get('tournament-team-size').errors && validationForm.get('tournament-team-size').errors.min && (validationForm.get('tournament-team-size').touched || validationForm.get('tournament-team-size').dirty)">
+						The minimum team size is 1
+					</mat-error>
+
+					<mat-error *ngIf="validationForm.get('tournament-team-size').errors && validationForm.get('tournament-team-size').errors.max && (validationForm.get('tournament-team-size').touched || validationForm.get('tournament-team-size').dirty)">
+						The maximum team size is 8
+					</mat-error>
+				</mat-form-field>
+
+				<p>
+					Enter the amount of players that are allowed to play in a team.
+				</p>
+			</div>
+		</div>
+	</form>
+</div>

@@ -49,11 +49,17 @@ import { AxsInformationComponent } from './components/axs/axs-information/axs-in
 import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
 import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
 import { TournamentComponent } from './components/tournament-management/tournament/tournament/tournament.component';
-import { TournamentCreateComponent } from './components/tournament-management/tournament/tournament-create/tournament-create.component';
+import { TournamentCreateComponent } from './components/tournament-management/tournament-create/tournament-create.component';
 import { TournamentAddUserDialogComponent } from './components/dialogs/tournament-add-user-dialog/tournament-add-user-dialog.component';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
+import { MappoolComponent } from './components/tournament-management/mappool/mappool/mappool.component';
+import { ModBracketComponent } from './components/tournament-management/mappool/mod-bracket/mod-bracket.component';
+import { TournamentGeneralComponent } from './components/tournament-management/tournament/tournament-general/tournament-general.component';
+import { TournamentAccessComponent } from './components/tournament-management/tournament/tournament-access/tournament-access.component';
+import { TournamentWebhookComponent } from './components/tournament-management/tournament/tournament-webhook/tournament-webhook.component';
+import { MappoolCreateComponent } from './components/tournament-management/mappool-create/mappool-create.component';
 
 @NgModule({
 	declarations: [
@@ -90,7 +96,13 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 		AxsFormulaComponent,
 		TournamentComponent,
 		TournamentCreateComponent,
-		TournamentAddUserDialogComponent
+		TournamentAddUserDialogComponent,
+		MappoolComponent,
+		ModBracketComponent,
+		TournamentGeneralComponent,
+		TournamentAccessComponent,
+		TournamentWebhookComponent,
+		MappoolCreateComponent
 	],
 	imports: [
 		BrowserModule,

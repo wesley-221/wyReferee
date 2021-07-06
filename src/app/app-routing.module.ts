@@ -14,7 +14,7 @@ import { AxsCalculatorComponent } from './components/axs/axs-calculator/axs-calc
 import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
 import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
 import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
-import { TournamentCreateComponent } from './components/tournament-management/tournament/tournament-create/tournament-create.component';
+import { TournamentCreateComponent } from './components/tournament-management/tournament-create/tournament-create.component';
 
 const routes: Routes = [
 	{
