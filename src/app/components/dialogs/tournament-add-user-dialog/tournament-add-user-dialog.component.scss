@@ -1,0 +1,26 @@
+.osu-user {
+	.header {
+		display: flex;
+
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+
+		.avatar {
+			display: flex;
+
+			margin: 24px;
+
+			width: 150px;
+			height: 150px;
+
+			border-radius: 50%;
+
+			background-size: contain;
+		}
+
+		.information {
+			margin: 24px;
+		}
+	}
+}

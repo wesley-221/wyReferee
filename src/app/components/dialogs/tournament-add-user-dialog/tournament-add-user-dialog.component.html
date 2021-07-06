@@ -1,0 +1,47 @@
+<h2 mat-dialog-title *ngIf="data.administrator">Add user to tournament as administrator</h2>
+<h2 mat-dialog-title *ngIf="data.access">Give tournament access to the user</h2>
+
+<mat-dialog-content>
+	<div class="row">
+		<div class="col">
+			<mat-form-field class="form-control">
+				<mat-label>osu! username</mat-label>
+				<input matInput [(ngModel)]="osuUsername" />
+			</mat-form-field>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<button mat-raised-button class="float-right" color="primary" (click)="searchForUser()" [disabled]="osuUsername == null || osuUsername == ''">
+				<fa-icon [icon]="['fas', 'search']"></fa-icon> search
+			</button>
+		</div>
+	</div>
+
+	<hr />
+
+	<div class="alert alert-danger" *ngIf="error != null">
+		{{ error }}
+	</div>
+
+	<div class="osu-user" *ngIf="foundOsuUser">
+		<div class="header"
+			[ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + foundOsuUser.cover_url + ')' }">
+			<div class="avatar box-shadow" [ngStyle]="{ 'background-image': 'url(' + foundOsuUser.avatar_url + ')' }">
+			</div>
+
+			<div class="information">
+				<div class="information-header">
+					<h1>{{ foundOsuUser.username }}</h1>
+					<div><img [src]="foundOsuUser.getFlagImageUrl()"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button mat-dialog-close>Cancel</button>
+	<button mat-button [mat-dialog-close]="foundUser" color="accent">Add</button>
+</mat-dialog-actions>

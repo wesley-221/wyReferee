@@ -23,6 +23,9 @@ export class WyTournament {
 	scoreInterfaceIdentifier: string;
 	scoreInterface: ScoreInterface;
 
+	webhook: string;
+	testWebhook: string;
+
 	challongeIntegration: number;
 	challongeApiKey: string;
 	challongeTournamentId: number;
@@ -66,6 +69,8 @@ export class WyTournament {
 			teams: tournament.teams,
 			scoreInterface: calc.getScoreInterface(tournament.scoreInterfaceIdentifier),
 			scoreInterfaceIdentifier: tournament.scoreInterfaceIdentifier,
+			webhook: tournament.webhook,
+			testWebhook: tournament.testWebhook,
 			challongeIntegration: tournament.challongeIntegration,
 			challongeApiKey: tournament.challongeApiKey,
 			challongeTournamentId: tournament.challongeTournamentId,

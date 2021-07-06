@@ -15,7 +15,7 @@ export enum MappoolType {
 }
 
 export class WyMappool {
-	id: number;
+	localId: number;
 	publishId: number;
 	name: string;
 	gamemodeId: Gamemodes;
@@ -35,7 +35,7 @@ export class WyMappool {
 	 */
 	public static makeTrueCopy(mappool: WyMappool): WyMappool {
 		const newMappool = new WyMappool({
-			id: mappool.id,
+			localId: mappool.localId,
 			publishId: mappool.publishId,
 			name: mappool.name,
 			gamemodeId: mappool.gamemodeId,

@@ -48,6 +48,9 @@ import { ReversePipe } from './pipes/reverse.pipe';
 import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
 import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
 import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
+import { TournamentComponent } from './components/tournament-management/tournament/tournament/tournament.component';
+import { TournamentCreateComponent } from './components/tournament-management/tournament/tournament-create/tournament-create.component';
+import { TournamentAddUserDialogComponent } from './components/dialogs/tournament-add-user-dialog/tournament-add-user-dialog.component';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
@@ -84,7 +87,10 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 		ReversePipe,
 		AxsInformationComponent,
 		AxsRouterComponent,
-		AxsFormulaComponent
+		AxsFormulaComponent,
+		TournamentComponent,
+		TournamentCreateComponent,
+		TournamentAddUserDialogComponent
 	],
 	imports: [
 		BrowserModule,
