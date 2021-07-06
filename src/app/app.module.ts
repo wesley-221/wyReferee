@@ -48,6 +48,9 @@ import { ReversePipe } from './pipes/reverse.pipe';
 import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
 import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
 import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
 
 @NgModule({
 	declarations: [
@@ -93,7 +96,8 @@ import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.co
 		VirtualScrollerModule,
 		BrowserAnimationsModule,
 		ClipboardModule,
-		AngularMaterialModule
+		AngularMaterialModule,
+		FontAwesomeModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
@@ -102,5 +106,7 @@ import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.co
 })
 
 export class AppModule {
-	constructor() { }
+	constructor(library: FaIconLibrary) {
+		library.addIconPacks(fas, far);
+	}
 }
