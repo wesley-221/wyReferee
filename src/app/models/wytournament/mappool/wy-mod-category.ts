@@ -1,6 +1,6 @@
 export class WyModCategory {
 	id: number;
-	validateIndex: number;
+	index: number;
 	name: string;
 
 	constructor(init?: Partial<WyModCategory>) {
@@ -14,7 +14,7 @@ export class WyModCategory {
 	public static makeTrueCopy(modCategory: WyModCategory): WyModCategory {
 		return new WyModCategory({
 			id: modCategory.id,
-			validateIndex: modCategory.validateIndex,
+			index: modCategory.index,
 			name: modCategory.name
 		});
 	}

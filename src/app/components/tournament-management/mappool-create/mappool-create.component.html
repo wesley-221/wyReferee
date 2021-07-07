@@ -8,14 +8,14 @@
 	</div>
 
 	<mat-accordion class="mappools" *ngIf="tournament.mappools.length > 0">
-		<mat-expansion-panel *ngFor="let mappool of tournament.mappools">
+		<mat-expansion-panel [expanded]="true" *ngFor="let mappool of tournament.mappools">
 			<mat-expansion-panel-header>
 				<mat-panel-title>
 					{{ mappool.name }}
 				</mat-panel-title>
 			</mat-expansion-panel-header>
 
-			<app-mappool [tournament]="tournament" [mappool]="mappool"></app-mappool>
+			<app-mappool [tournament]="tournament" [mappool]="mappool" [validationForm]="validationForm"></app-mappool>
 		</mat-expansion-panel>
 	</mat-accordion>
 

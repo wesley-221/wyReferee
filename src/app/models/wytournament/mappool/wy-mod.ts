@@ -1,6 +1,8 @@
 export class WyMod {
 	id: number;
 	name: string;
+	value: string | number;
+	index: number;
 
 	constructor(init?: Partial<WyMod>) {
 		Object.assign(this, init);
@@ -13,7 +15,8 @@ export class WyMod {
 	public static makeTrueCopy(mod: WyMod): WyMod {
 		return new WyMod({
 			id: mod.id,
-			name: mod.name
+			name: mod.name,
+			value: mod.value
 		});
 	}
 }

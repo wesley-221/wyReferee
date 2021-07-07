@@ -7,7 +7,9 @@ export class WyModBracket {
 	mods: WyMod[];
 	beatmaps: WyModBracketMap[];
 	collapsed: boolean;
-	validateIndex: number;
+	index: number;
+	modIndex: number;
+	beatmapIndex: number;
 
 	constructor(init?: Partial<WyModBracket>) {
 		this.mods = [];
@@ -25,7 +27,9 @@ export class WyModBracket {
 			id: modBracket.id,
 			name: modBracket.name,
 			collapsed: modBracket.collapsed,
-			validateIndex: modBracket.validateIndex
+			index: modBracket.index,
+			modIndex: 0,
+			beatmapIndex: 0
 		});
 
 		for (const beatmap in modBracket.beatmaps) {
@@ -33,7 +37,12 @@ export class WyModBracket {
 		}
 
 		for (const mod in modBracket.mods) {
-			newModBracket.mods.push(WyMod.makeTrueCopy(modBracket.mods[mod]));
+			const newMod = WyMod.makeTrueCopy(modBracket.mods[mod]);
+
+			newMod.index = newModBracket.modIndex;
+			newModBracket.modIndex++;
+
+			newModBracket.mods.push(newMod);
 		}
 
 		return newModBracket;

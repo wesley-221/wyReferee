@@ -1,6 +1,6 @@
-import { User } from "app/models/authentication/user";
 import { Gamemodes } from "app/models/osu-models/osu";
 import { WyModBracket } from "./wy-mod-bracket";
+import { WyModCategory } from "./wy-mod-category";
 
 export enum Availability {
 	ToEveryone = 0,
@@ -22,9 +22,17 @@ export class WyMappool {
 	mappoolType: MappoolType;
 
 	modBrackets: WyModBracket[];
+	modCategories: WyModCategory[];
+
+	modBracketIndex: number;
+	modCategoryIndex: number;
 
 	constructor(init?: Partial<WyMappool>) {
 		this.modBrackets = [];
+		this.modCategories = [];
+
+		this.modBracketIndex = 0;
+		this.modCategoryIndex = 0;
 
 		Object.assign(this, init);
 	}
@@ -39,11 +47,27 @@ export class WyMappool {
 			publishId: mappool.publishId,
 			name: mappool.name,
 			gamemodeId: mappool.gamemodeId,
-			mappoolType: mappool.mappoolType
+			mappoolType: mappool.mappoolType,
+			modBracketIndex: 0,
+			modCategoryIndex: 0
 		});
 
 		for (const modBracket in mappool.modBrackets) {
-			newMappool.modBrackets.push(mappool.modBrackets[modBracket]);
+			const newModBracket = WyModBracket.makeTrueCopy(mappool.modBrackets[modBracket]);
+
+			newModBracket.index = newMappool.modBracketIndex;
+			newMappool.modBracketIndex++;
+
+			newMappool.modBrackets.push(newModBracket);
+		}
+
+		for (const modCategory in mappool.modCategories) {
+			const newModCategory = WyModCategory.makeTrueCopy(mappool.modCategories[modCategory])
+			newModCategory.index = newMappool.modCategoryIndex;
+
+			newMappool.modCategoryIndex++;
+
+			newMappool.modCategories.push(newModCategory);
 		}
 
 		return newMappool;

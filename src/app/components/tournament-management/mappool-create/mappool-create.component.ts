@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
@@ -28,5 +28,8 @@ export class MappoolCreateComponent implements OnInit {
 		});
 
 		this.tournament.mappools.push(newMappool);
+
+		this.validationForm.addControl(`mappool-${newMappool.localId}-name`, new FormControl('', Validators.required));
+		this.validationForm.addControl(`mappool-${newMappool.localId}-type`, new FormControl('', Validators.required));
 	}
 }
