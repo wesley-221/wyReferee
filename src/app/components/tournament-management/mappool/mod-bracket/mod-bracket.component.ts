@@ -83,22 +83,22 @@ export class ModBracketComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
-				this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-${this.modBracket.index}-name`);
-
-				for (const mod in this.modBracket) {
-					this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-mod-${this.modBracket.mods[mod].index}-value`);
-				}
-
-				if (this.mappool.mappoolType == MappoolType.AxS) {
-					for (const beatmap in this.modBracket.beatmaps) {
-						this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${this.modBracket.beatmaps[beatmap].index}-modifier`);
-					}
-				}
-
 				for (const findModBracket in this.mappool.modBrackets) {
 					if (this.mappool.modBrackets[findModBracket].index == modBracket.index) {
 						this.mappool.modBrackets.splice(Number(findModBracket), 1);
 						break;
+					}
+				}
+
+				this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-${modBracket.index}-name`);
+
+				for (const mod in modBracket.mods) {
+					this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-mod-${modBracket.mods[mod].index}-value`);
+				}
+
+				if (this.mappool.mappoolType == MappoolType.AxS) {
+					for (const beatmap in modBracket.beatmaps) {
+						this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${modBracket.beatmaps[beatmap].index}-modifier`);
 					}
 				}
 

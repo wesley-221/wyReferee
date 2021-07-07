@@ -35,12 +35,8 @@ export class TournamentCreateComponent implements OnInit {
 			'tournament-format': new FormControl('', [
 				Validators.required
 			]),
-			'webhook': new FormControl('', [
-				Validators.required
-			]),
-			'test-webhook': new FormControl('', [
-				Validators.required
-			])
+			'webhook': new FormControl(''),
+			'test-webhook': new FormControl('')
 		});
 	}
 
