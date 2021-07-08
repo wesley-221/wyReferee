@@ -96,7 +96,7 @@ export class ModBracketComponent implements OnInit {
 					this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-mod-${modBracket.mods[mod].index}-value`);
 				}
 
-				if (this.mappool.mappoolType == MappoolType.AxS) {
+				if (this.mappool.type == MappoolType.AxS) {
 					for (const beatmap in modBracket.beatmaps) {
 						this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${modBracket.beatmaps[beatmap].index}-modifier`);
 					}
@@ -153,7 +153,7 @@ export class ModBracketComponent implements OnInit {
 
 		bracket.beatmaps.push(newModBracketMap);
 
-		if (this.mappool.mappoolType == MappoolType.AxS) {
+		if (this.mappool.type == MappoolType.AxS) {
 			this.validationForm.addControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
 		}
 	}
@@ -175,7 +175,7 @@ export class ModBracketComponent implements OnInit {
 
 			bracket.beatmaps.push(newModBracketMap);
 
-			if (this.mappool.mappoolType == MappoolType.AxS) {
+			if (this.mappool.type == MappoolType.AxS) {
 				this.validationForm.addControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
 			}
 		});
@@ -228,7 +228,7 @@ export class ModBracketComponent implements OnInit {
 	removeBeatmap(bracket: WyModBracket, beatmap: WyModBracketMap): void {
 		bracket.beatmaps.splice(bracket.beatmaps.indexOf(beatmap), 1);
 
-		if (this.mappool.mappoolType == MappoolType.AxS) {
+		if (this.mappool.type == MappoolType.AxS) {
 			this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${beatmap.index}-modifier`);
 		}
 	}

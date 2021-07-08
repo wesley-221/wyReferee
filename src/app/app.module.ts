@@ -61,6 +61,9 @@ import { TournamentAccessComponent } from './components/tournament-management/to
 import { TournamentWebhookComponent } from './components/tournament-management/tournament/tournament-webhook/tournament-webhook.component';
 import { MappoolCreateComponent } from './components/tournament-management/mappool-create/mappool-create.component';
 import { DeleteModBracketDialogComponent } from './components/dialogs/delete-mod-bracket-dialog/delete-mod-bracket-dialog.component';
+import { TournamentOverviewComponent } from './components/tournament-management/tournament-overview/tournament-overview.component';
+import { DeleteTournamentDialogComponent } from './components/dialogs/delete-tournament-dialog/delete-tournament-dialog.component';
+import { PublishTournamentDialogComponent } from './components/dialogs/publish-tournament-dialog/publish-tournament-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -104,7 +107,10 @@ import { DeleteModBracketDialogComponent } from './components/dialogs/delete-mod
 		TournamentAccessComponent,
 		TournamentWebhookComponent,
 		MappoolCreateComponent,
-		DeleteModBracketDialogComponent
+		DeleteModBracketDialogComponent,
+		TournamentOverviewComponent,
+		DeleteTournamentDialogComponent,
+		PublishTournamentDialogComponent
 	],
 	imports: [
 		BrowserModule,

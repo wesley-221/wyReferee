@@ -19,7 +19,7 @@ export class WyMappool {
 	publishId: number;
 	name: string;
 	gamemodeId: Gamemodes;
-	mappoolType: MappoolType;
+	type: MappoolType;
 
 	modBrackets: WyModBracket[];
 	modCategories: WyModCategory[];
@@ -47,7 +47,7 @@ export class WyMappool {
 			publishId: mappool.publishId,
 			name: mappool.name,
 			gamemodeId: mappool.gamemodeId,
-			mappoolType: mappool.mappoolType,
+			type: mappool.type,
 			modBracketIndex: 0,
 			modCategoryIndex: 0
 		});

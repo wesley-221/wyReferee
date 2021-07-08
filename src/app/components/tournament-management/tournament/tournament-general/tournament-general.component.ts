@@ -32,4 +32,17 @@ export class TournamentGeneralComponent implements OnInit {
 		this.tournament.scoreInterface = selectedScoreInterface;
 		this.tournament.scoreInterfaceIdentifier = selectedScoreInterface.getIdentifier();
 	}
+
+	/**
+	 * Change the tournament format (solo or teams)
+	 */
+	changeTeamFormat(event: MatSelectChange): void {
+		this.validationForm.get('tournament-format').setValue(event.value);
+		this.tournament.format = event.value;
+
+		if (event.value == 'solo') {
+			this.validationForm.get('tournament-team-size').setValue(1);
+			this.tournament.teamSize = 1;
+		}
+	}
 }

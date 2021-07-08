@@ -34,7 +34,7 @@ export class WyModBracketMap {
 			beatmapName: modBracketMap.beatmapName,
 			beatmapUrl: modBracketMap.beatmapUrl,
 			modifier: modBracketMap.modifier,
-			modCategory: WyModCategory.makeTrueCopy(modBracketMap.modCategory),
+			modCategory: modBracketMap.modCategory != undefined ? WyModCategory.makeTrueCopy(modBracketMap.modCategory) : null,
 			picked: modBracketMap.picked,
 			isSynchronizing: modBracketMap.isSynchronizing
 		});

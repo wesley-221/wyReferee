@@ -14,9 +14,7 @@ export class MappoolCreateComponent implements OnInit {
 
 	constructor() { }
 
-	ngOnInit(): void {
-		this.createNewMappool();
-	}
+	ngOnInit(): void { }
 
 	/**
 	 * Create a new mappool

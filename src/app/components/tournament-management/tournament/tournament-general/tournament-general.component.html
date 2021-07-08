@@ -79,7 +79,7 @@
 
 				<mat-form-field class="full-width">
 					<mat-label>Tournament format</mat-label>
-					<mat-select formControlName="tournament-format">
+					<mat-select formControlName="tournament-format" (selectionChange)="changeTeamFormat($event)">
 						<mat-option value="solo">Solo</mat-option>
 						<mat-option value="teams">Teams</mat-option>
 					</mat-select>

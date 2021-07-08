@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Publish tournament</h2>
+
+<mat-dialog-content class="mat-typography">
+	Are you sure you want to publish <b>{{ data.tournament.name }}</b>?
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="data.tournament" color="accent">Publish</button>
+</mat-dialog-actions>

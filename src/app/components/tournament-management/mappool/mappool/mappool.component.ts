@@ -32,7 +32,7 @@ export class MappoolComponent implements OnInit {
 	 * @param event
 	 */
 	changeMappoolType(event: MatSelectChange): void {
-		this.mappool.mappoolType = event.value;
+		this.mappool.type = event.value;
 	}
 
 	/**
@@ -68,19 +68,10 @@ export class MappoolComponent implements OnInit {
 	 * Create a new bracket
 	 */
 	createNewBracket(): void {
-		// TODO: replace this one with the one below
-		// const newModBracket = new WyModBracket({
-		// 	index: this.mappool.modBracketIndex,
-		// 	name: 'Unnamed mod bracket',
-		// 	collapsed: true,
-		// 	modIndex: 0,
-		// 	beatmapIndex: 0
-		// });
-
 		const newModBracket = new WyModBracket({
 			index: this.mappool.modBracketIndex,
 			name: 'Unnamed mod bracket',
-			collapsed: false,
+			collapsed: true,
 			modIndex: 0,
 			beatmapIndex: 0
 		});

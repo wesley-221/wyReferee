@@ -14,6 +14,7 @@ export class WyTournament {
 	publishId: number;
 	name: string;
 	acronym: string;
+	gamemode: number;
 	teamSize: number;
 	format: TournamentFormat;
 

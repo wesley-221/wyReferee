@@ -88,7 +88,8 @@ export class CreateLobbyComponent implements OnInit {
 	ngOnInit() { }
 
 	changeTournament() {
-		this.selectedTournament = this.tournamentService.getTournamentByName(this.validationForm.get('selected-tournament').value);
+		// TODO: fix this
+		// this.selectedTournament = this.tournamentService.getTournamentByName(this.validationForm.get('selected-tournament').value);
 		this.changeTeamSize(this.selectedTournament != null ? this.selectedTournament.teamSize : null);
 
 		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : null);
