@@ -16,6 +16,7 @@ import { AxsInformationComponent } from './components/axs/axs-information/axs-in
 import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
 import { TournamentCreateComponent } from './components/tournament-management/tournament-create/tournament-create.component';
 import { TournamentOverviewComponent } from './components/tournament-management/tournament-overview/tournament-overview.component';
+import { TournamentEditComponent } from './components/tournament-management/tournament-edit/tournament-edit.component';
 
 const routes: Routes = [
 	{
@@ -39,7 +40,7 @@ const routes: Routes = [
 
 					{ path: 'tournament-overview', component: TournamentOverviewComponent },
 					{ path: 'tournament-overview/tournament-create', component: TournamentCreateComponent },
-					// { path: 'tournament-overview/tournament-edit/:tournamentId/:publish', component: TournamentEditComponent },
+					{ path: 'tournament-overview/tournament-edit/:id', component: TournamentEditComponent },
 					// { path: 'tournament-overview/my-published-tournaments', component: MyPublishedTournamentsComponent },
 					// { path: 'tournament-overview/all-published-tournaments', component: AllPublishedTournamentsComponent }
 				]

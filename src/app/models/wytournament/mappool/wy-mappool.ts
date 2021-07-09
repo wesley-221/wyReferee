@@ -27,6 +27,8 @@ export class WyMappool {
 	modBracketIndex: number;
 	modCategoryIndex: number;
 
+	collapsed: boolean;
+
 	constructor(init?: Partial<WyMappool>) {
 		this.modBrackets = [];
 		this.modCategories = [];
@@ -49,7 +51,8 @@ export class WyMappool {
 			gamemodeId: mappool.gamemodeId,
 			type: mappool.type,
 			modBracketIndex: 0,
-			modCategoryIndex: 0
+			modCategoryIndex: 0,
+			collapsed: mappool.collapsed
 		});
 
 		for (const modBracket in mappool.modBrackets) {

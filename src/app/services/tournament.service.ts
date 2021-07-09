@@ -3,7 +3,6 @@ import { AppConfig } from '../../environments/environment';
 import { Tournament } from '../models/tournament/tournament';
 import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { User } from 'app/models/authentication/user';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
@@ -57,6 +56,21 @@ export class TournamentService {
 	}
 
 	/**
+	 * Update a tournament
+	 * @param tournament the tournament to update
+	 */
+	updateTournament(tournament: WyTournament): void {
+		for (const findTournament in this.allTournaments) {
+			if (this.allTournaments[findTournament].id == tournament.id) {
+				this.allTournaments[findTournament] = tournament;
+				break;
+			}
+		}
+
+		this.storeService.set(`cache.tournaments.${tournament.id}`, tournament);
+	}
+
+	/**
 	 * Delete the tournament from the cache and service
 	 * @param tournament the tournament to delete
 	 */
@@ -65,49 +79,22 @@ export class TournamentService {
 		this.storeService.delete(`cache.tournaments.${tournament.id}`);
 	}
 
+	/**
+	 * Get a tournament by the given id
+	 * @param id the id of the tournament to get
+	 */
+	getTournamentById(id: number): WyTournament {
+		let returnTournament: WyTournament = null;
 
-	// /**
-	//  * Get a tournament by the given id
-	//  * @param tournamentId the id of the tournament to get
-	//  */
-	// getTournament(tournamentId: number): Tournament {
-	// 	let returnTournamentl: Tournament = null;
+		for (const tournament in this.allTournaments) {
+			if (this.allTournaments[tournament].id == id) {
+				returnTournament = this.allTournaments[tournament];
+				break;
+			}
+		}
 
-	// 	for (const i in this.allTournaments) {
-	// 		if (this.allTournaments[i].id == tournamentId) {
-	// 			returnTournamentl = this.allTournaments[i];
-	// 			break;
-	// 		}
-	// 	}
-
-	// 	return returnTournamentl;
-	// }
-
-	// /**
-	//  * Save the tournament in the store and add it to the service
-	//  * @param tournament the tournament to save
-	//  */
-	// public saveTournament(tournament: Tournament): void {
-	// 	tournament.id = this.availableTournamentId++;
-
-	// 	this.allTournaments.push(tournament);
-	// 	this.storeService.set(`cache.tournaments.${tournament.id}`, tournament.convertToJson());
-	// }
-
-	// /**
-	//  * Update an existing tournament with new values
-	//  * @param tournament the tournament to update
-	//  */
-	// updateTournament(tournament: Tournament): void {
-	// 	for (const i in this.allTournaments) {
-	// 		if (this.allTournaments[i].id == tournament.id) {
-	// 			this.allTournaments[i] = tournament;
-
-	// 			this.storeService.set(`cache.tournaments.${tournament.id}`, tournament.convertToJson());
-	// 			return;
-	// 		}
-	// 	}
-	// }
+		return returnTournament;
+	}
 
 	// /**
 	//  * Update a published tournament

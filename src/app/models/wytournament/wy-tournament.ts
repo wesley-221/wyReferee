@@ -65,6 +65,7 @@ export class WyTournament {
 			publishId: tournament.publishId,
 			name: tournament.name,
 			acronym: tournament.acronym,
+			gamemode: tournament.gamemode,
 			teamSize: tournament.teamSize,
 			format: tournament.format,
 			teams: tournament.teams,

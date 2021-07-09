@@ -64,6 +64,7 @@ import { DeleteModBracketDialogComponent } from './components/dialogs/delete-mod
 import { TournamentOverviewComponent } from './components/tournament-management/tournament-overview/tournament-overview.component';
 import { DeleteTournamentDialogComponent } from './components/dialogs/delete-tournament-dialog/delete-tournament-dialog.component';
 import { PublishTournamentDialogComponent } from './components/dialogs/publish-tournament-dialog/publish-tournament-dialog.component';
+import { TournamentEditComponent } from './components/tournament-management/tournament-edit/tournament-edit.component';
 
 @NgModule({
 	declarations: [
@@ -110,7 +111,8 @@ import { PublishTournamentDialogComponent } from './components/dialogs/publish-t
 		DeleteModBracketDialogComponent,
 		TournamentOverviewComponent,
 		DeleteTournamentDialogComponent,
-		PublishTournamentDialogComponent
+		PublishTournamentDialogComponent,
+		TournamentEditComponent
 	],
 	imports: [
 		BrowserModule,
