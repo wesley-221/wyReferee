@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Delete mappool</h2>
+
+<mat-dialog-content>
+	Are you sure you want to delete the mappool <b>{{ data.mappool.name }}</b>?
+
+	<div class="alert alert-danger">
+		<b>NOTE:</b> This action is permanent. Once the mappool has been deleted, this can not be retrieved anymore unless it is published.
+	</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="data.mappool" color="warn">Delete</button>
+</mat-dialog-actions>

@@ -54,7 +54,7 @@ export class TournamentEditComponent implements OnInit {
 			this.validationForm.get('tournament-score-system').setValue(tournament.scoreInterfaceIdentifier);
 
 			for (const mappool of tournament.mappools) {
-				mappool.collapsed = false;
+				mappool.collapsed = true;
 
 				this.validationForm.addControl(`mappool-${mappool.localId}-name`, new FormControl(mappool.name, Validators.required));
 				this.validationForm.addControl(`mappool-${mappool.localId}-type`, new FormControl(mappool.type, Validators.required));
@@ -80,6 +80,9 @@ export class TournamentEditComponent implements OnInit {
 
 	ngOnInit(): void { }
 
+	/**
+	 * Update the current tournament
+	 */
 	updateTournament(): void {
 		if (this.validationForm.valid) {
 			this.tournament.name = this.validationForm.get('tournament-name').value;

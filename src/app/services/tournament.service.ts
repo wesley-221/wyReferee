@@ -24,7 +24,7 @@ export class TournamentService {
 
 		for (const tournament in storeAllTournaments) {
 			const newTournament = WyTournament.makeTrueCopy(storeAllTournaments[tournament]);
-			this.availableTournamentId = newTournament.id++;
+			this.availableTournamentId = newTournament.id + 1;
 
 			this.allTournaments.push(newTournament);
 
