@@ -53,6 +53,11 @@ export class TournamentEditComponent implements OnInit {
 
 			this.validationForm.get('tournament-score-system').setValue(tournament.scoreInterfaceIdentifier);
 
+			for (const team of tournament.teams) {
+				team.collapsed = true;
+				this.validationForm.addControl(`tournament-team-name-${team.index}`, new FormControl(team.name, Validators.required));
+			}
+
 			for (const mappool of tournament.mappools) {
 				mappool.collapsed = true;
 

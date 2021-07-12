@@ -5,7 +5,7 @@ export class WyTeam {
 	name: string;
 	collapsed: boolean;
 	players: WyTeamPlayer[];
-	validateIndex: number;
+	index: number;
 
 	constructor(init?: Partial<WyTeam>) {
 		this.players = [];
@@ -22,7 +22,7 @@ export class WyTeam {
 			id: team.id,
 			name: team.name,
 			collapsed: team.collapsed,
-			validateIndex: team.validateIndex
+			index: team.index
 		});
 
 		for (const player in team.players) {

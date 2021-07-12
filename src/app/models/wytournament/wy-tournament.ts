@@ -19,6 +19,7 @@ export class WyTournament {
 	format: TournamentFormat;
 
 	teams: WyTeam[];
+	teamIndex: number;
 	mappools: WyMappool[];
 
 	scoreInterfaceIdentifier: string;
@@ -39,11 +40,26 @@ export class WyTournament {
 
 	constructor(init?: Partial<WyTournament>) {
 		this.teams = [];
+		this.teamIndex = 0;
 		this.mappools = [];
 		this.availableTo = [];
 		this.administrators = [];
 
 		Object.assign(this, init);
+	}
+
+	/**
+	 * Get the mappool with the given id
+	 * @param id the id of the mappool to get
+	 */
+	getMappoolFromId(id: number): WyMappool {
+		for (const mappool in this.mappools) {
+			if (this.mappools[mappool].localId == id) {
+				return this.mappools[mappool];
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -68,7 +84,6 @@ export class WyTournament {
 			gamemode: tournament.gamemode,
 			teamSize: tournament.teamSize,
 			format: tournament.format,
-			teams: tournament.teams,
 			scoreInterface: calc.getScoreInterface(tournament.scoreInterfaceIdentifier),
 			scoreInterfaceIdentifier: tournament.scoreInterfaceIdentifier,
 			webhook: tournament.webhook,
@@ -80,7 +95,12 @@ export class WyTournament {
 		});
 
 		for (const team in tournament.teams) {
-			newTournament.teams.push(WyTeam.makeTrueCopy(tournament.teams[team]));
+			const newTeam = WyTeam.makeTrueCopy(tournament.teams[team]);
+
+			newTeam.index = newTournament.teamIndex;
+			newTournament.teamIndex++;
+
+			newTournament.teams.push(newTeam);
 		}
 
 		for (const mappool in tournament.mappools) {

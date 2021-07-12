@@ -78,15 +78,5 @@ export class TournamentCreateComponent implements OnInit {
 			this.toastService.addToast(`The mappool wasn't filled in correctly. Look for the marked fields to see what you did wrong.`, ToastType.Error);
 			this.validationForm.markAllAsTouched();
 		}
-
-		// Object.keys(this.validationForm.controls).forEach(key => {
-		// 	const controlErrors: ValidationErrors = this.validationForm.get(key).errors;
-
-		// 	if (controlErrors != null) {
-		// 		Object.keys(controlErrors).forEach(keyError => {
-		// 			console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-		// 		});
-		// 	}
-		// });
 	}
 }

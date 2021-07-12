@@ -62,7 +62,7 @@ export class TournamentService {
 	updateTournament(tournament: WyTournament): void {
 		for (const findTournament in this.allTournaments) {
 			if (this.allTournaments[findTournament].id == tournament.id) {
-				this.allTournaments[findTournament] = tournament;
+				this.allTournaments[findTournament] = WyTournament.makeTrueCopy(tournament);
 				break;
 			}
 		}

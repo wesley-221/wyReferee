@@ -66,6 +66,8 @@ import { DeleteTournamentDialogComponent } from './components/dialogs/delete-tou
 import { PublishTournamentDialogComponent } from './components/dialogs/publish-tournament-dialog/publish-tournament-dialog.component';
 import { TournamentEditComponent } from './components/tournament-management/tournament-edit/tournament-edit.component';
 import { DeleteMappoolDialogComponent } from './components/dialogs/delete-mappool-dialog/delete-mappool-dialog.component';
+import { TournamentParticipantsComponent } from './components/tournament-management/tournament/tournament-participants/tournament-participants.component';
+import { DeleteTeamDialogComponent } from './components/dialogs/delete-team-dialog/delete-team-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -114,7 +116,9 @@ import { DeleteMappoolDialogComponent } from './components/dialogs/delete-mappoo
 		DeleteTournamentDialogComponent,
 		PublishTournamentDialogComponent,
 		TournamentEditComponent,
-		DeleteMappoolDialogComponent
+		DeleteMappoolDialogComponent,
+		TournamentParticipantsComponent,
+		DeleteTeamDialogComponent
 	],
 	imports: [
 		BrowserModule,
