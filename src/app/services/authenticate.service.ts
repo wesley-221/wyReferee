@@ -100,6 +100,7 @@ export class AuthenticateService {
 		this.loggedInUser = null;
 
 		this.storeService.delete('oauth');
+		this.storeService.delete('osu-oauth');
 	}
 
 	/**
