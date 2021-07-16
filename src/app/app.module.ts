@@ -40,7 +40,6 @@ import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/j
 import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatmap.component';
 import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
 import { UpdaterComponent } from './components/main-page/updater/updater.component';
-import { FilterMappoolPipe } from './pipes/filter-mappool.pipe';
 import { FilterTournamentPipe } from './pipes/filter-tournament.pipe';
 import { AxsCalculatorComponent } from './components/axs/axs-calculator/axs-calculator.component';
 import { SendBeatmapResultComponent } from './components/dialogs/send-beatmap-result/send-beatmap-result.component';
@@ -94,7 +93,6 @@ import { DeleteTeamDialogComponent } from './components/dialogs/delete-team-dial
 		BanBeatmapComponent,
 		MultiplayerLobbyMovePlayerComponent,
 		UpdaterComponent,
-		FilterMappoolPipe,
 		FilterTournamentPipe,
 		AxsCalculatorComponent,
 		SendBeatmapResultComponent,

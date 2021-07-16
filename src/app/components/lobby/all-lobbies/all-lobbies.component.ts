@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { MultiplayerLobby } from '../../../models/store-multiplayer/multiplayer-lobby';
-import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies.service';
 import { ToastService } from '../../../services/toast.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteLobbyComponent } from 'app/components/dialogs/delete-lobby/delete-lobby.component';
+import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
+import { Lobby } from 'app/models/lobby';
 
 export interface MultiplayerLobbyDeleteDialogData {
-	multiplayerLobby: MultiplayerLobby;
+	multiplayerLobby: Lobby;
 }
 
 @Component({
@@ -17,12 +17,12 @@ export interface MultiplayerLobbyDeleteDialogData {
 })
 
 export class AllLobbiesComponent implements OnInit {
-	allLobbies: MultiplayerLobby[];
+	allLobbies: Lobby[];
 
 	dialogMessage: string;
-	deleteMultiplayerLobby: MultiplayerLobby;
+	deleteMultiplayerLobby: Lobby;
 
-	constructor(private dialog: MatDialog, private multiplayerLobbies: MultiplayerLobbiesService, private toastService: ToastService, private router: Router) {
+	constructor(private dialog: MatDialog, private multiplayerLobbies: WyMultiplayerLobbiesService, private toastService: ToastService, private router: Router) {
 		this.allLobbies = multiplayerLobbies.getAllLobbies();
 	}
 
@@ -32,7 +32,7 @@ export class AllLobbiesComponent implements OnInit {
 	 * Delete a multiplayer lobby
 	 * @param multiplayerLobby
 	 */
-	deleteLobby(multiplayerLobby: MultiplayerLobby) {
+	deleteLobby(multiplayerLobby: Lobby) {
 		const dialogRef = this.dialog.open(DeleteLobbyComponent, {
 			data: {
 				multiplayerLobby: multiplayerLobby
@@ -41,7 +41,7 @@ export class AllLobbiesComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
-				this.multiplayerLobbies.remove(multiplayerLobby);
+				this.multiplayerLobbies.deleteMultiplayerLobby(multiplayerLobby);
 				this.toastService.addToast(`Successfully deleted the multiplayer lobby "${multiplayerLobby.description}".`);
 			}
 		});
@@ -52,7 +52,7 @@ export class AllLobbiesComponent implements OnInit {
 	 * @param multiplayerLobby
 	 * @param event
 	 */
-	navigateLobby(multiplayerLobby: MultiplayerLobby, event: any) {
+	navigateLobby(multiplayerLobby: Lobby, event: any) {
 		if (event.srcElement.className.search(/mat-icon|mat-mini-fab|mat-button-wrapper/) == -1) {
 			this.router.navigate(['lobby-overview/lobby-view', multiplayerLobby.lobbyId]);
 		}

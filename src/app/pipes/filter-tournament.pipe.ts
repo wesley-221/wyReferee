@@ -1,27 +1,27 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Tournament } from 'app/models/tournament/tournament';
+import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
 @Pipe({
 	name: 'filterTournament'
 })
 export class FilterTournamentPipe implements PipeTransform {
-	transform(tournaments: Tournament[], searchValue: string, filterByUser: string): unknown {
-		let returnMappools: Tournament[] = [];
+	transform(tournaments: WyTournament[], searchValue: string, filterByUser: string): unknown {
+		let returnMappools: WyTournament[] = [];
 
 		for (const tournament of tournaments) {
-			returnMappools.push(Tournament.makeTrueCopy(tournament));
+			returnMappools.push(WyTournament.makeTrueCopy(tournament));
 		}
 
 		if (searchValue != null) {
 			returnMappools = returnMappools.filter(tournament => {
 				return tournament.id == parseInt(searchValue) ||
-					tournament.tournamentName.toLowerCase().includes(searchValue.toLowerCase());
+					tournament.name.toLowerCase().includes(searchValue.toLowerCase());
 			});
 		}
 
 		if (filterByUser != null) {
 			returnMappools = returnMappools.filter(tournament => {
-				return tournament.createdByUser.username.toLowerCase().includes(filterByUser.toLowerCase());
+				return tournament.createdBy.username.toLowerCase().includes(filterByUser.toLowerCase());
 			});
 		}
 

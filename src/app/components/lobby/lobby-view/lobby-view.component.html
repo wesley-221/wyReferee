@@ -43,12 +43,12 @@
 						<img *ngFor="let mod of getModsFromBit(match.mods)" [src]="'assets/osu-mods/' + mod + '.png'" />
 					</div>
 
-					<div class="modifier" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == true && selectedLobby.scoreInterfaceIndentifier == 'AxS'">
+					<div class="modifier" *ngIf="selectedLobby.gamesCountTowardsScore[match.game_id] == true && selectedLobby.tournament.scoreInterfaceIdentifier == 'AxS'">
 						<div class="alert alert-danger center" *ngIf="getModifier(match.beatmap_id) == null"><mat-icon>warning</mat-icon> There was no modifier set for this map. Have you selected a mappool yet?</div>
 						<h6 *ngIf="getModifier(match.beatmap_id) != null">Beatmap modifier: {{ getModifier(match.beatmap_id) }}</h6>
 					</div>
 
-					<div class="modifier" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == false">
+					<div class="modifier" *ngIf="selectedLobby.gamesCountTowardsScore[match.game_id] == false">
 						<div class="alert alert-warning center"><mat-icon>warning</mat-icon> This map does not count towards the team score (could be a warmup map/invalid score)</div>
 					</div>
 
@@ -156,8 +156,8 @@
 				</div>
 
 				<div class="column buttons">
-					<button mat-mini-fab color="accent" matTooltip="Mark as invalid" (click)="markAsInvalid(match)" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == true"><mat-icon>thumb_up</mat-icon></button>
-					<button mat-mini-fab color="warn" matTooltip="Mark as valid" (click)="markAsInvalid(match)" *ngIf="selectedLobby.mapsCountTowardScore[match.game_id] == false"><mat-icon>thumb_down</mat-icon></button>
+					<button mat-mini-fab color="accent" matTooltip="Mark as invalid" (click)="markAsInvalid(match)" *ngIf="selectedLobby.gamesCountTowardsScore[match.game_id] == true"><mat-icon>thumb_up</mat-icon></button>
+					<button mat-mini-fab color="warn" matTooltip="Mark as valid" (click)="markAsInvalid(match)" *ngIf="selectedLobby.gamesCountTowardsScore[match.game_id] == false"><mat-icon>thumb_down</mat-icon></button>
 
 					<button mat-mini-fab color="primary" matTooltip="Send beatmap result to multiplayer lobby" (click)="sendBeatmapResult(match)" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated"><mat-icon>send</mat-icon></button>
 					<button mat-mini-fab color="primary" matTooltip="Copy beatmap result" (click)="copyBeatmapResult(match)" *ngIf="!selectedLobby.ircConnected"><mat-icon>content_copy</mat-icon></button>

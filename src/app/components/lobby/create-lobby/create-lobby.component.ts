@@ -1,22 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { MultiplayerLobby } from '../../../models/store-multiplayer/multiplayer-lobby';
-import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies.service';
 import { ToastService } from '../../../services/toast.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IrcService } from '../../../services/irc.service';
 import { ScoreInterface } from '../../../models/score-calculation/calculation-types/score-interface';
 import { Calculate } from '../../../models/score-calculation/calculate';
 import { TournamentService } from '../../../services/tournament.service';
-import { Tournament } from '../../../models/tournament/tournament';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { from, Observable } from 'rxjs';
 import { BanchoMultiplayerChannel } from 'bancho.js';
-import { ChallongeService } from 'app/services/challonge.service';
 import { OsuHelper } from 'app/models/osu-models/osu';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { WyTeam } from 'app/models/wytournament/wy-team';
 import { map, startWith } from 'rxjs/operators';
+import { Lobby } from 'app/models/lobby';
+import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -51,7 +49,7 @@ export class CreateLobbyComponent implements OnInit {
 	teamTwoFilter: Observable<WyTeam[]>;
 
 	constructor(
-		private multiplayerLobbies: MultiplayerLobbiesService,
+		private multiplayerLobbies: WyMultiplayerLobbiesService,
 		private toastService: ToastService,
 		private ircService: IrcService,
 		public tournamentService: TournamentService,
@@ -171,57 +169,41 @@ export class CreateLobbyComponent implements OnInit {
 
 	createLobby() {
 		if (this.validationForm.valid) {
-			const newLobby = new MultiplayerLobby();
+			const lobby = new Lobby({
+				lobbyId: this.multiplayerLobbies.availableLobbyId,
+				teamSize: this.validationForm.get('team-size').value,
+				multiplayerLink: this.validationForm.get('multiplayer-link').value,
+				tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
+				tournament: this.selectedTournament,
+				webhook: this.validationForm.get('webhook').value,
+				teamOneName: this.validationForm.get('team-one-name').value,
+				teamTwoName: this.validationForm.get('team-two-name').value
+			});
 
-			newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
-			newLobby.teamSize = this.validationForm.get('team-size').value;
-			newLobby.multiplayerLink = this.validationForm.get('multiplayer-link').value;
-			newLobby.tournamentId = this.selectedTournament != null ? this.selectedTournament.id : null;
-			newLobby.tournamentAcronym = this.validationForm.get('tournament-acronym').value;
-			newLobby.webhook = this.validationForm.get('webhook').value;
-			newLobby.scoreInterfaceIndentifier = this.selectedTournament ? this.selectedTournament.scoreInterfaceIdentifier : this.selectedScoreInterface.getIdentifier();
+			lobby.description = `${lobby.teamOneName} vs ${lobby.teamTwoName}`;
 
-			if (this.challongeMatches.length > 0) {
-				newLobby.challongeMatchId = this.validationForm.get('challonge-match').value;
-				newLobby.challongeTournamentId = this.validationForm.get('challonge-tournament').value;
+			this.ircService.isCreatingMultiplayerLobby = lobby.lobbyId;
 
-				const match = this.challongeMatches.find(match => match.id == newLobby.challongeMatchId);
-
-				newLobby.teamOneName = match.getPlayer1Name();
-				newLobby.teamTwoName = match.getPlayer2Name();
-
-				newLobby.challongePlayerOneId = match.player1_id;
-				newLobby.challongePlayerTwoId = match.player2_id;
-			}
-			else {
-				newLobby.teamOneName = this.validationForm.get('team-one-name').value;
-				newLobby.teamTwoName = this.validationForm.get('team-two-name').value;
-			}
-
-			newLobby.description = `${newLobby.teamOneName} vs ${newLobby.teamTwoName}`;
-
-			this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
-
-			// Create a new lobby
-			if (newLobby.multiplayerLink == '') {
-				from(this.ircService.client.createLobby(`${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
+			// Multiplayer link was not found, create new lobby
+			if (lobby.multiplayerLink == '') {
+				from(this.ircService.client.createLobby(`${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
 					this.ircService.joinChannel(multiplayerChannel.name);
 					this.ircService.initializeChannelListeners(multiplayerChannel);
 
 					this.lobbyHasBeenCreatedTrigger();
 
-					newLobby.multiplayerLink = `https://osu.ppy.sh/community/matches/${multiplayerChannel.lobby.id}`;
+					lobby.multiplayerLink = `https://osu.ppy.sh/community/matches/${multiplayerChannel.lobby.id}`;
 
-					this.multiplayerLobbies.add(newLobby);
+					this.multiplayerLobbies.addMultiplayerLobby(lobby);
 
-					this.toastService.addToast(`Successfully created the multiplayer lobby ${newLobby.description}!`);
+					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
 
-					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
+					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
 				});
 			}
-			// Join an existing channel
+			// Multiplayer link was found, attempt to join lobby
 			else {
-				const multiplayerId = OsuHelper.getMultiplayerIdFromLink(newLobby.multiplayerLink);
+				const multiplayerId = OsuHelper.getMultiplayerIdFromLink(lobby.multiplayerLink);
 				const multiplayerChannel = this.ircService.client.getChannel(`#mp_${multiplayerId}`) as BanchoMultiplayerChannel;
 
 				from(multiplayerChannel.join()).subscribe(() => {
@@ -230,18 +212,18 @@ export class CreateLobbyComponent implements OnInit {
 
 					this.lobbyHasBeenCreatedTrigger();
 
-					this.multiplayerLobbies.add(newLobby);
+					this.multiplayerLobbies.addMultiplayerLobby(lobby);
 
 					this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}!`);
 
-					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
+					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
 				}, () => {
 					this.lobbyHasBeenCreatedTrigger();
-					this.multiplayerLobbies.add(newLobby);
+					this.multiplayerLobbies.addMultiplayerLobby(lobby);
 
 					this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}! Unable to connect to the irc channel, lobby is most likely closed already.`);
 
-					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
+					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
 				});
 			}
 		}

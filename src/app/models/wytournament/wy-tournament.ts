@@ -63,6 +63,24 @@ export class WyTournament {
 	}
 
 	/**
+	 * Get the modifier of the given beatmap
+	 * @param beatmapId the id of the beatmap to get the modifier from
+	 */
+	getModifierFromBeatmapId(beatmapId: number): number {
+		for (const mappool of this.mappools) {
+			for (const modBracket of mappool.modBrackets) {
+				for (const beatmap of modBracket.beatmaps) {
+					if (beatmap.modifier == beatmapId) {
+						return beatmap.modifier;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Check if the tournament is a solo tournament
 	 */
 	isSoloTournament() {

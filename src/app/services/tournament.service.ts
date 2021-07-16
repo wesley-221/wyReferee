@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../environments/environment';
-import { Tournament } from '../models/tournament/tournament';
 import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
-import { User } from 'app/models/authentication/user';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
 @Injectable({

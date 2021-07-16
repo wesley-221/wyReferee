@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MultiplayerLobby } from '../models/store-multiplayer/multiplayer-lobby';
 import { CacheService } from './cache.service';
-import { ModBracketMap } from '../models/osu-mappool/mod-bracket-map';
 import { CacheBeatmap } from '../models/cache/cache-beatmap';
 import { MultiplayerDataUser } from '../models/store-multiplayer/multiplayer-data-user';
+import { Lobby } from 'app/models/lobby';
+import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 
 @Injectable({
 	providedIn: 'root'
@@ -27,7 +27,7 @@ export class WebhookService {
 	 * @param extraMessage the extra message
 	 * @param referee the referee
 	 */
-	sendFinalResult(selectedLobby: MultiplayerLobby, extraMessage: string, referee: string) {
+	sendFinalResult(selectedLobby: Lobby, extraMessage: string, referee: string) {
 		const scoreString = (selectedLobby.teamOneScore > selectedLobby.teamTwoScore) ?
 			`**Score:** __${selectedLobby.teamOneName}__ | **${selectedLobby.teamOneScore}** - ${selectedLobby.teamTwoScore} | ${selectedLobby.teamTwoName}` :
 			`**Score:** ${selectedLobby.teamOneName} | ${selectedLobby.teamOneScore} - **${selectedLobby.teamTwoScore}** | __${selectedLobby.teamTwoName}__`;
@@ -95,7 +95,7 @@ export class WebhookService {
 	 * @param wbdLosingTeam the team that has the loss
 	 * @param referee the referee
 	 */
-	sendWinByDefaultResult(selectedLobby: MultiplayerLobby, extraMessage: string, wbdWinningTeam: string, wbdLosingTeam: string, referee: string) {
+	sendWinByDefaultResult(selectedLobby: Lobby, extraMessage: string, wbdWinningTeam: string, wbdLosingTeam: string, referee: string) {
 		let resultDescription = `**Score:** __${wbdWinningTeam}__ | 1 - 0 | ${wbdLosingTeam} \n\n__${wbdLosingTeam}__ failed to show up.`;
 
 		if (wbdWinningTeam == 'no-one') {
@@ -135,7 +135,7 @@ export class WebhookService {
 	 * @param ban the map that was banned
 	 * @param referee the referee
 	 */
-	sendBanResult(selectedLobby: MultiplayerLobby, teamName: string, ban: ModBracketMap, referee: string) {
+	sendBanResult(selectedLobby: Lobby, teamName: string, ban: WyModBracketMap, referee: string) {
 		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(ban.beatmapId);
 
 		const body = {
@@ -166,7 +166,7 @@ export class WebhookService {
 	 * @param multiplayerLobby the lobby to get the data from
 	 * @param referee the referee
 	 */
-	sendMatchFinishedResult(multiplayerLobby: MultiplayerLobby, referee: string) {
+	sendMatchFinishedResult(multiplayerLobby: Lobby, referee: string) {
 		const lastMultiplayerData = multiplayerLobby.multiplayerData[multiplayerLobby.multiplayerData.length - 1];
 		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(lastMultiplayerData.beatmap_id);
 
@@ -180,7 +180,7 @@ export class WebhookService {
 		let lostTheirPick = false;
 
 		// The pick was from team two
-		if (multiplayerLobby.getNextPickName() == multiplayerLobby.teamOneName) {
+		if (multiplayerLobby.getNextPick() == multiplayerLobby.teamOneName) {
 			embedHeader += `${multiplayerLobby.teamTwoName} `;
 
 			// Team two has won their pick
@@ -239,7 +239,7 @@ export class WebhookService {
 		resultString += `**MVP score**: __${highestScorePlayerName}__ with ${highestScorePlayer.score} points and ${highestScorePlayer.accuracy}% accuracy\n`;
 		resultString += `**MVP accuracy**: __${highestAccuracyPlayerName}__ with ${highestAccuracyPlayer.score} points and ${highestAccuracyPlayer.accuracy}% accuracy\n\n`;
 
-		resultString += `Next pick is for __${multiplayerLobby.getNextPickName()}__`;
+		resultString += `Next pick is for __${multiplayerLobby.getNextPick()}__`;
 
 		const body = {
 			'embeds': [

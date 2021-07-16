@@ -1,9 +1,8 @@
 export class CacheUser {
-    user_id: number;
-    username: string;
+	user_id: number;
+	username: string;
 
-    constructor(user_id: number, username: string) {
-        this.user_id = user_id;
-        this.username = username;
-    }
+	constructor(init?: Partial<CacheUser>) {
+		Object.assign(this, init);
+	}
 }
