@@ -122,6 +122,7 @@ export class SettingsComponent implements OnInit {
 	}
 
 	logoutOsu(): void {
+		this.storeService.delete('oauth');
 		this.storeService.delete('osu-oauth');
 		this.auth.loggedIn = false;
 		this.auth.loggedInUser = null;
