@@ -5,7 +5,7 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 	name: 'filterTournament'
 })
 export class FilterTournamentPipe implements PipeTransform {
-	transform(tournaments: WyTournament[], searchValue: string, filterByUser: string): unknown {
+	transform(tournaments: WyTournament[], searchValue: string, filterByUser: string) {
 		let returnMappools: WyTournament[] = [];
 
 		for (const tournament of tournaments) {

@@ -103,6 +103,21 @@ export class TournamentService {
 		return this.httpClient.post<WyTournament>(`${this.apiUrl}wyreferee/tournament`, tournament);
 	}
 
+	/**
+	 * Get all published tournaments
+	 */
+	getAllPublishedTournaments() {
+		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}wyreferee/tournament`);
+	}
+
+	/**
+	 * Get a published tournament by tournament id
+	 * @param tournamentId the id of the tournament that was published
+	 */
+	getPublishedTournament(tournamentId: number): Observable<WyTournament> {
+		return this.httpClient.get<WyTournament>(`${this.apiUrl}wyreferee/tournament/${tournamentId}`);
+	}
+
 	// /**
 	//  * Update a published tournament
 	//  * @param tournament the tournament to update
@@ -137,26 +152,11 @@ export class TournamentService {
 	// }
 
 	// /**
-	//  * Get a published tournament by tournament id
-	//  * @param tournamentId the id of the tournament that was published
-	//  */
-	// getPublishedTournament(tournamentId: number): Observable<Tournament> {
-	// 	return this.httpClient.get<Tournament>(`${this.apiUrl}wyreferee/tournament/${tournamentId}`);
-	// }
-
-	// /**
 	//  * Get all the published tournaments from the given user
 	//  * @param user the user to get all the tournaments from
 	//  */
 	// getAllPublishedTournamentsFromUser(user: User) {
 	// 	return this.httpClient.get<Tournament[]>(`${this.apiUrl}wyreferee/tournament/created_by/${user.id}`);
-	// }
-
-	// /**
-	//  * Get all published tournaments
-	//  */
-	// getAllPublishedTournaments() {
-	// 	return this.httpClient.get<Tournament[]>(`${this.apiUrl}wyreferee/tournament`);
 	// }
 
 	// /**
