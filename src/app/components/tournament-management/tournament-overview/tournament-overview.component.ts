@@ -75,25 +75,22 @@ export class TournamentOverviewComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
-				// const publishTournament: Tournament = Tournament.makeTrueCopy(tournament);
+				const publishTournament: WyTournament = WyTournament.makeTrueCopy(tournament);
 
-				// // Reset id
-				// publishTournament.id = null;
+				// Reset all ids
+				publishTournament.id = null;
 
-				// // Stringify the mods
-				// for (const team in publishTournament.teams) {
-				// 	// Reset id
-				// 	publishTournament.teams[team].id = null;
+				for (const team in publishTournament.teams) {
+					publishTournament.teams[team].id = null;
 
-				// 	for (const player in publishTournament.teams[team].teamPlayers) {
-				// 		// Reset id
-				// 		publishTournament.teams[team].teamPlayers[player].id = null;
-				// 	}
-				// }
+					for (const player in publishTournament.teams[team].players) {
+						publishTournament.teams[team].players[player].id = null;
+					}
+				}
 
-				// this.tournamentService.publishTournament(publishTournament).subscribe((data: any) => {
-				// 	this.toastService.addToast(`Successfully published the tournament "${data.body.tournamentName}" with the id ${data.body.id}.`);
-				// });
+				this.tournamentService.publishTournament(publishTournament).subscribe((data: WyTournament) => {
+					this.toastService.addToast(`Successfully published the tournament "${data.name}" with the id ${data.id}.`);
+				});
 			}
 		});
 	}

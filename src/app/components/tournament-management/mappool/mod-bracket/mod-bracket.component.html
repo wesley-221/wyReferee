@@ -85,7 +85,7 @@
 								</mat-form-field>
 							</div>
 
-							<div class="column" *ngIf="mappool.mappoolType == 1">
+							<div class="column" *ngIf="mappool.type == 1">
 								<mat-form-field class="full-width">
 									<mat-label>Modifier</mat-label>
 									<input matInput [formControlName]="'mappool-' + this.mappool.localId + '-mod-bracket-beatmap-' + beatmap.index + '-modifier'" [(ngModel)]="beatmap.modifier" />

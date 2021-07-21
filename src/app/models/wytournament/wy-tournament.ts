@@ -14,7 +14,7 @@ export class WyTournament {
 	publishId: number;
 	name: string;
 	acronym: string;
-	gamemode: number;
+	gamemodeId: number;
 	teamSize: number;
 	format: TournamentFormat;
 
@@ -99,7 +99,7 @@ export class WyTournament {
 			publishId: tournament.publishId,
 			name: tournament.name,
 			acronym: tournament.acronym,
-			gamemode: tournament.gamemode,
+			gamemodeId: tournament.gamemodeId,
 			teamSize: tournament.teamSize,
 			format: tournament.format,
 			scoreInterface: calc.getScoreInterface(tournament.scoreInterfaceIdentifier),
@@ -127,6 +127,10 @@ export class WyTournament {
 
 		for (const administrator in tournament.administrators) {
 			newTournament.administrators.push(User.makeTrueCopy(tournament.administrators[administrator]));
+		}
+
+		for (const user in tournament.availableTo) {
+			newTournament.availableTo.push(User.makeTrueCopy(tournament.availableTo[user]));
 		}
 
 		if (tournament.createdBy) {

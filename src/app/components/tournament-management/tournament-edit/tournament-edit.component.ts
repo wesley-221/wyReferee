@@ -28,7 +28,7 @@ export class TournamentEditComponent implements OnInit {
 				'tournament-acronym': new FormControl(tournament.acronym, [
 					Validators.required
 				]),
-				'tournament-gamemode': new FormControl(tournament.gamemode, [
+				'tournament-gamemode': new FormControl(tournament.gamemodeId, [
 					Validators.required
 				]),
 				'tournament-score-system': new FormControl('', [
@@ -92,7 +92,7 @@ export class TournamentEditComponent implements OnInit {
 		if (this.validationForm.valid) {
 			this.tournament.name = this.validationForm.get('tournament-name').value;
 			this.tournament.acronym = this.validationForm.get('tournament-acronym').value;
-			this.tournament.gamemode = this.validationForm.get('tournament-gamemode').value;
+			this.tournament.gamemodeId = this.validationForm.get('tournament-gamemode').value;
 
 			this.tournament.format = this.validationForm.get('tournament-format').value;
 			this.tournament.teamSize = this.validationForm.get('tournament-team-size').value;
@@ -108,6 +108,10 @@ export class TournamentEditComponent implements OnInit {
 					for (const mod of modBracket.mods) {
 						mod.value = this.validationForm.get(`mappool-${mappool.localId}-mod-bracket-mod-${mod.index}-value`).value;
 						mod.name = mod.value == 'freemod' ? 'Freemod' : Mods[mod.value];
+					}
+
+					for (const category of mappool.modCategories) {
+						category.name = this.validationForm.get(`mappool-${mappool.localId}-category-${category.index}-name`).value;
 					}
 				}
 			}

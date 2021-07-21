@@ -3,6 +3,7 @@ import { AppConfig } from '../../environments/environment';
 import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
 	providedIn: 'root'
@@ -92,6 +93,14 @@ export class TournamentService {
 		}
 
 		return returnTournament;
+	}
+
+	/**
+	 * Publish a tournament
+	 * @param tournament the tournament to publish
+	 */
+	publishTournament(tournament: WyTournament): Observable<WyTournament> {
+		return this.httpClient.post<WyTournament>(`${this.apiUrl}wyreferee/tournament`, tournament);
 	}
 
 	// /**
