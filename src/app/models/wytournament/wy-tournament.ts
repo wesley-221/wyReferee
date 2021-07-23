@@ -36,6 +36,10 @@ export class WyTournament {
 	availableTo: User[];
 
 	administrators: User[];
+
+	creationDate: Date;
+	updateDate: Date;
+
 	createdBy: User;
 
 	constructor(init?: Partial<WyTournament>) {
@@ -46,6 +50,42 @@ export class WyTournament {
 		this.administrators = [];
 
 		Object.assign(this, init);
+	}
+
+	/**
+	 * Reset the ids of all objects
+	 */
+	resetAllIds(): void {
+		this.id = null;
+
+		for (const mappool of this.mappools) {
+			mappool.localId = null;
+			mappool.publishId = null;
+
+			for (const modBracket of mappool.modBrackets) {
+				modBracket.id = null;
+
+				for (const mod of modBracket.mods) {
+					mod.id = null;
+				}
+
+				for (const map of modBracket.beatmaps) {
+					map.id = null;
+				}
+			}
+
+			for (const category of mappool.modCategories) {
+				category.id = null;
+			}
+		}
+
+		for (const team of this.teams) {
+			team.id = null;
+
+			for (const player of team.players) {
+				player.id = null;
+			}
+		}
 	}
 
 	/**
@@ -110,6 +150,8 @@ export class WyTournament {
 			challongeApiKey: tournament.challongeApiKey,
 			challongeTournamentId: tournament.challongeTournamentId,
 			challongeCreationType: tournament.challongeCreationType,
+			updateDate: new Date(tournament.updateDate),
+			creationDate: new Date(tournament.creationDate)
 		});
 
 		for (const team in tournament.teams) {

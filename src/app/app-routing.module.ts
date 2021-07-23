@@ -18,6 +18,8 @@ import { TournamentCreateComponent } from './components/tournament-management/to
 import { TournamentOverviewComponent } from './components/tournament-management/tournament-overview/tournament-overview.component';
 import { TournamentEditComponent } from './components/tournament-management/tournament-edit/tournament-edit.component';
 import { TournamentAllPublishedComponent } from './components/tournament-management/tournament-all-published/tournament-all-published.component';
+import { TournamentMyPublishedComponent } from './components/tournament-management/tournament-my-published/tournament-my-published.component';
+import { TournamentPublishedEditComponent } from './components/tournament-management/tournament-published-edit/tournament-published-edit.component';
 
 const routes: Routes = [
 	{
@@ -42,7 +44,8 @@ const routes: Routes = [
 					{ path: 'tournament-overview', component: TournamentOverviewComponent },
 					{ path: 'tournament-overview/tournament-create', component: TournamentCreateComponent },
 					{ path: 'tournament-overview/tournament-edit/:id', component: TournamentEditComponent },
-					// { path: 'tournament-overview/my-published-tournaments', component: MyPublishedTournamentsComponent },
+					{ path: 'tournament-overview/tournament-my-published/tournament-published-edit/:id', component: TournamentPublishedEditComponent },
+					{ path: 'tournament-overview/tournament-my-published', component: TournamentMyPublishedComponent },
 					{ path: 'tournament-overview/tournament-all-published', component: TournamentAllPublishedComponent }
 				]
 			},

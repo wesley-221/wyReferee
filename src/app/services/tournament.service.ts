@@ -70,12 +70,28 @@ export class TournamentService {
 	}
 
 	/**
+	 * Update a published tournament
+	 * @param tournament the tournament to update
+	 */
+	updatePublishedTournament(tournament: WyTournament): Observable<WyTournament> {
+		return this.httpClient.post<WyTournament>(`${this.apiUrl}wyreferee/tournament`, tournament);
+	}
+
+	/**
 	 * Delete the tournament from the cache and service
 	 * @param tournament the tournament to delete
 	 */
 	deleteTournament(tournament: WyTournament): void {
 		this.allTournaments.splice(this.allTournaments.indexOf(tournament), 1);
 		this.storeService.delete(`cache.tournaments.${tournament.id}`);
+	}
+
+	/**
+	 * Delete the published tournament
+	 * @param tournament the tournament to delete
+	 */
+	deletePublishedTournament(tournament: WyTournament): Observable<void> {
+		return this.httpClient.delete<void>(`${this.apiUrl}wyreferee/tournament/${tournament.id}`);
 	}
 
 	/**

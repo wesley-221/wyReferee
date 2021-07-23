@@ -1,0 +1,27 @@
+<div class="filters">
+	<div class="filter">
+		<mat-form-field class="full-width">
+			<mat-label>Filter by text</mat-label>
+			<input matInput [(ngModel)]="searchValue" />
+		</mat-form-field>
+	</div>
+
+	<div class="filter">
+		<mat-form-field class="full-width">
+			<mat-label>Filter by username</mat-label>
+			<input type="text" matInput [matAutocomplete]="auto" [(ngModel)]="filterByUser" [formControl]="filterByUserFormControl">
+
+			<mat-autocomplete #auto="matAutocomplete">
+				<mat-option *ngFor="let user of filteredUsers | async" [value]="user.username">
+					{{ user.username }}
+				</mat-option>
+			</mat-autocomplete>
+		</mat-form-field>
+	</div>
+</div>
+
+<div class="all-tournaments" *ngIf="allTournaments.length > 0">
+	<div class="tournament" *ngFor="let tournament of (allTournaments | filterTournament : searchValue : filterByUser)">
+		<app-tournament-card [tournament]="tournament" [publishedTournament]="true" (deletedTournamentEmitter)="onTournamentDeleted($event)"></app-tournament-card>
+	</div>
+</div>
