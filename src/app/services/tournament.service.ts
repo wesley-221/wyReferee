@@ -25,21 +25,27 @@ export class TournamentService {
 			const newTournament = WyTournament.makeTrueCopy(storeAllTournaments[tournament]);
 			this.availableTournamentId = newTournament.id + 1;
 
-			this.allTournaments.push(newTournament);
+			if (newTournament.publishId != undefined) {
+				this.getPublishedTournament(newTournament.publishId).subscribe((data) => {
+					const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
 
-			// if (newTournament.publishId != undefined) {
-			// 	this.getPublishedTournament(newTournament.publishId).subscribe((data) => {
-			// 		const updatedTournament: Tournament = Tournament.serializeJson(data);
-			// 		newTournament.updateAvailable = !newTournament.compareTo(updatedTournament);
+					if (publishedTournament.updateDate > newTournament.updateDate) {
+						publishedTournament.publishId = publishedTournament.id;
 
-			// 		this.allTournaments.push(newTournament);
-			// 	}, () => {
-			// 		this.allTournaments.push(newTournament);
-			// 	});
-			// }
-			// else {
-			// 	this.allTournaments.push(newTournament);
-			// }
+						this.updateTournament(publishedTournament);
+
+						this.allTournaments.push(publishedTournament);
+					}
+					else {
+						this.allTournaments.push(newTournament);
+					}
+				}, () => {
+					this.allTournaments.push(newTournament);
+				});
+			}
+			else {
+				this.allTournaments.push(newTournament);
+			}
 		}
 	}
 
