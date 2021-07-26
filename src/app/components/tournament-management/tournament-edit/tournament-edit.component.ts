@@ -19,67 +19,80 @@ export class TournamentEditComponent implements OnInit {
 
 	constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private toastService: ToastService) {
 		this.route.params.subscribe((params: Params) => {
-			const tournament: WyTournament = this.tournamentService.getTournamentById(params.id);
+			this.tournamentService.tournamentsHaveBeenInitialized().subscribe(initialized => {
+				if (initialized == true) {
+					const tournament: WyTournament = this.tournamentService.getTournamentById(params.id);
 
-			this.validationForm = new FormGroup({
-				'tournament-name': new FormControl(tournament.name, [
-					Validators.required
-				]),
-				'tournament-acronym': new FormControl(tournament.acronym, [
-					Validators.required
-				]),
-				'tournament-gamemode': new FormControl(tournament.gamemodeId, [
-					Validators.required
-				]),
-				'tournament-score-system': new FormControl('', [
-					Validators.required
-				]),
-				'tournament-format': new FormControl(tournament.format, [
-					Validators.required
-				]),
-				'tournament-team-size': new FormControl(tournament.teamSize, [
-					Validators.required,
-					Validators.min(1),
-					Validators.max(8)
-				]),
-				'webhook': new FormControl(tournament.webhook),
-				'test-webhook': new FormControl(tournament.testWebhook)
-			});
+					this.validationForm = new FormGroup({
+						'tournament-name': new FormControl(tournament.name, [
+							Validators.required
+						]),
+						'tournament-acronym': new FormControl(tournament.acronym, [
+							Validators.required
+						]),
+						'tournament-gamemode': new FormControl(tournament.gamemodeId, [
+							Validators.required
+						]),
+						'tournament-score-system': new FormControl('', [
+							Validators.required
+						]),
+						'tournament-format': new FormControl(tournament.format, [
+							Validators.required
+						]),
+						'tournament-team-size': new FormControl(tournament.teamSize, [
+							Validators.required,
+							Validators.min(1),
+							Validators.max(8)
+						])
+					});
 
-			const calculateScoreInterfaces: Calculate = new Calculate();
+					const calculateScoreInterfaces: Calculate = new Calculate();
 
-			const selectedScoreInterface = calculateScoreInterfaces.getScoreInterface(tournament.scoreInterfaceIdentifier);
-			tournament.scoreInterface = selectedScoreInterface;
+					const selectedScoreInterface = calculateScoreInterfaces.getScoreInterface(tournament.scoreInterfaceIdentifier);
+					tournament.scoreInterface = selectedScoreInterface;
 
-			this.validationForm.get('tournament-score-system').setValue(tournament.scoreInterfaceIdentifier);
+					this.validationForm.get('tournament-score-system').setValue(tournament.scoreInterfaceIdentifier);
 
-			for (const team of tournament.teams) {
-				team.collapsed = true;
-				this.validationForm.addControl(`tournament-team-name-${team.index}`, new FormControl(team.name, Validators.required));
-			}
-
-			for (const mappool of tournament.mappools) {
-				mappool.collapsed = true;
-
-				this.validationForm.addControl(`mappool-${mappool.localId}-name`, new FormControl(mappool.name, Validators.required));
-				this.validationForm.addControl(`mappool-${mappool.localId}-type`, new FormControl(mappool.type, Validators.required));
-
-				for (const modBracket of mappool.modBrackets) {
-					modBracket.collapsed = true;
-
-					this.validationForm.addControl(`mappool-${mappool.localId}-mod-bracket-${modBracket.index}-name`, new FormControl(modBracket.name, Validators.required));
-
-					for (const mod of modBracket.mods) {
-						this.validationForm.addControl(`mappool-${mappool.localId}-mod-bracket-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
+					for (const team of tournament.teams) {
+						team.collapsed = true;
+						this.validationForm.addControl(`tournament-team-name-${team.index}`, new FormControl(team.name, Validators.required));
 					}
-				}
 
-				for (const category of mappool.modCategories) {
-					this.validationForm.addControl(`mappool-${mappool.localId}-category-${category.index}-name`, new FormControl(category.name, Validators.required));
-				}
-			}
+					for (const webhook of tournament.webhooks) {
+						this.validationForm.addControl('webhook-' + webhook.index + '-name', new FormControl(webhook.name, Validators.required));
+						this.validationForm.addControl('webhook-' + webhook.index + '-url', new FormControl(webhook.url, Validators.required));
 
-			this.tournament = tournament;
+						this.validationForm.addControl('webhook-' + webhook.index + '-match-creation', new FormControl(webhook.matchCreation, Validators.required));
+						this.validationForm.addControl('webhook-' + webhook.index + '-picks', new FormControl(webhook.picks, Validators.required));
+						this.validationForm.addControl('webhook-' + webhook.index + '-bans', new FormControl(webhook.bans, Validators.required));
+						this.validationForm.addControl('webhook-' + webhook.index + '-match-result', new FormControl(webhook.matchResult, Validators.required));
+						this.validationForm.addControl('webhook-' + webhook.index + '-final-result', new FormControl(webhook.finalResult, Validators.required));
+					}
+
+					for (const mappool of tournament.mappools) {
+						mappool.collapsed = true;
+
+						this.validationForm.addControl(`mappool-${mappool.localId}-name`, new FormControl(mappool.name, Validators.required));
+						this.validationForm.addControl(`mappool-${mappool.localId}-type`, new FormControl(mappool.type, Validators.required));
+
+						for (const modBracket of mappool.modBrackets) {
+							modBracket.collapsed = true;
+
+							this.validationForm.addControl(`mappool-${mappool.localId}-mod-bracket-${modBracket.index}-name`, new FormControl(modBracket.name, Validators.required));
+
+							for (const mod of modBracket.mods) {
+								this.validationForm.addControl(`mappool-${mappool.localId}-mod-bracket-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
+							}
+						}
+
+						for (const category of mappool.modCategories) {
+							this.validationForm.addControl(`mappool-${mappool.localId}-category-${category.index}-name`, new FormControl(category.name, Validators.required));
+						}
+					}
+
+					this.tournament = tournament;
+				}
+			});
 		});
 	}
 
@@ -97,9 +110,6 @@ export class TournamentEditComponent implements OnInit {
 			this.tournament.format = this.validationForm.get('tournament-format').value;
 			this.tournament.teamSize = this.validationForm.get('tournament-team-size').value;
 
-			this.tournament.webhook = this.validationForm.get('webhook').value;
-			this.tournament.testWebhook = this.validationForm.get('test-webhook').value;
-
 			for (const mappool of this.tournament.mappools) {
 				mappool.name = this.validationForm.get(`mappool-${mappool.localId}-name`).value;
 				mappool.type = this.validationForm.get(`mappool-${mappool.localId}-type`).value;
@@ -114,6 +124,17 @@ export class TournamentEditComponent implements OnInit {
 						category.name = this.validationForm.get(`mappool-${mappool.localId}-category-${category.index}-name`).value;
 					}
 				}
+			}
+
+			for (const webhook of this.tournament.webhooks) {
+				webhook.name = this.validationForm.get(`webhook-${webhook.index}-name`).value;
+				webhook.url = this.validationForm.get(`webhook-${webhook.index}-url`).value;
+
+				webhook.matchCreation = this.validationForm.get(`webhook-${webhook.index}-match-creation`).value;
+				webhook.picks = this.validationForm.get(`webhook-${webhook.index}-picks`).value;
+				webhook.bans = this.validationForm.get(`webhook-${webhook.index}-bans`).value;
+				webhook.matchResult = this.validationForm.get(`webhook-${webhook.index}-match-result`).value;
+				webhook.finalResult = this.validationForm.get(`webhook-${webhook.index}-final-result`).value;
 			}
 
 			this.tournamentService.updateTournament(this.tournament);

@@ -42,9 +42,7 @@ export class TournamentPublishedEditComponent implements OnInit {
 						Validators.required,
 						Validators.min(1),
 						Validators.max(8)
-					]),
-					'webhook': new FormControl(tournament.webhook),
-					'test-webhook': new FormControl(tournament.testWebhook)
+					])
 				});
 
 				const calculateScoreInterfaces: Calculate = new Calculate();
@@ -80,6 +78,17 @@ export class TournamentPublishedEditComponent implements OnInit {
 					}
 				}
 
+				for (const webhook of tournament.webhooks) {
+					this.validationForm.addControl('webhook-' + webhook.index + '-name', new FormControl(webhook.name, Validators.required));
+					this.validationForm.addControl('webhook-' + webhook.index + '-url', new FormControl(webhook.url, Validators.required));
+
+					this.validationForm.addControl('webhook-' + webhook.index + '-match-creation', new FormControl(webhook.matchCreation, Validators.required));
+					this.validationForm.addControl('webhook-' + webhook.index + '-picks', new FormControl(webhook.picks, Validators.required));
+					this.validationForm.addControl('webhook-' + webhook.index + '-bans', new FormControl(webhook.bans, Validators.required));
+					this.validationForm.addControl('webhook-' + webhook.index + '-match-result', new FormControl(webhook.matchResult, Validators.required));
+					this.validationForm.addControl('webhook-' + webhook.index + '-final-result', new FormControl(webhook.finalResult, Validators.required));
+				}
+
 				this.tournament = tournament;
 			});
 		});
@@ -98,9 +107,6 @@ export class TournamentPublishedEditComponent implements OnInit {
 			this.tournament.format = this.validationForm.get('tournament-format').value;
 			this.tournament.teamSize = this.validationForm.get('tournament-team-size').value;
 
-			this.tournament.webhook = this.validationForm.get('webhook').value;
-			this.tournament.testWebhook = this.validationForm.get('test-webhook').value;
-
 			for (const mappool of this.tournament.mappools) {
 				mappool.name = this.validationForm.get(`mappool-${mappool.localId}-name`).value;
 				mappool.type = this.validationForm.get(`mappool-${mappool.localId}-type`).value;
@@ -115,6 +121,17 @@ export class TournamentPublishedEditComponent implements OnInit {
 						category.name = this.validationForm.get(`mappool-${mappool.localId}-category-${category.index}-name`).value;
 					}
 				}
+			}
+
+			for (const webhook of this.tournament.webhooks) {
+				webhook.name = this.validationForm.get(`webhook-${webhook.index}-name`).value;
+				webhook.url = this.validationForm.get(`webhook-${webhook.index}-url`).value;
+
+				webhook.matchCreation = this.validationForm.get(`webhook-${webhook.index}-match-creation`).value;
+				webhook.picks = this.validationForm.get(`webhook-${webhook.index}-picks`).value;
+				webhook.bans = this.validationForm.get(`webhook-${webhook.index}-bans`).value;
+				webhook.matchResult = this.validationForm.get(`webhook-${webhook.index}-match-result`).value;
+				webhook.finalResult = this.validationForm.get(`webhook-${webhook.index}-final-result`).value;
 			}
 
 			this.tournamentService.updatePublishedTournament(this.tournament).subscribe(tournament => {

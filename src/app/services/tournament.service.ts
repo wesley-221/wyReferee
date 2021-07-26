@@ -4,6 +4,7 @@ import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Observable } from 'rxjs/internal/Observable';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,9 +16,13 @@ export class TournamentService {
 	allTournaments: WyTournament[];
 	availableTournamentId: number;
 
+	private tournamentsInitialized$: BehaviorSubject<boolean>;
+
 	constructor(private storeService: StoreService, private httpClient: HttpClient) {
 		this.availableTournamentId = 0;
 		this.allTournaments = [];
+
+		this.tournamentsInitialized$ = new BehaviorSubject(false);
 
 		const storeAllTournaments = this.storeService.get('cache.tournaments');
 
@@ -47,6 +52,18 @@ export class TournamentService {
 				this.allTournaments.push(newTournament);
 			}
 		}
+
+		// TODO: make a better solution for this
+		setTimeout(() => {
+			this.tournamentsInitialized$.next(true);
+		}, 1);
+	}
+
+	/**
+	 * Check if the tournaments have been intialized
+	 */
+	tournamentsHaveBeenInitialized(): Observable<boolean> {
+		return this.tournamentsInitialized$.asObservable();
 	}
 
 	/**

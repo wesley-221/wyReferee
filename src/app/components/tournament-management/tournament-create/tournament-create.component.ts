@@ -38,9 +38,7 @@ export class TournamentCreateComponent implements OnInit {
 				Validators.required,
 				Validators.min(1),
 				Validators.max(8)
-			]),
-			'webhook': new FormControl(''),
-			'test-webhook': new FormControl('')
+			])
 		});
 	}
 
@@ -54,9 +52,6 @@ export class TournamentCreateComponent implements OnInit {
 
 			this.tournament.format = this.validationForm.get('tournament-format').value;
 			this.tournament.teamSize = this.validationForm.get('tournament-team-size').value;
-
-			this.tournament.webhook = this.validationForm.get('webhook').value;
-			this.tournament.testWebhook = this.validationForm.get('test-webhook').value;
 
 			for (const mappool of this.tournament.mappools) {
 				mappool.name = this.validationForm.get(`mappool-${mappool.localId}-name`).value;
@@ -72,6 +67,17 @@ export class TournamentCreateComponent implements OnInit {
 						category.name = this.validationForm.get(`mappool-${mappool.localId}-category-${category.index}-name`).value;
 					}
 				}
+			}
+
+			for (const webhook of this.tournament.webhooks) {
+				webhook.name = this.validationForm.get(`webhook-${webhook.index}-name`).value;
+				webhook.url = this.validationForm.get(`webhook-${webhook.index}-url`).value;
+
+				webhook.matchCreation = this.validationForm.get(`webhook-${webhook.index}-match-creation`).value;
+				webhook.picks = this.validationForm.get(`webhook-${webhook.index}-picks`).value;
+				webhook.bans = this.validationForm.get(`webhook-${webhook.index}-bans`).value;
+				webhook.matchResult = this.validationForm.get(`webhook-${webhook.index}-match-result`).value;
+				webhook.finalResult = this.validationForm.get(`webhook-${webhook.index}-final-result`).value;
 			}
 
 			this.tournamentService.saveTournament(this.tournament);

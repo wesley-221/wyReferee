@@ -20,35 +20,93 @@
 			<li>Fill in the fields and finally copy the "Webhook url"</li>
 		</ul>
 
-		<div class="row">
-			<div class="col">
-				<h3>Webhook</h3>
+		<hr />
 
-				<mat-form-field class="full-width">
-					<mat-label>Webhook</mat-label>
-					<input matInput formControlName="webhook" />
+		<button mat-raised-button color="primary" (click)="createWebhook()"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new webhook</button>
 
-					<mat-error *ngIf="validationForm.get('webhook').errors && (validationForm.get('webhook').touched || validationForm.get('webhook').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
-
-				<p>The webhook where all the messages will be send to</p>
+		<div class="all-webhooks">
+			<div class="alert alert-info" *ngIf="tournament.webhooks.length <= 0">
+				You have no webhooks setup.
 			</div>
 
-			<div class="col">
-				<h3>Test webhook</h3>
+			<div class="webhook" *ngFor="let webhook of tournament.webhooks">
+				<div class="title">
+					<h3 *ngIf="webhook.name == null">Unnamed webhook</h3>
+					<h3 *ngIf="webhook.name != null">{{ webhook.name }}</h3>
 
-				<mat-form-field class="full-width">
-					<mat-label>Test webhook</mat-label>
-					<input matInput formControlName="test-webhook" />
+					<button mat-mini-fab color="warn" (click)="removeWebhook(webhook)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+				</div>
 
-					<mat-error *ngIf="validationForm.get('test-webhook').errors && (validationForm.get('test-webhook').touched || validationForm.get('test-webhook').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
+				<div class="row">
+					<div class="col">
+						<mat-form-field class="full-width">
+							<mat-label>Webhook name</mat-label>
+							<input matInput [formControlName]="'webhook-' + webhook.index + '-name'" (change)="onNameChange(webhook)" />
 
-				<p>The webhook that can be used to test around with (for example a staff-only channel)</p>
+							<mat-error *ngIf="validationForm.get('webhook-' + webhook.index + '-name').errors && (validationForm.get('webhook-' + webhook.index + '-name').touched || validationForm.get('webhook-' + webhook.index + '-name').dirty)">
+								This field is required
+							</mat-error>
+						</mat-form-field>
+
+						<p>Used to identify the webhook</p>
+					</div>
+
+					<div class="col">
+						<mat-form-field class="full-width">
+							<mat-label>Webhook url</mat-label>
+							<input matInput [formControlName]="'webhook-' + webhook.index + '-url'" />
+
+							<mat-error *ngIf="validationForm.get('webhook-' + webhook.index + '-url').errors && (validationForm.get('webhook-' + webhook.index + '-url').touched || validationForm.get('webhook-' + webhook.index + '-url').dirty)">
+								This field is required
+							</mat-error>
+						</mat-form-field>
+
+						<p>The url of the webhook</p>
+					</div>
+				</div>
+
+				<h3>Options</h3>
+
+				<div class="all-options">
+					<div class="option">
+						<div class="description">
+							Match creation
+						</div>
+
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-match-creation'"></mat-slide-toggle>
+					</div>
+
+					<div class="option">
+						<div class="description">
+							Picks
+						</div>
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-picks'"></mat-slide-toggle>
+					</div>
+
+					<div class="option">
+						<div class="description">
+							Bans
+						</div>
+
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-bans'"></mat-slide-toggle>
+					</div>
+
+					<div class="option">
+						<div class="description">
+							Match result
+						</div>
+
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-match-result'"></mat-slide-toggle>
+					</div>
+
+					<div class="option">
+						<div class="description">
+							Final result
+						</div>
+
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-final-result'"></mat-slide-toggle>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

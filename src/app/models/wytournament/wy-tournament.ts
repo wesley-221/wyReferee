@@ -2,6 +2,7 @@ import { User } from "../authentication/user";
 import { Calculate } from "../score-calculation/calculate";
 import { ScoreInterface } from "../score-calculation/calculation-types/score-interface";
 import { WyMappool } from "./mappool/wy-mappool";
+import { WyWebhook } from "./wy-webhook";
 import { WyTeam } from "./wy-team";
 
 export enum TournamentFormat {
@@ -25,8 +26,8 @@ export class WyTournament {
 	scoreInterfaceIdentifier: string;
 	scoreInterface: ScoreInterface;
 
-	webhook: string;
-	testWebhook: string;
+	webhooks: WyWebhook[];
+	webhookIndex: number;
 
 	challongeIntegration: number;
 	challongeApiKey: string;
@@ -45,6 +46,8 @@ export class WyTournament {
 	constructor(init?: Partial<WyTournament>) {
 		this.teams = [];
 		this.teamIndex = 0;
+		this.webhooks = [];
+		this.webhookIndex = 0;
 		this.mappools = [];
 		this.availableTo = [];
 		this.administrators = [];
@@ -144,8 +147,6 @@ export class WyTournament {
 			format: tournament.format,
 			scoreInterface: calc.getScoreInterface(tournament.scoreInterfaceIdentifier),
 			scoreInterfaceIdentifier: tournament.scoreInterfaceIdentifier,
-			webhook: tournament.webhook,
-			testWebhook: tournament.testWebhook,
 			challongeIntegration: tournament.challongeIntegration,
 			challongeApiKey: tournament.challongeApiKey,
 			challongeTournamentId: tournament.challongeTournamentId,
@@ -161,6 +162,15 @@ export class WyTournament {
 			newTournament.teamIndex++;
 
 			newTournament.teams.push(newTeam);
+		}
+
+		for (const webhook in tournament.webhooks) {
+			const newWebhook = WyWebhook.makeTrueCopy(tournament.webhooks[webhook]);
+
+			newWebhook.index = newTournament.webhookIndex;
+			newTournament.webhookIndex++;
+
+			newTournament.webhooks.push(newWebhook);
 		}
 
 		for (const mappool in tournament.mappools) {
