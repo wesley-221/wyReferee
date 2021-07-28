@@ -90,15 +90,15 @@ export class ModBracketComponent implements OnInit {
 					}
 				}
 
-				this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-${modBracket.index}-name`);
+				this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-${modBracket.index}-name`);
 
 				for (const mod in modBracket.mods) {
-					this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-mod-${modBracket.mods[mod].index}-value`);
+					this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-mod-${modBracket.mods[mod].index}-value`);
 				}
 
 				if (this.mappool.type == MappoolType.AxS) {
 					for (const beatmap in modBracket.beatmaps) {
-						this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${modBracket.beatmaps[beatmap].index}-modifier`);
+						this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-beatmap-${modBracket.beatmaps[beatmap].index}-modifier`);
 					}
 				}
 
@@ -119,7 +119,7 @@ export class ModBracketComponent implements OnInit {
 			this.modBracket.modIndex++;
 			this.modBracket.mods.push(newMod);
 
-			this.validationForm.addControl(`mappool-${this.mappool.localId}-mod-bracket-mod-${newMod.index}-value`, new FormControl('', Validators.required));
+			this.validationForm.addControl(`mappool-${this.mappool.id}-mod-bracket-mod-${newMod.index}-value`, new FormControl('', Validators.required));
 		}
 		else {
 			this.toastService.addToast('Maximum amount of mods reached.', ToastType.Warning);
@@ -133,7 +133,7 @@ export class ModBracketComponent implements OnInit {
 	deleteMod(modIndex: number): void {
 		for (const mod in this.modBracket.mods) {
 			if (this.modBracket.mods[mod].index == modIndex) {
-				this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-mod-${this.modBracket.mods[mod].index}-value`);
+				this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-mod-${this.modBracket.mods[mod].index}-value`);
 
 				this.modBracket.mods.splice(Number(mod), 1);
 				return;
@@ -154,7 +154,7 @@ export class ModBracketComponent implements OnInit {
 		bracket.beatmaps.push(newModBracketMap);
 
 		if (this.mappool.type == MappoolType.AxS) {
-			this.validationForm.addControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
+			this.validationForm.addControl(`mappool-${this.mappool.id}-mod-bracket-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
 		}
 	}
 
@@ -176,7 +176,7 @@ export class ModBracketComponent implements OnInit {
 			bracket.beatmaps.push(newModBracketMap);
 
 			if (this.mappool.type == MappoolType.AxS) {
-				this.validationForm.addControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
+				this.validationForm.addControl(`mappool-${this.mappool.id}-mod-bracket-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
 			}
 		});
 	}
@@ -229,7 +229,7 @@ export class ModBracketComponent implements OnInit {
 		bracket.beatmaps.splice(bracket.beatmaps.indexOf(beatmap), 1);
 
 		if (this.mappool.type == MappoolType.AxS) {
-			this.validationForm.removeControl(`mappool-${this.mappool.localId}-mod-bracket-beatmap-${beatmap.index}-modifier`);
+			this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-beatmap-${beatmap.index}-modifier`);
 		}
 	}
 }

@@ -16,7 +16,6 @@ export class Lobby {
 	tournament: WyTournament;
 
 	teamSize: number;
-	webhook: string;
 
 	mappoolId: number;
 	mappool: WyMappool;
@@ -64,6 +63,9 @@ export class Lobby {
 
 		this.multiplayerData = [];
 		this.pickedCategories = [];
+
+		this.teamOneScore = 0;
+		this.teamTwoScore = 0;
 
 		this.ircConnected = false;
 
@@ -208,7 +210,6 @@ export class Lobby {
 			tournamentId: lobby.tournamentId,
 			tournament: lobby.tournament != null ? WyTournament.makeTrueCopy(lobby.tournament) : null,
 			teamSize: lobby.teamSize,
-			webhook: lobby.webhook,
 			mappoolId: lobby.mappoolId,
 			mappool: lobby.mappool != null ? WyMappool.makeTrueCopy(lobby.mappool) : null,
 			ircChannel: lobby.ircChannel,

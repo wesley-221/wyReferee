@@ -5,9 +5,9 @@
 
 			<mat-form-field class="full-width">
 				<mat-label>Mappool name</mat-label>
-				<input matInput [formControlName]="'mappool-' + mappool.localId + '-name'" (change)="onNameChange($event)" />
+				<input matInput [formControlName]="'mappool-' + mappool.id + '-name'" (change)="onNameChange($event)" />
 
-				<mat-error *ngIf="validationForm.get('mappool-' + mappool.localId + '-name').errors && (validationForm.get('mappool-' + mappool.localId + '-name').touched || validationForm.get('mappool-' + mappool.localId + '-name').dirty)">
+				<mat-error *ngIf="validationForm.get('mappool-' + mappool.id + '-name').errors && (validationForm.get('mappool-' + mappool.id + '-name').touched || validationForm.get('mappool-' + mappool.id + '-name').dirty)">
 					This field is required
 				</mat-error>
 			</mat-form-field>
@@ -20,13 +20,13 @@
 
 			<mat-form-field class="full-width">
 				<mat-label>Mappool type</mat-label>
-				<mat-select [formControlName]="'mappool-' + mappool.localId + '-type'" (selectionChange)="changeMappoolType($event)">
+				<mat-select [formControlName]="'mappool-' + mappool.id + '-type'" (selectionChange)="changeMappoolType($event)">
 					<mat-option [value]="0">Normal</mat-option>
 					<mat-option [value]="1">AxS</mat-option>
 					<mat-option [value]="2">Mystery tournament</mat-option>
 				</mat-select>
 
-				<mat-error *ngIf="validationForm.get('mappool-' + mappool.localId + '-type').errors && (validationForm.get('mappool-' + mappool.localId + '-type').touched || validationForm.get('mappool-' + mappool.localId + '-type').dirty)">
+				<mat-error *ngIf="validationForm.get('mappool-' + mappool.id + '-type').errors && (validationForm.get('mappool-' + mappool.id + '-type').touched || validationForm.get('mappool-' + mappool.id + '-type').dirty)">
 					This field is required
 				</mat-error>
 			</mat-form-field>
@@ -53,9 +53,9 @@
 				<div class="category-name">
 					<mat-form-field class="full-width">
 						<mat-label>Category name</mat-label>
-						<input matInput class="full-width" [formControlName]="'mappool-' + mappool.localId + '-category-' + category.index + '-name'" />
+						<input matInput class="full-width" [formControlName]="'mappool-' + mappool.id + '-category-' + category.index + '-name'" />
 
-						<mat-error *ngIf="validationForm.get('mappool-' + mappool.localId + '-category-' + category.index + '-name').errors && (validationForm.get('mappool-' + mappool.localId + '-category-' + category.index + '-name').touched || validationForm.get('mappool-' + mappool.localId + '-category-' + category.index + '-name').dirty)">
+						<mat-error *ngIf="validationForm.get('mappool-' + mappool.id + '-category-' + category.index + '-name').errors && (validationForm.get('mappool-' + mappool.id + '-category-' + category.index + '-name').touched || validationForm.get('mappool-' + mappool.id + '-category-' + category.index + '-name').dirty)">
 							This field is required
 						</mat-error>
 					</mat-form-field>

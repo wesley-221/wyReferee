@@ -25,7 +25,9 @@ export class MultiplayerData {
 		});
 
 		for (const player in multiplayerData.players) {
-			newMultiplayerData.players.push(MultiplayerDataUser.makeTrueCopy(multiplayerData.players[player]));
+			if (multiplayerData.players[player] != null) {
+				newMultiplayerData.players.push(MultiplayerDataUser.makeTrueCopy(multiplayerData.players[player]));
+			}
 		}
 
 		return newMultiplayerData;

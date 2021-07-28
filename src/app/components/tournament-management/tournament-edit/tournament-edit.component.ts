@@ -7,6 +7,7 @@ import { ToastType } from 'app/models/toast';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
+import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 
 @Component({
 	selector: 'app-tournament-edit',
@@ -17,7 +18,7 @@ export class TournamentEditComponent implements OnInit {
 	tournament: WyTournament;
 	validationForm: FormGroup;
 
-	constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private toastService: ToastService) {
+	constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private toastService: ToastService, private lobbyService: WyMultiplayerLobbiesService) {
 		this.route.params.subscribe((params: Params) => {
 			this.tournamentService.tournamentsHaveBeenInitialized().subscribe(initialized => {
 				if (initialized == true) {
@@ -72,21 +73,21 @@ export class TournamentEditComponent implements OnInit {
 					for (const mappool of tournament.mappools) {
 						mappool.collapsed = true;
 
-						this.validationForm.addControl(`mappool-${mappool.localId}-name`, new FormControl(mappool.name, Validators.required));
-						this.validationForm.addControl(`mappool-${mappool.localId}-type`, new FormControl(mappool.type, Validators.required));
+						this.validationForm.addControl(`mappool-${mappool.id}-name`, new FormControl(mappool.name, Validators.required));
+						this.validationForm.addControl(`mappool-${mappool.id}-type`, new FormControl(mappool.type, Validators.required));
 
 						for (const modBracket of mappool.modBrackets) {
 							modBracket.collapsed = true;
 
-							this.validationForm.addControl(`mappool-${mappool.localId}-mod-bracket-${modBracket.index}-name`, new FormControl(modBracket.name, Validators.required));
+							this.validationForm.addControl(`mappool-${mappool.id}-mod-bracket-${modBracket.index}-name`, new FormControl(modBracket.name, Validators.required));
 
 							for (const mod of modBracket.mods) {
-								this.validationForm.addControl(`mappool-${mappool.localId}-mod-bracket-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
+								this.validationForm.addControl(`mappool-${mappool.id}-mod-bracket-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
 							}
 						}
 
 						for (const category of mappool.modCategories) {
-							this.validationForm.addControl(`mappool-${mappool.localId}-category-${category.index}-name`, new FormControl(category.name, Validators.required));
+							this.validationForm.addControl(`mappool-${mappool.id}-category-${category.index}-name`, new FormControl(category.name, Validators.required));
 						}
 					}
 
@@ -111,17 +112,17 @@ export class TournamentEditComponent implements OnInit {
 			this.tournament.teamSize = this.validationForm.get('tournament-team-size').value;
 
 			for (const mappool of this.tournament.mappools) {
-				mappool.name = this.validationForm.get(`mappool-${mappool.localId}-name`).value;
-				mappool.type = this.validationForm.get(`mappool-${mappool.localId}-type`).value;
+				mappool.name = this.validationForm.get(`mappool-${mappool.id}-name`).value;
+				mappool.type = this.validationForm.get(`mappool-${mappool.id}-type`).value;
 
 				for (const modBracket of mappool.modBrackets) {
 					for (const mod of modBracket.mods) {
-						mod.value = this.validationForm.get(`mappool-${mappool.localId}-mod-bracket-mod-${mod.index}-value`).value;
+						mod.value = this.validationForm.get(`mappool-${mappool.id}-mod-bracket-mod-${mod.index}-value`).value;
 						mod.name = mod.value == 'freemod' ? 'Freemod' : Mods[mod.value];
 					}
 
 					for (const category of mappool.modCategories) {
-						category.name = this.validationForm.get(`mappool-${mappool.localId}-category-${category.index}-name`).value;
+						category.name = this.validationForm.get(`mappool-${mappool.id}-category-${category.index}-name`).value;
 					}
 				}
 			}
@@ -137,7 +138,13 @@ export class TournamentEditComponent implements OnInit {
 				webhook.finalResult = this.validationForm.get(`webhook-${webhook.index}-final-result`).value;
 			}
 
-			this.tournamentService.updateTournament(this.tournament);
+			this.tournamentService.updateTournament(this.tournament, this.tournament.id);
+
+			for (const lobby in this.lobbyService.allLobbies) {
+				if (this.lobbyService.allLobbies[lobby].tournamentId == this.tournament.id) {
+					this.lobbyService.allLobbies[lobby].tournament = this.tournament;
+				}
+			}
 
 			this.toastService.addToast(`Successfully updated the tournament.`);
 		}

@@ -4,9 +4,9 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 
 @Component({
-  selector: 'app-multiplayer-lobby-settings',
-  templateUrl: './multiplayer-lobby-settings.component.html',
-  styleUrls: ['./multiplayer-lobby-settings.component.scss']
+	selector: 'app-multiplayer-lobby-settings',
+	templateUrl: './multiplayer-lobby-settings.component.html',
+	styleUrls: ['./multiplayer-lobby-settings.component.scss']
 })
 export class MultiplayerLobbySettingsComponent implements OnInit {
 	constructor(@Inject(MAT_DIALOG_DATA) public data: MultiplayerLobbySettingsDialogData) { }

@@ -242,56 +242,6 @@
 			</div>
 		</div> -->
 
-		<h2>Webhook</h2>
-
-		<div *ngIf="selectedTournament != null">
-			<mat-form-field class="full-width">
-				<mat-label>Webhook</mat-label>
-
-				<mat-select formControlName="webhook">
-					<mat-option>No webhook</mat-option>
-					<mat-option [value]="selectedTournament.webhook">Main webhook</mat-option>
-					<mat-option [value]="selectedTournament.testWebhook">Test webhook</mat-option>
-				</mat-select>
-			</mat-form-field>
-
-			<p>Select the webhook you would like to use for this match.</p>
-
-			<ul>
-				<li>No webhook: no webhook will be used, no results will be send.</li>
-				<li>Main webhook: results will be send to a public Discord channel.</li>
-				<li>Test webhook: results will be send to a referee-only Discord channel, used for testing to see how it all works.</li>
-			</ul>
-		</div>
-
-		<div *ngIf="selectedTournament == null">
-			<mat-form-field class="full-width">
-				<mat-label>Webhook</mat-label>
-				<input matInput formControlName="webhook" />
-			</mat-form-field>
-
-			<div class="alert alert-info">
-				For the client to send status messages to a Discord channel, you have to setup a webhook. Currently the following statuses will be send to Discord:
-				<ul>
-					<li>When a referee bans a map for either team</li>
-					<li>When a map finishes</li>
-					<li>When the referee sends the final result</li>
-				</ul>
-
-				<div class="discord-webhook-header">How to create a Discord webhook:</div>
-				<i>NOTE: this step is only required when there is no webhook available.</i>
-				<ul>
-					<li>Go to the server you want the messages to be send to</li>
-					<li>Right click on the channel you want the messages to be send to</li>
-					<li>Click on "Edit Channel"</li>
-					<li>Click on "Integrations"</li>
-					<li>Click on "Create Webhook"</li>
-					<li>Fill in the fields and finally copy the "Webhook url"</li>
-				</ul>
-			</div>
-		</div>
-
-
 		<button mat-raised-button color="accent" class="margin-button" (click)="createLobby()" [disabled]="!ircAuthenticated">Create</button>
 	</form>
 </div>

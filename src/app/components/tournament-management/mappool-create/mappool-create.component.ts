@@ -27,14 +27,14 @@ export class MappoolCreateComponent implements OnInit {
 	 */
 	createNewMappool(): void {
 		const newMappool = new WyMappool({
-			localId: this.tournament.mappools.length + 1,
+			id: this.tournament.mappools.length + 1,
 			name: `Unnamed mappool`
 		});
 
 		this.tournament.mappools.push(newMappool);
 
-		this.validationForm.addControl(`mappool-${newMappool.localId}-name`, new FormControl('', Validators.required));
-		this.validationForm.addControl(`mappool-${newMappool.localId}-type`, new FormControl('', Validators.required));
+		this.validationForm.addControl(`mappool-${newMappool.id}-name`, new FormControl('', Validators.required));
+		this.validationForm.addControl(`mappool-${newMappool.id}-type`, new FormControl('', Validators.required));
 	}
 
 	/**
@@ -51,7 +51,7 @@ export class MappoolCreateComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
 				for (const findMappool in this.tournament.mappools) {
-					if (this.tournament.mappools[findMappool].localId == mappool.localId) {
+					if (this.tournament.mappools[findMappool].id == mappool.id) {
 						this.tournament.mappools.splice(Number(findMappool), 1);
 						break;
 					}

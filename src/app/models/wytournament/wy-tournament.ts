@@ -62,7 +62,7 @@ export class WyTournament {
 		this.id = null;
 
 		for (const mappool of this.mappools) {
-			mappool.localId = null;
+			mappool.id = null;
 			mappool.publishId = null;
 
 			for (const modBracket of mappool.modBrackets) {
@@ -97,7 +97,7 @@ export class WyTournament {
 	 */
 	getMappoolFromId(id: number): WyMappool {
 		for (const mappool in this.mappools) {
-			if (this.mappools[mappool].localId == id) {
+			if (this.mappools[mappool].id == id) {
 				return this.mappools[mappool];
 			}
 		}

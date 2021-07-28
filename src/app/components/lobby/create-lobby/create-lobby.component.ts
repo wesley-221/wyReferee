@@ -15,6 +15,7 @@ import { WyTeam } from 'app/models/wytournament/wy-team';
 import { map, startWith } from 'rxjs/operators';
 import { Lobby } from 'app/models/lobby';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
+import { WebhookService } from 'app/services/webhook.service';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -53,7 +54,8 @@ export class CreateLobbyComponent implements OnInit {
 		private toastService: ToastService,
 		private ircService: IrcService,
 		public tournamentService: TournamentService,
-		private router: Router) {
+		private router: Router,
+		private webhookService: WebhookService) {
 		this.calculateScoreInterfaces = new Calculate();
 
 		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -83,7 +85,6 @@ export class CreateLobbyComponent implements OnInit {
 			'team-two-name': new FormControl('', [
 				Validators.required
 			]),
-			'webhook': new FormControl(),
 			'selected-tournament': new FormControl()
 		});
 
@@ -175,7 +176,6 @@ export class CreateLobbyComponent implements OnInit {
 				multiplayerLink: this.validationForm.get('multiplayer-link').value,
 				tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
 				tournament: this.selectedTournament,
-				webhook: this.validationForm.get('webhook').value,
 				teamOneName: this.validationForm.get('team-one-name').value,
 				teamTwoName: this.validationForm.get('team-two-name').value
 			});
@@ -197,6 +197,8 @@ export class CreateLobbyComponent implements OnInit {
 					this.multiplayerLobbies.addMultiplayerLobby(lobby);
 
 					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
+
+					this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 
 					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
 				});

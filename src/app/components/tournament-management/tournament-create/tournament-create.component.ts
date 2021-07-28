@@ -54,17 +54,17 @@ export class TournamentCreateComponent implements OnInit {
 			this.tournament.teamSize = this.validationForm.get('tournament-team-size').value;
 
 			for (const mappool of this.tournament.mappools) {
-				mappool.name = this.validationForm.get(`mappool-${mappool.localId}-name`).value;
-				mappool.type = this.validationForm.get(`mappool-${mappool.localId}-type`).value;
+				mappool.name = this.validationForm.get(`mappool-${mappool.id}-name`).value;
+				mappool.type = this.validationForm.get(`mappool-${mappool.id}-type`).value;
 
 				for (const modBracket of mappool.modBrackets) {
 					for (const mod of modBracket.mods) {
-						mod.value = this.validationForm.get(`mappool-${mappool.localId}-mod-bracket-mod-${mod.index}-value`).value;
+						mod.value = this.validationForm.get(`mappool-${mappool.id}-mod-bracket-mod-${mod.index}-value`).value;
 						mod.name = mod.value == 'freemod' ? 'Freemod' : Mods[mod.value];
 					}
 
 					for (const category of mappool.modCategories) {
-						category.name = this.validationForm.get(`mappool-${mappool.localId}-category-${category.index}-name`).value;
+						category.name = this.validationForm.get(`mappool-${mappool.id}-category-${category.index}-name`).value;
 					}
 				}
 			}

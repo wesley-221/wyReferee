@@ -27,7 +27,7 @@ import { WebhookService } from './webhook.service';
 	providedIn: 'root'
 })
 export class WyMultiplayerLobbiesService {
-	private allLobbies: Lobby[];
+	allLobbies: Lobby[];
 	availableLobbyId: number;
 	synchronizeDone$: BehaviorSubject<number>;
 
@@ -49,7 +49,11 @@ export class WyMultiplayerLobbiesService {
 		for (const lobby in allLobbies) {
 			const newLobby = Lobby.makeTrueCopy(allLobbies[lobby]);
 
-			// re-import Tournament?
+			this.tournamentService.tournamentsHaveBeenInitialized().subscribe(initialized => {
+				if (initialized == true) {
+					newLobby.tournament = this.tournamentService.getTournamentById(newLobby.tournamentId);
+				}
+			});
 
 			this.allLobbies.push(newLobby);
 			this.availableLobbyId = newLobby.lobbyId + 1;
@@ -219,8 +223,8 @@ export class WyMultiplayerLobbiesService {
 					(<AxSCalculation>scoreInterface).setModifier(modifier);
 				}
 
-				multiplayerLobby.teamOneScore = scoreInterface.calculateTeamOneScore();
-				multiplayerLobby.teamTwoScore = scoreInterface.calculateTeamTwoScore();
+				multiplayerData.team_one_score = scoreInterface.calculateTeamOneScore();
+				multiplayerData.team_two_score = scoreInterface.calculateTeamTwoScore();
 
 				if (multiplayerData.team_one_score > multiplayerData.team_two_score) {
 					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
@@ -250,7 +254,7 @@ export class WyMultiplayerLobbiesService {
 
 			if (sendWebhook != null && sendWebhook == true) {
 				const ircCredentials = this.storeService.get('irc');
-				this.webhookService.sendMatchFinishedResult(multiplayerLobby, ircCredentials.username).subscribe();
+				this.webhookService.sendMatchFinishedResult(multiplayerLobby, ircCredentials.username);
 			}
 		});
 	}

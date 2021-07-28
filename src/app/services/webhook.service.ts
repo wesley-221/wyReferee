@@ -5,12 +5,13 @@ import { CacheBeatmap } from '../models/cache/cache-beatmap';
 import { MultiplayerDataUser } from '../models/store-multiplayer/multiplayer-data-user';
 import { Lobby } from 'app/models/lobby';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
+import { ToastService } from './toast.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class WebhookService {
-	constructor(private http: HttpClient, private cacheService: CacheService) { }
+	constructor(private http: HttpClient, private cacheService: CacheService, private toastService: ToastService) { }
 
 	/**
 	 * Get a beatmap from any given mappool
@@ -84,7 +85,13 @@ export class WebhookService {
 			});
 		}
 
-		return this.http.post(selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) });
+		for (const webhook of selectedLobby.tournament.webhooks) {
+			if (webhook.finalResult == true) {
+				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(() => {
+					this.toastService.addToast(`Successfully send the message to Discord.`);
+				});
+			}
+		}
 	}
 
 	/**
@@ -125,7 +132,13 @@ export class WebhookService {
 			});
 		}
 
-		return this.http.post(selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) });
+		for (const webhook of selectedLobby.tournament.webhooks) {
+			if (webhook.finalResult == true) {
+				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(() => {
+					this.toastService.addToast(`Successfully send the message to Discord.`);
+				});
+			}
+		}
 	}
 
 	/**
@@ -136,8 +149,6 @@ export class WebhookService {
 	 * @param referee the referee
 	 */
 	sendBanResult(selectedLobby: Lobby, teamName: string, ban: WyModBracketMap, referee: string) {
-		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(ban.beatmapId);
-
 		const body = {
 			'embeds': [
 				{
@@ -150,7 +161,7 @@ export class WebhookService {
 						'text': `Match referee was ${referee}`
 					},
 					'thumbnail': {
-						'url': `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
+						'url': `https://b.ppy.sh/thumb/${ban.beatmapsetId}.jpg`
 					},
 					'fields': [
 					]
@@ -158,7 +169,11 @@ export class WebhookService {
 			]
 		};
 
-		return this.http.post(selectedLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) });
+		for (const webhook of selectedLobby.tournament.webhooks) {
+			if (webhook.bans == true) {
+				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+			}
+		}
 	}
 
 	/**
@@ -168,11 +183,29 @@ export class WebhookService {
 	 */
 	sendMatchFinishedResult(multiplayerLobby: Lobby, referee: string) {
 		const lastMultiplayerData = multiplayerLobby.multiplayerData[multiplayerLobby.multiplayerData.length - 1];
-		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(lastMultiplayerData.beatmap_id);
+
+		let cachedBeatmap = null;
+
+		for (const mappool of multiplayerLobby.tournament.mappools) {
+			for (const modBracket of mappool.modBrackets) {
+				for (const beatmap of modBracket.beatmaps) {
+					if (beatmap.beatmapId == lastMultiplayerData.beatmap_id) {
+						cachedBeatmap = new CacheBeatmap({
+							name: beatmap.beatmapName,
+							beatmapId: beatmap.beatmapId,
+							beatmapSetId: beatmap.beatmapsetId,
+							beatmapUrl: beatmap.beatmapUrl
+						});
+
+						break;
+					}
+				}
+			}
+		}
 
 		// Map is a warmup map most likely, skip
 		if (cachedBeatmap == null) {
-			return null;
+			return;
 		}
 
 		let resultString = '';
@@ -220,16 +253,18 @@ export class WebhookService {
 		let highestAccuracyPlayer: MultiplayerDataUser = new MultiplayerDataUser();
 
 		for (const user of lastMultiplayerData.getPlayers()) {
-			// Cast score and accuracy to actual int and float to prevent string comparison
-			user.score = parseInt(user.score as any);
-			user.accuracy = parseFloat(user.accuracy as any);
+			if (user != null && user != undefined) {
+				// Cast score and accuracy to actual int and float to prevent string comparison
+				user.score = parseInt(user.score as any);
+				user.accuracy = parseFloat(user.accuracy as any);
 
-			if (user.score > highestScorePlayer.score) {
-				highestScorePlayer = user;
-			}
+				if (user.score > highestScorePlayer.score) {
+					highestScorePlayer = user;
+				}
 
-			if (user.accuracy > highestAccuracyPlayer.accuracy) {
-				highestAccuracyPlayer = user;
+				if (user.accuracy > highestAccuracyPlayer.accuracy) {
+					highestAccuracyPlayer = user;
+				}
 			}
 		}
 
@@ -261,6 +296,74 @@ export class WebhookService {
 			]
 		};
 
-		return this.http.post(multiplayerLobby.webhook, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) });
+		for (const webhook of multiplayerLobby.tournament.webhooks) {
+			if (webhook.matchResult == true) {
+				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+			}
+		}
+	}
+
+	/**
+	 * Send the multiplayer lobby details through a discord webhook
+	 * @param selectedLobby the lobby to get the data from
+	 * @param referee the referee
+	 */
+	sendMatchCreation(selectedLobby: Lobby, referee: string): void {
+		const body = {
+			'embeds': [
+				{
+					'title': `Multiplayer lobby - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					'url': selectedLobby.multiplayerLink,
+					'color': 15258703,
+					'timestamp': new Date(),
+					'footer': {
+						'text': `Match referee was ${referee}`
+					},
+					'fields': [
+					]
+				}
+			]
+		};
+
+		for (const webhook of selectedLobby.tournament.webhooks) {
+			if (webhook.matchCreation == true) {
+				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+			}
+		}
+	}
+
+	/**
+	 * Send the picked beatmap through a discord webhook
+	 * @param selectedLobby the lobby to get the data from
+	 * @param referee the referee
+	 * @param teamName the team that picked the map
+	 * @param pick the picked map
+	 */
+	sendBeatmapPicked(selectedLobby: Lobby, referee: string, teamName: string, pick: WyModBracketMap): void {
+		const body = {
+			'embeds': [
+				{
+					'title': `📌 Pick update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					'url': selectedLobby.multiplayerLink,
+					'description': `**${teamName}** has picked [**${pick.beatmapName}**](${pick.beatmapUrl})`,
+					'color': 15258703,
+					'timestamp': new Date(),
+					'footer': {
+						'text': `Match referee was ${referee}`
+					},
+					'thumbnail': {
+						'url': `https://b.ppy.sh/thumb/${pick.beatmapsetId}.jpg`
+					},
+					'fields': [
+					]
+				}
+			]
+		};
+
+		for (const webhook of selectedLobby.tournament.webhooks) {
+			if (webhook.picks == true) {
+				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+			}
+		}
 	}
 }

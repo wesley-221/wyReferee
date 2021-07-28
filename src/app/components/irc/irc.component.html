@@ -141,7 +141,7 @@
 									<mat-label>Mappool</mat-label>
 									<mat-select (selectionChange)="onMappoolChange($event)">
 										<mat-option></mat-option>
-										<mat-option *ngFor="let mappool of selectedLobby.tournament.mappools" [value]="mappool.localId">{{ mappool.name }}</mat-option>
+										<mat-option *ngFor="let mappool of selectedLobby.tournament.mappools" [value]="mappool.id">{{ mappool.name }}</mat-option>
 									</mat-select>
 								</mat-form-field>
 							</div>
@@ -191,7 +191,7 @@
 
 										<button mat-mini-fab color="accent" matTooltip="Change which team has picked this map" (click)="changePickedBy(beatmap, bracket)" *ngIf="beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>change_circle</mat-icon></button>
 
-										<button mat-mini-fab color="primary" matTooltip="Pick this beatmap" (click)="pickBeatmap(beatmap, bracket, selectedLobby.tournament.gamemode)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)" *ngIf="!beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
+										<button mat-mini-fab color="primary" matTooltip="Pick this beatmap" (click)="pickBeatmap(beatmap, bracket, selectedLobby.tournament.gamemodeId)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)" *ngIf="!beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
 										<button mat-mini-fab color="warn" matTooltip="Unpick this beatmap" (click)="unpickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)" *ngIf="beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
 									</div>
 								</div>

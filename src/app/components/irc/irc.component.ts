@@ -278,6 +278,8 @@ export class IrcComponent implements OnInit {
 			this.selectedLobby.teamTwoPicks = [];
 		}
 
+		this.webhookService.sendBeatmapPicked(this.selectedLobby, this.ircService.authenticatedUser, this.selectedLobby.getNextPick(), beatmap);
+
 		// Update picks
 		if (this.selectedLobby.teamOneName == this.nextPick) {
 			this.selectedLobby.teamOnePicks.push(beatmap.beatmapId);
@@ -405,11 +407,11 @@ export class IrcComponent implements OnInit {
 			if (result != null) {
 				if (result.banForTeam == result.multiplayerLobby.teamOneName) {
 					this.selectedLobby.teamOneBans.push(result.beatmap.beatmapId);
-					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser).subscribe();
+					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser);
 				}
 				else {
 					this.selectedLobby.teamTwoBans.push(result.beatmap.beatmapId);
-					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser).subscribe();
+					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser);
 				}
 
 				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);

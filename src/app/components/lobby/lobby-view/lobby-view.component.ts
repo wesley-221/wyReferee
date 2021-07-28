@@ -185,15 +185,6 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Gets called when the webhook changes
-	 * @param event
-	 */
-	changeWebhook(event: any) {
-		this.selectedLobby.webhook = event.target.value;
-		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
-	}
-
-	/**
 	 * Mark the match as valid or invalid so that it counts towards the team score
 	 * @param match the match
 	 */
@@ -395,14 +386,10 @@ export class LobbyViewComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result: MultiplayerLobbySendFinalMessageDialogData) => {
 			if (result.winByDefault) {
-				this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser).subscribe(() => {
-					this.toastService.addToast(`Successfully send the message to Discord.`);
-				});
+				this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser);
 			}
 			else {
-				this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser).subscribe(() => {
-					this.toastService.addToast('Successfully send the message to Discord.');
-				})
+				this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
 			}
 		});
 	}

@@ -30,31 +30,25 @@ export class TournamentService {
 			const newTournament = WyTournament.makeTrueCopy(storeAllTournaments[tournament]);
 			this.availableTournamentId = newTournament.id + 1;
 
-			if (newTournament.publishId != undefined) {
-				this.getPublishedTournament(newTournament.publishId).subscribe((data) => {
-					const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
-
-					if (publishedTournament.updateDate > newTournament.updateDate) {
-						publishedTournament.publishId = publishedTournament.id;
-
-						this.updateTournament(publishedTournament);
-
-						this.allTournaments.push(publishedTournament);
-					}
-					else {
-						this.allTournaments.push(newTournament);
-					}
-				}, () => {
-					this.allTournaments.push(newTournament);
-				});
-			}
-			else {
-				this.allTournaments.push(newTournament);
-			}
+			this.allTournaments.push(newTournament);
 		}
 
 		// TODO: make a better solution for this
 		setTimeout(() => {
+			for (const tournament in this.allTournaments) {
+				if (this.allTournaments[tournament].publishId != undefined) {
+					this.getPublishedTournament(this.allTournaments[tournament].publishId).subscribe((data) => {
+						const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
+
+						if (publishedTournament.updateDate > this.allTournaments[tournament].updateDate) {
+							publishedTournament.publishId = publishedTournament.id;
+
+							this.updateTournament(publishedTournament, this.allTournaments[tournament].publishId, true);
+						}
+					});
+				}
+			}
+
 			this.tournamentsInitialized$.next(true);
 		}, 1);
 	}
@@ -81,11 +75,21 @@ export class TournamentService {
 	 * Update a tournament
 	 * @param tournament the tournament to update
 	 */
-	updateTournament(tournament: WyTournament): void {
+	updateTournament(tournament: WyTournament, idToUpdate: number, updateFromPublish?: boolean): void {
 		for (const findTournament in this.allTournaments) {
-			if (this.allTournaments[findTournament].id == tournament.id) {
-				this.allTournaments[findTournament] = WyTournament.makeTrueCopy(tournament);
-				break;
+			if (updateFromPublish == true) {
+				if (this.allTournaments[findTournament].publishId == idToUpdate) {
+					tournament.id = this.allTournaments[findTournament].id;
+
+					this.allTournaments[findTournament] = WyTournament.makeTrueCopy(tournament);
+					break;
+				}
+			}
+			else {
+				if (this.allTournaments[findTournament].id == idToUpdate) {
+					this.allTournaments[findTournament] = WyTournament.makeTrueCopy(tournament);
+					break;
+				}
 			}
 		}
 
