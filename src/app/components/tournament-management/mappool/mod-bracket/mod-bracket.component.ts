@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { DeleteModBracketDialogComponent } from 'app/components/dialogs/delete-mod-bracket-dialog/delete-mod-bracket-dialog.component';
 import { Mods } from 'app/models/osu-models/osu';
 import { ToastType } from 'app/models/toast';
@@ -8,6 +10,7 @@ import { MappoolType, WyMappool } from 'app/models/wytournament/mappool/wy-mappo
 import { WyMod } from 'app/models/wytournament/mappool/wy-mod';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
+import { WyModCategory } from 'app/models/wytournament/mappool/wy-mod-category';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ElectronService } from 'app/services/electron.service';
 import { GetBeatmap } from 'app/services/osu-api/get-beatmap.service';
@@ -48,9 +51,6 @@ export class ModBracketComponent implements OnInit {
 
 		this.MAX_BRACKETS = 4;
 		this.synchAllDisabled = false;
-
-		// TODO: remove this
-		this.bulkBeatmaps = '2775160,2774351,1298998,2374098,183084,2774189,308024,1621362';
 	}
 	ngOnInit(): void { }
 
@@ -231,5 +231,30 @@ export class ModBracketComponent implements OnInit {
 		if (this.mappool.type == MappoolType.AxS) {
 			this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-beatmap-${beatmap.index}-modifier`);
 		}
+	}
+
+	/**
+	 * Change the mod category for the given map
+	 * @param beatmap
+	 * @param event
+	 */
+	changeModCategory(beatmap: WyModBracketMap, event: MatSelectChange): void {
+		const modCategory = this.mappool.getModCategoryByName(event.value);
+
+		if (modCategory == undefined) {
+			beatmap.modCategory = undefined;
+		}
+		else {
+			beatmap.modCategory = WyModCategory.makeTrueCopy(this.mappool.getModCategoryByName(event.value));
+		}
+	}
+
+	/**
+	 * Change the picked status for the given map
+	 * @param beatmap
+	 * @param event
+	 */
+	changePicked(beatmap: WyModBracketMap, event: MatSlideToggleChange): void {
+		beatmap.picked = event.checked;
 	}
 }

@@ -40,6 +40,20 @@ export class WyMappool {
 	}
 
 	/**
+	 * Get the category by the given name
+	 * @param name the name of the category
+	 */
+	getModCategoryByName(name: string): WyModCategory {
+		for (const category in this.modCategories) {
+			if (this.modCategories[category].name == name) {
+				return this.modCategories[category];
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Create a true copy of the object
 	 * @param mod the object to copy
 	 */

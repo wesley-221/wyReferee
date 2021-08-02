@@ -1,3 +1,57 @@
+@import "variables";
+
 :host {
 	width: 100%;
+}
+
+.button-row {
+	display: flex;
+	flex-direction: row;
+
+	.button {
+		display: flex;
+		flex: 0 0 calc(50% - 8px);
+
+		margin-bottom: 8px;
+		padding: 16px;
+
+		border: 1px solid darken(#3c4452, 15%);
+
+		-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+		-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+		box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+
+		.logo {
+			display: flex;
+			align-items: center;
+		}
+
+		.name {
+			display: flex;
+			align-items: center;
+
+			padding-left: 16px;
+		}
+
+		&.active,
+		&:hover {
+			color: $primary;
+			cursor: pointer;
+
+			background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+		}
+
+		&:first-child {
+			margin-right: 8px;
+		}
+
+		&:last-child {
+			margin-left: 8px;
+		}
+	}
+}
+
+.all-tournaments {
+	height: calc(100% - 70px);
+	overflow-y: auto;
 }

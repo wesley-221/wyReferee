@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject } from 'rxjs';
+import { GenericService } from './generic.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,39 +19,43 @@ export class TournamentService {
 
 	private tournamentsInitialized$: BehaviorSubject<boolean>;
 
-	constructor(private storeService: StoreService, private httpClient: HttpClient) {
+	constructor(private storeService: StoreService, private httpClient: HttpClient, private genericService: GenericService) {
 		this.availableTournamentId = 0;
 		this.allTournaments = [];
 
 		this.tournamentsInitialized$ = new BehaviorSubject(false);
 
-		const storeAllTournaments = this.storeService.get('cache.tournaments');
+		this.genericService.getCacheHasBeenChecked().subscribe(checked => {
+			if (checked == true) {
+				const storeAllTournaments = this.storeService.get('cache.tournaments');
 
-		for (const tournament in storeAllTournaments) {
-			const newTournament = WyTournament.makeTrueCopy(storeAllTournaments[tournament]);
-			this.availableTournamentId = newTournament.id + 1;
+				for (const tournament in storeAllTournaments) {
+					const newTournament = WyTournament.makeTrueCopy(storeAllTournaments[tournament]);
+					this.availableTournamentId = newTournament.id + 1;
 
-			this.allTournaments.push(newTournament);
-		}
-
-		// TODO: make a better solution for this
-		setTimeout(() => {
-			for (const tournament in this.allTournaments) {
-				if (this.allTournaments[tournament].publishId != undefined) {
-					this.getPublishedTournament(this.allTournaments[tournament].publishId).subscribe((data) => {
-						const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
-
-						if (publishedTournament.updateDate > this.allTournaments[tournament].updateDate) {
-							publishedTournament.publishId = publishedTournament.id;
-
-							this.updateTournament(publishedTournament, this.allTournaments[tournament].publishId, true);
-						}
-					});
+					this.allTournaments.push(newTournament);
 				}
-			}
 
-			this.tournamentsInitialized$.next(true);
-		}, 1);
+				// TODO: make a better solution for this
+				setTimeout(() => {
+					for (const tournament in this.allTournaments) {
+						if (this.allTournaments[tournament].publishId != undefined) {
+							this.getPublishedTournament(this.allTournaments[tournament].publishId).subscribe((data) => {
+								const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
+
+								if (publishedTournament.updateDate > this.allTournaments[tournament].updateDate) {
+									publishedTournament.publishId = publishedTournament.id;
+
+									this.updateTournament(publishedTournament, this.allTournaments[tournament].publishId, true);
+								}
+							});
+						}
+					}
+
+					this.tournamentsInitialized$.next(true);
+				}, 1);
+			}
+		});
 	}
 
 	/**

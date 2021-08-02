@@ -13,10 +13,14 @@ export class CacheService {
 	private cachedUsers: CacheUser[] = [];
 	private cachedModifiers: CacheModifier[] = [];
 
+	cacheVersion: string;
+
 	constructor(private storeService: StoreService) {
 		const beatmapCache = storeService.get('cache.beatmaps');
 		const userCache = storeService.get('cache.users');
 		const modifierCache = storeService.get('cache.modifiers');
+
+		this.cacheVersion = storeService.get('cache-version');
 
 		for (const beatmap in beatmapCache) {
 			this.cachedBeatmaps.push(new CacheBeatmap({
@@ -153,5 +157,22 @@ export class CacheService {
 
 		// Save it in the store
 		this.storeService.set(`cache.users.${cachedUser.user_id}`, cachedUser.username);
+	}
+
+	/**
+	 * Clear all cache
+	 */
+	public clearAllData(): void {
+		this.storeService.delete('irc.channels');
+		this.storeService.delete('lobby');
+		this.storeService.delete('cache');
+	}
+
+	/**
+	 * Set the version of the cache
+	 * @param version the new version
+	 */
+	public setCacheVersion(version: string): void {
+		this.storeService.set('cache-version', version);
 	}
 }

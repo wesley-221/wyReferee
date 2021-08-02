@@ -21,6 +21,7 @@ export class TournamentPublishedEditComponent implements OnInit {
 		this.route.params.subscribe((params: Params) => {
 			this.tournamentService.getPublishedTournament(params.id).subscribe(publishedTournament => {
 				const tournament = WyTournament.makeTrueCopy(publishedTournament);
+				tournament.publishId = tournament.id;
 
 				this.validationForm = new FormGroup({
 					'tournament-name': new FormControl(tournament.name, [
@@ -116,10 +117,10 @@ export class TournamentPublishedEditComponent implements OnInit {
 						mod.value = this.validationForm.get(`mappool-${mappool.id}-mod-bracket-mod-${mod.index}-value`).value;
 						mod.name = mod.value == 'freemod' ? 'Freemod' : Mods[mod.value];
 					}
+				}
 
-					for (const category of mappool.modCategories) {
-						category.name = this.validationForm.get(`mappool-${mappool.id}-category-${category.index}-name`).value;
-					}
+				for (const category of mappool.modCategories) {
+					category.name = this.validationForm.get(`mappool-${mappool.id}-category-${category.index}-name`).value;
 				}
 			}
 

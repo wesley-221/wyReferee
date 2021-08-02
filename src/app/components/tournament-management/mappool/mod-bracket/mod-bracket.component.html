@@ -96,17 +96,19 @@
 								</mat-form-field>
 							</div>
 
-							<!-- TODO: implement this -->
-							<!-- <div class="column" *ngIf="mappool.mappoolType == 2 && mappool.publishId != null">
-								<mat-form-field class="full-width">
+							<div class="column category" *ngIf="mappool.type == 2 && tournament.publishId != null">
+								<mat-form-field>
 									<mat-label>Mod category</mat-label>
-									<mat-select (selectionChange)="changeModCategory(beatmap, $event)" [value]="beatmap.modCategory != null ? beatmap.modCategory.categoryName : null">
-										<mat-option [value]="modCategory.categoryName" *ngFor="let modCategory of mappool.modCategories">{{ modCategory.categoryName }}</mat-option>
+									<mat-select (selectionChange)="changeModCategory(beatmap, $event)" [value]="beatmap.modCategory != null ? beatmap.modCategory.name : null">
+										<mat-option [value]="modCategory.name" *ngFor="let modCategory of mappool.modCategories">{{ modCategory.name }}</mat-option>
 									</mat-select>
 								</mat-form-field>
 
-								<mat-slide-toggle [disabled]="true">Beatmap can be picked</mat-slide-toggle>
-							</div> -->
+								<mat-slide-toggle [checked]="beatmap.picked" (change)="changePicked(beatmap, $event)">
+									<span *ngIf="beatmap.picked == true">Picked</span>
+									<span *ngIf="beatmap.picked == false || beatmap.picked == null">Not picked</span>
+								</mat-slide-toggle>
+							</div>
 						</div>
 
 						<div class="information">

@@ -80,6 +80,11 @@
 
 						.column {
 							padding-right: 4px;
+
+							&.category {
+								display: flex;
+								flex-direction: column;
+							}
 						}
 					}
 

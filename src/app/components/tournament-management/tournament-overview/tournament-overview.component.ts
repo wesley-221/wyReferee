@@ -13,9 +13,20 @@ export interface ITournamentDialogData {
 })
 export class TournamentOverviewComponent implements OnInit {
 	allTournaments: WyTournament[];
+	active: string;
 
 	constructor(private tournamentService: TournamentService) {
 		this.allTournaments = this.tournamentService.allTournaments;
+		this.active = 'local';
 	}
 	ngOnInit(): void { }
+
+	click(type: string) {
+		if (type == 'local') {
+			this.active = 'local';
+		}
+		else if (type == 'published') {
+			this.active = 'published';
+		}
+	}
 }

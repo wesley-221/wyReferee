@@ -15,6 +15,7 @@ import { WyMysteryMappoolHelper } from 'app/models/wytournament/mappool/wy-myste
 import { AppConfig } from 'environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CacheService } from './cache.service';
+import { GenericService } from './generic.service';
 import { GetBeatmap } from './osu-api/get-beatmap.service';
 import { GetMultiplayerService } from './osu-api/get-multiplayer.service';
 import { GetUser } from './osu-api/get-user.service';
@@ -40,26 +41,31 @@ export class WyMultiplayerLobbiesService {
 		private cacheService: CacheService,
 		private toastService: ToastService,
 		private webhookService: WebhookService,
-		private http: HttpClient) {
+		private http: HttpClient,
+		private genericService: GenericService) {
 		this.allLobbies = [];
 		this.availableLobbyId = 0;
 
-		const allLobbies = storeService.get('lobby');
+		this.genericService.getCacheHasBeenChecked().subscribe(checked => {
+			if (checked == true) {
+				const allLobbies = storeService.get('lobby');
 
-		for (const lobby in allLobbies) {
-			const newLobby = Lobby.makeTrueCopy(allLobbies[lobby]);
+				for (const lobby in allLobbies) {
+					const newLobby = Lobby.makeTrueCopy(allLobbies[lobby]);
 
-			this.tournamentService.tournamentsHaveBeenInitialized().subscribe(initialized => {
-				if (initialized == true) {
-					newLobby.tournament = this.tournamentService.getTournamentById(newLobby.tournamentId);
+					this.tournamentService.tournamentsHaveBeenInitialized().subscribe(initialized => {
+						if (initialized == true) {
+							newLobby.tournament = this.tournamentService.getTournamentById(newLobby.tournamentId);
+						}
+					});
+
+					this.allLobbies.push(newLobby);
+					this.availableLobbyId = newLobby.lobbyId + 1;
 				}
-			});
 
-			this.allLobbies.push(newLobby);
-			this.availableLobbyId = newLobby.lobbyId + 1;
-		}
-
-		this.synchronizeDone$ = new BehaviorSubject(-1);
+				this.synchronizeDone$ = new BehaviorSubject(-1);
+			}
+		});
 	}
 
 	/**

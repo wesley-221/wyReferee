@@ -108,7 +108,6 @@ export class CreateLobbyComponent implements OnInit {
 	ngOnInit() { }
 
 	changeTournament() {
-		// TODO: fix this
 		this.selectedTournament = this.tournamentService.getTournamentById(this.validationForm.get('selected-tournament').value);
 		this.changeTeamSize(this.selectedTournament != null ? this.selectedTournament.teamSize : null);
 
@@ -127,6 +126,7 @@ export class CreateLobbyComponent implements OnInit {
 		this.validationForm.removeControl('challonge-match');
 		this.validationForm.removeControl('challonge-tournament');
 
+		// TODO: re-implement challonge integration
 		// this.checkingChallongeIntegration = true;
 
 		// this.challongeService.getChallongeMatchups(this.selectedTournament).subscribe((result: any) => {
