@@ -75,7 +75,7 @@ export class TournamentMyPublishedComponent implements OnInit {
 	private populateTournamentArray(): void {
 		this.allTournaments = [];
 
-		this.tournamentService.getAllPublishedTournaments().subscribe(tournaments => {
+		this.tournamentService.getAllPublishedTournamentsWithAdminPermissions().subscribe(tournaments => {
 			for (const tournament of tournaments) {
 				this.allTournaments.push(WyTournament.makeTrueCopy(tournament));
 			}

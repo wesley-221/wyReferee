@@ -159,6 +159,13 @@ export class TournamentService {
 	}
 
 	/**
+	 * Get all published tournaments that you have administrator permissions to
+	 */
+	getAllPublishedTournamentsWithAdminPermissions() {
+		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}wyreferee/tournament/administrator_permission`);
+	}
+
+	/**
 	 * Get a published tournament by tournament id
 	 * @param tournamentId the id of the tournament that was published
 	 */

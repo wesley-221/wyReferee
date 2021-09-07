@@ -1,4 +1,5 @@
 export class WyMysteryMappoolHelper {
+	tournamentId: Number;
 	mappoolId: number;
 	modBracketId: number;
 	multiplayerLobbyName: string;
