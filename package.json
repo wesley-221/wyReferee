@@ -1,6 +1,6 @@
 {
 	"name": "wyreferee",
-	"version": "5.4.5",
+	"version": "6.0.0",
 	"description": "Referee client",
 	"author": {
 		"name": "Wesley"
@@ -97,6 +97,10 @@
 	"dependencies": {
 		"@angular/animations": "^10.1.0",
 		"@angular/material": "^10.2.0",
+		"@fortawesome/angular-fontawesome": "^0.8.2",
+		"@fortawesome/fontawesome-svg-core": "^1.2.35",
+		"@fortawesome/free-regular-svg-icons": "^5.15.3",
+		"@fortawesome/free-solid-svg-icons": "^5.15.3",
 		"bancho.js": "^0.9.7",
 		"custom-electron-titlebar": "^3.2.7",
 		"electron-log": "^3.0.8",

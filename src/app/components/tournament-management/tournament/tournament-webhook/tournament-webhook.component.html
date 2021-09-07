@@ -1,0 +1,113 @@
+<form [formGroup]="validationForm">
+	<div class="container-fluid">
+		<h3>What is a webhook?</h3>
+		<p>To put it simple, a webhook is a link to a channel where this client sends a message to. The messages being send currently to that channel are:</p>
+
+		<ul>
+			<li>When a referee bans a map for either team</li>
+			<li>When a map finishes</li>
+			<li>When the referee sends the final result</li>
+		</ul>
+
+		<h3>How to create a Discord webhook</h3>
+		<i>NOTE: this step is only required when there is no webhook available.</i>
+		<ul>
+			<li>Go to the server you want the messages to be send to</li>
+			<li>Right click on the channel you want the messages to be send to</li>
+			<li>Click on "Edit Channel"</li>
+			<li>Click on "Integrations"</li>
+			<li>Click on "Create Webhook"</li>
+			<li>Fill in the fields and finally copy the "Webhook url"</li>
+		</ul>
+
+		<hr />
+
+		<button mat-raised-button color="primary" (click)="createWebhook()"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new webhook</button>
+
+		<div class="all-webhooks">
+			<div class="alert alert-info" *ngIf="tournament.webhooks.length <= 0">
+				You have no webhooks setup.
+			</div>
+
+			<div class="webhook" *ngFor="let webhook of tournament.webhooks">
+				<div class="title">
+					<h3 *ngIf="webhook.name == null">Unnamed webhook</h3>
+					<h3 *ngIf="webhook.name != null">{{ webhook.name }}</h3>
+
+					<button mat-mini-fab color="warn" (click)="removeWebhook(webhook)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+				</div>
+
+				<div class="row">
+					<div class="col">
+						<mat-form-field class="full-width">
+							<mat-label>Webhook name</mat-label>
+							<input matInput [formControlName]="'webhook-' + webhook.index + '-name'" (change)="onNameChange(webhook)" />
+
+							<mat-error *ngIf="validationForm.get('webhook-' + webhook.index + '-name').errors && (validationForm.get('webhook-' + webhook.index + '-name').touched || validationForm.get('webhook-' + webhook.index + '-name').dirty)">
+								This field is required
+							</mat-error>
+						</mat-form-field>
+
+						<p>Used to identify the webhook</p>
+					</div>
+
+					<div class="col">
+						<mat-form-field class="full-width">
+							<mat-label>Webhook url</mat-label>
+							<input matInput [formControlName]="'webhook-' + webhook.index + '-url'" />
+
+							<mat-error *ngIf="validationForm.get('webhook-' + webhook.index + '-url').errors && (validationForm.get('webhook-' + webhook.index + '-url').touched || validationForm.get('webhook-' + webhook.index + '-url').dirty)">
+								This field is required
+							</mat-error>
+						</mat-form-field>
+
+						<p>The url of the webhook</p>
+					</div>
+				</div>
+
+				<h3>Options</h3>
+
+				<div class="all-options">
+					<div class="option">
+						<div class="description">
+							Match creation
+						</div>
+
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-match-creation'"></mat-slide-toggle>
+					</div>
+
+					<div class="option">
+						<div class="description">
+							Picks
+						</div>
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-picks'"></mat-slide-toggle>
+					</div>
+
+					<div class="option">
+						<div class="description">
+							Bans
+						</div>
+
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-bans'"></mat-slide-toggle>
+					</div>
+
+					<div class="option">
+						<div class="description">
+							Match result
+						</div>
+
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-match-result'"></mat-slide-toggle>
+					</div>
+
+					<div class="option">
+						<div class="description">
+							Final result
+						</div>
+
+						<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-final-result'"></mat-slide-toggle>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SidebarItem } from 'app/models/sidebar-item';
+import { AuthenticateService } from 'app/services/authenticate.service';
 
 @Component({
 	selector: 'app-axs-router',
@@ -13,6 +14,6 @@ export class AxsRouterComponent implements OnInit {
 		new SidebarItem({ name: 'Formula development', logo: 'code', link: '/axs/axs-formula' })
 	];
 
-	constructor() { }
+	constructor(public authenticateService: AuthenticateService) { }
 	ngOnInit(): void { }
 }

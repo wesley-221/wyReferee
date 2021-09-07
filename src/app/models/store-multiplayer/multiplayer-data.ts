@@ -9,8 +9,28 @@ export class MultiplayerData {
 	team_two_score: number;
 	private players: MultiplayerDataUser[];
 
-	constructor() {
+	constructor(init?: Partial<MultiplayerData>) {
 		this.players = [];
+
+		Object.assign(this, init);
+	}
+
+	public static makeTrueCopy(multiplayerData: MultiplayerData): MultiplayerData {
+		const newMultiplayerData = new MultiplayerData({
+			game_id: multiplayerData.game_id,
+			beatmap_id: multiplayerData.beatmap_id,
+			mods: multiplayerData.mods,
+			team_one_score: multiplayerData.team_one_score,
+			team_two_score: multiplayerData.team_two_score
+		});
+
+		for (const player in multiplayerData.players) {
+			if (multiplayerData.players[player] != null) {
+				newMultiplayerData.players.push(MultiplayerDataUser.makeTrueCopy(multiplayerData.players[player]));
+			}
+		}
+
+		return newMultiplayerData;
 	}
 
 	/**

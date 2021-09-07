@@ -1,0 +1,24 @@
+:host {
+	width: 100%;
+}
+
+.filters {
+	display: flex;
+	height: 60px;
+
+	.filter {
+		display: flex;
+		flex: 1;
+
+		margin-right: 8px;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}
+
+.all-tournaments {
+	height: calc(100% - 60px);
+	overflow-y: auto;
+}

@@ -11,9 +11,9 @@
 
 		<div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
 			<div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="all-channels"
-								[ngClass]="{'active': selectedChannel != undefined && (channel.channelName == selectedChannel.channelName), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages }">
-				<div class="channel-name" (click)="changeChannel(channel.channelName)">
-					{{ channel.channelName }}
+								[ngClass]="{'active': selectedChannel != undefined && (channel.name == selectedChannel.name), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages }">
+				<div class="channel-name" (click)="changeChannel(channel.name)">
+					{{ channel.name }}
 				</div>
 
 				<div class="side-button">
@@ -25,7 +25,7 @@
 						<mat-icon>volume_off</mat-icon>
 					</div>
 
-					<div class="button red" (click)="partChannel(channel.channelName)">
+					<div class="button red" (click)="partChannel(channel.name)">
 						<mat-icon>close</mat-icon>
 					</div>
 				</div>
@@ -34,8 +34,8 @@
 	</div>
 
 	<div class="chat-content">
-		<div class="chat-container" [ngClass]="{'in': !isPlayerManagementMinimized && selectedChannel != null && selectedChannel.channelName.startsWith('#mp_') }">
-			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')) && this.selectedLobby != null">
+		<div class="chat-container" [ngClass]="{'in': !isPlayerManagementMinimized && selectedChannel != null && selectedChannel.name.startsWith('#mp_') }">
+			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.name.startsWith('#mp_')) && this.selectedLobby != null">
 				Score: {{ selectedLobby.teamOneName }} : {{ teamOneScore }} - {{ teamTwoScore }} : {{ selectedLobby.teamTwoName }} <span *ngIf="this.hasWon == null">| Next pick: <b>{{ nextPick }}</b></span> <br />
 
 				<div *ngIf="selectedChannel != null && this.matchpoint != null">
@@ -66,7 +66,7 @@
 						</div>
 
 						<div class="message">
-							<div class="message-piece" *ngFor="let chatPiece of chat.message">
+							<div class="message-piece" *ngFor="let chatPiece of chat.messageBuilder">
 								<span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
 								<div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
 									<span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
@@ -86,10 +86,10 @@
 				<input type="text" placeholder="Message..." #chatMessage [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" (keypress)="sendMessage($event)" />
 			</div>
 
-			<div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized }" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
+			<div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized }" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
 				<div class="side-menu-button">
 					<button mat-mini-fab color="primary" matTooltip="Open referee settings" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><mat-icon>settings</mat-icon></button>
-					<button mat-mini-fab color="primary" matTooltip="Go to multiplayer lobby match overview" (click)="navigateLobbyOverview(selectedChannel.channelName)"><mat-icon>list</mat-icon></button>
+					<button mat-mini-fab color="primary" matTooltip="Go to multiplayer lobby match overview" (click)="navigateLobbyOverview()"><mat-icon>list</mat-icon></button>
 					<button mat-mini-fab color="primary" matTooltip="Show all the players in the current lobby" (click)="togglePlayerManagement()"><mat-icon>people</mat-icon></button>
 					<button mat-mini-fab color="primary" matTooltip="Send beatmap result to irc" (click)="sendMatchResult()"><mat-icon>send</mat-icon></button>
 				</div>
@@ -135,19 +135,19 @@
 							</div>
 						</div>
 
-						<div class="row">
+						<div class="row" *ngIf="selectedLobby && selectedLobby.tournament != null">
 							<div class="col">
 								<mat-form-field class="full-width">
 									<mat-label>Mappool</mat-label>
-									<mat-select (selectionChange)="onMappoolChange($event)" [value]="selectedLobby != undefined && selectedLobby.mappool != undefined && selectedLobby.mappool.id">
+									<mat-select (selectionChange)="onMappoolChange($event)">
 										<mat-option></mat-option>
-										<mat-option *ngFor="let mappool of mappoolService.allMappools" [value]="mappool.id">{{ mappool.name }}</mat-option>
+										<mat-option *ngFor="let mappool of selectedLobby.tournament.mappools" [value]="mappool.id">{{ mappool.name }}</mat-option>
 									</mat-select>
 								</mat-form-field>
 							</div>
 						</div>
 
-						<div class="row" *ngIf="selectedLobby.mappool != null">
+						<div class="row" *ngIf="selectedLobby && selectedLobby.mappool != null">
 							<div class="col">
 								<mat-form-field class="full-width">
 									<mat-label>Search for beatmap...</mat-label>
@@ -157,17 +157,17 @@
 						</div>
 					</div>
 
-					<div class="mappool" *ngIf="selectedLobby.mappool != null">
-						<div class="mod-bracket" *ngFor="let bracket of ( selectedLobby.mappool.modBrackets | searchmodbracket : searchValue )">
+					<div class="mappool" *ngIf="selectedLobby && selectedLobby.mappool != null">
+						<div class="mod-bracket" *ngFor="let bracket of (selectedLobby.mappool.modBrackets | searchmodbracket : searchValue )">
 							<hr />
-							<h3>{{ bracket.bracketName }}</h3>
+							<h3>{{ bracket.name }}</h3>
 							<hr />
 
-							<div class="pick-random-map" *ngIf="selectedLobby.mappool.mappoolType == 2">
+							<div class="pick-random-map" *ngIf="selectedLobby.mappool.type == 2">
 								<button mat-raised-button color="primary" (click)="pickMysteryMap(selectedLobby.mappool, bracket)" [disabled]="!selectedChannel.active">Pick random map</button>
 							</div>
 
-							<div *ngIf="selectedLobby.mappool.mappoolType != 2">
+							<div *ngIf="selectedLobby.mappool.type != 2">
 								<div class="map" *ngFor="let beatmap of bracket.beatmaps">
 									<div class="has-been-picked" [ngClass]="{ 'beatmap-picked-team-one': beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId), 'beatmap-picked-team-two': beatmapIsPickedByTeamTwo(selectedLobby, beatmap.beatmapId) }">
 										<div class="text">
@@ -191,7 +191,7 @@
 
 										<button mat-mini-fab color="accent" matTooltip="Change which team has picked this map" (click)="changePickedBy(beatmap, bracket)" *ngIf="beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>change_circle</mat-icon></button>
 
-										<button mat-mini-fab color="primary" matTooltip="Pick this beatmap" (click)="pickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)" *ngIf="!beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
+										<button mat-mini-fab color="primary" matTooltip="Pick this beatmap" (click)="pickBeatmap(beatmap, bracket, selectedLobby.tournament.gamemodeId)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)" *ngIf="!beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
 										<button mat-mini-fab color="warn" matTooltip="Unpick this beatmap" (click)="unpickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)" *ngIf="beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
 									</div>
 								</div>
@@ -202,8 +202,8 @@
 			</div>
 		</div>
 
-		<div class="player-management" [ngClass]="{'in': !isPlayerManagementMinimized}" *ngIf="selectedChannel != null && selectedChannel.channelName.startsWith('#mp_')">
-			<div class="players">
+		<div class="player-management" [ngClass]="{'in': !isPlayerManagementMinimized}" *ngIf="selectedChannel != null && selectedLobby && selectedChannel.name.startsWith('#mp_')">
+			<div class="players" *ngIf="selectedLobby.multiplayerLobbyPlayers != null">
 				<div class="player" *ngFor="let player of selectedLobby.multiplayerLobbyPlayers.players" [ngClass]="{'red': player.team == 'Red', 'blue': player.team == 'Blue'}">
 					<div class="top-row">
 						<div class="column">

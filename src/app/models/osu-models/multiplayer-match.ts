@@ -8,7 +8,9 @@ export class MultiplayerMatch {
 
 	games: MultiplayerGame[];
 
-	constructor() {
+	constructor(init?: Partial<MultiplayerMatch>) {
 		this.games = [];
+
+		Object.assign(this, init);
 	}
 }

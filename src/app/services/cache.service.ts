@@ -13,17 +13,29 @@ export class CacheService {
 	private cachedUsers: CacheUser[] = [];
 	private cachedModifiers: CacheModifier[] = [];
 
+	cacheVersion: string;
+
 	constructor(private storeService: StoreService) {
 		const beatmapCache = storeService.get('cache.beatmaps');
 		const userCache = storeService.get('cache.users');
 		const modifierCache = storeService.get('cache.modifiers');
 
+		this.cacheVersion = storeService.get('cache-version');
+
 		for (const beatmap in beatmapCache) {
-			this.cachedBeatmaps.push(new CacheBeatmap(beatmapCache[beatmap].name, parseInt(beatmap), parseInt(beatmapCache[beatmap].beatmapset_id), `https://osu.ppy.sh/beatmaps/${beatmapCache[beatmap].beatmapset_id}`));
+			this.cachedBeatmaps.push(new CacheBeatmap({
+				name: beatmapCache[beatmap].name,
+				beatmapId: parseInt(beatmap),
+				beatmapSetId: parseInt(beatmapCache[beatmap].beatmapset_id),
+				beatmapUrl: `https://osu.ppy.sh/beatmaps/${beatmapCache[beatmap].beatmapset_id}`
+			}));
 		}
 
 		for (const user in userCache) {
-			this.cachedUsers.push(new CacheUser(parseInt(user), userCache[user]));
+			this.cachedUsers.push(new CacheUser({
+				user_id: parseInt(user),
+				username: userCache[user]
+			}));
 		}
 
 		for (const modifier in modifierCache) {
@@ -60,7 +72,12 @@ export class CacheService {
 			for (const modBracket in mappools[mappool].modBrackets) {
 				for (const beatmap in mappools[mappool].modBrackets[modBracket].beatmaps) {
 					if (mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId == beatmapId) {
-						return new CacheBeatmap(mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapName, mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId, mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapsetId, mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapUrl);
+						return new CacheBeatmap({
+							name: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapName,
+							beatmapId: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId,
+							beatmapSetId: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapsetId,
+							beatmapUrl: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapUrl
+						});
 					}
 				}
 			}
@@ -140,5 +157,22 @@ export class CacheService {
 
 		// Save it in the store
 		this.storeService.set(`cache.users.${cachedUser.user_id}`, cachedUser.username);
+	}
+
+	/**
+	 * Clear all cache
+	 */
+	public clearAllData(): void {
+		this.storeService.delete('irc.channels');
+		this.storeService.delete('lobby');
+		this.storeService.delete('cache');
+	}
+
+	/**
+	 * Set the version of the cache
+	 * @param version the new version
+	 */
+	public setCacheVersion(version: string): void {
+		this.storeService.set('cache-version', version);
 	}
 }

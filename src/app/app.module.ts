@@ -25,44 +25,21 @@ import { ToastComponent } from './components/main-page/toast/toast.component';
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
 import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
-import { MappoolOverviewComponent } from './components/tournament-management/mappool/mappool-overview/mappool-overview.component';
-import { MappoolCreateComponent } from './components/tournament-management/mappool/mappool-create/mappool-create.component';
 import { AuthInterceptor } from './token-interceptor';
 import { IrcComponent } from './components/irc/irc.component';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { SearchModBracketPipe } from './pipes/search-mod-bracket.pipe';
 import { SearchPipe } from './pipes/search.pipe';
 import { RegisterComponent } from './components/register/register.component';
-import { TournamentCreateComponent } from './components/tournament-management/tournament/tournament-create/tournament-create.component';
-import { TournamentOverviewComponent } from './components/tournament-management/tournament/tournament-overview/tournament-overview.component';
-import { TournamentEditComponent } from './components/tournament-management/tournament/tournament-edit/tournament-edit.component';
-import { TournamentComponent } from './components/tournament-management/tournament/tournament/tournament.component';
-import { ModBracketComponent } from './components/tournament-management/mappool/mod-bracket/mod-bracket.component';
-import { MyPublishedMappoolsComponent } from './components/tournament-management/mappool/my-published-mappools/my-published-mappools.component';
-import { MappoolSummaryComponent } from './components/tournament-management/mappool/mappool-summary/mappool-summary.component';
-import { MappoolEditComponent } from './components/tournament-management/mappool/mappool-edit/mappool-edit.component';
-import { MappoolComponent } from './components/tournament-management/mappool/mappool/mappool.component';
-import { TournamentSummaryComponent } from './components/tournament-management/tournament/tournament-summary/tournament-summary.component';
-import { MyPublishedTournamentsComponent } from './components/tournament-management/tournament/my-published-tournaments/my-published-tournaments.component';
 import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
 import { DeleteLobbyComponent } from './components/dialogs/delete-lobby/delete-lobby.component';
 import { ManagementRouterComponent } from './components/tournament-management/management-router/management-router.component';
-import { PublishMappoolComponent } from './components/dialogs/publish-mappool/publish-mappool.component';
-import { DeleteMappoolComponent } from './components/dialogs/delete-mappool/delete-mappool.component';
-import { DeleteModBracketComponent } from './components/dialogs/delete-mod-bracket/delete-mod-bracket.component';
-import { DeleteTournamentComponent } from './components/dialogs/delete-tournament/delete-tournament.component';
-import { PublishTournamentComponent } from './components/dialogs/publish-tournament/publish-tournament.component';
-import { TeamComponent } from './components/tournament-management/tournament/team/team.component';
-import { DeleteTeamComponent } from './components/dialogs/delete-team/delete-team.component';
 import { MultiplayerLobbySettingsComponent } from './components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { SendFinalResultComponent } from './components/dialogs/send-final-result/send-final-result.component';
 import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/join-irc-channel.component';
 import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatmap.component';
 import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
 import { UpdaterComponent } from './components/main-page/updater/updater.component';
-import { AllPublishedMappoolsComponent } from './components/tournament-management/mappool/all-published-mappools/all-published-mappools.component';
-import { FilterMappoolPipe } from './pipes/filter-mappool.pipe';
-import { AllPublishedTournamentsComponent } from './components/tournament-management/tournament/all-published-tournaments/all-published-tournaments.component';
 import { FilterTournamentPipe } from './pipes/filter-tournament.pipe';
 import { AxsCalculatorComponent } from './components/axs/axs-calculator/axs-calculator.component';
 import { SendBeatmapResultComponent } from './components/dialogs/send-beatmap-result/send-beatmap-result.component';
@@ -70,6 +47,30 @@ import { ReversePipe } from './pipes/reverse.pipe';
 import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
 import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
 import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
+import { TournamentComponent } from './components/tournament-management/tournament/tournament/tournament.component';
+import { TournamentCreateComponent } from './components/tournament-management/tournament-create/tournament-create.component';
+import { TournamentAddUserDialogComponent } from './components/dialogs/tournament-add-user-dialog/tournament-add-user-dialog.component';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { MappoolComponent } from './components/tournament-management/mappool/mappool/mappool.component';
+import { ModBracketComponent } from './components/tournament-management/mappool/mod-bracket/mod-bracket.component';
+import { TournamentGeneralComponent } from './components/tournament-management/tournament/tournament-general/tournament-general.component';
+import { TournamentAccessComponent } from './components/tournament-management/tournament/tournament-access/tournament-access.component';
+import { TournamentWebhookComponent } from './components/tournament-management/tournament/tournament-webhook/tournament-webhook.component';
+import { MappoolCreateComponent } from './components/tournament-management/mappool-create/mappool-create.component';
+import { DeleteModBracketDialogComponent } from './components/dialogs/delete-mod-bracket-dialog/delete-mod-bracket-dialog.component';
+import { TournamentOverviewComponent } from './components/tournament-management/tournament-overview/tournament-overview.component';
+import { DeleteTournamentDialogComponent } from './components/dialogs/delete-tournament-dialog/delete-tournament-dialog.component';
+import { PublishTournamentDialogComponent } from './components/dialogs/publish-tournament-dialog/publish-tournament-dialog.component';
+import { TournamentEditComponent } from './components/tournament-management/tournament-edit/tournament-edit.component';
+import { DeleteMappoolDialogComponent } from './components/dialogs/delete-mappool-dialog/delete-mappool-dialog.component';
+import { TournamentParticipantsComponent } from './components/tournament-management/tournament/tournament-participants/tournament-participants.component';
+import { DeleteTeamDialogComponent } from './components/dialogs/delete-team-dialog/delete-team-dialog.component';
+import { TournamentAllPublishedComponent } from './components/tournament-management/tournament-all-published/tournament-all-published.component';
+import { TournamentMyPublishedComponent } from './components/tournament-management/tournament-my-published/tournament-my-published.component';
+import { TournamentCardComponent } from './components/tournament-management/tournament-card/tournament-card.component';
+import { TournamentPublishedEditComponent } from './components/tournament-management/tournament-published-edit/tournament-published-edit.component';
 
 @NgModule({
 	declarations: [
@@ -83,49 +84,47 @@ import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.co
 		AllLobbiesComponent,
 		CreateLobbyComponent,
 		LobbyViewComponent,
-		MappoolOverviewComponent,
-		MappoolCreateComponent,
 		IrcComponent,
 		SearchModBracketPipe,
 		SearchPipe,
 		RegisterComponent,
-		TournamentCreateComponent,
-		TournamentOverviewComponent,
-		TournamentEditComponent,
-		TournamentComponent,
-		ModBracketComponent,
-		MyPublishedMappoolsComponent,
-		MappoolSummaryComponent,
-		MappoolEditComponent,
-		MappoolComponent,
-		TournamentSummaryComponent,
-		MyPublishedTournamentsComponent,
 		RemoveSettingsComponent,
 		DeleteLobbyComponent,
 		ManagementRouterComponent,
-		PublishMappoolComponent,
-		DeleteMappoolComponent,
-		DeleteModBracketComponent,
-		DeleteTournamentComponent,
-		PublishTournamentComponent,
-		TeamComponent,
-		DeleteTeamComponent,
 		MultiplayerLobbySettingsComponent,
 		SendFinalResultComponent,
 		JoinIrcChannelComponent,
 		BanBeatmapComponent,
 		MultiplayerLobbyMovePlayerComponent,
 		UpdaterComponent,
-		AllPublishedMappoolsComponent,
-		FilterMappoolPipe,
-		AllPublishedTournamentsComponent,
 		FilterTournamentPipe,
 		AxsCalculatorComponent,
 		SendBeatmapResultComponent,
 		ReversePipe,
 		AxsInformationComponent,
 		AxsRouterComponent,
-		AxsFormulaComponent
+		AxsFormulaComponent,
+		TournamentComponent,
+		TournamentCreateComponent,
+		TournamentAddUserDialogComponent,
+		MappoolComponent,
+		ModBracketComponent,
+		TournamentGeneralComponent,
+		TournamentAccessComponent,
+		TournamentWebhookComponent,
+		MappoolCreateComponent,
+		DeleteModBracketDialogComponent,
+		TournamentOverviewComponent,
+		DeleteTournamentDialogComponent,
+		PublishTournamentDialogComponent,
+		TournamentEditComponent,
+		DeleteMappoolDialogComponent,
+		TournamentParticipantsComponent,
+		DeleteTeamDialogComponent,
+		TournamentAllPublishedComponent,
+		TournamentMyPublishedComponent,
+		TournamentCardComponent,
+		TournamentPublishedEditComponent
 	],
 	imports: [
 		BrowserModule,
@@ -137,7 +136,8 @@ import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.co
 		VirtualScrollerModule,
 		BrowserAnimationsModule,
 		ClipboardModule,
-		AngularMaterialModule
+		AngularMaterialModule,
+		FontAwesomeModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
@@ -146,5 +146,7 @@ import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.co
 })
 
 export class AppModule {
-	constructor() { }
+	constructor(library: FaIconLibrary) {
+		library.addIconPacks(fas, far);
+	}
 }

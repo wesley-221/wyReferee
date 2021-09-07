@@ -1,19 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { MultiplayerLobby } from '../../../models/store-multiplayer/multiplayer-lobby';
-import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies.service';
 import { ToastService } from '../../../services/toast.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IrcService } from '../../../services/irc.service';
 import { ScoreInterface } from '../../../models/score-calculation/calculation-types/score-interface';
 import { Calculate } from '../../../models/score-calculation/calculate';
 import { TournamentService } from '../../../services/tournament.service';
-import { Tournament } from '../../../models/tournament/tournament';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { BanchoMultiplayerChannel } from 'bancho.js';
-import { ChallongeService } from 'app/services/challonge.service';
 import { OsuHelper } from 'app/models/osu-models/osu';
+import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { WyTeam } from 'app/models/wytournament/wy-team';
+import { map, startWith } from 'rxjs/operators';
+import { Lobby } from 'app/models/lobby';
+import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
+import { WebhookService } from 'app/services/webhook.service';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -27,7 +29,7 @@ export class CreateLobbyComponent implements OnInit {
 	multiplayerLobby: string;
 	tournamentAcronym: string;
 	matchDescription: string;
-	selectedTournament: Tournament;
+	selectedTournament: WyTournament;
 	teamSize: number;
 	selectedScoreInterface: ScoreInterface;
 
@@ -44,13 +46,16 @@ export class CreateLobbyComponent implements OnInit {
 	challongeMatches: ChallongeMatch[] = [];
 	checkingChallongeIntegration = false;
 
+	teamOneFilter: Observable<WyTeam[]>;
+	teamTwoFilter: Observable<WyTeam[]>;
+
 	constructor(
-		private multiplayerLobbies: MultiplayerLobbiesService,
+		private multiplayerLobbies: WyMultiplayerLobbiesService,
 		private toastService: ToastService,
 		private ircService: IrcService,
 		public tournamentService: TournamentService,
 		private router: Router,
-		private challongeService: ChallongeService) {
+		private webhookService: WebhookService) {
 		this.calculateScoreInterfaces = new Calculate();
 
 		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -80,18 +85,33 @@ export class CreateLobbyComponent implements OnInit {
 			'team-two-name': new FormControl('', [
 				Validators.required
 			]),
-			'webhook': new FormControl(),
 			'selected-tournament': new FormControl()
 		});
+
+		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
+			startWith(''),
+			map((value) => {
+				const filterValue = value.toLowerCase();
+				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
+			})
+		);
+
+		this.teamTwoFilter = this.validationForm.get('team-two-name').valueChanges.pipe(
+			startWith(''),
+			map((value) => {
+				const filterValue = value.toLowerCase();
+				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
+			})
+		)
 	}
 
 	ngOnInit() { }
 
 	changeTournament() {
-		this.selectedTournament = this.tournamentService.getTournamentByName(this.validationForm.get('selected-tournament').value);
+		this.selectedTournament = this.tournamentService.getTournamentById(this.validationForm.get('selected-tournament').value);
 		this.changeTeamSize(this.selectedTournament != null ? this.selectedTournament.teamSize : null);
 
-		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : null);
+		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(this.selectedTournament ? this.selectedTournament.scoreInterfaceIdentifier : null);
 		this.teamSize = this.selectedScoreInterface ? this.selectedScoreInterface.getTeamSize() : null;
 		this.validationForm.get('team-size').setValue(this.selectedTournament != null ? this.selectedTournament.teamSize : this.teamSize);
 		this.validationForm.get('tournament-acronym').setValue(this.selectedTournament != null ? this.selectedTournament.acronym : null);
@@ -106,31 +126,32 @@ export class CreateLobbyComponent implements OnInit {
 		this.validationForm.removeControl('challonge-match');
 		this.validationForm.removeControl('challonge-tournament');
 
-		this.checkingChallongeIntegration = true;
+		// TODO: re-implement challonge integration
+		// this.checkingChallongeIntegration = true;
 
-		this.challongeService.getChallongeMatchups(this.selectedTournament).subscribe((result: any) => {
-			if (result == null) {
-				this.checkingChallongeIntegration = false;
-				return;
-			}
+		// this.challongeService.getChallongeMatchups(this.selectedTournament).subscribe((result: any) => {
+		// 	if (result == null) {
+		// 		this.checkingChallongeIntegration = false;
+		// 		return;
+		// 	}
 
-			// TODO: add check for Group stage matches, ignore those
-			// this.challongeMatches = this.challongeService.parseChallongeEndpoint(result);
+		// 	// TODO: add check for Group stage matches, ignore those
+		// 	// this.challongeMatches = this.challongeService.parseChallongeEndpoint(result);
 
-			if (this.challongeMatches.length > 0) {
-				this.challongeMatches.sort((firstMatch, secondMatch) => firstMatch.suggested_play_order - secondMatch.suggested_play_order);
+		// 	if (this.challongeMatches.length > 0) {
+		// 		this.challongeMatches.sort((firstMatch, secondMatch) => firstMatch.suggested_play_order - secondMatch.suggested_play_order);
 
-				this.validationForm.removeControl('team-one-name');
-				this.validationForm.removeControl('team-two-name');
+		// 		this.validationForm.removeControl('team-one-name');
+		// 		this.validationForm.removeControl('team-two-name');
 
-				this.validationForm.addControl('challonge-match', new FormControl('', Validators.required));
-				this.validationForm.addControl('challonge-tournament', new FormControl());
-			}
+		// 		this.validationForm.addControl('challonge-match', new FormControl('', Validators.required));
+		// 		this.validationForm.addControl('challonge-tournament', new FormControl());
+		// 	}
 
-			this.checkingChallongeIntegration = false;
-		}, () => {
-			this.checkingChallongeIntegration = false;
-		});
+		// 	this.checkingChallongeIntegration = false;
+		// }, () => {
+		// 	this.checkingChallongeIntegration = false;
+		// });
 	}
 
 	changeScoreInterface(event: MatSelectChange) {
@@ -149,57 +170,42 @@ export class CreateLobbyComponent implements OnInit {
 
 	createLobby() {
 		if (this.validationForm.valid) {
-			const newLobby = new MultiplayerLobby();
+			const lobby = new Lobby({
+				lobbyId: this.multiplayerLobbies.availableLobbyId,
+				teamSize: this.validationForm.get('team-size').value,
+				multiplayerLink: this.validationForm.get('multiplayer-link').value,
+				tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
+				tournament: this.selectedTournament,
+				teamOneName: this.validationForm.get('team-one-name').value,
+				teamTwoName: this.validationForm.get('team-two-name').value
+			});
 
-			newLobby.lobbyId = this.multiplayerLobbies.availableLobbyId;
-			newLobby.teamSize = this.validationForm.get('team-size').value;
-			newLobby.multiplayerLink = this.validationForm.get('multiplayer-link').value;
-			newLobby.tournamentId = this.selectedTournament != undefined && this.selectedTournament.publishId != undefined ? this.selectedTournament.publishId : null;
-			newLobby.tournamentAcronym = this.validationForm.get('tournament-acronym').value;
-			newLobby.webhook = this.validationForm.get('webhook').value;
-			newLobby.scoreInterfaceIndentifier = this.selectedTournament ? this.selectedTournament.tournamentScoreInterfaceIdentifier : this.selectedScoreInterface.getIdentifier();
+			lobby.description = `${lobby.teamOneName} vs ${lobby.teamTwoName}`;
 
-			if (this.challongeMatches.length > 0) {
-				newLobby.challongeMatchId = this.validationForm.get('challonge-match').value;
-				newLobby.challongeTournamentId = this.validationForm.get('challonge-tournament').value;
+			this.ircService.isCreatingMultiplayerLobby = lobby.lobbyId;
 
-				const match = this.challongeMatches.find(match => match.id == newLobby.challongeMatchId);
-
-				newLobby.teamOneName = match.getPlayer1Name();
-				newLobby.teamTwoName = match.getPlayer2Name();
-
-				newLobby.challongePlayerOneId = match.player1_id;
-				newLobby.challongePlayerTwoId = match.player2_id;
-			}
-			else {
-				newLobby.teamOneName = this.validationForm.get('team-one-name').value;
-				newLobby.teamTwoName = this.validationForm.get('team-two-name').value;
-			}
-
-			newLobby.description = `${newLobby.teamOneName} vs ${newLobby.teamTwoName}`;
-
-			this.ircService.isCreatingMultiplayerLobby = newLobby.lobbyId;
-
-			// Create a new lobby
-			if (newLobby.multiplayerLink == '') {
-				from(this.ircService.client.createLobby(`${newLobby.tournamentAcronym}: (${newLobby.teamOneName}) vs (${newLobby.teamTwoName})`)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
+			// Multiplayer link was not found, create new lobby
+			if (lobby.multiplayerLink == '') {
+				from(this.ircService.client.createLobby(`${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
 					this.ircService.joinChannel(multiplayerChannel.name);
 					this.ircService.initializeChannelListeners(multiplayerChannel);
 
 					this.lobbyHasBeenCreatedTrigger();
 
-					newLobby.multiplayerLink = `https://osu.ppy.sh/community/matches/${multiplayerChannel.lobby.id}`;
+					lobby.multiplayerLink = `https://osu.ppy.sh/community/matches/${multiplayerChannel.lobby.id}`;
 
-					this.multiplayerLobbies.add(newLobby);
+					this.multiplayerLobbies.addMultiplayerLobby(lobby);
 
-					this.toastService.addToast(`Successfully created the multiplayer lobby ${newLobby.description}!`);
+					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
 
-					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
+					this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
+
+					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
 				});
 			}
-			// Join an existing channel
+			// Multiplayer link was found, attempt to join lobby
 			else {
-				const multiplayerId = OsuHelper.getMultiplayerIdFromLink(newLobby.multiplayerLink);
+				const multiplayerId = OsuHelper.getMultiplayerIdFromLink(lobby.multiplayerLink);
 				const multiplayerChannel = this.ircService.client.getChannel(`#mp_${multiplayerId}`) as BanchoMultiplayerChannel;
 
 				from(multiplayerChannel.join()).subscribe(() => {
@@ -208,18 +214,18 @@ export class CreateLobbyComponent implements OnInit {
 
 					this.lobbyHasBeenCreatedTrigger();
 
-					this.multiplayerLobbies.add(newLobby);
+					this.multiplayerLobbies.addMultiplayerLobby(lobby);
 
 					this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}!`);
 
-					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
+					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
 				}, () => {
 					this.lobbyHasBeenCreatedTrigger();
-					this.multiplayerLobbies.add(newLobby);
+					this.multiplayerLobbies.addMultiplayerLobby(lobby);
 
 					this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}! Unable to connect to the irc channel, lobby is most likely closed already.`);
 
-					this.router.navigate(['lobby-overview/lobby-view', newLobby.lobbyId]);
+					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
 				});
 			}
 		}
@@ -240,7 +246,7 @@ export class CreateLobbyComponent implements OnInit {
 		return this.validationForm.get(key);
 	}
 
-	changeTeamSize(teamSize: number) {
+	changeTeamSize(teamSize?: number) {
 		this.teamOneArray = [];
 		this.teamTwoArray = [];
 

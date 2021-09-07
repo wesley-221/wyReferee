@@ -4,10 +4,7 @@ export class CacheBeatmap {
 	beatmapSetId: number
 	beatmapUrl: string;
 
-	constructor(name: string, beatmapId: number, beatmapSetId: number, beatmapUrl: string) {
-		this.name = name;
-		this.beatmapId = beatmapId;
-		this.beatmapSetId = beatmapSetId;
-		this.beatmapUrl = beatmapUrl;
+	constructor(init?: Partial<CacheBeatmap>) {
+		Object.assign(this, init);
 	}
 }

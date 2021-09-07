@@ -8,17 +8,15 @@ export class MessageBuilder {
 	message: string;
 	linkName: string;
 
-	constructor(messageType: MessageType, message: string, linkName: string = null) {
-		this.messageType = messageType;
-		this.message = message;
-		this.linkName = linkName;
+	constructor(init?: Partial<MessageBuilder>) {
+		Object.assign(this, init);
 	}
 
-	convertToJson(): { messageType: MessageType, message: string, linkName: string } {
-		return {
-			messageType: this.messageType,
-			message: this.message,
-			linkName: this.linkName
-		}
+	public static makeTrueCopy(messageBuilder: MessageBuilder): MessageBuilder {
+		return new MessageBuilder({
+			messageType: messageBuilder.messageType,
+			message: messageBuilder.message,
+			linkName: messageBuilder.linkName
+		});
 	}
 }

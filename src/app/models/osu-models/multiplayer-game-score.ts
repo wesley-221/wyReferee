@@ -14,4 +14,8 @@ export class MultiplayerGameScore {
 	perfect: number;
 	pass: number;
 	enabled_mods: any; // unsure of data type
+
+	constructor(init?: Partial<MultiplayerGameScore>) {
+		Object.assign(this, init);
+	}
 }

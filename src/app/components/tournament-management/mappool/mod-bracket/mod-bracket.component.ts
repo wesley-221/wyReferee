@@ -1,68 +1,143 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ModBracket } from '../../../../models/osu-mappool/mod-bracket';
-import { ModBracketMap } from '../../../../models/osu-mappool/mod-bracket-map';
-import { GetBeatmap } from '../../../../services/osu-api/get-beatmap.service';
-import { ElectronService } from '../../../../services/electron.service';
-import { Mods } from '../../../../models/osu-models/osu';
-import { ToastService } from '../../../../services/toast.service';
-import { ToastType } from '../../../../models/toast';
-import { Mappool, MappoolType } from '../../../../models/osu-mappool/mappool';
-import { ModCategory } from '../../../../models/osu-mappool/mod-category';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DeleteModBracketComponent } from 'app/components/dialogs/delete-mod-bracket/delete-mod-bracket.component';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { DeleteModBracketDialogComponent } from 'app/components/dialogs/delete-mod-bracket-dialog/delete-mod-bracket-dialog.component';
+import { Mods } from 'app/models/osu-models/osu';
+import { ToastType } from 'app/models/toast';
+import { MappoolType, WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
+import { WyMod } from 'app/models/wytournament/mappool/wy-mod';
+import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
+import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
+import { WyModCategory } from 'app/models/wytournament/mappool/wy-mod-category';
+import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { ElectronService } from 'app/services/electron.service';
+import { GetBeatmap } from 'app/services/osu-api/get-beatmap.service';
+import { ToastService } from 'app/services/toast.service';
 
-export interface DeleteModBracketDialogData {
-	modBracket: ModBracket;
+export interface IDeleteModBracketDialogData {
+	modBracket: WyModBracket;
 }
-
 @Component({
 	selector: 'app-mod-bracket',
 	templateUrl: './mod-bracket.component.html',
 	styleUrls: ['./mod-bracket.component.scss']
 })
 export class ModBracketComponent implements OnInit {
-	@Input() modBracket: ModBracket;
-	@Input() withBorder: boolean;
-	@Input() withCollapse: boolean;
-	@Input() mappool: Mappool;
+	@Input() tournament: WyTournament;
+	@Input() mappool: WyMappool;
+	@Input() modBracket: WyModBracket;
 	@Input() validationForm: FormGroup;
 
+	availableMods: WyMod[];
+	MAX_BRACKETS: number;
 	bulkBeatmaps: string;
+	synchAllDisabled: boolean;
 
-	selectedMods: { index: number, modValue: any }[] = [];
-	modBracketIndex = 0;
-	beatmapIndex = 0;
-	MAX_BRACKETS = 4;
+	constructor(private getBeatmap: GetBeatmap, private dialog: MatDialog, private toastService: ToastService, public electronService: ElectronService) {
+		this.availableMods = [
+			new WyMod({ name: 'Nomod', value: Mods.None }),
+			new WyMod({ name: 'Hidden', value: Mods.Hidden }),
+			new WyMod({ name: 'Flashlight', value: Mods.Flashlight }),
+			new WyMod({ name: 'Hardrock', value: Mods.HardRock }),
+			new WyMod({ name: 'Easy', value: Mods.Easy }),
+			new WyMod({ name: 'Doubletime', value: Mods.DoubleTime }),
+			new WyMod({ name: 'Nightcore', value: Mods.Nightcore }),
+			new WyMod({ name: 'Nofail', value: Mods.NoFail }),
+			new WyMod({ name: 'Halftime', value: Mods.HalfTime }),
+			new WyMod({ name: 'Freemod', value: 'freemod' })
+		];
 
-	dialogMessage: string;
-	modBracketToRemove: ModBracket;
+		this.MAX_BRACKETS = 4;
+		this.synchAllDisabled = false;
+	}
+	ngOnInit(): void { }
 
-	synchAllDisabled = false;
+	/**
+	 * When the name of the mappool gets changed
+	 * @param evt
+	 */
+	onNameChange(evt: Event) {
+		this.modBracket.name = (evt.target as any).value
+	}
 
-	availableMods: { modName: string, modValue: any }[] = [
-		{ modName: 'Nomod', modValue: Mods.None },
-		{ modName: 'Hidden', modValue: Mods.Hidden },
-		{ modName: 'Flashlight', modValue: Mods.Flashlight },
-		{ modName: 'Hardrock', modValue: Mods.HardRock },
-		{ modName: 'Easy', modValue: Mods.Easy },
-		{ modName: 'Doubletime', modValue: Mods.DoubleTime },
-		{ modName: 'Nightcore', modValue: Mods.Nightcore },
-		{ modName: 'Nofail', modValue: Mods.NoFail },
-		{ modName: 'Halftime', modValue: Mods.HalfTime },
-		{ modName: 'Freemod', modValue: 'freemod' }
-	];
+	/**
+	 * Collapse a bracket
+	 * @param bracket the bracket to collapse
+	 */
+	collapseBracket(bracket: WyModBracket): void {
+		bracket.collapsed = !bracket.collapsed;
+	}
 
-	constructor(private getBeatmap: GetBeatmap, public electronService: ElectronService, private toastService: ToastService, private dialog: MatDialog) { }
+	/**
+	 * Remove the mod bracket from the mappool
+	 * @param modBracket
+	 */
+	deleteModBracket(modBracket: WyModBracket): void {
+		const dialogRef = this.dialog.open(DeleteModBracketDialogComponent, {
+			data: {
+				modBracket
+			}
+		});
 
-	ngOnInit() {
+		dialogRef.afterClosed().subscribe(result => {
+			if (result != null) {
+				for (const findModBracket in this.mappool.modBrackets) {
+					if (this.mappool.modBrackets[findModBracket].index == modBracket.index) {
+						this.mappool.modBrackets.splice(Number(findModBracket), 1);
+						break;
+					}
+				}
+
+				this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-${modBracket.index}-name`);
+
+				for (const mod in modBracket.mods) {
+					this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-mod-${modBracket.mods[mod].index}-value`);
+				}
+
+				if (this.mappool.type == MappoolType.AxS) {
+					for (const beatmap in modBracket.beatmaps) {
+						this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-beatmap-${modBracket.beatmaps[beatmap].index}-modifier`);
+					}
+				}
+
+				this.toastService.addToast(`Successfully removed "${modBracket.name}" from the mappool.`);
+			}
+		});
+	}
+
+	/**
+	 * Add a new mod bracket
+	 */
+	addNewMod(): void {
+		if (this.modBracket.mods.length + 1 <= this.MAX_BRACKETS) {
+			const newMod = new WyMod({
+				index: this.modBracket.modIndex
+			});
+
+			this.modBracket.modIndex++;
+			this.modBracket.mods.push(newMod);
+
+			this.validationForm.addControl(`mappool-${this.mappool.id}-mod-bracket-mod-${newMod.index}-value`, new FormControl('', Validators.required));
+		}
+		else {
+			this.toastService.addToast('Maximum amount of mods reached.', ToastType.Warning);
+		}
+	}
+
+	/**
+	 * Delete a mod
+	 * @param modIndex the index of the mod to delete
+	 */
+	deleteMod(modIndex: number): void {
 		for (const mod in this.modBracket.mods) {
-			const modValue = this.modBracket.mods[mod].modValue;
-			this.selectedMods.push({ index: this.modBracketIndex + 1, modValue: modValue });
-			this.validationForm.addControl(`mod-bracket-mod-index-${this.modBracket.validateIndex}-${this.modBracketIndex + 1}`, new FormControl(modValue, Validators.required));
+			if (this.modBracket.mods[mod].index == modIndex) {
+				this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-mod-${this.modBracket.mods[mod].index}-value`);
 
-			this.modBracketIndex++;
+				this.modBracket.mods.splice(Number(mod), 1);
+				return;
+			}
 		}
 	}
 
@@ -70,15 +145,16 @@ export class ModBracketComponent implements OnInit {
 	 * Add a new beatmap to the given bracket
 	 * @param bracket the bracket to add the beatmap to
 	 */
-	addBeatmap(bracket: ModBracket): void {
-		const modBracketMap = new ModBracketMap();
-		modBracketMap.index = this.beatmapIndex;
-		this.beatmapIndex++;
+	addBeatmap(bracket: WyModBracket): void {
+		const newModBracketMap = new WyModBracketMap();
 
-		bracket.addBeatmap(modBracketMap);
+		newModBracketMap.index = this.modBracket.beatmapIndex;
+		this.modBracket.beatmapIndex++;
 
-		if (this.mappool.mappoolType == MappoolType.AxS) {
-			this.validationForm.addControl(`beatmap-modifier-${this.modBracket.validateIndex}-${modBracketMap.index}`, new FormControl('', Validators.required));
+		bracket.beatmaps.push(newModBracketMap);
+
+		if (this.mappool.type == MappoolType.AxS) {
+			this.validationForm.addControl(`mappool-${this.mappool.id}-mod-bracket-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
 		}
 	}
 
@@ -86,41 +162,30 @@ export class ModBracketComponent implements OnInit {
 	 * Add all beatmaps to the given bracket
 	 * @param modBracket the bracket to add the beatmaps to
 	 */
-	addBulkBeatmaps(modBracket: ModBracket): void {
+	addBulkBeatmaps(bracket: WyModBracket): void {
 		const allBeatmaps = this.bulkBeatmaps.split(',');
 
 		allBeatmaps.forEach(beatmapId => {
-			const modBracketMap = new ModBracketMap();
-			modBracketMap.index = this.beatmapIndex;
-			this.beatmapIndex++;
-			modBracketMap.beatmapId = parseInt(beatmapId.trim());
+			const newModBracketMap = new WyModBracketMap();
 
-			modBracket.addBeatmap(modBracketMap);
+			newModBracketMap.index = this.modBracket.beatmapIndex;
+			this.modBracket.beatmapIndex++;
 
-			if (this.mappool.mappoolType == MappoolType.AxS) {
-				this.validationForm.addControl(`beatmap-modifier-${this.modBracket.validateIndex}-${modBracketMap.index}`, new FormControl('', Validators.required));
+			newModBracketMap.beatmapId = parseInt(beatmapId.trim());
+
+			bracket.beatmaps.push(newModBracketMap);
+
+			if (this.mappool.type == MappoolType.AxS) {
+				this.validationForm.addControl(`mappool-${this.mappool.id}-mod-bracket-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
 			}
 		});
-	}
-
-	/**
-	 * Remove the given beatmap from the given bracket
-	 * @param bracket the bracket to remove the beatmap from
-	 * @param beatmap the beatmap to remove
-	 */
-	removeBeatmap(bracket: ModBracket, beatmap: ModBracketMap): void {
-		bracket.removeMap(beatmap);
-
-		if (this.mappool.mappoolType == MappoolType.AxS) {
-			this.validationForm.removeControl(`beatmap-modifier-${this.modBracket.validateIndex}-${beatmap.index}`);
-		}
 	}
 
 	/**
 	 * Get the data from the given beatmap
 	 * @param beatmap the beatmap to synchronize
 	 */
-	synchronizeBeatmap(beatmap: ModBracketMap): void {
+	synchronizeBeatmap(beatmap: WyModBracketMap): void {
 		beatmap.isSynchronizing = true;
 
 		this.getBeatmap.getByBeatmapId(beatmap.beatmapId).subscribe(data => {
@@ -143,7 +208,7 @@ export class ModBracketComponent implements OnInit {
 	 * Synchronize all beatmaps from the bracket
 	 * @param modBracket
 	 */
-	synchronizeAll(modBracket: ModBracket): void {
+	synchronizeAll(modBracket: WyModBracket): void {
 		this.synchAllDisabled = true;
 
 		for (const beatmap of modBracket.beatmaps) {
@@ -156,61 +221,15 @@ export class ModBracketComponent implements OnInit {
 	}
 
 	/**
-	 * Collapse a bracket
-	 * @param bracket the bracket to collapse
+	 * Remove the given beatmap from the given bracket
+	 * @param bracket the bracket to remove the beatmap from
+	 * @param beatmap the beatmap to remove
 	 */
-	collapseBracket(bracket: ModBracket): void {
-		bracket.collapsed = !bracket.collapsed;
-	}
+	removeBeatmap(bracket: WyModBracket, beatmap: WyModBracketMap): void {
+		bracket.beatmaps.splice(bracket.beatmaps.indexOf(beatmap), 1);
 
-	/**
-	 * Add a new mod bracket
-	 */
-	addNewMod(): void {
-		if (this.selectedMods.length + 1 <= this.MAX_BRACKETS) {
-			this.selectedMods.push({ index: this.modBracketIndex, modValue: 0 });
-			this.validationForm.addControl(`mod-bracket-mod-index-${this.modBracket.validateIndex}-${this.modBracketIndex}`, new FormControl('', Validators.required));
-
-			this.modBracketIndex++;
-		}
-		else {
-			this.toastService.addToast('Maximum amount of mods reached.', ToastType.Warning);
-		}
-	}
-
-	/**
-	 * Change the value of the selected mod
-	 * @param modIndex the index of the mod that has been changed
-	 * @param modValue the new value of the mod
-	 */
-	changeMod(modIndex: number, modValue: MatSelectChange): void {
-		modValue = modValue.value;
-
-		// Reset the mods
-		this.modBracket.mods = [];
-
-		for (const mod in this.selectedMods) {
-			if (this.selectedMods[mod].index == modIndex) {
-				this.selectedMods[mod].modValue = modValue;
-			}
-		}
-
-		this.modBracket.mods = this.selectedMods;
-	}
-
-	/**
-	 * Delete a mod
-	 * @param modIndex the index of the mod to delete
-	 */
-	deleteMod(modIndex: number): void {
-		for (const mod in this.selectedMods) {
-			if (this.selectedMods[mod].index == modIndex) {
-				this.selectedMods.splice(Number(mod), 1);
-
-				this.modBracket.mods = this.selectedMods;
-				this.validationForm.removeControl(`mod-bracket-mod-index-${this.modBracket.validateIndex}-${this.modBracketIndex}`);
-				return;
-			}
+		if (this.mappool.type == MappoolType.AxS) {
+			this.validationForm.removeControl(`mappool-${this.mappool.id}-mod-bracket-beatmap-${beatmap.index}-modifier`);
 		}
 	}
 
@@ -219,56 +238,23 @@ export class ModBracketComponent implements OnInit {
 	 * @param beatmap
 	 * @param event
 	 */
-	changeModCategory(beatmap: ModBracketMap, event: MatSelectChange): void {
+	changeModCategory(beatmap: WyModBracketMap, event: MatSelectChange): void {
 		const modCategory = this.mappool.getModCategoryByName(event.value);
 
 		if (modCategory == undefined) {
 			beatmap.modCategory = undefined;
 		}
 		else {
-			beatmap.modCategory = ModCategory.makeTrueCopy(this.mappool.getModCategoryByName(event.value));
+			beatmap.modCategory = WyModCategory.makeTrueCopy(this.mappool.getModCategoryByName(event.value));
 		}
 	}
 
 	/**
-	 * Change the mod bracket name
-	 * @param modBracket
+	 * Change the picked status for the given map
+	 * @param beatmap
 	 * @param event
 	 */
-	changeModBracketName(modBracket: ModBracket, event: any): void {
-		modBracket.bracketName = event.target.value;
-	}
-
-	/**
-	 * Remove the mod bracket from the mappool
-	 * @param modBracket
-	 */
-	deleteModBracket(modBracket: ModBracket): void {
-		const dialogRef = this.dialog.open(DeleteModBracketComponent, {
-			data: {
-				modBracket
-			}
-		});
-
-		dialogRef.afterClosed().subscribe(result => {
-			if (result != null) {
-				this.validationForm.removeControl(`mod-bracket-name-${modBracket.id}`);
-
-				for (const mod in this.selectedMods) {
-					this.validationForm.removeControl(`mod-bracket-mod-index-${this.modBracket.validateIndex}-${this.selectedMods[mod]}`);
-				}
-
-				for (const beatmap in this.modBracket.beatmaps) {
-					this.validationForm.removeControl(`beatmap-modifier-${this.modBracket.validateIndex}-${this.modBracket.beatmaps[beatmap].index}`);
-				}
-
-				this.mappool.removeModBracket(modBracket);
-				this.toastService.addToast(`Successfully removed "${modBracket.bracketName}" from the mappool.`);
-			}
-		});
-	}
-
-	getValidation(key: string): any {
-		return this.validationForm.get(key);
+	changePicked(beatmap: WyModBracketMap, event: MatSlideToggleChange): void {
+		beatmap.picked = event.checked;
 	}
 }

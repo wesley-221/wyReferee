@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../environments/environment';
-import { Tournament } from '../models/tournament/tournament';
 import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { User } from 'app/models/authentication/user';
+import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { Observable } from 'rxjs/internal/Observable';
+import { BehaviorSubject } from 'rxjs';
+import { GenericService } from './generic.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,194 +14,255 @@ import { User } from 'app/models/authentication/user';
 export class TournamentService {
 	private readonly apiUrl = AppConfig.apiUrl;
 
-	allTournaments: Tournament[];
-	availableTournamentId = 0;
+	allTournaments: WyTournament[];
+	availableTournamentId: number;
 
-	constructor(private storeService: StoreService, private httpClient: HttpClient) {
+	private tournamentsInitialized$: BehaviorSubject<boolean>;
+
+	constructor(private storeService: StoreService, private httpClient: HttpClient, private genericService: GenericService) {
+		this.availableTournamentId = 0;
 		this.allTournaments = [];
 
-		const storeAllTournaments = this.storeService.get('cache.tournaments');
+		this.tournamentsInitialized$ = new BehaviorSubject(false);
 
-		for (const tournament in storeAllTournaments) {
-			const thisMappool = storeAllTournaments[tournament];
-			const newTournament = Tournament.serializeJson(thisMappool);
+		this.genericService.getCacheHasBeenChecked().subscribe(checked => {
+			if (checked == true) {
+				const storeAllTournaments = this.storeService.get('cache.tournaments');
 
-			newTournament.id = thisMappool.id;
-			this.availableTournamentId = newTournament.id + 1;
-
-			if (newTournament.publishId != undefined) {
-				this.getPublishedTournament(newTournament.publishId).subscribe((data) => {
-					const updatedTournament: Tournament = Tournament.serializeJson(data);
-					newTournament.updateAvailable = !newTournament.compareTo(updatedTournament);
+				for (const tournament in storeAllTournaments) {
+					const newTournament = WyTournament.makeTrueCopy(storeAllTournaments[tournament]);
+					this.availableTournamentId = newTournament.id + 1;
 
 					this.allTournaments.push(newTournament);
-				}, () => {
-					this.allTournaments.push(newTournament);
-				});
+				}
+
+				// TODO: make a better solution for this
+				setTimeout(() => {
+					for (const tournament in this.allTournaments) {
+						if (this.allTournaments[tournament].publishId != undefined) {
+							this.getPublishedTournament(this.allTournaments[tournament].publishId).subscribe((data) => {
+								const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
+
+								if (publishedTournament.updateDate > this.allTournaments[tournament].updateDate) {
+									publishedTournament.publishId = publishedTournament.id;
+
+									this.updateTournament(publishedTournament, this.allTournaments[tournament].publishId, true);
+								}
+							});
+						}
+					}
+
+					this.tournamentsInitialized$.next(true);
+				}, 1);
 			}
-			else {
-				this.allTournaments.push(newTournament);
-			}
-		}
+		});
 	}
 
 	/**
-	 * Get a tournament by the given id
-	 * @param tournamentId the id of the tournament to get
+	 * Check if the tournaments have been intialized
 	 */
-	getTournament(tournamentId: number): Tournament {
-		let returnTournamentl: Tournament = null;
-
-		for (const i in this.allTournaments) {
-			if (this.allTournaments[i].id == tournamentId) {
-				returnTournamentl = this.allTournaments[i];
-				break;
-			}
-		}
-
-		return returnTournamentl;
+	tournamentsHaveBeenInitialized(): Observable<boolean> {
+		return this.tournamentsInitialized$.asObservable();
 	}
 
 	/**
-	 * Save the tournament in the store and add it to the service
+	 * Save a tournament and increment the available tournament id
 	 * @param tournament the tournament to save
 	 */
-	public saveTournament(tournament: Tournament): void {
+	saveTournament(tournament: WyTournament): void {
 		tournament.id = this.availableTournamentId++;
 
 		this.allTournaments.push(tournament);
-		this.storeService.set(`cache.tournaments.${tournament.id}`, tournament.convertToJson());
+		this.storeService.set(`cache.tournaments.${tournament.id}`, tournament);
 	}
 
 	/**
-	 * Update an existing tournament with new values
+	 * Update a tournament
 	 * @param tournament the tournament to update
 	 */
-	updateTournament(tournament: Tournament): void {
-		for (const i in this.allTournaments) {
-			if (this.allTournaments[i].id == tournament.id) {
-				this.allTournaments[i] = tournament;
+	updateTournament(tournament: WyTournament, idToUpdate: number, updateFromPublish?: boolean): void {
+		for (const findTournament in this.allTournaments) {
+			if (updateFromPublish == true) {
+				if (this.allTournaments[findTournament].publishId == idToUpdate) {
+					tournament.id = this.allTournaments[findTournament].id;
 
-				this.storeService.set(`cache.tournaments.${tournament.id}`, tournament.convertToJson());
-				return;
+					this.allTournaments[findTournament] = WyTournament.makeTrueCopy(tournament);
+					break;
+				}
+			}
+			else {
+				if (this.allTournaments[findTournament].id == idToUpdate) {
+					this.allTournaments[findTournament] = WyTournament.makeTrueCopy(tournament);
+					break;
+				}
 			}
 		}
+
+		this.storeService.set(`cache.tournaments.${tournament.id}`, tournament);
 	}
 
 	/**
 	 * Update a published tournament
 	 * @param tournament the tournament to update
 	 */
-	public updatePublishedTournament(tournament: Tournament) {
-		return this.httpClient.post<Tournament>(`${this.apiUrl}wyreferee/tournament`, tournament, { observe: 'response' });
+	updatePublishedTournament(tournament: WyTournament): Observable<WyTournament> {
+		return this.httpClient.post<WyTournament>(`${this.apiUrl}wyreferee/tournament`, tournament);
 	}
 
 	/**
-	 * Replace the original tournament with the new tournament
-	 * @param originalTournament the tournament to replace
-	 * @param updatedTournament the tournament with the new values
-	 */
-	public replaceTournament(originalTournament: Tournament, updatedTournament: Tournament) {
-		for (const i in this.allTournaments) {
-			if (this.allTournaments[i].id == originalTournament.id) {
-				updatedTournament.id = originalTournament.id;
-				this.allTournaments[i] = updatedTournament;
-
-				this.storeService.set(`cache.tournaments.${originalTournament.id}`, updatedTournament.convertToJson());
-				return;
-			}
-		}
-	}
-
-	/**
-	 * Delete the tournament in the store and service
+	 * Delete the tournament from the cache and service
 	 * @param tournament the tournament to delete
 	 */
-	deleteTournament(tournament: Tournament): void {
+	deleteTournament(tournament: WyTournament): void {
 		this.allTournaments.splice(this.allTournaments.indexOf(tournament), 1);
 		this.storeService.delete(`cache.tournaments.${tournament.id}`);
+	}
+
+	/**
+	 * Delete the published tournament
+	 * @param tournament the tournament to delete
+	 */
+	deletePublishedTournament(tournament: WyTournament): Observable<void> {
+		return this.httpClient.delete<void>(`${this.apiUrl}wyreferee/tournament/${tournament.id}`);
+	}
+
+	/**
+	 * Get a tournament by the given id
+	 * @param id the id of the tournament to get
+	 */
+	getTournamentById(id: number): WyTournament {
+		let returnTournament: WyTournament = null;
+
+		for (const tournament in this.allTournaments) {
+			if (this.allTournaments[tournament].id == id) {
+				returnTournament = this.allTournaments[tournament];
+				break;
+			}
+		}
+
+		return returnTournament;
 	}
 
 	/**
 	 * Publish a tournament
 	 * @param tournament the tournament to publish
 	 */
-	publishTournament(tournament: Tournament): Observable<any> {
-		return this.httpClient.post<Tournament>(`${this.apiUrl}wyreferee/tournament`, tournament, { observe: 'response' });
-	}
-
-	/**
-	 * Get a published tournament by tournament id
-	 * @param tournamentId the id of the tournament that was published
-	 */
-	getPublishedTournament(tournamentId: number): Observable<Tournament> {
-		return this.httpClient.get<Tournament>(`${this.apiUrl}wyreferee/tournament/${tournamentId}`);
-	}
-
-	/**
-	 * Get all the published tournaments from the given user
-	 * @param user the user to get all the tournaments from
-	 */
-	getAllPublishedTournamentsFromUser(user: User) {
-		return this.httpClient.get<Tournament[]>(`${this.apiUrl}wyreferee/tournament/created_by/${user.id}`);
+	publishTournament(tournament: WyTournament): Observable<WyTournament> {
+		return this.httpClient.post<WyTournament>(`${this.apiUrl}wyreferee/tournament`, tournament);
 	}
 
 	/**
 	 * Get all published tournaments
 	 */
 	getAllPublishedTournaments() {
-		return this.httpClient.get<Tournament[]>(`${this.apiUrl}wyreferee/tournament`);
+		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}wyreferee/tournament`);
 	}
 
 	/**
-	 * Delete a tournament
-	 * @param tournament the tournament to delete
+	 * Get all published tournaments that you have administrator permissions to
 	 */
-	deletePublishedTournament(tournament: Tournament) {
-		return this.httpClient.delete<Tournament>(`${this.apiUrl}wyreferee/tournament/${tournament.id}`);
+	getAllPublishedTournamentsWithAdminPermissions() {
+		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}wyreferee/tournament/administrator_permission`);
 	}
 
 	/**
-	 * Get a tournament by the given name
-	 * @param tournamentName the tournament name
+	 * Get a published tournament by tournament id
+	 * @param tournamentId the id of the tournament that was published
 	 */
-	getTournamentByName(tournamentName: string): Tournament {
-		for (const tournament of this.allTournaments) {
-			if (tournament.tournamentName == tournamentName) {
-				return tournament;
-			}
-		}
-
-		return null;
+	getPublishedTournament(tournamentId: number): Observable<WyTournament> {
+		return this.httpClient.get<WyTournament>(`${this.apiUrl}wyreferee/tournament/${tournamentId}`);
 	}
 
-	/**
-	 * Get a tournament by the given acronym
-	 * @param acronym the tournament acronym
-	 */
-	getTournamentByAcronym(acronym: string): Tournament {
-		for (const tournament of this.allTournaments) {
-			if (tournament.acronym == acronym) {
-				return tournament;
-			}
-		}
+	// /**
+	//  * Update a published tournament
+	//  * @param tournament the tournament to update
+	//  */
+	// public updatePublishedTournament(tournament: Tournament) {
+	// 	return this.httpClient.post<Tournament>(`${this.apiUrl}wyreferee/tournament`, tournament, { observe: 'response' });
+	// }
 
-		return null;
-	}
+	// /**
+	//  * Replace the original tournament with the new tournament
+	//  * @param originalTournament the tournament to replace
+	//  * @param updatedTournament the tournament with the new values
+	//  */
+	// public replaceTournament(originalTournament: Tournament, updatedTournament: Tournament) {
+	// 	for (const i in this.allTournaments) {
+	// 		if (this.allTournaments[i].id == originalTournament.id) {
+	// 			updatedTournament.id = originalTournament.id;
+	// 			this.allTournaments[i] = updatedTournament;
 
-	/**
-	 * Get the team from the given tournament by the given name
-	 * @param tournament the tournament to search in
-	 * @param teamName the team to search for
-	 */
-	getTeamFromTournamentByName(tournament: Tournament, teamName: string) {
-		for (const team of tournament.teams) {
-			if (team.teamName == teamName) {
-				return team;
-			}
-		}
+	// 			this.storeService.set(`cache.tournaments.${originalTournament.id}`, updatedTournament.convertToJson());
+	// 			return;
+	// 		}
+	// 	}
+	// }
 
-		return null;
-	}
+	// /**
+	//  * Publish a tournament
+	//  * @param tournament the tournament to publish
+	//  */
+	// publishTournament(tournament: Tournament): Observable<any> {
+	// 	return this.httpClient.post<Tournament>(`${this.apiUrl}wyreferee/tournament`, tournament, { observe: 'response' });
+	// }
+
+	// /**
+	//  * Get all the published tournaments from the given user
+	//  * @param user the user to get all the tournaments from
+	//  */
+	// getAllPublishedTournamentsFromUser(user: User) {
+	// 	return this.httpClient.get<Tournament[]>(`${this.apiUrl}wyreferee/tournament/created_by/${user.id}`);
+	// }
+
+	// /**
+	//  * Delete a tournament
+	//  * @param tournament the tournament to delete
+	//  */
+	// deletePublishedTournament(tournament: Tournament) {
+	// 	return this.httpClient.delete<Tournament>(`${this.apiUrl}wyreferee/tournament/${tournament.id}`);
+	// }
+
+	// /**
+	//  * Get a tournament by the given name
+	//  * @param tournamentName the tournament name
+	//  */
+	// getTournamentByName(tournamentName: string): Tournament {
+	// 	for (const tournament of this.allTournaments) {
+	// 		if (tournament.tournamentName == tournamentName) {
+	// 			return tournament;
+	// 		}
+	// 	}
+
+	// 	return null;
+	// }
+
+	// /**
+	//  * Get a tournament by the given acronym
+	//  * @param acronym the tournament acronym
+	//  */
+	// getTournamentByAcronym(acronym: string): Tournament {
+	// 	for (const tournament of this.allTournaments) {
+	// 		if (tournament.acronym == acronym) {
+	// 			return tournament;
+	// 		}
+	// 	}
+
+	// 	return null;
+	// }
+
+	// /**
+	//  * Get the team from the given tournament by the given name
+	//  * @param tournament the tournament to search in
+	//  * @param teamName the team to search for
+	//  */
+	// getTeamFromTournamentByName(tournament: Tournament, teamName: string) {
+	// 	for (const team of tournament.teams) {
+	// 		if (team.teamName == teamName) {
+	// 			return team;
+	// 		}
+	// 	}
+
+	// 	return null;
+	// }
 }
 

@@ -1,0 +1,35 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+			<button mat-raised-button color="accent" (click)="createNewMappool()"><fa-icon [icon]="['fas', 'plus']"></fa-icon> create new mappool</button>
+
+			<div class="mappool-spacing" *ngIf="tournament.mappools.length > 0"></div>
+
+			<div class="alert alert-warning" *ngIf="tournament.mappools.length == 0">
+				There are no mappools yet.
+			</div>
+
+			<div class="mappools">
+				<div class="mappool" *ngFor="let mappool of tournament.mappools">
+					<div class="header">
+						<div class="name">
+							<h3>{{ mappool.name }}</h3>
+						</div>
+
+						<div class="actions">
+							<button mat-mini-fab color="warn" (click)="deleteMappool(mappool)"><mat-icon>delete</mat-icon></button>
+							<button mat-mini-fab color="primary" (click)="mappool.collapsed = !mappool.collapsed">
+								<mat-icon *ngIf="mappool.collapsed">expand_more</mat-icon>
+								<mat-icon *ngIf="!mappool.collapsed">expand_less</mat-icon>
+							</button>
+						</div>
+					</div>
+
+					<div class="body" [ngClass]="{ 'hide': mappool.collapsed }">
+						<app-mappool [tournament]="tournament" [mappool]="mappool" [validationForm]="validationForm"></app-mappool>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

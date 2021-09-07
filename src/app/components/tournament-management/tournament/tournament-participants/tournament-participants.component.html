@@ -1,0 +1,85 @@
+<div *ngIf="!tournament.isSoloTournament()">
+	<h3>Teams</h3>
+	<p>Add a team to the tournament.</p>
+
+	<button mat-raised-button (click)="addTeam()" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new team</button>
+</div>
+
+<div *ngIf="tournament.isSoloTournament()">
+	<h3>Players</h3>
+	<p>Add a player to the tournament.</p>
+
+	<button mat-raised-button (click)="addTeam()" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new player</button>
+</div>
+
+<hr />
+
+<div class="all-teams">
+	<div class="team" *ngFor="let team of tournament.teams">
+		<form [formGroup]="validationForm">
+			<div class="header">
+				<div class="information">
+					<h3 *ngIf="team.name">{{ team.name }}</h3>
+					<h3 *ngIf="!team.name && !tournament.isSoloTournament()">Unnamed team</h3>
+					<h3 *ngIf="!team.name && tournament.isSoloTournament()">Unnamed player</h3>
+				</div>
+
+				<div class="buttons">
+					<button mat-mini-fab color="warn" (click)="deleteTeam(team)"><mat-icon>delete</mat-icon></button>
+					<button mat-mini-fab color="primary" (click)="collapseParticipant(team)">
+						<mat-icon *ngIf="team.collapsed">expand_more</mat-icon>
+						<mat-icon *ngIf="!team.collapsed">expand_less</mat-icon>
+					</button>
+				</div>
+			</div>
+
+			<div [ngClass]="{'hide': team.collapsed}" class="body">
+				<h3 *ngIf="!tournament.isSoloTournament()">Create a new team</h3>
+				<h3 *ngIf="tournament.isSoloTournament()">Create a new player</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label *ngIf="!tournament.isSoloTournament()">Team name</mat-label>
+					<mat-label *ngIf="tournament.isSoloTournament()">Player name</mat-label>
+
+					<input matInput [formControlName]="'tournament-team-name-' + team.index" (change)="changeTeamName(team, $event)" />
+
+					<mat-error *ngIf="validationForm.get('tournament-team-name-' + team.index) != null && validationForm.get('tournament-team-name-' + team.index).errors && (validationForm.get('tournament-team-name-' + team.index).touched || validationForm.get('tournament-team-name-' + team.index).dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p *ngIf="!tournament.isSoloTournament()">The name of the team</p>
+				<p *ngIf="tournament.isSoloTournament()">The name of the player</p>
+
+				<div *ngIf="!tournament.isSoloTournament()">
+					<h3>Manage players</h3>
+					<p>Add or remove players from the given team</p>
+
+					<button mat-raised-button (click)="addNewPlayer(team)" color="primary"><mat-icon>add</mat-icon> add new player</button>&nbsp;
+					<button mat-raised-button (click)="addBulkPlayers(team)" color="primary" [disabled]="usersToAdd == null || usersToAdd.length <= 0"><mat-icon>add</mat-icon> add bulk players</button>
+
+					<mat-form-field class="full-width">
+						<mat-label>User list divided by a comma (User1, user2, user3)</mat-label>
+						<textarea matInput [(ngModel)]="usersToAdd" [ngModelOptions]="{standalone: true}"></textarea>
+					</mat-form-field>
+
+					<div class="team-players">
+						<div class="player" *ngFor="let player of team.players">
+							<div class="player-name">
+								<mat-form-field class="full-width">
+									<mat-label>Player name</mat-label>
+
+									<input matInput [(ngModel)]="player.name" [ngModelOptions]="{ standalone: true }" />
+								</mat-form-field>
+							</div>
+
+							<div class="manage-buttons">
+								<button mat-mini-fab color="warn" (click)="removePlayer(team, player)"><mat-icon>delete</mat-icon></button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

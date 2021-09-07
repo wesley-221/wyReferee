@@ -3,12 +3,12 @@ import { BanchoClient, PrivateMessage, ChannelMessage, BanchoChannel, BanchoMult
 import { ToastService } from './toast.service';
 import { StoreService } from './store.service';
 import { BehaviorSubject, Observable, from } from 'rxjs';
-import { Channel, TeamMode, WinCondition } from '../models/irc/channel';
-import { Message } from '../models/irc/message';
 import { Regex } from '../models/irc/regex';
 import { MessageBuilder, MessageType } from '../models/irc/message-builder';
-import { MultiplayerLobbiesService } from './multiplayer-lobbies.service';
 import { Howl } from 'howler';
+import { IrcChannel, TeamMode, WinCondition } from 'app/models/irc/irc-channel';
+import { IrcMessage } from 'app/models/irc/irc-message';
+import { WyMultiplayerLobbiesService } from './wy-multiplayer-lobbies.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -27,7 +27,7 @@ export class IrcService {
 	 */
 	authenticatedUser = 'none';
 
-	allChannels: Channel[] = [];
+	allChannels: IrcChannel[] = [];
 
 	// Variables to tell if we are connecting/disconnecting to irc
 	isConnecting$: BehaviorSubject<boolean>;
@@ -42,7 +42,7 @@ export class IrcService {
 	// Indication if a sound is playing or not
 	private soundIsPlaying = false;
 
-	constructor(private toastService: ToastService, private storeService: StoreService, private multiplayerLobbiesService: MultiplayerLobbiesService) {
+	constructor(private toastService: ToastService, private storeService: StoreService, private multiplayerLobbiesService: WyMultiplayerLobbiesService) {
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
@@ -63,28 +63,20 @@ export class IrcService {
 		if (connectedChannels != undefined && Object.keys(connectedChannels).length > 0) {
 			// Loop through all the channels
 			for (const channel in connectedChannels) {
-				const nChannel = new Channel(connectedChannels[channel].name);
-				nChannel.active = connectedChannels[channel].active;
-				nChannel.lastActiveChannel = connectedChannels[channel].lastActiveChannel;
-				nChannel.isPrivateChannel = connectedChannels[channel].isPrivateChannel;
-				nChannel.playSoundOnMessage = (connectedChannels[channel].playSoundOnMessage ? connectedChannels[channel].playSoundOnMessage : false);
-
-				// Loop through all the messages
-				for (const message in connectedChannels[channel].messageHistory) {
-					const thisMessage = connectedChannels[channel].messageHistory[message];
-					const messageBuilder: MessageBuilder[] = [];
-
-					// Loop through the message builder
-					for (const messageInBuilder in thisMessage.message) {
-						const thisMessageInBuilder = thisMessage.message[messageInBuilder];
-						messageBuilder.push(new MessageBuilder(thisMessageInBuilder.messageType, thisMessageInBuilder.message, thisMessageInBuilder.linkName));
-					}
-
-					nChannel.allMessages.push(new Message(thisMessage.messageId, thisMessage.date, thisMessage.time, thisMessage.author, messageBuilder, false));
-				}
+				const nChannel = IrcChannel.makeTrueCopy(connectedChannels[channel]);
 
 				// Add a divider to the channel to show new messages
-				nChannel.allMessages.push(new Message(null, 'n/a', 'n/a', 'Today', [new MessageBuilder(MessageType.Message, 'Messages from history')], true));
+				nChannel.messages.push(new IrcMessage({
+					messageId: null,
+					date: 'n/a',
+					time: 'n/a',
+					author: 'Today',
+					messageBuilder: [new MessageBuilder({
+						messageType: MessageType.Message,
+						message: 'Messages from history'
+					})],
+					isADivider: true
+				}));
 
 				this.allChannels.push(nChannel);
 			}
@@ -178,7 +170,7 @@ export class IrcService {
 
 				// Gets called when !mp settings is ran
 				if (playerInSlot) {
-					this.multiplayerLobbiesService.getByIrcLobby(message.channel.name).multiplayerLobbyPlayers.playerChanged(playerInSlot);
+					this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(message.channel.name).multiplayerLobbyPlayers.playerChanged(playerInSlot);
 				}
 			}
 		});
@@ -222,31 +214,31 @@ export class IrcService {
 	 */
 	initializeChannelListeners(channel: BanchoMultiplayerChannel) {
 		channel.lobby.on('playerMoved', (obj: { player: BanchoLobbyPlayer, slot: number }) => {
-			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.movePlayerToSlot(obj);
+			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.movePlayerToSlot(obj);
 		});
 
 		channel.lobby.on('playerJoined', (obj: { player: BanchoLobbyPlayer, slot: number, team: string }) => {
-			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.playerJoined(obj);
+			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.playerJoined(obj);
 		});
 
 		channel.lobby.on('playerLeft', (player: BanchoLobbyPlayer) => {
-			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.playerLeft(player);
+			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.playerLeft(player);
 		})
 
 		channel.lobby.on('playerChangedTeam', (obj: { player: BanchoLobbyPlayer, team: string }) => {
-			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.playerChangedTeam(obj);
+			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.playerChangedTeam(obj);
 		});
 
 		channel.lobby.on('hostCleared', () => {
-			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.clearMatchHost();
+			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.clearMatchHost();
 		});
 
 		channel.lobby.on('host', (player: BanchoLobbyPlayer) => {
-			this.multiplayerLobbiesService.getByIrcLobby(channel.name).multiplayerLobbyPlayers.changeHost(player);
+			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.changeHost(player);
 		});
 
 		channel.lobby.on('matchFinished', () => {
-			this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getByIrcLobby(channel.name), true, true);
+			this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name), true, true);
 		});
 
 		channel.lobby.on('size', (size: number) => {
@@ -282,9 +274,9 @@ export class IrcService {
 	 * @param channelName the channelname
 	 */
 	getChannelByName(channelName: string) {
-		let channel: Channel = null;
+		let channel: IrcChannel = null;
 		for (const i in this.allChannels) {
-			if (this.allChannels[i].channelName == channelName) {
+			if (this.allChannels[i].name == channelName) {
 				channel = this.allChannels[i];
 				break;
 			}
@@ -305,7 +297,7 @@ export class IrcService {
 		const timeFormat = `${(date.getHours() <= 9 ? '0' : '')}${date.getHours()}:${(date.getMinutes() <= 9 ? '0' : '')}${date.getMinutes()}`;
 		const dateFormat = `${(date.getDate() <= 9 ? '0' : '')}${date.getDate()}/${(date.getMonth() <= 9 ? '0' : '')}${date.getMonth()}/${date.getFullYear()}`;
 
-		let newMessage: Message;
+		let newMessage: IrcMessage;
 
 		// ===============================
 		// The user is sending the message
@@ -315,22 +307,43 @@ export class IrcService {
 				this.joinChannel(recipient);
 			}
 
-			newMessage = new Message(Object.keys(this.getChannelByName(recipient).allMessages).length + 1, dateFormat, timeFormat, user, this.buildMessage(message), false);
+			newMessage = new IrcMessage({
+				messageId: Object.keys(this.getChannelByName(recipient).messages).length + 1,
+				date: dateFormat,
+				time: timeFormat,
+				author: user,
+				messageBuilder: this.buildMessage(message),
+				isADivider: false
+			});
 
-			this.getChannelByName(recipient).allMessages.push(newMessage);
+			this.getChannelByName(recipient).messages.push(newMessage);
 			this.getChannelByName(recipient).hasUnreadMessages = true;
 			this.saveMessageToHistory(recipient, newMessage);
 		}
 		// =============================
 		// The message is being received
 		else {
-			const messageId = this.getChannelByName(user) == null ? 0 : Object.keys(this.getChannelByName(user).allMessages).length + 1;
+			const messageId = this.getChannelByName(user) == null ? 0 : Object.keys(this.getChannelByName(user).messages).length + 1;
 
 			if (user.startsWith('#mp_')) {
-				newMessage = new Message(messageId, dateFormat, timeFormat, recipient, this.buildMessage(message), false);
+				newMessage = new IrcMessage({
+					messageId: messageId,
+					date: dateFormat,
+					time: timeFormat,
+					author: recipient,
+					messageBuilder: this.buildMessage(message),
+					isADivider: false
+				});
 			}
 			else {
-				newMessage = new Message(messageId, dateFormat, timeFormat, user, this.buildMessage(message), false);
+				newMessage = new IrcMessage({
+					messageId: messageId,
+					date: dateFormat,
+					time: timeFormat,
+					author: user,
+					messageBuilder: this.buildMessage(message),
+					isADivider: false
+				});
 			}
 
 			// Join channel if you haven't joined it yet
@@ -338,7 +351,7 @@ export class IrcService {
 				this.joinChannel(user);
 			}
 
-			this.getChannelByName(user).allMessages.push(newMessage);
+			this.getChannelByName(user).messages.push(newMessage);
 			this.getChannelByName(user).hasUnreadMessages = true;
 			this.saveMessageToHistory(user, newMessage);
 
@@ -379,16 +392,21 @@ export class IrcService {
 		// ===================================
 		// Joining a multiplayer match channel
 		if (channelName.startsWith('#mp_')) {
-			this.storeService.set(`irc.channels.${channelName}`, {
+			this.storeService.set(`irc.channels.${channelName}`, new IrcChannel({
 				name: channelName,
 				active: true,
-				messageHistory: [],
 				lastActiveChannel: false,
 				isPrivateChannel: false,
 				playSoundOnMessage: false
-			});
+			}));
 
-			this.allChannels.push(new Channel(channelName));
+			this.allChannels.push(new IrcChannel({
+				name: channelName,
+				active: true,
+				lastActiveChannel: false,
+				isPrivateChannel: false,
+				playSoundOnMessage: false
+			}));
 			this.toastService.addToast(`Joined channel "${channelName}".`);
 
 			this.isJoiningChannel$.next(false);
@@ -399,16 +417,21 @@ export class IrcService {
 			const getChannel = this.getChannelByName(channelName);
 
 			if (getChannel == null) {
-				this.storeService.set(`irc.channels.${channelName}`, {
+				this.storeService.set(`irc.channels.${channelName}`, new IrcChannel({
 					name: channelName,
 					active: true,
-					messageHistory: [],
 					lastActiveChannel: false,
 					isPrivateChannel: true,
 					playSoundOnMessage: false
-				});
+				}));
 
-				this.allChannels.push(new Channel(channelName, true));
+				this.allChannels.push(new IrcChannel({
+					name: channelName,
+					active: true,
+					lastActiveChannel: false,
+					isPrivateChannel: true,
+					playSoundOnMessage: false
+				}));
 				this.toastService.addToast(`Opened private message channel with "${channelName}".`);
 			}
 
@@ -436,7 +459,7 @@ export class IrcService {
 
 		if (allJoinedChannels.hasOwnProperty(channelName)) {
 			for (const i in this.allChannels) {
-				if (this.allChannels[i].channelName == channelName) {
+				if (this.allChannels[i].name == channelName) {
 					this.allChannels.splice(parseInt(i), 1);
 					break;
 				}
@@ -473,17 +496,17 @@ export class IrcService {
 	 * Save the rearranged channels
 	 * @param channels the rearranged channels
 	 */
-	rearrangeChannels(channels: Channel[]) {
+	rearrangeChannels(channels: IrcChannel[]) {
 		const rearrangedChannels = {};
 
 		for (const i in channels) {
-			rearrangedChannels[channels[i].channelName] = {
-				name: channels[i].channelName,
+			rearrangedChannels[channels[i].name] = new IrcChannel({
+				name: channels[i].name,
 				active: channels[i].active,
-				messageHistory: channels[i].allMessages.filter(m => !m.isADivider),
+				messages: channels[i].messages.filter(m => !m.isADivider),
 				lastActiveChannel: channels[i].lastActiveChannel,
 				isPrivateChannel: channels[i].isPrivateChannel
-			};
+			});
 		}
 
 		this.storeService.set('irc.channels', rearrangedChannels);
@@ -494,12 +517,12 @@ export class IrcService {
 	 * @param channel the channel to change the status of
 	 * @param active the status
 	 */
-	changeLastActiveChannel(channel: Channel, active: boolean) {
-		const storeChannel = this.storeService.get(`irc.channels.${channel.channelName}`);
+	changeLastActiveChannel(channel: IrcChannel, active: boolean) {
+		const storeChannel = this.storeService.get(`irc.channels.${channel.name}`);
 
 		storeChannel.lastActiveChannel = active;
 
-		this.storeService.set(`irc.channels.${channel.channelName}`, storeChannel);
+		this.storeService.set(`irc.channels.${channel.name}`, storeChannel);
 	}
 
 	/**
@@ -507,12 +530,12 @@ export class IrcService {
 	 * @param channel the channel to change the status of
 	 * @param active the status
 	 */
-	changeActiveChannel(channel: Channel, active: boolean) {
-		const storeChannel = this.storeService.get(`irc.channels.${channel.channelName}`);
+	changeActiveChannel(channel: IrcChannel, active: boolean) {
+		const storeChannel = this.storeService.get(`irc.channels.${channel.name}`);
 
 		storeChannel.active = active;
 
-		this.storeService.set(`irc.channels.${channel.channelName}`, storeChannel);
+		this.storeService.set(`irc.channels.${channel.name}`, storeChannel);
 	}
 
 	/**
@@ -520,11 +543,11 @@ export class IrcService {
 	 * @param channelName the channel to save it in
 	 * @param message the message object to save
 	 */
-	saveMessageToHistory(channelName: string, message: Message) {
+	saveMessageToHistory(channelName: string, message: IrcMessage) {
 		if (message.isADivider) return;
 
-		const storeChannel = this.storeService.get(`irc.channels.${channelName}`);
-		storeChannel.messageHistory.push(message.convertToJson());
+		const storeChannel: IrcChannel = this.storeService.get(`irc.channels.${channelName}`);
+		storeChannel.messages.push(message);
 		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
 	}
 
@@ -550,8 +573,16 @@ export class IrcService {
 			const currentRegex = allRegexes[regex].run(message);
 
 			if (currentRegex != null) {
-				messageBuilder.push(new MessageBuilder(MessageType.Message, currentRegex.message));
-				messageBuilder.push(new MessageBuilder(MessageType.Link, currentRegex.link, currentRegex.name));
+				messageBuilder.push(new MessageBuilder({
+					messageType: MessageType.Message,
+					message: currentRegex.message
+				}));
+
+				messageBuilder.push(new MessageBuilder({
+					messageType: MessageType.Link,
+					message: currentRegex.link,
+					linkName: currentRegex.message
+				}));
 
 				regexSucceeded = true;
 			}
@@ -569,7 +600,11 @@ export class IrcService {
 				if (splittedString.length == 1) {
 					const linkSplit = splittedString[0].split(Regex.isEmbedLink.regexSplit).filter(s => s != '' && s.trim());
 
-					messageBuilder.push(new MessageBuilder(MessageType.Link, linkSplit[0], linkSplit[1]));
+					messageBuilder.push(new MessageBuilder({
+						messageType: MessageType.Link,
+						message: linkSplit[0],
+						linkName: linkSplit[1]
+					}));
 				}
 				else {
 					for (const split in splittedString) {
@@ -577,11 +612,18 @@ export class IrcService {
 						if (Regex.isEmbedLink.run(splittedString[split])) {
 							const linkSplit = splittedString[split].split(Regex.isEmbedLink.regexSplit).filter(s => s != '' && s.trim());
 
-							messageBuilder.push(new MessageBuilder(MessageType.Link, linkSplit[0], linkSplit[1]));
+							messageBuilder.push(new MessageBuilder({
+								messageType: MessageType.Link,
+								message: linkSplit[0],
+								linkName: linkSplit[1]
+							}));
 						}
 						// The split is a message
 						else {
-							messageBuilder.push(new MessageBuilder(MessageType.Message, splittedString[split]));
+							messageBuilder.push(new MessageBuilder({
+								messageType: MessageType.Message,
+								message: splittedString[split]
+							}));
 						}
 					}
 				}
@@ -591,23 +633,35 @@ export class IrcService {
 				const splittedString = message.split(Regex.isLink.regex).filter(s => s != '' && s.trim());
 
 				if (splittedString.length == 1) {
-					messageBuilder.push(new MessageBuilder(MessageType.Link, splittedString[0]));
+					messageBuilder.push(new MessageBuilder({
+						messageType: MessageType.Link,
+						message: splittedString[0]
+					}));
 				}
 				else {
 					for (const split in splittedString) {
 						// The split is a link
 						if (Regex.isLink.run(splittedString[split])) {
-							messageBuilder.push(new MessageBuilder(MessageType.Link, splittedString[split]));
+							messageBuilder.push(new MessageBuilder({
+								messageType: MessageType.Link,
+								message: splittedString[split]
+							}));
 						}
 						// The split is a message
 						else {
-							messageBuilder.push(new MessageBuilder(MessageType.Message, splittedString[split]));
+							messageBuilder.push(new MessageBuilder({
+								messageType: MessageType.Message,
+								message: splittedString[split]
+							}));
 						}
 					}
 				}
 			}
 			else {
-				messageBuilder.push(new MessageBuilder(MessageType.Message, message));
+				messageBuilder.push(new MessageBuilder({
+					messageType: MessageType.Message,
+					message: message
+				}));
 			}
 		}
 

@@ -1,0 +1,33 @@
+@import "variables";
+
+.all-users {
+	display: flex;
+	flex-direction: column;
+
+	margin-top: 8px;
+
+	max-height: 250px;
+
+	overflow-y: auto;
+
+	.user {
+		display: flex;
+		flex: 1;
+		justify-content: space-between;
+		align-items: center;
+
+		padding: 4px;
+
+		background-color: $background-color;
+
+		.link {
+			&:hover {
+				cursor: pointer;
+			}
+		}
+
+		&:nth-child(odd) {
+			background-color: lighten($background-color, 5%);
+		}
+	}
+}

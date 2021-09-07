@@ -1,175 +1,81 @@
-<div class="fluid-container" *ngIf="mappool">
-	<form [formGroup]="validationForm">
-		<h3>Mappool description</h3>
-		<mat-form-field class="full-width">
-			<mat-label>Mappool description</mat-label>
-			<input matInput formControlName="mappool-description" [(ngModel)]="mappool.name" />
+<form [formGroup]="validationForm">
+	<div class="row">
+		<div class="col">
+			<h3>Mappool name</h3>
 
-			<mat-error *ngIf="getValidation('mappool-description').errors && (getValidation('mappool-description').touched || getValidation('mappool-description').dirty)">
-				This field is required
-			</mat-error>
-		</mat-form-field>
+			<mat-form-field class="full-width">
+				<mat-label>Mappool name</mat-label>
+				<input matInput [formControlName]="'mappool-' + mappool.id + '-name'" (change)="onNameChange($event)" />
 
-		<p>This will be the header of the mappool. It is used to identify the mappools more easily.</p>
+				<mat-error *ngIf="validationForm.get('mappool-' + mappool.id + '-name').errors && (validationForm.get('mappool-' + mappool.id + '-name').touched || validationForm.get('mappool-' + mappool.id + '-name').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
 
-		<div class="row">
-			<div class="col">
-				<h3>Mappool gamemode</h3>
-
-				<mat-form-field class="full-width">
-					<mat-label>Mappool gamemode</mat-label>
-					<mat-select formControlName="mappool-gamemode" (selectionChange)="changeGamemode($event)">
-						<mat-option [value]="0">osu!</mat-option>
-						<mat-option [value]="1">osu!taiko</mat-option>
-						<mat-option [value]="2">osu!catch</mat-option>
-						<mat-option [value]="3">osu!mania</mat-option>
-					</mat-select>
-
-					<mat-error *ngIf="getValidation('mappool-gamemode').errors && (getValidation('mappool-gamemode').touched || getValidation('mappool-gamemode').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
-
-				<p>The gamemode that will be used for all the beatmaps when picking.</p>
-			</div>
-
-			<div class="col">
-				<h3>Mappool type</h3>
-
-				<mat-form-field class="full-width">
-					<mat-label>Mappool type</mat-label>
-					<mat-select formControlName="mappool-type" (selectionChange)="changeMappoolType($event)">
-						<mat-option [value]="0">Normal</mat-option>
-						<mat-option [value]="1">AxS</mat-option>
-						<mat-option [value]="2">Mystery tournament</mat-option>
-					</mat-select>
-
-					<mat-error *ngIf="getValidation('mappool-type').errors && (getValidation('mappool-type').touched || getValidation('mappool-type').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
-
-				<p>Various mappool types depending on what tournament it is being used for. Pick normal if you are unsure what to pick.</p>
-			</div>
+			<p>The name of the mappool. It is used to identify the mappool more easily</p>
 		</div>
 
-		<div class="row">
-			<div class="col">
-				<h3>Availability</h3>
+		<div class="col">
+			<h3>Mappool type</h3>
 
-				<mat-form-field class="full-width">
-					<mat-label>Availability</mat-label>
-					<mat-select formControlName="mappool-availability" (selectionChange)="changeAvailability($event)">
-						<mat-option [value]="0">Available for everyone</mat-option>
-						<mat-option [value]="1">Available to just me</mat-option>
-						<mat-option [value]="2">Available to specific people</mat-option>
-					</mat-select>
+			<mat-form-field class="full-width">
+				<mat-label>Mappool type</mat-label>
+				<mat-select [formControlName]="'mappool-' + mappool.id + '-type'" (selectionChange)="changeMappoolType($event)">
+					<mat-option [value]="0">Normal</mat-option>
+					<mat-option [value]="1">AxS</mat-option>
+					<mat-option [value]="2">Mystery tournament</mat-option>
+				</mat-select>
 
-					<mat-error *ngIf="getValidation('mappool-availability').errors && (getValidation('mappool-availability').touched || getValidation('mappool-availability').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
+				<mat-error *ngIf="validationForm.get('mappool-' + mappool.id + '-type').errors && (validationForm.get('mappool-' + mappool.id + '-type').touched || validationForm.get('mappool-' + mappool.id + '-type').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
 
-				<p>Select whether or not you want the mappool be available to everyone, for just you or for a select amount of people. The mappool will always be available for yourself.</p>
+			<p>Various mappool types depending on what tournament it is being used for. Pick normal if you are unsure what to pick</p>
+		</div>
+	</div>
 
-				<div class="alert alert-info">
-					<b>Note:</b> Availability only affects published mappools.
+	<div *ngIf="mappool.type == 2">
+		<h3>Mod categories</h3>
+		<p>
+			In order for maps to be picked at random, you have to assign a category to the map. A category can only be picked once per multiplayer match so picks can't be repeated.
+			Once you have created all the categories, you will be able to assign them once the mappool is published.
+		</p>
+
+		<button mat-raised-button (click)="addNewCategory()" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new category</button>
+
+		<div class="categories">
+			<div *ngIf="mappool.modCategories.length == 0" class="alert alert-danger full-width">
+				You haven't added a category yet.
+			</div>
+
+			<div class="category" *ngFor="let category of mappool.modCategories">
+				<div class="category-name">
+					<mat-form-field class="full-width">
+						<mat-label>Category name</mat-label>
+						<input matInput class="full-width" [formControlName]="'mappool-' + mappool.id + '-category-' + category.index + '-name'" />
+
+						<mat-error *ngIf="validationForm.get('mappool-' + mappool.id + '-category-' + category.index + '-name').errors && (validationForm.get('mappool-' + mappool.id + '-category-' + category.index + '-name').touched || validationForm.get('mappool-' + mappool.id + '-category-' + category.index + '-name').dirty)">
+							This field is required
+						</mat-error>
+					</mat-form-field>
+				</div>
+
+				<div class="category-button">
+					<button mat-mini-fab (click)="deleteCategory(category)" color="warn"><mat-icon>delete</mat-icon></button>
 				</div>
 			</div>
 		</div>
 
 		<hr />
+	</div>
 
-		<div class="spacing" *ngIf="mappool.availability == 2">
-			<h3>Available to</h3>
-			<p>Add users that will be able to import this mappool. You add or remove users later as you see fit.</p>
+	<h3>Mod brackets</h3>
+	<p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod bracket. Fill in the name of the bracket</p>
 
-			<div class="users">
-				<mat-form-field class="full-width">
-					<mat-label>Search</mat-label>
-					<input matInput class="full-width" [(ngModel)]="searchValue" [ngModelOptions]="{ standalone: true }" />
-				</mat-form-field>
+	<button mat-raised-button (click)="createNewBracket()" color="primary"><mat-icon>add</mat-icon> create new bracket</button>
 
-				<div class="row">
-					<div class="col">
-						<div class="background-area all-users">
-							<div class="user" *ngFor="let user of (allUsers | search: searchValue )">
-								<div class="username">
-									<p>{{ user.username }}</p>
-								</div>
+	<hr />
 
-								<div class="buttons">
-									<button mat-mini-fab (click)="addNewMappicker(user)"><mat-icon>add</mat-icon></button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col">
-						<div class="background-area all-users">
-							<div *ngIf="mappool.availableTo.length == 0" class="alert alert-danger full-width">
-								You haven't added a user yet. This mappool will only be visible for yourself.
-							</div>
-
-							<div class="user" *ngFor="let user of mappool.availableTo">
-								<div class="username">
-									<p>{{ user.username }}</p>
-								</div>
-
-								<div class="buttons">
-									<button mat-mini-fab (click)="removeMappicker(user)" color="warn"><mat-icon>remove</mat-icon></button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<hr />
-		</div>
-
-		<div *ngIf="mappool.mappoolType == 2">
-			<h3>Mod categories</h3>
-			<p>
-				In order for maps to be picked at random, you have to assign a category to the map. A category can only be picked once per multiplayer match so picks can't be repeated.
-				Once you have created all the categories, you will be able to assign them once the mappool is published.
-			</p>
-
-			<button mat-raised-button (click)="addNewCategory()" color="primary"><mat-icon>add</mat-icon> add new category</button>
-
-			<div class="categories">
-				<div *ngIf="mappool.modCategories.length == 0" class="alert alert-danger full-width">
-					You haven't added a category yet.
-				</div>
-
-				<div class="category" *ngFor="let category of mappool.modCategories">
-					<div class="category-name">
-						<mat-form-field class="full-width">
-							<mat-label>Category name</mat-label>
-							<input matInput class="full-width" [formControlName]="'category-name-' + category.validateIndex" (change)="onCategoryChange(category, $event)" />
-
-							<mat-error *ngIf="getValidation('category-name-' + category.validateIndex).errors && (getValidation('category-name-' + category.validateIndex).touched || getValidation('category-name-' + category.validateIndex).dirty)">
-								This field is required
-							</mat-error>
-						</mat-form-field>
-					</div>
-
-					<div class="category-button">
-						<button mat-mini-fab (click)="deleteCategory(category)" color="warn"><mat-icon>delete</mat-icon></button>
-					</div>
-				</div>
-			</div>
-
-			<hr />
-		</div>
-
-		<h3>Mod brackets</h3>
-		<p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod bracket. Fill in the name of the bracket</p>
-
-		<button mat-raised-button (click)="createNewBracket()" color="primary"><mat-icon>add</mat-icon> create new bracket</button>
-
-		<hr />
-
-		<app-mod-bracket [modBracket]="bracket" [withBorder]="true" [withCollapse]="true" [mappool]="mappool" [validationForm]="validationForm" *ngFor="let bracket of mappool.getAllBrackets()"></app-mod-bracket>
-	</form>
-</div>
+	<app-mod-bracket [tournament]="tournament" [mappool]="mappool" [modBracket]="bracket" [validationForm]="validationForm" *ngFor="let bracket of mappool.modBrackets"></app-mod-bracket>
+</form>

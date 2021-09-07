@@ -14,7 +14,9 @@ export class MultiplayerGame {
 
 	scores: MultiplayerGameScore[];
 
-	constructor() {
+	constructor(init?: Partial<MultiplayerGame>) {
 		this.scores = [];
+
+		Object.assign(this, init);
 	}
 }

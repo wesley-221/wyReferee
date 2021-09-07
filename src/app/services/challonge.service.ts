@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Tournament } from 'app/models/tournament/tournament';
+import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { AppConfig } from 'environments/environment';
 
 @Injectable({
@@ -32,7 +32,7 @@ export class ChallongeService {
 	 * Endpoint to check if the tournament has challonge integration
 	 * @param tournament the tournament to check
 	 */
-	public getChallongeMatchups(tournament: Tournament) {
+	public getChallongeMatchups(tournament: WyTournament) {
 		return this.httpClient.post(`${this.apiUrl}challonge-matchups`, tournament.publishId);
 	}
 

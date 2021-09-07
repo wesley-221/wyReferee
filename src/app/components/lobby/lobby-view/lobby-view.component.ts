@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MultiplayerLobby } from '../../../models/store-multiplayer/multiplayer-lobby';
-import { MultiplayerLobbiesService } from '../../../services/multiplayer-lobbies.service';
 import { ElectronService } from '../../../services/electron.service';
 import { ToastService } from '../../../services/toast.service';
 import { CacheService } from '../../../services/cache.service';
 import { MultiplayerData } from '../../../models/store-multiplayer/multiplayer-data';
 import { MultiplayerDataUser } from '../../../models/store-multiplayer/multiplayer-data-user';
-import { MappoolService } from '../../../services/mappool.service';
 import { StoreService } from '../../../services/store.service';
 import { IrcService } from '../../../services/irc.service';
 import { ClipboardService } from 'ngx-clipboard';
@@ -17,13 +14,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MultiplayerLobbySettingsComponent } from 'app/components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { SendFinalResultComponent } from 'app/components/dialogs/send-final-result/send-final-result.component';
 import { OsuHelper } from 'app/models/osu-models/osu';
+import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
+import { Lobby } from 'app/models/lobby';
 
 export interface MultiplayerLobbySettingsDialogData {
-	multiplayerLobby: MultiplayerLobby;
+	multiplayerLobby: Lobby;
 }
 
 export interface MultiplayerLobbySendFinalMessageDialogData {
-	multiplayerLobby: MultiplayerLobby;
+	multiplayerLobby: Lobby;
 
 	winByDefault: boolean;
 
@@ -40,7 +39,7 @@ export interface MultiplayerLobbySendFinalMessageDialogData {
 })
 
 export class LobbyViewComponent implements OnInit {
-	selectedLobby: MultiplayerLobby;
+	selectedLobby: Lobby;
 	settingsTabIsOpened = false;
 
 	wbdSelected = false;
@@ -53,11 +52,10 @@ export class LobbyViewComponent implements OnInit {
 
 	constructor(
 		private route: ActivatedRoute,
-		private multiplayerLobbies: MultiplayerLobbiesService,
+		private multiplayerLobbies: WyMultiplayerLobbiesService,
 		private toastService: ToastService,
 		private cacheService: CacheService,
 		public electronService: ElectronService,
-		public mappoolService: MappoolService,
 		private storeService: StoreService,
 		public ircService: IrcService,
 		private clipboardService: ClipboardService,
@@ -65,11 +63,11 @@ export class LobbyViewComponent implements OnInit {
 		private webhookService: WebhookService,
 		private dialog: MatDialog) {
 		this.route.params.subscribe(params => {
-			this.selectedLobby = multiplayerLobbies.get(params.id);
+			this.selectedLobby = multiplayerLobbies.getMultiplayerLobby(params.id);
 
-			this.selectedLobby.ircChannel = `#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`;
+			this.selectedLobby.ircChannel = this.ircService.getChannelByName(`#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`);
 
-			if (ircService.getChannelByName(this.selectedLobby.ircChannel) != null && ircService.getChannelByName(this.selectedLobby.ircChannel).active) {
+			if (ircService.getChannelByName(this.selectedLobby.ircChannel.name) != null && ircService.getChannelByName(this.selectedLobby.ircChannel.name).active) {
 				this.selectedLobby.ircConnected = true;
 			}
 
@@ -97,7 +95,7 @@ export class LobbyViewComponent implements OnInit {
 		this.toastService.addToast('Synchronizing multiplayer lobby...');
 
 		// console.time('synchronize-lobby');
-		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby);
+		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby, true, false);
 		// console.timeEnd('synchronize-lobby');
 	}
 
@@ -109,7 +107,7 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	sendBeatmapResult(match: MultiplayerData) {
 		// User is connected to irc channel
-		if (this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
+		if (this.selectedLobby.ircChannel != null) {
 			const totalMapsPlayed = this.selectedLobby.teamOneScore + this.selectedLobby.teamTwoScore;
 			let nextPick = '';
 
@@ -123,11 +121,11 @@ export class LobbyViewComponent implements OnInit {
 
 			if (match.team_one_score > match.team_two_score) {
 				const teamOneHasWon = (this.selectedLobby.teamOneScore == Math.ceil(this.selectedLobby.bestOf / 2));
-				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamOneHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
+				this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamOneHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
 			}
 			else {
 				const teamTwoHasWon = (this.selectedLobby.teamTwoScore == Math.ceil(this.selectedLobby.bestOf / 2));
-				this.ircService.sendMessage(this.selectedLobby.ircChannel, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_two_score - match.team_one_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamTwoHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
+				this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_two_score - match.team_one_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName} ${!teamTwoHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
 			}
 		}
 	}
@@ -156,8 +154,8 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	sendMatchResult() {
 		// User is connected to irc channel
-		if (this.ircService.getChannelByName(this.selectedLobby.ircChannel) != null) {
-			this.ircService.sendMessage(this.selectedLobby.ircChannel, `${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}`);
+		if (this.selectedLobby.ircChannel != null) {
+			this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}`);
 		}
 	}
 
@@ -172,27 +170,18 @@ export class LobbyViewComponent implements OnInit {
 	 * Open a dialog for the multiplayer lobby settings
 	 * @param selectedLobby
 	 */
-	openSettings(selectedLobby: MultiplayerLobby) {
+	openSettings(selectedLobby: Lobby) {
 		const dialogRef = this.dialog.open(MultiplayerLobbySettingsComponent, {
 			data: {
 				multiplayerLobby: selectedLobby
 			}
 		});
 
-		dialogRef.afterClosed().subscribe((result: MultiplayerLobby) => {
+		dialogRef.afterClosed().subscribe((result: Lobby) => {
 			if (result != null) {
-				this.multiplayerLobbies.update(result);
+				this.multiplayerLobbies.updateMultiplayerLobby(result);
 			}
 		});
-	}
-
-	/**
-	 * Gets called when the webhook changes
-	 * @param event
-	 */
-	changeWebhook(event: any) {
-		this.selectedLobby.webhook = event.target.value;
-		this.multiplayerLobbies.update(this.selectedLobby);
 	}
 
 	/**
@@ -200,10 +189,10 @@ export class LobbyViewComponent implements OnInit {
 	 * @param match the match
 	 */
 	markAsInvalid(match: MultiplayerData) {
-		this.selectedLobby.mapsCountTowardScore[match.game_id] = !this.selectedLobby.mapsCountTowardScore[match.game_id];
-		this.storeService.set(`lobby.${this.selectedLobby.lobbyId}.countForScore.${match.game_id}`, this.selectedLobby.mapsCountTowardScore[match.game_id]);
+		this.selectedLobby.gamesCountTowardsScore[match.game_id] = !this.selectedLobby.gamesCountTowardsScore[match.game_id];
+		this.storeService.set(`lobby.${this.selectedLobby.lobbyId}.countForScore.${match.game_id}`, this.selectedLobby.gamesCountTowardsScore[match.game_id]);
 
-		if (this.selectedLobby.mapsCountTowardScore[match.game_id]) {
+		if (this.selectedLobby.gamesCountTowardsScore[match.game_id]) {
 			this.toastService.addToast(`"${this.getBeatmapname(match.beatmap_id)}" will now count towards the score.`);
 		}
 		else {
@@ -219,19 +208,8 @@ export class LobbyViewComponent implements OnInit {
 	 * @param beatmapId the beatmapid to get the modifier for
 	 */
 	getModifier(beatmapId: number) {
-		if (this.selectedLobby.mappool == null) {
-			this.selectedLobby.mappool = this.mappoolService.getMappool(this.selectedLobby.mappoolId);
-
-			if (this.selectedLobby.mappool != null) {
-				if (this.selectedLobby.mappool.modifiers.hasOwnProperty(beatmapId)) {
-					return this.selectedLobby.mappool.modifiers[beatmapId].modifier;
-				}
-			}
-		}
-		else {
-			if (this.selectedLobby.mappool.modifiers.hasOwnProperty(beatmapId)) {
-				return this.selectedLobby.mappool.modifiers[beatmapId].modifier;
-			}
+		if (this.selectedLobby.tournament != null) {
+			return this.selectedLobby.tournament.getModifierFromBeatmapId(beatmapId);
 		}
 
 		return null;
@@ -399,7 +377,7 @@ export class LobbyViewComponent implements OnInit {
 	/**
 	 * Send the final result to discord
 	 */
-	sendFinalResult(multiplayerLobby: MultiplayerLobby) {
+	sendFinalResult(multiplayerLobby: Lobby) {
 		const dialogRef = this.dialog.open(SendFinalResultComponent, {
 			data: {
 				multiplayerLobby: multiplayerLobby
@@ -408,14 +386,10 @@ export class LobbyViewComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result: MultiplayerLobbySendFinalMessageDialogData) => {
 			if (result.winByDefault) {
-				this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser).subscribe(() => {
-					this.toastService.addToast(`Successfully send the message to Discord.`);
-				});
+				this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser);
 			}
 			else {
-				this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser).subscribe(() => {
-					this.toastService.addToast('Successfully send the message to Discord.');
-				})
+				this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
 			}
 		});
 	}

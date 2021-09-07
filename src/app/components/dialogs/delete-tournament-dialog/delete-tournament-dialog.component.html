@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Delete tournament</h2>
+
+<mat-dialog-content class="mat-typography">
+	Are you sure you want to delete the tournament <b>{{ data.tournament.name }}</b>?
+
+	<div class="alert alert-danger">
+		<b>NOTE:</b> This action is permanent. Once the tournament has been deleted, this can not be retrieved anymore unless it is published.
+	</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="data.tournament" color="warn">Delete</button>
+</mat-dialog-actions>
