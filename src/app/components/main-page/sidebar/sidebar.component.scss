@@ -4,6 +4,61 @@
 	width: 95%;
 }
 
+.login {
+	padding: 16px;
+
+	background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+
+	.user {
+		display: flex;
+		flex-direction: row;
+
+		img {
+			border-radius: 50%;
+			max-height: 50px;
+			max-width: 50px;
+
+			-webkit-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+			-moz-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+			box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+		}
+
+		div {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: flex-start;
+
+			padding-left: 8px;
+
+			font-size: 16px;
+
+			div {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+
+				font-size: 16px;
+
+				.dot {
+					width: 8px;
+					height: 8px;
+
+					border-radius: 50%;
+
+					background-color: red;
+
+					margin-right: 4px;
+
+					&.connected {
+						background-color: #00ff00;
+					}
+				}
+			}
+		}
+	}
+}
+
 .sidebar-link {
 	user-select: none;
 	text-decoration: none;

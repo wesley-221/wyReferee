@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticateService } from 'app/services/authenticate.service';
 import { GenericService } from 'app/services/generic.service';
+import { IrcService } from 'app/services/irc.service';
 
 @Component({
 	selector: 'app-sidebar',
@@ -17,7 +19,7 @@ export class SidebarComponent implements OnInit {
 		{ icon: 'hdr_auto', header: 'AxS', link: 'axs', showIf: false }
 	];
 
-	constructor(private genericService: GenericService) {
+	constructor(private genericService: GenericService, public authenticateService: AuthenticateService, public ircService: IrcService) {
 		genericService.getAxSMenuStatus().subscribe(active => {
 			this.allNavigations[this.allNavigations.length - 1].showIf = active;
 		});

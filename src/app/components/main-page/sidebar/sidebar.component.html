@@ -1,3 +1,29 @@
+<div class="login">
+	<div class="user" *ngIf="authenticateService.loggedIn">
+		<img [src]="authenticateService.loggedInUser.getAvatarUrl()" />
+
+		<div>
+			{{ authenticateService.loggedInUser.username }}
+
+			<div>
+				<div class="dot" [ngClass]="{'connected': ircService.isAuthenticated}"></div> irc
+			</div>
+		</div>
+	</div>
+
+	<div class="user" *ngIf="!authenticateService.loggedIn">
+		<img [src]="'assets/images/osulogo.png'" />
+
+		<div>
+			You are not logged in.
+
+			<div>
+				<div class="dot" [ngClass]="{'connected': ircService.isAuthenticated}"></div> irc
+			</div>
+		</div>
+	</div>
+</div>
+
 <mat-list>
 	<div *ngFor="let navigationItem of allNavigations">
 		<a [routerLink]="[navigationItem.link]" routerLinkActive="active" class="sidebar-link" *ngIf="navigationItem.showIf == undefined || navigationItem.showIf == true">
