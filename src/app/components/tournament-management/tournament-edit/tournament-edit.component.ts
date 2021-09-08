@@ -82,7 +82,12 @@ export class TournamentEditComponent implements OnInit {
 							this.validationForm.addControl(`mappool-${mappool.id}-mod-bracket-${modBracket.index}-name`, new FormControl(modBracket.name, Validators.required));
 
 							for (const mod of modBracket.mods) {
-								this.validationForm.addControl(`mappool-${mappool.id}-mod-bracket-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
+								if (mod.value != 'freemod') {
+									this.validationForm.addControl(`mappool-${mappool.id}-mod-bracket-mod-${mod.index}-value`, new FormControl(Number(mod.value), Validators.required));
+								}
+								else {
+									this.validationForm.addControl(`mappool-${mappool.id}-mod-bracket-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
+								}
 							}
 						}
 
