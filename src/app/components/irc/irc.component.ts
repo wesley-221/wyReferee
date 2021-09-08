@@ -586,4 +586,8 @@ export class IrcComponent implements OnInit {
 			}
 		});
 	}
+
+	tempDisabled() {
+		this.toastService.addToast(`Temporarily disabled, will be enabled at a later date.`, ToastType.Warning);
+	}
 }
