@@ -3,6 +3,7 @@ import { IrcService } from './services/irc.service';
 import { AuthenticateService } from './services/authenticate.service';
 import { CacheService } from './services/cache.service';
 import { GenericService } from './services/generic.service';
+import { gte } from 'semver';
 
 @Component({
 	selector: 'app-root',
@@ -18,13 +19,12 @@ export class AppComponent {
 		this.clearDataBeforeVersion = '5.5.0';
 
 		if (cacheService.cacheVersion == undefined) {
-			this.cacheService.clearAllData();
 			this.cacheService.setCacheVersion(currentVersion);
 
 			this.genericService.setCacheHasBeenChecked(true);
 		}
 		else {
-			if (this.haveToClearCache(cacheService.cacheVersion)) {
+			if (!gte(cacheService.cacheVersion, this.clearDataBeforeVersion)) {
 				this.cacheService.clearAllData();
 				this.cacheService.setCacheVersion(currentVersion);
 
@@ -32,16 +32,8 @@ export class AppComponent {
 			}
 			else {
 				this.cacheService.setCacheVersion(currentVersion);
-
 				this.genericService.setCacheHasBeenChecked(true);
 			}
 		}
-	}
-
-	private haveToClearCache(versionToCheck: string) {
-		const versionToCheckSplit = versionToCheck.split('.').map(Number).reduce((a, b) => a + b, 0);
-		const oldVersionSplit = this.clearDataBeforeVersion.split('.').map(Number).reduce((a, b) => a + b, 0);
-
-		return versionToCheckSplit < oldVersionSplit;
 	}
 }
