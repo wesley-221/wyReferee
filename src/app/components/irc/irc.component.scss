@@ -587,6 +587,10 @@ $hyperlink-background-color: #2b4576;
 									margin-left: 4px;
 
 									button {
+										display: flex;
+										justify-content: center;
+										align-items: flex-end;
+
 										box-sizing: border-box;
 										margin-right: 4px;
 									}
