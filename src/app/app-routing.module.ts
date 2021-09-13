@@ -20,6 +20,7 @@ import { TournamentEditComponent } from './components/tournament-management/tour
 import { TournamentAllPublishedComponent } from './components/tournament-management/tournament-all-published/tournament-all-published.component';
 import { TournamentMyPublishedComponent } from './components/tournament-management/tournament-my-published/tournament-my-published.component';
 import { TournamentPublishedEditComponent } from './components/tournament-management/tournament-published-edit/tournament-published-edit.component';
+import { TournamentAllPublishedAdministratorComponent } from './components/tournament-management/tournament-all-published-administrator/tournament-all-published-administrator.component';
 
 const routes: Routes = [
 	{
@@ -46,7 +47,8 @@ const routes: Routes = [
 					{ path: 'tournament-overview/tournament-edit/:id', component: TournamentEditComponent },
 					{ path: 'tournament-overview/tournament-my-published/tournament-published-edit/:id', component: TournamentPublishedEditComponent },
 					{ path: 'tournament-overview/tournament-my-published', component: TournamentMyPublishedComponent },
-					{ path: 'tournament-overview/tournament-all-published', component: TournamentAllPublishedComponent }
+					{ path: 'tournament-overview/tournament-all-published', component: TournamentAllPublishedComponent },
+					{ path: 'tournament-overview/tournament-all-published-administrator', component: TournamentAllPublishedAdministratorComponent }
 				]
 			},
 			{

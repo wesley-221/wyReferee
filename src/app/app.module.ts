@@ -71,6 +71,7 @@ import { TournamentAllPublishedComponent } from './components/tournament-managem
 import { TournamentMyPublishedComponent } from './components/tournament-management/tournament-my-published/tournament-my-published.component';
 import { TournamentCardComponent } from './components/tournament-management/tournament-card/tournament-card.component';
 import { TournamentPublishedEditComponent } from './components/tournament-management/tournament-published-edit/tournament-published-edit.component';
+import { TournamentAllPublishedAdministratorComponent } from './components/tournament-management/tournament-all-published-administrator/tournament-all-published-administrator.component';
 
 @NgModule({
 	declarations: [
@@ -124,7 +125,8 @@ import { TournamentPublishedEditComponent } from './components/tournament-manage
 		TournamentAllPublishedComponent,
 		TournamentMyPublishedComponent,
 		TournamentCardComponent,
-		TournamentPublishedEditComponent
+		TournamentPublishedEditComponent,
+		TournamentAllPublishedAdministratorComponent
 	],
 	imports: [
 		BrowserModule,
