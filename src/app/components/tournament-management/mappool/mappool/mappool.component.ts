@@ -46,7 +46,7 @@ export class MappoolComponent implements OnInit {
 		this.mappool.modCategoryIndex++;
 		this.mappool.modCategories.push(newCategory);
 
-		this.validationForm.addControl(`mappool-${this.mappool.id}-category-${newCategory.index}-name`, new FormControl('', Validators.required));
+		this.validationForm.addControl(`mappool-${this.mappool.index}-category-${newCategory.index}-name`, new FormControl('', Validators.required));
 	}
 
 	/**
@@ -61,7 +61,7 @@ export class MappoolComponent implements OnInit {
 			}
 		}
 
-		this.validationForm.removeControl(`mappool-${this.mappool.id}-category-${category.index}-name`);
+		this.validationForm.removeControl(`mappool-${this.mappool.index}-category-${category.index}-name`);
 	}
 
 	/**
@@ -79,6 +79,6 @@ export class MappoolComponent implements OnInit {
 		this.mappool.modBracketIndex++;
 		this.mappool.modBrackets.push(newModBracket);
 
-		this.validationForm.addControl(`mappool-${this.mappool.id}-mod-bracket-${newModBracket.index}-name`, new FormControl('', Validators.required));
+		this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-name`, new FormControl('', Validators.required));
 	}
 }

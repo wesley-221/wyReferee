@@ -27,14 +27,16 @@ export class MappoolCreateComponent implements OnInit {
 	 */
 	createNewMappool(): void {
 		const newMappool = new WyMappool({
-			id: this.tournament.mappools.length + 1,
+			index: this.tournament.mappoolIndex,
 			name: `Unnamed mappool`
 		});
 
+		this.tournament.mappoolIndex++;
+
 		this.tournament.mappools.push(newMappool);
 
-		this.validationForm.addControl(`mappool-${newMappool.id}-name`, new FormControl('', Validators.required));
-		this.validationForm.addControl(`mappool-${newMappool.id}-type`, new FormControl('', Validators.required));
+		this.validationForm.addControl(`mappool-${newMappool.index}-name`, new FormControl('', Validators.required));
+		this.validationForm.addControl(`mappool-${newMappool.index}-type`, new FormControl('', Validators.required));
 	}
 
 	/**

@@ -22,6 +22,7 @@ export class WyTournament {
 	teams: WyTeam[];
 	teamIndex: number;
 	mappools: WyMappool[];
+	mappoolIndex: number;
 
 	scoreInterfaceIdentifier: string;
 	scoreInterface: ScoreInterface;
@@ -46,6 +47,7 @@ export class WyTournament {
 	constructor(init?: Partial<WyTournament>) {
 		this.teams = [];
 		this.teamIndex = 0;
+		this.mappoolIndex = 0;
 		this.webhooks = [];
 		this.webhookIndex = 0;
 		this.mappools = [];
@@ -174,7 +176,12 @@ export class WyTournament {
 		}
 
 		for (const mappool in tournament.mappools) {
-			newTournament.mappools.push(WyMappool.makeTrueCopy(tournament.mappools[mappool]));
+			const newMappool = WyMappool.makeTrueCopy(tournament.mappools[mappool]);
+
+			newMappool.index = newTournament.mappoolIndex;
+			newTournament.mappoolIndex++;
+
+			newTournament.mappools.push(newMappool);
 		}
 
 		for (const administrator in tournament.administrators) {

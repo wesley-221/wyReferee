@@ -17,6 +17,7 @@ export enum MappoolType {
 export class WyMappool {
 	id: number;
 	publishId: number;
+	index: number;
 	name: string;
 	gamemodeId: Gamemodes;
 	type: MappoolType;

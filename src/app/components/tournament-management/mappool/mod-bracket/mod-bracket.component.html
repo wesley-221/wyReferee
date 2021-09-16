@@ -17,9 +17,9 @@
 		<div class="body" [ngClass]="{'hide': modBracket.collapsed}">
 			<mat-form-field class="full-width">
 				<mat-label>Mod bracket name</mat-label>
-				<input matInput [formControlName]="'mappool-' + this.mappool.id + '-mod-bracket-' + modBracket.index + '-name'" (change)="onNameChange($event)" />
+				<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name'" (change)="onNameChange($event)" />
 
-				<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.id + '-mod-bracket-' + modBracket.index + '-name').errors && (validationForm.get('mappool-' + this.mappool.id + '-mod-bracket-' + modBracket.index + '-name').touched || validationForm.get('mappool-' + this.mappool.id + '-mod-bracket-' + modBracket.index + '-name').dirty)">
+				<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').dirty)">
 					This field is required
 				</mat-error>
 			</mat-form-field>
@@ -42,11 +42,11 @@
 					<div class="mod-select">
 						<mat-form-field class="full-width">
 							<mat-label>Mod</mat-label>
-							<mat-select class="full-width" [formControlName]="'mappool-' + this.mappool.id + '-mod-bracket-mod-' + modSelect.index + '-value'">
+							<mat-select class="full-width" [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-mod-' + modSelect.index + '-value'">
 								<mat-option *ngFor="let mod of availableMods" [value]="mod.value">{{ mod.name }}</mat-option>
 							</mat-select>
 
-							<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.id + '-mod-bracket-mod-' + modSelect.index + '-value').errors && (validationForm.get('mappool-' + this.mappool.id + '-mod-bracket-mod-' + modSelect.index + '-value').touched || validationForm.get('mappool-' + this.mappool.id + '-mod-bracket-mod-' + modSelect.index + '-value').dirty)">
+							<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-mod-' + modSelect.index + '-value').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-mod-' + modSelect.index + '-value').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-mod-' + modSelect.index + '-value').dirty)">
 								This field is required
 							</mat-error>
 						</mat-form-field>
@@ -88,9 +88,9 @@
 							<div class="column" *ngIf="mappool.type == 1">
 								<mat-form-field class="full-width">
 									<mat-label>Modifier</mat-label>
-									<input matInput [formControlName]="'mappool-' + this.mappool.id + '-mod-bracket-beatmap-' + beatmap.index + '-modifier'" [(ngModel)]="beatmap.modifier" />
+									<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier'" [(ngModel)]="beatmap.modifier" />
 
-									<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.id + '-mod-bracket-beatmap-' + beatmap.index + '-modifier').errors && (validationForm.get('mappool-' + this.mappool.id + '-mod-bracket-beatmap-' + beatmap.index + '-modifier').touched || validationForm.get('mappool-' + this.mappool.id + '-mod-bracket-beatmap-' + beatmap.index + '-modifier').dirty)">
+									<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier').dirty)">
 										This field is required
 									</mat-error>
 								</mat-form-field>
