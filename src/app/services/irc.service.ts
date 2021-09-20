@@ -54,7 +54,6 @@ export class IrcService {
 		const ircCredentials = storeService.get('irc');
 
 		if (ircCredentials != undefined) {
-			toastService.addToast('Irc credentials were found, attempting to login to irc.');
 			this.connect(ircCredentials.username, ircCredentials.password);
 		}
 
@@ -193,8 +192,6 @@ export class IrcService {
 			this.isConnecting$.next(false);
 
 			this.isAuthenticated$.next(true);
-
-			this.toastService.addToast('Successfully connected to irc!');
 
 			// Initialize multiplayer channels after restart
 			for (const ircChannel in allJoinedChannels) {

@@ -5,8 +5,8 @@
 		<div>
 			{{ authenticateService.loggedInUser.username }}
 
-			<div>
-				<div class="dot" [ngClass]="{'connected': ircService.isAuthenticated}"></div> irc
+			<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
+				<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
 			</div>
 		</div>
 	</div>
@@ -17,8 +17,8 @@
 		<div>
 			You are not logged in.
 
-			<div>
-				<div class="dot" [ngClass]="{'connected': ircService.isAuthenticated}"></div> irc
+			<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
+				<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
 			</div>
 		</div>
 	</div>

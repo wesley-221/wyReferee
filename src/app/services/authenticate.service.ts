@@ -39,8 +39,6 @@ export class AuthenticateService {
 					}
 
 					this.loggedInUserLoaded$.next(true);
-
-					this.toastService.addToast(`Successfully logged in, welcome ${this.loggedInUser.username}!`);
 				});
 			}
 		});

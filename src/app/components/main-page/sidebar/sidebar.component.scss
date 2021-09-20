@@ -53,6 +53,10 @@
 					&.connected {
 						background-color: #00ff00;
 					}
+
+					&.connecting {
+						background-color: orange;
+					}
 				}
 			}
 		}

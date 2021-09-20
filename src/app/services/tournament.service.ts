@@ -6,6 +6,8 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject } from 'rxjs';
 import { GenericService } from './generic.service';
+import { ToastService } from './toast.service';
+import { ToastType } from 'app/models/toast';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,7 +21,7 @@ export class TournamentService {
 
 	private tournamentsInitialized$: BehaviorSubject<boolean>;
 
-	constructor(private storeService: StoreService, private httpClient: HttpClient, private genericService: GenericService) {
+	constructor(private storeService: StoreService, private httpClient: HttpClient, private genericService: GenericService, private toastService: ToastService) {
 		this.availableTournamentId = 0;
 		this.allTournaments = [];
 
@@ -43,8 +45,10 @@ export class TournamentService {
 							this.getPublishedTournament(this.allTournaments[tournament].publishId).subscribe((data) => {
 								const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
 
-								if (publishedTournament.updateDate > this.allTournaments[tournament].updateDate) {
+								if (publishedTournament.updateDate.getTime() != this.allTournaments[tournament].updateDate.getTime()) {
 									publishedTournament.publishId = publishedTournament.id;
+
+									this.toastService.addToast(`The tournament "${this.allTournaments[tournament].name}" has been updated.`, ToastType.Information, 10);
 
 									this.updateTournament(publishedTournament, this.allTournaments[tournament].publishId, true);
 								}

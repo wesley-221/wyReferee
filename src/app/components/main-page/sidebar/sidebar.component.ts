@@ -10,6 +10,8 @@ import { IrcService } from 'app/services/irc.service';
 })
 
 export class SidebarComponent implements OnInit {
+	ircConnectionStatus: number;
+
 	allNavigations: { icon: string; header: string; link: string, showIf?: boolean }[] = [
 		{ icon: 'info', header: 'information', link: 'information' },
 		{ icon: 'settings', header: 'settings', link: 'settings' },
@@ -20,8 +22,19 @@ export class SidebarComponent implements OnInit {
 	];
 
 	constructor(private genericService: GenericService, public authenticateService: AuthenticateService, public ircService: IrcService) {
+		this.ircConnectionStatus = 0;
+
 		genericService.getAxSMenuStatus().subscribe(active => {
 			this.allNavigations[this.allNavigations.length - 1].showIf = active;
+		});
+
+		ircService.getIsConnecting().subscribe(status => {
+			if (status == true) {
+				this.ircConnectionStatus = 1;
+			}
+			else {
+				this.ircConnectionStatus = ircService.isAuthenticated ? 2 : 0;
+			}
 		});
 	}
 
