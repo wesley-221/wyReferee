@@ -55,7 +55,13 @@ export class WebhookService {
 
 		if (selectedLobby.teamOneBans.length > 0) {
 			for (const ban of selectedLobby.teamOneBans) {
-				teamOneBans.push(`[${this.getBeatmapnameFromMappools(ban).name}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
+				for (const modBracket of selectedLobby.mappool.modBrackets) {
+					for (const beatmap of modBracket.beatmaps) {
+						if (beatmap.beatmapId == ban) {
+							teamOneBans.push(`[${beatmap.beatmapName}](${beatmap.beatmapUrl})`);
+						}
+					}
+				}
 			}
 
 			body.embeds[0].fields.push({
@@ -68,7 +74,13 @@ export class WebhookService {
 
 		if (selectedLobby.teamTwoBans.length > 0) {
 			for (const ban of selectedLobby.teamTwoBans) {
-				teamTwoBans.push(`[${this.getBeatmapnameFromMappools(ban).name}](${this.getBeatmapnameFromMappools(ban).beatmapUrl})`);
+				for (const modBracket of selectedLobby.mappool.modBrackets) {
+					for (const beatmap of modBracket.beatmaps) {
+						if (beatmap.beatmapId == ban) {
+							teamTwoBans.push(`[${beatmap.beatmapName}](${beatmap.beatmapUrl})`);
+						}
+					}
+				}
 			}
 
 			body.embeds[0].fields.push({
