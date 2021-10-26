@@ -578,7 +578,7 @@ export class IrcService {
 				messageBuilder.push(new MessageBuilder({
 					messageType: MessageType.Link,
 					message: currentRegex.link,
-					linkName: currentRegex.message
+					linkName: currentRegex.name
 				}));
 
 				regexSucceeded = true;
