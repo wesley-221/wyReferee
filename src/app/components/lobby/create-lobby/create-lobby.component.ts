@@ -49,6 +49,9 @@ export class CreateLobbyComponent implements OnInit {
 	teamOneFilter: Observable<WyTeam[]>;
 	teamTwoFilter: Observable<WyTeam[]>;
 
+	qualifier: boolean;
+	qualifierLobbyIdentifier: string;
+
 	constructor(
 		private multiplayerLobbies: WyMultiplayerLobbiesService,
 		private toastService: ToastService,
@@ -57,6 +60,8 @@ export class CreateLobbyComponent implements OnInit {
 		private router: Router,
 		private webhookService: WebhookService) {
 		this.calculateScoreInterfaces = new Calculate();
+
+		this.qualifier = false;
 
 		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
 			this.ircAuthenticated = isAuthenticated;
@@ -170,23 +175,40 @@ export class CreateLobbyComponent implements OnInit {
 
 	createLobby() {
 		if (this.validationForm.valid) {
-			const lobby = new Lobby({
-				lobbyId: this.multiplayerLobbies.availableLobbyId,
-				teamSize: this.validationForm.get('team-size').value,
-				multiplayerLink: this.validationForm.get('multiplayer-link').value,
-				tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
-				tournament: this.selectedTournament,
-				teamOneName: this.validationForm.get('team-one-name').value,
-				teamTwoName: this.validationForm.get('team-two-name').value
-			});
+			let lobby: Lobby;
 
-			lobby.description = `${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+			if (this.qualifier == true) {
+				lobby = new Lobby({
+					lobbyId: this.multiplayerLobbies.availableLobbyId,
+					teamSize: this.validationForm.get('team-size').value,
+					multiplayerLink: this.validationForm.get('multiplayer-link').value,
+					tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
+					tournament: this.selectedTournament
+				});
+
+				lobby.description = `Qualifier lobby: ${this.qualifierLobbyIdentifier}`;
+			}
+			else {
+				lobby = new Lobby({
+					lobbyId: this.multiplayerLobbies.availableLobbyId,
+					teamSize: this.validationForm.get('team-size').value,
+					multiplayerLink: this.validationForm.get('multiplayer-link').value,
+					tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
+					tournament: this.selectedTournament,
+					teamOneName: this.validationForm.get('team-one-name').value,
+					teamTwoName: this.validationForm.get('team-two-name').value
+				});
+
+				lobby.description = `${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+			}
 
 			this.ircService.isCreatingMultiplayerLobby = lobby.lobbyId;
 
 			// Multiplayer link was not found, create new lobby
 			if (lobby.multiplayerLink == '') {
-				from(this.ircService.client.createLobby(`${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
+				const lobbyName = this.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : `${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+
+				from(this.ircService.client.createLobby(lobbyName)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
 					this.ircService.joinChannel(multiplayerChannel.name);
 					this.ircService.initializeChannelListeners(multiplayerChannel);
 
@@ -267,6 +289,23 @@ export class CreateLobbyComponent implements OnInit {
 
 		for (let i = teamSizeVal + 1; i < ((teamSizeVal * 2) + 1); i++) {
 			this.teamTwoArray.push(i);
+		}
+	}
+
+	changeQualifierLobby(): void {
+		if (this.qualifier == true) {
+			this.validationForm.addControl('qualifier-lobby-identifier', new FormControl('', Validators.required));
+			this.validationForm.removeControl('team-one-name');
+			this.validationForm.removeControl('team-two-name');
+
+			this.validationForm.controls['qualifier-lobby-identifier'].valueChanges.subscribe(value => {
+				this.qualifierLobbyIdentifier = value;
+			});
+		}
+		else {
+			this.validationForm.removeControl('qualifier-lobby-identifier');
+			this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
+			this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
 		}
 	}
 }

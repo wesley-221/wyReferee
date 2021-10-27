@@ -48,6 +48,8 @@ export class Lobby {
 
 	ircConnected: boolean;
 
+	isQualifierLobby: boolean;
+
 	multiplayerLobbyPlayers: MultiplayerLobbyPlayers;
 
 	constructor(init?: Partial<Lobby>) {
@@ -69,6 +71,8 @@ export class Lobby {
 		this.teamTwoScore = 0;
 
 		this.ircConnected = false;
+
+		this.isQualifierLobby = false;
 
 		Object.assign(this, init);
 	}
@@ -161,6 +165,13 @@ export class Lobby {
 	}
 
 	/**
+	 * Get the name of the lobby if it's a qualifier lobby
+	 */
+	getQualifierName(): string {
+		return `${this.tournament.acronym}: ${this.description}`;
+	}
+
+	/**
 	 * Mark a category as picked in the given mod bracket
 	 * @param modBracket the mod bracket that was picked
 	 * @param modCategory the mod category that was picked
@@ -227,7 +238,8 @@ export class Lobby {
 			teamOneSlotArray: lobby.teamOneSlotArray,
 			teamTwoSlotArray: lobby.teamTwoSlotArray,
 			gamesCountTowardsScore: lobby.gamesCountTowardsScore,
-			multiplayerLobbyPlayers: lobby.multiplayerLobbyPlayers
+			multiplayerLobbyPlayers: lobby.multiplayerLobbyPlayers,
+			isQualifierLobby: lobby.isQualifierLobby
 		});
 
 		for (const pickedCategory in lobby.pickedCategories) {

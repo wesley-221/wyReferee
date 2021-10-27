@@ -1,7 +1,8 @@
 <div class="lobby">
 	<div class="match-header">
 		<div class="header">
-			<h2>{{ selectedLobby.getLobbyName() }}</h2>
+			<h2 *ngIf="selectedLobby.isQualifierLobby == false || selectedLobby.isQualifierLobby == undefined">{{ selectedLobby.getLobbyName() }}</h2>
+			<h2 *ngIf="selectedLobby.isQualifierLobby == true">{{ selectedLobby.getQualifierName() }}</h2>
 
 			<div class="information">
 				<div class="column">

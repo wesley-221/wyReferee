@@ -15,13 +15,19 @@
 
 		<div *ngFor="let lobby of allLobbies.slice().reverse()" (click)="navigateLobby(lobby, $event)" class="lobby">
 			<div class="body">
-				<div class="information">
+				<div class="information" *ngIf="lobby.isQualifierLobby == false || lobby.isQualifierLobby == undefined">
 					<div class="multiplayerId">
 						<h1>{{ lobby.getLobbyName() }}</h1>
 					</div>
 
 					<div class="multiplayerDesc">
 						{{ lobby.teamOneName }} vs {{ lobby.teamTwoName }}
+					</div>
+				</div>
+
+				<div class="information" *ngIf="lobby.isQualifierLobby == true">
+					<div class="multiplayerId">
+						<h1>{{ lobby.getQualifierName() }}</h1>
 					</div>
 				</div>
 
