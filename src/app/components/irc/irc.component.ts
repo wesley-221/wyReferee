@@ -243,8 +243,8 @@ export class IrcComponent implements OnInit {
 	 * @param event
 	 */
 	onMappoolChange(event: MatSelectChange) {
-		this.selectedLobby.mappoolId = parseInt(event.value);
-		this.selectedLobby.mappool = this.selectedLobby.tournament.getMappoolFromId(this.selectedLobby.mappoolId);
+		this.selectedLobby.mappoolIndex = parseInt(event.value);
+		this.selectedLobby.mappool = this.selectedLobby.tournament.getMappoolFromIndex(this.selectedLobby.mappoolIndex);
 
 		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 	}

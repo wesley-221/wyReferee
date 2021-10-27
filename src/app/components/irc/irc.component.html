@@ -143,7 +143,7 @@
 									<mat-label>Mappool</mat-label>
 									<mat-select (selectionChange)="onMappoolChange($event)">
 										<mat-option></mat-option>
-										<mat-option *ngFor="let mappool of selectedLobby.tournament.mappools" [value]="mappool.id">{{ mappool.name }}</mat-option>
+										<mat-option *ngFor="let mappool of selectedLobby.tournament.mappools" [value]="mappool.index">{{ mappool.name }}</mat-option>
 									</mat-select>
 								</mat-form-field>
 							</div>

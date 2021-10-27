@@ -18,6 +18,7 @@ export class Lobby {
 	teamSize: number;
 
 	mappoolId: number;
+	mappoolIndex: number;
 	mappool: WyMappool;
 
 	ircChannel: IrcChannel;

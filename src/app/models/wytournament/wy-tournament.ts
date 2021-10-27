@@ -108,6 +108,20 @@ export class WyTournament {
 	}
 
 	/**
+	 * Get the mappool with the given index
+	 * @param index the index of the mappool to get
+	 */
+	 getMappoolFromIndex(index: number): WyMappool {
+		for (const mappool in this.mappools) {
+			if (this.mappools[mappool].index == index) {
+				return this.mappools[mappool];
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get the modifier of the given beatmap
 	 * @param beatmapId the id of the beatmap to get the modifier from
 	 */
