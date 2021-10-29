@@ -1,0 +1,60 @@
+<h2 mat-dialog-title>Irc shortcut commands</h2>
+
+<mat-dialog-content class="mat-typography">
+	<p>Shortcut commands allow you generate your own irc commands, which can be executed with a single click of a button. Add, remove or adjust shortcut commands to your own needs.</p>
+
+	<mat-accordion>
+		<mat-expansion-panel hideToggle>
+			<mat-expansion-panel-header>
+				<mat-panel-title>Advanced setup (click me)</mat-panel-title>
+			</mat-expansion-panel-header>
+
+			<p>Irc shortcut commands also support variables. What this means is that you can enter one of those variables in a command and it'll automatically changes out the variable for a different value. Currently the following variables are supported: </p>
+
+			<ul>
+				<li><code>{{ '{' }}{{ '{' }} team1 {{ '}' }}{{ '}' }}</code>: this will get replaced with the name of the first team</li>
+				<li><code>{{ '{' }}{{ '{' }} team2 {{ '}' }}{{ '}' }}</code>: this will get replaced with the name of the second team</li>
+				<li><code>{{ '{' }}{{ '{' }} team1slots {{ '}' }}{{ '}' }}</code>: this will get replaced with the slots the first team is supposed to be in (ex: 1, 2, 3)</li>
+				<li><code>{{ '{' }}{{ '{' }} team2slots {{ '}' }}{{ '}' }}</code>: this will get replaced with the slots the second team is supposed to be in (ex: 1, 2, 3)</li>
+				<li><code>{{ '{' }}{{ '{' }} team1colour {{ '}' }}{{ '}' }}</code>: this will get replaced with the colour the first team is supposed to be (Red/Blue)</li>
+				<li><code>{{ '{' }}{{ '{' }} team2colour {{ '}' }}{{ '}' }}</code>: this will get replaced with the colour the second team is supposed to be (Red/Blue)</li>
+			</ul>
+
+			<p>If you have any ideas as of what other variables you would like, send me a message on Discord: Wesley#2772 or make an issue on Github.</p>
+		</mat-expansion-panel>
+	</mat-accordion>
+
+	<div class="extra-spacing"></div>
+
+	<div class="buttons">
+		<button mat-raised-button color="accent" (click)="createNewShortcutCommand()"><mat-icon>add</mat-icon> create new shortcut command</button>
+		<button mat-raised-button color="accent" (click)="createGenericShortcutCommands()"><mat-icon>add</mat-icon> create generic shortcut commands</button>
+	</div>
+
+	<div class="shortcut-commands">
+		<div class="command" *ngFor="let ircShortcutCommand of ircShortCutCommandsService.ircShortCutCommands">
+			<div class="actions">
+				<button mat-mini-fab color="warn" (click)="deleteIrcShortcutCommand(ircShortcutCommand)"><mat-icon>delete</mat-icon></button>
+			</div>
+
+			<div class="label">
+				<mat-form-field class="full-width">
+					<mat-label>Label</mat-label>
+					<input matInput [(ngModel)]="ircShortcutCommand.label" />
+				</mat-form-field>
+			</div>
+
+			<div class="irc-command">
+				<mat-form-field class="full-width">
+					<mat-label>Command</mat-label>
+					<input matInput [(ngModel)]="ircShortcutCommand.command" />
+				</mat-form-field>
+			</div>
+		</div>
+	</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="saveIrcShortcutCommands()" color="primary">Save</button>
+</mat-dialog-actions>
+

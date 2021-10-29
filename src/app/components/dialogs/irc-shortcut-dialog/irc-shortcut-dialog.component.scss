@@ -1,0 +1,31 @@
+.extra-spacing {
+	margin-top: 8px;
+}
+
+.shortcut-commands {
+	margin-top: 8px;
+
+	.command {
+		display: flex;
+
+		.actions {
+			margin-right: 8px;
+		}
+
+		.label {
+			flex: 1 1 30%;
+
+			margin-right: 8px;
+		}
+
+		.irc-command {
+			flex: 1 1 60%;
+		}
+	}
+}
+
+.buttons {
+	button {
+		margin-right: 8px;
+	}
+}

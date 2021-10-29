@@ -72,6 +72,7 @@ import { TournamentMyPublishedComponent } from './components/tournament-manageme
 import { TournamentCardComponent } from './components/tournament-management/tournament-card/tournament-card.component';
 import { TournamentPublishedEditComponent } from './components/tournament-management/tournament-published-edit/tournament-published-edit.component';
 import { TournamentAllPublishedAdministratorComponent } from './components/tournament-management/tournament-all-published-administrator/tournament-all-published-administrator.component';
+import { IrcShortcutDialogComponent } from './components/dialogs/irc-shortcut-dialog/irc-shortcut-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -126,7 +127,8 @@ import { TournamentAllPublishedAdministratorComponent } from './components/tourn
 		TournamentMyPublishedComponent,
 		TournamentCardComponent,
 		TournamentPublishedEditComponent,
-		TournamentAllPublishedAdministratorComponent
+		TournamentAllPublishedAdministratorComponent,
+		IrcShortcutDialogComponent
 	],
 	imports: [
 		BrowserModule,

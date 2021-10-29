@@ -23,6 +23,9 @@ import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
+import { IrcShortcutDialogComponent } from '../dialogs/irc-shortcut-dialog/irc-shortcut-dialog.component';
+import { IrcShortcutCommandsService } from 'app/services/irc-shortcut-commands.service';
+import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
 
 export interface BanBeatmapDialogData {
 	beatmap: WyModBracketMap;
@@ -96,7 +99,8 @@ export class IrcComponent implements OnInit {
 		private router: Router,
 		private toastService: ToastService,
 		private webhookService: WebhookService,
-		private dialog: MatDialog) {
+		private dialog: MatDialog,
+		public ircShortcutCommandsService: IrcShortcutCommandsService) {
 		this.channels = ircService.allChannels;
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -585,6 +589,61 @@ export class IrcComponent implements OnInit {
 				ircChannel: this.selectedChannel.name
 			}
 		});
+	}
+
+	/**
+	 * Open a dialog to manage irc shortcut commands
+	 */
+	shortcutSettings(): void {
+		const dialogRef = this.dialog.open(IrcShortcutDialogComponent);
+
+		dialogRef.afterClosed().subscribe(result => {
+			if (result == undefined) {
+				this.ircShortcutCommandsService.loadIrcShortcutCommands();
+			}
+			else {
+				this.ircShortcutCommandsService.saveIrcShortcutCommands();
+			}
+		});
+	}
+
+	/**
+	 * Execute an irc shortcut command and process variables
+	 * @param ircShortcutCommand the command that was executed
+	 */
+	executeIrcShortcutCommand(ircShortcutCommand: IrcShortcutCommand): void {
+		if (!this.ircService.isAuthenticated) {
+			return;
+		}
+
+		let teamOneSlotArray = [];
+		let teamTwoSlotArray = [];
+
+		for (let i: any = 0; i < this.selectedLobby.teamSize * 2; i++) {
+			if (i < this.selectedLobby.teamSize) {
+				teamOneSlotArray.push(parseInt(i) + 1);
+			}
+			else {
+				teamTwoSlotArray.push(parseInt(i) + 1);
+			}
+		}
+
+		const replaceWords = {
+			"{{\\s{0,}team1\\s{0,}}}": this.selectedLobby.teamOneName,
+			"{{\\s{0,}team2\\s{0,}}}": this.selectedLobby.teamTwoName,
+			"{{\\s{0,}team1slots\\s{0,}}}": teamOneSlotArray.join(', '),
+			"{{\\s{0,}team2slots\\s{0,}}}": teamTwoSlotArray.join(', '),
+			"{{\\s{0,}team1colour\\s{0,}}}": "Red",
+			"{{\\s{0,}team2colour\\s{0,}}}": "Blue"
+		};
+
+		let ircCommand = ircShortcutCommand.command;
+
+		for (const regex in replaceWords) {
+			ircCommand = ircCommand.replace(new RegExp(regex), replaceWords[regex]);
+		}
+
+		this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
 	}
 
 	tempDisabled() {
