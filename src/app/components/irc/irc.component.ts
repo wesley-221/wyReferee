@@ -130,6 +130,13 @@ export class IrcComponent implements OnInit {
 				ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
 			}
 		});
+
+		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
+			if (data == this.selectedLobby.lobbyId) {
+				this.selectedLobby = this.multiplayerLobbies.getMultiplayerLobby(data);
+				this.refreshIrcHeader(this.selectedLobby);
+			}
+		});
 	}
 
 	ngOnInit() {
@@ -157,11 +164,7 @@ export class IrcComponent implements OnInit {
 		this.selectedChannel.hasUnreadMessages = false;
 		this.chats = this.selectedChannel.messages;
 
-		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
-			if (data != -1) {
-				this.refreshIrcHeader(this.multiplayerLobbies.getMultiplayerLobby(data));
-			}
-		});
+		this.refreshIrcHeader(this.selectedLobby);
 
 		if (this.selectedLobby != undefined) {
 			this.teamOneScore = this.selectedLobby.teamOneScore;
@@ -259,6 +262,13 @@ export class IrcComponent implements OnInit {
 	 * @param bracket the bracket where the beatmap is from
 	 */
 	pickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number) {
+		if (this.selectedLobby.tournament.allowDoublePick == false) {
+			if (this.wasBeatmapPickedFromSamePreviousModBracket(beatmap, bracket)) {
+				this.toastService.addToast(`${this.selectedLobby.getNextPick()} can't pick from ${bracket.name}, as their previous pick was from this mod bracket as well.`, ToastType.Error);
+				return;
+			}
+		}
+
 		this.ircService.sendMessage(this.selectedChannel.name, `!mp map ${beatmap.beatmapId} ${gamemode}`);
 
 		let modBit = 0;
@@ -295,6 +305,37 @@ export class IrcComponent implements OnInit {
 		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 
 		this.ircService.sendMessage(this.selectedChannel.name, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
+	}
+
+	wasBeatmapPickedFromSamePreviousModBracket(beatmap: WyModBracketMap, bracket: WyModBracket): boolean {
+		if (this.selectedLobby.getNextPick() == this.selectedLobby.teamOneName) {
+			if (this.selectedLobby.teamOnePicks.length <= 0) {
+				return false;
+			}
+
+			const lastPick = this.selectedLobby.teamOnePicks[this.selectedLobby.teamOnePicks.length - 1];
+
+			for (const beatmap of bracket.beatmaps) {
+				if (beatmap.beatmapId == lastPick) {
+					return true;
+				}
+			}
+		}
+		else if (this.selectedLobby.getNextPick() == this.selectedLobby.teamTwoName) {
+			if (this.selectedLobby.teamTwoPicks.length <= 0) {
+				return false;
+			}
+
+			const lastPick = this.selectedLobby.teamTwoPicks[this.selectedLobby.teamTwoPicks.length - 1];
+
+			for (const beatmap of bracket.beatmaps) {
+				if (beatmap.beatmapId == lastPick) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**

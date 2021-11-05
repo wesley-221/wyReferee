@@ -52,6 +52,8 @@
 			</div>
 		</div>
 
+		<hr />
+
 		<div class="row">
 			<div class="col">
 				<h3>Score system</h3>
@@ -117,5 +119,19 @@
 				</p>
 			</div>
 		</div>
+
+		<hr />
+
+		<div class="row">
+			<div class="col">
+				<h2>Picking from mappool</h2>
+				<p>Use this option if the players/teams are not allowed to pick from the same mod bracket twice in a row.</p>
+				<p>Example: Team 1 picks NM, Team 2 picks HD. Team 1 can now not pick NM for their next pick and Team 2 can now not pick HD as their next pick.</p>
+
+				<mat-slide-toggle (change)="changeAllowDoublePick($event)" [checked]="tournament.allowDoublePick">Players/teams <span [ngClass]="{'green': tournament.allowDoublePick == true, 'red': tournament.allowDoublePick == false}">{{ tournament.allowDoublePick == true ? 'can' : 'can\'t' }}</span> pick twice from the same mod bracket</mat-slide-toggle>
+			</div>
+		</div>
 	</form>
+
+	<p><!-- Prevents small vertical scrollbar from appearing, don't touch :) --></p>
 </div>

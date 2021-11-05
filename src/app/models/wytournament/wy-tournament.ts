@@ -35,6 +35,8 @@ export class WyTournament {
 	challongeTournamentId: number;
 	challongeCreationType: number;
 
+	allowDoublePick: boolean;
+
 	availableTo: User[];
 
 	administrators: User[];
@@ -51,6 +53,7 @@ export class WyTournament {
 		this.webhooks = [];
 		this.webhookIndex = 0;
 		this.mappools = [];
+		this.allowDoublePick = true;
 		this.availableTo = [];
 		this.administrators = [];
 
@@ -168,7 +171,8 @@ export class WyTournament {
 			challongeTournamentId: tournament.challongeTournamentId,
 			challongeCreationType: tournament.challongeCreationType,
 			updateDate: new Date(tournament.updateDate),
-			creationDate: new Date(tournament.creationDate)
+			creationDate: new Date(tournament.creationDate),
+			allowDoublePick: tournament.allowDoublePick
 		});
 
 		for (const team in tournament.teams) {

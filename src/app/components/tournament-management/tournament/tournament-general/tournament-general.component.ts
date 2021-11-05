@@ -18,7 +18,9 @@ export class TournamentGeneralComponent implements OnInit {
 	constructor() {
 		this.calculateScoreInterfaces = new Calculate();
 	}
-	ngOnInit(): void { }
+	ngOnInit(): void {
+		this.tournament.allowDoublePick = this.validationForm.get('allow-double-pick').value;
+	}
 
 	/**
 	 * Change the score interface
@@ -44,5 +46,13 @@ export class TournamentGeneralComponent implements OnInit {
 			this.validationForm.get('tournament-team-size').setValue(1);
 			this.tournament.teamSize = 1;
 		}
+	}
+
+	/**
+	 * Change the allowed double pick
+	 */
+	changeAllowDoublePick(event: { source: any, checked: boolean }): void {
+		this.validationForm.get('allow-double-pick').setValue(event.checked);
+		this.tournament.allowDoublePick = event.checked;
 	}
 }
