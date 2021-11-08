@@ -560,7 +560,7 @@ export class IrcComponent implements OnInit {
 	 * Toggle the player management tab
 	 */
 	togglePlayerManagement() {
-		this.isPlayerManagementMinimized = !this.isPlayerManagementMinimized
+		this.isPlayerManagementMinimized = !this.isPlayerManagementMinimized;
 
 		if (!this.isPlayerManagementMinimized) {
 			this.scrollToTop();

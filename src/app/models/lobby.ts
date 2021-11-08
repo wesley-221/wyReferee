@@ -74,6 +74,8 @@ export class Lobby {
 
 		this.isQualifierLobby = false;
 
+		this.multiplayerLobbyPlayers = new MultiplayerLobbyPlayers();
+
 		Object.assign(this, init);
 	}
 
@@ -238,7 +240,7 @@ export class Lobby {
 			teamOneSlotArray: lobby.teamOneSlotArray,
 			teamTwoSlotArray: lobby.teamTwoSlotArray,
 			gamesCountTowardsScore: lobby.gamesCountTowardsScore,
-			multiplayerLobbyPlayers: lobby.multiplayerLobbyPlayers,
+			multiplayerLobbyPlayers: lobby.multiplayerLobbyPlayers == undefined ? new MultiplayerLobbyPlayers() : lobby.multiplayerLobbyPlayers,
 			isQualifierLobby: lobby.isQualifierLobby
 		});
 
