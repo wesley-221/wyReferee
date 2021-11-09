@@ -26,6 +26,7 @@ import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
 import { IrcShortcutDialogComponent } from '../dialogs/irc-shortcut-dialog/irc-shortcut-dialog.component';
 import { IrcShortcutCommandsService } from 'app/services/irc-shortcut-commands.service';
 import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
+import { MultiplayerLobbySettingsComponent } from '../dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 
 export interface BanBeatmapDialogData {
 	beatmap: WyModBracketMap;
@@ -262,6 +263,26 @@ export class IrcComponent implements OnInit {
 	 * @param bracket the bracket where the beatmap is from
 	 */
 	pickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number) {
+		// Prevent picking when firstPick isn't set
+		if (this.selectedLobby.firstPick == undefined) {
+			this.toastService.addToast(`You haven't set who picks first yet.`, ToastType.Error);
+
+			const dialogRef = this.dialog.open(MultiplayerLobbySettingsComponent, {
+				data: {
+					multiplayerLobby: this.selectedLobby
+				}
+			});
+
+			dialogRef.afterClosed().subscribe((result: Lobby) => {
+				if (result != null) {
+					this.multiplayerLobbies.updateMultiplayerLobby(result);
+				}
+			});
+
+			return;
+		}
+
+		// Check if teams are allowed to pick from the same modbracket twice in a row
 		if (this.selectedLobby.tournament.allowDoublePick == false) {
 			if (this.wasBeatmapPickedFromSamePreviousModBracket(beatmap, bracket)) {
 				this.toastService.addToast(`${this.selectedLobby.getNextPick()} can't pick from ${bracket.name}, as their previous pick was from this mod bracket as well.`, ToastType.Error);
