@@ -1,0 +1,56 @@
+<div class="container-fluid">
+	<form [formGroup]="validationForm">
+		<div class="row">
+			<div class="col">
+				<h2>Stages</h2>
+				<p>Add a stage to the tournament.</p>
+
+				<button mat-raised-button (click)="addStage()" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new stage</button>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<div class="all-stages">
+					<div class="stage" *ngFor="let stage of tournament.stages">
+						<div class="name">
+							<mat-form-field class="full-width">
+								<mat-label>Stage name</mat-label>
+
+								<input matInput [formControlName]="'tournament-stage-name-' + stage.index" (change)="changeStageName(stage, $event)" />
+
+								<mat-error *ngIf="validationForm.get('tournament-stage-name-' + stage.index) != null && validationForm.get('tournament-stage-name-' + stage.index).errors && (validationForm.get('tournament-stage-name-' + stage.index).touched || validationForm.get('tournament-stage-name-' + stage.index).dirty)">
+									This field is required
+								</mat-error>
+							</mat-form-field>
+						</div>
+
+						<div class="bestof">
+							<mat-form-field class="full-width">
+								<mat-label>Best of</mat-label>
+								<mat-select [formControlName]="'tournament-stage-best-of-' + stage.index" (selectionChange)="changeStageBestOf(stage, $event)" [value]="stage.bestOf">
+									<mat-option [value]="5">5</mat-option>
+									<mat-option [value]="7">7</mat-option>
+									<mat-option [value]="9">9</mat-option>
+									<mat-option [value]="11">11</mat-option>
+									<mat-option [value]="13">13</mat-option>
+									<mat-option [value]="15">15</mat-option>
+									<mat-option [value]="17">17</mat-option>
+									<mat-option [value]="19">19</mat-option>
+								</mat-select>
+
+								<mat-error *ngIf="validationForm.get('tournament-stage-best-of-' + stage.index) != null && validationForm.get('tournament-stage-best-of-' + stage.index).errors && (validationForm.get('tournament-stage-best-of-' + stage.index).touched || validationForm.get('tournament-stage-best-of-' + stage.index).dirty)">
+									This field is required
+								</mat-error>
+							</mat-form-field>
+						</div>
+
+						<div class="actions">
+							<button mat-mini-fab color="warn" (click)="removeStage(stage)"><mat-icon>delete</mat-icon></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

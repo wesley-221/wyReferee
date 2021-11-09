@@ -36,7 +36,7 @@ export class WebhookService {
 		const body = {
 			'embeds': [
 				{
-					'title': `Result of **${selectedLobby.teamOneName}** vs. **${selectedLobby.teamTwoName}**`,
+					'title': `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
 					'url': selectedLobby.multiplayerLink,
 					'description': `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n[${selectedLobby.multiplayerLink}](${selectedLobby.multiplayerLink})`,
 					'color': 15258703,
@@ -124,7 +124,7 @@ export class WebhookService {
 		const body = {
 			'embeds': [
 				{
-					'title': `Result of **${selectedLobby.teamOneName}** vs. **${selectedLobby.teamTwoName}**`,
+					'title': `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
 					'description': resultDescription,
 					'color': 15258703,
 					'timestamp': new Date(),
@@ -332,6 +332,14 @@ export class WebhookService {
 						'text': `Match referee was ${referee}`
 					},
 					'fields': [
+						{
+							'name': `Twitch multiplayer link command`,
+							'value': `\`!editcom !mp ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}: ${selectedLobby.multiplayerLink}\``
+						},
+						{
+							'name': `Twitch stream title command`,
+							'value': `\`!title ${selectedLobby.tournament.name} - ${selectedLobby.selectedStage.name}: ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}\``
+						}
 					]
 				}
 			]

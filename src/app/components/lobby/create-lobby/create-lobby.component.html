@@ -173,6 +173,20 @@
 		<div *ngIf="selectedTournament != null && challongeMatches.length <= 0">
 			<div class="row">
 				<div class="col">
+					<h1>Stage</h1>
+					<p>Select for which stage this match is supposed to be for.</p>
+
+					<mat-form-field class="full-width">
+						<mat-label>Stage</mat-label>
+						<mat-select formControlName="stage">
+							<mat-option [value]="stage.name" *ngFor="let stage of selectedTournament.stages">{{ stage.name }}</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">
 					<h1>Qualifier lobby</h1>
 					<p>Use this option if the lobby you are creating is supposed to be a qualifier lobby.</p>
 

@@ -4,6 +4,7 @@ import { ScoreInterface } from "../score-calculation/calculation-types/score-int
 import { WyMappool } from "./mappool/wy-mappool";
 import { WyWebhook } from "./wy-webhook";
 import { WyTeam } from "./wy-team";
+import { WyStage } from "./wy-stage";
 
 export enum TournamentFormat {
 	Solo = 'solo',
@@ -19,6 +20,8 @@ export class WyTournament {
 	teamSize: number;
 	format: TournamentFormat;
 
+	stages: WyStage[];
+	stageIndex: number;
 	teams: WyTeam[];
 	teamIndex: number;
 	mappools: WyMappool[];
@@ -47,7 +50,9 @@ export class WyTournament {
 	createdBy: User;
 
 	constructor(init?: Partial<WyTournament>) {
+		this.stages = [];
 		this.teams = [];
+		this.stageIndex = 0;
 		this.teamIndex = 0;
 		this.mappoolIndex = 0;
 		this.webhooks = [];
@@ -114,7 +119,7 @@ export class WyTournament {
 	 * Get the mappool with the given index
 	 * @param index the index of the mappool to get
 	 */
-	 getMappoolFromIndex(index: number): WyMappool {
+	getMappoolFromIndex(index: number): WyMappool {
 		for (const mappool in this.mappools) {
 			if (this.mappools[mappool].index == index) {
 				return this.mappools[mappool];
@@ -182,6 +187,15 @@ export class WyTournament {
 			newTournament.teamIndex++;
 
 			newTournament.teams.push(newTeam);
+		}
+
+		for (const stage in tournament.stages) {
+			const newStage = WyStage.makeTrueCopy(tournament.stages[stage]);
+
+			newStage.index = newTournament.stageIndex;
+			newTournament.stageIndex++;
+
+			newTournament.stages.push(newStage);
 		}
 
 		for (const webhook in tournament.webhooks) {

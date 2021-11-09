@@ -1,0 +1,29 @@
+.all-stages {
+	display: flex;
+	flex-direction: column;
+
+	padding-top: 8px;
+	padding-bottom: 8px;
+
+	.stage {
+		display: flex;
+		flex: 1;
+
+		.name {
+			flex: 1 1 50%;
+
+			margin-right: 8px;
+		}
+
+		.bestof {
+			flex: 1 1 50%;
+
+			margin-right: 8px;
+		}
+
+		.actions {
+			display: flex;
+			align-items: center;
+		}
+	}
+}

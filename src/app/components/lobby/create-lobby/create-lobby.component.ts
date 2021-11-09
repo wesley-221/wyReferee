@@ -90,7 +90,8 @@ export class CreateLobbyComponent implements OnInit {
 			'team-two-name': new FormControl('', [
 				Validators.required
 			]),
-			'selected-tournament': new FormControl()
+			'selected-tournament': new FormControl(),
+			'stage': new FormControl()
 		});
 
 		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
@@ -200,6 +201,19 @@ export class CreateLobbyComponent implements OnInit {
 				});
 
 				lobby.description = `${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+			}
+
+			if (this.selectedTournament != undefined || this.selectedTournament != null) {
+				const selectedStage = this.validationForm.get('stage').value;
+
+				for (const stage of this.selectedTournament.stages) {
+					if (stage.name == selectedStage) {
+						lobby.selectedStage = stage;
+						lobby.bestOf = stage.bestOf;
+
+						break;
+					}
+				}
 			}
 
 			this.ircService.isCreatingMultiplayerLobby = lobby.lobbyId;

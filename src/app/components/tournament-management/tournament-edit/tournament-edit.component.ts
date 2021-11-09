@@ -60,6 +60,11 @@ export class TournamentEditComponent implements OnInit {
 						this.validationForm.addControl(`tournament-team-name-${team.index}`, new FormControl(team.name, Validators.required));
 					}
 
+					for (const stage of tournament.stages) {
+						this.validationForm.addControl(`tournament-stage-name-${stage.index}`, new FormControl(stage.name, Validators.required));
+						this.validationForm.addControl(`tournament-stage-best-of-${stage.index}`, new FormControl(Number(stage.bestOf), Validators.required));
+					}
+
 					for (const webhook of tournament.webhooks) {
 						this.validationForm.addControl('webhook-' + webhook.index + '-name', new FormControl(webhook.name, Validators.required));
 						this.validationForm.addControl('webhook-' + webhook.index + '-url', new FormControl(webhook.url, Validators.required));

@@ -59,6 +59,11 @@ export class TournamentPublishedEditComponent implements OnInit {
 					this.validationForm.addControl(`tournament-team-name-${team.index}`, new FormControl(team.name, Validators.required));
 				}
 
+				for (const stage of tournament.stages) {
+					this.validationForm.addControl(`tournament-stage-name-${stage.index}`, new FormControl(stage.name, Validators.required));
+					this.validationForm.addControl(`tournament-stage-best-of-${stage.index}`, new FormControl(Number(stage.bestOf), Validators.required));
+				}
+
 				for (const mappool of tournament.mappools) {
 					mappool.collapsed = true;
 

@@ -5,6 +5,7 @@ import { MultiplayerData } from "./store-multiplayer/multiplayer-data";
 import { WyMappool } from "./wytournament/mappool/wy-mappool";
 import { WyModBracket } from "./wytournament/mappool/wy-mod-bracket";
 import { WyModCategory } from "./wytournament/mappool/wy-mod-category";
+import { WyStage } from "./wytournament/wy-stage";
 import { WyTournament } from "./wytournament/wy-tournament";
 
 export class Lobby {
@@ -24,6 +25,7 @@ export class Lobby {
 	ircChannel: IrcChannel;
 
 	firstPick: string;
+	selectedStage: WyStage;
 	bestOf: number;
 
 	teamOneName: string;
@@ -228,6 +230,7 @@ export class Lobby {
 			mappool: lobby.mappool != null ? WyMappool.makeTrueCopy(lobby.mappool) : null,
 			ircChannel: lobby.ircChannel,
 			firstPick: lobby.firstPick,
+			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
 			bestOf: lobby.bestOf,
 			teamOneName: lobby.teamOneName,
 			teamTwoName: lobby.teamTwoName,
