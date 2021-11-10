@@ -210,8 +210,35 @@ export class WyMultiplayerLobbiesService {
 						mods: currentScore.enabled_mods
 					});
 
-					if (!multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(currentGame.game_id)) {
-						multiplayerLobby.gamesCountTowardsScore[currentGame.game_id] = true;
+					// Invalidate beatmaps that aren't part of the mappool
+					if (multiplayerLobby.mappool != null || multiplayerLobby.mappool != undefined) {
+						let beatmapFound = false;
+
+						for (const modBracket of multiplayerLobby.mappool.modBrackets) {
+							for (const map of modBracket.beatmaps) {
+								if (map.beatmapId == currentGame.beatmap_id) {
+									beatmapFound = true;
+									break;
+								}
+							}
+						}
+
+						if (beatmapFound == false) {
+							if (!multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(currentGame.game_id)) {
+								multiplayerLobby.gamesCountTowardsScore[currentGame.game_id] = false;
+							}
+						}
+						else {
+							if (!multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(currentGame.game_id)) {
+								multiplayerLobby.gamesCountTowardsScore[currentGame.game_id] = true;
+							}
+						}
+					}
+					// No selected mappool, default to always count towards score
+					else {
+						if (!multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(currentGame.game_id)) {
+							multiplayerLobby.gamesCountTowardsScore[currentGame.game_id] = true;
+						}
 					}
 
 					multiplayerData.addPlayer(newMultiplayerDataUser);
