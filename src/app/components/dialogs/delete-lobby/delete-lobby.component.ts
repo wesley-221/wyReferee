@@ -10,4 +10,11 @@ import { MultiplayerLobbyDeleteDialogData } from 'app/components/lobby/all-lobbi
 export class DeleteLobbyComponent implements OnInit {
 	constructor(@Inject(MAT_DIALOG_DATA) public data: MultiplayerLobbyDeleteDialogData) { }
 	ngOnInit(): void { }
+
+	/**
+	 * Get the name of the lobby
+	 */
+	getLobbyName(): string {
+		return this.data.multiplayerLobby.tournament != null ? `${this.data.multiplayerLobby.tournament.acronym}: ${this.data.multiplayerLobby.description}` : this.data.multiplayerLobby.description;
+	}
 }
