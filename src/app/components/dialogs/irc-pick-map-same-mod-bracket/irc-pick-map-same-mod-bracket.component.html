@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Pick beatmap</h2>
+
+<mat-dialog-content class="mat-typography" *ngIf="data">
+	<div class="alert alert-danger">
+		<b>{{ data.lobby.getNextPick() }}</b> previous pick was from <b>{{ data.modBracket.name }}</b>.
+	</div>
+
+	Are you sure you want them to pick:
+	<p><b><a class="hover" (click)="electronService.openLink(data.beatmap.beatmapUrl)">{{ data.beatmap.beatmapName }}</a></b> from <b>{{ data.modBracket.name }}</b>?</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="true" color="warn">Pick</button>
+</mat-dialog-actions>

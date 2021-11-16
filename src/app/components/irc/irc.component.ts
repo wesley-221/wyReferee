@@ -27,6 +27,7 @@ import { IrcShortcutDialogComponent } from '../dialogs/irc-shortcut-dialog/irc-s
 import { IrcShortcutCommandsService } from 'app/services/irc-shortcut-commands.service';
 import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
 import { MultiplayerLobbySettingsComponent } from '../dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
+import { IrcPickMapSameModBracketComponent } from '../dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 
 export interface BanBeatmapDialogData {
 	beatmap: WyModBracketMap;
@@ -45,6 +46,12 @@ export interface MultiplayerLobbyMovePlayerDialogData {
 export interface SendBeatmapResultDialogData {
 	multiplayerLobby: Lobby;
 	ircChannel: string;
+}
+
+export interface BeatmapModBracketDialogData {
+	beatmap: WyModBracketMap;
+	modBracket: WyModBracket;
+	lobby: Lobby;
 }
 
 @Component({
@@ -262,7 +269,7 @@ export class IrcComponent implements OnInit {
 	 * @param beatmap the picked beatmap
 	 * @param bracket the bracket where the beatmap is from
 	 */
-	pickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number) {
+	pickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number, forcePick: boolean = false) {
 		// Prevent picking when firstPick isn't set
 		if (this.selectedLobby.firstPick == undefined) {
 			this.toastService.addToast(`You haven't set who picks first yet.`, ToastType.Error);
@@ -284,8 +291,21 @@ export class IrcComponent implements OnInit {
 
 		// Check if teams are allowed to pick from the same modbracket twice in a row
 		if (this.selectedLobby.tournament.allowDoublePick == false) {
-			if (this.wasBeatmapPickedFromSamePreviousModBracket(beatmap, bracket)) {
-				this.toastService.addToast(`${this.selectedLobby.getNextPick()} can't pick from ${bracket.name}, as their previous pick was from this mod bracket as well.`, ToastType.Error);
+			if (this.wasBeatmapPickedFromSamePreviousModBracket(beatmap, bracket) && forcePick == false) {
+				const dialogRef = this.dialog.open(IrcPickMapSameModBracketComponent, {
+					data: {
+						beatmap: beatmap,
+						modBracket: bracket,
+						lobby: this.selectedLobby
+					}
+				});
+
+				dialogRef.afterClosed().subscribe((result: boolean) => {
+					if (result == true) {
+						this.pickBeatmap(beatmap, bracket, gamemode, true);
+					}
+				});
+
 				return;
 			}
 		}
