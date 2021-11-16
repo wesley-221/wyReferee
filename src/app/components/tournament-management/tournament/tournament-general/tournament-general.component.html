@@ -124,6 +124,13 @@
 
 		<div class="row">
 			<div class="col">
+				<h2>Invalidate beatmaps</h2>
+				<p>Use this option if you want to invalidate maps automatically that are not part of the mappool. This will automatically invalidate warmup maps for example, so referees don't have to do this manually.</p>
+
+				<mat-slide-toggle (change)="changeInvalidateBeatmaps($event)" [checked]="tournament.invalidateBeatmaps">Beatmaps <span [ngClass]="{'green': tournament.invalidateBeatmaps == true, 'red': tournament.invalidateBeatmaps == false}">{{ tournament.invalidateBeatmaps == true ? 'will' : 'will not' }}</span> be invalidated</mat-slide-toggle>
+			</div>
+
+			<div class="col">
 				<h2>Picking from mappool</h2>
 				<p>Use this option if the players/teams are not allowed to pick from the same mod bracket twice in a row.</p>
 				<p>Example: Team 1 picks NM, Team 2 picks HD. Team 1 can now not pick NM for their next pick and Team 2 can now not pick HD as their next pick.</p>

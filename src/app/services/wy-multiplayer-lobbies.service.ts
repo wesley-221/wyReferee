@@ -223,7 +223,7 @@ export class WyMultiplayerLobbiesService {
 							}
 						}
 
-						if (beatmapFound == false) {
+						if (beatmapFound == false && multiplayerLobby.tournament.invalidateBeatmaps == true) {
 							if (!multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(currentGame.game_id)) {
 								multiplayerLobby.gamesCountTowardsScore[currentGame.game_id] = false;
 							}

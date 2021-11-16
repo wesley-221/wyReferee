@@ -39,7 +39,8 @@ export class TournamentCreateComponent implements OnInit {
 				Validators.min(1),
 				Validators.max(8)
 			]),
-			'allow-double-pick': new FormControl(true)
+			'allow-double-pick': new FormControl(true),
+			'invalidate-beatmaps': new FormControl(true)
 		});
 	}
 

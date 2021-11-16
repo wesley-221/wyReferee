@@ -20,6 +20,7 @@ export class TournamentGeneralComponent implements OnInit {
 	}
 	ngOnInit(): void {
 		this.tournament.allowDoublePick = this.validationForm.get('allow-double-pick').value;
+		this.tournament.invalidateBeatmaps = this.validationForm.get('invalidate-beatmaps').value;
 	}
 
 	/**
@@ -54,5 +55,13 @@ export class TournamentGeneralComponent implements OnInit {
 	changeAllowDoublePick(event: { source: any, checked: boolean }): void {
 		this.validationForm.get('allow-double-pick').setValue(event.checked);
 		this.tournament.allowDoublePick = event.checked;
+	}
+
+	/**
+	 * Change if beatmaps will be invalidated
+	 */
+	changeInvalidateBeatmaps(event: { source: any, checked: boolean }): void {
+		this.validationForm.get('invalidate-beatmaps').setValue(event.checked);
+		this.tournament.invalidateBeatmaps = event.checked;
 	}
 }
