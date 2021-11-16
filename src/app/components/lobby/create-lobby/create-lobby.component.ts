@@ -51,6 +51,7 @@ export class CreateLobbyComponent implements OnInit {
 
 	qualifier: boolean;
 	qualifierLobbyIdentifier: string;
+	webhook: boolean;
 
 	constructor(
 		private multiplayerLobbies: WyMultiplayerLobbiesService,
@@ -62,6 +63,7 @@ export class CreateLobbyComponent implements OnInit {
 		this.calculateScoreInterfaces = new Calculate();
 
 		this.qualifier = false;
+		this.webhook = true;
 
 		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
 			this.ircAuthenticated = isAuthenticated;
@@ -91,7 +93,9 @@ export class CreateLobbyComponent implements OnInit {
 				Validators.required
 			]),
 			'selected-tournament': new FormControl(),
-			'stage': new FormControl()
+			'stage': new FormControl('', [
+				Validators.required
+			])
 		});
 
 		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
@@ -214,6 +218,8 @@ export class CreateLobbyComponent implements OnInit {
 						break;
 					}
 				}
+
+				lobby.sendWebhooks = this.webhook;
 			}
 
 			this.ircService.isCreatingMultiplayerLobby = lobby.lobbyId;

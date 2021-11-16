@@ -51,6 +51,7 @@ export class Lobby {
 	ircConnected: boolean;
 
 	isQualifierLobby: boolean;
+	sendWebhooks: boolean;
 
 	multiplayerLobbyPlayers: MultiplayerLobbyPlayers;
 
@@ -75,6 +76,7 @@ export class Lobby {
 		this.ircConnected = false;
 
 		this.isQualifierLobby = false;
+		this.sendWebhooks = true;
 
 		this.multiplayerLobbyPlayers = new MultiplayerLobbyPlayers();
 
@@ -244,7 +246,8 @@ export class Lobby {
 			teamTwoSlotArray: lobby.teamTwoSlotArray,
 			gamesCountTowardsScore: lobby.gamesCountTowardsScore,
 			multiplayerLobbyPlayers: lobby.multiplayerLobbyPlayers == undefined ? new MultiplayerLobbyPlayers() : lobby.multiplayerLobbyPlayers,
-			isQualifierLobby: lobby.isQualifierLobby
+			isQualifierLobby: lobby.isQualifierLobby,
+			sendWebhooks: lobby.sendWebhooks
 		});
 
 		for (const pickedCategory in lobby.pickedCategories) {

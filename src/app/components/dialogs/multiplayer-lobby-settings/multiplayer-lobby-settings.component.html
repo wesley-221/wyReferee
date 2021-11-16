@@ -1,6 +1,10 @@
 <h2 mat-dialog-title>Settings {{ data.multiplayerLobby.getLobbyName() }}</h2>
 
 <mat-dialog-content class="mat-typography">
+	<h3>Webhooks</h3>
+	<mat-slide-toggle [(ngModel)]="data.multiplayerLobby.sendWebhooks" [ngModelOptions]="{ standalone: true }">Webhooks <span [ngClass]="{ 'green': data.multiplayerLobby.sendWebhooks == true, 'red': data.multiplayerLobby.sendWebhooks == false }">{{ data.multiplayerLobby.sendWebhooks == true ? 'will' : 'wont' }}</span> be sent</mat-slide-toggle>
+	<p>Use this option to disable webhooks from being sent. Could be used for practice lobby, testing, etc.</p>
+
 	<h3>First pick</h3>
 	<mat-form-field class="full-width">
 		<mat-label>First pick</mat-label>

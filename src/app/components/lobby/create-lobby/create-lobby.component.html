@@ -181,6 +181,10 @@
 						<mat-select formControlName="stage">
 							<mat-option [value]="stage.name" *ngFor="let stage of selectedTournament.stages">{{ stage.name }}</mat-option>
 						</mat-select>
+
+						<mat-error *ngIf="getValidation('stage').errors && (getValidation('stage').touched || getValidation('stage').dirty)">
+							This field is required
+						</mat-error>
 					</mat-form-field>
 				</div>
 			</div>
@@ -191,6 +195,13 @@
 					<p>Use this option if the lobby you are creating is supposed to be a qualifier lobby.</p>
 
 					<mat-slide-toggle [(ngModel)]="qualifier" (change)="changeQualifierLobby()" [ngModelOptions]="{ standalone: true }"></mat-slide-toggle>
+				</div>
+
+				<div class="col">
+					<h1>Webhooks</h1>
+					<p>Use this option to disable webhooks from being sent. Could be used for practice lobby, testing, etc.</p>
+
+					<mat-slide-toggle [(ngModel)]="webhook" [ngModelOptions]="{ standalone: true }">Webhooks <span [ngClass]="{ 'green': webhook == true, 'red': webhook == false }">{{ webhook == true ? 'will' : 'wont' }}</span> be sent</mat-slide-toggle>
 				</div>
 
 				<!-- <div class="col">

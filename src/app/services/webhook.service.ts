@@ -29,6 +29,11 @@ export class WebhookService {
 	 * @param referee the referee
 	 */
 	sendFinalResult(selectedLobby: Lobby, extraMessage: string, referee: string) {
+		// Dont send webhooks if its disabled
+		if (!this.doSendWebhooks(selectedLobby)) {
+			return;
+		}
+
 		const scoreString = (selectedLobby.teamOneScore > selectedLobby.teamTwoScore) ?
 			`**Score:** __${selectedLobby.teamOneName}__ | **${selectedLobby.teamOneScore}** - ${selectedLobby.teamTwoScore} | ${selectedLobby.teamTwoName}` :
 			`**Score:** ${selectedLobby.teamOneName} | ${selectedLobby.teamOneScore} - **${selectedLobby.teamTwoScore}** | __${selectedLobby.teamTwoName}__`;
@@ -115,6 +120,11 @@ export class WebhookService {
 	 * @param referee the referee
 	 */
 	sendWinByDefaultResult(selectedLobby: Lobby, extraMessage: string, wbdWinningTeam: string, wbdLosingTeam: string, referee: string) {
+		// Dont send webhooks if its disabled
+		if (!this.doSendWebhooks(selectedLobby)) {
+			return;
+		}
+
 		let resultDescription = `**Score:** __${wbdWinningTeam}__ | 1 - 0 | ${wbdLosingTeam} \n\n__${wbdLosingTeam}__ failed to show up.`;
 
 		if (wbdWinningTeam == 'no-one') {
@@ -161,6 +171,11 @@ export class WebhookService {
 	 * @param referee the referee
 	 */
 	sendBanResult(selectedLobby: Lobby, teamName: string, ban: WyModBracketMap, referee: string) {
+		// Dont send webhooks if its disabled
+		if (!this.doSendWebhooks(selectedLobby)) {
+			return;
+		}
+
 		const body = {
 			'embeds': [
 				{
@@ -194,6 +209,11 @@ export class WebhookService {
 	 * @param referee the referee
 	 */
 	sendMatchFinishedResult(multiplayerLobby: Lobby, referee: string) {
+		// Dont send webhooks if its disabled
+		if (!this.doSendWebhooks(multiplayerLobby)) {
+			return;
+		}
+
 		const lastMultiplayerData = multiplayerLobby.multiplayerData[multiplayerLobby.multiplayerData.length - 1];
 
 		let cachedBeatmap = null;
@@ -321,6 +341,11 @@ export class WebhookService {
 	 * @param referee the referee
 	 */
 	sendMatchCreation(selectedLobby: Lobby, referee: string): void {
+		// Dont send webhooks if its disabled
+		if (!this.doSendWebhooks(selectedLobby)) {
+			return;
+		}
+
 		const body = {
 			'embeds': [
 				{
@@ -360,6 +385,11 @@ export class WebhookService {
 	 * @param pick the picked map
 	 */
 	sendBeatmapPicked(selectedLobby: Lobby, referee: string, teamName: string, pick: WyModBracketMap): void {
+		// Dont send webhooks if its disabled
+		if (!this.doSendWebhooks(selectedLobby)) {
+			return;
+		}
+
 		const body = {
 			'embeds': [
 				{
@@ -385,5 +415,13 @@ export class WebhookService {
 				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
 			}
 		}
+	}
+
+	/**
+	 * Check if webhooks are supposed to be sent
+	 * @param lobby the lobby to check
+	 */
+	private doSendWebhooks(lobby: Lobby): boolean {
+		return !(lobby.sendWebhooks == null || lobby.sendWebhooks == undefined || lobby.sendWebhooks == false);
 	}
 }
