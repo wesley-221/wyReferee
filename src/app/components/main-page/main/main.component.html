@@ -2,6 +2,10 @@
 	<app-toast></app-toast>
 	<app-updater></app-updater>
 
+	<div class="debug" *ngIf="debugService.menuActive">
+		<app-debug [data]="debugService.debugData"></app-debug>
+	</div>
+
 	<div class="sidebar-container">
 		<app-sidebar></app-sidebar>
 	</div>

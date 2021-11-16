@@ -74,6 +74,7 @@ import { TournamentPublishedEditComponent } from './components/tournament-manage
 import { TournamentAllPublishedAdministratorComponent } from './components/tournament-management/tournament-all-published-administrator/tournament-all-published-administrator.component';
 import { IrcShortcutDialogComponent } from './components/dialogs/irc-shortcut-dialog/irc-shortcut-dialog.component';
 import { TournamenStagesComponent } from './components/tournament-management/tournament/tournament-stages/tournament-stages.component';
+import { DebugComponent } from './components/debug/debug.component';
 
 @NgModule({
 	declarations: [
@@ -130,7 +131,8 @@ import { TournamenStagesComponent } from './components/tournament-management/tou
 		TournamentPublishedEditComponent,
 		TournamentAllPublishedAdministratorComponent,
 		IrcShortcutDialogComponent,
-		TournamenStagesComponent
+		TournamenStagesComponent,
+		DebugComponent
 	],
 	imports: [
 		BrowserModule,

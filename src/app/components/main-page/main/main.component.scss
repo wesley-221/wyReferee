@@ -9,6 +9,17 @@
 
 	height: 100%;
 
+	.debug {
+		position: absolute;
+		left: 3%;
+		right: 3%;
+		top: 1%;
+
+		height: 40%;
+
+		z-index: 50000;
+	}
+
 	.sidebar-container {
 		display: flex;
 		flex: 1 0 15%;

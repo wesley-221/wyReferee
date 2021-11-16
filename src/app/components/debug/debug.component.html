@@ -1,0 +1,33 @@
+<div class="main-container container-fluid">
+	<div class="no-data" *ngIf="data == undefined || data == null || objectSize(data) == 0">
+		There is no data to debug. (Press F1 to close)
+	</div>
+
+	<ng-template #recursiveJson let-data let-parent="parent" let-i="index">
+		<div class="main-item" (click)="toggleActive($event, data.key + '-' + index + '-' + parent)" [ngClass]="{'active': isActive('value-' + data.key + '-' + index + '-' + parent)}" *ngFor="let data of data | keyvalue; let index=index">
+			<div class="label">
+				<div class="chevron" *ngIf="!isActive('value-' + data.key + '-' + index + '-' + parent)">
+					<mat-icon>keyboard_arrow_right</mat-icon>
+				</div>
+
+				<div class="chevron" *ngIf="isActive('value-' + data.key + '-' + index + '-' + parent)">
+					<mat-icon>keyboard_arrow_down</mat-icon>
+				</div>
+
+				<div>
+					{{ data.key }}
+				</div>
+			</div>
+
+			<div class="value" [ngClass]="{'active': isActive('value-' + data.key + '-' + index + '-' + parent)}" *ngIf="objectSize(data.value) > 0">
+				<ng-container *ngTemplateOutlet="recursiveJson; context: { $implicit: data.value, parent: data.key }"></ng-container>
+			</div>
+
+			<div class="value" [ngClass]="{'active': isActive('value-' + data.key + '-' + index + '-' + parent)}" *ngIf="objectSize(data.value) == 0">
+				{{ data.value }}
+			</div>
+		</div>
+	</ng-template>
+</div>
+
+<ng-container *ngTemplateOutlet="recursiveJson; context: { $implicit: data }"></ng-container>

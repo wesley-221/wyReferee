@@ -1,0 +1,65 @@
+@import "variables";
+
+.main-container {
+	overflow-y: auto;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.no-data {
+	background-color: $primary;
+	color: black;
+
+	text-align: center;
+
+	padding: 8px;
+
+	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+}
+
+.main-item {
+	background-color: $primary;
+
+	padding: 4px;
+	margin-bottom: 4px;
+
+	.label {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		.chevron {
+			display: flex;
+		}
+	}
+
+	&.active {
+		background-color: darken($primary, 15%);
+	}
+
+	.value {
+		background-color: lighten($primary, 15%);
+		color: black;
+
+		padding: 4px;
+		margin-bottom: 4px;
+
+		display: none;
+
+		&.active {
+			display: block;
+		}
+	}
+
+	&:hover {
+		cursor: pointer;
+		background-color: darken($primary, 15%);
+	}
+}
