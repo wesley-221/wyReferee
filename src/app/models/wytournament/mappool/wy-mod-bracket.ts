@@ -4,6 +4,7 @@ import { WyModBracketMap } from "./wy-mod-bracket-map";
 export class WyModBracket {
 	id: number;
 	name: string;
+	acronym: string;
 	mods: WyMod[];
 	beatmaps: WyModBracketMap[];
 	collapsed: boolean;
@@ -26,6 +27,7 @@ export class WyModBracket {
 		const newModBracket = new WyModBracket({
 			id: modBracket.id,
 			name: modBracket.name,
+			acronym: modBracket.acronym,
 			collapsed: modBracket.collapsed,
 			index: modBracket.index,
 			modIndex: 0,

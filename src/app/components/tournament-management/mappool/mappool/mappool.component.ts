@@ -80,5 +80,6 @@ export class MappoolComponent implements OnInit {
 		this.mappool.modBrackets.push(newModBracket);
 
 		this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-name`, new FormControl('', Validators.required));
+		this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-acronym`, new FormControl('', Validators.required));
 	}
 }

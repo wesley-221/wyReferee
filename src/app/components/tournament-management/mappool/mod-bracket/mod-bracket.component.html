@@ -15,16 +15,35 @@
 		</div>
 
 		<div class="body" [ngClass]="{'hide': modBracket.collapsed}">
-			<mat-form-field class="full-width">
-				<mat-label>Mod bracket name</mat-label>
-				<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name'" (change)="onNameChange($event)" />
+			<div class="row">
+				<div class="col">
+					<mat-form-field class="full-width">
+						<mat-label>Mod bracket name</mat-label>
+						<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name'" (change)="onNameChange($event)" />
 
-				<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').dirty)">
-					This field is required
-				</mat-error>
-			</mat-form-field>
+						<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').dirty)">
+							This field is required
+						</mat-error>
+					</mat-form-field>
 
-			<p>Enter the name of the mod bracket.</p>
+					<p>Enter the name of the mod bracket.</p>
+				</div>
+
+				<div class="col">
+					<mat-form-field class="full-width">
+						<mat-label>Mod bracket acronym</mat-label>
+						<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-acronym'" (change)="onAcronymChange($event)" />
+
+						<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-acronym').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-acronym').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-acronym').dirty)">
+							This field is required
+						</mat-error>
+					</mat-form-field>
+
+					<p>Enter the acronym of the mod bracket, used to identify chat commands such as "NM1", "HD3", "FM4", etc.</p>
+				</div>
+			</div>
+
+
 
 			<hr />
 

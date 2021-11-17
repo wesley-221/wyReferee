@@ -55,11 +55,19 @@ export class ModBracketComponent implements OnInit {
 	ngOnInit(): void { }
 
 	/**
-	 * When the name of the mappool gets changed
+	 * When the name of the modbracket gets changed
 	 * @param evt
 	 */
 	onNameChange(evt: Event) {
 		this.modBracket.name = (evt.target as any).value
+	}
+
+	/**
+	 * When the acronym of the modbracket gets changed
+	 * @param evt
+	 */
+	onAcronymChange(evt: Event) {
+		this.modBracket.acronym = (evt.target as any).value;
 	}
 
 	/**
@@ -91,6 +99,7 @@ export class ModBracketComponent implements OnInit {
 				}
 
 				this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-name`);
+				this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-acronym`);
 
 				for (const mod in modBracket.mods) {
 					this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-mod-${modBracket.mods[mod].index}-value`);

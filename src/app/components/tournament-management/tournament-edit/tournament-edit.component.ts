@@ -87,6 +87,7 @@ export class TournamentEditComponent implements OnInit {
 							modBracket.collapsed = true;
 
 							this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-name`, new FormControl(modBracket.name, Validators.required));
+							this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-acronym`, new FormControl(modBracket.acronym, Validators.required));
 
 							for (const mod of modBracket.mods) {
 								if (mod.value != 'freemod') {
