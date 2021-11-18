@@ -28,6 +28,7 @@ import { IrcShortcutCommandsService } from 'app/services/irc-shortcut-commands.s
 import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
 import { MultiplayerLobbySettingsComponent } from '../dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { IrcPickMapSameModBracketComponent } from '../dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
+import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 
 export interface BanBeatmapDialogData {
 	beatmap: WyModBracketMap;
@@ -80,6 +81,7 @@ export class IrcComponent implements OnInit {
 
 	isOptionMenuMinimized = true;
 	isPlayerManagementMinimized = true;
+	isInvitesMinimized = true;
 
 	@ViewChild('teamMode') teamMode: MatSelect;
 	@ViewChild('winCondition') winCondition: MatSelect;
@@ -421,7 +423,7 @@ export class IrcComponent implements OnInit {
 			const timer =
 				setInterval(() => {
 					if (this.roomSettingDelay == 0) {
-						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.value} ${this.winCondition.value} ${this.players.value}`);
+						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.value} ${this.winCondition.value} ${this.players.value == undefined ? 8 : this.players.value}`);
 
 						this.ircService.getChannelByName(this.selectedChannel.name).teamMode = this.teamMode.value;
 						this.ircService.getChannelByName(this.selectedChannel.name).winCondition = this.winCondition.value;
@@ -728,7 +730,12 @@ export class IrcComponent implements OnInit {
 		this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
 	}
 
-	tempDisabled() {
-		this.toastService.addToast(`Temporarily disabled, will be enabled at a later date.`, ToastType.Warning);
+	/**
+	 * Invite a player to the current multiplayer lobby
+	 * @param player the player to invite
+	 */
+	invitePlayer(player: WyTeamPlayer): void {
+		this.ircService.sendMessage(this.selectedChannel.name, `!mp invite ${player.name}`);
+		this.toastService.addToast(`Invited ${player.name} to the multiplayer lobby.`);
 	}
 }

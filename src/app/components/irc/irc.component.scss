@@ -510,6 +510,79 @@ $hyperlink-background-color: #2b4576;
 						padding: 16px;
 					}
 
+					.invite-header {
+						display: flex;
+						flex: 1 1 100%;
+
+						align-items: center;
+
+						padding-top: 4px;
+						padding-bottom: 4px;
+
+						margin-bottom: 4px;
+
+						-webkit-touch-callout: none;
+						-webkit-user-select: none;
+						-khtml-user-select: none;
+						-moz-user-select: none;
+						-ms-user-select: none;
+						user-select: none;
+
+						.invite-header-icon {
+							display: flex;
+						}
+
+						&.active {
+							cursor: pointer;
+							background-color: $primary;
+
+							margin-bottom: 0;
+						}
+
+						&:hover {
+							cursor: pointer;
+							background-color: $primary;
+						}
+					}
+
+					.invite-body {
+						padding: 4px;
+						margin-bottom: 4px;
+
+						background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+
+						.invite-team {
+							h3 {
+								margin-bottom: 0;
+							}
+
+							.player {
+								display: flex;
+								justify-content: space-between;
+								align-items: center;
+
+								margin-bottom: 4px;
+								padding: 4px;
+
+								.actions {
+									opacity: 0%;
+								}
+
+								&:hover {
+									background-color: rgba(lighten($primary, 15%), 0.2);
+
+									.actions {
+										opacity: 100%;
+									}
+								}
+
+								&:last-child {
+									margin-bottom: 0;
+								}
+							}
+						}
+					}
+
 					.mappool {
 						padding-left: 16px;
 

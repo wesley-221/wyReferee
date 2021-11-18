@@ -6,6 +6,7 @@ import { WyMappool } from "./wytournament/mappool/wy-mappool";
 import { WyModBracket } from "./wytournament/mappool/wy-mod-bracket";
 import { WyModCategory } from "./wytournament/mappool/wy-mod-category";
 import { WyStage } from "./wytournament/wy-stage";
+import { WyTeamPlayer } from "./wytournament/wy-team-player";
 import { WyTournament } from "./wytournament/wy-tournament";
 
 export class Lobby {
@@ -81,6 +82,20 @@ export class Lobby {
 		this.multiplayerLobbyPlayers = new MultiplayerLobbyPlayers();
 
 		Object.assign(this, init);
+	}
+
+	/**
+	 * Get an array with all players of the given team name
+	 * @param teamName the name of the team
+	 */
+	getTeamPlayersFromTournament(teamName: string): WyTeamPlayer[] {
+		for (const team of this.tournament.teams) {
+			if (team.name == teamName) {
+				return team.players;
+			}
+		}
+
+		return null;
 	}
 
 	/**
