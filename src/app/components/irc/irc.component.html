@@ -155,7 +155,7 @@
 										<mat-icon *ngIf="isInvitesMinimized == false">expand_more</mat-icon>
 									</div>
 
-									<div>Invites</div>
+									<div>Teams</div>
 								</div>
 
 								<div class="invite-body" *ngIf="isInvitesMinimized == false">
@@ -163,13 +163,9 @@
 										<div class="col invite-team">
 											<h3>{{ selectedLobby.teamOneName }}</h3>
 
-											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
+											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)"  (click)="invitePlayer(player)" matTooltip="Click to invite player">
 												<div class="name">
 													{{ player.name }}
-												</div>
-
-												<div class="actions">
-													<button mat-mini-fab color="primary" (click)="invitePlayer(player)" matTooltip="Invite player"><mat-icon>person_add</mat-icon></button>
 												</div>
 											</div>
 										</div>
@@ -177,13 +173,9 @@
 										<div class="col invite-team">
 											<h3>{{ selectedLobby.teamTwoName }}</h3>
 
-											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
+											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)" (click)="invitePlayer(player)" matTooltip="Click to invite player">
 												<div class="name">
 													{{ player.name }}
-												</div>
-
-												<div class="actions">
-													<button mat-mini-fab color="primary" (click)="invitePlayer(player)" matTooltip="Invite player"><mat-icon>person_add</mat-icon></button>
 												</div>
 											</div>
 										</div>
