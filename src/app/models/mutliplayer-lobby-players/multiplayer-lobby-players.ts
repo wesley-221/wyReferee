@@ -54,7 +54,7 @@ export class MultiplayerLobbyPlayers {
 		obj.slot = obj.slot + 1;
 
 		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].username == obj.player.user.ircUsername) {
+			if (this.players[i].username == obj.player.user.username) {
 				const existingPlayer = MultiplayerLobbyPlayersPlayer.makeTrueCopy(this.players[i]);
 				existingPlayer.slot = obj.slot;
 
@@ -79,11 +79,11 @@ export class MultiplayerLobbyPlayers {
 	 */
 	changeHost(player: BanchoLobbyPlayer) {
 		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].username == player.user.ircUsername) {
+			if (this.players[i].username == player.user.username) {
 				this.players[i].isHost = true;
 			}
 
-			if (this.players[i].isHost == true && this.players[i].username != player.user.ircUsername) {
+			if (this.players[i].isHost == true && this.players[i].username != player.user.username) {
 				this.players[i].isHost = false;
 			}
 		}
@@ -95,7 +95,7 @@ export class MultiplayerLobbyPlayers {
 	 */
 	playerChangedTeam(playerHasChangedTeam: { player: BanchoLobbyPlayer, team: string }) {
 		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].username == playerHasChangedTeam.player.user.ircUsername) {
+			if (this.players[i].username == playerHasChangedTeam.player.user.username) {
 				this.players[i].team = playerHasChangedTeam.team;
 			}
 		}
@@ -118,7 +118,7 @@ export class MultiplayerLobbyPlayers {
 	 */
 	playerLeft(playerLeft: BanchoLobbyPlayer) {
 		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].username == playerLeft.user.ircUsername) {
+			if (this.players[i].username == playerLeft.user.username) {
 				const newPlayer = new MultiplayerLobbyPlayersPlayer();
 				newPlayer.slot = this.players[i].slot;
 
@@ -138,7 +138,7 @@ export class MultiplayerLobbyPlayers {
 			if (this.players[i].slot == obj.slot) {
 				const newPlayer = new MultiplayerLobbyPlayersPlayer();
 
-				newPlayer.username = obj.player.user.ircUsername;
+				newPlayer.username = obj.player.user.username;
 				newPlayer.slot = obj.slot;
 				newPlayer.team = obj.team;
 

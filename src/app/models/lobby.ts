@@ -245,7 +245,7 @@ export class Lobby {
 			teamOneSlotArray: lobby.teamOneSlotArray,
 			teamTwoSlotArray: lobby.teamTwoSlotArray,
 			gamesCountTowardsScore: lobby.gamesCountTowardsScore,
-			multiplayerLobbyPlayers: lobby.multiplayerLobbyPlayers == undefined ? new MultiplayerLobbyPlayers() : lobby.multiplayerLobbyPlayers,
+			multiplayerLobbyPlayers: new MultiplayerLobbyPlayers(),
 			isQualifierLobby: lobby.isQualifierLobby,
 			sendWebhooks: lobby.sendWebhooks
 		});
