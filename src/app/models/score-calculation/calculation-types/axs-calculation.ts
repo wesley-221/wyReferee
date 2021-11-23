@@ -13,7 +13,7 @@ export class AxSCalculation extends ScoreInterface {
 	}
 
 	public calculatePlayerScore(player: MultiplayerDataUser): number {
-		return Number(player != null ? player.score : 0);
+		throw new Error('Method not implemented.');
 	}
 
 	public calculateTeamOneScore() {
@@ -23,18 +23,18 @@ export class AxSCalculation extends ScoreInterface {
 			const currentUser = this.getUserBySlot(i);
 
 			if (currentUser.slot == 0) {
-				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));
+				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser, this.modifier));
 				currentUser.caption = 'Accuracy player';
 			}
 			else {
-				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
+				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser, this.modifier));
 				currentUser.caption = 'Score player';
 			}
 
 			users.push(currentUser);
 		}
 
-		return AxSCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
+		return AxSCalculation.calculateTeamScore(users[0], users[1], users[2], this.modifier);
 	}
 
 	public calculateTeamTwoScore() {
@@ -44,18 +44,18 @@ export class AxSCalculation extends ScoreInterface {
 			const currentUser = this.getUserBySlot(i);
 
 			if (currentUser.slot == 3) {
-				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateAccuracyPlayerScore(currentUser.score));
+				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser, this.modifier));
 				currentUser.caption = 'Accuracy player';
 			}
 			else {
-				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser.score, currentUser.accuracy, this.modifier));
+				currentUser.score = (currentUser.passed == 0 ? 0 : AxSCalculation.calculateScorePlayerScore(currentUser, this.modifier));
 				currentUser.caption = 'Score player';
 			}
 
 			users.push(currentUser);
 		}
 
-		return AxSCalculation.calculateTeamScore(users[0].score, users[1].score, users[2].score, users[0].accuracy, this.modifier);
+		return AxSCalculation.calculateTeamScore(users[0], users[1], users[2], this.modifier);
 	}
 
 	public getModifier() {
@@ -67,21 +67,13 @@ export class AxSCalculation extends ScoreInterface {
 	}
 
 	/**
-	 * Calculate the score of the accuracy player
-	 * @param score the full score of the accuracy player
-	 */
-	public static calculateAccuracyPlayerScore(score: number) {
-		return (score * 0.2);
-	}
-
-	/**
 	 * Calculate the score of a score player with the given modifier
 	 * @param score the full score of the player
 	 * @param accuracy the accuracy of the player
 	 * @param modifier the modifier of the map
 	 */
-	public static calculateScorePlayerScore(score: number, accuracy: number, modifier: number) {
-		return (score * (Math.pow((100 - ((100 - accuracy) / 5)) / 100, modifier)));
+	public static calculateScorePlayerScore(player: MultiplayerDataUser, modifier: number) {
+		return (player.score * (Math.pow((100 - ((100 - player.accuracy) / 5)) / 100, modifier)));
 	}
 
 	/**
@@ -92,7 +84,7 @@ export class AxSCalculation extends ScoreInterface {
 	 * @param accuracy_player_one the accuracy of player one
 	 * @param modifier the modifier of the map
 	 */
-	public static calculateTeamScore(score_player_one: number, score_player_two: number, score_player_three: number, accuracy_player_one: number, modifier: number): number {
-		return Number((((score_player_one) + (score_player_two) + (score_player_three)) * (Math.pow(accuracy_player_one / 100, modifier))).toFixed());
+	public static calculateTeamScore(playerOne: MultiplayerDataUser, playerTwo: MultiplayerDataUser, playerThree: MultiplayerDataUser, modifier: number): number {
+		return Number(((playerOne.score + playerTwo.score + playerThree.score) * Math.pow((((playerOne.accuracy * 0.5) + (playerTwo.accuracy * 0.25) + (playerThree.accuracy * 0.25)) / 100), modifier)).toFixed());
 	}
 }

@@ -90,12 +90,21 @@ export class AxsFormulaComponent implements OnInit {
 			for (let score in currentGame.scores) {
 				const currentScore = currentGame.scores[score];
 
+				const newMpDataUser = new MultiplayerDataUser();
+
+				newMpDataUser.user = currentGame.scores[score].user_id;
+				newMpDataUser.score = currentGame.scores[score].score;
+				newMpDataUser.accuracy = Calculations.getAccuracyOfScore(currentGame.scores[score]);
+				newMpDataUser.passed = currentGame.scores[score].pass;
+				newMpDataUser.slot = currentGame.scores[score].slot;
+				newMpDataUser.mods = currentGame.scores[score].enabled_mods;
+
 				let gameScore = {
 					slot: currentScore.slot,
 					mods: currentScore.enabled_mods,
 					accuracy: this.calculateAccuracy(currentScore),
 					normal_score: currentScore.score,
-					axs_score: (currentScore.slot == 0 || currentScore.slot == 3) ? AxSCalculation.calculateAccuracyPlayerScore(currentScore.score).toFixed() : AxSCalculation.calculateScorePlayerScore(currentScore.score, this.calculateAccuracy(currentScore), axsScoreInterface.getModifier()).toFixed(),
+					axs_score: (currentScore.slot == 0 || currentScore.slot == 3) ? AxSCalculation.calculateScorePlayerScore(newMpDataUser, axsScoreInterface.getModifier()).toFixed() : AxSCalculation.calculateScorePlayerScore(newMpDataUser, axsScoreInterface.getModifier()).toFixed(),
 					proposed_score: (currentScore.slot == 0 || currentScore.slot == 3) ? ProposedCalculation.calculateAccuracyPlayerScore(currentScore.score).toFixed() : ProposedCalculation.calculateScorePlayerScore(currentScore.score, this.calculateAccuracy(currentScore), proposedScoreInterface.getModifier()).toFixed()
 				}
 
