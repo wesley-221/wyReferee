@@ -29,6 +29,7 @@ import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
 import { MultiplayerLobbySettingsComponent } from '../dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { IrcPickMapSameModBracketComponent } from '../dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
+import { IrcShortcutWarningDialogComponent } from '../dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
 
 export interface BanBeatmapDialogData {
 	beatmap: WyModBracketMap;
@@ -52,6 +53,11 @@ export interface SendBeatmapResultDialogData {
 export interface BeatmapModBracketDialogData {
 	beatmap: WyModBracketMap;
 	modBracket: WyModBracket;
+	lobby: Lobby;
+}
+
+export interface IIrcShortcutCommandDialogData {
+	ircShortcutCommand: IrcShortcutCommand;
 	lobby: Lobby;
 }
 
@@ -700,34 +706,25 @@ export class IrcComponent implements OnInit {
 			return;
 		}
 
-		let teamOneSlotArray = [];
-		let teamTwoSlotArray = [];
+		if (ircShortcutCommand.warning == true) {
+			const dialogRef = this.dialog.open(IrcShortcutWarningDialogComponent, {
+				data: {
+					ircShortcutCommand: ircShortcutCommand,
+					lobby: this.selectedLobby
+				}
+			});
 
-		for (let i: any = 0; i < this.selectedLobby.teamSize * 2; i++) {
-			if (i < this.selectedLobby.teamSize) {
-				teamOneSlotArray.push(parseInt(i) + 1);
-			}
-			else {
-				teamTwoSlotArray.push(parseInt(i) + 1);
-			}
+			dialogRef.afterClosed().subscribe(result => {
+				if (result == true) {
+					const ircCommand = ircShortcutCommand.parseIrcCommand(this.selectedLobby);
+					this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
+				}
+			});
 		}
-
-		const replaceWords = {
-			"{{\\s{0,}team1\\s{0,}}}": this.selectedLobby.teamOneName,
-			"{{\\s{0,}team2\\s{0,}}}": this.selectedLobby.teamTwoName,
-			"{{\\s{0,}team1slots\\s{0,}}}": teamOneSlotArray.join(', '),
-			"{{\\s{0,}team2slots\\s{0,}}}": teamTwoSlotArray.join(', '),
-			"{{\\s{0,}team1colour\\s{0,}}}": "Red",
-			"{{\\s{0,}team2colour\\s{0,}}}": "Blue"
-		};
-
-		let ircCommand = ircShortcutCommand.command;
-
-		for (const regex in replaceWords) {
-			ircCommand = ircCommand.replace(new RegExp(regex), replaceWords[regex]);
+		else {
+			const ircCommand = ircShortcutCommand.parseIrcCommand(this.selectedLobby);
+			this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
 		}
-
-		this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
 	}
 
 	/**

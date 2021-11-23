@@ -50,6 +50,10 @@
 					<input matInput [(ngModel)]="ircShortcutCommand.command" />
 				</mat-form-field>
 			</div>
+
+			<div class="warning" matTooltip="A pop-up will show up before activating">
+				<mat-slide-toggle [(ngModel)]="ircShortcutCommand.warning">Warning</mat-slide-toggle>
+			</div>
 		</div>
 	</div>
 </mat-dialog-content>

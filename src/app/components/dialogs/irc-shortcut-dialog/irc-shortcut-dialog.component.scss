@@ -20,6 +20,15 @@
 
 		.irc-command {
 			flex: 1 1 60%;
+
+			margin-right: 8px;
+		}
+
+		.warning {
+			display: flex;
+			align-items: center;
+
+			flex: 1 1 150px;
 		}
 	}
 }

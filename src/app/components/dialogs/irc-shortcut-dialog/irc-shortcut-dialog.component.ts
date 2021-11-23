@@ -26,10 +26,14 @@ export class IrcShortcutDialogComponent implements OnInit {
 
 	createGenericShortcutCommands(): void {
 		this.ircShortCutCommandsService.addIrcShortcutCommand('start', '!mp start 10');
+		this.ircShortCutCommandsService.addIrcShortcutCommand('timer', '!mp start 120');
 		this.ircShortCutCommandsService.addIrcShortcutCommand('aborttimer', '!mp aborttimer');
 		this.ircShortCutCommandsService.addIrcShortcutCommand('settings', '!mp settings');
+		this.ircShortCutCommandsService.addIrcShortcutCommand('clearhost', '!mp clearhost');
 		this.ircShortCutCommandsService.addIrcShortcutCommand('team slots', '{{ team1 }} has slot {{ team1slots }} - team {{ team1colour }} // {{ team2 }} has slot {{ team2slots}} - team {{ team2colour }}');
-		this.ircShortCutCommandsService.addIrcShortcutCommand('close', '!mp close');
+		this.ircShortCutCommandsService.addIrcShortcutCommand('team 1 win roll', '{{ team1 }}: first ban AND second pick, or ban second AND pick first');
+		this.ircShortCutCommandsService.addIrcShortcutCommand('team 2 win roll', '{{ team2 }}: first ban AND second pick, or ban second AND pick first');
+		this.ircShortCutCommandsService.addIrcShortcutCommand('close', '!mp close', true);
 
 		this.ircShortCutCommandsService.saveIrcShortcutCommands();
 	}

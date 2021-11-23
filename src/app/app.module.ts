@@ -76,6 +76,7 @@ import { IrcShortcutDialogComponent } from './components/dialogs/irc-shortcut-di
 import { TournamenStagesComponent } from './components/tournament-management/tournament/tournament-stages/tournament-stages.component';
 import { DebugComponent } from './components/debug/debug.component';
 import { IrcPickMapSameModBracketComponent } from './components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
+import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -134,7 +135,8 @@ import { IrcPickMapSameModBracketComponent } from './components/dialogs/irc-pick
 		IrcShortcutDialogComponent,
 		TournamenStagesComponent,
 		DebugComponent,
-		IrcPickMapSameModBracketComponent
+		IrcPickMapSameModBracketComponent,
+		IrcShortcutWarningDialogComponent
 	],
 	imports: [
 		BrowserModule,
