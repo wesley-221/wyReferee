@@ -8,8 +8,8 @@ fs.readFile(f_angular, 'utf8', function (err, data) {
 	}
 
 	let result = data.replace(/target: "electron-renderer",/g, '');
-	let result = result.replace(/target: "web",/g, '');
-	let result = result.replace(/return \{/g, 'return {target: "electron-renderer",');
+	result = result.replace(/target: "web",/g, '');
+	result = result.replace(/return \{/g, 'return {target: "electron-renderer",');
 
 	fs.writeFile(f_angular, result, 'utf8', function (err) {
 		if (err)
