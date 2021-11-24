@@ -117,7 +117,7 @@
 				"lint": {
 					"builder": "@angular-eslint/builder:lint",
 					"options": {
-						"eslintConfig": "src/eslintrc.config.json",
+						"eslintConfig": ".eslintrc.json",
 						"tsConfig": [
 							"src/tsconfig.app.json",
 							"src/tsconfig.spec.json"
