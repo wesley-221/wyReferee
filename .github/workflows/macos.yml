@@ -49,4 +49,4 @@ jobs:
     - name: Check lint
       run: npm run lint
     - name: Build the app
-      run: npm run electron:build
+      run: npm run electron:mac

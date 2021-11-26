@@ -49,15 +49,4 @@ jobs:
     - name: Check lint
       run: npm run lint
     - name: Build the app
-      run: npm run electron:build
-
-    - name: Run headless unit test
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        run: npm test
-
-    - name: Run headless e2e test
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        run: npm run e2e
-
+      run: npm run electron:linux
