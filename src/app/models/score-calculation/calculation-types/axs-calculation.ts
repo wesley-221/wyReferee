@@ -12,7 +12,7 @@ export class AxSCalculation extends ScoreInterface {
 		this.setSoloTournament(false);
 	}
 
-	public calculatePlayerScore(player: MultiplayerDataUser): number {
+	public calculatePlayerScore(): number {
 		throw new Error('Method not implemented.');
 	}
 

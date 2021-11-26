@@ -1,4 +1,4 @@
-import { IrcMessage } from "./irc-message";
+import { IrcMessage } from './irc-message';
 
 export enum TeamMode {
 	HeadToHead = 0,

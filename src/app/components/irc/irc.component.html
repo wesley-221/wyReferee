@@ -238,10 +238,10 @@
 										<button mat-mini-fab color="warn" class="button-align" matTooltip="Ban this beatmap" (click)="banBeatmap(beatmap, bracket, selectedLobby)" *ngIf="!beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon svgIcon="hammer"></mat-icon></button>
 										<button mat-mini-fab color="accent" class="button-align" matTooltip="Unban this beatmap" (click)="unbanBeatmap(beatmap)" *ngIf="beatmapIsBanned(selectedLobby, beatmap.beatmapId)"><mat-icon>thumb_up</mat-icon></button>
 
-										<button mat-mini-fab color="accent" class="button-align" matTooltip="Change which team has picked this map" (click)="changePickedBy(beatmap, bracket)" *ngIf="beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>change_circle</mat-icon></button>
+										<button mat-mini-fab color="accent" class="button-align" matTooltip="Change which team has picked this map" (click)="changePickedBy(beatmap)" *ngIf="beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>change_circle</mat-icon></button>
 
 										<button mat-mini-fab color="primary" class="button-align" matTooltip="Pick this beatmap" (click)="pickBeatmap(beatmap, bracket, selectedLobby.tournament.gamemodeId)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)" *ngIf="!beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
-										<button mat-mini-fab color="warn" class="button-align" matTooltip="Unpick this beatmap" (click)="unpickBeatmap(beatmap, bracket)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)" *ngIf="beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
+										<button mat-mini-fab color="warn" class="button-align" matTooltip="Unpick this beatmap" (click)="unpickBeatmap(beatmap)" [disabled]="beatmapIsBanned(selectedLobby, beatmap.beatmapId)" *ngIf="beatmapIsPicked(selectedLobby, beatmap.beatmapId)"><mat-icon>push_pin</mat-icon></button>
 									</div>
 								</div>
 							</div>

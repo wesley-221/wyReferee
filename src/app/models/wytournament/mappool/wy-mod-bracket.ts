@@ -1,5 +1,5 @@
-import { WyMod } from "./wy-mod";
-import { WyModBracketMap } from "./wy-mod-bracket-map";
+import { WyMod } from './wy-mod';
+import { WyModBracketMap } from './wy-mod-bracket-map';
 
 export class WyModBracket {
 	id: number;

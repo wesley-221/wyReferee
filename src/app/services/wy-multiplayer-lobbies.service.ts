@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CacheBeatmap } from 'app/models/cache/cache-beatmap';
@@ -253,7 +254,7 @@ export class WyMultiplayerLobbiesService {
 				// Have to check if this works
 				// Otherwise > if(scoreInterface.getIdentifier() == 'AxS')
 				if (scoreInterface instanceof AxSCalculation) {
-					(<AxSCalculation>scoreInterface).setModifier(modifier);
+					scoreInterface.setModifier(modifier);
 				}
 
 				multiplayerData.team_one_score = scoreInterface.calculateTeamOneScore();

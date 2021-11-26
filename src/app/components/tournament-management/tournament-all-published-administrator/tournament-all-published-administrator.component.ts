@@ -111,7 +111,7 @@ export class TournamentAllPublishedAdministratorComponent implements OnInit {
 				this.tournamentService.deletePublishedTournament(tournament).subscribe(() => {
 					this.allTournaments.splice(this.allTournaments.indexOf(tournament), 1);
 
-					this.toastService.addToast(`Successfully deleted the tournament.`);
+					this.toastService.addToast('Successfully deleted the tournament.');
 				}, error => {
 					this.toastService.addToast(`Unable to delete the tournament: ${error.error.message}`, ToastType.Error);
 				});

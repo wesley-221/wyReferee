@@ -17,7 +17,7 @@ export class IrcShortcutCommandsService {
 	 * @param label the label of the command
 	 * @param command the message being sent to irc
 	 */
-	addIrcShortcutCommand(label: string, command: string, warning: boolean = false): void {
+	addIrcShortcutCommand(label: string, command: string, warning = false): void {
 		const newCommand = new IrcShortcutCommand({ label: label, command: command, warning: warning });
 
 		this.ircShortCutCommands.push(newCommand);

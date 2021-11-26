@@ -13,7 +13,7 @@ import { GetMultiplayerService } from 'app/services/osu-api/get-multiplayer.serv
 	styleUrls: ['./axs-formula.component.scss']
 })
 export class AxsFormulaComponent implements OnInit {
-	multiplayerLink: string = 'https://osu.ppy.sh/community/matches/76323975';
+	multiplayerLink = 'https://osu.ppy.sh/community/matches/76323975';
 	multiplayerMatch: MultiplayerMatch;
 	calculatedScores: any;
 
@@ -35,12 +35,12 @@ export class AxsFormulaComponent implements OnInit {
 	 * @param match the match to calculate the scores of
 	 */
 	calculateScores(match: MultiplayerMatch) {
-		let allBeatmaps = [];
+		const allBeatmaps = [];
 
-		for (let game in match.games) {
+		for (const game in match.games) {
 			const currentGame = match.games[game];
 
-			let beatmap = {
+			const beatmap = {
 				beatmapId: currentGame.beatmap_id,
 				scores: [],
 				team_one_score: 0,
@@ -60,7 +60,7 @@ export class AxsFormulaComponent implements OnInit {
 			axsScoreInterface.setModifier(20);
 			proposedScoreInterface.setModifier(20);
 
-			for (let score in currentGame.scores) {
+			for (const score in currentGame.scores) {
 				const newMpDataUser = new MultiplayerDataUser();
 
 				newMpDataUser.user = currentGame.scores[score].user_id;
@@ -87,7 +87,7 @@ export class AxsFormulaComponent implements OnInit {
 			beatmap.proposed_team_one_score = proposedScoreInterface.calculateTeamOneScore();
 			beatmap.proposed_team_two_score = proposedScoreInterface.calculateTeamTwoScore();
 
-			for (let score in currentGame.scores) {
+			for (const score in currentGame.scores) {
 				const currentScore = currentGame.scores[score];
 
 				const newMpDataUser = new MultiplayerDataUser();
@@ -99,7 +99,7 @@ export class AxsFormulaComponent implements OnInit {
 				newMpDataUser.slot = currentGame.scores[score].slot;
 				newMpDataUser.mods = currentGame.scores[score].enabled_mods;
 
-				let gameScore = {
+				const gameScore = {
 					slot: currentScore.slot,
 					mods: currentScore.enabled_mods,
 					accuracy: this.calculateAccuracy(currentScore),
@@ -133,12 +133,12 @@ export class AxsFormulaComponent implements OnInit {
 	addDot(nStr: any, splitter: any) {
 		nStr += '';
 		const x = nStr.split('.');
-		let x1 = x[0];
-		const x2 = x.length > 1 ? '.' + x[1] : '';
+		let x1: string = x[0];
+		const x2 = x.length > 1 ? `.${x[1]}` : '';
 		const rgx = /(\d+)(\d{3})/;
 
 		while (rgx.test(x1)) {
-			x1 = x1.replace(rgx, '$1' + splitter + '$2');
+			x1 = x1.replace(rgx, `$1${splitter}$2`);
 		}
 
 		return x1 + x2;

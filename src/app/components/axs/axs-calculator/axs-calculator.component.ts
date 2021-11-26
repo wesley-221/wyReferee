@@ -8,25 +8,25 @@ import { MultiplayerDataUser } from 'app/models/store-multiplayer/multiplayer-da
 	styleUrls: ['./axs-calculator.component.scss']
 })
 export class AxsCalculatorComponent implements OnInit {
-	playerOneAccuracy: number = 100;
-	playerOneScore: number = 1000000;
+	playerOneAccuracy = 100;
+	playerOneScore = 1000000;
 
-	playerTwoAccuracy: number = 100;
-	playerTwoScore: number = 1000000;
+	playerTwoAccuracy = 100;
+	playerTwoScore = 1000000;
 
-	playerThreeAccuracy: number = 100;
-	playerThreeScore: number = 1000000;
+	playerThreeAccuracy = 100;
+	playerThreeScore = 1000000;
 
-	playerFourAccuracy: number = 100;
-	playerFourScore: number = 1000000;
+	playerFourAccuracy = 100;
+	playerFourScore = 1000000;
 
-	playerFiveAccuracy: number = 100;
-	playerFiveScore: number = 1000000;
+	playerFiveAccuracy = 100;
+	playerFiveScore = 1000000;
 
-	playerSixAccuracy: number = 100;
-	playerSixScore: number = 1000000;
+	playerSixAccuracy = 100;
+	playerSixScore = 1000000;
 
-	modifier: number = 0;
+	modifier = 0;
 
 	teamOneScore: number;
 	teamTwoScore: number;

@@ -1,10 +1,10 @@
-import { User } from "../authentication/user";
-import { Calculate } from "../score-calculation/calculate";
-import { ScoreInterface } from "../score-calculation/calculation-types/score-interface";
-import { WyMappool } from "./mappool/wy-mappool";
-import { WyWebhook } from "./wy-webhook";
-import { WyTeam } from "./wy-team";
-import { WyStage } from "./wy-stage";
+import { User } from '../authentication/user';
+import { Calculate } from '../score-calculation/calculate';
+import { ScoreInterface } from '../score-calculation/calculation-types/score-interface';
+import { WyMappool } from './mappool/wy-mappool';
+import { WyWebhook } from './wy-webhook';
+import { WyTeam } from './wy-team';
+import { WyStage } from './wy-stage';
 
 export enum TournamentFormat {
 	Solo = 'solo',

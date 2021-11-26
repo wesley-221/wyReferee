@@ -105,7 +105,7 @@ export class WebhookService {
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.finalResult == true) {
 				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(() => {
-					this.toastService.addToast(`Successfully send the message to Discord.`);
+					this.toastService.addToast('Successfully send the message to Discord.');
 				});
 			}
 		}
@@ -157,7 +157,7 @@ export class WebhookService {
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.finalResult == true) {
 				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(() => {
-					this.toastService.addToast(`Successfully send the message to Discord.`);
+					this.toastService.addToast('Successfully send the message to Discord.');
 				});
 			}
 		}
@@ -358,11 +358,11 @@ export class WebhookService {
 					},
 					'fields': [
 						{
-							'name': `Twitch multiplayer link command`,
+							'name': 'Twitch multiplayer link command',
 							'value': `\`!editcom !mp ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}: ${selectedLobby.multiplayerLink}\``
 						},
 						{
-							'name': `Twitch stream title command`,
+							'name': 'Twitch stream title command',
 							'value': `\`!title ${selectedLobby.tournament.name} - ${selectedLobby.selectedStage.name}: ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}\``
 						}
 					]

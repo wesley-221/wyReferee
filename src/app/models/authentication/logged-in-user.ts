@@ -13,11 +13,11 @@ export class LoggedInUser {
 		loggedInUser.tournamentHost = json.tournamentHost;
 
 		for (const role in json.roles) {
-			if (json.roles[role].name == "Tournament manager") {
+			if (json.roles[role].name == 'Tournament manager') {
 				loggedInUser.tournamentHost = true;
 			}
 
-			if (json.roles[role].name == "Administrator") {
+			if (json.roles[role].name == 'Administrator') {
 				loggedInUser.admin = true;
 			}
 		}

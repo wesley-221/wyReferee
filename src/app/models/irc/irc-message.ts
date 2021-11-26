@@ -1,4 +1,4 @@
-import { MessageBuilder } from "./message-builder";
+import { MessageBuilder } from './message-builder';
 
 export class IrcMessage {
 	messageId: number;

@@ -93,14 +93,14 @@ export class TournamentPublishedEditComponent implements OnInit {
 				}
 
 				for (const webhook of tournament.webhooks) {
-					this.validationForm.addControl('webhook-' + webhook.index + '-name', new FormControl(webhook.name, Validators.required));
-					this.validationForm.addControl('webhook-' + webhook.index + '-url', new FormControl(webhook.url, Validators.required));
+					this.validationForm.addControl(`webhook-${webhook.index}-name`, new FormControl(webhook.name, Validators.required));
+					this.validationForm.addControl(`webhook-${webhook.index}-url`, new FormControl(webhook.url, Validators.required));
 
-					this.validationForm.addControl('webhook-' + webhook.index + '-match-creation', new FormControl(webhook.matchCreation, Validators.required));
-					this.validationForm.addControl('webhook-' + webhook.index + '-picks', new FormControl(webhook.picks, Validators.required));
-					this.validationForm.addControl('webhook-' + webhook.index + '-bans', new FormControl(webhook.bans, Validators.required));
-					this.validationForm.addControl('webhook-' + webhook.index + '-match-result', new FormControl(webhook.matchResult, Validators.required));
-					this.validationForm.addControl('webhook-' + webhook.index + '-final-result', new FormControl(webhook.finalResult, Validators.required));
+					this.validationForm.addControl(`webhook-${webhook.index}-match-creation`, new FormControl(webhook.matchCreation, Validators.required));
+					this.validationForm.addControl(`webhook-${webhook.index}-picks`, new FormControl(webhook.picks, Validators.required));
+					this.validationForm.addControl(`webhook-${webhook.index}-bans`, new FormControl(webhook.bans, Validators.required));
+					this.validationForm.addControl(`webhook-${webhook.index}-match-result`, new FormControl(webhook.matchResult, Validators.required));
+					this.validationForm.addControl(`webhook-${webhook.index}-final-result`, new FormControl(webhook.finalResult, Validators.required));
 				}
 
 				this.tournament = tournament;
@@ -155,7 +155,7 @@ export class TournamentPublishedEditComponent implements OnInit {
 			});
 		}
 		else {
-			this.toastService.addToast(`The mappool wasn't filled in correctly. Look for the marked fields to see what you did wrong.`, ToastType.Error);
+			this.toastService.addToast('The mappool wasn\'t filled in correctly. Look for the marked fields to see what you did wrong.', ToastType.Error);
 			this.validationForm.markAllAsTouched();
 		}
 	}

@@ -1,5 +1,5 @@
-import { MultiplayerLobbyPlayersPlayer } from "./multiplayer-lobby-players-player";
-import { BanchoLobbyPlayer } from "bancho.js";
+import { MultiplayerLobbyPlayersPlayer } from './multiplayer-lobby-players-player';
+import { BanchoLobbyPlayer } from 'bancho.js';
 
 export class MultiplayerLobbyPlayers {
 	players: MultiplayerLobbyPlayersPlayer[];

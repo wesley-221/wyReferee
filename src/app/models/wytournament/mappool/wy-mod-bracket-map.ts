@@ -1,4 +1,4 @@
-import { WyModCategory } from "./wy-mod-category";
+import { WyModCategory } from './wy-mod-category';
 
 export class WyModBracketMap {
 	id: number;

@@ -28,7 +28,7 @@ export class MappoolCreateComponent implements OnInit {
 	createNewMappool(): void {
 		const newMappool = new WyMappool({
 			index: this.tournament.mappoolIndex,
-			name: `Unnamed mappool`
+			name: 'Unnamed mappool'
 		});
 
 		this.tournament.mappoolIndex++;

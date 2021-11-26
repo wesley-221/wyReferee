@@ -1,6 +1,6 @@
-import { Gamemodes } from "app/models/osu-models/osu";
-import { WyModBracket } from "./wy-mod-bracket";
-import { WyModCategory } from "./wy-mod-category";
+import { Gamemodes } from 'app/models/osu-models/osu';
+import { WyModBracket } from './wy-mod-bracket';
+import { WyModCategory } from './wy-mod-category';
 
 export enum Availability {
 	ToEveryone = 0,

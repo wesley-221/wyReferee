@@ -23,7 +23,7 @@ export class ProposedCalculation extends ScoreInterface {
 		super(identifier);
 
 		this.setTeamSize(teamSize);
-		this.setDescription(`Proposed changes for AxS score, mess around and see what it does!`);
+		this.setDescription('Proposed changes for AxS score, mess around and see what it does!');
 		this.setSoloTournament(false);
 	}
 

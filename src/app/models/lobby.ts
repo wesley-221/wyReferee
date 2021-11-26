@@ -1,13 +1,13 @@
-import { IrcChannel } from "./irc/irc-channel";
-import { MultiplayerLobbyPlayers } from "./mutliplayer-lobby-players/multiplayer-lobby-players";
-import { PickedCategory } from "./picked-category";
-import { MultiplayerData } from "./store-multiplayer/multiplayer-data";
-import { WyMappool } from "./wytournament/mappool/wy-mappool";
-import { WyModBracket } from "./wytournament/mappool/wy-mod-bracket";
-import { WyModCategory } from "./wytournament/mappool/wy-mod-category";
-import { WyStage } from "./wytournament/wy-stage";
-import { WyTeamPlayer } from "./wytournament/wy-team-player";
-import { WyTournament } from "./wytournament/wy-tournament";
+import { IrcChannel } from './irc/irc-channel';
+import { MultiplayerLobbyPlayers } from './mutliplayer-lobby-players/multiplayer-lobby-players';
+import { PickedCategory } from './picked-category';
+import { MultiplayerData } from './store-multiplayer/multiplayer-data';
+import { WyMappool } from './wytournament/mappool/wy-mappool';
+import { WyModBracket } from './wytournament/mappool/wy-mod-bracket';
+import { WyModCategory } from './wytournament/mappool/wy-mod-category';
+import { WyStage } from './wytournament/wy-stage';
+import { WyTeamPlayer } from './wytournament/wy-team-player';
+import { WyTournament } from './wytournament/wy-tournament';
 
 export class Lobby {
 	lobbyId: number;
@@ -44,7 +44,7 @@ export class Lobby {
 	teamOneSlotArray: number[];
 	teamTwoSlotArray: number[];
 
-	gamesCountTowardsScore: {}
+	gamesCountTowardsScore: unknown;
 
 	multiplayerData: MultiplayerData[];
 	pickedCategories: PickedCategory[];
@@ -138,7 +138,7 @@ export class Lobby {
 	 */
 	getNextPick() {
 		const totalMapsPlayed = this.teamOneScore + this.teamTwoScore;
-		let nextPick: string = '';
+		let nextPick = '';
 
 		if (totalMapsPlayed % 2 == 0) {
 			nextPick = this.firstPick;

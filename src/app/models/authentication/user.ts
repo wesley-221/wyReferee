@@ -77,11 +77,11 @@ export class User {
 		for (const role in user.roles) {
 			newUser.roles.push(Role.makeTrueCopy(user.roles[role]));
 
-			if (user.roles[role].name == "Tournament manager") {
+			if (user.roles[role].name == 'Tournament manager') {
 				newUser.isTournamentManager = true;
 			}
 
-			if (user.roles[role].name == "Administrator") {
+			if (user.roles[role].name == 'Administrator') {
 				newUser.isAdmin = true;
 			}
 		}

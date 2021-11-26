@@ -1,4 +1,4 @@
-import { WyTeamPlayer } from "./wy-team-player";
+import { WyTeamPlayer } from './wy-team-player';
 
 export class WyTeam {
 	id: number;

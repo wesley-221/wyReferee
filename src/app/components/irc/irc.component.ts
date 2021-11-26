@@ -277,10 +277,10 @@ export class IrcComponent implements OnInit {
 	 * @param beatmap the picked beatmap
 	 * @param bracket the bracket where the beatmap is from
 	 */
-	pickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number, forcePick: boolean = false) {
+	pickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number, forcePick = false) {
 		// Prevent picking when firstPick isn't set
 		if (this.selectedLobby.firstPick == undefined) {
-			this.toastService.addToast(`You haven't set who picks first yet.`, ToastType.Error);
+			this.toastService.addToast('You haven\'t set who picks first yet.', ToastType.Error);
 
 			const dialogRef = this.dialog.open(MultiplayerLobbySettingsComponent, {
 				data: {
@@ -392,7 +392,7 @@ export class IrcComponent implements OnInit {
 	 * @param beatmap
 	 * @param bracket
 	 */
-	unpickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket) {
+	unpickBeatmap(beatmap: WyModBracketMap) {
 		if (this.selectedLobby.teamOnePicks.indexOf(beatmap.beatmapId) > -1) {
 			this.selectedLobby.teamOnePicks.splice(this.selectedLobby.teamOnePicks.indexOf(beatmap.beatmapId), 1);
 		}
@@ -408,7 +408,7 @@ export class IrcComponent implements OnInit {
 	 * @param beatmap
 	 * @param bracket
 	 */
-	changePickedBy(beatmap: WyModBracketMap, bracket: WyModBracket) {
+	changePickedBy(beatmap: WyModBracketMap) {
 		if (this.selectedLobby.teamOnePicks.indexOf(beatmap.beatmapId) > -1) {
 			this.selectedLobby.teamOnePicks.splice(this.selectedLobby.teamOnePicks.indexOf(beatmap.beatmapId), 1);
 			this.selectedLobby.teamTwoPicks.push(beatmap.beatmapId);

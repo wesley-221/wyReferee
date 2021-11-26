@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { Injectable } from '@angular/core';
 import { BanchoClient, PrivateMessage, ChannelMessage, BanchoChannel, BanchoMultiplayerChannel, BanchoLobbyPlayer } from 'bancho.js';
 import { ToastService } from './toast.service';

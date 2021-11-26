@@ -13,8 +13,8 @@ export class OauthService {
 	public oauth: Oauth;
 	public osuOauth: Oauth;
 
-	private oauthLoaded$: BehaviorSubject<Boolean>;
-	private osuOauthLoaded$: BehaviorSubject<Boolean>;
+	private oauthLoaded$: BehaviorSubject<boolean>;
+	private osuOauthLoaded$: BehaviorSubject<boolean>;
 
 	constructor(private storeService: StoreService) {
 		this.oauthLoaded$ = new BehaviorSubject(false);
@@ -56,14 +56,14 @@ export class OauthService {
 	/**
 	 * Check if oauth has been loaded from memory or from login request
 	 */
-	public hasOauthBeenLoaded(): Observable<Boolean> {
+	public hasOauthBeenLoaded(): Observable<boolean> {
 		return this.oauthLoaded$;
 	}
 
 	/**
 	 * Check if osu oauth has been loaded
 	 */
-	public hasOsuOauthBeenLoaded(): Observable<Boolean> {
+	public hasOsuOauthBeenLoaded(): Observable<boolean> {
 		return this.osuOauthLoaded$;
 	}
 
@@ -79,7 +79,7 @@ export class OauthService {
 	 * Set osu oauth as loaded or not loaded
 	 * @param loaded
 	 */
-	 public setOsuOauthHasBeenLoaded(loaded: boolean): void {
+	public setOsuOauthHasBeenLoaded(loaded: boolean): void {
 		this.osuOauthLoaded$.next(loaded);
 	}
 }

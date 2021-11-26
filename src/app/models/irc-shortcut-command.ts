@@ -1,4 +1,4 @@
-import { Lobby } from "./lobby";
+import { Lobby } from './lobby';
 
 export class IrcShortcutCommand {
 	label: string;
@@ -14,8 +14,8 @@ export class IrcShortcutCommand {
 	 * @param selectedLobby a lobby where we get data from
 	 */
 	parseIrcCommand(selectedLobby: Lobby): string {
-		let teamOneSlotArray = [];
-		let teamTwoSlotArray = [];
+		const teamOneSlotArray = [];
+		const teamTwoSlotArray = [];
 
 		for (let i: any = 0; i < selectedLobby.teamSize * 2; i++) {
 			if (i < selectedLobby.teamSize) {
@@ -27,12 +27,12 @@ export class IrcShortcutCommand {
 		}
 
 		const replaceWords = {
-			"{{\\s{0,}team1\\s{0,}}}": selectedLobby.teamOneName,
-			"{{\\s{0,}team2\\s{0,}}}": selectedLobby.teamTwoName,
-			"{{\\s{0,}team1slots\\s{0,}}}": teamOneSlotArray.join(', '),
-			"{{\\s{0,}team2slots\\s{0,}}}": teamTwoSlotArray.join(', '),
-			"{{\\s{0,}team1colour\\s{0,}}}": "Red",
-			"{{\\s{0,}team2colour\\s{0,}}}": "Blue"
+			'{{\\s{0,}team1\\s{0,}}}': selectedLobby.teamOneName,
+			'{{\\s{0,}team2\\s{0,}}}': selectedLobby.teamTwoName,
+			'{{\\s{0,}team1slots\\s{0,}}}': teamOneSlotArray.join(', '),
+			'{{\\s{0,}team2slots\\s{0,}}}': teamTwoSlotArray.join(', '),
+			'{{\\s{0,}team1colour\\s{0,}}}': 'Red',
+			'{{\\s{0,}team2colour\\s{0,}}}': 'Blue'
 		};
 
 		let ircCommand = this.command;

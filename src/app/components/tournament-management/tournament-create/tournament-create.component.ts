@@ -84,10 +84,10 @@ export class TournamentCreateComponent implements OnInit {
 
 			this.tournamentService.saveTournament(this.tournament);
 
-			this.toastService.addToast(`Successfully created the tournament.`);
+			this.toastService.addToast('Successfully created the tournament.');
 		}
 		else {
-			this.toastService.addToast(`The mappool wasn't filled in correctly. Look for the marked fields to see what you did wrong.`, ToastType.Error);
+			this.toastService.addToast('The mappool wasn\'t filled in correctly. Look for the marked fields to see what you did wrong.', ToastType.Error);
 			this.validationForm.markAllAsTouched();
 		}
 	}

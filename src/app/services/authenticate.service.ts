@@ -20,7 +20,7 @@ export class AuthenticateService {
 	public loggedInUser: User;
 	public loggedIn = false;
 
-	private loggedInUserLoaded$: BehaviorSubject<Boolean>;
+	private loggedInUserLoaded$: BehaviorSubject<boolean>;
 	private oauthResponse$: BehaviorSubject<Oauth>;
 
 	constructor(private httpClient: HttpClient, private storeService: StoreService, private oauthService: OauthService, private toastService: ToastService, private electronService: ElectronService) {
@@ -78,7 +78,7 @@ export class AuthenticateService {
 	/**
 	 * Check if the logged in user has loaded
 	 */
-	public hasLoggedInUserLoaded(): Observable<Boolean> {
+	public hasLoggedInUserLoaded(): Observable<boolean> {
 		return this.loggedInUserLoaded$;
 	}
 
@@ -133,7 +133,7 @@ export class AuthenticateService {
 		const oldWindow = this.electronService.remote.getCurrentWindow();
 
 		const win = new this.electronService.remote.BrowserWindow({
-			icon: `src/assets/images/icon.png`,
+			icon: 'src/assets/images/icon.png',
 			modal: true,
 			parent: oldWindow
 		});

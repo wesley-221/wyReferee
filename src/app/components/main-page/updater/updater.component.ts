@@ -11,8 +11,8 @@ export class UpdaterComponent implements OnInit {
 	remote: any;
 	autoUpdater: any;
 
-	updateWasFound: boolean = false;
-	downloadPercentage: number = 0;
+	updateWasFound = false;
+	downloadPercentage = 0;
 
 	constructor(private ref: ChangeDetectorRef, private toastService: ToastService) {
 		const log = require('electron-log');
@@ -48,7 +48,7 @@ export class UpdaterComponent implements OnInit {
 
 			this.autoUpdater.on('update-downloaded', () => {
 				// TODO: Remove this, see TODO above
-				toastService.addToast(`The update has been downloaded and will be installed in 10 seconds. If you close the client, it will install the update right away.`);
+				toastService.addToast('The update has been downloaded and will be installed in 10 seconds. If you close the client, it will install the update right away.');
 
 				setTimeout(() => {
 					this.autoUpdater.quitAndInstall();

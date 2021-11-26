@@ -1,6 +1,7 @@
 export class Regex {
 	static isLink = {
-		regex: /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*))/g,
+		// regex: /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*))/g,
+		regex: /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*))/g,
 		run: (message: string) => {
 			const isLinkRegex = RegExp(Regex.isLink.regex).exec(message);
 
@@ -13,8 +14,10 @@ export class Regex {
 	}
 
 	static isEmbedLink = {
-		regexFullEmbed: /(\[https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*) .+\])/g,
-		regexSplit: /\[(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)) (.+)\]/g,
+		// regexFullEmbed: /(\[https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*) .+\])/g,
+		// regexSplit: /\[(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)) (.+)\]/g,
+		regexFullEmbed: /(\[https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*) .+\])/g,
+		regexSplit: /\[(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)) (.+)\]/g,
 		run: (message: string) => {
 			const isEmbedLinkRegex = RegExp(Regex.isEmbedLink.regexFullEmbed).exec(message);
 
@@ -262,7 +265,7 @@ export class Regex {
 			const playerJoinedRegex = RegExp(Regex.playerJoined.regex).exec(message);
 
 			if (playerJoinedRegex !== null) {
-				let team = playerJoinedRegex[3] == 'blue' ? 'Blue' : 'Red';
+				const team = playerJoinedRegex[3] == 'blue' ? 'Blue' : 'Red';
 				return { username: playerJoinedRegex[1], slot: parseInt(playerJoinedRegex[2]), team: team };
 			}
 

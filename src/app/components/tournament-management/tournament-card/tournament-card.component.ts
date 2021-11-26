@@ -68,7 +68,7 @@ export class TournamentCardComponent implements OnInit {
 					this.tournamentService.deletePublishedTournament(tournament).subscribe(() => {
 						this.deletedTournamentEmitter.emit(true);
 
-						this.toastService.addToast(`Successfully deleted the tournament.`);
+						this.toastService.addToast('Successfully deleted the tournament.');
 					}, error => {
 						this.toastService.addToast(`Unable to delete the tournament: ${error.error.message}`, ToastType.Error);
 					});

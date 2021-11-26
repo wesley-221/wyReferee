@@ -41,8 +41,8 @@ export class ChallongeService {
 	 * @param challongeResult
 	 */
 	public parseChallongeEndpoint(challongeResult: any): ChallongeMatch[] {
-		let allMatches: ChallongeMatch[] = [];
-		let allParticipants = {};
+		const allMatches: ChallongeMatch[] = [];
+		const allParticipants = {};
 
 		const parsedMatches = JSON.parse(challongeResult.matches);
 		const parsedParticipants = JSON.parse(challongeResult.participants);
