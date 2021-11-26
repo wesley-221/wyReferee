@@ -52,9 +52,9 @@ Building wyReferee:
 
 ## Building for development
 If you want to develop the client, you can follow all the steps show above (Building the client yourself), except for the `Building wyReferee` part.
-Instead of that, you have to run the client:
+Instead of that, you have to run the client like so:
 ```bash
-npm run
+npm start
 ```
 
 This will launch wyReferee in a hot-reloaded Electron window, where any change you make will reload the client with the new changes.
