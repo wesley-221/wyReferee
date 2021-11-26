@@ -5,6 +5,11 @@
 		"es6": true,
 		"es2017": true
 	},
+	"ignorePatterns": [
+		"app/**/*",
+		"dist/**/*",
+		"release/**/*"
+	],
 	"overrides": [
 		{
 			"files": [
