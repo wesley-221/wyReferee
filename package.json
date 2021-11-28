@@ -12,7 +12,7 @@
 		"bancho",
 		"referee client"
 	],
-	"main": "app/main.js",
+	"main": "main.js",
 	"private": true,
 	"scripts": {
 		"gh-publish": "npm run build:prod && electron-builder -p always",
