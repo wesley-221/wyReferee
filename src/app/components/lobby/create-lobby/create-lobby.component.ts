@@ -92,15 +92,12 @@ export class CreateLobbyComponent implements OnInit {
 			'team-two-name': new FormControl('', [
 				Validators.required
 			]),
-			'selected-tournament': new FormControl(),
-			'stage': new FormControl('', [
-				Validators.required
-			])
+			'selected-tournament': new FormControl('')
 		});
 
 		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
 			startWith(''),
-			map((value) => {
+			map((value: string) => {
 				const filterValue = value.toLowerCase();
 				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
 			})
@@ -108,7 +105,7 @@ export class CreateLobbyComponent implements OnInit {
 
 		this.teamTwoFilter = this.validationForm.get('team-two-name').valueChanges.pipe(
 			startWith(''),
-			map((value) => {
+			map((value: string) => {
 				const filterValue = value.toLowerCase();
 				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
 			})
@@ -132,6 +129,8 @@ export class CreateLobbyComponent implements OnInit {
 
 		this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
 		this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
+
+		this.validationForm.addControl('stage', new FormControl('', Validators.required));
 
 		this.validationForm.removeControl('challonge-match');
 		this.validationForm.removeControl('challonge-tournament');
@@ -226,7 +225,16 @@ export class CreateLobbyComponent implements OnInit {
 
 			// Multiplayer link was not found, create new lobby
 			if (lobby.multiplayerLink == '') {
-				const lobbyName = this.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : `${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+				let lobbyName: string;
+
+				if (lobby.tournament == undefined || lobby.tournament == null) {
+					const acronym = this.validationForm.get('tournament-acronym').value;
+
+					lobbyName = this.qualifier == true ? `${acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : `${acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+				}
+				else {
+					lobbyName = this.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : `${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+				}
 
 				from(this.ircService.client.createLobby(lobbyName)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
 					this.ircService.joinChannel(multiplayerChannel.name);
