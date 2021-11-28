@@ -2,14 +2,14 @@
 
 <mat-dialog-content class="mat-typography">
 	<div class="alert alert-danger">
-		Are you sure you want to execute <b>{{ data.ircShortcutCommand.label }}</b>?
+		Are you sure you want to run the irc command <b>{{ data.ircShortcutCommand.label }}</b>?
 	</div>
 
-	<p>This will send the following message:</p>
+	<p>This will send the following message in irc:</p>
 	<b>{{ data.ircShortcutCommand.parseIrcCommand(data.lobby) }}</b>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
 	<button mat-button mat-dialog-close color="warn">Close</button>
-	<button mat-button [mat-dialog-close]="true" color="primary">Execute</button>
+	<button mat-button [mat-dialog-close]="true" color="primary">Send</button>
 </mat-dialog-actions>
