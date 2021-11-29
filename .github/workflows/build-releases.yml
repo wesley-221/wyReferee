@@ -72,4 +72,4 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: npm run gh-publish-mac
-	  run: npm run gh-publish-mac-64
+      run: npm run gh-publish-mac-64
