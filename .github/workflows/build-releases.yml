@@ -24,7 +24,52 @@ jobs:
       run: npm i
     - name: Check lint
       run: npm run lint
-    - name: Build the app
+    - name: Build Windows app
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npm run gh-publish
+      run: npm run gh-publish-windows
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Dependencies
+      run: npm i
+    - name: Check lint
+      run: npm run lint
+    - name: Build Linux app
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npm run gh-publish-linux
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Dependencies
+      run: npm i
+    - name: Check lint
+      run: npm run lint
+    - name: Build Mac app
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npm run gh-publish-mac
+	  run: npm run gh-publish-mac-64
