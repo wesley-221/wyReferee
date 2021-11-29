@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Build releases
+  build-windows:
+    name: Build Windows
 
     strategy:
       matrix:
@@ -29,6 +29,9 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: npm run gh-publish-windows
 
+  build-linux:
+    name: Build Linux
+
     strategy:
       matrix:
         node-version: [12.x]
@@ -50,6 +53,9 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: npm run gh-publish-linux
+
+  build-mac:
+    name: Build Mac
 
     strategy:
       matrix:
