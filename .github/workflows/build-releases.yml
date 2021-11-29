@@ -78,7 +78,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: npm run gh-publish-mac
-    - name: Build Mac app 64
+    - name: Build Mac app arm
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npm run gh-publish-mac-64
+      run: npm run gh-publish-mac-arm

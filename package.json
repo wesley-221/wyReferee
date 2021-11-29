@@ -18,7 +18,7 @@
 		"gh-publish-windows": "npm run build:prod && electron-builder -p always",
 		"gh-publish-linux": "npm run build:prod && electron-builder build --linux -p always",
 		"gh-publish-mac": "npm run build:prod && electron-builder build --mac -p always",
-		"gh-publish-mac-64": "npm run build:prod && electron-builder build --mac --x64 -p always",
+		"gh-publish-mac-arm": "npm run build:prod && electron-builder build --mac --arm64 -p always",
 		"postinstall": "npm run postinstall:electron && electron-builder install-app-deps",
 		"postinstall:web": "node postinstall-web",
 		"postinstall:electron": "node postinstall",
