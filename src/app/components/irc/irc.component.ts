@@ -299,7 +299,7 @@ export class IrcComponent implements OnInit {
 
 		// Check if teams are allowed to pick from the same modbracket twice in a row
 		if (this.selectedLobby.tournament.allowDoublePick == false) {
-			if (this.wasBeatmapPickedFromSamePreviousModBracket(beatmap, bracket) && forcePick == false) {
+			if (this.wasBeatmapPickedFromSamePreviousModBracket(bracket) && forcePick == false) {
 				const dialogRef = this.dialog.open(IrcPickMapSameModBracketComponent, {
 					data: {
 						beatmap: beatmap,
@@ -356,7 +356,11 @@ export class IrcComponent implements OnInit {
 		this.ircService.sendMessage(this.selectedChannel.name, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
 	}
 
-	wasBeatmapPickedFromSamePreviousModBracket(beatmap: WyModBracketMap, bracket: WyModBracket): boolean {
+	/**
+	 * Check if the beatmap that is being picked came from the same mod bracket as the last pick was from
+	 * @param bracket the bracket to check from
+	 */
+	wasBeatmapPickedFromSamePreviousModBracket(bracket: WyModBracket): boolean {
 		if (this.selectedLobby.getNextPick() == this.selectedLobby.teamOneName) {
 			if (this.selectedLobby.teamOnePicks.length <= 0) {
 				return false;
@@ -511,43 +515,6 @@ export class IrcComponent implements OnInit {
 				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 			}
 		});
-	}
-
-	/**
-	 * Check if a beatmap is banned int he current lobby
-	 * @param multiplayerLobby the multiplayerlobby to check from
-	 * @param beatmapId the beatmap to check
-	 */
-	beatmapIsBanned(multiplayerLobby: Lobby, beatmapId: number) {
-		return multiplayerLobby.teamOneBans.indexOf(beatmapId) > -1 || multiplayerLobby.teamTwoBans.indexOf(beatmapId) > -1;
-	}
-
-	/**
-	 * Check if the beatmap is banned by team one
-	 * @param multiplayerLobby the multiplayerlobby to check from
-	 * @param beatmapId the beatmap to check
-	 */
-	beatmapIsBannedByTeamOne(multiplayerLobby: Lobby, beatmapId: number) {
-		return multiplayerLobby.teamOneBans.indexOf(beatmapId) > -1;
-	}
-
-	/**
-	 * Check if the beatmap is banned by team two
-	 * @param multiplayerLobby the multiplayerlobby to check from
-	 * @param beatmapId the beatmap to check
-	 */
-	beatmapIsBannedByTeamTwo(multiplayerLobby: Lobby, beatmapId: number) {
-		return multiplayerLobby.teamTwoBans.indexOf(beatmapId) > -1;
-	}
-
-	/**
-	 * Check if a beatmap has been picked in the current lobby
-	 * @param multiplayerLobby the multiplayerlobby to check from
-	 * @param beatmapId the beatmap to check
-	 */
-	beatmapIsPicked(multiplayerLobby: Lobby, beatmapId: number) {
-		return multiplayerLobby.teamOnePicks != null && multiplayerLobby.teamTwoPicks != null &&
-			(multiplayerLobby.teamOnePicks.indexOf(beatmapId) > -1 || multiplayerLobby.teamTwoPicks.indexOf(beatmapId) > -1);
 	}
 
 	/**

@@ -1,9 +1,18 @@
+import { MatDialog } from '@angular/material/dialog';
+import { IrcPickMapSameModBracketComponent } from 'app/components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
+import { MultiplayerLobbySettingsComponent } from 'app/components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
+import { IrcService } from 'app/services/irc.service';
+import { ToastService } from 'app/services/toast.service';
+import { WebhookService } from 'app/services/webhook.service';
+import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { IrcChannel } from './irc/irc-channel';
 import { MultiplayerLobbyPlayers } from './mutliplayer-lobby-players/multiplayer-lobby-players';
 import { PickedCategory } from './picked-category';
 import { MultiplayerData } from './store-multiplayer/multiplayer-data';
+import { ToastType } from './toast';
 import { WyMappool } from './wytournament/mappool/wy-mappool';
 import { WyModBracket } from './wytournament/mappool/wy-mod-bracket';
+import { WyModBracketMap } from './wytournament/mappool/wy-mod-bracket-map';
 import { WyModCategory } from './wytournament/mappool/wy-mod-category';
 import { WyStage } from './wytournament/wy-stage';
 import { WyTeamPlayer } from './wytournament/wy-team-player';
@@ -43,6 +52,9 @@ export class Lobby {
 
 	teamOneSlotArray: number[];
 	teamTwoSlotArray: number[];
+
+	teamOneCaptain: WyTeamPlayer;
+	teamTwoCaptain: WyTeamPlayer;
 
 	gamesCountTowardsScore: unknown;
 
@@ -229,6 +241,158 @@ export class Lobby {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Check if a beatmap is banned int he current lobby
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsBanned(beatmapId: number) {
+		return this.teamOneBans.indexOf(beatmapId) > -1 || this.teamTwoBans.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if the beatmap is banned by team one
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsBannedByTeamOne(beatmapId: number) {
+		return this.teamOneBans.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if the beatmap is banned by team two
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsBannedByTeamTwo(beatmapId: number) {
+		return this.teamTwoBans.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if a beatmap has been picked in the current lobby
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsPicked(beatmapId: number) {
+		return this.teamOnePicks != null && this.teamTwoPicks != null &&
+			(this.teamOnePicks.indexOf(beatmapId) > -1 || this.teamTwoPicks.indexOf(beatmapId) > -1);
+	}
+
+	/**
+	 * Check if the beatmap that is being picked came from the same mod bracket as the last pick was from
+	 * @param bracket the bracket to check from
+	 */
+	wasBeatmapPickedFromSamePreviousModBracket(bracket: WyModBracket): boolean {
+		if (this.getNextPick() == this.teamOneName) {
+			if (this.teamOnePicks.length <= 0) {
+				return false;
+			}
+
+			const lastPick = this.teamOnePicks[this.teamOnePicks.length - 1];
+
+			for (const beatmap of bracket.beatmaps) {
+				if (beatmap.beatmapId == lastPick) {
+					return true;
+				}
+			}
+		}
+		else if (this.getNextPick() == this.teamTwoName) {
+			if (this.teamTwoPicks.length <= 0) {
+				return false;
+			}
+
+			const lastPick = this.teamTwoPicks[this.teamTwoPicks.length - 1];
+
+			for (const beatmap of bracket.beatmaps) {
+				if (beatmap.beatmapId == lastPick) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Pick a beatmap from the given bracket
+	 * @param beatmap the picked beatmap
+	 * @param bracket the bracket where the beatmap is from
+	 */
+	pickBeatmap(selectedChannel: IrcChannel, beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number, toastService: ToastService, ircService: IrcService, dialog: MatDialog, multiplayerLobbies: WyMultiplayerLobbiesService, webhookService: WebhookService, forcePick = false) {
+		// Prevent picking when firstPick isn't set
+		if (this.firstPick == undefined) {
+			toastService.addToast('You haven\'t set who picks first yet.', ToastType.Error);
+
+			const dialogRef = dialog.open(MultiplayerLobbySettingsComponent, {
+				data: {
+					multiplayerLobby: this
+				}
+			});
+
+			dialogRef.afterClosed().subscribe((result: Lobby) => {
+				if (result != null) {
+					multiplayerLobbies.updateMultiplayerLobby(result);
+				}
+			});
+
+			return;
+		}
+
+		// Check if teams are allowed to pick from the same modbracket twice in a row
+		if (this.tournament.allowDoublePick == false) {
+			if (this.wasBeatmapPickedFromSamePreviousModBracket(bracket) && forcePick == false) {
+				const dialogRef = dialog.open(IrcPickMapSameModBracketComponent, {
+					data: {
+						beatmap: beatmap,
+						modBracket: bracket,
+						lobby: this
+					}
+				});
+
+				dialogRef.afterClosed().subscribe((result: boolean) => {
+					if (result == true) {
+						this.pickBeatmap(selectedChannel, beatmap, bracket, gamemode, toastService, ircService, dialog, multiplayerLobbies, webhookService, true);
+					}
+				});
+
+				return;
+			}
+		}
+
+		ircService.sendMessage(selectedChannel.name, `!mp map ${beatmap.beatmapId} ${gamemode}`);
+
+		let modBit = 0;
+		let freemodEnabled = false;
+
+		for (const mod in bracket.mods) {
+			if (bracket.mods[mod].value != 'freemod') {
+				modBit += Number(bracket.mods[mod].value);
+			}
+			else {
+				freemodEnabled = true;
+			}
+		}
+
+		// Add an extra null check
+		if (this.teamOnePicks == null) {
+			this.teamOnePicks = [];
+		}
+
+		if (this.teamTwoPicks == null) {
+			this.teamTwoPicks = [];
+		}
+
+		webhookService.sendBeatmapPicked(this, ircService.authenticatedUser, this.getNextPick(), beatmap);
+
+		// Update picks
+		if (this.teamOneName == this.getNextPick()) {
+			this.teamOnePicks.push(beatmap.beatmapId);
+		}
+		else {
+			this.teamTwoPicks.push(beatmap.beatmapId);
+		}
+
+		multiplayerLobbies.updateMultiplayerLobby(this);
+
+		ircService.sendMessage(selectedChannel.name, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
 	}
 
 	/**
