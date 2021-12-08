@@ -573,6 +573,22 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Pick a random map from the mod bracket
+	 * @param mappool the mappool to pick from
+	 * @param modBracket the modbracket to pick from
+	 */
+	pickRandomMap(modBracket: WyModBracket) {
+		let randomMap: WyModBracketMap = modBracket.pickRandomMap(this.selectedLobby);
+
+		if (randomMap == null) {
+			this.toastService.addToast(`Attempted to pick 30 random maps but could not find any. Did the mod bracket run out of maps to pick from?`, ToastType.Error);
+		}
+		else {
+			this.pickBeatmap(randomMap, modBracket, this.selectedLobby.tournament.gamemodeId, true);
+		}
+	}
+
+	/**
 	 * Toggle the player management tab
 	 */
 	togglePlayerManagement() {
@@ -701,5 +717,26 @@ export class IrcComponent implements OnInit {
 	invitePlayer(player: WyTeamPlayer): void {
 		this.ircService.sendMessage(this.selectedChannel.name, `!mp invite ${player.name}`);
 		this.toastService.addToast(`Invited ${player.name} to the multiplayer lobby.`);
+	}
+
+	/**
+	 * Invite a player to the current multiplayer lobby
+	 * @param player the player to invite
+	 */
+	assignPlayerAsCaptain(player: WyTeamPlayer, teamIndex: number): void {
+		if (teamIndex == 1) {
+			if (this.selectedLobby.teamOneCaptain != player) {
+				this.selectedLobby.teamOneCaptain = player;
+
+				this.toastService.addToast(`${player.name} has been assigned as captain for ${this.selectedLobby.teamOneName}.`);
+			}
+		}
+		else {
+			if (this.selectedLobby.teamTwoCaptain != player) {
+				this.selectedLobby.teamTwoCaptain = player;
+
+				this.toastService.addToast(`${player.name} has been assigned as captain for ${this.selectedLobby.teamTwoName}.`);
+			}
+		}
 	}
 }

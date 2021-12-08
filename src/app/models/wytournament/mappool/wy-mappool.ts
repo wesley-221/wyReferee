@@ -11,7 +11,8 @@ export enum Availability {
 export enum MappoolType {
 	Normal = 0,
 	AxS = 1,
-	MysteryTournament = 2
+	MysteryTournament = 2,
+	RNGTournament = 3
 }
 
 export class WyMappool {

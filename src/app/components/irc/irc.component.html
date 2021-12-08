@@ -163,9 +163,20 @@
 										<div class="col invite-team">
 											<h3>{{ selectedLobby.teamOneName }}</h3>
 
-											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)"  (click)="invitePlayer(player)" matTooltip="Click to invite player">
+											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
 												<div class="name">
 													{{ player.name }}
+												</div>
+
+												<div class="actions">
+													<div class="custom-button" (click)="invitePlayer(player)" matTooltip="Click to invite player">
+														<mat-icon>add</mat-icon>
+													</div>
+
+													<!-- TODO: implement captain for rng -->
+													<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 1)" matTooltip="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamOneCaptain == player}">
+														<mat-icon>star</mat-icon>
+													</div> -->
 												</div>
 											</div>
 										</div>
@@ -173,9 +184,20 @@
 										<div class="col invite-team">
 											<h3>{{ selectedLobby.teamTwoName }}</h3>
 
-											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)" (click)="invitePlayer(player)" matTooltip="Click to invite player">
+											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
 												<div class="name">
 													{{ player.name }}
+												</div>
+
+												<div class="actions">
+													<div class="custom-button" (click)="invitePlayer(player)" matTooltip="Click to invite player">
+														<mat-icon>add</mat-icon>
+													</div>
+
+													<!-- TODO: implement captain for rng -->
+													<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 2)" matTooltip="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamTwoCaptain == player}">
+														<mat-icon>star</mat-icon>
+													</div> -->
 												</div>
 											</div>
 										</div>
@@ -208,9 +230,23 @@
 
 					<div class="mappool" *ngIf="selectedLobby && selectedLobby.mappool != null">
 						<div class="mod-bracket" *ngFor="let bracket of (selectedLobby.mappool.modBrackets | searchmodbracket : searchValue )">
-							<hr />
-							<h3>{{ bracket.name }}</h3>
-							<hr />
+							<div *ngIf="selectedLobby.mappool.type != 3">
+								<hr />
+								<h3>{{ bracket.name }}</h3>
+								<hr />
+							</div>
+
+							<div *ngIf="selectedLobby.mappool.type == 3">
+								<hr />
+
+								<div class="pick-rng-map">
+									<h3>{{ bracket.name }}</h3>
+
+									<button mat-raised-button color="primary" (click)="pickRandomMap(bracket)" [disabled]="!selectedChannel.active">Pick random map</button>
+								</div>
+
+								<hr />
+							</div>
 
 							<div class="pick-random-map" *ngIf="selectedLobby.mappool.type == 2">
 								<button mat-raised-button color="primary" (click)="pickMysteryMap(selectedLobby.mappool, bracket)" [disabled]="!selectedChannel.active">Pick random map</button>

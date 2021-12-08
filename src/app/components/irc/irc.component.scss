@@ -564,10 +564,35 @@ $hyperlink-background-color: #2b4576;
 								margin-bottom: 4px;
 								padding: 4px;
 
-								&:hover {
-									background-color: rgba(lighten($primary, 15%), 0.2);
-									cursor: pointer;
+								.actions {
+									display: flex;
+									flex-direction: row;
+
+									.custom-button {
+										display: flex;
+										align-items: center;
+										justify-content: center;
+
+										background-color: $primary;
+
+										padding: 4px;
+
+										&:hover {
+											background-color: rgba(darken($primary, 15%), 0.2);
+											cursor: pointer;
+										}
+
+										&.disabled {
+											background-color: rgba(darken($primary, 15%), 0.2);
+											cursor: not-allowed;
+										}
+									}
 								}
+
+								// &:hover {
+								// 	background-color: rgba(lighten($primary, 15%), 0.2);
+								// 	cursor: pointer;
+								// }
 
 								&:last-child {
 									margin-bottom: 0;
@@ -587,6 +612,22 @@ $hyperlink-background-color: #2b4576;
 							width: 100%;
 
 							margin-bottom: 16px;
+
+							.pick-rng-map {
+								display: flex;
+								flex-direction: row;
+
+								align-items: center;
+								justify-content: space-between;
+
+								h3 {
+									margin: 0;
+								}
+
+								button {
+									margin-right: 15px;
+								}
+							}
 
 							.pick-random-map {
 								button {
