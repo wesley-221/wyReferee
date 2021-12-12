@@ -21,6 +21,7 @@ export class IrcChannel {
 
 	lastActiveChannel: boolean;
 	isPrivateChannel: boolean;
+	isPublicChannel: boolean;
 	hasUnreadMessages: boolean;
 	playSoundOnMessage: boolean;
 
@@ -40,6 +41,7 @@ export class IrcChannel {
 			active: ircChannel.active,
 			lastActiveChannel: ircChannel.lastActiveChannel,
 			isPrivateChannel: ircChannel.isPrivateChannel,
+			isPublicChannel: ircChannel.isPublicChannel,
 			hasUnreadMessages: ircChannel.hasUnreadMessages,
 			playSoundOnMessage: ircChannel.playSoundOnMessage,
 			teamMode: ircChannel.teamMode,

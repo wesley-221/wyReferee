@@ -148,6 +148,8 @@ export class IrcComponent implements OnInit {
 		});
 
 		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
+			if (this.selectedLobby == undefined) return;
+
 			if (data == this.selectedLobby.lobbyId) {
 				this.selectedLobby = this.multiplayerLobbies.getMultiplayerLobby(data);
 				this.refreshIrcHeader(this.selectedLobby);
@@ -471,11 +473,19 @@ export class IrcComponent implements OnInit {
 	 * @param multiplayerLobby the multiplayerlobby
 	 */
 	refreshIrcHeader(multiplayerLobby: Lobby) {
-		this.teamOneScore = multiplayerLobby.teamOneScore;
-		this.teamTwoScore = multiplayerLobby.teamTwoScore;
-		this.nextPick = multiplayerLobby.getNextPick();
-		this.matchpoint = multiplayerLobby.getMatchPoint();
-		this.hasWon = multiplayerLobby.teamHasWon();
+		if (this.selectedLobby == undefined) return;
+
+		if (this.selectedLobby.ircChannel == undefined) {
+			this.selectedLobby.ircChannel = this.ircService.getChannelByName(this.selectedLobby.getLobbyName());
+		}
+
+		if (!this.selectedLobby.ircChannel.isPublicChannel && !this.selectedLobby.ircChannel.isPrivateChannel) {
+			this.teamOneScore = multiplayerLobby.teamOneScore;
+			this.teamTwoScore = multiplayerLobby.teamTwoScore;
+			this.nextPick = multiplayerLobby.getNextPick();
+			this.matchpoint = multiplayerLobby.getMatchPoint();
+			this.hasWon = multiplayerLobby.teamHasWon();
+		}
 	}
 
 	/**
@@ -578,10 +588,10 @@ export class IrcComponent implements OnInit {
 	 * @param modBracket the modbracket to pick from
 	 */
 	pickRandomMap(modBracket: WyModBracket) {
-		let randomMap: WyModBracketMap = modBracket.pickRandomMap(this.selectedLobby);
+		const randomMap: WyModBracketMap = modBracket.pickRandomMap(this.selectedLobby);
 
 		if (randomMap == null) {
-			this.toastService.addToast(`Attempted to pick 30 random maps but could not find any. Did the mod bracket run out of maps to pick from?`, ToastType.Error);
+			this.toastService.addToast('Attempted to pick 30 random maps but could not find any. Did the mod bracket run out of maps to pick from?', ToastType.Error);
 		}
 		else {
 			this.pickBeatmap(randomMap, modBracket, this.selectedLobby.tournament.gamemodeId, true);

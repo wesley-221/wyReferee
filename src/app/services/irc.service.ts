@@ -125,7 +125,7 @@ export class IrcService {
 	 * @param password the password to connect with
 	 */
 	connect(username: string, password: string) {
-		const allJoinedChannels = this.storeService.get('irc.channels');
+		const allJoinedChannels: IrcChannel[] = this.storeService.get('irc.channels');
 		const apiKey = this.storeService.get('api-key')
 
 		this.client = new BanchoClient({ username: username, password: password, apiKey: apiKey });
@@ -201,7 +201,7 @@ export class IrcService {
 
 			// Initialize multiplayer channels after restart
 			for (const ircChannel in allJoinedChannels) {
-				if (allJoinedChannels[ircChannel].isPrivateChannel == false) {
+				if (allJoinedChannels[ircChannel].isPrivateChannel == false && allJoinedChannels[ircChannel].isPublicChannel == false) {
 					const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
 					from(channel.join()).subscribe(() => {
 						this.initializeChannelListeners(channel);
@@ -328,6 +328,7 @@ export class IrcService {
 		else {
 			const messageId = this.getChannelByName(user) == null ? 0 : Object.keys(this.getChannelByName(user).messages).length + 1;
 
+			// Message is received from a #mp_ channel
 			if (user.startsWith('#mp_')) {
 				newMessage = new IrcMessage({
 					messageId: messageId,
@@ -338,6 +339,18 @@ export class IrcService {
 					isADivider: false
 				});
 			}
+			// Message is received from a # channel, such as #osu/#taiko/#ctb/#mania/etc
+			else if (user.startsWith('#')) {
+				newMessage = new IrcMessage({
+					messageId: messageId,
+					date: dateFormat,
+					time: timeFormat,
+					author: recipient,
+					messageBuilder: this.buildMessage(message),
+					isADivider: false
+				});
+			}
+			// Message received as a DM
 			else {
 				newMessage = new IrcMessage({
 					messageId: messageId,
@@ -410,6 +423,34 @@ export class IrcService {
 				isPrivateChannel: false,
 				playSoundOnMessage: false
 			}));
+			this.toastService.addToast(`Joined channel "${channelName}".`);
+
+			this.isJoiningChannel$.next(false);
+		}
+		// =========================================================
+		// Joining a "default" channel, such as #osu/#ctb/#dutch/etc
+		if (channelName.startsWith('#')) {
+			this.storeService.set(`irc.channels.${channelName}`, new IrcChannel({
+				name: channelName,
+				active: true,
+				lastActiveChannel: false,
+				isPrivateChannel: false,
+				isPublicChannel: true,
+				playSoundOnMessage: false
+			}));
+
+			this.allChannels.push(new IrcChannel({
+				name: channelName,
+				active: true,
+				lastActiveChannel: false,
+				isPrivateChannel: false,
+				isPublicChannel: true,
+				playSoundOnMessage: false
+			}));
+
+			const channel = this.client.getChannel(channelName) as BanchoMultiplayerChannel;
+			channel.join();
+
 			this.toastService.addToast(`Joined channel "${channelName}".`);
 
 			this.isJoiningChannel$.next(false);
@@ -710,7 +751,7 @@ export class IrcService {
 
 			// Look for the mod bracket
 			let foundModBracket: WyModBracket = null;
-			let modBracketString: string[] = [];
+			const modBracketString: string[] = [];
 
 			for (const modBracket of multiplayerLobby.mappool.modBrackets) {
 				// Ignore tiebreaker from being randomly picked
