@@ -5,6 +5,7 @@ export class SidebarItem {
 	link: string;
 	subMenuItem: boolean;
 	onlyShowAsTournamentHost: boolean;
+	onlyShowAsAdministrator: boolean;
 
 	constructor(init?: Partial<SidebarItem>) {
 		Object.assign(this, init);

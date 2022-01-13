@@ -12,7 +12,7 @@ export class ManagementRouterComponent implements OnInit {
 		new SidebarItem({ name: 'Tournament', svgIcon: 'trophy', link: '/tournament-management/tournament-overview' }),
 		new SidebarItem({ name: 'Create', logo: 'add', link: '/tournament-management/tournament-overview/tournament-create', subMenuItem: true }),
 		new SidebarItem({ name: 'All tournaments', logo: 'cloud_upload', link: '/tournament-management/tournament-overview/tournament-all-published', subMenuItem: true }),
-		new SidebarItem({ name: 'Administrator', logo: 'admin_panel_settings', link: '/tournament-management/tournament-overview/tournament-all-published-administrator', subMenuItem: true })
+		new SidebarItem({ name: 'Administrator', logo: 'admin_panel_settings', link: '/tournament-management/tournament-overview/tournament-all-published-administrator', subMenuItem: true, onlyShowAsAdministrator: true })
 	];
 
 	constructor(public authenticateService: AuthenticateService) { }
