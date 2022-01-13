@@ -1,6 +1,6 @@
+[![Windows Build][windows-build-badge]][windows-build]
 [![Linux Build][linux-build-badge]][linux-build]
 [![MacOS Build][macos-build-badge]][macos-build]
-[![Windows Build][windows-build-badge]][windows-build]
 
 # Introduction
 wyReferee is an irc client made for osu!. Create a tournament, add participants, webhooks and even mappools, all with quality of life features for every single thing.
@@ -66,9 +66,9 @@ This will launch wyReferee in a hot-reloaded Electron window, where any change y
 | app | Electron main process folder |
 | src | Electron renderer process folder (Angular) |
 
-[linux-build-badge]: https://github.com/maximegris/angular-electron/workflows/Linux%20Build/badge.svg
-[linux-build]: https://github.com/maximegris/angular-electron/actions?query=workflow%3A%22Linux+Build%22
-[macos-build-badge]: https://github.com/maximegris/angular-electron/workflows/MacOS%20Build/badge.svg
-[macos-build]: https://github.com/maximegris/angular-electron/actions?query=workflow%3A%22MacOS+Build%22
-[windows-build-badge]: https://github.com/maximegris/angular-electron/workflows/Windows%20Build/badge.svg
-[windows-build]: https://github.com/maximegris/angular-electron/actions?query=workflow%3A%22Windows+Build%22
+[linux-build-badge]: https://github.com/wesley-221/wyreferee/workflows/Linux%20Build/badge.svg
+[linux-build]: https://github.com/wesley-221/wyreferee/actions?query=workflow%3A%22Linux+Build%22
+[macos-build-badge]: https://github.com/wesley-221/wyreferee/workflows/MacOS%20Build/badge.svg
+[macos-build]: https://github.com/wesley-221/wyreferee/actions?query=workflow%3A%22MacOS+Build%22
+[windows-build-badge]: https://github.com/wesley-221/wyreferee/workflows/Windows%20Build/badge.svg
+[windows-build]: https://github.com/wesley-221/wyreferee/actions?query=workflow%3A%22Windows+Build%22
