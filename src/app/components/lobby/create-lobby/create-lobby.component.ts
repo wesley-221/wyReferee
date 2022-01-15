@@ -187,7 +187,10 @@ export class CreateLobbyComponent implements OnInit {
 					teamSize: this.validationForm.get('team-size').value,
 					multiplayerLink: this.validationForm.get('multiplayer-link').value,
 					tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
-					tournament: this.selectedTournament
+					tournament: this.selectedTournament,
+					teamOneName: 'Qualifier lobby',
+					teamTwoName: 'Qualifier lobby',
+					isQualifierLobby: true
 				});
 
 				lobby.description = `Qualifier lobby: ${this.qualifierLobbyIdentifier}`;
@@ -200,7 +203,8 @@ export class CreateLobbyComponent implements OnInit {
 					tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
 					tournament: this.selectedTournament,
 					teamOneName: this.validationForm.get('team-one-name').value,
-					teamTwoName: this.validationForm.get('team-two-name').value
+					teamTwoName: this.validationForm.get('team-two-name').value,
+					isQualifierLobby: false
 				});
 
 				lobby.description = `${lobby.teamOneName} vs ${lobby.teamTwoName}`;

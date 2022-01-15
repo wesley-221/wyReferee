@@ -281,7 +281,7 @@ export class IrcComponent implements OnInit {
 	 */
 	pickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number, forcePick = false) {
 		// Prevent picking when firstPick isn't set
-		if (this.selectedLobby.firstPick == undefined) {
+		if (this.selectedLobby.firstPick == undefined && (this.selectedLobby.isQualifierLobby == undefined || this.selectedLobby.isQualifierLobby == false)) {
 			this.toastService.addToast('You haven\'t set who picks first yet.', ToastType.Error);
 
 			const dialogRef = this.dialog.open(MultiplayerLobbySettingsComponent, {
