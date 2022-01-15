@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
+import { MappoolType, WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModCategory } from 'app/models/wytournament/mappool/wy-mod-category';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
@@ -32,6 +32,21 @@ export class MappoolComponent implements OnInit {
 	 * @param event
 	 */
 	changeMappoolType(event: MatSelectChange): void {
+		if (event.value == MappoolType.AxS) {
+			for (const modBracket of this.mappool.modBrackets) {
+				for (const beatmap of modBracket.beatmaps) {
+					this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`, new FormControl(beatmap.modifier, Validators.required));
+				}
+			}
+		}
+		else {
+			for (const modBracket of this.mappool.modBrackets) {
+				for (const beatmap of modBracket.beatmaps) {
+					this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`);
+				}
+			}
+		}
+
 		this.mappool.type = event.value;
 	}
 

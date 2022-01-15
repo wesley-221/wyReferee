@@ -4,6 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Mods } from 'app/models/osu-models/osu';
 import { Calculate } from 'app/models/score-calculation/calculate';
 import { ToastType } from 'app/models/toast';
+import { MappoolType } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
@@ -83,6 +84,12 @@ export class TournamentPublishedEditComponent implements OnInit {
 							}
 							else {
 								this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
+							}
+
+							if (mappool.type == MappoolType.AxS) {
+								for (const beatmap of modBracket.beatmaps) {
+									this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`, new FormControl(beatmap.modifier, Validators.required));
+								}
 							}
 						}
 					}
