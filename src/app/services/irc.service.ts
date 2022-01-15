@@ -203,6 +203,7 @@ export class IrcService {
 			for (const ircChannel in allJoinedChannels) {
 				if (allJoinedChannels[ircChannel].isPrivateChannel == false && allJoinedChannels[ircChannel].isPublicChannel == false) {
 					const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
+
 					from(channel.join()).subscribe(() => {
 						this.initializeChannelListeners(channel);
 					});
@@ -413,6 +414,7 @@ export class IrcService {
 				active: true,
 				lastActiveChannel: false,
 				isPrivateChannel: false,
+				isPublicChannel: false,
 				playSoundOnMessage: false
 			}));
 
@@ -421,6 +423,7 @@ export class IrcService {
 				active: true,
 				lastActiveChannel: false,
 				isPrivateChannel: false,
+				isPublicChannel: false,
 				playSoundOnMessage: false
 			}));
 			this.toastService.addToast(`Joined channel "${channelName}".`);
@@ -429,7 +432,7 @@ export class IrcService {
 		}
 		// =========================================================
 		// Joining a "default" channel, such as #osu/#ctb/#dutch/etc
-		if (channelName.startsWith('#')) {
+		else if (channelName.startsWith('#')) {
 			this.storeService.set(`irc.channels.${channelName}`, new IrcChannel({
 				name: channelName,
 				active: true,
@@ -466,6 +469,7 @@ export class IrcService {
 					active: true,
 					lastActiveChannel: false,
 					isPrivateChannel: true,
+					isPublicChannel: false,
 					playSoundOnMessage: false
 				}));
 
@@ -474,6 +478,7 @@ export class IrcService {
 					active: true,
 					lastActiveChannel: false,
 					isPrivateChannel: true,
+					isPublicChannel: false,
 					playSoundOnMessage: false
 				}));
 				this.toastService.addToast(`Opened private message channel with "${channelName}".`);
