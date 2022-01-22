@@ -139,7 +139,7 @@ export class WyTournament {
 		for (const mappool of this.mappools) {
 			for (const modBracket of mappool.modBrackets) {
 				for (const beatmap of modBracket.beatmaps) {
-					if (beatmap.modifier == beatmapId) {
+					if (beatmap.beatmapId == beatmapId) {
 						return beatmap.modifier;
 					}
 				}
