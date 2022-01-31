@@ -59,7 +59,12 @@ export class WyModBracket {
 		});
 
 		for (const beatmap in modBracket.beatmaps) {
-			newModBracket.beatmaps.push(WyModBracketMap.makeTrueCopy(modBracket.beatmaps[beatmap]));
+			const newBeatmap = WyModBracketMap.makeTrueCopy(modBracket.beatmaps[beatmap]);
+
+			newBeatmap.index = newModBracket.beatmapIndex;
+			newModBracket.beatmapIndex++;
+
+			newModBracket.beatmaps.push(newBeatmap);
 		}
 
 		for (const mod in modBracket.mods) {
