@@ -31,10 +31,11 @@
 		<button mat-raised-button color="accent" (click)="createGenericShortcutCommands()"><mat-icon>add</mat-icon> create generic shortcut commands</button>
 	</div>
 
-	<div class="shortcut-commands">
-		<div class="command" *ngFor="let ircShortcutCommand of ircShortCutCommandsService.ircShortCutCommands">
+	<div class="shortcut-commands" cdkDropList (cdkDropListDropped)="dropChannel($event)">
+		<div class="command" *ngFor="let ircShortcutCommand of ircShortCutCommandsService.ircShortCutCommands" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="shortcut-commands">
 			<div class="actions">
 				<button mat-mini-fab color="warn" (click)="deleteIrcShortcutCommand(ircShortcutCommand)"><mat-icon>delete</mat-icon></button>
+				<button mat-mini-fab color="primary" cdkDragHandle><mat-icon>open_with</mat-icon></button>
 			</div>
 
 			<div class="label">
@@ -59,6 +60,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-	<button mat-button [mat-dialog-close]="saveIrcShortcutCommands()" color="primary">Save</button>
+	<button mat-button [mat-dialog-close]="false" color="warn">Cancel</button>
+	<button mat-button [mat-dialog-close]="true" color="primary">Save</button>
 </mat-dialog-actions>
 

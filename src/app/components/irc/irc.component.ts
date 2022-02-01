@@ -681,7 +681,7 @@ export class IrcComponent implements OnInit {
 		const dialogRef = this.dialog.open(IrcShortcutDialogComponent);
 
 		dialogRef.afterClosed().subscribe(result => {
-			if (result == undefined) {
+			if (result == false) {
 				this.ircShortcutCommandsService.loadIrcShortcutCommands();
 			}
 			else {

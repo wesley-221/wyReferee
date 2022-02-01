@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
@@ -16,10 +17,6 @@ export class IrcShortcutDialogComponent implements OnInit {
 		this.ircShortCutCommandsService.ircShortCutCommands.push(new IrcShortcutCommand());
 	}
 
-	saveIrcShortcutCommands(): IrcShortcutCommand[] {
-		return this.ircShortCutCommandsService.ircShortCutCommands;
-	}
-
 	deleteIrcShortcutCommand(ircShortcutCommand: IrcShortcutCommand): void {
 		this.ircShortCutCommandsService.removeIrcShortcutCommand(ircShortcutCommand.label);
 	}
@@ -36,5 +33,9 @@ export class IrcShortcutDialogComponent implements OnInit {
 		this.ircShortCutCommandsService.addIrcShortcutCommand('close', '!mp close', true);
 
 		this.ircShortCutCommandsService.saveIrcShortcutCommands();
+	}
+
+	dropChannel(event: CdkDragDrop<IrcShortcutCommand[]>) {
+		moveItemInArray(this.ircShortCutCommandsService.ircShortCutCommands, event.previousIndex, event.currentIndex);
 	}
 }
