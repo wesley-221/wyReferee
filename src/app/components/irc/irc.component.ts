@@ -749,4 +749,36 @@ export class IrcComponent implements OnInit {
 			}
 		}
 	}
+
+	/**
+	 * Check if the user is part of the blue team
+	 * @param name the name of the user
+	 */
+	isBlueTeam(name: string): boolean {
+		for (const player of this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)) {
+			const playerName = player.name.replace(/ /g, '_');
+
+			if (playerName == name) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if the user is part of the red team
+	 * @param name the name of the user
+	 */
+	isRedTeam(name: string): boolean {
+		for (const player of this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)) {
+			const playerName = player.name.replace(/ /g, '_');
+
+			if (playerName == name) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

@@ -3,6 +3,8 @@
 $background-color-irc: #282828;
 $bancho-chat-colour: #df96c0;
 $me-chat-colour: #ffffff;
+$red-team-chat-colour: #e94f64;
+$blue-team-chat-colour: #29b;
 
 $hyperlink-background-color: #2b4576;
 
@@ -327,6 +329,22 @@ $hyperlink-background-color: #2b4576;
 
 							border-radius: 50px;
 
+							&.red {
+								background-color: $red-team-chat-colour;
+
+								&:hover {
+									background-color: darken($red-team-chat-colour, 15%);
+								}
+							}
+
+							&.blue {
+								background-color: $blue-team-chat-colour;
+
+								&:hover {
+									background-color: darken($blue-team-chat-colour, 15%);
+								}
+							}
+
 							&.bancho {
 								background-color: $bancho-chat-colour;
 
@@ -578,21 +596,18 @@ $hyperlink-background-color: #2b4576;
 										padding: 4px;
 
 										&:hover {
-											background-color: rgba(darken($primary, 15%), 0.2);
 											cursor: pointer;
 										}
 
 										&.disabled {
-											background-color: rgba(darken($primary, 15%), 0.2);
 											cursor: not-allowed;
 										}
 									}
 								}
 
-								// &:hover {
-								// 	background-color: rgba(lighten($primary, 15%), 0.2);
-								// 	cursor: pointer;
-								// }
+								&:hover {
+									background-color: rgba(lighten($primary, 5%), 0.2);
+								}
 
 								&:last-child {
 									margin-bottom: 0;
@@ -707,6 +722,10 @@ $hyperlink-background-color: #2b4576;
 								}
 
 								.name {
+									display: flex;
+
+									align-items: center;
+
 									overflow: hidden;
 									word-wrap: none;
 
