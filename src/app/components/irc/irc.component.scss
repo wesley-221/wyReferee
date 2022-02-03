@@ -269,6 +269,12 @@ $hyperlink-background-color: #2b4576;
 				}
 			}
 
+			.first-pick-dialog {
+				&:hover {
+					cursor: pointer;
+				}
+			}
+
 			.messages {
 				float: left;
 

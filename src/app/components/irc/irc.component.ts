@@ -781,4 +781,22 @@ export class IrcComponent implements OnInit {
 
 		return false;
 	}
+
+	/**
+	 * Open lobby options dialog
+	 */
+	openLobbyDialog(): void {
+		const dialogRef = this.dialog.open(MultiplayerLobbySettingsComponent, {
+			data: {
+				multiplayerLobby: this.selectedLobby
+			}
+		});
+
+		dialogRef.afterClosed().subscribe((result: Lobby) => {
+			if (result != null) {
+				this.multiplayerLobbies.updateMultiplayerLobby(result);
+				this.refreshIrcHeader(this.selectedLobby);
+			}
+		});
+	}
 }

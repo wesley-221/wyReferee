@@ -46,8 +46,9 @@
 					<b>{{ this.hasWon }}</b> has won the match, GG and wp!
 				</div>
 
-				<div class="warning" *ngIf="selectedLobby.firstPick == null || selectedLobby.bestOf == null">
-					You haven't set the <b>First pick</b> and the <b>Best of</b> the match yet. Make sure to go to the settings and select them.
+				<div class="warning first-pick-dialog" *ngIf="selectedLobby.firstPick == null || selectedLobby.bestOf == null" (click)="openLobbyDialog()">
+					You haven't set the <b>First pick</b> of the match yet. <br />
+					<b>Click on me to change who picks first.</b>
 				</div>
 			</div>
 
@@ -101,6 +102,7 @@
 			<div class="side-menu" [ngClass]="{'in': !isOptionMenuMinimized }" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
 				<div class="side-menu-button">
 					<button mat-mini-fab color="primary" matTooltip="Open referee settings" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><mat-icon>settings</mat-icon></button>
+					<button mat-mini-fab color="primary" matTooltip="Open lobby settings" (click)="openLobbyDialog()"><mat-icon>settings</mat-icon></button>
 					<button mat-mini-fab color="primary" matTooltip="Go to multiplayer lobby match overview" (click)="navigateLobbyOverview()"><mat-icon>list</mat-icon></button>
 					<button mat-mini-fab color="primary" matTooltip="Show all the players in the current lobby" (click)="togglePlayerManagement()"><mat-icon>people</mat-icon></button>
 					<button mat-mini-fab color="primary" matTooltip="Send beatmap result to irc" (click)="sendMatchResult()"><mat-icon>send</mat-icon></button>
