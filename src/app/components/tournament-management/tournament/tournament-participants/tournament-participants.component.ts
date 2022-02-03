@@ -99,6 +99,8 @@ export class TournamentParticipantsComponent implements OnInit {
 
 			team.players.push(teamPlayer);
 		});
+
+		this.usersToAdd = null;
 	}
 
 	/**
