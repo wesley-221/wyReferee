@@ -37,6 +37,7 @@ export class UpdaterComponent implements OnInit {
 			});
 
 			this.autoUpdater.on('update-available', () => {
+				toastService.addToast('An update was found, the download will now start!');
 				this.updateWasFound = true;
 			});
 
