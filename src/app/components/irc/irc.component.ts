@@ -755,8 +755,12 @@ export class IrcComponent implements OnInit {
 	 * @param name the name of the user
 	 */
 	isBlueTeam(name: string): boolean {
-		for (const player of this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)) {
-			const playerName = player.name.replace(/ /g, '_');
+		if (this.selectedLobby == undefined)
+			return;
+
+		for (const player in this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)) {
+			const playerObj = this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)[player];
+			const playerName = playerObj.name.replace(/ /g, '_');
 
 			if (playerName == name) {
 				return true;
@@ -771,8 +775,12 @@ export class IrcComponent implements OnInit {
 	 * @param name the name of the user
 	 */
 	isRedTeam(name: string): boolean {
-		for (const player of this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)) {
-			const playerName = player.name.replace(/ /g, '_');
+		if (this.selectedLobby == undefined)
+			return;
+
+		for (const player in this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)) {
+			const playerObj = this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)[player];
+			const playerName = playerObj.name.replace(/ /g, '_');
 
 			if (playerName == name) {
 				return true;
