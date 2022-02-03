@@ -165,6 +165,10 @@ export class Regex {
 		regexTeamHost: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)\s+\/\s+Team\s+(Blue|Red)\s?\]/,
 		regexTeamHostMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)\s+\/\s+Team\s+(Blue|Red)\s+\/\s+(.*)\]/,
 		regexTeamMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[Team\s+(Blue|Red)\s+\/\s+(.*)\]/,
+		regexSolo: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s*$/,
+		regexSoloHost: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)]/,
+		regexSoloHostMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)\s+\/\s+(.*)\]/,
+		regexSoloMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(.*)\]/,
 		run: (message: string): { type: string, slotId: number, status: string, username: string, host: boolean, team: string, mods: string } => {
 			const regexTeamRegex = RegExp(Regex.playerInSlot.regexTeam).exec(message);
 
@@ -188,6 +192,35 @@ export class Regex {
 
 			if (regexTeamHostModsRegex !== null) {
 				return { type: 'regexTeamHost', slotId: parseInt(regexTeamHostModsRegex[1]), status: regexTeamHostModsRegex[2], username: regexTeamHostModsRegex[3], team: regexTeamHostModsRegex[5], host: true, mods: regexTeamHostModsRegex[6] };
+			}
+
+			const regexSoloRegex = RegExp(Regex.playerInSlot.regexSolo).exec(message);
+
+			if (regexSoloRegex !== null) {
+				return { type: 'regexSolo', slotId: parseInt(regexSoloRegex[1]), status: regexSoloRegex[2], username: regexSoloRegex[3], team: null, host: false, mods: 'none' };
+			}
+
+			const regexSoloModsRegex = RegExp(Regex.playerInSlot.regexSoloMods).exec(message);
+
+			if (regexSoloModsRegex !== null) {
+				// User is the host of the match
+				if (regexSoloModsRegex[4].indexOf('Host') > -1) {
+					const regexSoloHostRegex = RegExp(Regex.playerInSlot.regexSoloHost).exec(message);
+
+					if (regexSoloHostRegex !== null) {
+						return { type: 'regexSoloHost', slotId: parseInt(regexSoloHostRegex[1]), status: regexSoloHostRegex[2], username: regexSoloHostRegex[3], team: null, host: true, mods: 'none' };
+					}
+
+					const regexSoloHostModsRegex = RegExp(Regex.playerInSlot.regexSoloHostMods).exec(message);
+
+					if (regexSoloHostModsRegex !== null) {
+						return { type: 'regexSoloHostMods', slotId: parseInt(regexSoloHostModsRegex[1]), status: regexSoloHostModsRegex[2], username: regexSoloHostModsRegex[3], team: null, host: true, mods: regexSoloHostModsRegex[5] };
+					}
+				}
+				// User is not the host of the match
+				else {
+					return { type: 'regexSoloHostMods', slotId: parseInt(regexSoloModsRegex[1]), status: regexSoloModsRegex[2], username: regexSoloModsRegex[3], team: null, host: false, mods: regexSoloModsRegex[4] };
+				}
 			}
 
 			return null;

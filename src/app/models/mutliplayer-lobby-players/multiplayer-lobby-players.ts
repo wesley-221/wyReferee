@@ -78,6 +78,9 @@ export class MultiplayerLobbyPlayers {
 	 * @param hostChanged
 	 */
 	changeHost(player: BanchoLobbyPlayer) {
+		if (player == null)
+			return;
+
 		for (let i = 0; i < this.players.length; i++) {
 			if (this.players[i].username == player.user.username) {
 				this.players[i].isHost = true;
