@@ -42,6 +42,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-	<button mat-button mat-dialog-close>Cancel</button>
+	<button mat-button [mat-dialog-close]="undefined">Cancel</button>
 	<button mat-button [mat-dialog-close]="foundUser" color="accent">Add</button>
 </mat-dialog-actions>
