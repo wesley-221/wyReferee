@@ -475,8 +475,8 @@ export class IrcComponent implements OnInit {
 	refreshIrcHeader(multiplayerLobby: Lobby) {
 		if (this.selectedLobby == undefined) return;
 
-		if (this.selectedLobby.ircChannel == undefined) {
-			this.selectedLobby.ircChannel = this.ircService.getChannelByName(this.selectedLobby.getLobbyName());
+		if (this.selectedLobby.ircChannel == undefined || this.selectedLobby.ircChannel == null) {
+			this.selectedLobby.ircChannel = this.ircService.getChannelByName(`#mp_${Lobby.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`);
 		}
 
 		if (!this.selectedLobby.ircChannel.isPublicChannel && !this.selectedLobby.ircChannel.isPrivateChannel) {
