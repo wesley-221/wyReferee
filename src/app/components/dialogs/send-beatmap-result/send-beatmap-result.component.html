@@ -1,6 +1,10 @@
 <h2 mat-dialog-title>Send beatmap result</h2>
 
 <mat-dialog-content class="mat-typography">
+	<div class="alert alert-info" *ngIf="data.multiplayerLobby.multiplayerData.length <= 0">
+		No beatmaps have been played yet.
+	</div>
+
 	<div *ngFor="let match of data.multiplayerLobby.multiplayerData | reverse">
 		<div class="img" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + getBeatmapCoverUrl(match.beatmap_id) + ')' }">
 			<h2>{{ getBeatmapname(match.beatmap_id) }}</h2>
