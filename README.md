@@ -59,13 +59,6 @@ npm start
 
 This will launch wyReferee in a hot-reloaded Electron window, where any change you make will reload the client with the new changes.
 
-## Project structure
-
-|Folder|Description|
-| ---- | ---- |
-| app | Electron main process folder |
-| src | Electron renderer process folder (Angular) |
-
 [linux-build-badge]: https://github.com/wesley-221/wyreferee/workflows/Linux%20Build/badge.svg
 [linux-build]: https://github.com/wesley-221/wyreferee/actions?query=workflow%3A%22Linux+Build%22
 [macos-build-badge]: https://github.com/wesley-221/wyreferee/workflows/MacOS%20Build/badge.svg
