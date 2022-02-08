@@ -67,6 +67,9 @@ export class MultiplayerLobbyPlayers {
 		}
 
 		for (let i = 0; i < this.players.length; i++) {
+			if (movePlayer == undefined)
+				continue;
+
 			if (this.players[i].slot == movePlayer.slot) {
 				this.players[i] = movePlayer;
 			}
