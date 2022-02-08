@@ -59,8 +59,8 @@ export class WyMappool {
 	 * Get a regex to match HD1/DT3/etc. from the mappool
 	 * @param fullRegex true = NM1 // false = NM 1 (separated)
 	 */
-	getModbracketRegex(fullRegex: boolean = false): RegExp {
-		let regexOptions: string[] = [];
+	getModbracketRegex(fullRegex = false): RegExp {
+		const regexOptions: string[] = [];
 
 		for (const modBracket of this.modBrackets) {
 			if (modBracket.acronym) {

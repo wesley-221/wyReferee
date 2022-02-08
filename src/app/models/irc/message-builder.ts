@@ -1,4 +1,4 @@
-import { WyMod } from "../wytournament/mappool/wy-mod";
+import { WyMod } from '../wytournament/mappool/wy-mod';
 
 export enum MessageType {
 	Message = 'Message',

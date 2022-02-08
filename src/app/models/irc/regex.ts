@@ -317,7 +317,7 @@ export class Regex {
 			return false;
 		},
 		run: (regexp: RegExp, message: string): any => {
-			const multiplayerModRegex = message.match(regexp);
+			const multiplayerModRegex = regexp.exec(message);
 
 			if (multiplayerModRegex) {
 				return multiplayerModRegex;
