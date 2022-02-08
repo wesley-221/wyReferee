@@ -30,6 +30,7 @@ import { MultiplayerLobbySettingsComponent } from '../dialogs/multiplayer-lobby-
 import { IrcPickMapSameModBracketComponent } from '../dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { IrcShortcutWarningDialogComponent } from '../dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
+import { MessageBuilder } from 'app/models/irc/message-builder';
 
 export interface BanBeatmapDialogData {
 	beatmap: WyModBracketMap;
@@ -806,5 +807,42 @@ export class IrcComponent implements OnInit {
 				this.refreshIrcHeader(this.selectedLobby);
 			}
 		});
+	}
+
+	/**
+	 * Pick a beatmap from the given acronym typed in irc (HR1/MM2/DT3/etc.)
+	 * @param chatPiece a MessageBuilder from irc to pick the map
+	 */
+	pickBeatmapFromAcronym(chatPiece: MessageBuilder) {
+		if (this.selectedLobby.mappool.id == chatPiece.modAcronymMappoolId) {
+			for (const modBracket of this.selectedLobby.mappool.modBrackets) {
+				if (modBracket.id == chatPiece.modAcronymModBracketId) {
+					for (const map of modBracket.beatmaps) {
+						if (map.beatmapId == chatPiece.modAcronymBeatmapId) {
+							this.pickBeatmap(map, modBracket, chatPiece.modAcronymGameMode);
+							return;
+						}
+					}
+				}
+			}
+		}
+		else {
+			for (const mappool of this.selectedLobby.tournament.mappools) {
+				if (mappool.id == chatPiece.modAcronymMappoolId) {
+					for (const modBracket of mappool.modBrackets) {
+						if (modBracket.id == chatPiece.modAcronymModBracketId) {
+							for (const map of modBracket.beatmaps) {
+								if (map.beatmapId == chatPiece.modAcronymBeatmapId) {
+									this.pickBeatmap(map, modBracket, chatPiece.modAcronymGameMode);
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		this.toastService.addToast(`Unable to pick ${chatPiece.message}.`);
 	}
 }

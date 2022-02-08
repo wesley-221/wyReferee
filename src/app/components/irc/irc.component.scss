@@ -407,6 +407,24 @@ $hyperlink-background-color: #2b4576;
 										}
 									}
 								}
+
+								.pick-beatmap {
+									margin-right: 3px;
+									margin-left: 3px;
+
+									.url {
+										padding: 5px;
+										background-color: $hyperlink-background-color;
+									}
+
+									&:hover {
+										cursor: pointer;
+
+										.url {
+											background-color: lighten($hyperlink-background-color, 15%);
+										}
+									}
+								}
 							}
 						}
 					}

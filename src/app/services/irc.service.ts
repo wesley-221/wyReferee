@@ -11,6 +11,7 @@ import { IrcChannel, TeamMode, WinCondition } from 'app/models/irc/irc-channel';
 import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyMultiplayerLobbiesService } from './wy-multiplayer-lobbies.service';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
+import { Lobby } from 'app/models/lobby';
 
 @Injectable({
 	providedIn: 'root'
@@ -306,28 +307,40 @@ export class IrcService {
 		// ===============================
 		// The user is sending the message
 		if (isSending == true) {
+			const channel = this.getChannelByName(recipient);
+			const multiplayerLobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name);
+
 			// Join channel if you haven't joined it yet
-			if (this.getChannelByName(recipient) == null) {
+			if (channel == null) {
 				this.joinChannel(recipient);
 			}
 
 			newMessage = new IrcMessage({
-				messageId: Object.keys(this.getChannelByName(recipient).messages).length + 1,
+				messageId: Object.keys(channel.messages).length + 1,
 				date: dateFormat,
 				time: timeFormat,
 				author: user,
-				messageBuilder: this.buildMessage(message),
+				messageBuilder: this.buildMessage(message, multiplayerLobby),
 				isADivider: false
 			});
 
-			this.getChannelByName(recipient).messages.push(newMessage);
-			this.getChannelByName(recipient).hasUnreadMessages = true;
+			channel.messages.push(newMessage);
+			channel.hasUnreadMessages = true;
+
 			this.saveMessageToHistory(recipient, newMessage);
 		}
 		// =============================
 		// The message is being received
 		else {
-			const messageId = this.getChannelByName(user) == null ? 0 : Object.keys(this.getChannelByName(user).messages).length + 1;
+			const channel = this.getChannelByName(user);
+			const messageId = channel == null ? 0 : Object.keys(channel.messages).length + 1;
+
+			// Join channel if you haven't joined it yet
+			if (channel == null) {
+				this.joinChannel(user);
+			}
+
+			const multiplayerLobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name);
 
 			// Message is received from a #mp_ channel
 			if (user.startsWith('#mp_')) {
@@ -336,7 +349,7 @@ export class IrcService {
 					date: dateFormat,
 					time: timeFormat,
 					author: recipient,
-					messageBuilder: this.buildMessage(message),
+					messageBuilder: this.buildMessage(message, multiplayerLobby),
 					isADivider: false
 				});
 			}
@@ -347,7 +360,7 @@ export class IrcService {
 					date: dateFormat,
 					time: timeFormat,
 					author: recipient,
-					messageBuilder: this.buildMessage(message),
+					messageBuilder: this.buildMessage(message, multiplayerLobby),
 					isADivider: false
 				});
 			}
@@ -358,21 +371,17 @@ export class IrcService {
 					date: dateFormat,
 					time: timeFormat,
 					author: user,
-					messageBuilder: this.buildMessage(message),
+					messageBuilder: this.buildMessage(message, multiplayerLobby),
 					isADivider: false
 				});
 			}
 
-			// Join channel if you haven't joined it yet
-			if (this.getChannelByName(user) == null) {
-				this.joinChannel(user);
-			}
+			channel.messages.push(newMessage);
+			channel.hasUnreadMessages = true;
 
-			this.getChannelByName(user).messages.push(newMessage);
-			this.getChannelByName(user).hasUnreadMessages = true;
 			this.saveMessageToHistory(user, newMessage);
 
-			if (this.getChannelByName(user).playSoundOnMessage) {
+			if (channel.playSoundOnMessage) {
 				const sound = new Howl({
 					src: ['assets/stairs.mp3'],
 				});
@@ -603,8 +612,9 @@ export class IrcService {
 	/**
 	 * Build a message with the appropriate hyperlinks
 	 * @param message the message to build
+	 * @param lobby the multiplayer lobby the message was sent for
 	 */
-	buildMessage(message: string): MessageBuilder[] {
+	buildMessage(message: string, lobby: Lobby): MessageBuilder[] {
 		const messageBuilder: MessageBuilder[] = [];
 
 		const allRegexes = [
@@ -707,10 +717,71 @@ export class IrcService {
 				}
 			}
 			else {
-				messageBuilder.push(new MessageBuilder({
-					messageType: MessageType.Message,
-					message: message
-				}));
+				// Multiplayer lobby regex -> HD1/DT3/etc.
+				if (lobby.mappool != null && lobby.mappool != undefined) {
+					let regexp = lobby.mappool.getModbracketRegex(true);
+					const currentRegexTest = Regex.multiplayerLobbyMod.test(regexp, message);
+
+					// A mod acronym was mentioned
+					if (currentRegexTest) {
+						const splittedString = message.split(regexp).filter(s => s != undefined && s != '' && s.trim());
+
+						if (splittedString.length == 1) {
+							const mapInformation = lobby.mappool.getInformationFromPickAcronym(splittedString[0]);
+
+							messageBuilder.push(new MessageBuilder({
+								messageType: MessageType.ModAcronymPick,
+								message: splittedString[0],
+								modAcronymBeatmapId: mapInformation.beatmapId,
+								modAcronymGameMode: lobby.tournament.gamemodeId,
+								modAcronymMappoolId: lobby.mappool.id,
+								modAcronymModBracketId: mapInformation.modBracket.id,
+								modAcronymMods: mapInformation.modBracket.mods
+							}));
+						}
+						else {
+							regexp = lobby.mappool.getModbracketRegex();
+
+							for (const split in splittedString) {
+								// The split is a mod acronym pick
+								if (regexp.test(splittedString[split])) {
+									const mapInformation = lobby.mappool.getInformationFromPickAcronym(splittedString[split]);
+
+									messageBuilder.push(new MessageBuilder({
+										messageType: MessageType.ModAcronymPick,
+										message: splittedString[split],
+										modAcronymBeatmapId: mapInformation.beatmapId,
+										modAcronymGameMode: lobby.tournament.gamemodeId,
+										modAcronymMappoolId: lobby.mappool.id,
+										modAcronymModBracketId: mapInformation.modBracket.id,
+										modAcronymMods: mapInformation.modBracket.mods
+									}));
+								}
+								// The split is a message
+								else {
+									messageBuilder.push(new MessageBuilder({
+										messageType: MessageType.Message,
+										message: splittedString[split]
+									}));
+								}
+							}
+						}
+					}
+					// Normal message
+					else {
+						messageBuilder.push(new MessageBuilder({
+							messageType: MessageType.Message,
+							message: message
+						}));
+					}
+				}
+				// Normal message
+				else {
+					messageBuilder.push(new MessageBuilder({
+						messageType: MessageType.Message,
+						message: message
+					}));
+				}
 			}
 		}
 

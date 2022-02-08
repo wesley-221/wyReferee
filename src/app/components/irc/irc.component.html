@@ -69,9 +69,14 @@
 						<div class="message">
 							<div class="message-piece" *ngFor="let chatPiece of chat.messageBuilder">
 								<span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
+
 								<div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
 									<span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
 									<span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
+								</div>
+
+								<div class="pick-beatmap" *ngIf="chatPiece.messageType == 'ModAcronymPick'" (click)="pickBeatmapFromAcronym(chatPiece)" matTooltip="Click to pick beatmap" matTooltipPosition="above">
+									<span class="url">{{ chatPiece.message }}</span>
 								</div>
 							</div>
 						</div>

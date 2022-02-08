@@ -305,4 +305,25 @@ export class Regex {
 			return null;
 		}
 	}
+
+	static multiplayerLobbyMod = {
+		test: (regexp: RegExp, message: string): boolean => {
+			const multiplayerModRegex = regexp.test(message);
+
+			if (multiplayerModRegex) {
+				return multiplayerModRegex;
+			}
+
+			return false;
+		},
+		run: (regexp: RegExp, message: string): any => {
+			const multiplayerModRegex = message.match(regexp);
+
+			if (multiplayerModRegex) {
+				return multiplayerModRegex;
+			}
+
+			return null;
+		}
+	}
 }

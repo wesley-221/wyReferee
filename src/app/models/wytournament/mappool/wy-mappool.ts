@@ -56,6 +56,51 @@ export class WyMappool {
 	}
 
 	/**
+	 * Get a regex to match HD1/DT3/etc. from the mappool
+	 * @param fullRegex true = NM1 // false = NM 1 (separated)
+	 */
+	getModbracketRegex(fullRegex: boolean = false): RegExp {
+		let regexOptions: string[] = [];
+
+		for (const modBracket of this.modBrackets) {
+			if (modBracket.acronym) {
+				if (fullRegex == true) {
+					regexOptions.push(`(${modBracket.acronym}\\s?[1-${modBracket.beatmaps.length}])`);
+				}
+				else {
+					regexOptions.push(`(${modBracket.acronym})\\s?([1-${modBracket.beatmaps.length}])`);
+				}
+			}
+		}
+
+		return RegExp(`(?:${regexOptions.join('|')})+`, 'gi');
+	}
+
+	/**
+	 * Get information about a beatmap from the given acronym
+	 * @param acronym the acronym to get the information for
+	 */
+	getInformationFromPickAcronym(acronym: string): { mappool: WyMappool, modBracket: WyModBracket, beatmapId: number } {
+		const regexp = this.getModbracketRegex();
+		const regex = regexp.exec(acronym).filter(s => s != undefined && s.trim());
+
+		const modBracketAcronym = regex[1];
+		const modBracketAcronymIndex = regex[2];
+
+		for (const modBracket of this.modBrackets) {
+			if (modBracket.acronym.toLowerCase() == modBracketAcronym.toLowerCase()) {
+				return {
+					mappool: this,
+					modBracket: modBracket,
+					beatmapId: modBracket.beatmaps[parseInt(modBracketAcronymIndex) - 1].beatmapId
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Create a true copy of the object
 	 * @param mod the object to copy
 	 */
