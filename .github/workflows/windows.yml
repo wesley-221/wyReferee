@@ -22,7 +22,7 @@ jobs:
         node-version: [12.x]
 
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
     - uses: actions/checkout@v2
