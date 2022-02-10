@@ -84,7 +84,7 @@
 				<div class="modify-buttons">
 					<button mat-raised-button (click)="addBeatmap(modBracket)" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new beatmap</button>
 					<button mat-raised-button (click)="addBulkBeatmaps(modBracket)" color="primary" [disabled]="bulkBeatmaps == null || bulkBeatmaps.length <= 0"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add bulk beatmaps</button>
-					<button mat-raised-button (click)="synchronizeAll(modBracket)" color="primary" [disabled]="synchAllDisabled"><fa-icon [icon]="['fas', 'sync']"></fa-icon> synchronize all beatmaps</button>
+					<button mat-raised-button (click)="synchronizeAll(modBracket)" color="primary" [disabled]="synchAllDisabled"><mat-icon>sync</mat-icon> synchronize all beatmaps</button>
 				</div>
 
 				<mat-form-field class="full-width extra-spacing">

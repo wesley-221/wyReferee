@@ -7,7 +7,7 @@
 		<div class="user" *ngFor="let administrator of tournament.administrators">
 			<a class="link" (click)="electronService.openLink(administrator.getOsuProfileUrl())">{{ administrator.username }}</a>
 
-			<button mat-mini-fab color="warn" (click)="removeAdministrator(administrator)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+			<button mat-mini-fab color="warn" (click)="removeAdministrator(administrator)"><mat-icon>delete</mat-icon></button>
 		</div>
 	</div>
 
@@ -21,7 +21,7 @@
 		<div class="user" *ngFor="let user of tournament.availableTo">
 			<a class="link" (click)="electronService.openLink(user.getOsuProfileUrl())">{{ user.username }}</a>
 
-			<button mat-mini-fab color="warn" (click)="removeUser(user)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+			<button mat-mini-fab color="warn" (click)="removeUser(user)"><mat-icon>delete</mat-icon></button>
 		</div>
 	</div>
 </div>

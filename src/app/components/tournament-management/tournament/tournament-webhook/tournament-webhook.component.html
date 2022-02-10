@@ -34,7 +34,7 @@
 					<h3 *ngIf="webhook.name == null">Unnamed webhook</h3>
 					<h3 *ngIf="webhook.name != null">{{ webhook.name }}</h3>
 
-					<button mat-mini-fab color="warn" (click)="removeWebhook(webhook)"><fa-icon [icon]="['fas', 'times']"></fa-icon></button>
+					<button mat-mini-fab color="warn" (click)="removeWebhook(webhook)"><mat-icon>delete</mat-icon></button>
 				</div>
 
 				<div class="row">
