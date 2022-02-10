@@ -29,6 +29,7 @@
 							<mat-form-field class="full-width">
 								<mat-label>Best of</mat-label>
 								<mat-select [formControlName]="'tournament-stage-best-of-' + stage.index" (selectionChange)="changeStageBestOf(stage, $event)" [value]="stage.bestOf">
+									<mat-option [value]="0">N/A</mat-option>
 									<mat-option [value]="5">5</mat-option>
 									<mat-option [value]="7">7</mat-option>
 									<mat-option [value]="9">9</mat-option>

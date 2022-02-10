@@ -91,7 +91,7 @@ export class TournamentParticipantsComponent implements OnInit {
 	 * @param team the team to add the players to
 	 */
 	addBulkPlayers(team: WyTeam) {
-		const allUsers = this.usersToAdd.split(',');
+		const allUsers = this.usersToAdd.split('\n');
 
 		allUsers.forEach(user => {
 			const teamPlayer = new WyTeamPlayer();

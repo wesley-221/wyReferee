@@ -172,7 +172,7 @@ export class ModBracketComponent implements OnInit {
 	 * @param modBracket the bracket to add the beatmaps to
 	 */
 	addBulkBeatmaps(bracket: WyModBracket): void {
-		const allBeatmaps = this.bulkBeatmaps.split(',');
+		const allBeatmaps = this.bulkBeatmaps.split('\n');
 
 		allBeatmaps.forEach(beatmapId => {
 			const newModBracketMap = new WyModBracketMap();
