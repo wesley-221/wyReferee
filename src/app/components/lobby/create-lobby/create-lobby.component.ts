@@ -223,6 +223,15 @@ export class CreateLobbyComponent implements OnInit {
 				}
 
 				lobby.sendWebhooks = this.webhook;
+
+				for (const mappool of this.selectedTournament.mappools) {
+					if (mappool.name == selectedStage) {
+						lobby.mappoolId == mappool.id;
+						lobby.mappool = mappool;
+
+						break;
+					}
+				}
 			}
 
 			this.ircService.isCreatingMultiplayerLobby = lobby.lobbyId;

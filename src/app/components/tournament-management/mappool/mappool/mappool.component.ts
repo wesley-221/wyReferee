@@ -23,8 +23,8 @@ export class MappoolComponent implements OnInit {
 	 * When the name of the mappool gets changed
 	 * @param evt
 	 */
-	onNameChange(evt: Event) {
-		this.mappool.name = (evt.target as any).value
+	onNameChange(evt: MatSelectChange) {
+		this.mappool.name = evt.value;
 	}
 
 	/**
@@ -86,7 +86,7 @@ export class MappoolComponent implements OnInit {
 		const newModBracket = new WyModBracket({
 			index: this.mappool.modBracketIndex,
 			name: 'Unnamed mod bracket',
-			collapsed: true,
+			collapsed: false,
 			modIndex: 0,
 			beatmapIndex: 0
 		});

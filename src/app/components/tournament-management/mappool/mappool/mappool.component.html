@@ -5,14 +5,15 @@
 
 			<mat-form-field class="full-width">
 				<mat-label>Mappool name</mat-label>
-				<input matInput [formControlName]="'mappool-' + mappool.index + '-name'" (change)="onNameChange($event)" />
 
-				<mat-error *ngIf="validationForm.get('mappool-' + mappool.index + '-name').errors && (validationForm.get('mappool-' + mappool.index + '-name').touched || validationForm.get('mappool-' + mappool.index + '-name').dirty)">
-					This field is required
-				</mat-error>
+				<mat-select [formControlName]="'mappool-' + mappool.index + '-name'" (selectionChange)="onNameChange($event)">
+					<mat-option *ngFor="let stage of tournament.stages" [value]="stage.name">
+						{{ stage.name }}
+					</mat-option>
+				</mat-select>
 			</mat-form-field>
 
-			<p>The name of the mappool. It is used to identify the mappool more easily</p>
+			<p>Select the name of the mappool</p>
 		</div>
 
 		<div class="col">
