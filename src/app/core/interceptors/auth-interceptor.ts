@@ -3,8 +3,8 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient } from
 import { Observable, of, throwError } from 'rxjs';
 import { concatMap, delay, retryWhen } from 'rxjs/operators';
 import { AppConfig } from 'environments/environment';
-import { OauthService } from './services/oauth.service';
-import { Oauth } from './models/authentication/oauth';
+import { OauthService } from '../../services/oauth.service';
+import { Oauth } from '../../models/authentication/oauth';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
