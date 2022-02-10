@@ -28,16 +28,11 @@
 	Head on over to <a [routerLink]="['settings']">Settings</a> where all the general settings are located.
 </p>
 
-<h2>wyBin tournament host</h2>
+<h2>osu! authentication</h2>
 <p>
-	This is the login that allows you to publish a tournament and mappool. When a tournament or mappool has been
-	published, other people are able to import these to their own client.
-</p>
-
-<p>
-	Even if you have an account doesn't mean you will be able to publish your tournaments or mappools. To request access
-	for publishing tournaments or mappools you have to send a request to Wesley#2772 on Discord (somewhat manual process
-	right now, will try to improve this in the future).
+	This is used to identify who you are. A new window will pop up where you will have to give permission for wyReferee
+	to read public data on your behalf. This basically means that wyReferee will be able to tell who is logged in, which
+	then will be used to give you permissions to create, edit and view tournaments.
 </p>
 
 <h2>osu! irc</h2>
@@ -52,4 +47,13 @@
 	This client requires you to set your api key to get various data from the osu server. In order for the client to
 	show everything properly, we have to get data from the osu! servers. This way we will be able to get all multiplayer
 	match data and beatmap data.
+</p>
+
+<h2>Making your own tournament</h2>
+<p>
+	<b>NEW: Publishing your tournaments is now publicly available.</b> <br />
+
+	Do you want to make your own Tournament in wyReferee? Go to the <a class="hover"
+		(click)="electronService.openLink('https://github.com/wesley-221/wyReferee/wiki/4.-Management')">wiki (click
+		me)</a> and simply follow the steps to get started!
 </p>

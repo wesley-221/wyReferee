@@ -15,7 +15,7 @@
 		</div>
 
 		<div class="buttons">
-			<button mat-mini-fab color="primary" matTooltip="Publish this tournament" [matTooltipPosition]="'above'" (click)="publishTournament(tournament)" *ngIf="canPublish() && (publishedTournament == undefined || publishedTournament == false)"><mat-icon>cloud_upload</mat-icon></button>
+			<button mat-mini-fab color="primary" matTooltip="Publish this tournament" [matTooltipPosition]="'above'" (click)="publishTournament(tournament)"><mat-icon>cloud_upload</mat-icon></button>
 			<button mat-mini-fab color="warn" matTooltip="Delete this tournament" [matTooltipPosition]="'above'" (click)="deleteTournament(tournament)"><mat-icon>delete</mat-icon></button>
 		</div>
 	</div>
