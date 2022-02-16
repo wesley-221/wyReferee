@@ -394,6 +394,9 @@ $hyperlink-background-color: #2b4576;
 								display: inline-block;
 
 								.link {
+									margin-right: 3px;
+									margin-left: 3px;
+
 									.url {
 										background-color: $hyperlink-background-color;
 										padding: 5px;
@@ -423,6 +426,16 @@ $hyperlink-background-color: #2b4576;
 										.url {
 											background-color: lighten($hyperlink-background-color, 15%);
 										}
+									}
+								}
+
+								&:first-child {
+									.link {
+										margin-left: 0;
+									}
+
+									.pick-beatmap {
+										margin-left: 0;
 									}
 								}
 							}
