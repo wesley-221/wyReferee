@@ -718,7 +718,7 @@ export class IrcService {
 			}
 			else {
 				// Multiplayer lobby regex -> HD1/DT3/etc.
-				if (lobby.mappool != null && lobby.mappool != undefined) {
+				if (lobby != undefined && lobby != null && lobby.mappool != null && lobby.mappool != undefined) {
 					let regexp = lobby.mappool.getModbracketRegex(true);
 					const currentRegexTest = Regex.multiplayerLobbyMod.test(regexp, message);
 
