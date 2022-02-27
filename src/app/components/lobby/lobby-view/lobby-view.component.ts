@@ -243,6 +243,14 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
+	 * Get the beatmap url
+	 * @param beatmapId the beatmapid
+	 */
+	getBeatmapUrlFromId(beatmapId: number): string {
+		return `https://osu.ppy.sh/beatmaps/${beatmapId}`;
+	}
+
+	/**
 	 * Get the cached username
 	 * @param userId the userid
 	 */
