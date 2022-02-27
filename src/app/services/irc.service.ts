@@ -439,6 +439,9 @@ export class IrcService {
 			}));
 			this.toastService.addToast(`Joined channel "${channelName}".`);
 
+			const channel = this.client.getChannel(channelName) as BanchoMultiplayerChannel;
+			channel.join();
+
 			this.isJoiningChannel$.next(false);
 		}
 		// =========================================================
