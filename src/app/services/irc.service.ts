@@ -307,12 +307,13 @@ export class IrcService {
 		// ===============================
 		// The user is sending the message
 		if (isSending == true) {
-			const channel = this.getChannelByName(recipient);
+			let channel = this.getChannelByName(recipient);
 			const multiplayerLobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name);
 
 			// Join channel if you haven't joined it yet
 			if (channel == null) {
 				this.joinChannel(recipient);
+				channel = this.getChannelByName(recipient);
 			}
 
 			newMessage = new IrcMessage({
@@ -332,12 +333,13 @@ export class IrcService {
 		// =============================
 		// The message is being received
 		else {
-			const channel = this.getChannelByName(user);
+			let channel = this.getChannelByName(user);
 			const messageId = channel == null ? 0 : Object.keys(channel.messages).length + 1;
 
 			// Join channel if you haven't joined it yet
 			if (channel == null) {
 				this.joinChannel(user);
+				channel = this.getChannelByName(user);
 			}
 
 			const multiplayerLobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name);
