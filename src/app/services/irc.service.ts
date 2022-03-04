@@ -138,7 +138,7 @@ export class IrcService {
 		 */
 		this.client.on('PM', (message: PrivateMessage) => {
 			if (message.self != true)
-				this.addMessageToChannel(message.user.ircUsername, message.recipient.ircUsername, message.content, false);
+				this.addMessageToChannel(message.user.username, message.recipient.username, message.content, false);
 		});
 
 		this.client.on('CM', (message: ChannelMessage) => {
@@ -509,7 +509,7 @@ export class IrcService {
 	sendChannelMessage(message: ChannelMessage) {
 		// Message is send from ingame
 		if (message.self == false) {
-			this.addMessageToChannel(message.channel.name, message.user.ircUsername, message.message, false);
+			this.addMessageToChannel(message.channel.name, message.user.username, message.message, false);
 		}
 	}
 
