@@ -201,7 +201,7 @@ export class Lobby {
 	 * Get the name of the lobby if it's a qualifier lobby
 	 */
 	getQualifierName(): string {
-		return `${this.tournament.acronym}: ${this.description}`;
+		return this.tournament == null ? this.description : `${this.tournament.acronym}: ${this.description}`;
 	}
 
 	/**
