@@ -47,7 +47,7 @@ export class SendFinalResultComponent implements OnInit {
 		let winningTeam = null;
 		let losingTeam = null;
 
-		if(this.isWinByDefault) {
+		if (this.isWinByDefault) {
 			winningTeam = this.secondStepFormGroup.get('winning-team').value;
 			losingTeam = winningTeam == this.data.multiplayerLobby.teamOneName ? this.data.multiplayerLobby.teamTwoName : this.data.multiplayerLobby.teamOneName;
 		}
@@ -61,7 +61,8 @@ export class SendFinalResultComponent implements OnInit {
 			losingTeam: losingTeam,
 			winByDefault: this.isWinByDefault,
 			multiplayerLobby: this.data.multiplayerLobby,
-			extraMessage: this.firstStepFormGroup.get('extra-message').value
+			extraMessage: this.firstStepFormGroup.get('extra-message').value,
+			qualifierLobby: this.firstStepFormGroup.get('match-outcome').value == 'qualifier-result' ? true : false
 		}
 	}
 }

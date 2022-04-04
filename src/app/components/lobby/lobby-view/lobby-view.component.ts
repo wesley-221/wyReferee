@@ -30,6 +30,8 @@ export interface MultiplayerLobbySendFinalMessageDialogData {
 	losingTeam: string;
 
 	extraMessage: string;
+
+	qualifierLobby: boolean;
 }
 
 @Component({
@@ -393,11 +395,18 @@ export class LobbyViewComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe((result: MultiplayerLobbySendFinalMessageDialogData) => {
-			if (result.winByDefault) {
-				this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser);
-			}
-			else {
-				this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+			if (result != undefined) {
+				if (result.qualifierLobby) {
+					this.webhookService.sendQualifierResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+				}
+				else {
+					if (result.winByDefault) {
+						this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser);
+					}
+					else {
+						this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+					}
+				}
 			}
 		});
 	}

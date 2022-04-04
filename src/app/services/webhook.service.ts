@@ -164,6 +164,51 @@ export class WebhookService {
 	}
 
 	/**
+	 * Send qualifier lobby message to discord through a webhook
+	 * @param selectedLobby the lobby to get the data from
+	 * @param extraMessage the extra message
+	 * @param referee the referee
+	 */
+	sendQualifierResult(selectedLobby: Lobby, extraMessage: string, referee: string) {
+		// Dont send webhooks if its disabled
+		if (!this.doSendWebhooks(selectedLobby)) {
+			return;
+		}
+
+		const body = {
+			'embeds': [
+				{
+					'title': selectedLobby.getQualifierName(),
+					'description': '',
+					'url': selectedLobby.multiplayerLink,
+					'color': 15258703,
+					'timestamp': new Date(),
+					'footer': {
+						'text': `Match referee was ${referee}`
+					},
+					'fields': [
+					]
+				}
+			]
+		};
+
+		if (extraMessage != null) {
+			body.embeds[0].fields.push({
+				'name': `**Additional message by ${referee}**`,
+				'value': extraMessage,
+			});
+		}
+
+		for (const webhook of selectedLobby.tournament.webhooks) {
+			if (webhook.finalResult == true) {
+				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(() => {
+					this.toastService.addToast('Successfully send the message to Discord.');
+				});
+			}
+		}
+	}
+
+	/**
 	 * Send the ban through a discord webhook
 	 * @param selectedLobby the lobby to get the data from
 	 * @param teamName the name of the banner

@@ -11,11 +11,13 @@
 				<ul>
 					<li>"Win by default" is for when one of both teams/players didn't show up.</li>
 					<li>"Normal result" is for when the match finished as it's supposed to be.</li>
+					<li>"Qualifier result" is for when a match is a qualifier lobby.</li>
 				</ul>
 
 				<mat-button-toggle-group color="primary" formControlName="match-outcome" (change)="changeMatchOutcome($event)">
 					<mat-button-toggle value="win-by-default">Win by default</mat-button-toggle>
 					<mat-button-toggle value="normal-result">Normal result</mat-button-toggle>
+					<mat-button-toggle value="qualifier-result">Qualifier result</mat-button-toggle>
 				</mat-button-toggle-group>
 
 				<div class="alert alert-warning" *ngIf="firstStepFormGroup.get('match-outcome').errors && (firstStepFormGroup.get('match-outcome').touched || firstStepFormGroup.get('match-outcome').dirty)">
