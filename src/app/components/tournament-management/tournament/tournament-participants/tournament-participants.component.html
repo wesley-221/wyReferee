@@ -5,14 +5,14 @@
 				<h3>Teams</h3>
 				<p>Add a team to the tournament.</p>
 
-				<button mat-raised-button (click)="addTeam()" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new team</button>
+				<button mat-raised-button (click)="addTeam()" color="primary"><mat-icon>add</mat-icon> add new team</button>
 			</div>
 
 			<div *ngIf="tournament.isSoloTournament()">
 				<h3>Players</h3>
 				<p>Add a player to the tournament.</p>
 
-				<button mat-raised-button (click)="addTeam()" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new player</button>
+				<button mat-raised-button (click)="addTeam()" color="primary"><mat-icon>add</mat-icon> add new player</button>
 			</div>
 
 			<hr />

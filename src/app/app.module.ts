@@ -50,9 +50,6 @@ import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.co
 import { TournamentComponent } from './components/tournament-management/tournament/tournament/tournament.component';
 import { TournamentCreateComponent } from './components/tournament-management/tournament-create/tournament-create.component';
 import { TournamentAddUserDialogComponent } from './components/dialogs/tournament-add-user-dialog/tournament-add-user-dialog.component';
-import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
 import { MappoolComponent } from './components/tournament-management/mappool/mappool/mappool.component';
 import { ModBracketComponent } from './components/tournament-management/mappool/mod-bracket/mod-bracket.component';
 import { TournamentGeneralComponent } from './components/tournament-management/tournament/tournament-general/tournament-general.component';
@@ -148,8 +145,7 @@ import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shor
 		VirtualScrollerModule,
 		BrowserAnimationsModule,
 		ClipboardModule,
-		AngularMaterialModule,
-		FontAwesomeModule
+		AngularMaterialModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
@@ -158,7 +154,5 @@ import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shor
 })
 
 export class AppModule {
-	constructor(library: FaIconLibrary) {
-		library.addIconPacks(fas, far);
-	}
+	constructor() { }
 }

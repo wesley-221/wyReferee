@@ -22,7 +22,7 @@
 
 		<hr />
 
-		<button mat-raised-button color="primary" (click)="createWebhook()"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new webhook</button>
+		<button mat-raised-button color="primary" (click)="createWebhook()"><mat-icon>add</mat-icon> add new webhook</button>
 
 		<div class="all-webhooks">
 			<div class="alert alert-info" *ngIf="tournament.webhooks.length <= 0">

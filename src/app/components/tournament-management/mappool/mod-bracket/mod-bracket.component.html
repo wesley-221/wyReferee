@@ -51,7 +51,7 @@
 			</p>
 
 			<div class="spacing">
-				<button mat-raised-button (click)="addNewMod()" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new mod</button>
+				<button mat-raised-button (click)="addNewMod()" color="primary"><mat-icon>add</mat-icon> add new mod</button>
 			</div>
 
 			<div class="all-mods">
@@ -82,8 +82,8 @@
 				<p>Import beatmaps that will be used in the mod bracket. Make sure to synchronize the beatmaps so you you know you got the correct beatmap.</p>
 
 				<div class="modify-buttons">
-					<button mat-raised-button (click)="addBeatmap(modBracket)" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new beatmap</button>
-					<button mat-raised-button (click)="addBulkBeatmaps(modBracket)" color="primary" [disabled]="bulkBeatmaps == null || bulkBeatmaps.length <= 0"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add bulk beatmaps</button>
+					<button mat-raised-button (click)="addBeatmap(modBracket)" color="primary"><mat-icon>add</mat-icon> add new beatmap</button>
+					<button mat-raised-button (click)="addBulkBeatmaps(modBracket)" color="primary" [disabled]="bulkBeatmaps == null || bulkBeatmaps.length <= 0"><mat-icon>add</mat-icon> add bulk beatmaps</button>
 					<button mat-raised-button (click)="synchronizeAll(modBracket)" color="primary" [disabled]="synchAllDisabled"><mat-icon>sync</mat-icon> synchronize all beatmaps</button>
 				</div>
 

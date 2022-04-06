@@ -44,7 +44,7 @@
 			Once you have created all the categories, you will be able to assign them once the mappool is published.
 		</p>
 
-		<button mat-raised-button (click)="addNewCategory()" color="primary"><fa-icon [icon]="['fas', 'plus']"></fa-icon> add new category</button>
+		<button mat-raised-button (click)="addNewCategory()" color="primary"><mat-icon>add</mat-icon> add new category</button>
 
 		<div class="categories">
 			<div *ngIf="mappool.modCategories.length == 0" class="alert alert-danger full-width">
