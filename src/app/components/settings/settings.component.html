@@ -2,7 +2,7 @@
 	<div *ngIf="!apiKeyIsValid">
 		<h2>osu!api key</h2>
 		<p>In order for wyReferee to work properly, you have to enter your osu! api key in the textbox below. wyReferee uses this api key to grab relevant data from the osu! servers, for example multiplayer data andbeatmap data.</p>
-		<p>You can find your api key <a [routerLink]="" (click)="electronService.openLink('https://old.ppy.sh/p/api');">here</a>.</p>
+		<p>You can find your api key <a [routerLink]="[]" (click)="electronService.openLink('https://old.ppy.sh/p/api');">here</a>.</p>
 
 		<mat-form-field class="full-width">
 			<mat-label>osu!api key</mat-label>
@@ -100,7 +100,7 @@
 					</div>
 
 					<div class="footer">
-						<a [routerLink]="" (click)="electronService.openLink('https://osu.ppy.sh/p/irc')" *ngIf="!ircService.isAuthenticated">Lookup your irc credentials</a>
+						<a [routerLink]="[]" (click)="electronService.openLink('https://osu.ppy.sh/p/irc')" *ngIf="!ircService.isAuthenticated">Lookup your irc credentials</a>
 					</div>
 				</div>
 			</div>

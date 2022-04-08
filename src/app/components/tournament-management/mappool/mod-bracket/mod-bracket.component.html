@@ -130,7 +130,7 @@
 
 						<div class="information">
 							<span *ngIf="beatmap.beatmapName == null && beatmap.invalid == false" class="has-error">No beatmap found, have you tried synchronizing?</span>
-							<a [routerLink]="" *ngIf="beatmap.beatmapName && !beatmap.invalid" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a>
+							<a [routerLink]="[]" *ngIf="beatmap.beatmapName && !beatmap.invalid" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a>
 							<span *ngIf="beatmap.invalid" class="has-error">There was no beatmap found with the beatmap id "{{ beatmap.beatmapId }}".</span>
 						</div>
 

@@ -2,7 +2,7 @@ import { Mods } from '../osu-models/osu';
 
 export class MultiplayerDataUser {
 	accuracy: number;
-	mods: Mods;
+	mods: number;
 	passed: number;
 	score: number;
 	user: number;

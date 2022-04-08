@@ -14,11 +14,11 @@ export class TeamVsHiddenCalculation extends ScoreInterface {
 	calculatePlayerScore(player: MultiplayerDataUser): number {
 		let newScore = player.score;
 
-		if((player.mods == 24) && player.mods != 0) {
+		if(player.mods == 24) {
 			newScore /= 1.12;
 		}
 
-		if((player.mods == 72) && player.mods != 0) {
+		if(player.mods == 72) {
 			newScore /= 1.06;
 		}
 
@@ -26,17 +26,17 @@ export class TeamVsHiddenCalculation extends ScoreInterface {
 		newScore = Math.ceil(newScore);
 
 		// Just hidden
-		if((player.mods == 8) && player.mods != 0) {
+		if(player.mods == 8) {
 			newScore *= 1.06;
 		}
 
 		// Hidden + Hardrock
-		if((player.mods == 24) && player.mods != 0) {
+		if(player.mods == 24) {
 			newScore *= 1.18;
 		}
 
 		// Hidden + Doubletime
-		if((player.mods == 72) && player.mods != 0) {
+		if(player.mods == 72) {
 			newScore *= 1.12;
 		}
 
