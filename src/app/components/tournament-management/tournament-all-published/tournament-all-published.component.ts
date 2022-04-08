@@ -6,8 +6,7 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { AuthenticateService } from 'app/services/authenticate.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map, startWith } from 'rxjs/internal/operators';
+import { Observable, BehaviorSubject, startWith, map } from 'rxjs';
 
 @Component({
 	selector: 'app-tournament-all-published',

@@ -4,8 +4,7 @@ import { User } from 'app/models/authentication/user';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { AuthenticateService } from 'app/services/authenticate.service';
 import { TournamentService } from 'app/services/tournament.service';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map, startWith } from 'rxjs/internal/operators';
+import { Observable, BehaviorSubject, startWith, map } from 'rxjs';
 
 @Component({
 	selector: 'app-tournament-my-published',
