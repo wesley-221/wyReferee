@@ -1,7 +1,7 @@
 @import '~@angular/material/theming';
 @import 'variables';
 
-// Change the font for the angular components
+/* Change the font for the angular components */
 $typography: mat-typography-config(
 	$font-family
 );

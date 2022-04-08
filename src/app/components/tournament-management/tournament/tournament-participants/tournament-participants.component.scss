@@ -1,5 +1,15 @@
 @import "variables";
 
+.buttons {
+	button {
+		margin-right: 8px;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}
+
 .team {
 	overflow: hidden;
 

@@ -1,144 +1,142 @@
-<div class="container-fluid">
-	<form [formGroup]="validationForm">
-		<div class="row">
-			<div class="col">
-				<h3>Tournament name</h3>
+<form [formGroup]="validationForm">
+	<div class="row r-3">
+		<div class="col">
+			<h3>Tournament name</h3>
 
-				<mat-form-field class="full-width">
-					<mat-label>Tournament name</mat-label>
-					<input matInput formControlName="tournament-name" />
+			<mat-form-field class="full-width">
+				<mat-label>Tournament name</mat-label>
+				<input matInput formControlName="tournament-name" />
 
-					<mat-error *ngIf="validationForm.get('tournament-name').errors && (validationForm.get('tournament-name').touched || validationForm.get('tournament-name').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
+				<mat-error *ngIf="validationForm.get('tournament-name').errors && (validationForm.get('tournament-name').touched || validationForm.get('tournament-name').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
 
-				<p>The name of the tournament</p>
-			</div>
+			<p>The name of the tournament</p>
+		</div>
 
-			<div class="col">
-				<h3>Tournament acronym</h3>
+		<div class="col">
+			<h3>Tournament acronym</h3>
 
-				<mat-form-field class="full-width">
-					<mat-label>Tournament acronym</mat-label>
-					<input matInput formControlName="tournament-acronym" />
+			<mat-form-field class="full-width">
+				<mat-label>Tournament acronym</mat-label>
+				<input matInput formControlName="tournament-acronym" />
 
-					<mat-error *ngIf="validationForm.get('tournament-acronym').errors && (validationForm.get('tournament-acronym').touched || validationForm.get('tournament-acronym').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
+				<mat-error *ngIf="validationForm.get('tournament-acronym').errors && (validationForm.get('tournament-acronym').touched || validationForm.get('tournament-acronym').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
 
-				<p>The acronym of the tournament</p>
-			</div>
+			<p>The acronym of the tournament</p>
+		</div>
 
-			<div class="col">
-				<h3>Gamemode</h3>
+		<div class="col">
+			<h3>Gamemode</h3>
 
-				<mat-form-field class="full-width">
-					<mat-label>Gamemode</mat-label>
-					<mat-select formControlName="tournament-gamemode">
-						<mat-option [value]="0">osu!</mat-option>
-						<mat-option [value]="1">osu!taiko</mat-option>
-						<mat-option [value]="2">osu!catch</mat-option>
-						<mat-option [value]="3">osu!mania</mat-option>
-					</mat-select>
+			<mat-form-field class="full-width">
+				<mat-label>Gamemode</mat-label>
+				<mat-select formControlName="tournament-gamemode">
+					<mat-option [value]="0">osu!</mat-option>
+					<mat-option [value]="1">osu!taiko</mat-option>
+					<mat-option [value]="2">osu!catch</mat-option>
+					<mat-option [value]="3">osu!mania</mat-option>
+				</mat-select>
 
-					<mat-error *ngIf="validationForm.get('tournament-gamemode').errors && (validationForm.get('tournament-gamemode').touched || validationForm.get('tournament-gamemode').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
+				<mat-error *ngIf="validationForm.get('tournament-gamemode').errors && (validationForm.get('tournament-gamemode').touched || validationForm.get('tournament-gamemode').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
 
-				<p>The gamemode that will be used for all the beatmaps when picking</p>
+			<p>The gamemode that will be used for all the beatmaps when picking</p>
+		</div>
+	</div>
+
+	<hr />
+
+	<div class="row r-3">
+		<div class="col">
+			<h3>Score system</h3>
+
+			<mat-form-field class="full-width">
+				<mat-label>Score system</mat-label>
+				<mat-select formControlName="tournament-score-system" (selectionChange)="changeScoreInterface($event)">
+					<mat-option *ngFor="let scoreInterface of this.calculateScoreInterfaces.getAllScoreInterfaces()" [value]="scoreInterface.getIdentifier()">{{ scoreInterface.getIdentifier() }}</mat-option>
+				</mat-select>
+
+				<mat-error *ngIf="validationForm.get('tournament-score-system').errors && (validationForm.get('tournament-score-system').touched || validationForm.get('tournament-score-system').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
+
+			<p>Select the score system that is being used for the multiplayer game.</p>
+
+			<div class="alert alert-info" *ngIf="this.tournament.scoreInterface">
+				{{ this.tournament.scoreInterface.getDescription() }}
 			</div>
 		</div>
 
-		<hr />
+		<div class="col" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.isSoloTournament() == null">
+			<h3>Tournament format</h3>
 
-		<div class="row">
-			<div class="col">
-				<h3>Score system</h3>
+			<mat-form-field class="full-width">
+				<mat-label>Tournament format</mat-label>
+				<mat-select formControlName="tournament-format" (selectionChange)="changeTeamFormat($event)">
+					<mat-option value="solo">Solo</mat-option>
+					<mat-option value="teams">Teams</mat-option>
+				</mat-select>
 
-				<mat-form-field class="full-width">
-					<mat-label>Score system</mat-label>
-					<mat-select formControlName="tournament-score-system" (selectionChange)="changeScoreInterface($event)">
-						<mat-option *ngFor="let scoreInterface of this.calculateScoreInterfaces.getAllScoreInterfaces()" [value]="scoreInterface.getIdentifier()">{{ scoreInterface.getIdentifier() }}</mat-option>
-					</mat-select>
+				<mat-error *ngIf="validationForm.get('tournament-format').errors && (validationForm.get('tournament-format').touched || validationForm.get('tournament-format').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
 
-					<mat-error *ngIf="validationForm.get('tournament-score-system').errors && (validationForm.get('tournament-score-system').touched || validationForm.get('tournament-score-system').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
-
-				<p>Select the score system that is being used for the multiplayer game.</p>
-
-				<div class="alert alert-info" *ngIf="this.tournament.scoreInterface">
-					{{ this.tournament.scoreInterface.getDescription() }}
-				</div>
-			</div>
-
-			<div class="col" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.isSoloTournament() == null">
-				<h3>Tournament format</h3>
-
-				<mat-form-field class="full-width">
-					<mat-label>Tournament format</mat-label>
-					<mat-select formControlName="tournament-format" (selectionChange)="changeTeamFormat($event)">
-						<mat-option value="solo">Solo</mat-option>
-						<mat-option value="teams">Teams</mat-option>
-					</mat-select>
-
-					<mat-error *ngIf="validationForm.get('tournament-format').errors && (validationForm.get('tournament-format').touched || validationForm.get('tournament-format').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
-
-				<p>The tournament format, teams or solo</p>
-			</div>
-
-			<div class="col" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.getTeamSize() == null && !tournament.isSoloTournament()">
-				<h2>Team size</h2>
-
-				<mat-form-field class="full-width">
-					<mat-label>Team size</mat-label>
-					<input matInput formControlName="tournament-team-size" />
-
-					<mat-error *ngIf="validationForm.get('tournament-team-size').errors && validationForm.get('tournament-team-size').errors.required && (validationForm.get('tournament-team-size').touched || validationForm.get('tournament-team-size').dirty)">
-						This field is required
-					</mat-error>
-
-					<mat-error *ngIf="validationForm.get('tournament-team-size').errors && validationForm.get('tournament-team-size').errors.min && (validationForm.get('tournament-team-size').touched || validationForm.get('tournament-team-size').dirty)">
-						The minimum team size is 1
-					</mat-error>
-
-					<mat-error *ngIf="validationForm.get('tournament-team-size').errors && validationForm.get('tournament-team-size').errors.max && (validationForm.get('tournament-team-size').touched || validationForm.get('tournament-team-size').dirty)">
-						The maximum team size is 8
-					</mat-error>
-				</mat-form-field>
-
-				<p>
-					Enter the amount of players that are allowed to play in a team.
-				</p>
-			</div>
+			<p>The tournament format, teams or solo</p>
 		</div>
 
-		<hr />
+		<div class="col" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.getTeamSize() == null && !tournament.isSoloTournament()">
+			<h3>Team size</h3>
 
-		<div class="row">
-			<div class="col">
-				<h2>Invalidate beatmaps</h2>
-				<p>Use this option if you want to invalidate maps automatically that are not part of the mappool. This will automatically invalidate warmup maps for example, so referees don't have to do this manually.</p>
+			<mat-form-field class="full-width">
+				<mat-label>Team size</mat-label>
+				<input matInput formControlName="tournament-team-size" />
 
-				<mat-slide-toggle (change)="changeInvalidateBeatmaps($event)" [checked]="tournament.invalidateBeatmaps">Beatmaps <span [ngClass]="{'green': tournament.invalidateBeatmaps == true, 'red': tournament.invalidateBeatmaps == false}">{{ tournament.invalidateBeatmaps == true ? 'will' : 'will not' }}</span> be invalidated</mat-slide-toggle>
-			</div>
+				<mat-error *ngIf="validationForm.get('tournament-team-size').errors && validationForm.get('tournament-team-size').errors.required && (validationForm.get('tournament-team-size').touched || validationForm.get('tournament-team-size').dirty)">
+					This field is required
+				</mat-error>
 
-			<div class="col">
-				<h2>Picking from mappool</h2>
-				<p>Use this option if the players/teams are not allowed to pick from the same mod bracket twice in a row.</p>
-				<p>Example: Team 1 picks NM, Team 2 picks HD. Team 1 can now not pick NM for their next pick and Team 2 can now not pick HD as their next pick.</p>
+				<mat-error *ngIf="validationForm.get('tournament-team-size').errors && validationForm.get('tournament-team-size').errors.min && (validationForm.get('tournament-team-size').touched || validationForm.get('tournament-team-size').dirty)">
+					The minimum team size is 1
+				</mat-error>
 
-				<mat-slide-toggle (change)="changeAllowDoublePick($event)" [checked]="tournament.allowDoublePick">Players/teams <span [ngClass]="{'green': tournament.allowDoublePick == true, 'red': tournament.allowDoublePick == false}">{{ tournament.allowDoublePick == true ? 'can' : 'can\'t' }}</span> pick twice from the same mod bracket</mat-slide-toggle>
-			</div>
+				<mat-error *ngIf="validationForm.get('tournament-team-size').errors && validationForm.get('tournament-team-size').errors.max && (validationForm.get('tournament-team-size').touched || validationForm.get('tournament-team-size').dirty)">
+					The maximum team size is 8
+				</mat-error>
+			</mat-form-field>
+
+			<p>
+				Enter the amount of players that are allowed to play in a team.
+			</p>
 		</div>
-	</form>
+	</div>
 
-	<p><!-- Prevents small vertical scrollbar from appearing, don't touch :) --></p>
-</div>
+	<hr />
+
+	<div class="row r-2">
+		<div class="col">
+			<h2>Invalidate beatmaps</h2>
+			<p>Use this option if you want to invalidate maps automatically that are not part of the mappool. This will automatically invalidate warmup maps for example, so referees don't have to do this manually.</p>
+
+			<mat-slide-toggle (change)="changeInvalidateBeatmaps($event)" [checked]="tournament.invalidateBeatmaps">Beatmaps <span [ngClass]="{'green': tournament.invalidateBeatmaps == true, 'red': tournament.invalidateBeatmaps == false}">{{ tournament.invalidateBeatmaps == true ? 'will' : 'will not' }}</span> be invalidated</mat-slide-toggle>
+		</div>
+
+		<div class="col">
+			<h2>Picking from mappool</h2>
+			<p>Use this option if the players/teams are not allowed to pick from the same mod bracket twice in a row.</p>
+			<p>Example: Team 1 picks NM, Team 2 picks HD. Team 1 can now not pick NM for their next pick and Team 2 can now not pick HD as their next pick.</p>
+
+			<mat-slide-toggle (change)="changeAllowDoublePick($event)" [checked]="tournament.allowDoublePick">Players/teams <span [ngClass]="{'green': tournament.allowDoublePick == true, 'red': tournament.allowDoublePick == false}">{{ tournament.allowDoublePick == true ? 'can' : 'can\'t' }}</span> pick twice from the same mod bracket</mat-slide-toggle>
+		</div>
+	</div>
+</form>
+
+<p><!-- Prevents small vertical scrollbar from appearing, don't touch :) --></p>

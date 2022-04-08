@@ -31,10 +31,13 @@
 
 		background-color: $background-color;
 
+		padding-right: 8px;
 		padding-left: 8px;
 		padding-top: 8px;
 
 		margin-right: 0;
+
+		overflow: hidden;
 
 		&.no-padding {
 			padding-left: 0;

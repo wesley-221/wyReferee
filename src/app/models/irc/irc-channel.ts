@@ -16,6 +16,7 @@ export enum WinCondition {
 
 export class IrcChannel {
 	name: string;
+	label: string;
 	active: boolean;
 	messages: IrcMessage[];
 
@@ -29,7 +30,10 @@ export class IrcChannel {
 	winCondition: WinCondition;
 	players: number;
 
+	editingLabel: boolean;
+
 	constructor(init?: Partial<IrcChannel>) {
+		this.editingLabel = false;
 		this.messages = [];
 
 		Object.assign(this, init);
@@ -38,6 +42,7 @@ export class IrcChannel {
 	public static makeTrueCopy(ircChannel: IrcChannel): IrcChannel {
 		const newIrcChannel = new IrcChannel({
 			name: ircChannel.name,
+			label: ircChannel.label,
 			active: ircChannel.active,
 			lastActiveChannel: ircChannel.lastActiveChannel,
 			isPrivateChannel: ircChannel.isPrivateChannel,

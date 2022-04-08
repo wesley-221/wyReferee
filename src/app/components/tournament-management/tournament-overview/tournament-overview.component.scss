@@ -1,18 +1,16 @@
 @import "variables";
 
-:host {
-	width: 100%;
-}
-
 .button-row {
-	display: flex;
-	flex-direction: row;
+	display: grid;
+	grid-auto-flow: row;
+
+	grid-template-columns: 1fr 1fr;
+	column-gap: 8px;
+
+	margin-bottom: 8px;
 
 	.button {
 		display: flex;
-		flex: 0 0 calc(50% - 8px);
-
-		margin-bottom: 8px;
 		padding: 16px;
 
 		border: 1px solid darken(#3c4452, 15%);

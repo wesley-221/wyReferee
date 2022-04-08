@@ -406,7 +406,7 @@ export class IrcService {
 	 * Join a
 	 * @param channelName
 	 */
-	joinChannel(channelName: string) {
+	joinChannel(channelName: string, customLabel: string = null) {
 		const allJoinedChannels = this.storeService.get('irc.channels');
 		this.isJoiningChannel$.next(true);
 
@@ -422,6 +422,7 @@ export class IrcService {
 		if (channelName.startsWith('#mp_')) {
 			this.storeService.set(`irc.channels.${channelName}`, new IrcChannel({
 				name: channelName,
+				label: customLabel == null ? null : customLabel,
 				active: true,
 				lastActiveChannel: false,
 				isPrivateChannel: false,
@@ -431,6 +432,7 @@ export class IrcService {
 
 			this.allChannels.push(new IrcChannel({
 				name: channelName,
+				label: customLabel == null ? null : customLabel,
 				active: true,
 				lastActiveChannel: false,
 				isPrivateChannel: false,

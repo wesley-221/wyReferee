@@ -250,7 +250,7 @@ export class CreateLobbyComponent implements OnInit {
 				}
 
 				from(this.ircService.client.createLobby(lobbyName)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
-					this.ircService.joinChannel(multiplayerChannel.name);
+					this.ircService.joinChannel(multiplayerChannel.name, `${lobby.teamOneName} vs. ${lobby.teamTwoName}`);
 					this.ircService.initializeChannelListeners(multiplayerChannel);
 
 					this.lobbyHasBeenCreatedTrigger();

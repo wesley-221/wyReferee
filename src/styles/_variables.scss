@@ -200,13 +200,13 @@ $md-warning: (
 
 $font-family: "Montserrat", "Open Sans", Arial, Helvetica, sans-serif;
 
-// Setup the theme
+/* Setup the theme */
 $theme-primary: mat-palette($md-primary);
 $theme-accent: mat-palette($md-accent, A200, A100, A400);
 $theme-danger: mat-palette($md-danger);
 $theme-success: mat-palette($md-success);
 
-// Export default colours to use everywhere
+/* Export default colours to use everywhere */
 $primary: map-get($theme-primary, 500);
 $success: map-get($theme-success, 700);
 $warning: map-get($md-warning, 600);

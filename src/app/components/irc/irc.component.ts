@@ -501,6 +501,19 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Edit the label of a channel
+	 * @param channel the channel to edit the label for
+	 */
+	editLabel(channel: IrcChannel): void {
+		channel.editingLabel = !channel.editingLabel;
+
+		// Stopped editing the label
+		if (channel.editingLabel == false) {
+			this.storeService.set(`irc.channels.${channel.name}.label`, channel.label);
+		}
+	}
+
+	/**
 	 * Ban a beatmap
 	 */
 	banBeatmap(beatmap: WyModBracketMap, modBracket: WyModBracket, multiplayerLobby: Lobby) {

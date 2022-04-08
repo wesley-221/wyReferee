@@ -7,17 +7,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AngularMaterialModule } from './angular-material-module';
-
 import { AppRoutingModule } from './app-routing.module';
-
-// NG Translate
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ClipboardModule } from 'ngx-clipboard';
-
 import { AppComponent } from './app.component';
 import { MainComponent } from './components/main-page/main/main.component';
 import { SidebarComponent } from './components/main-page/sidebar/sidebar.component';
-
 import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
 import { InformationComponent } from './components/information/information.component';

@@ -1,8 +1,17 @@
+@use "sass:math";
 @import "variables";
 
 .scroll {
 	height: 100%;
 	overflow-y: auto;
+}
+
+.login-containers {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-auto-flow: row;
+
+	column-gap: 30px;
 }
 
 .options {
@@ -67,7 +76,7 @@ $container-height: 400px;
 		align-items: center;
 		justify-content: center;
 
-		height: $container-height / 2;
+		height: math.div($container-height, 2);
 
 		background: rgb(64, 49, 188);
 		background: linear-gradient(0deg, rgba(64, 49, 188, 1) 0%, rgba(49, 129, 229, 1) 100%);

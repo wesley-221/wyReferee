@@ -3,7 +3,7 @@
 $tiles-height: 110px;
 
 .main {
-	height: 100%;
+	height: calc(100% - 8px);
 
 	display: flex;
 	flex: 1 0 auto;
@@ -87,7 +87,6 @@ $tiles-height: 110px;
 
 		height: 100%;
 		overflow-y: auto;
-		padding-right: 16px;
 		padding-top: 8px;
 	}
 }

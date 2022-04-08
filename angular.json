@@ -21,11 +21,11 @@
 						],
 						"styles": [
 							"src/styles.scss",
-							"src/assets/styles/bootstrap/scss/bootstrap-grid.scss"
+							"src/bootstrap.scss"
 						],
 						"stylePreprocessorOptions": {
 							"includePaths": [
-								"src/assets/styles"
+								"src/styles"
 							]
 						},
 						"customWebpackConfig": {
@@ -34,18 +34,11 @@
 					},
 					"configurations": {
 						"dev": {
-							"budgets": [
-								{
-									"type": "anyComponentStyle",
-									"maximumWarning": "6kb"
-								}
-							],
 							"optimization": false,
 							"outputHashing": "all",
 							"sourceMap": true,
-							"extractCss": true,
 							"namedChunks": false,
-							"aot": true,
+							"aot": false,
 							"extractLicenses": true,
 							"vendorChunk": false,
 							"buildOptimizer": false,
@@ -57,16 +50,9 @@
 							]
 						},
 						"production": {
-							"budgets": [
-								{
-									"type": "anyComponentStyle",
-									"maximumWarning": "6kb"
-								}
-							],
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"extractCss": true,
 							"namedChunks": false,
 							"aot": true,
 							"extractLicenses": true,
@@ -103,12 +89,17 @@
 						"tsConfig": "src/tsconfig.spec.json",
 						"karmaConfig": "src/karma.conf.js",
 						"assets": [
-							"src/assets/images"
+							"src/assets"
 						],
 						"styles": [
-							"src/styles.scss",
-							"src/assets/styles/bootstrap/scss/bootstrap-grid.scss"
+							"src/styles.scss"
 						],
+						"stylePreprocessorOptions": {
+							"includePaths": [
+								"src/styles",
+								"src/bootstrap.scss"
+							]
+						},
 						"customWebpackConfig": {
 							"path": "./angular.webpack.js"
 						}

@@ -1,56 +1,48 @@
-<div class="container-fluid scroll">
+<div class="scroll">
 	<form [formGroup]="validationForm">
-		<div class="row">
-			<div class="col">
-				<h2>Multiplayer link</h2>
+		<h2>Multiplayer link</h2>
 
-				<mat-form-field class="full-width">
-					<mat-label>Multiplayer link</mat-label>
-					<input matInput formControlName="multiplayer-link" />
+		<mat-form-field class="full-width">
+			<mat-label>Multiplayer link</mat-label>
+			<input matInput formControlName="multiplayer-link" />
 
-					<mat-error *ngIf="getValidation('multiplayer-link').errors && getValidation('multiplayer-link').errors.pattern">
-						Invalid multiplayerlink provided. Accepted format: https://osu.ppy.sh/community/matches/46358686
-					</mat-error>
-				</mat-form-field>
+			<mat-error *ngIf="getValidation('multiplayer-link').errors && getValidation('multiplayer-link').errors.pattern">
+				Invalid multiplayerlink provided. Accepted format: https://osu.ppy.sh/community/matches/46358686
+			</mat-error>
+		</mat-form-field>
 
-				<div>
-					Enter a multiplayer link in here for the match you want to calculate the scores off.
+		<div>
+			Enter a multiplayer link in here for the match you want to calculate the scores off.
 
-					<div class="alert alert-info">
-						You only have to fill in the multiplayer link when you want to use an old multiplayer lobby. If you
-						leave this blank, it will create a <b>NEW</b> multiplayer lobby on osu!.
-					</div>
-				</div>
+			<div class="alert alert-info">
+				You only have to fill in the multiplayer link when you want to use an old multiplayer lobby. If you
+				leave this blank, it will create a <b>NEW</b> multiplayer lobby on osu!.
 			</div>
 		</div>
 
 		<hr />
 
-		<div class="row">
-			<div class="col">
-				<h2>Select a tournament</h2>
+		<h2>Select a tournament</h2>
 
-				<mat-form-field class="full-width">
-					<mat-label>Select a tournament</mat-label>
-					<mat-select formControlName="selected-tournament" (selectionChange)="changeTournament()">
-						<mat-option *ngFor="let tournament of tournamentService.allTournaments" [value]="tournament.id">
-							{{ tournament.name }}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
+		<mat-form-field class="full-width">
+			<mat-label>Select a tournament</mat-label>
+			<mat-select formControlName="selected-tournament" (selectionChange)="changeTournament()">
+				<mat-option *ngFor="let tournament of tournamentService.allTournaments" [value]="tournament.id">
+					{{ tournament.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
 
-				<div>
-					Select a tournament for which you will be making a multiplayer match for. <br />
-					<div class="alert alert-info" *ngIf="selectedTournament == null">
-						You can leave this empty if you want to manually enter all the data.
-					</div>
-				</div>
+		<div>
+			Select a tournament for which you will be making a multiplayer match for. <br />
+			<div class="alert alert-info" *ngIf="selectedTournament == null">
+				You can leave this empty if you want to manually enter all the data.
 			</div>
 		</div>
 
 		<hr />
 
-		<div class="row">
+		<div class="row r-3">
 			<div class="col" *ngIf="selectedTournament == null">
 				<div class="tournament-acronym">
 					<h2>Tournament acronym</h2>
@@ -134,7 +126,7 @@
 			<div>Checking for Challonge integration...</div>
 		</div>
 
-		<div class="row" *ngIf="selectedTournament == null">
+		<div class="row r-2" *ngIf="selectedTournament == null">
 			<div class="col">
 				<h2>Team one name</h2>
 
@@ -171,25 +163,21 @@
 		</div>
 
 		<div *ngIf="selectedTournament != null && challongeMatches.length <= 0">
-			<div class="row">
-				<div class="col">
-					<h1>Stage</h1>
-					<p>Select for which stage this match is supposed to be for.</p>
+			<h1>Stage</h1>
+			<p>Select for which stage this match is supposed to be for.</p>
 
-					<mat-form-field class="full-width">
-						<mat-label>Stage</mat-label>
-						<mat-select formControlName="stage">
-							<mat-option [value]="stage.name" *ngFor="let stage of selectedTournament.stages">{{ stage.name }}</mat-option>
-						</mat-select>
+			<mat-form-field class="full-width">
+				<mat-label>Stage</mat-label>
+				<mat-select formControlName="stage">
+					<mat-option [value]="stage.name" *ngFor="let stage of selectedTournament.stages">{{ stage.name }}</mat-option>
+				</mat-select>
 
-						<mat-error *ngIf="getValidation('stage').errors && (getValidation('stage').touched || getValidation('stage').dirty)">
-							This field is required
-						</mat-error>
-					</mat-form-field>
-				</div>
-			</div>
+				<mat-error *ngIf="getValidation('stage').errors && (getValidation('stage').touched || getValidation('stage').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
 
-			<div class="row">
+			<div class="row r-2">
 				<div class="col">
 					<h1>Qualifier lobby</h1>
 					<p>Use this option if the lobby you are creating is supposed to be a qualifier lobby.</p>
@@ -203,16 +191,11 @@
 
 					<mat-slide-toggle [(ngModel)]="webhook" [ngModelOptions]="{ standalone: true }">Webhooks <span [ngClass]="{ 'green': webhook == true, 'red': webhook == false }">{{ webhook == true ? 'will' : 'wont' }}</span> be sent</mat-slide-toggle>
 				</div>
-
-				<!-- <div class="col">
-					<h1>Test lobby</h1>
-					<p>Use this option if the lobby you are creating is supposed to be for testing purposes. This will send the webhook messages to the test channel instead of the public channels.</p>
-				</div> -->
 			</div>
 
 			<hr />
 
-			<div class="row" *ngIf="qualifier == false">
+			<div class="row r-2" *ngIf="qualifier == false">
 				<div class="col">
 					<h2>Team one name</h2>
 
@@ -262,20 +245,18 @@
 				</div>
 			</div>
 
-			<div class="row" *ngIf="qualifier == true">
-				<div class="col">
-					<mat-form-field class="full-width">
-						<mat-label>Qualifier lobby identifier</mat-label>
-						<input matInput formControlName="qualifier-lobby-identifier" />
+			<div *ngIf="qualifier == true">
+				<mat-form-field class="full-width">
+					<mat-label>Qualifier lobby identifier</mat-label>
+					<input matInput formControlName="qualifier-lobby-identifier" />
 
-						<mat-error *ngIf="getValidation('qualifier-lobby-identifier').errors && getValidation('qualifier-lobby-identifier').errors.pattern">
-							You have to enter an identifier
-						</mat-error>
-					</mat-form-field>
+					<mat-error *ngIf="getValidation('qualifier-lobby-identifier').errors && getValidation('qualifier-lobby-identifier').errors.pattern">
+						You have to enter an identifier
+					</mat-error>
+				</mat-form-field>
 
-					<p>Enter the identifier of the qualifier lobby (for example, "B"). Current name of the lobby:</p>
-					<p>{{ selectedTournament.acronym }}: Qualifier lobby: {{ qualifierLobbyIdentifier }}</p>
-				</div>
+				<p>Enter the identifier of the qualifier lobby (for example, "B"). Current name of the lobby:</p>
+				<p>{{ selectedTournament.acronym }}: Qualifier lobby: {{ qualifierLobbyIdentifier }}</p>
 			</div>
 		</div>
 

@@ -7,3 +7,18 @@
 	color: #00ff00;
 	font-style: bold;
 }
+
+.row {
+	display: grid;
+	grid-auto-flow: column;
+
+	column-gap: 8px;
+
+	&.r-2 {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	&.r-3 {
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+}

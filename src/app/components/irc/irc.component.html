@@ -11,9 +11,17 @@
 
 		<div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
 			<div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="all-channels"
-								[ngClass]="{'active': selectedChannel != undefined && (channel.name == selectedChannel.name), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages }">
-				<div class="channel-name" (click)="changeChannel(channel.name)">
-					{{ channel.name }}
+								[ngClass]="{'active': selectedChannel != undefined && (channel.name == selectedChannel.name), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages, 'editing': channel.editingLabel }">
+				<div class="channel-name" (click)="changeChannel(channel.name)" *ngIf="!channel.editingLabel">
+					<span *ngIf="channel.label">{{ channel.label }}</span>
+					<span *ngIf="!channel.label">{{ channel.name }}</span>
+				</div>
+
+				<div class="channel-name-label" *ngIf="channel.editingLabel">
+					<mat-form-field>
+						<mat-label>Label</mat-label>
+						<input matInput [(ngModel)]="channel.label" />
+					</mat-form-field>
 				</div>
 
 				<div class="side-button">
@@ -23,6 +31,14 @@
 
 					<div class="button muted" (click)="playSound(channel, true)" *ngIf="!channel.playSoundOnMessage">
 						<mat-icon>volume_off</mat-icon>
+					</div>
+
+					<div class="button edit" (click)="editLabel(channel)" *ngIf="!channel.editingLabel">
+						<mat-icon>edit</mat-icon>
+					</div>
+
+					<div class="button edit" (click)="editLabel(channel)" *ngIf="channel.editingLabel">
+						<mat-icon>save</mat-icon>
 					</div>
 
 					<div class="button red" (click)="partChannel(channel.name)">
@@ -166,46 +182,44 @@
 								</div>
 
 								<div class="invite-body" *ngIf="isInvitesMinimized == false">
-									<div class="row">
-										<div class="col invite-team">
-											<h3>{{ selectedLobby.teamOneName }}</h3>
+									<div class="invite-team">
+										<h3>{{ selectedLobby.teamOneName }}</h3>
 
-											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
-												<div class="name">
-													{{ player.name }}
+										<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
+											<div class="name">
+												{{ player.name }}
+											</div>
+
+											<div class="actions">
+												<div class="custom-button" (click)="invitePlayer(player)" matTooltip="Click to invite player">
+													<mat-icon>add</mat-icon>
 												</div>
 
-												<div class="actions">
-													<div class="custom-button" (click)="invitePlayer(player)" matTooltip="Click to invite player">
-														<mat-icon>add</mat-icon>
-													</div>
-
-													<!-- TODO: implement captain for rng -->
-													<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 1)" matTooltip="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamOneCaptain == player}">
-														<mat-icon>star</mat-icon>
-													</div> -->
-												</div>
+												<!-- TODO: implement captain for rng -->
+												<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 1)" matTooltip="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamOneCaptain == player}">
+													<mat-icon>star</mat-icon>
+												</div> -->
 											</div>
 										</div>
+									</div>
 
-										<div class="col invite-team">
-											<h3>{{ selectedLobby.teamTwoName }}</h3>
+									<div class="invite-team">
+										<h3>{{ selectedLobby.teamTwoName }}</h3>
 
-											<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
-												<div class="name">
-													{{ player.name }}
+										<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
+											<div class="name">
+												{{ player.name }}
+											</div>
+
+											<div class="actions">
+												<div class="custom-button" (click)="invitePlayer(player)" matTooltip="Click to invite player">
+													<mat-icon>add</mat-icon>
 												</div>
 
-												<div class="actions">
-													<div class="custom-button" (click)="invitePlayer(player)" matTooltip="Click to invite player">
-														<mat-icon>add</mat-icon>
-													</div>
-
-													<!-- TODO: implement captain for rng -->
-													<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 2)" matTooltip="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamTwoCaptain == player}">
-														<mat-icon>star</mat-icon>
-													</div> -->
-												</div>
+												<!-- TODO: implement captain for rng -->
+												<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 2)" matTooltip="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamTwoCaptain == player}">
+													<mat-icon>star</mat-icon>
+												</div> -->
 											</div>
 										</div>
 									</div>

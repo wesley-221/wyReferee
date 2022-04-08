@@ -21,6 +21,7 @@ export class TournamentParticipantsComponent implements OnInit {
 	@Input() validationForm: FormGroup;
 
 	usersToAdd: string;
+	teamsToAdd: string;
 
 	constructor(private dialog: MatDialog, private toastService: ToastService) { }
 	ngOnInit(): void { }
@@ -101,6 +102,22 @@ export class TournamentParticipantsComponent implements OnInit {
 		});
 
 		this.usersToAdd = null;
+	}
+
+	/**
+	 * Bulk add teams to the tournament
+	 */
+	addBulkTeams(): void {
+		const allTeams = this.teamsToAdd.split('\n');
+
+		allTeams.forEach(team => {
+			const newTeam = new WyTeam();
+			newTeam.name = team.trim();
+
+			this.tournament.teams.push(newTeam);
+		});
+
+		this.teamsToAdd = null;
 	}
 
 	/**

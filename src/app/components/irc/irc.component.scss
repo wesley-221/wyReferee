@@ -54,8 +54,6 @@ $hyperlink-background-color: #2b4576;
 				flex-direction: row;
 
 				user-select: none;
-
-				width: 100%;
 				height: 40px;
 
 				border-left: 3px solid transparent;
@@ -67,12 +65,20 @@ $hyperlink-background-color: #2b4576;
 					padding: 8px;
 				}
 
+				.channel-name-label {
+					display: flex;
+					align-items: center;
+
+					padding: 8px;
+					color: white;
+				}
+
 				.side-button {
 					display: none;
 
 					align-items: center;
 
-					width: 80px;
+					width: 120px;
 					height: 40px;
 					line-height: 40px;
 
@@ -117,19 +123,34 @@ $hyperlink-background-color: #2b4576;
 								background-color: darken($success, 5%);
 							}
 						}
+
+						&.edit {
+							background-color: $primary;
+
+							&:hover {
+								background-color: darken($primary, 5%);
+							}
+						}
 					}
 				}
 
 				&:hover,
-				&.cdk-drag-preview {
+				&.cdk-drag-preview,
+				&.editing {
+					cursor: pointer;
+
+					border-left: 3px solid $primary;
+					color: $primary;
+
 					.channel-name {
-						width: calc(100% - 80px);
+						width: calc(100% - 120px);
 					}
 
 					.side-button {
 						display: flex;
 
-						width: 80px;
+						width: 120px;
+						color: white;
 					}
 				}
 
@@ -149,17 +170,6 @@ $hyperlink-background-color: #2b4576;
 					font-weight: bold;
 
 					border-left: 3px solid $primary;
-				}
-
-				&:hover {
-					cursor: pointer;
-
-					border-left: 3px solid $primary;
-					color: $primary;
-
-					.side-button {
-						color: white;
-					}
 				}
 
 				&.unread {
@@ -601,6 +611,11 @@ $hyperlink-background-color: #2b4576;
 					}
 
 					.invite-body {
+						display: grid;
+						grid-auto-columns: 1fr 1fr;
+						grid-auto-flow: column;
+						column-gap: 8px;
+
 						padding: 4px;
 						margin-bottom: 4px;
 
@@ -654,11 +669,10 @@ $hyperlink-background-color: #2b4576;
 					}
 
 					.mappool {
+						padding-right: 16px;
 						padding-left: 16px;
 
 						overflow-y: auto;
-
-						width: 100%;
 
 						.mod-bracket {
 							width: 100%;

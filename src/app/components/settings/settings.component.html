@@ -20,91 +20,87 @@
 		<hr />
 	</div>
 
-	<div class="row">
-		<div class="col">
-			<div class="login-container">
-				<div class="login-icon-container">
-					<div class="icon osu"></div>
-				</div>
+	<div class="login-containers">
+		<div class="login-container">
+			<div class="login-icon-container">
+				<div class="icon osu"></div>
+			</div>
 
-				<div class="login-content">
-					<div class="login-form" *ngIf="!auth.loggedIn">
-						<h3 class="header">osu! authentication</h3>
-						<button mat-raised-button color="primary" class="full-width margin-button" (click)="authenticateOsu()">Login</button>
+			<div class="login-content">
+				<div class="login-form" *ngIf="!auth.loggedIn">
+					<h3 class="header">osu! authentication</h3>
+					<button mat-raised-button color="primary" class="full-width margin-button" (click)="authenticateOsu()">Login</button>
 
-						<div class="alert alert-info authentication-message" *ngIf="isAuthenticating == true">
-							<div class="spinner-container">
-								<mat-spinner [diameter]="32" class="spinner"></mat-spinner>
-							</div>
+					<div class="alert alert-info authentication-message" *ngIf="isAuthenticating == true">
+						<div class="spinner-container">
+							<mat-spinner [diameter]="32" class="spinner"></mat-spinner>
+						</div>
 
-							<div class="text">
-								<p>Attempting to login, hold on tight!</p>
-							</div>
+						<div class="text">
+							<p>Attempting to login, hold on tight!</p>
 						</div>
 					</div>
+				</div>
 
-					<div class="login-form" *ngIf="auth.loggedIn">
-						<h3 class="header">osu! authentication</h3>
-						<p align="center">Logged in as {{ auth.loggedInUser.username }}</p>
+				<div class="login-form" *ngIf="auth.loggedIn">
+					<h3 class="header">osu! authentication</h3>
+					<p align="center">Logged in as {{ auth.loggedInUser.username }}</p>
 
-						<button mat-raised-button color="warn" class="full-width margin-button" (click)="logoutOsu()">Logout</button>
-					</div>
+					<button mat-raised-button color="warn" class="full-width margin-button" (click)="logoutOsu()">Logout</button>
 				</div>
 			</div>
 		</div>
 
-		<div class="col">
-			<div class="login-container">
-				<div class="login-icon-container">
-					<div class="icon osu"></div>
-				</div>
+		<div class="login-container">
+			<div class="login-icon-container">
+				<div class="icon osu"></div>
+			</div>
 
-				<div class="login-content">
-					<div class="login-form">
-						<h3 class="header">osu! irc</h3>
+			<div class="login-content">
+				<div class="login-form">
+					<h3 class="header">osu! irc</h3>
 
-						<form [formGroup]="ircLoginForm" *ngIf="!ircService.isAuthenticated">
-							<mat-form-field class="full-width">
-								<mat-label>Username</mat-label>
-								<input matInput placeholder="Username" formControlName="irc-username">
+					<form [formGroup]="ircLoginForm" *ngIf="!ircService.isAuthenticated">
+						<mat-form-field class="full-width">
+							<mat-label>Username</mat-label>
+							<input matInput placeholder="Username" formControlName="irc-username">
 
-								<mat-error *ngIf="ircLoginForm.get('irc-username').invalid && (ircLoginForm.get('irc-username').dirty || ircLoginForm.get('irc-username').touched)">
-									This field is required.
-								</mat-error>
-							</mat-form-field>
+							<mat-error *ngIf="ircLoginForm.get('irc-username').invalid && (ircLoginForm.get('irc-username').dirty || ircLoginForm.get('irc-username').touched)">
+								This field is required.
+							</mat-error>
+						</mat-form-field>
 
-							<mat-form-field class="full-width">
-								<mat-label>Password</mat-label>
-								<input matInput type="password" formControlName="irc-password">
+						<mat-form-field class="full-width">
+							<mat-label>Password</mat-label>
+							<input matInput type="password" formControlName="irc-password">
 
-								<mat-error *ngIf="ircLoginForm.get('irc-password').invalid && (ircLoginForm.get('irc-password').dirty || ircLoginForm.get('irc-password').touched)">
-									This field is required.
-								</mat-error>
-							</mat-form-field>
+							<mat-error *ngIf="ircLoginForm.get('irc-password').invalid && (ircLoginForm.get('irc-password').dirty || ircLoginForm.get('irc-password').touched)">
+								This field is required.
+							</mat-error>
+						</mat-form-field>
 
-							<button mat-raised-button color="primary" class="full-width align-spinner margin-button" (click)="connectIrc()" [disabled]="apiKeyIsValid == false">Connect</button>
+						<button mat-raised-button color="primary" class="full-width align-spinner margin-button" (click)="connectIrc()" [disabled]="apiKeyIsValid == false">Connect</button>
 
-							<div class="center" *ngIf="isConnecting">
-								<mat-spinner [diameter]="40"></mat-spinner>
-								<div class="text">Attempting to login...</div>
-							</div>
-
-							<div class="center" *ngIf="apiKeyIsValid == false">
-								<div class="alert alert-danger">
-									You have to set the api key before being able to login to irc.
-								</div>
-							</div>
-						</form>
-
-						<div class="footer" *ngIf="ircService.isAuthenticated">
-							Logged in as&nbsp;<b>{{ ircService.authenticatedUser }}</b>
-
-							<button mat-raised-button color="warn" class="full-width margin-button" (click)="disconnectIrc()">Disconnect</button>
+						<div class="center" *ngIf="isConnecting">
+							<mat-spinner [diameter]="40"></mat-spinner>
+							<div class="text">Attempting to login...</div>
 						</div>
 
-						<div class="footer">
-							<a [routerLink]="" (click)="electronService.openLink('https://osu.ppy.sh/p/irc')" *ngIf="!ircService.isAuthenticated">Lookup your irc credentials</a>
+						<div class="center" *ngIf="apiKeyIsValid == false">
+							<div class="alert alert-danger">
+								You have to set the api key before being able to login to irc.
+							</div>
 						</div>
+					</form>
+
+					<div class="footer" *ngIf="ircService.isAuthenticated">
+						Logged in as&nbsp;<b>{{ ircService.authenticatedUser }}</b>
+
+						<button mat-raised-button color="warn" class="full-width margin-button" (click)="disconnectIrc()">Disconnect</button>
+					</div>
+
+					<div class="footer">
+						<a [routerLink]="" (click)="electronService.openLink('https://osu.ppy.sh/p/irc')" *ngIf="!ircService.isAuthenticated">Lookup your irc credentials</a>
 					</div>
 				</div>
 			</div>
