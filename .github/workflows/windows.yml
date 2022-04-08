@@ -19,7 +19,7 @@ jobs:
   build:
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [16.x]
 
     # The type of runner that the job will run on
     runs-on: windows-2019
