@@ -96,7 +96,7 @@
 	},
 	"dependencies": {
 		"@angular/animations": "^13.3.2",
-		"@angular/material": "^10.2.0",
+		"@angular/material": "^13.3.2",
 		"bancho.js": "^0.9.7",
 		"electron-log": "^3.0.8",
 		"electron-store": "^5.0.0",
