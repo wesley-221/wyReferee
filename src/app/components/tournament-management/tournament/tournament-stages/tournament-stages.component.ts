@@ -32,6 +32,7 @@ export class TournamenStagesComponent implements OnInit {
 
 	/**
 	 * Change the name of the stage
+	 *
 	 * @param stage the stage to change the name of
 	 * @param event the changed value
 	 */
@@ -41,6 +42,7 @@ export class TournamenStagesComponent implements OnInit {
 
 	/**
 	 * Change the best of for the stage
+	 *
 	 * @param stage the stage to change the best of
 	 * @param event the changed value
 	 */
@@ -50,6 +52,7 @@ export class TournamenStagesComponent implements OnInit {
 
 	/**
 	 * Remove a stage from the tournament
+	 *
 	 * @param stage the stage to remove
 	 */
 	removeStage(stage: WyStage) {

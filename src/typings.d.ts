@@ -1,5 +1,5 @@
 /* SystemJS module definition */
-declare var nodeModule: NodeModule;
+declare const nodeModule: NodeModule;
 interface NodeModule {
 	id: string;
 }
@@ -113,9 +113,9 @@ declare class ChallongeMatch {
 	open_graph_image_file_size: any;
 	prequisite_match_ids_csv: string;
 	scores_csv: string;
-	getPlayer1Name: Function;
-	getPlayer2Name: Function;
-	getScore: Function;
+	getPlayer1Name: () => string;
+	getPlayer2Name: () => string;
+	getScore: () => string;
 }
 
 declare class ChallongeParticipant {

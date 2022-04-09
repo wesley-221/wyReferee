@@ -23,6 +23,7 @@ export class DebugService {
 
 	/**
 	 * Set new debug data
+	 *
 	 * @param data the new data
 	 */
 	setDebugData(data: any): void {
@@ -34,12 +35,12 @@ export class DebugService {
 			const ignorePartialStrings = ['service', 'router', 'dialog'];
 			const ignoreStrings = ['multiplayerLobbies', '__ngContext__'];
 
-			if (ignorePartialStrings.some(element => i.toLowerCase().includes(element))) continue;
-			if (ignoreStrings.indexOf(i) > -1) continue;
-
-			// console.log(i);
-			// console.log(data[i]);
-			// continue;
+			if (ignorePartialStrings.some(element => i.toLowerCase().includes(element))) {
+				continue;
+			}
+			if (ignoreStrings.indexOf(i) > -1) {
+				continue;
+			}
 
 			finalData[i] = data[i];
 		}

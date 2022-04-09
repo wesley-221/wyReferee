@@ -97,7 +97,69 @@ export class Lobby {
 	}
 
 	/**
+	 * Make a true copy of the given lobby
+	 *
+	 * @param lobby the lobby to make a true copy of
+	 */
+	public static makeTrueCopy(lobby: Lobby): Lobby {
+		const newLobby = new Lobby({
+			lobbyId: lobby.lobbyId,
+			description: lobby.description,
+			multiplayerLink: lobby.multiplayerLink,
+			tournamentId: lobby.tournamentId,
+			tournament: lobby.tournament != null ? WyTournament.makeTrueCopy(lobby.tournament) : null,
+			teamSize: lobby.teamSize,
+			mappoolId: lobby.mappoolId,
+			mappool: lobby.mappool != null ? WyMappool.makeTrueCopy(lobby.mappool) : null,
+			ircChannel: lobby.ircChannel,
+			firstPick: lobby.firstPick,
+			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
+			bestOf: lobby.bestOf,
+			teamOneName: lobby.teamOneName,
+			teamTwoName: lobby.teamTwoName,
+			teamOneScore: lobby.teamOneScore,
+			teamTwoScore: lobby.teamTwoScore,
+			teamOneBans: lobby.teamOneBans,
+			teamTwoBans: lobby.teamTwoBans,
+			teamOnePicks: lobby.teamOnePicks,
+			teamTwoPicks: lobby.teamTwoPicks,
+			teamOneSlotArray: lobby.teamOneSlotArray,
+			teamTwoSlotArray: lobby.teamTwoSlotArray,
+			gamesCountTowardsScore: lobby.gamesCountTowardsScore,
+			multiplayerLobbyPlayers: new MultiplayerLobbyPlayers(),
+			isQualifierLobby: lobby.isQualifierLobby,
+			sendWebhooks: lobby.sendWebhooks
+		});
+
+		for (const pickedCategory in lobby.pickedCategories) {
+			newLobby.pickedCategories.push(PickedCategory.makeTrueCopy(lobby.pickedCategories[pickedCategory]));
+		}
+
+		for (const multiplayerData in lobby.multiplayerData) {
+			newLobby.multiplayerData.push(MultiplayerData.makeTrueCopy(lobby.multiplayerData[multiplayerData]));
+		}
+
+		return newLobby;
+	}
+
+	/**
+	 * Get the id of the multiplayer link
+	 *
+	 * @param link the link to the multiplayer lobby
+	 */
+	public static getMultiplayerIdFromLink(link: string): string {
+		const regularExpression = new RegExp(/https:\/\/osu\.ppy\.sh\/community\/matches\/([0-9]+)/).exec(link);
+
+		if (regularExpression) {
+			return regularExpression[1];
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get an array with all players of the given team name
+	 *
 	 * @param teamName the name of the team
 	 */
 	getTeamPlayersFromTournament(teamName: string): WyTeamPlayer[] {
@@ -112,6 +174,7 @@ export class Lobby {
 
 	/**
 	 * Check if the multiplayer data exists in the lobby
+	 *
 	 * @param multiplayerData the multiplayer data to check
 	 */
 	doesMultiplayerDataExist(multiplayerData: MultiplayerData): boolean {
@@ -126,6 +189,7 @@ export class Lobby {
 
 	/**
 	 * Update the multiplayer data in the lobby
+	 *
 	 * @param multiplayerData the multiplayer data to update
 	 */
 	updateMultiplayerData(multiplayerData: MultiplayerData): void {
@@ -139,6 +203,7 @@ export class Lobby {
 
 	/**
 	 * Add the multiplayer data to the lobby
+	 *
 	 * @param multiplayerData the multiplayer data to add
 	 */
 	addMultiplayerData(multiplayerData: MultiplayerData): void {
@@ -206,6 +271,7 @@ export class Lobby {
 
 	/**
 	 * Mark a category as picked in the given mod bracket
+	 *
 	 * @param modBracket the mod bracket that was picked
 	 * @param modCategory the mod category that was picked
 	 */
@@ -230,21 +296,8 @@ export class Lobby {
 	}
 
 	/**
-	 * Get the id of the multiplayer link
-	 * @param link the link to the multiplayer lobby
-	 */
-	static getMultiplayerIdFromLink(link: string): string {
-		const regularExpression = new RegExp(/https:\/\/osu\.ppy\.sh\/community\/matches\/([0-9]+)/).exec(link);
-
-		if (regularExpression) {
-			return regularExpression[1];
-		}
-
-		return null;
-	}
-
-	/**
 	 * Check if a beatmap is banned int he current lobby
+	 *
 	 * @param beatmapId the beatmap to check
 	 */
 	beatmapIsBanned(beatmapId: number) {
@@ -253,6 +306,7 @@ export class Lobby {
 
 	/**
 	 * Check if the beatmap is banned by team one
+	 *
 	 * @param beatmapId the beatmap to check
 	 */
 	beatmapIsBannedByTeamOne(beatmapId: number) {
@@ -261,6 +315,7 @@ export class Lobby {
 
 	/**
 	 * Check if the beatmap is banned by team two
+	 *
 	 * @param beatmapId the beatmap to check
 	 */
 	beatmapIsBannedByTeamTwo(beatmapId: number) {
@@ -269,6 +324,7 @@ export class Lobby {
 
 	/**
 	 * Check if a beatmap has been picked in the current lobby
+	 *
 	 * @param beatmapId the beatmap to check
 	 */
 	beatmapIsPicked(beatmapId: number) {
@@ -278,6 +334,7 @@ export class Lobby {
 
 	/**
 	 * Check if the beatmap that is being picked came from the same mod bracket as the last pick was from
+	 *
 	 * @param bracket the bracket to check from
 	 */
 	wasBeatmapPickedFromSamePreviousModBracket(bracket: WyModBracket): boolean {
@@ -313,6 +370,7 @@ export class Lobby {
 
 	/**
 	 * Pick a beatmap from the given bracket
+	 *
 	 * @param beatmap the picked beatmap
 	 * @param bracket the bracket where the beatmap is from
 	 */
@@ -393,50 +451,5 @@ export class Lobby {
 		multiplayerLobbies.updateMultiplayerLobby(this);
 
 		ircService.sendMessage(selectedChannel.name, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
-	}
-
-	/**
-	 * Make a true copy of the given lobby
-	 * @param lobby the lobby to make a true copy of
-	 */
-	public static makeTrueCopy(lobby: Lobby): Lobby {
-		const newLobby = new Lobby({
-			lobbyId: lobby.lobbyId,
-			description: lobby.description,
-			multiplayerLink: lobby.multiplayerLink,
-			tournamentId: lobby.tournamentId,
-			tournament: lobby.tournament != null ? WyTournament.makeTrueCopy(lobby.tournament) : null,
-			teamSize: lobby.teamSize,
-			mappoolId: lobby.mappoolId,
-			mappool: lobby.mappool != null ? WyMappool.makeTrueCopy(lobby.mappool) : null,
-			ircChannel: lobby.ircChannel,
-			firstPick: lobby.firstPick,
-			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
-			bestOf: lobby.bestOf,
-			teamOneName: lobby.teamOneName,
-			teamTwoName: lobby.teamTwoName,
-			teamOneScore: lobby.teamOneScore,
-			teamTwoScore: lobby.teamTwoScore,
-			teamOneBans: lobby.teamOneBans,
-			teamTwoBans: lobby.teamTwoBans,
-			teamOnePicks: lobby.teamOnePicks,
-			teamTwoPicks: lobby.teamTwoPicks,
-			teamOneSlotArray: lobby.teamOneSlotArray,
-			teamTwoSlotArray: lobby.teamTwoSlotArray,
-			gamesCountTowardsScore: lobby.gamesCountTowardsScore,
-			multiplayerLobbyPlayers: new MultiplayerLobbyPlayers(),
-			isQualifierLobby: lobby.isQualifierLobby,
-			sendWebhooks: lobby.sendWebhooks
-		});
-
-		for (const pickedCategory in lobby.pickedCategories) {
-			newLobby.pickedCategories.push(PickedCategory.makeTrueCopy(lobby.pickedCategories[pickedCategory]));
-		}
-
-		for (const multiplayerData in lobby.multiplayerData) {
-			newLobby.multiplayerData.push(MultiplayerData.makeTrueCopy(lobby.multiplayerData[multiplayerData]));
-		}
-
-		return newLobby;
 	}
 }

@@ -52,9 +52,7 @@ export class TournamentAllPublishedAdministratorComponent implements OnInit {
 				this.allUsers.push(newUser);
 			}
 
-			this.allUsers.sort((a: User, b: User) => {
-				return a.username.localeCompare(b.username);
-			})
+			this.allUsers.sort((a: User, b: User) => a.username.localeCompare(b.username));
 
 			this.usersImported$.next(true);
 		});
@@ -65,8 +63,8 @@ export class TournamentAllPublishedAdministratorComponent implements OnInit {
 			if (res == true) {
 				this.filteredUsers = this.filterByUserFormControl.valueChanges.pipe(
 					startWith(''),
-					map(value => this._filter(value))
-				)
+					map(value => this.filter(value))
+				);
 			}
 		});
 	}
@@ -97,6 +95,7 @@ export class TournamentAllPublishedAdministratorComponent implements OnInit {
 
 	/**
 	 * Delete a tournament
+	 *
 	 * @param tournament the tournament to delete
 	 */
 	deleteTournament(tournament: WyTournament) {
@@ -113,13 +112,13 @@ export class TournamentAllPublishedAdministratorComponent implements OnInit {
 
 					this.toastService.addToast('Successfully deleted the tournament.');
 				}, error => {
-					this.toastService.addToast(`Unable to delete the tournament: ${error.error.message}`, ToastType.Error);
+					this.toastService.addToast(`Unable to delete the tournament: ${error.error.message as string}`, ToastType.Error);
 				});
 			}
 		});
 	}
 
-	private _filter(filterUser: string): User[] {
+	private filter(filterUser: string): User[] {
 		return this.allUsers.filter(user => user.username.toLowerCase().includes(filterUser));
 	}
 }

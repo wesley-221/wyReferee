@@ -14,6 +14,7 @@ export class IrcShortcutCommandsService {
 
 	/**
 	 * Create a new irc shortcut command
+	 *
 	 * @param label the label of the command
 	 * @param command the message being sent to irc
 	 */
@@ -26,6 +27,7 @@ export class IrcShortcutCommandsService {
 
 	/**
 	 * Remove an irc shortcut command
+	 *
 	 * @param label the label of the command to remove
 	 */
 	removeIrcShortcutCommand(label: string): void {

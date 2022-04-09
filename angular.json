@@ -1,5 +1,8 @@
 {
 	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+	"cli": {
+		"defaultCollection": "@angular-eslint/schematics"
+	},
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
@@ -108,13 +111,8 @@
 				"lint": {
 					"builder": "@angular-eslint/builder:lint",
 					"options": {
-						"eslintConfig": ".eslintrc.json",
-						"tsConfig": [
-							"src/tsconfig.app.json",
-							"src/tsconfig.spec.json"
-						],
-						"exclude": [
-							"**/node_modules/**"
+						"lintFilePatterns": [
+							"src/**/*.ts"
 						]
 					}
 				}
@@ -127,12 +125,8 @@
 				"lint": {
 					"builder": "@angular-eslint/builder:lint",
 					"options": {
-						"eslintConfig": "e2e/eslintrc.e2e.json",
-						"tsConfig": [
-							"e2e/tsconfig.e2e.json"
-						],
-						"exclude": [
-							"**/node_modules/**"
+						"lintFilePatterns": [
+							"e2e/**/*.ts"
 						]
 					}
 				}

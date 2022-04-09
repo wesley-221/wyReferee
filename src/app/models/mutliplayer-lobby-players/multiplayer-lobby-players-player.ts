@@ -8,7 +8,7 @@ export class MultiplayerLobbyPlayersPlayer {
 
 	constructor() {
 		this.username = 'Open';
-		this.team = 'invalid'
+		this.team = 'invalid';
 		this.status = 'Not ready';
 		this.mods = [];
 		this.isHost = false;

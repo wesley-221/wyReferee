@@ -33,6 +33,7 @@ export class TournamentCardComponent implements OnInit {
 
 	/**
 	 * Edit a tournament
+	 *
 	 * @param tournament the tournament to edit
 	 */
 	editTournament(tournament: WyTournament, event: any): void {
@@ -49,6 +50,7 @@ export class TournamentCardComponent implements OnInit {
 
 	/**
 	 * Delete a mappool from the bottom of the earth
+	 *
 	 * @param mappool the mappool
 	 */
 	deleteTournament(tournament: WyTournament): void {
@@ -70,7 +72,7 @@ export class TournamentCardComponent implements OnInit {
 
 						this.toastService.addToast('Successfully deleted the tournament.');
 					}, error => {
-						this.toastService.addToast(`Unable to delete the tournament: ${error.error.message}`, ToastType.Error);
+						this.toastService.addToast(`Unable to delete the tournament: ${error.error.message as string}`, ToastType.Error);
 					});
 				}
 			}
@@ -79,6 +81,7 @@ export class TournamentCardComponent implements OnInit {
 
 	/**
 	 * Publish a tournament
+	 *
 	 * @param tournament the tournament to publish
 	 */
 	publishTournament(tournament: WyTournament): void {

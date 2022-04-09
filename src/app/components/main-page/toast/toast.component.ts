@@ -29,6 +29,7 @@ export class ToastComponent implements OnInit {
 
 	/**
 	 * Gets called when a toast enters the screen
+	 *
 	 * @param event
 	 */
 	onAnimationEvent(event: any) {

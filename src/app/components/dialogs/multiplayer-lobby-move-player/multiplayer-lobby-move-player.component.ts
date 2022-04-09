@@ -25,6 +25,6 @@ export class MultiplayerLobbyMovePlayerComponent implements OnInit {
 			allPlayers: this.data.allPlayers,
 			movePlayer: this.data.movePlayer,
 			moveToSlot: this.selectedSlot
-		}
+		};
 	}
 }

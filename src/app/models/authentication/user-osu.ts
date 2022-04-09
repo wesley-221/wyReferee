@@ -16,7 +16,9 @@ export class UserOsu {
 	 * Make a true copy of the user
 	 */
 	public static makeTrueCopy(userOsu: UserOsu): UserOsu {
-		if (userOsu == null) return null;
+		if (userOsu == null) {
+			return null;
+		}
 
 		return new UserOsu({
 			id: userOsu.id,
@@ -46,11 +48,15 @@ export class UserOsu {
 
 	/**
 	 * Check if the user is eligible to join a tournament
+	 *
 	 * @param minimumRank the minimum rank the user has to be
 	 * @param maximumRank the maximum rank the user has to be
 	 */
 	isEligibleToJoin(minimumRank: number, maximumRank: number): boolean {
-		if (minimumRank == null && maximumRank == null) return true;
+		if (minimumRank == null && maximumRank == null) {
+			return true;
+		}
+
 		return this.rank >= minimumRank && this.rank <= maximumRank;
 	}
 }

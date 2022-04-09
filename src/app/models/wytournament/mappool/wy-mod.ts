@@ -10,6 +10,7 @@ export class WyMod {
 
 	/**
 	 * Create a true copy of the object
+	 *
 	 * @param mod the object to copy
 	 */
 	public static makeTrueCopy(mod: WyMod): WyMod {

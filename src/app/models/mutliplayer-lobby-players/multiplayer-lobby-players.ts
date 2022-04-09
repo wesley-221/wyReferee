@@ -20,9 +20,10 @@ export class MultiplayerLobbyPlayers {
 
 	/**
 	 * Gets called when !mp settings is ran, see Regex.playerInSlot
+	 *
 	 * @param playerInSlot
 	 */
-	playerChanged(playerInSlot: { type: string, slotId: number, status: string, username: string, host: boolean, team: string, mods: string }) {
+	playerChanged(playerInSlot: { type: string; slotId: number; status: string; username: string; host: boolean; team: string; mods: string }) {
 		for (let i = 0; i < this.players.length; i++) {
 			if (this.players[i].username == playerInSlot.username) {
 				const newPlayer = new MultiplayerLobbyPlayersPlayer();
@@ -47,62 +48,67 @@ export class MultiplayerLobbyPlayers {
 
 	/**
 	 * Gets called when a player moves around in a multiplayer lobby. See Regex.playerHasMoved
+	 *
 	 * @param player
 	 */
-	movePlayerToSlot(obj: { player: BanchoLobbyPlayer, slot: number }) {
+	movePlayerToSlot(obj: { player: BanchoLobbyPlayer; slot: number }) {
 		let movePlayer: MultiplayerLobbyPlayersPlayer;
 		obj.slot = obj.slot + 1;
 
-		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].username == obj.player.user.username) {
-				const existingPlayer = MultiplayerLobbyPlayersPlayer.makeTrueCopy(this.players[i]);
+		for (const iPlayer in this.players) {
+			if (this.players[iPlayer].username == obj.player.user.username) {
+				const existingPlayer = MultiplayerLobbyPlayersPlayer.makeTrueCopy(this.players[iPlayer]);
 				existingPlayer.slot = obj.slot;
 
 				const newPlayer = new MultiplayerLobbyPlayersPlayer();
-				newPlayer.slot = this.players[i].slot;
+				newPlayer.slot = this.players[iPlayer].slot;
 
 				movePlayer = existingPlayer;
-				this.players[i] = newPlayer;
+				this.players[iPlayer] = newPlayer;
 			}
 		}
 
-		for (let i = 0; i < this.players.length; i++) {
-			if (movePlayer == undefined)
+		for (const iPlayer in this.players) {
+			if (movePlayer == undefined) {
 				continue;
+			}
 
-			if (this.players[i].slot == movePlayer.slot) {
-				this.players[i] = movePlayer;
+			if (this.players[iPlayer].slot == movePlayer.slot) {
+				this.players[iPlayer] = movePlayer;
 			}
 		}
 	}
 
 	/**
 	 * Gets called when the host changes. See Regex.hostChanged
+	 *
 	 * @param hostChanged
 	 */
 	changeHost(player: BanchoLobbyPlayer) {
-		if (player == null)
+		if (player == null) {
 			return;
+		}
 
-		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].username == player.user.username) {
-				this.players[i].isHost = true;
+		for (const iPlayer in this.players) {
+			if (this.players[iPlayer].username == player.user.username) {
+				this.players[iPlayer].isHost = true;
 			}
 
-			if (this.players[i].isHost == true && this.players[i].username != player.user.username) {
-				this.players[i].isHost = false;
+			if (this.players[iPlayer].isHost == true && this.players[iPlayer].username != player.user.username) {
+				this.players[iPlayer].isHost = false;
 			}
 		}
 	}
 
 	/**
 	 * Gets called when a player changes team. See Regex.playerHasChangedTeam
+	 *
 	 * @param playerHasChangedTeam
 	 */
-	playerChangedTeam(playerHasChangedTeam: { player: BanchoLobbyPlayer, team: string }) {
-		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].username == playerHasChangedTeam.player.user.username) {
-				this.players[i].team = playerHasChangedTeam.team;
+	playerChangedTeam(playerHasChangedTeam: { player: BanchoLobbyPlayer; team: string }) {
+		for (const iPlayer in this.players) {
+			if (this.players[iPlayer].username == playerHasChangedTeam.player.user.username) {
+				this.players[iPlayer].team = playerHasChangedTeam.team;
 			}
 		}
 	}
@@ -111,15 +117,16 @@ export class MultiplayerLobbyPlayers {
 	 * Gets called when the match host gets cleared. See Regex.clearMatchHost
 	 */
 	clearMatchHost() {
-		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].isHost) {
-				this.players[i].isHost = false;
+		for (const iPlayer in this.players) {
+			if (this.players[iPlayer].isHost) {
+				this.players[iPlayer].isHost = false;
 			}
 		}
 	}
 
 	/**
 	 * Gets called when a player leaves the match (kick or normal leave). See Regex.playerLeft
+	 *
 	 * @param playerLeft
 	 */
 	playerLeft(playerLeft: BanchoLobbyPlayer) {
@@ -135,9 +142,10 @@ export class MultiplayerLobbyPlayers {
 
 	/**
 	 * Gets called when a player joins. See Regex.playerJoined
+	 *
 	 * @param playerJoined
 	 */
-	playerJoined(obj: { player: BanchoLobbyPlayer, slot: number, team: string }) {
+	playerJoined(obj: { player: BanchoLobbyPlayer; slot: number; team: string }) {
 		obj.slot = obj.slot + 1;
 
 		for (let i = 0; i < this.players.length; i++) {

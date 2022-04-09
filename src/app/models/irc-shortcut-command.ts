@@ -10,7 +10,21 @@ export class IrcShortcutCommand {
 	}
 
 	/**
+	 * Make a true copy of the given irc shortcut command
+	 *
+	 * @param ircShortcutCommand the object to make a true copy of
+	 */
+	public static makeTrueCopy(ircShortcutCommand: IrcShortcutCommand): IrcShortcutCommand {
+		return new IrcShortcutCommand({
+			label: ircShortcutCommand.label,
+			command: ircShortcutCommand.command,
+			warning: ircShortcutCommand.warning
+		});
+	}
+
+	/**
 	 * Parse variables in the current command
+	 *
 	 * @param selectedLobby a lobby where we get data from
 	 */
 	parseIrcCommand(selectedLobby: Lobby): string {
@@ -42,13 +56,5 @@ export class IrcShortcutCommand {
 		}
 
 		return ircCommand;
-	}
-
-	static makeTrueCopy(ircShortcutCommand: IrcShortcutCommand): IrcShortcutCommand {
-		return new IrcShortcutCommand({
-			label: ircShortcutCommand.label,
-			command: ircShortcutCommand.command,
-			warning: ircShortcutCommand.warning
-		});
 	}
 }

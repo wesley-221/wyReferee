@@ -15,6 +15,7 @@ export class ToastService {
 
 	/**
 	 * Create a new toast message for the given duration
+	 *
 	 * @param message the message to show
 	 * @param duration how long the toast should stay alive (in seconds)
 	 */
@@ -31,6 +32,7 @@ export class ToastService {
 
 	/**
 	 * Remove a toast so that it is no longer visible
+	 *
 	 * @param toast the toast to remove
 	 */
 	removeToast(toast: Toast): void {

@@ -63,6 +63,6 @@ export class SendFinalResultComponent implements OnInit {
 			multiplayerLobby: this.data.multiplayerLobby,
 			extraMessage: this.firstStepFormGroup.get('extra-message').value,
 			qualifierLobby: this.firstStepFormGroup.get('match-outcome').value == 'qualifier-result' ? true : false
-		}
+		};
 	}
 }

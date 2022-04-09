@@ -14,16 +14,8 @@ export class WebhookService {
 	constructor(private http: HttpClient, private cacheService: CacheService, private toastService: ToastService) { }
 
 	/**
-	 * Get a beatmap from any given mappool
-	 * @param beatmapId the beatmapid
-	 */
-	private getBeatmapnameFromMappools(beatmapId: number): CacheBeatmap {
-		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(beatmapId);
-		return (cachedBeatmap != null) ? cachedBeatmap : null;
-	}
-
-	/**
 	 * Send final result to discord through a webhook
+	 *
 	 * @param selectedLobby the lobby to get the data from
 	 * @param extraMessage the extra message
 	 * @param referee the referee
@@ -39,21 +31,21 @@ export class WebhookService {
 			`**Score:** ${selectedLobby.teamOneName} | ${selectedLobby.teamOneScore} - **${selectedLobby.teamTwoScore}** | __${selectedLobby.teamTwoName}__`;
 
 		const body = {
-			'embeds': [
+			embeds: [
 				{
-					'title': `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
-					'url': selectedLobby.multiplayerLink,
-					'description': `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n[${selectedLobby.multiplayerLink}](${selectedLobby.multiplayerLink})`,
-					'color': 15258703,
-					'timestamp': new Date(),
-					'footer': {
-						'text': `Match referee was ${referee}`
+					title: `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
+					url: selectedLobby.multiplayerLink,
+					description: `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n[${selectedLobby.multiplayerLink}](${selectedLobby.multiplayerLink})`,
+					color: 15258703,
+					timestamp: new Date(),
+					footer: {
+						text: `Match referee was ${referee}`
 					},
-					'fields': [
+					fields: [
 					]
 				}
 			]
-		}
+		};
 
 		const teamOneBans: any[] = [];
 		const teamTwoBans: any[] = [];
@@ -70,9 +62,9 @@ export class WebhookService {
 			}
 
 			body.embeds[0].fields.push({
-				'name': `**${selectedLobby.teamOneName}** bans:`,
-				'value': teamOneBans.join('\n'),
-				'inline': true
+				name: `**${selectedLobby.teamOneName}** bans:`,
+				value: teamOneBans.join('\n'),
+				inline: true
 			});
 
 		}
@@ -89,16 +81,16 @@ export class WebhookService {
 			}
 
 			body.embeds[0].fields.push({
-				'name': `**${selectedLobby.teamTwoName}** bans:`,
-				'value': teamTwoBans.join('\n'),
-				'inline': true
+				name: `**${selectedLobby.teamTwoName}** bans:`,
+				value: teamTwoBans.join('\n'),
+				inline: true
 			});
 		}
 
 		if (extraMessage != null) {
 			body.embeds[0].fields.push({
-				'name': `**Additional message by ${referee}**`,
-				'value': extraMessage,
+				name: `**Additional message by ${referee}**`,
+				value: extraMessage,
 			});
 		}
 
@@ -113,6 +105,7 @@ export class WebhookService {
 
 	/**
 	 * Send win by default message to discord through a webhook
+	 *
 	 * @param selectedLobby the lobby to get the data from
 	 * @param extraMessage the extra message
 	 * @param wbdWinningTeam the team that has the win
@@ -132,16 +125,16 @@ export class WebhookService {
 		}
 
 		const body = {
-			'embeds': [
+			embeds: [
 				{
-					'title': `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
-					'description': resultDescription,
-					'color': 15258703,
-					'timestamp': new Date(),
-					'footer': {
-						'text': `Match referee was ${referee}`
+					title: `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
+					description: resultDescription,
+					color: 15258703,
+					timestamp: new Date(),
+					footer: {
+						text: `Match referee was ${referee}`
 					},
-					'fields': [
+					fields: [
 					]
 				}
 			]
@@ -149,8 +142,8 @@ export class WebhookService {
 
 		if (extraMessage != null) {
 			body.embeds[0].fields.push({
-				'name': `**Additional message by ${referee}**`,
-				'value': extraMessage,
+				name: `**Additional message by ${referee}**`,
+				value: extraMessage,
 			});
 		}
 
@@ -165,6 +158,7 @@ export class WebhookService {
 
 	/**
 	 * Send qualifier lobby message to discord through a webhook
+	 *
 	 * @param selectedLobby the lobby to get the data from
 	 * @param extraMessage the extra message
 	 * @param referee the referee
@@ -176,17 +170,17 @@ export class WebhookService {
 		}
 
 		const body = {
-			'embeds': [
+			embeds: [
 				{
-					'title': selectedLobby.getQualifierName(),
-					'description': '',
-					'url': selectedLobby.multiplayerLink,
-					'color': 15258703,
-					'timestamp': new Date(),
-					'footer': {
-						'text': `Match referee was ${referee}`
+					title: selectedLobby.getQualifierName(),
+					description: '',
+					url: selectedLobby.multiplayerLink,
+					color: 15258703,
+					timestamp: new Date(),
+					footer: {
+						text: `Match referee was ${referee}`
 					},
-					'fields': [
+					fields: [
 					]
 				}
 			]
@@ -194,8 +188,8 @@ export class WebhookService {
 
 		if (extraMessage != null) {
 			body.embeds[0].fields.push({
-				'name': `**Additional message by ${referee}**`,
-				'value': extraMessage,
+				name: `**Additional message by ${referee}**`,
+				value: extraMessage,
 			});
 		}
 
@@ -210,6 +204,7 @@ export class WebhookService {
 
 	/**
 	 * Send the ban through a discord webhook
+	 *
 	 * @param selectedLobby the lobby to get the data from
 	 * @param teamName the name of the banner
 	 * @param ban the map that was banned
@@ -222,20 +217,20 @@ export class WebhookService {
 		}
 
 		const body = {
-			'embeds': [
+			embeds: [
 				{
-					'title': `🔨 Ban update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
-					'url': selectedLobby.multiplayerLink,
-					'description': `**${teamName}** has banned [**${ban.beatmapName}**](${ban.beatmapUrl})`,
-					'color': 15258703,
-					'timestamp': new Date(),
-					'footer': {
-						'text': `Match referee was ${referee}`
+					title: `🔨 Ban update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					url: selectedLobby.multiplayerLink,
+					description: `**${teamName}** has banned [**${ban.beatmapName}**](${ban.beatmapUrl})`,
+					color: 15258703,
+					timestamp: new Date(),
+					footer: {
+						text: `Match referee was ${referee}`
 					},
-					'thumbnail': {
-						'url': `https://b.ppy.sh/thumb/${ban.beatmapsetId}.jpg`
+					thumbnail: {
+						url: `https://b.ppy.sh/thumb/${ban.beatmapsetId}.jpg`
 					},
-					'fields': [
+					fields: [
 					]
 				}
 			]
@@ -250,6 +245,7 @@ export class WebhookService {
 
 	/**
 	 * Send the result of the last played beatmap to a discord webhook
+	 *
 	 * @param multiplayerLobby the lobby to get the data from
 	 * @param referee the referee
 	 */
@@ -261,7 +257,7 @@ export class WebhookService {
 
 		const lastMultiplayerData = multiplayerLobby.multiplayerData[multiplayerLobby.multiplayerData.length - 1];
 
-		let cachedBeatmap = null;
+		let cachedBeatmap: CacheBeatmap = null;
 
 		for (const mappool of multiplayerLobby.tournament.mappools) {
 			for (const modBracket of mappool.modBrackets) {
@@ -354,20 +350,20 @@ export class WebhookService {
 		resultString += `Next pick is for __${multiplayerLobby.getNextPick()}__`;
 
 		const body = {
-			'embeds': [
+			embeds: [
 				{
-					'title': `🏁 ${embedHeader}`,
-					'url': multiplayerLobby.multiplayerLink,
-					'description': resultString,
-					'color': lostTheirPick ? 0xad324f : 0x32a852,
-					'timestamp': new Date(),
-					'thumbnail': {
-						'url': `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
+					title: `🏁 ${embedHeader}`,
+					url: multiplayerLobby.multiplayerLink,
+					description: resultString,
+					color: lostTheirPick ? 0xad324f : 0x32a852,
+					timestamp: new Date(),
+					thumbnail: {
+						url: `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
 					},
-					'footer': {
-						'text': `Match referee was ${referee}`
+					footer: {
+						text: `Match referee was ${referee}`
 					},
-					'fields': [
+					fields: [
 					]
 				}
 			]
@@ -382,6 +378,7 @@ export class WebhookService {
 
 	/**
 	 * Send the multiplayer lobby details through a discord webhook
+	 *
 	 * @param selectedLobby the lobby to get the data from
 	 * @param referee the referee
 	 */
@@ -392,23 +389,23 @@ export class WebhookService {
 		}
 
 		const body = {
-			'embeds': [
+			embeds: [
 				{
-					'title': `Multiplayer lobby - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
-					'url': selectedLobby.multiplayerLink,
-					'color': 15258703,
-					'timestamp': new Date(),
-					'footer': {
-						'text': `Match referee was ${referee}`
+					title: `Multiplayer lobby - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					url: selectedLobby.multiplayerLink,
+					color: 15258703,
+					timestamp: new Date(),
+					footer: {
+						text: `Match referee was ${referee}`
 					},
-					'fields': [
+					fields: [
 						{
-							'name': 'Twitch multiplayer link command',
-							'value': `\`!editcom !mp ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}: ${selectedLobby.multiplayerLink}\``
+							name: 'Twitch multiplayer link command',
+							value: `\`!editcom !mp ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}: ${selectedLobby.multiplayerLink}\``
 						},
 						{
-							'name': 'Twitch stream title command',
-							'value': `\`!title ${selectedLobby.tournament.name} - ${selectedLobby.selectedStage.name}: ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}\``
+							name: 'Twitch stream title command',
+							value: `\`!title ${selectedLobby.tournament.name} - ${selectedLobby.selectedStage.name}: ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}\``
 						}
 					]
 				}
@@ -424,6 +421,7 @@ export class WebhookService {
 
 	/**
 	 * Send the picked beatmap through a discord webhook
+	 *
 	 * @param selectedLobby the lobby to get the data from
 	 * @param referee the referee
 	 * @param teamName the team that picked the map
@@ -436,20 +434,20 @@ export class WebhookService {
 		}
 
 		const body = {
-			'embeds': [
+			embeds: [
 				{
-					'title': `📌 Pick update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
-					'url': selectedLobby.multiplayerLink,
-					'description': `**${teamName}** has picked [**${pick.beatmapName}**](${pick.beatmapUrl})`,
-					'color': 15258703,
-					'timestamp': new Date(),
-					'footer': {
-						'text': `Match referee was ${referee}`
+					title: `📌 Pick update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					url: selectedLobby.multiplayerLink,
+					description: `**${teamName}** has picked [**${pick.beatmapName}**](${pick.beatmapUrl})`,
+					color: 15258703,
+					timestamp: new Date(),
+					footer: {
+						text: `Match referee was ${referee}`
 					},
-					'thumbnail': {
-						'url': `https://b.ppy.sh/thumb/${pick.beatmapsetId}.jpg`
+					thumbnail: {
+						url: `https://b.ppy.sh/thumb/${pick.beatmapsetId}.jpg`
 					},
-					'fields': [
+					fields: [
 					]
 				}
 			]
@@ -464,9 +462,20 @@ export class WebhookService {
 
 	/**
 	 * Check if webhooks are supposed to be sent
+	 *
 	 * @param lobby the lobby to check
 	 */
 	private doSendWebhooks(lobby: Lobby): boolean {
 		return !(lobby.sendWebhooks == null || lobby.sendWebhooks == undefined || lobby.sendWebhooks == false);
+	}
+
+	/**
+	 * Get a beatmap from any given mappool
+	 *
+	 * @param beatmapId the beatmapid
+	 */
+	private getBeatmapnameFromMappools(beatmapId: number): CacheBeatmap {
+		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(beatmapId);
+		return (cachedBeatmap != null) ? cachedBeatmap : null;
 	}
 }

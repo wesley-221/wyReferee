@@ -9,11 +9,12 @@ import { StoreService } from './store.service';
 })
 
 export class CacheService {
-	private cachedBeatmaps: CacheBeatmap[] = []
+	cacheVersion: string;
+
+
+	private cachedBeatmaps: CacheBeatmap[] = [];
 	private cachedUsers: CacheUser[] = [];
 	private cachedModifiers: CacheModifier[] = [];
-
-	cacheVersion: string;
 
 	constructor(private storeService: StoreService) {
 		const beatmapCache = storeService.get('cache.beatmaps');
@@ -27,7 +28,7 @@ export class CacheService {
 				name: beatmapCache[beatmap].name,
 				beatmapId: parseInt(beatmap),
 				beatmapSetId: parseInt(beatmapCache[beatmap].beatmapset_id),
-				beatmapUrl: `https://osu.ppy.sh/beatmaps/${beatmapCache[beatmap].beatmapset_id}`
+				beatmapUrl: `https://osu.ppy.sh/beatmaps/${beatmapCache[beatmap].beatmapset_id as string}`
 			}));
 		}
 
@@ -45,6 +46,7 @@ export class CacheService {
 
 	/**
 	 * Check if the given beatmapId is cached
+	 *
 	 * @param beatmapId the beatmapId to look for
 	 * @returns returns CacheBeatmap if found, null if not
 	 */
@@ -63,6 +65,7 @@ export class CacheService {
 
 	/**
 	 * Check if the given beatmapId is cached in a mappool
+	 *
 	 * @param beatmapId the beatmapId to look for
 	 */
 	public getCachedBeatmapFromMappools(beatmapId: number): CacheBeatmap {
@@ -86,6 +89,7 @@ export class CacheService {
 
 	/**
 	 * Create or update the cache for the given beatmap
+	 *
 	 * @param cachedBeatmap the CacheBeatmap to create/update
 	 */
 	public cacheBeatmap(cachedBeatmap: CacheBeatmap): void {
@@ -116,6 +120,7 @@ export class CacheService {
 
 	/**
 	 * Check if the given userId is cached
+	 *
 	 * @param userId the userId to look for
 	 * @returns returns CacheUser if found, null if not
 	 */
@@ -134,6 +139,7 @@ export class CacheService {
 
 	/**
 	 * Create or update the cache for the given user
+	 *
 	 * @param cachedUser the CacheUser to create/update
 	 */
 	public cacheUser(cachedUser: CacheUser): void {
@@ -170,6 +176,7 @@ export class CacheService {
 
 	/**
 	 * Set the version of the cache
+	 *
 	 * @param version the new version
 	 */
 	public setCacheVersion(version: string): void {

@@ -22,6 +22,7 @@ export class WyModBracketMap {
 
 	/**
 	 * Create a true copy of the object
+	 *
 	 * @param mod the object to copy
 	 */
 	public static makeTrueCopy(modBracketMap: WyModBracketMap): WyModBracketMap {

@@ -17,6 +17,7 @@ export class GenericService {
 
 	/**
 	 * Hide or show the AxS menu item
+	 *
 	 * @param active the status of the AxS menu
 	 */
 	setAxSMenu(active: boolean): void {
@@ -33,6 +34,7 @@ export class GenericService {
 
 	/**
 	 * Set the status of the cache check
+	 *
 	 * @param active the status of the cache check
 	 */
 	setCacheHasBeenChecked(active: boolean): void {

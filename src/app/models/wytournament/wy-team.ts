@@ -15,6 +15,7 @@ export class WyTeam {
 
 	/**
 	 * Create a true copy of the object
+	 *
 	 * @param team the object to copy
 	 */
 	public static makeTrueCopy(team: WyTeam): WyTeam {

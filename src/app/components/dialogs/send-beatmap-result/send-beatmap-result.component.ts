@@ -16,6 +16,7 @@ export class SendBeatmapResultComponent implements OnInit {
 
 	/**
 	 * Get the cover image
+	 *
 	 * @param beatmapId the beatmapid
 	 */
 	getBeatmapCoverUrl(beatmapId: number): string {
@@ -25,6 +26,7 @@ export class SendBeatmapResultComponent implements OnInit {
 
 	/**
 	 * Get the cached beatmap if it exists
+	 *
 	 * @param beatmapId the beatmapid
 	 */
 	getBeatmapname(beatmapId: number) {
@@ -67,11 +69,12 @@ export class SendBeatmapResultComponent implements OnInit {
 
 	/**
 	 * Split the string
+	 *
 	 * @param nStr the string to split
 	 * @param splitter the character to split the string with
 	 */
-	addDot(nStr: any, splitter: any) {
-		nStr += '';
+	addDot(nStr: string | number, splitter: string) {
+		nStr = nStr.toString();
 		const x = nStr.split('.');
 		let x1: string = x[0];
 		const x2 = x.length > 1 ? `.${x[1]}` : '';

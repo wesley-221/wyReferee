@@ -21,30 +21,8 @@ export class WyModBracket {
 	}
 
 	/**
-	 * Pick a random map from the current bracket with the data from the given multiplayer lobby
-	 * @param multiplayerLobby the multiplayerlobby to get the data from
-	 */
-	pickRandomMap(multiplayerLobby: Lobby): WyModBracketMap {
-		let randomMap: WyModBracketMap = null;
-
-		let iterations = 0;
-
-		do {
-			const map = this.beatmaps[Math.floor(Math.random() * this.beatmaps.length)];
-
-			if (!multiplayerLobby.beatmapIsBanned(map.beatmapId) && !multiplayerLobby.beatmapIsPicked(map.beatmapId)) {
-				randomMap = map;
-			}
-
-			iterations++;
-		}
-		while (randomMap == null && iterations < 30);
-
-		return randomMap;
-	}
-
-	/**
 	 * Create a true copy of the object
+	 *
 	 * @param mod the object to copy
 	 */
 	public static makeTrueCopy(modBracket: WyModBracket): WyModBracket {
@@ -77,5 +55,29 @@ export class WyModBracket {
 		}
 
 		return newModBracket;
+	}
+
+	/**
+	 * Pick a random map from the current bracket with the data from the given multiplayer lobby
+	 *
+	 * @param multiplayerLobby the multiplayerlobby to get the data from
+	 */
+	pickRandomMap(multiplayerLobby: Lobby): WyModBracketMap {
+		let randomMap: WyModBracketMap = null;
+
+		let iterations = 0;
+
+		do {
+			const map = this.beatmaps[Math.floor(Math.random() * this.beatmaps.length)];
+
+			if (!multiplayerLobby.beatmapIsBanned(map.beatmapId) && !multiplayerLobby.beatmapIsPicked(map.beatmapId)) {
+				randomMap = map;
+			}
+
+			iterations++;
+		}
+		while (randomMap == null && iterations < 30);
+
+		return randomMap;
 	}
 }

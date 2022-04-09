@@ -41,6 +41,7 @@ export class MappoolCreateComponent implements OnInit {
 
 	/**
 	 * Delete a mappool
+	 *
 	 * @param mappool the mappool to delete
 	 */
 	deleteMappool(mappool: WyMappool): void {

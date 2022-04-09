@@ -14,15 +14,16 @@ export class MultiplayerLobbySettingsComponent implements OnInit {
 
 	/**
 	 * Change various settings for the lobby
+	 *
 	 * @param element
 	 * @param event
 	 */
 	change(element: string, event: MatSelectChange) {
 		if (element == 'firstPick') {
-			this.data.multiplayerLobby.firstPick = event.value
+			this.data.multiplayerLobby.firstPick = event.value;
 		}
 		else if (element == 'bestOf') {
-			this.data.multiplayerLobby.bestOf = event.value
+			this.data.multiplayerLobby.bestOf = event.value;
 		}
 	}
 }

@@ -56,14 +56,16 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * When the name of the modbracket gets changed
+	 *
 	 * @param evt
 	 */
 	onNameChange(evt: Event) {
-		this.modBracket.name = (evt.target as any).value
+		this.modBracket.name = (evt.target as any).value;
 	}
 
 	/**
 	 * When the acronym of the modbracket gets changed
+	 *
 	 * @param evt
 	 */
 	onAcronymChange(evt: Event) {
@@ -72,6 +74,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Collapse a bracket
+	 *
 	 * @param bracket the bracket to collapse
 	 */
 	collapseBracket(bracket: WyModBracket): void {
@@ -80,6 +83,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Remove the mod bracket from the mappool
+	 *
 	 * @param modBracket
 	 */
 	deleteModBracket(modBracket: WyModBracket): void {
@@ -137,6 +141,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Delete a mod
+	 *
 	 * @param modIndex the index of the mod to delete
 	 */
 	deleteMod(modIndex: number): void {
@@ -152,6 +157,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Add a new beatmap to the given bracket
+	 *
 	 * @param bracket the bracket to add the beatmap to
 	 */
 	addBeatmap(bracket: WyModBracket): void {
@@ -169,6 +175,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Add all beatmaps to the given bracket
+	 *
 	 * @param modBracket the bracket to add the beatmaps to
 	 */
 	addBulkBeatmaps(bracket: WyModBracket): void {
@@ -192,6 +199,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Get the data from the given beatmap
+	 *
 	 * @param beatmap the beatmap to synchronize
 	 */
 	synchronizeBeatmap(beatmap: WyModBracketMap): void {
@@ -215,6 +223,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Synchronize all beatmaps from the bracket
+	 *
 	 * @param modBracket
 	 */
 	synchronizeAll(modBracket: WyModBracket): void {
@@ -231,6 +240,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Remove the given beatmap from the given bracket
+	 *
 	 * @param bracket the bracket to remove the beatmap from
 	 * @param beatmap the beatmap to remove
 	 */
@@ -244,6 +254,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Change the mod category for the given map
+	 *
 	 * @param beatmap
 	 * @param event
 	 */
@@ -260,6 +271,7 @@ export class ModBracketComponent implements OnInit {
 
 	/**
 	 * Change the picked status for the given map
+	 *
 	 * @param beatmap
 	 * @param event
 	 */

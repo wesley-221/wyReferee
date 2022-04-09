@@ -14,11 +14,10 @@ import { ToastType } from 'app/models/toast';
 })
 
 export class TournamentService {
-	private readonly apiUrl = AppConfig.apiUrl;
-
 	allTournaments: WyTournament[];
 	availableTournamentId: number;
 
+	private readonly apiUrl = AppConfig.apiUrl;
 	private tournamentsInitialized$: BehaviorSubject<boolean>;
 
 	constructor(private storeService: StoreService, private httpClient: HttpClient, private genericService: GenericService, private toastService: ToastService) {
@@ -71,6 +70,7 @@ export class TournamentService {
 
 	/**
 	 * Save a tournament and increment the available tournament id
+	 *
 	 * @param tournament the tournament to save
 	 */
 	saveTournament(tournament: WyTournament): void {
@@ -82,6 +82,7 @@ export class TournamentService {
 
 	/**
 	 * Update a tournament
+	 *
 	 * @param tournament the tournament to update
 	 */
 	updateTournament(tournament: WyTournament, idToUpdate: number, updateFromPublish?: boolean): void {
@@ -107,6 +108,7 @@ export class TournamentService {
 
 	/**
 	 * Update a published tournament
+	 *
 	 * @param tournament the tournament to update
 	 */
 	updatePublishedTournament(tournament: WyTournament): Observable<WyTournament> {
@@ -115,6 +117,7 @@ export class TournamentService {
 
 	/**
 	 * Delete the tournament from the cache and service
+	 *
 	 * @param tournament the tournament to delete
 	 */
 	deleteTournament(tournament: WyTournament): void {
@@ -124,6 +127,7 @@ export class TournamentService {
 
 	/**
 	 * Delete the published tournament
+	 *
 	 * @param tournament the tournament to delete
 	 */
 	deletePublishedTournament(tournament: WyTournament): Observable<void> {
@@ -132,6 +136,7 @@ export class TournamentService {
 
 	/**
 	 * Get a tournament by the given id
+	 *
 	 * @param id the id of the tournament to get
 	 */
 	getTournamentById(id: number): WyTournament {
@@ -149,6 +154,7 @@ export class TournamentService {
 
 	/**
 	 * Publish a tournament
+	 *
 	 * @param tournament the tournament to publish
 	 */
 	publishTournament(tournament: WyTournament): Observable<WyTournament> {
@@ -178,6 +184,7 @@ export class TournamentService {
 
 	/**
 	 * Get a published tournament by tournament id
+	 *
 	 * @param tournamentId the id of the tournament that was published
 	 */
 	getPublishedTournament(tournamentId: number): Observable<WyTournament> {

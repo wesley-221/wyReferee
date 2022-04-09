@@ -8,6 +8,7 @@ export class WyTeamPlayer {
 
 	/**
 	 * Create a true copy of the object
+	 *
 	 * @param teamPlayer the object to copy
 	 */
 	public static makeTrueCopy(teamPlayer: WyTeamPlayer): WyTeamPlayer {

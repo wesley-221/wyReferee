@@ -71,6 +71,10 @@ export class IrcComponent implements OnInit {
 	@ViewChild('channelName') channelName: ElementRef;
 	@ViewChild('chatMessage') chatMessage: ElementRef;
 
+	@ViewChild('teamMode') teamMode: MatSelect;
+	@ViewChild('winCondition') winCondition: MatSelect;
+	@ViewChild('players') players: MatSelect;
+
 	@ViewChild(VirtualScrollerComponent, { static: true }) private virtualScroller: VirtualScrollerComponent;
 
 	selectedChannel: IrcChannel;
@@ -89,10 +93,6 @@ export class IrcComponent implements OnInit {
 	isOptionMenuMinimized = true;
 	isPlayerManagementMinimized = true;
 	isInvitesMinimized = true;
-
-	@ViewChild('teamMode') teamMode: MatSelect;
-	@ViewChild('winCondition') winCondition: MatSelect;
-	@ViewChild('players') players: MatSelect;
 
 	searchValue: string;
 
@@ -149,7 +149,9 @@ export class IrcComponent implements OnInit {
 		});
 
 		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
-			if (this.selectedLobby == undefined) return;
+			if (this.selectedLobby == undefined) {
+				return;
+			}
 
 			if (data == this.selectedLobby.lobbyId) {
 				this.selectedLobby = this.multiplayerLobbies.getMultiplayerLobby(data);
@@ -166,6 +168,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Change the channel
+	 *
 	 * @param channel the channel to change to
 	 */
 	changeChannel(channel: string, delayScroll = false) {
@@ -223,6 +226,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Part from a channel
+	 *
 	 * @param channelName the channel to part
 	 */
 	partChannel(channelName: string) {
@@ -248,6 +252,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Drop a channel to rearrange it
+	 *
 	 * @param event
 	 */
 	dropChannel(event: CdkDragDrop<IrcChannel[]>) {
@@ -258,6 +263,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Open the link to the users userpage
+	 *
 	 * @param username
 	 */
 	openUserpage(username: string) {
@@ -266,6 +272,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Change the current mappool
+	 *
 	 * @param event
 	 */
 	onMappoolChange(event: MatSelectChange) {
@@ -277,6 +284,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Pick a beatmap from the given bracket
+	 *
 	 * @param beatmap the picked beatmap
 	 * @param bracket the bracket where the beatmap is from
 	 */
@@ -361,6 +369,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Check if the beatmap that is being picked came from the same mod bracket as the last pick was from
+	 *
 	 * @param bracket the bracket to check from
 	 */
 	wasBeatmapPickedFromSamePreviousModBracket(bracket: WyModBracket): boolean {
@@ -396,6 +405,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Unpick a beatmap
+	 *
 	 * @param beatmap
 	 * @param bracket
 	 */
@@ -412,6 +422,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Change what team picked the map
+	 *
 	 * @param beatmap
 	 * @param bracket
 	 */
@@ -436,7 +447,7 @@ export class IrcComponent implements OnInit {
 			const timer =
 				setInterval(() => {
 					if (this.roomSettingDelay == 0) {
-						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.value} ${this.winCondition.value} ${this.players.value == undefined ? 8 : this.players.value}`);
+						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.value as string} ${this.winCondition.value as string} ${this.players.value == undefined ? 8 : this.players.value as string}`);
 
 						this.ircService.getChannelByName(this.selectedChannel.name).teamMode = this.teamMode.value;
 						this.ircService.getChannelByName(this.selectedChannel.name).winCondition = this.winCondition.value;
@@ -471,10 +482,13 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Refresh the stats for a multiplayer lobby.
+	 *
 	 * @param multiplayerLobby the multiplayerlobby
 	 */
 	refreshIrcHeader(multiplayerLobby: Lobby) {
-		if (this.selectedLobby == undefined) return;
+		if (this.selectedLobby == undefined) {
+			return;
+		}
 
 		if (this.selectedLobby.ircChannel == undefined || this.selectedLobby.ircChannel == null) {
 			this.selectedLobby.ircChannel = this.ircService.getChannelByName(`#mp_${Lobby.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`);
@@ -491,6 +505,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Play a sound when a message is being send to a specific channel
+	 *
 	 * @param channel the channel that should where a message should be send from
 	 * @param status mute or unmute the sound
 	 */
@@ -502,6 +517,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Edit the label of a channel
+	 *
 	 * @param channel the channel to edit the label for
 	 */
 	editLabel(channel: IrcChannel): void {
@@ -543,6 +559,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Check if a beatmap has been picked by team one in the current lobby
+	 *
 	 * @param multiplayerLobby the multiplayerlobby to check from
 	 * @param beatmapId the beatmap to check
 	 */
@@ -552,6 +569,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Check if a beatmap has been picked by team two in the current lobby
+	 *
 	 * @param multiplayerLobby the multiplayerlobby to check from
 	 * @param beatmapId the beatmap to check
 	 */
@@ -561,6 +579,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Unban a beatmap
+	 *
 	 * @param beatmap
 	 * @param bracket
 	 */
@@ -577,6 +596,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Pick a mystery map
+	 *
 	 * @param mappool the mappool to pick from
 	 * @param modBracket the modbracket to pick from
 	 */
@@ -598,6 +618,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Pick a random map from the mod bracket
+	 *
 	 * @param mappool the mappool to pick from
 	 * @param modBracket the modbracket to pick from
 	 */
@@ -625,6 +646,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Change the host to a different player
+	 *
 	 * @param player
 	 */
 	setHost(player: MultiplayerLobbyPlayersPlayer) {
@@ -633,6 +655,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Kick the player from the match
+	 *
 	 * @param player
 	 */
 	kickPlayer(player: MultiplayerLobbyPlayersPlayer) {
@@ -641,6 +664,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Move the player to a different slot
+	 *
 	 * @param player
 	 */
 	movePlayer(player: MultiplayerLobbyPlayersPlayer) {
@@ -660,6 +684,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Change the colour of the current player
+	 *
 	 * @param player
 	 */
 	changeTeam(player: MultiplayerLobbyPlayersPlayer) {
@@ -706,6 +731,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Execute an irc shortcut command and process variables
+	 *
 	 * @param ircShortcutCommand the command that was executed
 	 */
 	executeIrcShortcutCommand(ircShortcutCommand: IrcShortcutCommand): void {
@@ -736,6 +762,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Invite a player to the current multiplayer lobby
+	 *
 	 * @param player the player to invite
 	 */
 	invitePlayer(player: WyTeamPlayer): void {
@@ -745,6 +772,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Invite a player to the current multiplayer lobby
+	 *
 	 * @param player the player to invite
 	 */
 	assignPlayerAsCaptain(player: WyTeamPlayer, teamIndex: number): void {
@@ -766,11 +794,13 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Check if the user is part of the blue team
+	 *
 	 * @param name the name of the user
 	 */
 	isBlueTeam(name: string): boolean {
-		if (this.selectedLobby == undefined)
+		if (this.selectedLobby == undefined) {
 			return;
+		}
 
 		for (const player in this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)) {
 			const playerObj = this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)[player];
@@ -786,11 +816,13 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Check if the user is part of the red team
+	 *
 	 * @param name the name of the user
 	 */
 	isRedTeam(name: string): boolean {
-		if (this.selectedLobby == undefined)
+		if (this.selectedLobby == undefined) {
 			return;
+		}
 
 		for (const player in this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)) {
 			const playerObj = this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)[player];
@@ -824,6 +856,7 @@ export class IrcComponent implements OnInit {
 
 	/**
 	 * Pick a beatmap from the given acronym typed in irc (HR1/MM2/DT3/etc.)
+	 *
 	 * @param chatPiece a MessageBuilder from irc to pick the map
 	 */
 	pickBeatmapFromAcronym(chatPiece: MessageBuilder) {

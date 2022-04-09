@@ -35,6 +35,7 @@ export class MultiplayerData {
 
 	/**
 	 * Add a player to the MultiplayerData
+	 *
 	 * @param player the player to add
 	 */
 	addPlayer(player: MultiplayerDataUser) {
@@ -43,6 +44,7 @@ export class MultiplayerData {
 
 	/**
 	 * Get a specific player from the given slot
+	 *
 	 * @param slot the slot of the player
 	 */
 	getPlayer(slot: number) {

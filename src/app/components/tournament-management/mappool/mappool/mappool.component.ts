@@ -21,6 +21,7 @@ export class MappoolComponent implements OnInit {
 
 	/**
 	 * When the name of the mappool gets changed
+	 *
 	 * @param evt
 	 */
 	onNameChange(evt: MatSelectChange) {
@@ -29,6 +30,7 @@ export class MappoolComponent implements OnInit {
 
 	/**
 	 * Change the type of the mappool
+	 *
 	 * @param event
 	 */
 	changeMappoolType(event: MatSelectChange): void {
@@ -66,6 +68,7 @@ export class MappoolComponent implements OnInit {
 
 	/**
 	 * Delete a mod category
+	 *
 	 * @param index the index of the mod category to delete
 	 */
 	deleteCategory(category: WyModCategory): void {

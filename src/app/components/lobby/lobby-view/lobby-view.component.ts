@@ -134,19 +134,20 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Copy the result of the beatmap to the clipboard
+	 *
 	 * @param match
 	 */
 	copyBeatmapResult(match: MultiplayerData) {
-		let string = '';
+		let beatmapResult = '';
 
 		if (match.team_one_score > match.team_two_score) {
-			string = `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_one_score - match.team_two_score}`;
+			beatmapResult = `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_one_score - match.team_two_score}`;
 		}
 		else {
-			string = `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_two_score - match.team_one_score}`;
+			beatmapResult = `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_two_score - match.team_one_score}`;
 		}
 
-		this.clipboardService.copyFromContent(string);
+		this.clipboardService.copyFromContent(beatmapResult);
 
 		this.toastService.addToast(`Copied the result for "${this.getBeatmapname(match.beatmap_id)}"`);
 	}
@@ -170,6 +171,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Open a dialog for the multiplayer lobby settings
+	 *
 	 * @param selectedLobby
 	 */
 	openSettings(selectedLobby: Lobby) {
@@ -188,6 +190,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Mark the match as valid or invalid so that it counts towards the team score
+	 *
 	 * @param match the match
 	 */
 	markAsInvalid(match: MultiplayerData) {
@@ -207,6 +210,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get the modifier for the given beatmapid
+	 *
 	 * @param beatmapId the beatmapid to get the modifier for
 	 */
 	getModifier(beatmapId: number) {
@@ -219,6 +223,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get the cached beatmap if it exists
+	 *
 	 * @param beatmapId the beatmapid
 	 */
 	getBeatmapname(beatmapId: number) {
@@ -228,6 +233,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get a beatmap from any given mappool
+	 *
 	 * @param beatmapId the beatmapid
 	 */
 	getBeatmapnameFromMappools(beatmapId: number): CacheBeatmap {
@@ -237,6 +243,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get the cover image
+	 *
 	 * @param beatmapId the beatmapid
 	 */
 	getBeatmapCoverUrl(beatmapId: number): string {
@@ -246,6 +253,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get the beatmap url
+	 *
 	 * @param beatmapId the beatmapid
 	 */
 	getBeatmapUrlFromId(beatmapId: number): string {
@@ -254,6 +262,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get the cached username
+	 *
 	 * @param userId the userid
 	 */
 	getUsernameFromUserId(userId: number) {
@@ -263,17 +272,19 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get the accuracy of the player in the given slot
+	 *
 	 * @param match the MultiplayerData
 	 * @param slotId the slot you want the accuracy from
 	 */
 	getAccuracy(match: MultiplayerData, slotId: number): any {
 		const user: MultiplayerDataUser = match.getPlayer(slotId);
 
-		return (user != undefined) ? user.accuracy : 0.00
+		return (user != undefined) ? user.accuracy : 0.00;
 	}
 
 	/**
 	 * Get the score of the player in the given slot
+	 *
 	 * @param match the MultiplayerData
 	 * @param slotId the slot you want the score from
 	 */
@@ -285,6 +296,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get the mods of the player in the given slot
+	 *
 	 * @param match the MultiplayerData
 	 * @param slotId the slot you want the mods from
 	 */
@@ -303,6 +315,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get the mods of the multiplayer lobby
+	 *
 	 * @param modBit the mods as bit
 	 */
 	getModsFromBit(modBit: number): string[] {
@@ -319,11 +332,12 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Split the string
+	 *
 	 * @param nStr the string to split
 	 * @param splitter the character to split the string with
 	 */
-	addDot(nStr: any, splitter: any) {
-		nStr += '';
+	addDot(nStr: string | number, splitter: string) {
+		nStr = nStr.toString();
 		const x = nStr.split('.');
 		let x1: string = x[0];
 		const x2 = x.length > 1 ? `.${x[1]}` : '';
@@ -338,6 +352,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Get the id of the multiplayer link
+	 *
 	 * @param link the multiplayerlink
 	 */
 	getMultiplayerIdFromLink(link: string) {
@@ -376,6 +391,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Select the winning and losing team
+	 *
 	 * @param winningTeam
 	 * @param losingTeam
 	 */

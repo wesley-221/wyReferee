@@ -15,7 +15,72 @@ export class User {
 	userOsu: UserOsu;
 
 	/**
+	 * Make a true copy of the user
+	 */
+	public static makeTrueCopy(user: User): User {
+		const newUser = new User();
+
+		newUser.id = user.id;
+		newUser.slug = user.slug;
+		newUser.username = user.username;
+		newUser.isAdmin = user.isAdmin;
+		newUser.isTournamentManager = user.isTournamentManager;
+		newUser.uploadSecretKey = user.uploadSecretKey;
+		newUser.uploadSecret = user.uploadSecret;
+		newUser.password = user.password;
+		newUser.passwordConfirm = user.passwordConfirm;
+		newUser.roles = [];
+		newUser.userOsu = UserOsu.makeTrueCopy(user.userOsu);
+
+		for (const role in user.roles) {
+			newUser.roles.push(Role.makeTrueCopy(user.roles[role]));
+
+			if (user.roles[role].name == 'Tournament manager') {
+				newUser.isTournamentManager = true;
+			}
+
+			if (user.roles[role].name == 'Administrator') {
+				newUser.isAdmin = true;
+			}
+		}
+
+		return newUser;
+	}
+
+	/**
+	 * Serialize the given json to a User
+	 *
+	 * @param json the json to serialize
+	 */
+	public static serializeJson(json: any): User {
+		const newUser = new User();
+
+		newUser.id = json.id;
+		newUser.slug = json.slug;
+		newUser.username = json.username;
+		newUser.isAdmin = json.isAdmin;
+		newUser.isTournamentManager = json.isTournamentManager;
+		newUser.uploadSecretKey = json.uploadSecretKey;
+		newUser.uploadSecret = json.uploadSecret;
+		newUser.password = json.password;
+		newUser.passwordConfirm = json.passwordConfirm;
+		newUser.userOsu = UserOsu.makeTrueCopy(json.userOsu);
+
+		for (const role in json.roles) {
+			newUser.roles.push(new Role({
+				id: json.roles[role].id,
+				name: json.roles[role].name,
+				description: json.roles[role].description,
+				permanent: json.roles[role].permanent
+			}));
+		}
+
+		return newUser;
+	}
+
+	/**
 	 * Return a role by the given name of the user
+	 *
 	 * @param name the name of a role
 	 */
 	public getRoleByName(name: string): Role {
@@ -54,68 +119,5 @@ export class User {
 	 */
 	public hasOsuConnected(): boolean {
 		return this.userOsu !== null;
-	}
-
-	/**
-	 * Make a true copy of the user
-	 */
-	public static makeTrueCopy(user: User): User {
-		const newUser = new User();
-
-		newUser.id = user.id;
-		newUser.slug = user.slug;
-		newUser.username = user.username;
-		newUser.isAdmin = user.isAdmin;
-		newUser.isTournamentManager = user.isTournamentManager;
-		newUser.uploadSecretKey = user.uploadSecretKey;
-		newUser.uploadSecret = user.uploadSecret;
-		newUser.password = user.password;
-		newUser.passwordConfirm = user.passwordConfirm;
-		newUser.roles = [];
-		newUser.userOsu = UserOsu.makeTrueCopy(user.userOsu);
-
-		for (const role in user.roles) {
-			newUser.roles.push(Role.makeTrueCopy(user.roles[role]));
-
-			if (user.roles[role].name == 'Tournament manager') {
-				newUser.isTournamentManager = true;
-			}
-
-			if (user.roles[role].name == 'Administrator') {
-				newUser.isAdmin = true;
-			}
-		}
-
-		return newUser;
-	}
-
-	/**
-	 * Serialize the given json to a User
-	 * @param json the json to serialize
-	 */
-	public static serializeJson(json: any): User {
-		const newUser = new User();
-
-		newUser.id = json.id;
-		newUser.slug = json.slug;
-		newUser.username = json.username;
-		newUser.isAdmin = json.isAdmin;
-		newUser.isTournamentManager = json.isTournamentManager;
-		newUser.uploadSecretKey = json.uploadSecretKey;
-		newUser.uploadSecret = json.uploadSecret;
-		newUser.password = json.password;
-		newUser.passwordConfirm = json.passwordConfirm;
-		newUser.userOsu = UserOsu.makeTrueCopy(json.userOsu);
-
-		for (const role in json.roles) {
-			newUser.roles.push(new Role({
-				id: json.roles[role].id,
-				name: json.roles[role].name,
-				description: json.roles[role].description,
-				permanent: json.roles[role].permanent
-			}));
-		}
-
-		return newUser;
 	}
 }

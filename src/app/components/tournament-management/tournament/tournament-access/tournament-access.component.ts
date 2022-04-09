@@ -84,6 +84,7 @@ export class TournamentAccessComponent implements OnInit {
 
 	/**
 	 * Remove an administrator from the tournament
+	 *
 	 * @param user the administrator to remove
 	 */
 	removeAdministrator(user: User): void {
@@ -99,6 +100,7 @@ export class TournamentAccessComponent implements OnInit {
 
 	/**
 	 * Remove a user from the tournament
+	 *
 	 * @param user the user to remove
 	 */
 	removeUser(user: User): void {

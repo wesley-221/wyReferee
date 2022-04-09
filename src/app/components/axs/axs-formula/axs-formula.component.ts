@@ -32,6 +32,7 @@ export class AxsFormulaComponent implements OnInit {
 
 	/**
 	 * Calculate the scores of all the games played in the MultiplayerMatch
+	 *
 	 * @param match the match to calculate the scores of
 	 */
 	calculateScores(match: MultiplayerMatch) {
@@ -106,7 +107,7 @@ export class AxsFormulaComponent implements OnInit {
 					normal_score: currentScore.score,
 					axs_score: (currentScore.slot == 0 || currentScore.slot == 3) ? AxSCalculation.calculateScorePlayerScore(newMpDataUser, axsScoreInterface.getModifier()).toFixed() : AxSCalculation.calculateScorePlayerScore(newMpDataUser, axsScoreInterface.getModifier()).toFixed(),
 					proposed_score: (currentScore.slot == 0 || currentScore.slot == 3) ? ProposedCalculation.calculateAccuracyPlayerScore(currentScore.score).toFixed() : ProposedCalculation.calculateScorePlayerScore(currentScore.score, this.calculateAccuracy(currentScore), proposedScoreInterface.getModifier()).toFixed()
-				}
+				};
 
 				beatmap.scores.push(gameScore);
 			}
@@ -119,6 +120,7 @@ export class AxsFormulaComponent implements OnInit {
 
 	/**
 	 * Calculate the accuracy of the given score
+	 *
 	 * @param score the score used to calculate the accuracy
 	 */
 	calculateAccuracy(score: MultiplayerGameScore) {
@@ -127,10 +129,11 @@ export class AxsFormulaComponent implements OnInit {
 
 	/**
 	 * Split the string
+	 *
 	 * @param nStr the string to split
 	 * @param splitter the character to split the string with
 	 */
-	addDot(nStr: any, splitter: any) {
+	addDot(nStr: string, splitter: string) {
 		nStr += '';
 		const x = nStr.split('.');
 		let x1: string = x[0];

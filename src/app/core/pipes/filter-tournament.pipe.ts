@@ -13,16 +13,12 @@ export class FilterTournamentPipe implements PipeTransform {
 		}
 
 		if (searchValue != null) {
-			returnMappools = returnMappools.filter(tournament => {
-				return tournament.id == parseInt(searchValue) ||
-					tournament.name.toLowerCase().includes(searchValue.toLowerCase());
-			});
+			returnMappools = returnMappools.filter(tournament => tournament.id == parseInt(searchValue) ||
+				tournament.name.toLowerCase().includes(searchValue.toLowerCase()));
 		}
 
 		if (filterByUser != null) {
-			returnMappools = returnMappools.filter(tournament => {
-				return tournament.createdBy.username.toLowerCase().includes(filterByUser.toLowerCase());
-			});
+			returnMappools = returnMappools.filter(tournament => tournament.createdBy.username.toLowerCase().includes(filterByUser.toLowerCase()));
 		}
 
 		return returnMappools;

@@ -37,10 +37,11 @@ export class IrcService {
 	isDisconnecting$: BehaviorSubject<boolean>;
 	isJoiningChannel$: BehaviorSubject<boolean>;
 	messageHasBeenSend$: BehaviorSubject<boolean>;
-	private isAuthenticated$: BehaviorSubject<boolean>;
 
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
 	isCreatingMultiplayerLobby = -1;
+
+	private isAuthenticated$: BehaviorSubject<boolean>;
 
 	// Indication if a sound is playing or not
 	private soundIsPlaying = false;
@@ -122,12 +123,13 @@ export class IrcService {
 
 	/**
 	 * Connect the user to irc
+	 *
 	 * @param username the username to connect with
 	 * @param password the password to connect with
 	 */
 	connect(username: string, password: string) {
 		const allJoinedChannels: IrcChannel[] = this.storeService.get('irc.channels');
-		const apiKey = this.storeService.get('api-key')
+		const apiKey = this.storeService.get('api-key');
 
 		this.client = new BanchoClient({ username: username, password: password, apiKey: apiKey });
 
@@ -137,8 +139,9 @@ export class IrcService {
 		 * Message handler
 		 */
 		this.client.on('PM', (message: PrivateMessage) => {
-			if (message.self != true)
+			if (message.self != true) {
 				this.addMessageToChannel(message.user.ircUsername, message.recipient.ircUsername, message.content, false);
+			}
 		});
 
 		this.client.on('CM', (message: ChannelMessage) => {
@@ -215,22 +218,23 @@ export class IrcService {
 
 	/**
 	 * Initialize the channel listeners when connecting to a channel
+	 *
 	 * @param channel
 	 */
 	initializeChannelListeners(channel: BanchoMultiplayerChannel) {
-		channel.lobby.on('playerMoved', (obj: { player: BanchoLobbyPlayer, slot: number }) => {
+		channel.lobby.on('playerMoved', (obj: { player: BanchoLobbyPlayer; slot: number }) => {
 			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.movePlayerToSlot(obj);
 		});
 
-		channel.lobby.on('playerJoined', (obj: { player: BanchoLobbyPlayer, slot: number, team: string }) => {
+		channel.lobby.on('playerJoined', (obj: { player: BanchoLobbyPlayer; slot: number; team: string }) => {
 			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.playerJoined(obj);
 		});
 
 		channel.lobby.on('playerLeft', (player: BanchoLobbyPlayer) => {
 			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.playerLeft(player);
-		})
+		});
 
-		channel.lobby.on('playerChangedTeam', (obj: { player: BanchoLobbyPlayer, team: string }) => {
+		channel.lobby.on('playerChangedTeam', (obj: { player: BanchoLobbyPlayer; team: string }) => {
 			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.playerChangedTeam(obj);
 		});
 
@@ -276,6 +280,7 @@ export class IrcService {
 
 	/**
 	 * Get the channel by its name
+	 *
 	 * @param channelName the channelname
 	 */
 	getChannelByName(channelName: string) {
@@ -292,6 +297,7 @@ export class IrcService {
 
 	/**
 	 * Add a message to the appropriate channel
+	 *
 	 * @param user the user that is sending the message
 	 * @param recipient the user that is receiving the message
 	 * @param message the message it self
@@ -404,6 +410,7 @@ export class IrcService {
 
 	/**
 	 * Join a
+	 *
 	 * @param channelName
 	 */
 	joinChannel(channelName: string, customLabel: string = null) {
@@ -506,6 +513,7 @@ export class IrcService {
 
 	/**
 	 * Send a message to the given channelmessage
+	 *
 	 * @param message
 	 */
 	sendChannelMessage(message: ChannelMessage) {
@@ -517,6 +525,7 @@ export class IrcService {
 
 	/**
 	 * Part from the given channel
+	 *
 	 * @param channelName the channel to part
 	 */
 	partChannel(channelName: string) {
@@ -543,6 +552,7 @@ export class IrcService {
 
 	/**
 	 * Send a message to the said channel
+	 *
 	 * @param channelName the channel to send the message in
 	 * @param message the message to send
 	 */
@@ -559,6 +569,7 @@ export class IrcService {
 
 	/**
 	 * Save the rearranged channels
+	 *
 	 * @param channels the rearranged channels
 	 */
 	rearrangeChannels(channels: IrcChannel[]) {
@@ -579,6 +590,7 @@ export class IrcService {
 
 	/**
 	 * Change the last active status in the store for the given channel
+	 *
 	 * @param channel the channel to change the status of
 	 * @param active the status
 	 */
@@ -592,6 +604,7 @@ export class IrcService {
 
 	/**
 	 * Change the active status in the store for the given channel
+	 *
 	 * @param channel the channel to change the status of
 	 * @param active the status
 	 */
@@ -605,11 +618,14 @@ export class IrcService {
 
 	/**
 	 * Save the message in the channel history
+	 *
 	 * @param channelName the channel to save it in
 	 * @param message the message object to save
 	 */
 	saveMessageToHistory(channelName: string, message: IrcMessage) {
-		if (message.isADivider) return;
+		if (message.isADivider) {
+			return;
+		}
 
 		const storeChannel: IrcChannel = this.storeService.get(`irc.channels.${channelName}`);
 		storeChannel.messages.push(message);
@@ -618,6 +634,7 @@ export class IrcService {
 
 	/**
 	 * Build a message with the appropriate hyperlinks
+	 *
 	 * @param message the message to build
 	 * @param lobby the multiplayer lobby the message was sent for
 	 */
@@ -797,6 +814,7 @@ export class IrcService {
 
 	/**
 	 * Handle irc commands
+	 *
 	 * @param message the message to process
 	 */
 	handleIrcCommand(message: ChannelMessage) {
@@ -838,7 +856,9 @@ export class IrcService {
 
 			for (const modBracket of multiplayerLobby.mappool.modBrackets) {
 				// Ignore tiebreaker from being randomly picked
-				if (modBracket.name.toLowerCase() == 'tiebreaker') continue;
+				if (modBracket.name.toLowerCase() == 'tiebreaker') {
+					continue;
+				}
 
 				if (modBracket.name == commandMessage || modBracket.acronym == commandMessage) {
 					foundModBracket = modBracket;

@@ -2,7 +2,7 @@ export class LoggedInUser {
 	id: number;
 	username: string;
 	admin: boolean;
-	tournamentHost: boolean
+	tournamentHost: boolean;
 
 	public static mapFromJson(json: any): LoggedInUser {
 		const loggedInUser = new LoggedInUser();
@@ -28,12 +28,12 @@ export class LoggedInUser {
 	/**
 	 * Convert the user to a json file
 	 */
-	public convertToJson(): { id: number, username: string, admin: boolean, tournamentHost: boolean } {
+	public convertToJson(): { id: number; username: string; admin: boolean; tournamentHost: boolean } {
 		return {
 			id: this.id,
 			username: this.username,
 			admin: this.admin,
 			tournamentHost: this.tournamentHost,
-		}
+		};
 	}
 }

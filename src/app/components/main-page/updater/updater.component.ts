@@ -32,7 +32,7 @@ export class UpdaterComponent implements OnInit {
 		if (AppConfig.production) {
 			this.autoUpdater.checkForUpdates();
 
-			this.autoUpdater.on('error', (err: any) => {
+			this.autoUpdater.on('error', (err: string) => {
 				toastService.addToast(`Something went wrong while trying to update: ${err}`);
 			});
 

@@ -16,10 +16,10 @@ import { Oauth } from 'app/models/authentication/oauth';
 })
 
 export class AuthenticateService {
-	private readonly apiUrl = AppConfig.apiUrl;
 	public loggedInUser: User;
 	public loggedIn = false;
 
+	private readonly apiUrl = AppConfig.apiUrl;
 	private loggedInUserLoaded$: BehaviorSubject<boolean>;
 	private oauthResponse$: BehaviorSubject<Oauth>;
 
@@ -53,6 +53,7 @@ export class AuthenticateService {
 
 	/**
 	 * Register a new user
+	 *
 	 * @param registerRequest
 	 */
 	public register(registerRequest: RegisterRequest): Observable<User> {
@@ -61,6 +62,7 @@ export class AuthenticateService {
 
 	/**
 	 * Login with the given email and password
+	 *
 	 * @param email the email to login with
 	 * @param password the password to login with
 	 */
@@ -84,6 +86,7 @@ export class AuthenticateService {
 
 	/**
 	 * Set logged in user as loaded or not loaded
+	 *
 	 * @param loaded
 	 */
 	public setLoggedInUserLoaded(loaded: boolean): void {
@@ -102,7 +105,31 @@ export class AuthenticateService {
 	}
 
 	/**
+	 * Get the oauth token for osu
+	 *
+	 * @returns observable that contains the oauth token
+	 */
+	public startOsuOauthProcess(): Observable<Oauth> {
+		this.openOsuBrowserWindow();
+
+		return this.oauthResponse$;
+	}
+
+	/**
+	 * Get the public osu data of the current logged in user
+	 */
+	public getMeData(withOauth?: boolean): Observable<any> {
+		if (withOauth && withOauth == true) {
+			return this.httpClient.get<any>(`${AppConfig.apiUrl}osu/me/oauth`);
+		}
+		else {
+			return this.httpClient.get<any>(`${AppConfig.apiUrl}osu/me`);
+		}
+	}
+
+	/**
 	 * Get the authorization url of the mappicker app
+	 *
 	 * @returns authorization url of the mappicker app
 	 */
 	private getOsuOauthUrl(): string {
@@ -113,11 +140,11 @@ export class AuthenticateService {
 			{ parameterName: 'scope', value: 'identify%20public' }
 		];
 
-		let finalLink = 'https://osu.ppy.sh/oauth/authorize?'
+		let finalLink = 'https://osu.ppy.sh/oauth/authorize?';
 
 		if (parameters != null) {
 			parameters.forEach(parameter => {
-				finalLink += `${parameter.parameterName}=${parameter.value}&`
+				finalLink += `${parameter.parameterName}=${parameter.value}&`;
 			});
 
 			finalLink = finalLink.substring(0, finalLink.length - 1);
@@ -140,7 +167,7 @@ export class AuthenticateService {
 
 		win.loadURL(this.getOsuOauthUrl());
 
-		const contents = win.webContents
+		const contents = win.webContents;
 		contents.on('will-redirect', (_, url) => {
 			const oauthToken = url.replace(`${AppConfig.osu.redirect_uri}?code=`, '');
 
@@ -154,27 +181,5 @@ export class AuthenticateService {
 				oldWindow.reload();
 			});
 		});
-	}
-
-	/**
-	 * Get the oauth token for osu
-	 * @returns observable that contains the oauth token
-	 */
-	public startOsuOauthProcess(): Observable<Oauth> {
-		this.openOsuBrowserWindow();
-
-		return this.oauthResponse$;
-	}
-
-	/**
-	 * Get the public osu data of the current logged in user
-	 */
-	public getMeData(withOauth?: boolean): Observable<any> {
-		if (withOauth && withOauth == true) {
-			return this.httpClient.get<any>(`${AppConfig.apiUrl}osu/me/oauth`);
-		}
-		else {
-			return this.httpClient.get<any>(`${AppConfig.apiUrl}osu/me`);
-		}
 	}
 }

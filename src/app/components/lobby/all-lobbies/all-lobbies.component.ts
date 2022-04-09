@@ -30,6 +30,7 @@ export class AllLobbiesComponent implements OnInit {
 
 	/**
 	 * Delete a multiplayer lobby
+	 *
 	 * @param multiplayerLobby
 	 */
 	deleteLobby(multiplayerLobby: Lobby) {
@@ -49,6 +50,7 @@ export class AllLobbiesComponent implements OnInit {
 
 	/**
 	 * Navigate to the selected multiplayer lobby
+	 *
 	 * @param multiplayerLobby
 	 * @param event
 	 */

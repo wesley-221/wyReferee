@@ -48,9 +48,7 @@ export class TournamentAllPublishedComponent implements OnInit {
 				this.allUsers.push(newUser);
 			}
 
-			this.allUsers.sort((a: User, b: User) => {
-				return a.username.localeCompare(b.username);
-			})
+			this.allUsers.sort((a: User, b: User) => a.username.localeCompare(b.username));
 
 			this.usersImported$.next(true);
 		});
@@ -60,8 +58,8 @@ export class TournamentAllPublishedComponent implements OnInit {
 			if (res == true) {
 				this.filteredUsers = this.filterByUserFormControl.valueChanges.pipe(
 					startWith(''),
-					map(value => this._filter(value))
-				)
+					map(value => this.filter(value))
+				);
 			}
 		});
 	}
@@ -83,7 +81,7 @@ export class TournamentAllPublishedComponent implements OnInit {
 		});
 	}
 
-	private _filter(filterUser: string): User[] {
+	private filter(filterUser: string): User[] {
 		return this.allUsers.filter(user => user.username.toLowerCase().includes(filterUser));
 	}
 }

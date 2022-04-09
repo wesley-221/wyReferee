@@ -1,5 +1,3 @@
-import { Mods } from '../osu-models/osu';
-
 export class MultiplayerDataUser {
 	accuracy: number;
 	mods: number;

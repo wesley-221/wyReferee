@@ -10,6 +10,7 @@ export class Role {
 
 	/**
 	 * Make a true copy of the given object
+	 *
 	 * @param role the role to make a true copy of
 	 */
 	public static makeTrueCopy(role: Role): Role {

@@ -59,7 +59,7 @@ export class WyTournament {
 		this.webhooks = [];
 		this.webhookIndex = 0;
 		this.mappools = [];
-		this.invalidateBeatmaps =  true;
+		this.invalidateBeatmaps = true;
 		this.allowDoublePick = true;
 		this.availableTo = [];
 		this.administrators = [];
@@ -68,96 +68,8 @@ export class WyTournament {
 	}
 
 	/**
-	 * Reset the ids of all objects
-	 */
-	resetAllIds(): void {
-		this.id = null;
-
-		for (const mappool of this.mappools) {
-			mappool.id = null;
-			mappool.publishId = null;
-
-			for (const modBracket of mappool.modBrackets) {
-				modBracket.id = null;
-
-				for (const mod of modBracket.mods) {
-					mod.id = null;
-				}
-
-				for (const map of modBracket.beatmaps) {
-					map.id = null;
-				}
-			}
-
-			for (const category of mappool.modCategories) {
-				category.id = null;
-			}
-		}
-
-		for (const team of this.teams) {
-			team.id = null;
-
-			for (const player of team.players) {
-				player.id = null;
-			}
-		}
-	}
-
-	/**
-	 * Get the mappool with the given id
-	 * @param id the id of the mappool to get
-	 */
-	getMappoolFromId(id: number): WyMappool {
-		for (const mappool in this.mappools) {
-			if (this.mappools[mappool].id == id) {
-				return this.mappools[mappool];
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get the mappool with the given index
-	 * @param index the index of the mappool to get
-	 */
-	getMappoolFromIndex(index: number): WyMappool {
-		for (const mappool in this.mappools) {
-			if (this.mappools[mappool].index == index) {
-				return this.mappools[mappool];
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get the modifier of the given beatmap
-	 * @param beatmapId the id of the beatmap to get the modifier from
-	 */
-	getModifierFromBeatmapId(beatmapId: number): number {
-		for (const mappool of this.mappools) {
-			for (const modBracket of mappool.modBrackets) {
-				for (const beatmap of modBracket.beatmaps) {
-					if (beatmap.beatmapId == beatmapId) {
-						return beatmap.modifier;
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Check if the tournament is a solo tournament
-	 */
-	isSoloTournament() {
-		return this.format == TournamentFormat.Solo;
-	}
-
-	/**
 	 * Create a true copy of the object
+	 *
 	 * @param tournament the object to copy
 	 */
 	public static makeTrueCopy(tournament: WyTournament): WyTournament {
@@ -232,5 +144,97 @@ export class WyTournament {
 		}
 
 		return newTournament;
+	}
+
+	/**
+	 * Reset the ids of all objects
+	 */
+	resetAllIds(): void {
+		this.id = null;
+
+		for (const mappool of this.mappools) {
+			mappool.id = null;
+			mappool.publishId = null;
+
+			for (const modBracket of mappool.modBrackets) {
+				modBracket.id = null;
+
+				for (const mod of modBracket.mods) {
+					mod.id = null;
+				}
+
+				for (const map of modBracket.beatmaps) {
+					map.id = null;
+				}
+			}
+
+			for (const category of mappool.modCategories) {
+				category.id = null;
+			}
+		}
+
+		for (const team of this.teams) {
+			team.id = null;
+
+			for (const player of team.players) {
+				player.id = null;
+			}
+		}
+	}
+
+	/**
+	 * Get the mappool with the given id
+	 *
+	 * @param id the id of the mappool to get
+	 */
+	getMappoolFromId(id: number): WyMappool {
+		for (const mappool in this.mappools) {
+			if (this.mappools[mappool].id == id) {
+				return this.mappools[mappool];
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the mappool with the given index
+	 *
+	 * @param index the index of the mappool to get
+	 */
+	getMappoolFromIndex(index: number): WyMappool {
+		for (const mappool in this.mappools) {
+			if (this.mappools[mappool].index == index) {
+				return this.mappools[mappool];
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the modifier of the given beatmap
+	 *
+	 * @param beatmapId the id of the beatmap to get the modifier from
+	 */
+	getModifierFromBeatmapId(beatmapId: number): number {
+		for (const mappool of this.mappools) {
+			for (const modBracket of mappool.modBrackets) {
+				for (const beatmap of modBracket.beatmaps) {
+					if (beatmap.beatmapId == beatmapId) {
+						return beatmap.modifier;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Check if the tournament is a solo tournament
+	 */
+	isSoloTournament() {
+		return this.format == TournamentFormat.Solo;
 	}
 }

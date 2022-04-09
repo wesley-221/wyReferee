@@ -39,9 +39,7 @@ export class TournamentMyPublishedComponent implements OnInit {
 				this.allUsers.push(newUser);
 			}
 
-			this.allUsers.sort((a: User, b: User) => {
-				return a.username.localeCompare(b.username);
-			})
+			this.allUsers.sort((a: User, b: User) => a.username.localeCompare(b.username));
 
 			this.usersImported$.next(true);
 		});
@@ -52,14 +50,15 @@ export class TournamentMyPublishedComponent implements OnInit {
 			if (res == true) {
 				this.filteredUsers = this.filterByUserFormControl.valueChanges.pipe(
 					startWith(''),
-					map(value => this._filter(value))
-				)
+					map(value => this.filter(value))
+				);
 			}
 		});
 	}
 
 	/**
 	 * Repopulate the tournament array when a tournament gets deleted
+	 *
 	 * @param deleted if the tournament is deleted
 	 */
 	onTournamentDeleted(deleted: boolean) {
@@ -83,7 +82,7 @@ export class TournamentMyPublishedComponent implements OnInit {
 		});
 	}
 
-	private _filter(filterUser: string): User[] {
+	private filter(filterUser: string): User[] {
 		return this.allUsers.filter(user => user.username.toLowerCase().includes(filterUser));
 	}
 }

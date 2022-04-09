@@ -158,7 +158,7 @@ export class TournamentPublishedEditComponent implements OnInit {
 			this.tournamentService.updatePublishedTournament(this.tournament).subscribe(tournament => {
 				this.toastService.addToast(`Successfully updated ${tournament.name}.`);
 			}, error => {
-				this.toastService.addToast(`Unable to update the tournament: ${error.error.message}`, ToastType.Error);
+				this.toastService.addToast(`Unable to update the tournament: ${error.error.message as string}`, ToastType.Error);
 			});
 		}
 		else {

@@ -18,13 +18,14 @@ export class GetMultiplayerService extends OsuApi {
 	}
 
 	/**
-     * Get the multiplayerdata from the given url
-     * @param multiplayerLink the multiplayerlink
-     */
+	 * Get the multiplayerdata from the given url
+	 *
+	 * @param multiplayerLink the multiplayerlink
+	 */
 	public get(multiplayerLink: string): Observable<MultiplayerMatch> {
 		const multiplayerId = this.getMultiplayerIdFromUrl(multiplayerLink);
 
-		return this.httpClient.get<MultiplayerMatch>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key')}&mp=${multiplayerId}`)
+		return this.httpClient.get<MultiplayerMatch>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key') as string}&mp=${multiplayerId}`)
 			.pipe(
 				map((data: any) => this.serializeFromJson(data))
 			);
@@ -32,6 +33,7 @@ export class GetMultiplayerService extends OsuApi {
 
 	/**
 	 * Serialize the json file to MultiplayerMatch()
+	 *
 	 * @param json the json
 	 */
 	private serializeFromJson(json: any): MultiplayerMatch {
@@ -60,21 +62,21 @@ export class GetMultiplayerService extends OsuApi {
 				const currentScore = currentGame.scores[score];
 				const newScore = new MultiplayerGameScore();
 
-				newScore.count50 = currentScore.count50
-				newScore.count100 = currentScore.count100
-				newScore.count300 = currentScore.count300
-				newScore.countgeki = currentScore.countgeki
-				newScore.countkatu = currentScore.countkatu
-				newScore.countmiss = currentScore.countmiss
-				newScore.enabled_mods = currentScore.enabled_mods
-				newScore.maxcombo = currentScore.maxcombo
-				newScore.pass = currentScore.pass
-				newScore.perfect = currentScore.perfect
-				newScore.rank = currentScore.rank
-				newScore.score = currentScore.score
-				newScore.slot = currentScore.slot
-				newScore.team = currentScore.team
-				newScore.user_id = currentScore.user_id
+				newScore.count50 = currentScore.count50;
+				newScore.count100 = currentScore.count100;
+				newScore.count300 = currentScore.count300;
+				newScore.countgeki = currentScore.countgeki;
+				newScore.countkatu = currentScore.countkatu;
+				newScore.countmiss = currentScore.countmiss;
+				newScore.enabled_mods = currentScore.enabled_mods;
+				newScore.maxcombo = currentScore.maxcombo;
+				newScore.pass = currentScore.pass;
+				newScore.perfect = currentScore.perfect;
+				newScore.rank = currentScore.rank;
+				newScore.score = currentScore.score;
+				newScore.slot = currentScore.slot;
+				newScore.team = currentScore.team;
+				newScore.user_id = currentScore.user_id;
 
 				newGame.scores.push(currentScore);
 			}
@@ -87,6 +89,7 @@ export class GetMultiplayerService extends OsuApi {
 
 	/**
 	 * Get the id of the given multiplayer url
+	 *
 	 * @param url the complete url
 	 */
 	private getMultiplayerIdFromUrl(url: string) {
@@ -96,6 +99,6 @@ export class GetMultiplayerService extends OsuApi {
 			return regularExpression[1];
 		}
 
-		return false;
+		return null;
 	}
 }

@@ -36,7 +36,7 @@ export class SettingsComponent implements OnInit {
 
 	axsMenuStatus: boolean;
 
-	allOptions: { icon: string, message: string, buttonText: string, action: any }[] = [
+	allOptions: { icon: string; message: string; buttonText: string; action: any }[] = [
 		{ icon: 'settings', message: 'This will export the config file and save it as a file in case you need to share it with someone. <br /><b>Note:</b> This will not export any authentication data such as login information or API keys <br />', buttonText: 'Export config file', action: () => this.exportConfigFile() },
 		{ icon: 'cached', message: 'This will clear all the cache.', buttonText: 'Clear cache', action: () => this.openDialog(0) },
 		{ icon: 'api', message: 'This will remove the API key.', buttonText: 'Remove API key', action: () => this.openDialog(1) },
@@ -69,10 +69,10 @@ export class SettingsComponent implements OnInit {
 
 	ngOnInit() {
 		this.mappoolPublishForm = new FormGroup({
-			'username': new FormControl('', [
+			username: new FormControl('', [
 				Validators.required
 			]),
-			'password': new FormControl('', [
+			password: new FormControl('', [
 				Validators.required
 			])
 		});
@@ -198,11 +198,11 @@ export class SettingsComponent implements OnInit {
 			// Remove the api key and auth properties
 			let configFile = this.storeService.storage.store;
 			configFile['api-key'] = 'redacted';
-			configFile['auth'] = 'redacted'; // Authentication details from older versions
-			configFile['oauth'] = 'redacted';
+			configFile.auth = 'redacted'; // Authentication details from older versions
+			configFile.oauth = 'redacted';
 			configFile['osu-oauth'] = 'redacted';
-			configFile['irc']['username'] = 'redacted';
-			configFile['irc']['password'] = 'redacted';
+			configFile.irc.username = 'redacted';
+			configFile.irc.password = 'redacted';
 
 			configFile = JSON.stringify(configFile, null, '\t');
 

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { LayoutModule } from '@angular/cdk/layout';
 
-import { MatIconModule, MatIconRegistry } from '@angular/material/icon'
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';

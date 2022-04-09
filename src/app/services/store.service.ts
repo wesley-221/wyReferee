@@ -17,6 +17,7 @@ export class StoreService {
 
 	/**
 	 * Get data out of the storage with the given key
+	 *
 	 * @param key the key you want to get
 	 */
 	get(key: string): any {
@@ -25,6 +26,7 @@ export class StoreService {
 
 	/**
 	 * Set the data in the storage with the given key/value
+	 *
 	 * @param key the key you want to set
 	 * @param value the value you want to set
 	 */
@@ -34,6 +36,7 @@ export class StoreService {
 
 	/**
 	 * Delete data out of the storage
+	 *
 	 * @param key the key to delete
 	 */
 	delete(key: string): void {

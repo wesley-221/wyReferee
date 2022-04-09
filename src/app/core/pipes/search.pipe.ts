@@ -13,9 +13,7 @@ export class SearchPipe implements PipeTransform {
 
 		let returnUsers: User[] = [];
 
-		returnUsers = allUsers.filter(user => {
-			return user.username.toLowerCase().indexOf(username.toLowerCase()) > -1;
-		});
+		returnUsers = allUsers.filter(user => user.username.toLowerCase().indexOf(username.toLowerCase()) > -1);
 
 		return returnUsers;
 	}

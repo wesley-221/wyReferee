@@ -16,9 +16,7 @@ export class SearchModBracketPipe implements PipeTransform {
 		for (const bracket in allModbrackets) {
 			const currentBracket = WyModBracket.makeTrueCopy(allModbrackets[bracket]);
 
-			currentBracket.beatmaps = currentBracket.beatmaps.filter(beatmap => {
-				return beatmap.beatmapName.toLowerCase().includes(beatmapName.toLowerCase())
-			});
+			currentBracket.beatmaps = currentBracket.beatmaps.filter(beatmap => beatmap.beatmapName.toLowerCase().includes(beatmapName.toLowerCase()));
 
 			if (currentBracket.beatmaps.length > 0) {
 				returnModBrackets.push(currentBracket);

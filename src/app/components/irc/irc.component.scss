@@ -52,6 +52,7 @@ $hyperlink-background-color: #2b4576;
 			.channel {
 				display: flex;
 				flex-direction: row;
+				justify-content: space-between;
 
 				user-select: none;
 				height: 40px;

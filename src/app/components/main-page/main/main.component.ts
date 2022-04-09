@@ -10,10 +10,10 @@ import { DebugService } from 'app/services/debug.service';
 
 export class MainComponent implements OnInit {
 	constructor(public router: Router, public debugService: DebugService) { }
-	ngOnInit() { }
 
 	/**
 	 * Trigger the debug menu
+	 *
 	 * @param event the triggered button
 	 */
 	@HostListener('window:keydown', ['$event'])
@@ -22,4 +22,6 @@ export class MainComponent implements OnInit {
 			this.debugService.menuActive = !this.debugService.menuActive;
 		}
 	}
+
+	ngOnInit() { }
 }

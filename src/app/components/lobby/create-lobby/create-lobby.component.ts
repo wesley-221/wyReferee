@@ -109,7 +109,7 @@ export class CreateLobbyComponent implements OnInit {
 				const filterValue = value.toLowerCase();
 				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
 			})
-		)
+		);
 	}
 
 	ngOnInit() { }
@@ -171,10 +171,10 @@ export class CreateLobbyComponent implements OnInit {
 	}
 
 	changeChallongeMatch(event: MatSelectChange) {
-		const match = this.challongeMatches.find(match => match.id == event.value);
+		const findMatch = this.challongeMatches.find(match => match.id == event.value);
 
-		this.validationForm.get('challonge-match').setValue(match.id);
-		this.validationForm.get('challonge-tournament').setValue(match.tournament_id);
+		this.validationForm.get('challonge-match').setValue(findMatch.id);
+		this.validationForm.get('challonge-tournament').setValue(findMatch.tournament_id);
 	}
 
 	createLobby() {
@@ -226,7 +226,7 @@ export class CreateLobbyComponent implements OnInit {
 
 				for (const mappool of this.selectedTournament.mappools) {
 					if (mappool.name == selectedStage) {
-						lobby.mappoolId == mappool.id;
+						lobby.mappoolId = mappool.id;
 						lobby.mappool = mappool;
 
 						break;
@@ -241,7 +241,7 @@ export class CreateLobbyComponent implements OnInit {
 				let lobbyName: string;
 
 				if (lobby.tournament == undefined || lobby.tournament == null) {
-					const acronym = this.validationForm.get('tournament-acronym').value;
+					const acronym: string = this.validationForm.get('tournament-acronym').value;
 
 					lobbyName = this.qualifier == true ? `${acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : `${acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
 				}
@@ -250,7 +250,13 @@ export class CreateLobbyComponent implements OnInit {
 				}
 
 				from(this.ircService.client.createLobby(lobbyName)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
-					this.ircService.joinChannel(multiplayerChannel.name, `${lobby.teamOneName} vs. ${lobby.teamTwoName}`);
+					if (lobby.isQualifierLobby) {
+						this.ircService.joinChannel(multiplayerChannel.name, lobby.description);
+					}
+					else {
+						this.ircService.joinChannel(multiplayerChannel.name, `${lobby.teamOneName} vs. ${lobby.teamTwoName}`);
+					}
+
 					this.ircService.initializeChannelListeners(multiplayerChannel);
 
 					this.lobbyHasBeenCreatedTrigger();

@@ -13,7 +13,7 @@ export class JoinIrcChannelComponent implements OnInit {
 	constructor(@Inject(MAT_DIALOG_DATA) public data: string) {
 		this.validationForm = new FormGroup({
 			'channel-name': new FormControl('', Validators.required)
-		})
+		});
 	}
 
 	ngOnInit(): void { }

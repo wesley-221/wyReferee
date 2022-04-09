@@ -65,6 +65,7 @@ export class OsuApi {
 export class OsuHelper {
 	/**
 	 * Get the bit from the given mod strings
+	 *
 	 * @param mods the mods in an array
 	 */
 	public static getBitFromMods(mods: string[]) {
@@ -85,14 +86,15 @@ export class OsuHelper {
 
 	/**
 	 * Get all mods from the given bit
+	 *
 	 * @param bit the mods
 	 */
 	public static getModsFromBit(bit: number) {
 		const allMods = [];
 
 		for (const item in Mods) {
-			if (((<any>Mods[item]) & bit) > 0) {
-				allMods.push(item.toLowerCase())
+			if (((Mods[item] as any) & bit) > 0) {
+				allMods.push(item.toLowerCase());
 			}
 		}
 
@@ -101,6 +103,7 @@ export class OsuHelper {
 
 	/**
 	 * Get the multiplayer id from the given multiplayer link
+	 *
 	 * @param link the multiplayer link
 	 */
 	public static getMultiplayerIdFromLink(link: string) {
@@ -109,6 +112,7 @@ export class OsuHelper {
 
 	/**
 	 * Get mod abbreviations from the given mods array
+	 *
 	 * @param mod the mod to get the abbreviation from
 	 */
 	public static getModAbbreviation(mod: string): string {

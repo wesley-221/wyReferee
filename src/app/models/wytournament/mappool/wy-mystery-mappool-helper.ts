@@ -4,7 +4,7 @@ export class WyMysteryMappoolHelper {
 	modBracketId: number;
 	multiplayerLobbyName: string;
 	refereeName: string;
-	pickedCategories: { modBracketName: string, categories: string[] }[];
+	pickedCategories: { modBracketName: string; categories: string[] }[];
 
 	constructor(init?: Partial<WyMysteryMappoolHelper>) {
 		this.pickedCategories = [];

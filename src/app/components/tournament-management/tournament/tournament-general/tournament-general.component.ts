@@ -52,7 +52,7 @@ export class TournamentGeneralComponent implements OnInit {
 	/**
 	 * Change the allowed double pick
 	 */
-	changeAllowDoublePick(event: { source: any, checked: boolean }): void {
+	changeAllowDoublePick(event: { source: any; checked: boolean }): void {
 		this.validationForm.get('allow-double-pick').setValue(event.checked);
 		this.tournament.allowDoublePick = event.checked;
 	}
@@ -60,7 +60,7 @@ export class TournamentGeneralComponent implements OnInit {
 	/**
 	 * Change if beatmaps will be invalidated
 	 */
-	changeInvalidateBeatmaps(event: { source: any, checked: boolean }): void {
+	changeInvalidateBeatmaps(event: { source: any; checked: boolean }): void {
 		this.validationForm.get('invalidate-beatmaps').setValue(event.checked);
 		this.tournament.invalidateBeatmaps = event.checked;
 	}

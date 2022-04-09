@@ -14,6 +14,7 @@ export class ChallongeService {
 
 	/**
 	 * Send a generic request to api to check if the key is correct
+	 *
 	 * @param apiKey
 	 */
 	public validateApiKey(apiKey: string) {
@@ -22,6 +23,7 @@ export class ChallongeService {
 
 	/**
 	 * Get all tournaments
+	 *
 	 * @param apiKey
 	 */
 	public getAllTournaments(apiKey: string) {
@@ -30,6 +32,7 @@ export class ChallongeService {
 
 	/**
 	 * Endpoint to check if the tournament has challonge integration
+	 *
 	 * @param tournament the tournament to check
 	 */
 	public getChallongeMatchups(tournament: WyTournament) {
@@ -38,6 +41,7 @@ export class ChallongeService {
 
 	/**
 	 * Parse challonge endpoint from wyBin
+	 *
 	 * @param challongeResult
 	 */
 	public parseChallongeEndpoint(challongeResult: any): ChallongeMatch[] {
@@ -81,21 +85,16 @@ export class ChallongeService {
 		}
 
 		for (const match of allMatches) {
-			match.getPlayer1Name = () => {
-				return match.player1 != undefined ?
-					match.player1.name :
-					match.player1_prereq_match != null ? `Winner of match ${match.player1_prereq_match.suggested_play_order}` : 'Unknown';
-			}
+			match.getPlayer1Name = () => match.player1 != undefined ?
+				match.player1.name :
+				match.player1_prereq_match != null ? `Winner of match ${match.player1_prereq_match.suggested_play_order}` : 'Unknown';
 
-			match.getPlayer2Name = () => {
-				return match.player2 != undefined ?
-					match.player2.name :
-					match.player2_prereq_match != null ? `Winner of match ${match.player2_prereq_match.suggested_play_order}` : 'Unknown';
-			}
 
-			match.getScore = () => {
-				return match.scores_csv == '' ? '0-0' : match.scores_csv;
-			}
+			match.getPlayer2Name = () => match.player2 != undefined ?
+				match.player2.name :
+				match.player2_prereq_match != null ? `Winner of match ${match.player2_prereq_match.suggested_play_order}` : 'Unknown';
+
+			match.getScore = () => match.scores_csv == '' ? '0-0' : match.scores_csv;
 		}
 
 		return allMatches;
@@ -103,6 +102,7 @@ export class ChallongeService {
 
 	/**
 	 * Update the score on challonge
+	 *
 	 * @param tournamentId the id of the published tournament
 	 * @param challongeTournamentId the id of the tournament to update
 	 * @param challongeMatchId the id of the match to update
@@ -123,6 +123,7 @@ export class ChallongeService {
 
 	/**
 	 * Endpoint to create a tournament through Challonge
+	 *
 	 * @param apiKey the api key for Challonge
 	 * @param name the name of the tournament
 	 * @param url the url of the tournament
@@ -139,6 +140,7 @@ export class ChallongeService {
 
 	/**
 	 * Bulk add all given participants to the tournament
+	 *
 	 * @param tournament the tournament to add the participants to
 	 * @param participants the participants to add to the tournament
 	 */

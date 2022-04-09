@@ -42,6 +42,7 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	/**
 	 * Delete a team from the tournament
+	 *
 	 * @param team the team to remove
 	 */
 	deleteTeam(team: WyTeam) {
@@ -64,6 +65,7 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	/**
 	 * Collapse a participant bracket
+	 *
 	 * @param team the participant bracket to collapse
 	 */
 	collapseParticipant(team: WyTeam) {
@@ -72,6 +74,7 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	/**
 	 * Change the name of the team
+	 *
 	 * @param team the team to change the name of
 	 * @param event the changed value
 	 */
@@ -81,6 +84,7 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	/**
 	 * Add a player to the given team
+	 *
 	 * @param team the team to add the player to
 	 */
 	addNewPlayer(team: WyTeam) {
@@ -89,6 +93,7 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	/**
 	 * Bulk add players to the given team
+	 *
 	 * @param team the team to add the players to
 	 */
 	addBulkPlayers(team: WyTeam) {
@@ -122,6 +127,7 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	/**
 	 * Remove a player from the given team
+	 *
 	 * @param team the team to remove a player from
 	 * @param player the player to remove from the team
 	 */

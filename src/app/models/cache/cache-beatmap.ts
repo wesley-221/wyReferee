@@ -1,7 +1,7 @@
 export class CacheBeatmap {
 	name: string;
 	beatmapId: number;
-	beatmapSetId: number
+	beatmapSetId: number;
 	beatmapUrl: string;
 
 	constructor(init?: Partial<CacheBeatmap>) {

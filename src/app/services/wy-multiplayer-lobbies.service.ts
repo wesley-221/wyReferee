@@ -78,6 +78,7 @@ export class WyMultiplayerLobbiesService {
 
 	/**
 	 * Add a new multiplayer lobby
+	 *
 	 * @param multiplayerLobby the lobby to add
 	 */
 	addMultiplayerLobby(multiplayerLobby: Lobby): void {
@@ -89,6 +90,7 @@ export class WyMultiplayerLobbiesService {
 
 	/**
 	 * Get a multiplayer lobby from the given id
+	 *
 	 * @param lobbyId the id of the multiplayer lobby to get
 	 */
 	getMultiplayerLobby(lobbyId: number): Lobby {
@@ -103,6 +105,7 @@ export class WyMultiplayerLobbiesService {
 
 	/**
 	 * Get a multiplayer lobby by an irc channel
+	 *
 	 * @param name the name of the irc channel
 	 */
 	getMultiplayerLobbyByIrc(name: string): Lobby {
@@ -115,6 +118,7 @@ export class WyMultiplayerLobbiesService {
 
 	/**
 	 * Update a multiplayer lobby
+	 *
 	 * @param multiplayerLobby the multiplayer lobby to update
 	 */
 	updateMultiplayerLobby(multiplayerLobby: Lobby): void {
@@ -130,6 +134,7 @@ export class WyMultiplayerLobbiesService {
 
 	/**
 	 * Delete a multiplayer lobby
+	 *
 	 * @param multiplayerLobby the multiplayer lobby to delete
 	 */
 	deleteMultiplayerLobby(multiplayerLobby: Lobby): void {
@@ -147,6 +152,7 @@ export class WyMultiplayerLobbiesService {
 
 	/**
 	 * Synchronize the multiplayer lobby
+	 *
 	 * @param multiplayerLobby the multiplayer lobby to synchronize
 	 * @param showToast whether or not to show toast messages
 	 * @param sendWebhook whether or not to send the result to the webhook
@@ -185,7 +191,7 @@ export class WyMultiplayerLobbiesService {
 							beatmapId: beatmap.beatmap_id,
 							beatmapSetId: beatmap.beatmapset_id,
 							beatmapUrl: `https://osu.ppy.sh/beatmaps/${beatmap.beatmap_id}`
-						}))
+						}));
 					});
 				}
 
@@ -283,8 +289,9 @@ export class WyMultiplayerLobbiesService {
 
 			this.updateMultiplayerLobby(multiplayerLobby);
 
-			if (showToast != null && showToast == true)
+			if (showToast != null && showToast == true) {
 				this.toastService.addToast('Successfully synchronized the multiplayer lobby.');
+			}
 
 			if (sendWebhook != null && sendWebhook == true) {
 				const ircCredentials = this.storeService.get('irc');
@@ -295,6 +302,7 @@ export class WyMultiplayerLobbiesService {
 
 	/**
 	 * Get a map from the given mystery mappool
+	 *
 	 * @param mappool the mappool to get the mystery map from
 	 * @param modBracket the modbracket to get the mystery map from
 	 */

@@ -12,6 +12,30 @@ export class AxSCalculation extends ScoreInterface {
 		this.setSoloTournament(false);
 	}
 
+	/**
+	 * Calculate the score of a score player with the given modifier
+	 *
+	 * @param score the full score of the player
+	 * @param accuracy the accuracy of the player
+	 * @param modifier the modifier of the map
+	 */
+	public static calculateScorePlayerScore(player: MultiplayerDataUser, modifier: number) {
+		return (player.score * (Math.pow((100 - ((100 - player.accuracy) / 5)) / 100, modifier)));
+	}
+
+	/**
+	 * Calculate the team score with all the given scores and modifier
+	 *
+	 * @param score_player_one the final calculated score of player one
+	 * @param score_player_two the final calculated score of player two
+	 * @param score_player_three the final calculated score of player three
+	 * @param accuracy_player_one the accuracy of player one
+	 * @param modifier the modifier of the map
+	 */
+	public static calculateTeamScore(playerOne: MultiplayerDataUser, playerTwo: MultiplayerDataUser, playerThree: MultiplayerDataUser, modifier: number): number {
+		return Number(((playerOne.score + playerTwo.score + playerThree.score) * Math.pow((((playerOne.accuracy * 0.5) + (playerTwo.accuracy * 0.25) + (playerThree.accuracy * 0.25)) / 100), modifier)).toFixed());
+	}
+
 	public calculatePlayerScore(): number {
 		throw new Error('Method not implemented.');
 	}
@@ -64,27 +88,5 @@ export class AxSCalculation extends ScoreInterface {
 
 	public setModifier(modifier: number) {
 		this.modifier = modifier;
-	}
-
-	/**
-	 * Calculate the score of a score player with the given modifier
-	 * @param score the full score of the player
-	 * @param accuracy the accuracy of the player
-	 * @param modifier the modifier of the map
-	 */
-	public static calculateScorePlayerScore(player: MultiplayerDataUser, modifier: number) {
-		return (player.score * (Math.pow((100 - ((100 - player.accuracy) / 5)) / 100, modifier)));
-	}
-
-	/**
-	 * Calculate the team score with all the given scores and modifier
-	 * @param score_player_one the final calculated score of player one
-	 * @param score_player_two the final calculated score of player two
-	 * @param score_player_three the final calculated score of player three
-	 * @param accuracy_player_one the accuracy of player one
-	 * @param modifier the modifier of the map
-	 */
-	public static calculateTeamScore(playerOne: MultiplayerDataUser, playerTwo: MultiplayerDataUser, playerThree: MultiplayerDataUser, modifier: number): number {
-		return Number(((playerOne.score + playerTwo.score + playerThree.score) * Math.pow((((playerOne.accuracy * 0.5) + (playerTwo.accuracy * 0.25) + (playerThree.accuracy * 0.25)) / 100), modifier)).toFixed());
 	}
 }

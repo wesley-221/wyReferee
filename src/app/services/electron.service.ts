@@ -21,10 +21,6 @@ export class ElectronService {
 	shell: typeof shell;
 	dialog: typeof dialog;
 
-	get isElectron() {
-		return window && window.process && window.process.type;
-	}
-
 	constructor(private toastService: ToastService) {
 		// Conditional imports
 		if (this.isElectron) {
@@ -39,8 +35,13 @@ export class ElectronService {
 		}
 	}
 
+	get isElectron() {
+		return window && window.process && window.process.type;
+	}
+
 	/**
 	 * Open a link in the default browser
+	 *
 	 * @param link the url to open in the default browser
 	 */
 	openLink(link: string): void {

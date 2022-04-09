@@ -12,10 +12,11 @@ export class Calculate {
 		this.addScoreInterface(new AxSCalculation('AxS', 3));
 	}
 
-    /**
-     * Get a score interface by the given identifier
-     * @param identifier the identifier of the score interface
-     */
+	/**
+	 * Get a score interface by the given identifier
+	 *
+	 * @param identifier the identifier of the score interface
+	 */
 	public getScoreInterface(identifier: string): ScoreInterface {
 		for (const scoreInterface of this.scoreInterfaces) {
 			if (scoreInterface.getIdentifier() == identifier) {
@@ -26,10 +27,11 @@ export class Calculate {
 		return null;
 	}
 
-    /**
-     * Add a score interface to the calculator
-     * @param scoreInterface the interface to add
-     */
+	/**
+	 * Add a score interface to the calculator
+	 *
+	 * @param scoreInterface the interface to add
+	 */
 	public addScoreInterface(scoreInterface: ScoreInterface) {
 		this.scoreInterfaces.push(scoreInterface);
 	}

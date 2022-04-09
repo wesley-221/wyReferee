@@ -15,6 +15,7 @@ export class DebugComponent implements OnInit {
 
 	/**
 	 * Get the size of the object
+	 *
 	 * @param object the object
 	 */
 	objectSize(object: any): number {
@@ -23,6 +24,7 @@ export class DebugComponent implements OnInit {
 
 	/**
 	 * Toggle the state of the clicked item
+	 *
 	 * @param event the clicked item
 	 * @param name the name of the clicked item
 	 */
@@ -39,6 +41,7 @@ export class DebugComponent implements OnInit {
 
 	/**
 	 * Check if the clicked item is active
+	 *
 	 * @param name the name of the clicked item
 	 */
 	isActive(name: string) {

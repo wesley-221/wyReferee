@@ -38,6 +38,7 @@ export class OauthService {
 
 	/**
 	 * Cache the oauth data from the user
+	 *
 	 * @param oauth the oauth data
 	 */
 	public cacheOauth(oauth: Oauth) {
@@ -46,6 +47,7 @@ export class OauthService {
 
 	/**
 	 * Cache the osu oauth data from the user
+	 *
 	 * @param oauth the oauth data
 	 */
 	public cacheOsuOauth(oauth: Oauth) {
@@ -69,6 +71,7 @@ export class OauthService {
 
 	/**
 	 * Set oauth as loaded or not loaded
+	 *
 	 * @param loaded
 	 */
 	public setOauthHasBeenLoaded(loaded: boolean): void {
@@ -77,6 +80,7 @@ export class OauthService {
 
 	/**
 	 * Set osu oauth as loaded or not loaded
+	 *
 	 * @param loaded
 	 */
 	public setOsuOauthHasBeenLoaded(loaded: boolean): void {

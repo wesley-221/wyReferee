@@ -9,6 +9,7 @@ export class WyModCategory {
 
 	/**
 	 * Create a true copy of the object
+	 *
 	 * @param modCategory the object to copy
 	 */
 	public static makeTrueCopy(modCategory: WyModCategory): WyModCategory {

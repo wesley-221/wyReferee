@@ -17,10 +17,10 @@ export class RegisterComponent implements OnInit {
 
 	constructor(private authenticateService: AuthenticateService, private toastService: ToastService) {
 		this.registrationForm = new FormGroup({
-			'username': new FormControl('', [
+			username: new FormControl('', [
 				Validators.required
 			]),
-			'password': new FormControl('', [
+			password: new FormControl('', [
 				Validators.required
 			]),
 			'password-confirmation': new FormControl('', [
@@ -66,6 +66,6 @@ export class RegisterComponent implements OnInit {
 			const v2 = checkForm.controls[type2];
 
 			return v1.value === v2.value ? null : v2.setErrors({ notEquivalent: true });
-		}
+		};
 	}
 }
