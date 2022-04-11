@@ -173,6 +173,23 @@ export class Lobby {
 	}
 
 	/**
+	 * Get an array with all players of the tournament if its a solo tournament
+	 */
+	getSoloPlayersFromTournament(): WyTeamPlayer[] {
+		const allPlayers: WyTeamPlayer[] = [];
+
+		if (this.tournament.isSoloTournament()) {
+			for (const team of this.tournament.teams) {
+				allPlayers.push(new WyTeamPlayer({
+					name: team.name
+				}));
+			}
+		}
+
+		return allPlayers;
+	}
+
+	/**
 	 * Check if the multiplayer data exists in the lobby
 	 *
 	 * @param multiplayerData the multiplayer data to check

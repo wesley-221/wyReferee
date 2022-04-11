@@ -802,12 +802,24 @@ export class IrcComponent implements OnInit {
 			return;
 		}
 
-		for (const player in this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)) {
-			const playerObj = this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)[player];
-			const playerName = playerObj.name.replace(/ /g, '_');
+		if (this.selectedLobby.tournament.isSoloTournament()) {
+			for (const player in this.selectedLobby.getSoloPlayersFromTournament()) {
+				const playerObj = this.selectedLobby.getSoloPlayersFromTournament()[player];
+				const playerName = playerObj.name.replace(/ /g, '_');
 
-			if (playerName == name) {
-				return true;
+				if (playerName == name && this.selectedLobby.teamTwoName == name) {
+					return true;
+				}
+			}
+		}
+		else {
+			for (const player in this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)) {
+				const playerObj = this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamTwoName)[player];
+				const playerName = playerObj.name.replace(/ /g, '_');
+
+				if (playerName == name) {
+					return true;
+				}
 			}
 		}
 
@@ -824,12 +836,24 @@ export class IrcComponent implements OnInit {
 			return;
 		}
 
-		for (const player in this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)) {
-			const playerObj = this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)[player];
-			const playerName = playerObj.name.replace(/ /g, '_');
+		if (this.selectedLobby.tournament.isSoloTournament()) {
+			for (const player in this.selectedLobby.getSoloPlayersFromTournament()) {
+				const playerObj = this.selectedLobby.getSoloPlayersFromTournament()[player];
+				const playerName = playerObj.name.replace(/ /g, '_');
 
-			if (playerName == name) {
-				return true;
+				if (playerName == name && this.selectedLobby.teamOneName == name) {
+					return true;
+				}
+			}
+		}
+		else {
+			for (const player in this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)) {
+				const playerObj = this.selectedLobby.getTeamPlayersFromTournament(this.selectedLobby.teamOneName)[player];
+				const playerName = playerObj.name.replace(/ /g, '_');
+
+				if (playerName == name) {
+					return true;
+				}
 			}
 		}
 
