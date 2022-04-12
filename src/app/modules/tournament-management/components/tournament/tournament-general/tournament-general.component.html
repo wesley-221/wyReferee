@@ -70,9 +70,9 @@
 
 			<p>Select the score system that is being used for the multiplayer game.</p>
 
-			<div class="alert alert-info" *ngIf="this.tournament.scoreInterface">
+			<app-alert alertType="info" *ngIf="this.tournament.scoreInterface">
 				{{ this.tournament.scoreInterface.getDescription() }}
-			</div>
+			</app-alert>
 		</div>
 
 		<div class="col" *ngIf="this.tournament.scoreInterface && this.tournament.scoreInterface.isSoloTournament() == null">

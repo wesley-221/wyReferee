@@ -20,9 +20,9 @@
 					<mat-button-toggle value="qualifier-result">Qualifier result</mat-button-toggle>
 				</mat-button-toggle-group>
 
-				<div class="alert alert-warning" *ngIf="firstStepFormGroup.get('match-outcome').errors && (firstStepFormGroup.get('match-outcome').touched || firstStepFormGroup.get('match-outcome').dirty)">
+				<app-alert alertType="warn" *ngIf="firstStepFormGroup.get('match-outcome').errors && (firstStepFormGroup.get('match-outcome').touched || firstStepFormGroup.get('match-outcome').dirty)">
 					You have to select either <b>Win by default</b> or <b>Normal result</b>
-				</div>
+				</app-alert>
 
 				<hr />
 				<button mat-raised-button matStepperNext color="accent" (click)="nextStep()">Next step</button>
@@ -41,9 +41,9 @@
 					<mat-button-toggle [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-button-toggle>
 				</mat-button-toggle-group>
 
-				<div class="alert alert-warning" *ngIf="secondStepFormGroup.get('winning-team').errors && (secondStepFormGroup.get('winning-team').touched || secondStepFormGroup.get('winning-team').dirty)">
+				<app-alert alertType="warn" *ngIf="secondStepFormGroup.get('winning-team').errors && (secondStepFormGroup.get('winning-team').touched || secondStepFormGroup.get('winning-team').dirty)">
 					You have to select either <b>No-one</b>, <b>{{ data.multiplayerLobby.teamOneName }}</b> or <b>{{ data.multiplayerLobby.teamTwoName }}</b>
-				</div>
+				</app-alert>
 
 				<hr />
 				<button mat-raised-button matStepperNext color="accent" (click)="nextStep()">Next step</button>

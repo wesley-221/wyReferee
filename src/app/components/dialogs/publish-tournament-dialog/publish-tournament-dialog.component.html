@@ -3,10 +3,10 @@
 <mat-dialog-content class="mat-typography">
 	Are you sure you want to publish <b>{{ data.tournament.name }}</b>?
 
-	<div class="alert alert-info">
+	<app-alert alertType="info">
 		This will make the tournament available to all
 		the users that have been given access to view this tournament.
-	</div>
+	</app-alert>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

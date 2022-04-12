@@ -21,9 +21,9 @@
 
 	<hr />
 
-	<div class="alert alert-danger" *ngIf="error != null">
+	<app-alert alertType="danger" *ngIf="error != null">
 		{{ error }}
-	</div>
+	</app-alert>
 
 	<div class="osu-user" *ngIf="foundOsuUser">
 		<div class="header"

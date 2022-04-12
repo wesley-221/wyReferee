@@ -3,7 +3,9 @@
 
 <mat-dialog-content class="mat-typography">
 	<div *ngIf="data.multiplayerLobby == undefined">
-		<div class="alert alert-info">No tournament has been selected, no settings available.</div>
+		<app-alert alertType="info">
+			No tournament has been selected, no settings available.
+		</app-alert>
 	</div>
 
 	<div *ngIf="data.multiplayerLobby != undefined">

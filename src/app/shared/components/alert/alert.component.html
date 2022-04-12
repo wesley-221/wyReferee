@@ -1,4 +1,11 @@
-<div class="alert" [ngClass]="alertType">
+<div class="alert" [ngClass]="{
+	'info': alertType == 'info',
+	'success': alertType == 'success',
+	'warn': alertType == 'warn',
+	'danger': alertType == 'danger',
+	'no-margin-top': noMarginTop == true,
+	'no-margin-bottom': noMarginBottom == true,
+	'no-margin': noMargin == true}">
 	<div class="header">
 		<mat-icon *ngIf="alertType == 'info'" class="info">error_outline</mat-icon>
 		<mat-icon *ngIf="alertType == 'success'">done</mat-icon>

@@ -5,9 +5,9 @@
 
 			<div class="mappool-spacing" *ngIf="tournament.mappools.length > 0"></div>
 
-			<div class="alert alert-warning" *ngIf="tournament.mappools.length == 0">
+			<app-alert alertType="warn" *ngIf="tournament.mappools.length == 0">
 				There are no mappools yet.
-			</div>
+			</app-alert>
 
 			<div class="mappools">
 				<div class="mappool" *ngFor="let mappool of tournament.mappools">

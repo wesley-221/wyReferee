@@ -43,11 +43,11 @@
 
 						<button mat-raised-button color="primary" class="full-width" (click)="register()">Register</button>
 
-						<div class="alert alert-danger" *ngIf="loginErrors.length > 0">
+						<app-alert alertType="danger" *ngIf="loginErrors.length > 0">
 							<ul>
 								<li *ngFor="let error of loginErrors">{{ error }}</li>
 							</ul>
-						</div>
+						</app-alert>
 					</form>
 				</div>
 			</div>

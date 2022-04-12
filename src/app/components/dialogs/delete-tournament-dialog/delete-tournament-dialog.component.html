@@ -3,9 +3,9 @@
 <mat-dialog-content class="mat-typography">
 	Are you sure you want to delete the tournament <b>{{ data.tournament.name }}</b>?
 
-	<div class="alert alert-danger">
+	<app-alert alertType="danger">
 		<b>NOTE:</b> This action is permanent. Once the tournament has been deleted, this can not be retrieved anymore unless it is published.
-	</div>
+	</app-alert>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

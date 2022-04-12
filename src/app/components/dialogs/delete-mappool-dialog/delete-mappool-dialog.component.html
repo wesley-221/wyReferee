@@ -3,9 +3,9 @@
 <mat-dialog-content>
 	Are you sure you want to delete the mappool <b>{{ data.mappool.name }}</b>?
 
-	<div class="alert alert-danger">
+	<app-alert alertType="danger">
 		<b>NOTE:</b> This action is permanent. Once the mappool has been deleted, this can not be retrieved anymore unless it is published.
-	</div>
+	</app-alert>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

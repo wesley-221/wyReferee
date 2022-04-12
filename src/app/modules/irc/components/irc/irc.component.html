@@ -69,8 +69,8 @@
 			</div>
 
 			<virtual-scroller class="messages" [items]="chats" [stripedTable]="true" (vsUpdate)="viewPortItems = $event">
-				<div *ngIf="chats.length == 0 && selectedChannel != undefined" class="alert alert-warning alert-spacing">There are no messages yet.</div>
-				<div *ngIf="chats.length == 0 && selectedChannel == undefined" class="alert alert-warning alert-spacing">There is no selected channel.</div>
+				<app-alert alertType="warn" *ngIf="chats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
+				<app-alert alertType="warn" *ngIf="chats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
 
 				<div class="chat" *ngFor="let chat of viewPortItems">
 					<div class="chat-content divider" *ngIf="!chat.isADivider">

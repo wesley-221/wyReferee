@@ -15,6 +15,9 @@ $danger-background-dark-color: #de2d23;
 	flex-direction: row;
 	align-items: stretch;
 
+	margin-top: 8px;
+	margin-bottom: 8px;
+
 	.header {
 		display: flex;
 		align-items: center;
@@ -29,6 +32,19 @@ $danger-background-dark-color: #de2d23;
 
 	.content {
 		padding: 16px;
+	}
+
+	&.no-margin-top {
+		margin-top: 0;
+	}
+
+	&.no-margin-bottom {
+		margin-bottom: 0;
+	}
+
+	&.no-margin {
+		margin-top: 0;
+		margin-bottom: 0;
 	}
 
 	&.info {

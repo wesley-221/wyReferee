@@ -23,9 +23,9 @@
 
 	<button mat-raised-button color="primary" (click)="createWebhook()"><mat-icon>add</mat-icon> add new webhook</button>
 
-	<div class="alert alert-info" *ngIf="tournament.webhooks.length <= 0">
+	<app-alert alertType="info" *ngIf="tournament.webhooks.length <= 0">
 		You have no webhooks setup.
-	</div>
+	</app-alert>
 
 	<div class="all-webhooks">
 		<div class="webhook" *ngFor="let webhook of tournament.webhooks">

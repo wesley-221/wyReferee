@@ -12,9 +12,9 @@
 		<button mat-raised-button color="primary" (click)="saveApiKey()">Save</button>
 
 		<div class="center" *ngIf="apiKeyIsValid == false">
-			<div class="alert alert-danger">
+			<app-alert alertType="danger">
 				You have to set the api key before being able to continue.
-			</div>
+			</app-alert>
 		</div>
 
 		<hr />
@@ -31,7 +31,7 @@
 					<h3 class="header">osu! authentication</h3>
 					<button mat-raised-button color="primary" class="full-width margin-button" (click)="authenticateOsu()">Login</button>
 
-					<div class="alert alert-info authentication-message" *ngIf="isAuthenticating == true">
+					<app-alert alertType="info" *ngIf="isAuthenticating == true">
 						<div class="spinner-container">
 							<mat-spinner [diameter]="32" class="spinner"></mat-spinner>
 						</div>
@@ -39,7 +39,7 @@
 						<div class="text">
 							<p>Attempting to login, hold on tight!</p>
 						</div>
-					</div>
+					</app-alert>
 				</div>
 
 				<div class="login-form" *ngIf="auth.loggedIn">
@@ -87,9 +87,9 @@
 						</div>
 
 						<div class="center" *ngIf="apiKeyIsValid == false">
-							<div class="alert alert-danger">
+							<app-alert alertType="danger">
 								You have to set the api key before being able to login to irc.
-							</div>
+							</app-alert>
 						</div>
 					</form>
 

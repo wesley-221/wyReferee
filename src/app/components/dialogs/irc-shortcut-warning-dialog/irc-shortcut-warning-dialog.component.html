@@ -1,9 +1,9 @@
 <h2 mat-dialog-title>Irc shortcut command</h2>
 
 <mat-dialog-content class="mat-typography">
-	<div class="alert alert-danger">
+	<app-alert alertType="danger">
 		Are you sure you want to run the irc command <b>{{ data.ircShortcutCommand.label }}</b>?
-	</div>
+	</app-alert>
 
 	<p>This will send the following message in irc:</p>
 	<b>{{ data.ircShortcutCommand.parseIrcCommand(data.lobby) }}</b>

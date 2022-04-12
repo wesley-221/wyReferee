@@ -9,9 +9,9 @@
 	</div>
 
 	<div class="all-lobbies">
-		<div class="alert alert-info" *ngIf="allLobbies.length == 0">
+		<app-alert alertType="info" *ngIf="allLobbies.length == 0">
 			There are currently no lobbies available.
-		</div>
+		</app-alert>
 
 		<div *ngFor="let lobby of allLobbies.slice().reverse()" (click)="navigateLobby(lobby, $event)" class="lobby">
 			<div class="body">

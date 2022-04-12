@@ -7,6 +7,9 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class AlertComponent implements OnInit {
 	@Input() alertType: string;
+	@Input() noMarginTop: boolean;
+	@Input() noMarginBottom: boolean;
+	@Input() noMargin: boolean;
 
 	constructor() { }
 	ngOnInit(): void { }

@@ -47,9 +47,9 @@
 		<button mat-raised-button (click)="addNewCategory()" color="primary"><mat-icon>add</mat-icon> add new category</button>
 
 		<div class="categories">
-			<div *ngIf="mappool.modCategories.length == 0" class="alert alert-danger full-width">
+			<app-alert alertType="danger" *ngIf="mappool.modCategories.length == 0">
 				You haven't added a category yet.
-			</div>
+			</app-alert>
 
 			<div class="category" *ngFor="let category of mappool.modCategories">
 				<div class="category-name">

@@ -14,10 +14,10 @@
 		<div>
 			Enter a multiplayer link in here for the match you want to calculate the scores off.
 
-			<div class="alert alert-info">
+			<app-alert alertType="info">
 				You only have to fill in the multiplayer link when you want to use an old multiplayer lobby. If you
 				leave this blank, it will create a <b>NEW</b> multiplayer lobby on osu!.
-			</div>
+			</app-alert>
 		</div>
 
 		<hr />
@@ -35,9 +35,9 @@
 
 		<div>
 			Select a tournament for which you will be making a multiplayer match for. <br />
-			<div class="alert alert-info" *ngIf="selectedTournament == null">
+			<app-alert alertType="info" *ngIf="selectedTournament == null">
 				You can leave this empty if you want to manually enter all the data.
-			</div>
+			</app-alert>
 		</div>
 
 		<hr />
@@ -84,9 +84,9 @@
 					Enter the score system that is being used for the multiplayer game
 				</p>
 
-				<div class="alert alert-info" *ngIf="this.selectedScoreInterface">
+				<app-alert alertType="info" *ngIf="this.selectedScoreInterface">
 					{{ this.selectedScoreInterface.getDescription() }}
-				</div>
+				</app-alert>
 			</div>
 
 			<div class="col" *ngIf="selectedTournament == null && (this.teamSize == 0 || this.teamSize == null)">
@@ -121,10 +121,10 @@
 
 		<hr *ngIf="selectedTournament == null" />
 
-		<div class="alert alert-info challonge" *ngIf="checkingChallongeIntegration == true">
+		<app-alert alertType="info" *ngIf="checkingChallongeIntegration == true">
 			<mat-spinner [diameter]="32"></mat-spinner>
 			<div>Checking for Challonge integration...</div>
-		</div>
+		</app-alert>
 
 		<div class="row r-2" *ngIf="selectedTournament == null">
 			<div class="col">

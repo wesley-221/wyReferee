@@ -16,9 +16,9 @@
 		</div>
 
 		<div class="settings-warning" *ngIf="selectedLobby.bestOf == null || selectedLobby.firstPick == null">
-			<div class="alert alert-danger">
+			<app-alert alertType="danger">
 				You haven't set the First pick of the match yet. Make sure to go to the settings and select them.
-			</div>
+			</app-alert>
 		</div>
 
 		<div class="buttons">
@@ -45,12 +45,16 @@
 					</div>
 
 					<div class="modifier" *ngIf="selectedLobby.gamesCountTowardsScore[match.game_id] == true && selectedLobby.tournament.scoreInterfaceIdentifier == 'AxS'">
-						<div class="alert alert-danger center" *ngIf="getModifier(match.beatmap_id) == null"><mat-icon>warning</mat-icon> There was no modifier set for this map. Have you selected a mappool yet?</div>
+						<app-alert alertType="danger" *ngIf="getModifier(match.beatmap_id) == null">
+							There was no modifier set for this map. Have you selected a mappool yet?
+						</app-alert>
 						<h6 *ngIf="getModifier(match.beatmap_id) != null">Beatmap modifier: {{ getModifier(match.beatmap_id) }}</h6>
 					</div>
 
 					<div class="modifier" *ngIf="selectedLobby.gamesCountTowardsScore[match.game_id] == false">
-						<div class="alert alert-warning center"><mat-icon>warning</mat-icon> This map does not count towards the team score (could be a warmup map/invalid score)</div>
+						<app-alert alertType="warn">
+							This map does not count towards the team score (could be a warmup map/invalid score)
+						</app-alert>
 					</div>
 
 					<div class="team-scores">
