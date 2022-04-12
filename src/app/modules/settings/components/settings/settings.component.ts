@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ElectronService } from '../../services/electron.service';
-import { StoreService } from '../../services/store.service';
-import { ToastService } from '../../services/toast.service';
-import { ToastType } from '../../models/toast';
-import { ApiKeyValidation } from '../../services/osu-api/api-key-validation.service';
+import { ElectronService } from '../../../../services/electron.service';
+import { StoreService } from '../../../../services/store.service';
+import { ToastService } from '../../../../services/toast.service';
+import { ToastType } from '../../../../models/toast';
+import { ApiKeyValidation } from '../../../../services/osu-api/api-key-validation.service';
 import { MatDialog } from '@angular/material/dialog';
-import { RemoveSettingsComponent } from '../dialogs/remove-settings/remove-settings.component';
+import { RemoveSettingsComponent } from '../../../../components/dialogs/remove-settings/remove-settings.component';
 import { AuthenticateService } from 'app/services/authenticate.service';
 import { IrcService } from 'app/services/irc.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';

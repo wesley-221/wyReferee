@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainComponent } from './components/main-page/main/main.component';
 import { SidebarComponent } from './components/main-page/sidebar/sidebar.component';
-import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
 import { ToastComponent } from './components/main-page/toast/toast.component';
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
@@ -40,7 +39,6 @@ import { SharedModule } from './shared/shared.module';
 		AppComponent,
 		MainComponent,
 		SidebarComponent,
-		SettingsComponent,
 		ErrorComponent,
 		ToastComponent,
 		AllLobbiesComponent,

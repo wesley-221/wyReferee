@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MainComponent } from './components/main-page/main/main.component';
-import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
 import { InformationComponent } from './modules/information/components/information/information.component';
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
@@ -19,7 +18,10 @@ const routes: Routes = [
 				path: 'information', loadChildren: () =>
 					import('./modules/information/information.module').then(m => m.InformationModule)
 			},
-			{ path: 'settings', component: SettingsComponent },
+			{
+				path: 'settings', loadChildren: () =>
+					import('./modules/settings/settings.module').then(m => m.SettingsModule)
+			},
 			{ path: 'register', component: RegisterComponent },
 			{ path: 'lobby-overview', component: AllLobbiesComponent },
 			{ path: 'lobby-overview/create-lobby', component: CreateLobbyComponent },
