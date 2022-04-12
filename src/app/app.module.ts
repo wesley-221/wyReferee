@@ -13,7 +13,6 @@ import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.
 import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
-import { IrcComponent } from './components/irc/irc.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
 import { DeleteLobbyComponent } from './components/dialogs/delete-lobby/delete-lobby.component';
@@ -47,7 +46,6 @@ import { SharedModule } from './shared/shared.module';
 		AllLobbiesComponent,
 		CreateLobbyComponent,
 		LobbyViewComponent,
-		IrcComponent,
 		RegisterComponent,
 		RemoveSettingsComponent,
 		DeleteLobbyComponent,

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MultiplayerLobbyMovePlayerDialogData } from 'app/components/irc/irc.component';
+import { IMultiplayerLobbyMovePlayerDialogData } from 'app/interfaces/i-multiplayer-lobby-move-player-dialog-data';
 import { MultiplayerLobbyPlayersPlayer } from 'app/models/mutliplayer-lobby-players/multiplayer-lobby-players-player';
 
 @Component({
@@ -11,7 +11,7 @@ import { MultiplayerLobbyPlayersPlayer } from 'app/models/mutliplayer-lobby-play
 export class MultiplayerLobbyMovePlayerComponent implements OnInit {
 	selectedSlot: number;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public data: MultiplayerLobbyMovePlayerDialogData) { }
+	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbyMovePlayerDialogData) { }
 	ngOnInit(): void { }
 
 	selectSlot(player: MultiplayerLobbyPlayersPlayer) {
@@ -20,7 +20,7 @@ export class MultiplayerLobbyMovePlayerComponent implements OnInit {
 		}
 	}
 
-	getData(): MultiplayerLobbyMovePlayerDialogData {
+	getData(): IMultiplayerLobbyMovePlayerDialogData {
 		return {
 			allPlayers: this.data.allPlayers,
 			movePlayer: this.data.movePlayer,

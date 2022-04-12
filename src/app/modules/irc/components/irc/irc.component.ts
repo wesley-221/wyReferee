@@ -1,21 +1,20 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { IrcService } from '../../services/irc.service';
-import { ElectronService } from '../../services/electron.service';
+import { IrcService } from '../../../../services/irc.service';
+import { ElectronService } from '../../../../services/electron.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
 import { Router } from '@angular/router';
-import { ToastService } from '../../services/toast.service';
-import { StoreService } from '../../services/store.service';
-import { ToastType } from '../../models/toast';
-import { WebhookService } from '../../services/webhook.service';
+import { ToastService } from '../../../../services/toast.service';
+import { StoreService } from '../../../../services/store.service';
+import { ToastType } from '../../../../models/toast';
+import { WebhookService } from '../../../../services/webhook.service';
 import { MatDialog } from '@angular/material/dialog';
-import { JoinIrcChannelComponent } from '../dialogs/join-irc-channel/join-irc-channel.component';
+import { JoinIrcChannelComponent } from '../../../../components/dialogs/join-irc-channel/join-irc-channel.component';
 import { MatSelectChange, MatSelect } from '@angular/material/select';
-import { BanBeatmapComponent } from '../dialogs/ban-beatmap/ban-beatmap.component';
+import { BanBeatmapComponent } from '../../../../components/dialogs/ban-beatmap/ban-beatmap.component';
 import { MultiplayerLobbyPlayersPlayer } from 'app/models/mutliplayer-lobby-players/multiplayer-lobby-players-player';
-import { MultiplayerLobbyMovePlayerComponent } from '../dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
-import { MultiplayerLobbyPlayers } from 'app/models/mutliplayer-lobby-players/multiplayer-lobby-players';
-import { SendBeatmapResultComponent } from '../dialogs/send-beatmap-result/send-beatmap-result.component';
+import { MultiplayerLobbyMovePlayerComponent } from '../../../../components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
+import { SendBeatmapResultComponent } from '../../../../components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { IrcChannel } from 'app/models/irc/irc-channel';
 import { Lobby } from 'app/models/lobby';
@@ -23,44 +22,16 @@ import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
-import { IrcShortcutDialogComponent } from '../dialogs/irc-shortcut-dialog/irc-shortcut-dialog.component';
+import { IrcShortcutDialogComponent } from '../../../../components/dialogs/irc-shortcut-dialog/irc-shortcut-dialog.component';
 import { IrcShortcutCommandsService } from 'app/services/irc-shortcut-commands.service';
 import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
-import { MultiplayerLobbySettingsComponent } from '../dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
-import { IrcPickMapSameModBracketComponent } from '../dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
+import { MultiplayerLobbySettingsComponent } from '../../../../components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
+import { IrcPickMapSameModBracketComponent } from '../../../../components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
-import { IrcShortcutWarningDialogComponent } from '../dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
+import { IrcShortcutWarningDialogComponent } from '../../../../components/dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
 import { MessageBuilder } from 'app/models/irc/message-builder';
-
-export interface BanBeatmapDialogData {
-	beatmap: WyModBracketMap;
-	modBracket: WyModBracket;
-	multiplayerLobby: Lobby;
-
-	banForTeam: string;
-}
-
-export interface MultiplayerLobbyMovePlayerDialogData {
-	allPlayers: MultiplayerLobbyPlayers;
-	movePlayer: MultiplayerLobbyPlayersPlayer;
-	moveToSlot: number;
-}
-
-export interface SendBeatmapResultDialogData {
-	multiplayerLobby: Lobby;
-	ircChannel: string;
-}
-
-export interface BeatmapModBracketDialogData {
-	beatmap: WyModBracketMap;
-	modBracket: WyModBracket;
-	lobby: Lobby;
-}
-
-export interface IIrcShortcutCommandDialogData {
-	ircShortcutCommand: IrcShortcutCommand;
-	lobby: Lobby;
-}
+import { IBanBeatmapDialogData } from 'app/interfaces/i-ban-beatmap-dialog-data';
+import { IMultiplayerLobbyMovePlayerDialogData } from 'app/interfaces/i-multiplayer-lobby-move-player-dialog-data';
 
 @Component({
 	selector: 'app-irc',
@@ -541,7 +512,7 @@ export class IrcComponent implements OnInit {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe((result: BanBeatmapDialogData) => {
+		dialogRef.afterClosed().subscribe((result: IBanBeatmapDialogData) => {
 			if (result != null) {
 				if (result.banForTeam == result.multiplayerLobby.teamOneName) {
 					this.selectedLobby.teamOneBans.push(result.beatmap.beatmapId);
@@ -675,7 +646,7 @@ export class IrcComponent implements OnInit {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe((result: MultiplayerLobbyMovePlayerDialogData) => {
+		dialogRef.afterClosed().subscribe((result: IMultiplayerLobbyMovePlayerDialogData) => {
 			if (result != undefined) {
 				this.ircService.sendMessage(this.selectedChannel.name, `!mp move ${result.movePlayer.username} ${result.moveToSlot}`);
 			}

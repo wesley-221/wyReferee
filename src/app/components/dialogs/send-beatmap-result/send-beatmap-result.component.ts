@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SendBeatmapResultDialogData } from 'app/components/irc/irc.component';
+import { ISendBeatmapResultDialogData } from 'app/interfaces/i-send-beatmap-result-dialog-data';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { CacheService } from 'app/services/cache.service';
 import { IrcService } from 'app/services/irc.service';
@@ -11,7 +11,7 @@ import { IrcService } from 'app/services/irc.service';
 	styleUrls: ['./send-beatmap-result.component.scss']
 })
 export class SendBeatmapResultComponent implements OnInit {
-	constructor(@Inject(MAT_DIALOG_DATA) public data: SendBeatmapResultDialogData, private cacheService: CacheService, private ircService: IrcService, private dialogRef: MatDialogRef<SendBeatmapResultComponent>) { }
+	constructor(@Inject(MAT_DIALOG_DATA) public data: ISendBeatmapResultDialogData, private cacheService: CacheService, private ircService: IrcService, private dialogRef: MatDialogRef<SendBeatmapResultComponent>) { }
 	ngOnInit(): void { }
 
 	/**

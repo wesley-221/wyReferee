@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IIrcShortcutCommandDialogData } from 'app/components/irc/irc.component';
+import { IIrcShortcutCommandDialogData } from 'app/interfaces/i-irc-shortcut-command-dialog-data';
 
 @Component({
 	selector: 'app-irc-shortcut-warning-dialog',

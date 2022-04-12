@@ -7,7 +7,6 @@ import { InformationComponent } from './modules/information/components/informati
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
 import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
-import { IrcComponent } from './components/irc/irc.component';
 import { RegisterComponent } from './components/register/register.component';
 
 const routes: Routes = [
@@ -34,7 +33,11 @@ const routes: Routes = [
 				loadChildren: () =>
 					import('./modules/axs/axs.module').then(m => m.AxsModule)
 			},
-			{ path: 'irc', component: IrcComponent },
+			{
+				path: 'irc',
+				loadChildren: () =>
+					import('./modules/irc/irc.module').then(m => m.IrcModule)
+			},
 			{ path: '**', component: ErrorComponent }
 		]
 	}
