@@ -1,6 +1,8 @@
 <div class="scroll" *ngIf="tournament">
 	<h1>Updating {{ tournament.name }}</h1>
 
+	<app-alert alertType="info">You are currently editing {{ tournament.name }}. Any changes made here will only be saved <u>locally</u>.</app-alert>
+
 	<app-tournament [tournament]="tournament" [validationForm]="validationForm"></app-tournament>
 
 	<button mat-raised-button class="extra-padding" color="primary" (click)="updateTournament()">Update</button>
