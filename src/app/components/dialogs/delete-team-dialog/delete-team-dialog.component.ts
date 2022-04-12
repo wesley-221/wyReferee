@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ITeamDialogData } from 'app/components/tournament-management/tournament/tournament-participants/tournament-participants.component';
+import { ITeamDialogData } from 'app/interfaces/i-team-dialog-data';
 
 @Component({
 	selector: 'app-delete-team-dialog',

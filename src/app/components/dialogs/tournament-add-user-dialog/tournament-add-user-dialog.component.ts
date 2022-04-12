@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ITournamentInvite } from 'app/components/tournament-management/tournament/tournament/tournament.component';
 import { User } from 'app/models/authentication/user';
 import { UserOsu } from 'app/models/authentication/user-osu';
+import { ITournamentInviteDialogData } from 'app/interfaces/i-tournament-invite-dialog-data';
 import { AppConfig } from 'environments/environment';
 
 @Component({
@@ -17,7 +17,7 @@ export class TournamentAddUserDialogComponent implements OnInit {
 	foundUser: User;
 	error: string;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public data: ITournamentInvite, private http: HttpClient) { }
+	constructor(@Inject(MAT_DIALOG_DATA) public data: ITournamentInviteDialogData, private http: HttpClient) { }
 
 	ngOnInit(): void { }
 

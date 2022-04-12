@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IMappoolDialogData } from 'app/components/tournament-management/mappool-create/mappool-create.component';
+import { IMappoolDialogData } from 'app/interfaces/i-mappool-dialog-data';
 
 @Component({
 	selector: 'app-delete-mappool-dialog',

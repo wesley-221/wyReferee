@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IDeleteModBracketDialogData } from 'app/components/tournament-management/mappool/mod-bracket/mod-bracket.component';
-
+import { IDeleteModBracketDialogData } from 'app/interfaces/i-delete-mod-bracket-dialog-data';
 @Component({
 	selector: 'app-delete-mod-bracket-dialog',
 	templateUrl: './delete-mod-bracket-dialog.component.html',

@@ -6,9 +6,6 @@ import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 
-export interface IMappoolDialogData {
-	mappool: WyMappool;
-}
 @Component({
 	selector: 'app-mappool-create',
 	templateUrl: './mappool-create.component.html',

@@ -8,7 +8,7 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 	templateUrl: './tournament-stages.component.html',
 	styleUrls: ['./tournament-stages.component.scss']
 })
-export class TournamenStagesComponent implements OnInit {
+export class TournamentStagesComponent implements OnInit {
 	@Input() tournament: WyTournament;
 	@Input() validationForm: FormGroup;
 

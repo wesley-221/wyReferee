@@ -16,9 +16,6 @@ import { ElectronService } from 'app/services/electron.service';
 import { GetBeatmap } from 'app/services/osu-api/get-beatmap.service';
 import { ToastService } from 'app/services/toast.service';
 
-export interface IDeleteModBracketDialogData {
-	modBracket: WyModBracket;
-}
 @Component({
 	selector: 'app-mod-bracket',
 	templateUrl: './mod-bracket.component.html',

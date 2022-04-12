@@ -7,10 +7,6 @@ import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 
-export interface ITeamDialogData {
-	team: WyTeam;
-}
-
 @Component({
 	selector: 'app-tournament-participants',
 	templateUrl: './tournament-participants.component.html',
