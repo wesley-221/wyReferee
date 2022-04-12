@@ -10,12 +10,17 @@ import { FilterTournamentPipe } from './pipes/filter-tournament.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { SearchModBracketPipe } from './pipes/search-mod-bracket.pipe';
 import { SearchPipe } from './pipes/search.pipe';
+import { DebugComponent } from './components/debug/debug.component';
+import { AlertComponent } from './components/alert/alert.component';
 
 const declerations = [
 	FilterTournamentPipe,
 	ReversePipe,
 	SearchModBracketPipe,
-	SearchPipe
+	SearchPipe,
+	DebugComponent,
+	DebugComponent,
+	AlertComponent
 ];
 
 const modules = [

@@ -26,7 +26,6 @@ import { PublishTournamentDialogComponent } from './components/dialogs/publish-t
 import { DeleteMappoolDialogComponent } from './components/dialogs/delete-mappool-dialog/delete-mappool-dialog.component';
 import { DeleteTeamDialogComponent } from './components/dialogs/delete-team-dialog/delete-team-dialog.component';
 import { IrcShortcutDialogComponent } from './components/dialogs/irc-shortcut-dialog/irc-shortcut-dialog.component';
-import { DebugComponent } from './components/debug/debug.component';
 import { IrcPickMapSameModBracketComponent } from './components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
 import { SharedModule } from './shared/shared.module';
@@ -55,7 +54,6 @@ import { SharedModule } from './shared/shared.module';
 		DeleteMappoolDialogComponent,
 		DeleteTeamDialogComponent,
 		IrcShortcutDialogComponent,
-		DebugComponent,
 		IrcPickMapSameModBracketComponent,
 		IrcShortcutWarningDialogComponent
 	],

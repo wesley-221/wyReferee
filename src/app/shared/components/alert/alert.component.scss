@@ -1,0 +1,65 @@
+$info-background-light-color: #0075dd;
+$info-background-dark-color: #0056a7;
+
+$success-background-light-color: #00cd2a;
+$success-background-dark-color: #009a1d;
+
+$warn-background-light-color: #ff9d00;
+$warn-background-dark-color: #cb7600;
+
+$danger-background-light-color: #ff3f32;
+$danger-background-dark-color: #de2d23;
+
+.alert {
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+
+	.header {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		padding: 16px;
+
+		.info {
+			transform: rotate(180deg);
+		}
+	}
+
+	.content {
+		padding: 16px;
+	}
+
+	&.info {
+		background-color: $info-background-light-color;
+
+		.header {
+			background-color: $info-background-dark-color;
+		}
+	}
+
+	&.success {
+		background-color: $success-background-light-color;
+
+		.header {
+			background-color: $success-background-dark-color;
+		}
+	}
+
+	&.warn {
+		background-color: $warn-background-light-color;
+
+		.header {
+			background-color: $warn-background-dark-color;
+		}
+	}
+
+	&.danger {
+		background-color: $danger-background-light-color;
+
+		.header {
+			background-color: $danger-background-dark-color;
+		}
+	}
+}
