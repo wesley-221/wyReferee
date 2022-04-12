@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { InformationRoutingModule } from './information-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
-import { InformationComponent } from './information/information.component';
+import { InformationComponent } from './components/information/information.component';
 
 
 @NgModule({
