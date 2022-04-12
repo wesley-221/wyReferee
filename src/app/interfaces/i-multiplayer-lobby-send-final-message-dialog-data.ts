@@ -1,4 +1,4 @@
-import { Lobby } from "app/models/lobby";
+import { Lobby } from 'app/models/lobby';
 
 export interface IMultiplayerLobbySendFinalMessageDialogData {
 	multiplayerLobby: Lobby;

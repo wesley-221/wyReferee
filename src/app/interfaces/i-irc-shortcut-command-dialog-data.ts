@@ -1,5 +1,5 @@
-import { IrcShortcutCommand } from "app/models/irc-shortcut-command";
-import { Lobby } from "app/models/lobby";
+import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
+import { Lobby } from 'app/models/lobby';
 
 export interface IIrcShortcutCommandDialogData {
 	ircShortcutCommand: IrcShortcutCommand;
