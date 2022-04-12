@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '../../../../services/toast.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteLobbyComponent } from 'app/components/dialogs/delete-lobby/delete-lobby.component';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { Lobby } from 'app/models/lobby';
-
-export interface MultiplayerLobbyDeleteDialogData {
-	multiplayerLobby: Lobby;
-}
 
 @Component({
 	selector: 'app-all-lobbies',

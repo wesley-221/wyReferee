@@ -1,38 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ElectronService } from '../../../services/electron.service';
-import { ToastService } from '../../../services/toast.service';
-import { CacheService } from '../../../services/cache.service';
-import { MultiplayerData } from '../../../models/store-multiplayer/multiplayer-data';
-import { MultiplayerDataUser } from '../../../models/store-multiplayer/multiplayer-data-user';
-import { StoreService } from '../../../services/store.service';
-import { IrcService } from '../../../services/irc.service';
-import { ClipboardService } from 'ngx-clipboard';
-import { WebhookService } from '../../../services/webhook.service';
-import { CacheBeatmap } from '../../../models/cache/cache-beatmap';
 import { MatDialog } from '@angular/material/dialog';
 import { MultiplayerLobbySettingsComponent } from 'app/components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { SendFinalResultComponent } from 'app/components/dialogs/send-final-result/send-final-result.component';
 import { OsuHelper } from 'app/models/osu-models/osu';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { Lobby } from 'app/models/lobby';
-
-export interface MultiplayerLobbySettingsDialogData {
-	multiplayerLobby: Lobby;
-}
-
-export interface MultiplayerLobbySendFinalMessageDialogData {
-	multiplayerLobby: Lobby;
-
-	winByDefault: boolean;
-
-	winningTeam: string;
-	losingTeam: string;
-
-	extraMessage: string;
-
-	qualifierLobby: boolean;
-}
+import { CacheBeatmap } from 'app/models/cache/cache-beatmap';
+import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
+import { MultiplayerDataUser } from 'app/models/store-multiplayer/multiplayer-data-user';
+import { CacheService } from 'app/services/cache.service';
+import { ElectronService } from 'app/services/electron.service';
+import { IrcService } from 'app/services/irc.service';
+import { StoreService } from 'app/services/store.service';
+import { ToastService } from 'app/services/toast.service';
+import { WebhookService } from 'app/services/webhook.service';
+import { ClipboardService } from 'ngx-clipboard';
+import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-multiplayer-lobby-send-final-message-dialog-data';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -410,7 +394,7 @@ export class LobbyViewComponent implements OnInit {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe((result: MultiplayerLobbySendFinalMessageDialogData) => {
+		dialogRef.afterClosed().subscribe((result: IMultiplayerLobbySendFinalMessageDialogData) => {
 			if (result != undefined) {
 				if (result.qualifierLobby) {
 					this.webhookService.sendQualifierResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);

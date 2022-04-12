@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MultiplayerLobbySettingsDialogData } from 'app/components/lobby/lobby-view/lobby-view.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
+import { IMultiplayerLobbySettingsDialogData } from 'app/interfaces/i-multiplayer-lobby-settings-dialog-data';
 
 @Component({
 	selector: 'app-multiplayer-lobby-settings',
@@ -9,7 +9,7 @@ import { MatSelectChange } from '@angular/material/select';
 	styleUrls: ['./multiplayer-lobby-settings.component.scss']
 })
 export class MultiplayerLobbySettingsComponent implements OnInit {
-	constructor(@Inject(MAT_DIALOG_DATA) public data: MultiplayerLobbySettingsDialogData) { }
+	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySettingsDialogData) { }
 	ngOnInit(): void { }
 
 	/**

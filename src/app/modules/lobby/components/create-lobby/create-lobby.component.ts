@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastService } from '../../../services/toast.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { IrcService } from '../../../services/irc.service';
-import { ScoreInterface } from '../../../models/score-calculation/calculation-types/score-interface';
-import { Calculate } from '../../../models/score-calculation/calculate';
-import { TournamentService } from '../../../services/tournament.service';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { from, Observable } from 'rxjs';
-import { BanchoMultiplayerChannel } from 'bancho.js';
-import { OsuHelper } from 'app/models/osu-models/osu';
-import { WyTournament } from 'app/models/wytournament/wy-tournament';
-import { WyTeam } from 'app/models/wytournament/wy-team';
-import { map, startWith } from 'rxjs/operators';
 import { Lobby } from 'app/models/lobby';
-import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
+import { OsuHelper } from 'app/models/osu-models/osu';
+import { Calculate } from 'app/models/score-calculation/calculate';
+import { ScoreInterface } from 'app/models/score-calculation/calculation-types/score-interface';
+import { WyTeam } from 'app/models/wytournament/wy-team';
+import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { IrcService } from 'app/services/irc.service';
+import { ToastService } from 'app/services/toast.service';
+import { TournamentService } from 'app/services/tournament.service';
 import { WebhookService } from 'app/services/webhook.service';
+import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
+import { BanchoMultiplayerChannel } from 'bancho.js';
+import { Observable, startWith, map, from } from 'rxjs';
 
 @Component({
 	selector: 'app-create-lobby',

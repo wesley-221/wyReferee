@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MultiplayerLobbySendFinalMessageDialogData } from 'app/components/lobby/lobby-view/lobby-view.component';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-multiplayer-lobby-send-final-message-dialog-data';
 
 @Component({
 	selector: 'app-send-final-result',
@@ -17,7 +17,7 @@ export class SendFinalResultComponent implements OnInit {
 
 	canSend = false;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public data: MultiplayerLobbySendFinalMessageDialogData) {
+	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySendFinalMessageDialogData) {
 		this.firstStepFormGroup = new FormGroup({
 			'match-outcome': new FormControl('', Validators.required),
 			'extra-message': new FormControl()
@@ -43,7 +43,7 @@ export class SendFinalResultComponent implements OnInit {
 		this.secondStepFormGroup.markAllAsTouched();
 	}
 
-	returnData(): MultiplayerLobbySendFinalMessageDialogData {
+	returnData(): IMultiplayerLobbySendFinalMessageDialogData {
 		let winningTeam = null;
 		let losingTeam = null;
 

@@ -8,9 +8,6 @@ import { MainComponent } from './components/main-page/main/main.component';
 import { SidebarComponent } from './components/main-page/sidebar/sidebar.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
 import { ToastComponent } from './components/main-page/toast/toast.component';
-import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
-import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
-import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
 import { RegisterComponent } from './components/register/register.component';
 import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
@@ -41,9 +38,6 @@ import { SharedModule } from './shared/shared.module';
 		SidebarComponent,
 		ErrorComponent,
 		ToastComponent,
-		AllLobbiesComponent,
-		CreateLobbyComponent,
-		LobbyViewComponent,
 		RegisterComponent,
 		RemoveSettingsComponent,
 		DeleteLobbyComponent,
