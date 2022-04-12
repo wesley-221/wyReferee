@@ -4,10 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MainComponent } from './components/main-page/main/main.component';
-import { SidebarComponent } from './components/main-page/sidebar/sidebar.component';
-import { ErrorComponent } from './components/main-page/error/error.component';
-import { ToastComponent } from './components/main-page/toast/toast.component';
+import { ErrorComponent } from './layout/error/error.component';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
 import { RegisterComponent } from './components/register/register.component';
 import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
@@ -17,7 +14,6 @@ import { SendFinalResultComponent } from './components/dialogs/send-final-result
 import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/join-irc-channel.component';
 import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatmap.component';
 import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
-import { UpdaterComponent } from './components/main-page/updater/updater.component';
 import { SendBeatmapResultComponent } from './components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { TournamentAddUserDialogComponent } from './components/dialogs/tournament-add-user-dialog/tournament-add-user-dialog.component';
 import { DeleteModBracketDialogComponent } from './components/dialogs/delete-mod-bracket-dialog/delete-mod-bracket-dialog.component';
@@ -29,6 +25,10 @@ import { IrcShortcutDialogComponent } from './components/dialogs/irc-shortcut-di
 import { IrcPickMapSameModBracketComponent } from './components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
 import { SharedModule } from './shared/shared.module';
+import { MainComponent } from './layout/main/main.component';
+import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import { ToastComponent } from './layout/toast/toast.component';
+import { UpdaterComponent } from './layout/updater/updater.component';
 
 @NgModule({
 	declarations: [

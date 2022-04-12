@@ -1,7 +1,7 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { ToastService } from '../../../services/toast.service';
-import { Toast, ToastType } from '../../../models/toast';
 import { trigger } from '@angular/animations';
+import { Toast, ToastType } from 'app/models/toast';
+import { ToastService } from 'app/services/toast.service';
 
 @Component({
 	selector: 'app-toast',
