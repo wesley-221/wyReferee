@@ -1,28 +1,19 @@
-import 'reflect-metadata';
-import '../polyfills';
-
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AngularMaterialModule } from './angular-material-module';
 import { AppRoutingModule } from './app-routing.module';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { ClipboardModule } from 'ngx-clipboard';
 import { AppComponent } from './app.component';
 import { MainComponent } from './components/main-page/main/main.component';
 import { SidebarComponent } from './components/main-page/sidebar/sidebar.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
-import { InformationComponent } from './components/information/information.component';
 import { ToastComponent } from './components/main-page/toast/toast.component';
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
 import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
 import { IrcComponent } from './components/irc/irc.component';
-import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { SearchModBracketPipe } from './core/pipes/search-mod-bracket.pipe';
 import { SearchPipe } from './core/pipes/search.pipe';
 import { RegisterComponent } from './components/register/register.component';
@@ -36,12 +27,8 @@ import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatma
 import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
 import { UpdaterComponent } from './components/main-page/updater/updater.component';
 import { FilterTournamentPipe } from './core/pipes/filter-tournament.pipe';
-import { AxsCalculatorComponent } from './components/axs/axs-calculator/axs-calculator.component';
 import { SendBeatmapResultComponent } from './components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { ReversePipe } from './core/pipes/reverse.pipe';
-import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
-import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
-import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
 import { TournamentComponent } from './components/tournament-management/tournament/tournament/tournament.component';
 import { TournamentCreateComponent } from './components/tournament-management/tournament-create/tournament-create.component';
 import { TournamentAddUserDialogComponent } from './components/dialogs/tournament-add-user-dialog/tournament-add-user-dialog.component';
@@ -69,6 +56,7 @@ import { TournamenStagesComponent } from './components/tournament-management/tou
 import { DebugComponent } from './components/debug/debug.component';
 import { IrcPickMapSameModBracketComponent } from './components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
 	declarations: [
@@ -77,7 +65,6 @@ import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shor
 		SidebarComponent,
 		SettingsComponent,
 		ErrorComponent,
-		InformationComponent,
 		ToastComponent,
 		AllLobbiesComponent,
 		CreateLobbyComponent,
@@ -96,12 +83,8 @@ import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shor
 		MultiplayerLobbyMovePlayerComponent,
 		UpdaterComponent,
 		FilterTournamentPipe,
-		AxsCalculatorComponent,
 		SendBeatmapResultComponent,
 		ReversePipe,
-		AxsInformationComponent,
-		AxsRouterComponent,
-		AxsFormulaComponent,
 		TournamentComponent,
 		TournamentCreateComponent,
 		TournamentAddUserDialogComponent,
@@ -132,15 +115,10 @@ import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shor
 	],
 	imports: [
 		BrowserModule,
-		FormsModule,
-		ReactiveFormsModule,
+		BrowserAnimationsModule,
 		HttpClientModule,
 		AppRoutingModule,
-		DragDropModule,
-		VirtualScrollerModule,
-		BrowserAnimationsModule,
-		ClipboardModule,
-		AngularMaterialModule
+		SharedModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

@@ -3,17 +3,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { MainComponent } from './components/main-page/main/main.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ErrorComponent } from './components/main-page/error/error.component';
-import { InformationComponent } from './components/information/information.component';
+import { InformationComponent } from './modules/information/information/information.component';
 import { AllLobbiesComponent } from './components/lobby/all-lobbies/all-lobbies.component';
 import { CreateLobbyComponent } from './components/lobby/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby/lobby-view/lobby-view.component';
 import { IrcComponent } from './components/irc/irc.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ManagementRouterComponent } from './components/tournament-management/management-router/management-router.component';
-import { AxsCalculatorComponent } from './components/axs/axs-calculator/axs-calculator.component';
-import { AxsRouterComponent } from './components/axs/axs-router/axs-router.component';
-import { AxsInformationComponent } from './components/axs/axs-information/axs-information.component';
-import { AxsFormulaComponent } from './components/axs/axs-formula/axs-formula.component';
 import { TournamentCreateComponent } from './components/tournament-management/tournament-create/tournament-create.component';
 import { TournamentOverviewComponent } from './components/tournament-management/tournament-overview/tournament-overview.component';
 import { TournamentEditComponent } from './components/tournament-management/tournament-edit/tournament-edit.component';
@@ -28,7 +24,10 @@ const routes: Routes = [
 		component: MainComponent,
 		children: [
 			{ path: '', component: InformationComponent },
-			{ path: 'information', component: InformationComponent },
+			{
+				path: 'information', loadChildren: () =>
+					import('./modules/information/information.module').then(m => m.InformationModule)
+			},
 			{ path: 'settings', component: SettingsComponent },
 			{ path: 'register', component: RegisterComponent },
 			{ path: 'lobby-overview', component: AllLobbiesComponent },
@@ -36,12 +35,6 @@ const routes: Routes = [
 			{ path: 'lobby-overview/lobby-view/:id', component: LobbyViewComponent },
 			{
 				path: 'tournament-management', component: ManagementRouterComponent, children: [
-					// { path: 'mappool-overview', component: MappoolOverviewComponent },
-					// { path: 'mappool-overview/mappool-create', component: MappoolCreateComponent },
-					// { path: 'mappool-overview/mappool-edit/:mappoolId/:publish', component: MappoolEditComponent },
-					// { path: 'mappool-overview/my-published-mappools', component: MyPublishedMappoolsComponent },
-					// { path: 'mappool-overview/all-published-mappools', component: AllPublishedMappoolsComponent },
-
 					{ path: 'tournament-overview', component: TournamentOverviewComponent },
 					{ path: 'tournament-overview/tournament-create', component: TournamentCreateComponent },
 					{ path: 'tournament-overview/tournament-edit/:id', component: TournamentEditComponent },
@@ -52,12 +45,9 @@ const routes: Routes = [
 				]
 			},
 			{
-				path: 'axs', component: AxsRouterComponent, children: [
-					{ path: 'information', component: AxsInformationComponent },
-					{ path: 'manual-calculator', component: AxsCalculatorComponent },
-					{ path: 'axs-formula', component: AxsFormulaComponent },
-					{ path: '**', component: AxsInformationComponent }
-				]
+				path: 'axs',
+				loadChildren: () =>
+					import('./modules/axs/axs.module').then(m => m.AxsModule)
 			},
 			{ path: 'irc', component: IrcComponent },
 			{ path: '**', component: ErrorComponent }
