@@ -9,8 +9,14 @@
 				{{ tournament.id }}
 			</div>
 
-			<div class="name">
-				{{ tournament.name }}
+			<div class="tournament-name">
+				<div class="name">
+					{{ tournament.name }}
+				</div>
+
+				<div class="created-by">
+					<i>Created by <a [href]="" (click)="electronService.openLink(tournament.createdBy.getOsuProfileUrl())">{{ tournament.createdBy.username }}</a></i>
+				</div>
 			</div>
 		</div>
 
@@ -23,40 +29,32 @@
 	<hr />
 
 	<div class="body">
-		<div class="body-blocks" *ngIf="!tournament.isSoloTournament()">
-			<h3>Teams</h3>
+		<div class="body-blocks">
+			<h3>Administrators</h3>
 
-			<div class="tournament-teams">
-				<div class="team" *ngFor="let team of tournament.teams">
-					<h5>{{ team.name }}</h5>
-
-					{{ team.players.length }} player<span *ngIf="team.players.length > 1">s</span>
+			<div class="all-administrators">
+				<div class="administrator" *ngIf="tournament.administrators.length <= 0">
+					<app-alert alertType="info">There are no administrators.</app-alert>
 				</div>
-			</div>
-		</div>
 
-		<div class="body-blocks" *ngIf="tournament.isSoloTournament()">
-			<h3>Players</h3>
-
-			<div class="tournament-players">
-				<div class="player" *ngFor="let team of tournament.teams">
-					<h5>{{ team.name }}</h5>
+				<div class="administrator" *ngFor="let administrator of tournament.administrators">
+					<a [href]="" (click)="electronService.openLink(administrator.getOsuProfileUrl())">{{ administrator.username }}</a>
 				</div>
 			</div>
 		</div>
 
 		<div class="body-blocks mappool-area">
+			<h3 *ngIf="!tournament.isSoloTournament()">Team count</h3>
+			<h3 *ngIf="tournament.isSoloTournament()">Player count</h3>
+			{{ tournament.teams.length }}
+
+			<mat-divider class="divider"></mat-divider>
+
 			<h3>Mappools</h3>
 
 			<div class="mappools">
 				<div class="mappool" *ngFor="let mappool of tournament.mappools">
-					<h4>{{ mappool.name }}</h4>
-
-					<div class="mod-brackets">
-						<div class="mod-bracket" *ngFor="let bracket of mappool.modBrackets">
-							{{ bracket.name }}
-						</div>
-					</div>
+					{{ mappool.name }}
 				</div>
 			</div>
 		</div>

@@ -53,6 +53,7 @@ $hyperlink-background-color: #2b4576;
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
+				align-items: center;
 
 				user-select: none;
 				height: 40px;
@@ -139,6 +140,8 @@ $hyperlink-background-color: #2b4576;
 				&.cdk-drag-preview,
 				&.editing {
 					cursor: pointer;
+
+					height: auto;
 
 					border-left: 3px solid $primary;
 					color: $primary;

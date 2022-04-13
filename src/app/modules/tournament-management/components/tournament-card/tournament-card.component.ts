@@ -6,6 +6,7 @@ import { PublishTournamentDialogComponent } from 'app/components/dialogs/publish
 import { ToastType } from 'app/models/toast';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { AuthenticateService } from 'app/services/authenticate.service';
+import { ElectronService } from 'app/services/electron.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 
@@ -19,7 +20,7 @@ export class TournamentCardComponent implements OnInit {
 	@Input() publishedTournament: boolean;
 	@Output() deletedTournamentEmitter: EventEmitter<boolean>;
 
-	constructor(private tournamentService: TournamentService, private authService: AuthenticateService, private dialog: MatDialog, private router: Router, private toastService: ToastService) {
+	constructor(private tournamentService: TournamentService, private authService: AuthenticateService, private dialog: MatDialog, private router: Router, private toastService: ToastService, public electronService: ElectronService) {
 		this.deletedTournamentEmitter = new EventEmitter(false);
 	}
 	ngOnInit(): void { }
