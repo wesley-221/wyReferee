@@ -255,6 +255,11 @@ export class WebhookService {
 			return;
 		}
 
+		// Dont send webhook if its a qualifier lobby
+		if (multiplayerLobby.isQualifierLobby == true) {
+			return;
+		}
+
 		const lastMultiplayerData = multiplayerLobby.multiplayerData[multiplayerLobby.multiplayerData.length - 1];
 
 		let cachedBeatmap: CacheBeatmap = null;
@@ -391,26 +396,44 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `Multiplayer lobby - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					title: '',
 					url: selectedLobby.multiplayerLink,
 					color: 15258703,
 					timestamp: new Date(),
 					footer: {
 						text: `Match referee was ${referee}`
 					},
-					fields: [
-						{
-							name: 'Twitch multiplayer link command',
-							value: `\`!editcom !mp ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}: ${selectedLobby.multiplayerLink}\``
-						},
-						{
-							name: 'Twitch stream title command',
-							value: `\`!title ${selectedLobby.tournament.name} - ${selectedLobby.selectedStage.name}: ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}\``
-						}
-					]
+					fields: []
 				}
 			]
 		};
+
+		if (selectedLobby.isQualifierLobby == true) {
+			body.embeds[0].title = `Multiplayer lobby - ${selectedLobby.description}`;
+
+			body.embeds[0].fields.push(
+				{
+					name: 'Twitch multiplayer link command',
+					value: `\`!editcom !mp ${selectedLobby.tournament.name}: ${selectedLobby.description}\``
+				},
+				{
+					name: 'Twitch stream title command',
+					value: `\`!title ${selectedLobby.tournament.name}: ${selectedLobby.description}\``
+				});
+		}
+		else {
+			body.embeds[0].title = `Multiplayer lobby - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`;
+
+			body.embeds[0].fields.push(
+				{
+					name: 'Twitch multiplayer link command',
+					value: `\`!editcom !mp ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}: ${selectedLobby.multiplayerLink}\``
+				},
+				{
+					name: 'Twitch stream title command',
+					value: `\`!title ${selectedLobby.tournament.name} - ${selectedLobby.selectedStage.name}: ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}\``
+				});
+		}
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.matchCreation == true) {
@@ -430,6 +453,11 @@ export class WebhookService {
 	sendBeatmapPicked(selectedLobby: Lobby, referee: string, teamName: string, pick: WyModBracketMap): void {
 		// Dont send webhooks if its disabled
 		if (!this.doSendWebhooks(selectedLobby)) {
+			return;
+		}
+
+		// Dont send webhook if its a qualifier lobby
+		if (selectedLobby.isQualifierLobby == true) {
 			return;
 		}
 
