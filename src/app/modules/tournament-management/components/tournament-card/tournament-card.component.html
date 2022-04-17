@@ -14,7 +14,7 @@
 					{{ tournament.name }}
 				</div>
 
-				<div class="created-by">
+				<div class="created-by" *ngIf="tournament.createdBy">
 					<i>Created by <a [href]="" (click)="electronService.openLink(tournament.createdBy.getOsuProfileUrl())">{{ tournament.createdBy.username }}</a></i>
 				</div>
 			</div>
