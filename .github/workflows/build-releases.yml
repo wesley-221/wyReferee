@@ -116,6 +116,6 @@ jobs:
     - name: Build Mac app
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CSC_LINK: ${{ env.CSC_LINK }}
-        CSC_KEY_PASSWORD: ${{ env.CSC_KEY_PASSWORD }}
+        CSC_LINK: ${{ secrets.CSC_LINK }}
+        CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
       run: yarn run gh-publish-mac
