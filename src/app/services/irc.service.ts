@@ -38,6 +38,8 @@ export class IrcService {
 	isJoiningChannel$: BehaviorSubject<boolean>;
 	messageHasBeenSend$: BehaviorSubject<boolean>;
 
+	setChannelUnreadMessages$: BehaviorSubject<IrcChannel>;
+
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
 	isCreatingMultiplayerLobby = -1;
 
@@ -53,6 +55,7 @@ export class IrcService {
 		this.isJoiningChannel$ = new BehaviorSubject<boolean>(false);
 		this.messageHasBeenSend$ = new BehaviorSubject<boolean>(false);
 		this.isAuthenticated$ = new BehaviorSubject<boolean>(false);
+		this.setChannelUnreadMessages$ = new BehaviorSubject<IrcChannel>(null);
 
 		// Connect to irc if the credentials are saved
 		const ircCredentials = storeService.get('irc');
@@ -332,7 +335,7 @@ export class IrcService {
 			});
 
 			channel.messages.push(newMessage);
-			channel.hasUnreadMessages = true;
+			this.setChannelUnreadMessages$.next(channel);
 
 			this.saveMessageToHistory(recipient, newMessage);
 		}
@@ -385,7 +388,7 @@ export class IrcService {
 			}
 
 			channel.messages.push(newMessage);
-			channel.hasUnreadMessages = true;
+			this.setChannelUnreadMessages$.next(channel);
 
 			this.saveMessageToHistory(user, newMessage);
 
@@ -885,5 +888,9 @@ export class IrcService {
 				// pick the map
 			}
 		}
+	}
+
+	getChannelMessageUnread(): BehaviorSubject<IrcChannel> {
+		return this.setChannelUnreadMessages$;
 	}
 }

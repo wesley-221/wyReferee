@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { IrcService } from '../../../../services/irc.service';
 import { ElectronService } from '../../../../services/electron.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -88,7 +88,8 @@ export class IrcComponent implements OnInit {
 		private toastService: ToastService,
 		private webhookService: WebhookService,
 		private dialog: MatDialog,
-		public ircShortcutCommandsService: IrcShortcutCommandsService) {
+		public ircShortcutCommandsService: IrcShortcutCommandsService,
+		private ref: ChangeDetectorRef) {
 		this.channels = ircService.allChannels;
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -127,6 +128,19 @@ export class IrcComponent implements OnInit {
 			if (data == this.selectedLobby.lobbyId) {
 				this.selectedLobby = this.multiplayerLobbies.getMultiplayerLobby(data);
 				this.refreshIrcHeader(this.selectedLobby);
+			}
+		});
+
+		// Trigger hasUnReadMessages for channels
+		this.ircService.getChannelMessageUnread().subscribe(channel => {
+			if (channel != null && this.selectedChannel.name != channel.name) {
+				for (const findChannel in this.channels) {
+					if (this.channels[findChannel].name == channel.name) {
+						this.channels[findChannel].hasUnreadMessages = true;
+						this.ref.detectChanges();
+						break;
+					}
+				}
 			}
 		});
 	}
