@@ -497,6 +497,24 @@ export class IrcComponent implements OnInit {
 		// Stopped editing the label
 		if (channel.editingLabel == false) {
 			this.storeService.set(`irc.channels.${channel.name}.label`, channel.label);
+		} else {
+			// Store old label when starting to edit so we can revert if canceled
+			channel.oldLabel = channel.label;
+		}
+	}
+
+	/**
+	 * Cancel editing the label of a channel
+	 *
+	 * @param channel the channel to cancel editing the label for
+	 */
+	cancelEditLabel(channel: IrcChannel): void {
+		channel.editingLabel = !channel.editingLabel;
+
+		// When creating label for the first time channel.oldLabel will get set to undefined since channel.label will be undefined
+		if (channel.oldLabel !== undefined && channel.oldLabel !== null) {
+			channel.label = channel.oldLabel;
+			this.storeService.set(`irc.channels.${channel.name}.label`, channel.label);
 		}
 	}
 

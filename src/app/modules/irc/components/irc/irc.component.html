@@ -20,7 +20,7 @@
 				<div class="channel-name-label" *ngIf="channel.editingLabel">
 					<mat-form-field>
 						<mat-label>Label</mat-label>
-						<input matInput [(ngModel)]="channel.label" />
+						<input matInput (keyup.enter)="editLabel(channel)" (keyup.esc)="cancelEditLabel(channel)" [(ngModel)]="channel.label" />
 					</mat-form-field>
 				</div>
 

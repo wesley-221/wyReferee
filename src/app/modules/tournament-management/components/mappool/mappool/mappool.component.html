@@ -75,7 +75,11 @@
 	<h3>Mod brackets</h3>
 	<p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod bracket. Fill in the name of the bracket</p>
 
-	<button mat-raised-button (click)="createNewBracket()" color="primary"><mat-icon>add</mat-icon> create new bracket</button>
+	<div class="buttons">
+		<button mat-raised-button (click)="createNewBracket()" color="primary"><mat-icon>add</mat-icon> create new bracket</button>
+		<button mat-raised-button (click)="createDefaultBrackets(false)" color="primary"><mat-icon>add</mat-icon> create default brackets</button>
+		<button mat-raised-button (click)="createDefaultBrackets(true)" color="primary"><mat-icon>add</mat-icon> create default brackets with NF</button>
+	</div>
 
 	<hr />
 

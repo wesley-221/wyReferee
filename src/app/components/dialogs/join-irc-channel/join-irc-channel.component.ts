@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, HostListener } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -16,9 +16,14 @@ export class JoinIrcChannelComponent implements OnInit {
 		});
 	}
 
-	@HostListener('window:keyup.Enter', ['$event'])
-	onDialogClick(): void {
-		this.dialogRef.close(this.getChannelName());
+	onEnter(): void {
+		if (!this.validationForm.invalid) {
+			this.dialogRef.close(this.getChannelName());
+		}
+	}
+
+	onEsc(): void {
+		this.dialogRef.close(null);
 	}
 
 	ngOnInit(): void { }

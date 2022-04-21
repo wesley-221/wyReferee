@@ -31,9 +31,11 @@ export class IrcChannel {
 	players: number;
 
 	editingLabel: boolean;
+	oldLabel: string;
 
 	constructor(init?: Partial<IrcChannel>) {
 		this.editingLabel = false;
+		this.oldLabel = '';
 		this.messages = [];
 
 		Object.assign(this, init);
