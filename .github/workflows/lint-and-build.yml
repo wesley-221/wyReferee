@@ -1,6 +1,12 @@
-name: 'Build releases'
+name: 'Lint and build'
 
 on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
@@ -30,21 +36,16 @@ jobs:
         run: yarn run lint
 
       - if: runner.os == 'Linux'
-        name: Building release for Linux
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn run gh-publish-linux
+        name: Building app for Linux
+        run: yarn run electron:linux
 
       - if: runner.os == 'Windows'
-        name: Building release for Windows
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn run gh-publish-windows
+        name: Building app for Windows
+        run: yarn run electron:windows
 
       - if: runner.os == 'macOs'
-        name: Building release for macOS
+        name: Building app for macOS
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn run gh-publish-mac
+        run: yarn run electron:mac
