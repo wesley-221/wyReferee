@@ -28,14 +28,7 @@ git clone git@github.com:wesley-221/wyReferee.git
 
 Install dependencies:
 ```bash
-npm install
-```
-
-Install Electron dependencies:
-
-```bash
-cd app/
-npm install
+yarn install
 ```
 
 Updating to the latest version of wyReferee (run this from the wyReferee directory):
@@ -46,15 +39,15 @@ git pull
 Once you have pulled the new changes, you have to install the dependencies again just to be safe.
 
 Building wyReferee:
-- If you are on a Windows machine, run `npm run electron:windows` (this builds the same `.exe` as in the latest release)
-- If you are on a Mac, run `npm run electron:mac`
-- If you are on a Linux distro, run `npm run electron:linux`
+- If you are on a Windows machine, run `yarn run electron:windows` (this builds the same `.exe` as in the latest release)
+- If you are on a Mac, run `yarn run electron:mac`
+- If you are on a Linux distro, run `yarn run electron:linux`
 
 ## Building for development
 If you want to develop the client, you can follow all the steps show above (Building the client yourself), except for the `Building wyReferee` part.
 Instead of that, you have to run the client like so:
 ```bash
-npm start
+yarn start
 ```
 
 This will launch wyReferee in a hot-reloaded Electron window, where any change you make will reload the client with the new changes.

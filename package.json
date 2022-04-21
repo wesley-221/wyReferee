@@ -1,6 +1,6 @@
 {
 	"name": "wyreferee",
-	"version": "6.3.3",
+	"version": "6.4.0",
 	"description": "Referee client",
 	"author": {
 		"name": "Wesley"
@@ -16,28 +16,28 @@
 	"main": "main.js",
 	"private": true,
 	"scripts": {
-		"gh-publish-windows": "npm run build:prod && electron-builder -p always",
-		"gh-publish-linux": "npm run build:prod && electron-builder build --linux -p always",
-		"gh-publish-mac": "npm run build:prod && electron-builder build --mac -p always",
-		"gh-publish-mac-arm": "npm run build:prod && electron-builder build --mac --arm64 -p always",
-		"postinstall": "npm run postinstall:electron && electron-builder install-app-deps",
+		"gh-publish-windows": "yarn run build:prod && electron-builder -p always",
+		"gh-publish-linux": "yarn run build:prod && electron-builder build --linux -p always",
+		"gh-publish-mac": "yarn run build:prod && electron-builder build --mac -p always",
+		"gh-publish-mac-arm": "yarn run build:prod && electron-builder build --mac --arm64 -p always",
+		"postinstall": "yarn run postinstall:electron && electron-builder install-app-deps",
 		"postinstall:web": "node postinstall-web",
 		"postinstall:electron": "node postinstall",
 		"ng": "ng",
-		"start": "npm run postinstall:electron && npm-run-all -p ng:serve electron:serve",
-		"build": "npm run postinstall:electron && npm run electron:serve-tsc && ng build",
-		"build:dev": "npm run build -- -c dev",
-		"build:prod": "npm run build -- -c production",
+		"start": "yarn run postinstall:electron && npm-run-all -p ng:serve electron:serve",
+		"build": "yarn run postinstall:electron && yarn run electron:serve-tsc && ng build",
+		"build:dev": "yarn run build -- -c dev",
+		"build:prod": "yarn run build -- -c production",
 		"ng:serve": "ng serve",
-		"ng:serve:web": "npm run postinstall:web && ng serve -o",
+		"ng:serve:web": "yarn run postinstall:web && ng serve -o",
 		"electron:serve-tsc": "tsc -p tsconfig.serve.json",
-		"electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:serve-tsc && electron . --serve",
-		"electron:local": "npm run build:prod && electron .",
-		"electron:linux": "npm run build:prod && electron-builder build --linux --publish never",
-		"electron:windows": "npm run build:prod && electron-builder build --windows --publish never",
-		"electron:mac": "npm run build:prod && electron-builder build --mac --publish never",
-		"test": "npm run postinstall:web && ng test",
-		"e2e": "npm run build:prod && playwright test -c e2e/playwright.config.ts e2e/",
+		"electron:serve": "wait-on http-get://localhost:4200/ && yarn run electron:serve-tsc && electron . --serve",
+		"electron:local": "yarn run build:prod && electron .",
+		"electron:linux": "yarn run build:prod && electron-builder build --linux --publish never",
+		"electron:windows": "yarn run build:prod && electron-builder build --windows --publish never",
+		"electron:mac": "yarn run build:prod && electron-builder build --mac --publish never",
+		"test": "yarn run postinstall:web && ng test",
+		"e2e": "yarn run build:prod && playwright test -c e2e/playwright.config.ts e2e/",
 		"lint": "ng lint"
 	},
 	"devDependencies": {
@@ -94,7 +94,7 @@
 		"zone.js": "~0.11.4"
 	},
 	"engines": {
-		"node": ">=10.9.0"
+		"node": ">=14.0.0"
 	},
 	"dependencies": {
 		"@angular/animations": "13.3.2",

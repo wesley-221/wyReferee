@@ -16,18 +16,27 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Cache node modules
+      uses: actions/cache@v3
+      id:
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install Dependencies
-      run: npm i
+      run: yarn i
     - name: Check lint
-      run: npm run lint
+      run: yarn run lint
     - name: Build Windows app
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npm run gh-publish-windows
+      run: yarn run gh-publish-windows
 
   build-linux:
     name: Build Linux
@@ -41,18 +50,27 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Cache node modules
+      uses: actions/cache@v3
+      id:
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install Dependencies
-      run: npm i
+      run: yarn i
     - name: Check lint
-      run: npm run lint
+      run: yarn run lint
     - name: Build Linux app
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npm run gh-publish-linux
+      run: yarn run gh-publish-linux
 
   build-mac:
     name: Build Mac
@@ -66,15 +84,26 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Cache node modules
+      uses: actions/cache@v3
+      id:
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install Dependencies
-      run: npm i
+      run: yarn i
     - name: Check lint
-      run: npm run lint
+      run: yarn run lint
     - name: Build Mac app
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npm run gh-publish-mac
+        CSC_LINK: ${{ env.CSC_LINK }}
+        CSC_KEY_PASSWORD: ${{ env.CSC_KEY_PASSWORD }}
+      run: yarn run gh-publish-mac
