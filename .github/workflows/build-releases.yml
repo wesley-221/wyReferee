@@ -22,7 +22,7 @@ jobs:
 
     - name: Cache node modules
       uses: actions/cache@v3
-      id: yarn-cache-dir-path
+      id: yarn-cache
       with:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -60,7 +60,7 @@ jobs:
 
     - name: Cache node modules
       uses: actions/cache@v3
-      id: yarn-cache-dir-path
+      id: yarn-cache
       with:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -98,7 +98,7 @@ jobs:
 
     - name: Cache node modules
       uses: actions/cache@v3
-      id: yarn-cache-dir-path
+      id: yarn-cache
       with:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
