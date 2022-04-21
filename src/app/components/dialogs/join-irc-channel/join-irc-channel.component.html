@@ -11,7 +11,7 @@
 
 		<mat-form-field class="full-width">
 			<mat-label>Channel name</mat-label>
-			<input matInput formControlName="channel-name" />
+			<input matInput (keyup.enter)="onEnter()" (keyup.esc)="onEsc()" formControlName="channel-name" />
 
 			<mat-error *ngIf="validationForm.get('channel-name').errors && (validationForm.get('channel-name').dirty || validationForm.get('channel-name').touched)">
 				This field is required.
