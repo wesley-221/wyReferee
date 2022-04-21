@@ -5,7 +5,7 @@ import { MappoolType, WyMappool } from 'app/models/wytournament/mappool/wy-mappo
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModCategory } from 'app/models/wytournament/mappool/wy-mod-category';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
-import { Mods } from 'app/models/osu-models/osu';
+import { Gamemodes, Mods } from 'app/models/osu-models/osu';
 import { WyMod } from 'app/models/wytournament/mappool/wy-mod';
 
 @Component({
@@ -71,7 +71,7 @@ export class MappoolComponent implements OnInit {
 	/**
 	 * Delete a mod category
 	 *
-	 * @param index the index of the mod category to delete
+	 * @param category the mod category to delete
 	 */
 	deleteCategory(category: WyModCategory): void {
 		for (const findCategory in this.mappool.modCategories) {
@@ -105,29 +105,45 @@ export class MappoolComponent implements OnInit {
 
 	/**
 	 * Create default brackets
+	 *
 	 * @param nofail whether or not to add NoFail to the brackets
 	 */
 	createDefaultBrackets(nofail: boolean): void {
 		if (nofail) {
 			this.createDefaultBracket('Nomod', 'NM', [{ name: 'Nofail', value: Mods.NoFail }]);
 			this.createDefaultBracket('Hidden', 'HD', [{ name: 'Hidden', value: Mods.Hidden }, { name: 'Nofail', value: Mods.NoFail }]);
-		} else {
+
+			if (this.tournament.gamemodeId != Gamemodes.Catch) {
+				this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Hardrock', value: Mods.HardRock }, { name: 'Nofail', value: Mods.NoFail }]);
+				this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }, { name: 'Nofail', value: Mods.NoFail }]);
+			}
+		}
+		else {
 			this.createDefaultBracket('Nomod', 'NM', [{ name: 'Nomod', value: Mods.None }]);
 			this.createDefaultBracket('Hidden', 'HD', [{ name: 'Hidden', value: Mods.Hidden }]);
+
+			if (this.tournament.gamemodeId != Gamemodes.Catch) {
+				this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Hardrock', value: Mods.HardRock }]);
+				this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }]);
+			}
 		}
 
-		this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Freemod', value: 'freemod' }]);
-		this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }, { name: 'Freemod', value: 'freemod' }]);
+		if (this.tournament.gamemodeId == Gamemodes.Catch) {
+			this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Freemod', value: 'freemod' }]);
+			this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }, { name: 'Freemod', value: 'freemod' }]);
+		}
+
 		this.createDefaultBracket('Tiebreaker', 'TB', [{ name: 'Freemod', value: 'freemod' }]);
 	}
 
 	/**
 	 * Create a default bracket
+	 *
 	 * @param name the desired name for this bracket
 	 * @param acronym the desired acronym for this bracket
 	 * @param modsEnabled json array of desired mods for this bracket
 	 */
-	createDefaultBracket(name: string, acronym: string, modsEnabled: any[]): void {
+	private createDefaultBracket(name: string, acronym: string, modsEnabled: any[]): void {
 		// Create bracket object with name and acronym provided
 		const newModBracket = new WyModBracket({
 			index: this.mappool.modBracketIndex,
@@ -151,18 +167,18 @@ export class MappoolComponent implements OnInit {
 		const current_bracket_index = newModBracket.index;
 
 		// Loop list of mods we want on this bracket
-		modsEnabled.forEach( (mod) => {
+		modsEnabled.forEach(mod => {
 			// Create mod object with name and value = current mod
 			const newMod = new WyMod({
 				index: this.mappool.modBrackets[current_bracket_index].modIndex,
 				name: mod.name,
 				value: mod.value
 			});
-	
+
 			// Increment mod count and push mod to list of mods
 			this.mappool.modBrackets[current_bracket_index].modIndex++;
 			this.mappool.modBrackets[current_bracket_index].mods.push(newMod);
-	
+
 			// Create FormGroupControl to watch the dropdown field for this mod (and sync changes?)
 			// Important: Pass in the same mod value as the initial value
 			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${current_bracket_index}-mod-${newMod.index}-value`, new FormControl(mod.value, Validators.required));
