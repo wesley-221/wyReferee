@@ -171,10 +171,12 @@ export class IrcComponent implements OnInit {
 		if (delayScroll) {
 			setTimeout(() => {
 				this.scrollToTop();
+				this.chatMessage.nativeElement.focus();
 			}, 500);
 		}
 		else {
 			this.scrollToTop();
+			this.chatMessage.nativeElement.focus();
 		}
 
 		// Reset search bar
