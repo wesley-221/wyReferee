@@ -21,3 +21,13 @@
 		margin: 8px;
 	}
 }
+
+.buttons {
+	button {
+		margin-right: 8px;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}
