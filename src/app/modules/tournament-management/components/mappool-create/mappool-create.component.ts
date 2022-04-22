@@ -51,7 +51,7 @@ export class MappoolCreateComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
 				for (const findMappool in this.tournament.mappools) {
-					if (this.tournament.mappools[findMappool].id == mappool.id) {
+					if (this.tournament.mappools[findMappool].index == mappool.index) {
 						this.tournament.mappools.splice(Number(findMappool), 1);
 						break;
 					}
