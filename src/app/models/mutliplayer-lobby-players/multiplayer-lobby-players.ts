@@ -171,6 +171,7 @@ export class MultiplayerLobbyPlayers {
 
 	/**
 	 * Get a player by the username
+	 *
 	 * @param username the username of the user to get
 	 * @returns
 	 */

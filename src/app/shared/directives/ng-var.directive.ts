@@ -4,6 +4,15 @@ import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 	selector: '[ngVar]'
 })
 export class NgVarDirective {
+	private context: { $implicit: unknown; ngVar: unknown } = {
+		$implicit: null,
+		ngVar: null,
+	};
+
+	private hasView = false;
+
+	constructor(private templateRef: TemplateRef<any>, private vcRef: ViewContainerRef) { }
+
 	@Input()
 	set ngVar(context: unknown) {
 		this.context.$implicit = this.context.ngVar = context;
@@ -13,13 +22,4 @@ export class NgVarDirective {
 			this.hasView = true;
 		}
 	}
-
-	private context: { $implicit: unknown; ngVar: unknown; } = {
-		$implicit: null,
-		ngVar: null,
-	};
-
-	private hasView: boolean = false;
-
-	constructor(private templateRef: TemplateRef<any>, private vcRef: ViewContainerRef) { }
 }
