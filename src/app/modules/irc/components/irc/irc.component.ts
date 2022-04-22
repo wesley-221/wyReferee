@@ -129,6 +129,40 @@ export class IrcComponent implements OnInit {
 				this.refreshIrcHeader(this.selectedLobby);
 			}
 		});
+
+		this.ircService.hasMultiplayerLobbyChanged().subscribe(changed => {
+			if (changed == null) {
+				return;
+			}
+
+			const data = changed.data;
+
+			if (changed.action == 'playerJoined') {
+				this.selectedLobby.multiplayerLobbyPlayers.playerJoined(data.player, (data.slot + 1), data.team);
+			}
+			else if (changed.action == 'playerLeft') {
+				this.selectedLobby.multiplayerLobbyPlayers.playerLeft(data);
+			}
+			else if (changed.action == 'playerMoved') {
+				this.selectedLobby.multiplayerLobbyPlayers.movePlayerToSlot(data.player, (data.slot + 1));
+			}
+			else if (changed.action == 'host') {
+				// Somehow gets triggered by hostCleared as well sometimes
+				// Add null check for when that happens
+				if (data != null) {
+					this.selectedLobby.multiplayerLobbyPlayers.changeHost(data);
+				}
+			}
+			else if (changed.action == 'hostCleared') {
+				this.selectedLobby.multiplayerLobbyPlayers.clearMatchHost();
+			}
+			else if (changed.action == 'playerChangedTeam') {
+				this.selectedLobby.multiplayerLobbyPlayers.playerChangedTeam(data.player, data.team);
+			}
+			else if (changed.action == 'playerInSlot') {
+				this.selectedLobby.multiplayerLobbyPlayers.playerChanged(data);
+			}
+		});
 	}
 
 	ngOnInit() {

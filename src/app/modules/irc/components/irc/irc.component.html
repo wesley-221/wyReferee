@@ -337,9 +337,12 @@
 						</div>
 
 						<div class="column">
-							<mat-chip-list>
-								<mat-chip *ngFor="let mod of player.mods">{{ mod }}</mat-chip>
-							</mat-chip-list>
+							<div class="mods">
+								<div class="mod-icon" *ngFor="let mod of player.mods">
+									<img *ngIf="mod" [src]="'assets/osu-mods/' + mod + '.png'" [matTooltip]="mod | uppercase" />
+									<img *ngIf="mod == null" src="assets/osu-mods/nm.png" [matTooltip]="'nm' | uppercase" />
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

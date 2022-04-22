@@ -133,7 +133,7 @@ export class OsuHelper {
 		let modAbbreviations: string = null;
 
 		for (const abbreviation of allMods) {
-			if (abbreviation.fullModName.toString().toLowerCase() == mod) {
+			if (abbreviation.fullModName.toString().toLowerCase() == mod.trim().toLowerCase()) {
 				modAbbreviations = abbreviation.abbreviationModName;
 			}
 		}

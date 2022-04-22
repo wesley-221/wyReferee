@@ -217,7 +217,7 @@ $hyperlink-background-color: #2b4576;
 						justify-content: space-between;
 						align-items: center;
 
-						margin-bottom: 3px;
+						margin-bottom: 8px;
 
 						.column {
 							display: flex;
@@ -248,6 +248,22 @@ $hyperlink-background-color: #2b4576;
 							.green {
 								color: green;
 								text-shadow: 1px 1px black;
+							}
+
+							.mods {
+								display: flex;
+								flex-direction: row;
+
+								.mod-icon {
+									display: flex;
+									align-items: center;
+
+									margin-right: 4px;
+
+									&:last-child {
+										margin-right: 0;
+									}
+								}
 							}
 						}
 					}

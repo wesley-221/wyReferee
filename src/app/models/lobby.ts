@@ -126,7 +126,6 @@ export class Lobby {
 			teamOneSlotArray: lobby.teamOneSlotArray,
 			teamTwoSlotArray: lobby.teamTwoSlotArray,
 			gamesCountTowardsScore: lobby.gamesCountTowardsScore,
-			multiplayerLobbyPlayers: new MultiplayerLobbyPlayers(),
 			isQualifierLobby: lobby.isQualifierLobby,
 			sendWebhooks: lobby.sendWebhooks
 		});
