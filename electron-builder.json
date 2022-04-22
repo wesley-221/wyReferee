@@ -24,7 +24,8 @@
 	"mac": {
 		"icon": "src/assets/images/mac-icon/icon.png",
 		"target": [
-			"dmg"
+			"dmg",
+			"zip"
 		]
 	}
 }
