@@ -78,7 +78,10 @@
 							{{ chat.time }}
 						</div>
 
-						<div class="author" [ngClass]="{'me': chat.author == ircService.authenticatedUser, 'bancho': chat.author == 'BanchoBot', 'blue': isBlueTeam(chat.author), 'red': isRedTeam(chat.author)}" (click)="openUserpage(chat.author)">
+						<div class="author" *ngVar="selectedLobby.multiplayerLobbyPlayers.getPlayerByUsername(chat.author) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
+							'bancho': chat.author == 'BanchoBot',
+							'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
+							'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false}" (click)="openUserpage(chat.author)">
 							{{ chat.author }}
 						</div>
 

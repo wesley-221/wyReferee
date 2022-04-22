@@ -896,10 +896,16 @@ export class IrcService {
 		}
 	}
 
+	/**
+	 * Whenever a user changes anything in a multiplayer lobby
+	 */
 	hasMultiplayerLobbyChanged(): BehaviorSubject<{ action: string; data: any }> {
 		return this.multiplayerLobbyChanged$;
 	}
 
+	/**
+	 * Whenever a message gets sent
+	 */
 	getChannelMessageUnread(): BehaviorSubject<IrcChannel> {
 		return this.setChannelUnreadMessages$;
 	}

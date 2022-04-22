@@ -12,6 +12,7 @@ import { SearchModBracketPipe } from './pipes/search-mod-bracket.pipe';
 import { SearchPipe } from './pipes/search.pipe';
 import { DebugComponent } from './components/debug/debug.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { NgVarDirective } from './directives/ng-var.directive';
 
 const declerations = [
 	FilterTournamentPipe,
@@ -20,7 +21,8 @@ const declerations = [
 	SearchPipe,
 	DebugComponent,
 	DebugComponent,
-	AlertComponent
+	AlertComponent,
+	NgVarDirective
 ];
 
 const modules = [
