@@ -168,4 +168,20 @@ export class MultiplayerLobbyPlayers {
 
 		return this.players;
 	}
+
+	/**
+	 * Get a player by the username
+	 *
+	 * @param username the username of the user to get
+	 * @returns
+	 */
+	getPlayerByUsername(username: string) {
+		for (const user of this.players) {
+			if (user.username == username) {
+				return user;
+			}
+		}
+
+		return null;
+	}
 }
