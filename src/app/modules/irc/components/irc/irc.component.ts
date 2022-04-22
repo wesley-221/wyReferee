@@ -167,7 +167,7 @@ export class IrcComponent implements OnInit {
 
 		// Trigger hasUnReadMessages for channels
 		this.ircService.getChannelMessageUnread().subscribe(channel => {
-			if (channel != null && this.selectedChannel.name != channel.name) {
+			if ((channel != null && this.selectedChannel != null) && this.selectedChannel.name != channel.name) {
 				for (const findChannel in this.channels) {
 					if (this.channels[findChannel].name == channel.name) {
 						this.channels[findChannel].hasUnreadMessages = true;
