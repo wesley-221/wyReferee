@@ -38,6 +38,7 @@ export class IrcService {
 	isJoiningChannel$: BehaviorSubject<boolean>;
 	messageHasBeenSend$: BehaviorSubject<boolean>;
 
+	multiplayerLobbyChanged$: BehaviorSubject<{ action: string; data: any }>;
 	setChannelUnreadMessages$: BehaviorSubject<IrcChannel>;
 
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
@@ -48,13 +49,16 @@ export class IrcService {
 	// Indication if a sound is playing or not
 	private soundIsPlaying = false;
 
-	constructor(private toastService: ToastService, private storeService: StoreService, private multiplayerLobbiesService: WyMultiplayerLobbiesService) {
+	constructor(private toastService: ToastService,
+		private storeService: StoreService,
+		private multiplayerLobbiesService: WyMultiplayerLobbiesService) {
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
 		this.isJoiningChannel$ = new BehaviorSubject<boolean>(false);
 		this.messageHasBeenSend$ = new BehaviorSubject<boolean>(false);
 		this.isAuthenticated$ = new BehaviorSubject<boolean>(false);
+		this.multiplayerLobbyChanged$ = new BehaviorSubject(null);
 		this.setChannelUnreadMessages$ = new BehaviorSubject<IrcChannel>(null);
 
 		// Connect to irc if the credentials are saved
@@ -178,7 +182,7 @@ export class IrcService {
 
 				// Gets called when !mp settings is ran
 				if (playerInSlot) {
-					this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(message.channel.name).multiplayerLobbyPlayers.playerChanged(playerInSlot);
+					this.multiplayerLobbyChanged$.next({ action: 'playerInSlot', data: playerInSlot });
 				}
 			}
 
@@ -225,36 +229,38 @@ export class IrcService {
 	 * @param channel
 	 */
 	initializeChannelListeners(channel: BanchoMultiplayerChannel) {
-		channel.lobby.on('playerMoved', (obj: { player: BanchoLobbyPlayer; slot: number }) => {
-			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.movePlayerToSlot(obj);
-		});
-
-		channel.lobby.on('playerJoined', (obj: { player: BanchoLobbyPlayer; slot: number; team: string }) => {
-			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.playerJoined(obj);
-		});
-
-		channel.lobby.on('playerLeft', (player: BanchoLobbyPlayer) => {
-			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.playerLeft(player);
-		});
-
-		channel.lobby.on('playerChangedTeam', (obj: { player: BanchoLobbyPlayer; team: string }) => {
-			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.playerChangedTeam(obj);
-		});
-
-		channel.lobby.on('hostCleared', () => {
-			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.clearMatchHost();
-		});
-
-		channel.lobby.on('host', (player: BanchoLobbyPlayer) => {
-			this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name).multiplayerLobbyPlayers.changeHost(player);
-		});
-
 		channel.lobby.on('matchFinished', () => {
 			this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name), true, true);
 		});
 
 		channel.lobby.on('size', (size: number) => {
 			this.getChannelByName(channel.name).players = size;
+		});
+
+		channel.lobby.on('playerJoined', (obj: { player: BanchoLobbyPlayer; slot: number; team: string }) => {
+			// Slot starts at 0 instead of 1
+			this.multiplayerLobbyChanged$.next({ action: 'playerJoined', data: obj });
+		});
+
+		channel.lobby.on('playerLeft', (player: BanchoLobbyPlayer) => {
+			this.multiplayerLobbyChanged$.next({ action: 'playerLeft', data: player });
+		});
+
+		channel.lobby.on('playerMoved', (obj: { player: BanchoLobbyPlayer; slot: number }) => {
+			// Slot starts at 0 instead of 1
+			this.multiplayerLobbyChanged$.next({ action: 'playerMoved', data: obj });
+		});
+
+		channel.lobby.on('host', (player: BanchoLobbyPlayer) => {
+			this.multiplayerLobbyChanged$.next({ action: 'host', data: player });
+		});
+
+		channel.lobby.on('hostCleared', () => {
+			this.multiplayerLobbyChanged$.next({ action: 'hostCleared', data: null });
+		});
+
+		channel.lobby.on('playerChangedTeam', (obj: { player: BanchoLobbyPlayer; team: string }) => {
+			this.multiplayerLobbyChanged$.next({ action: 'playerChangedTeam', data: obj });
 		});
 	}
 
@@ -888,6 +894,10 @@ export class IrcService {
 				// pick the map
 			}
 		}
+	}
+
+	hasMultiplayerLobbyChanged(): BehaviorSubject<{ action: string; data: any }> {
+		return this.multiplayerLobbyChanged$;
 	}
 
 	getChannelMessageUnread(): BehaviorSubject<IrcChannel> {

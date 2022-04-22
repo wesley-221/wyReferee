@@ -1,21 +1,137 @@
 import { MultiplayerLobbyPlayersPlayer } from './multiplayer-lobby-players-player';
 import { BanchoLobbyPlayer } from 'bancho.js';
+import { OsuHelper } from '../osu-models/osu';
 
 export class MultiplayerLobbyPlayers {
 	players: MultiplayerLobbyPlayersPlayer[];
 
 	constructor() {
-		let counter = 1;
-
 		this.players = [];
 
-		for (let i = 0; i < 16; i++) {
+		for (let i = 1; i <= 16; i++) {
 			const newPlayer = new MultiplayerLobbyPlayersPlayer();
-			newPlayer.slot = counter;
+			newPlayer.slot = i;
 			this.players.push(newPlayer);
-
-			counter++;
 		}
+	}
+
+	/**
+	 * Gets called when a player joins
+	 *
+	 * @param player the player that joined
+	 * @param slot the slot the player joined in
+	 * @param team the team the player joined as
+	 */
+	playerJoined(player: BanchoLobbyPlayer, slot: number, team: string) {
+		for (const mpSlot of this.players) {
+			if (mpSlot.slot == slot) {
+				mpSlot.username = player.user.username;
+				mpSlot.team = team;
+
+				break;
+			}
+		}
+
+		return this.players;
+	}
+
+	/**
+	 * Gets called when a player leaves the match (kick or normal leave)
+	 *
+	 * @param player the player that left the lobby
+	 */
+	playerLeft(player: BanchoLobbyPlayer) {
+		for (const mpSlot of this.players) {
+			if (mpSlot.username == player.user.username) {
+				mpSlot.username = 'Open';
+				mpSlot.team = 'invalid';
+				mpSlot.mods = [];
+
+				break;
+			}
+		}
+
+		return this.players;
+	}
+
+	/**
+	 * Gets called when a player moves around in a multiplayer lobby
+	 *
+	 * @param player the player that moved
+	 * @param slot the slot the player moved to
+	 */
+	movePlayerToSlot(player: BanchoLobbyPlayer, slot: number) {
+		for (const mpSlot of this.players) {
+			if (mpSlot.username == player.user.username) {
+				mpSlot.username = 'Open';
+				mpSlot.team = 'invalid';
+				mpSlot.mods = [];
+
+				break;
+			}
+		}
+
+		for (const mpSlot of this.players) {
+			if (mpSlot.slot == slot) {
+				mpSlot.username = player.user.username;
+				mpSlot.team = player.team;
+
+				for (const mod of player.mods) {
+					mpSlot.mods.push(OsuHelper.getModAbbreviation(mod.longMod));
+				}
+
+				break;
+			}
+		}
+
+		return this.players;
+	}
+
+	/**
+	 * Gets called when the host changes
+	 *
+	 * @param player the player that is the new host
+	 */
+	changeHost(player: BanchoLobbyPlayer) {
+		for (const mpSlot of this.players) {
+			if (mpSlot.username == player.user.username) {
+				mpSlot.isHost = true;
+			}
+			else {
+				mpSlot.isHost = false;
+			}
+		}
+
+		return this.players;
+	}
+
+	/**
+	 * Gets called when the match host gets cleared
+	 */
+	clearMatchHost() {
+		for (const mpSlot of this.players) {
+			mpSlot.isHost = false;
+		}
+
+		return this.players;
+	}
+
+	/**
+	 * Gets called when a player changes team. See Regex.playerHasChangedTeam
+	 *
+	 * @param player the player that changed team
+	 * @param team the team of the player changed to
+	 */
+	playerChangedTeam(player: BanchoLobbyPlayer, team: string) {
+		for (const mpSlot of this.players) {
+			if (mpSlot.username == player.user.username) {
+				mpSlot.team = team;
+
+				break;
+			}
+		}
+
+		return this.players;
 	}
 
 	/**
@@ -39,125 +155,17 @@ export class MultiplayerLobbyPlayers {
 				newPlayer.team = playerInSlot.team;
 				newPlayer.status = playerInSlot.status.trim();
 				newPlayer.isHost = playerInSlot.host;
-				newPlayer.mods = playerInSlot.mods.split(',');
+
+				const mods = playerInSlot.mods.split(',');
+
+				for (const mod of mods) {
+					newPlayer.mods.push(OsuHelper.getModAbbreviation(mod));
+				}
 
 				this.players[i] = newPlayer;
 			}
 		}
-	}
 
-	/**
-	 * Gets called when a player moves around in a multiplayer lobby. See Regex.playerHasMoved
-	 *
-	 * @param player
-	 */
-	movePlayerToSlot(obj: { player: BanchoLobbyPlayer; slot: number }) {
-		let movePlayer: MultiplayerLobbyPlayersPlayer;
-		obj.slot = obj.slot + 1;
-
-		for (const iPlayer in this.players) {
-			if (this.players[iPlayer].username == obj.player.user.username) {
-				const existingPlayer = MultiplayerLobbyPlayersPlayer.makeTrueCopy(this.players[iPlayer]);
-				existingPlayer.slot = obj.slot;
-
-				const newPlayer = new MultiplayerLobbyPlayersPlayer();
-				newPlayer.slot = this.players[iPlayer].slot;
-
-				movePlayer = existingPlayer;
-				this.players[iPlayer] = newPlayer;
-			}
-		}
-
-		for (const iPlayer in this.players) {
-			if (movePlayer == undefined) {
-				continue;
-			}
-
-			if (this.players[iPlayer].slot == movePlayer.slot) {
-				this.players[iPlayer] = movePlayer;
-			}
-		}
-	}
-
-	/**
-	 * Gets called when the host changes. See Regex.hostChanged
-	 *
-	 * @param hostChanged
-	 */
-	changeHost(player: BanchoLobbyPlayer) {
-		if (player == null) {
-			return;
-		}
-
-		for (const iPlayer in this.players) {
-			if (this.players[iPlayer].username == player.user.username) {
-				this.players[iPlayer].isHost = true;
-			}
-
-			if (this.players[iPlayer].isHost == true && this.players[iPlayer].username != player.user.username) {
-				this.players[iPlayer].isHost = false;
-			}
-		}
-	}
-
-	/**
-	 * Gets called when a player changes team. See Regex.playerHasChangedTeam
-	 *
-	 * @param playerHasChangedTeam
-	 */
-	playerChangedTeam(playerHasChangedTeam: { player: BanchoLobbyPlayer; team: string }) {
-		for (const iPlayer in this.players) {
-			if (this.players[iPlayer].username == playerHasChangedTeam.player.user.username) {
-				this.players[iPlayer].team = playerHasChangedTeam.team;
-			}
-		}
-	}
-
-	/**
-	 * Gets called when the match host gets cleared. See Regex.clearMatchHost
-	 */
-	clearMatchHost() {
-		for (const iPlayer in this.players) {
-			if (this.players[iPlayer].isHost) {
-				this.players[iPlayer].isHost = false;
-			}
-		}
-	}
-
-	/**
-	 * Gets called when a player leaves the match (kick or normal leave). See Regex.playerLeft
-	 *
-	 * @param playerLeft
-	 */
-	playerLeft(playerLeft: BanchoLobbyPlayer) {
-		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].username == playerLeft.user.username) {
-				const newPlayer = new MultiplayerLobbyPlayersPlayer();
-				newPlayer.slot = this.players[i].slot;
-
-				this.players[i] = newPlayer;
-			}
-		}
-	}
-
-	/**
-	 * Gets called when a player joins. See Regex.playerJoined
-	 *
-	 * @param playerJoined
-	 */
-	playerJoined(obj: { player: BanchoLobbyPlayer; slot: number; team: string }) {
-		obj.slot = obj.slot + 1;
-
-		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].slot == obj.slot) {
-				const newPlayer = new MultiplayerLobbyPlayersPlayer();
-
-				newPlayer.username = obj.player.user.username;
-				newPlayer.slot = obj.slot;
-				newPlayer.team = obj.team;
-
-				this.players[i] = newPlayer;
-			}
-		}
+		return this.players;
 	}
 }
