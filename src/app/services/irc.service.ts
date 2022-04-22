@@ -899,7 +899,7 @@ export class IrcService {
 	hasMultiplayerLobbyChanged(): BehaviorSubject<{ action: string; data: any }> {
 		return this.multiplayerLobbyChanged$;
 	}
-		
+
 	getChannelMessageUnread(): BehaviorSubject<IrcChannel> {
 		return this.setChannelUnreadMessages$;
 	}

@@ -164,7 +164,7 @@ export class IrcComponent implements OnInit {
 				this.selectedLobby.multiplayerLobbyPlayers.playerChanged(data);
 			}
 		});
-			
+
 		// Trigger hasUnReadMessages for channels
 		this.ircService.getChannelMessageUnread().subscribe(channel => {
 			if (channel != null && this.selectedChannel.name != channel.name) {
