@@ -19,6 +19,8 @@ export class TournamentParticipantsComponent implements OnInit {
 	usersToAdd: string;
 	teamsToAdd: string;
 
+	teamFilter: string;
+
 	constructor(private dialog: MatDialog, private toastService: ToastService) { }
 	ngOnInit(): void { }
 
@@ -64,7 +66,11 @@ export class TournamentParticipantsComponent implements OnInit {
 	 *
 	 * @param team the participant bracket to collapse
 	 */
-	collapseParticipant(team: WyTeam) {
+	collapseParticipant(team: WyTeam, event: MouseEvent) {
+		if ((event.target as any).localName == 'button' || (event.target as any).localName == 'mat-icon') {
+			return;
+		}
+
 		team.collapsed = !team.collapsed;
 	}
 

@@ -1,16 +1,12 @@
 <form [formGroup]="validationForm">
 	<div class="mod-bracket">
-		<div class="header">
+		<div class="header" (click)="collapseBracket(modBracket, $event)">
 			<div class="information">
 				<h3>{{ modBracket.name }}</h3>
 			</div>
 
 			<div class="buttons">
 				<button mat-mini-fab color="warn" (click)="deleteModBracket(modBracket)"><mat-icon>delete</mat-icon></button>
-				<button mat-mini-fab color="primary" (click)="collapseBracket(modBracket)">
-					<mat-icon *ngIf="modBracket.collapsed">expand_more</mat-icon>
-					<mat-icon *ngIf="!modBracket.collapsed">expand_less</mat-icon>
-				</button>
 			</div>
 		</div>
 

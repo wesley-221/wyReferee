@@ -61,4 +61,15 @@ export class MappoolCreateComponent implements OnInit {
 			}
 		});
 	}
+
+	/**
+	 * Collapse the mappool
+	 */
+	collapseMappool(mappool: WyMappool, event: MouseEvent) {
+		if ((event.target as any).localName == 'button' || (event.target as any).localName == 'mat-icon') {
+			return;
+		}
+
+		mappool.collapsed = !mappool.collapsed;
+	}
 }

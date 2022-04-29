@@ -6,21 +6,21 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 })
 export class FilterTournamentPipe implements PipeTransform {
 	transform(tournaments: WyTournament[], searchValue: string, filterByUser: string) {
-		let returnMappools: WyTournament[] = [];
+		let returnTournaments: WyTournament[] = [];
 
 		for (const tournament of tournaments) {
-			returnMappools.push(WyTournament.makeTrueCopy(tournament));
+			returnTournaments.push(WyTournament.makeTrueCopy(tournament));
 		}
 
 		if (searchValue != null) {
-			returnMappools = returnMappools.filter(tournament => tournament.id == parseInt(searchValue) ||
+			returnTournaments = returnTournaments.filter(tournament => tournament.id == parseInt(searchValue) ||
 				tournament.name.toLowerCase().includes(searchValue.toLowerCase()));
 		}
 
 		if (filterByUser != null) {
-			returnMappools = returnMappools.filter(tournament => tournament.createdBy.username.toLowerCase().includes(filterByUser.toLowerCase()));
+			returnTournaments = returnTournaments.filter(tournament => tournament.createdBy.username.toLowerCase().includes(filterByUser.toLowerCase()));
 		}
 
-		return returnMappools;
+		return returnTournaments;
 	}
 }
