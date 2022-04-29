@@ -7,7 +7,6 @@ import { WyTeam } from 'app/models/wytournament/wy-team';
 export class FilterTeamPipe implements PipeTransform {
 	transform(teams: WyTeam[], searchValue: string) {
 		let returnTeams: WyTeam[] = [];
-		console.log(searchValue);
 
 		for (const team of teams) {
 			if (searchValue == undefined || searchValue == null || searchValue == '') {
