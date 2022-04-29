@@ -10,10 +10,21 @@
 					<button mat-raised-button (click)="addBulkTeams()" color="primary" [disabled]="teamsToAdd == null || teamsToAdd.length <= 0"><mat-icon>add</mat-icon> add bulk teams</button>
 				</div>
 
-				<mat-form-field class="full-width">
-					<mat-label>List with all teams. 1 team per line (click me)</mat-label>
-					<textarea matInput [(ngModel)]="teamsToAdd" [ngModelOptions]="{standalone: true}"></textarea>
-				</mat-form-field>
+				<div class="split">
+					<div class="col">
+						<mat-form-field class="full-width margin-top">
+							<mat-label>Bulk add teams, list all teams. 1 team per line (click me)</mat-label>
+							<textarea matInput [(ngModel)]="teamsToAdd" [ngModelOptions]="{standalone: true}"></textarea>
+						</mat-form-field>
+					</div>
+
+					<div class="col">
+						<mat-form-field class="full-width margin-top">
+							<mat-label>Filter players/teams by name</mat-label>
+							<textarea matInput [(ngModel)]="teamFilter" [ngModelOptions]="{standalone: true}"></textarea>
+						</mat-form-field>
+					</div>
+				</div>
 			</div>
 
 			<div *ngIf="tournament.isSoloTournament()">
@@ -26,9 +37,9 @@
 			<hr />
 
 			<div class="all-teams">
-				<div class="team" *ngFor="let team of tournament.teams">
+				<div class="team" *ngFor="let team of (tournament.teams | filterTeam : teamFilter)">
 					<form [formGroup]="validationForm">
-						<div class="header">
+						<div class="header" (click)="collapseParticipant(team, $event)">
 							<div class="information">
 								<h3 *ngIf="team.name">{{ team.name }}</h3>
 								<h3 *ngIf="!team.name && !tournament.isSoloTournament()">Unnamed team</h3>
@@ -37,10 +48,6 @@
 
 							<div class="buttons">
 								<button mat-mini-fab color="warn" (click)="deleteTeam(team)"><mat-icon>delete</mat-icon></button>
-								<button mat-mini-fab color="primary" (click)="collapseParticipant(team)">
-									<mat-icon *ngIf="team.collapsed">expand_more</mat-icon>
-									<mat-icon *ngIf="!team.collapsed">expand_less</mat-icon>
-								</button>
 							</div>
 						</div>
 

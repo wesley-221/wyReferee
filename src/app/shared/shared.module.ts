@@ -13,6 +13,7 @@ import { SearchPipe } from './pipes/search.pipe';
 import { DebugComponent } from './components/debug/debug.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { NgVarDirective } from './directives/ng-var.directive';
+import { FilterTeamPipe } from './pipes/filter-team.pipe';
 
 const declerations = [
 	FilterTournamentPipe,
@@ -22,7 +23,8 @@ const declerations = [
 	DebugComponent,
 	DebugComponent,
 	AlertComponent,
-	NgVarDirective
+	NgVarDirective,
+	FilterTeamPipe
 ];
 
 const modules = [

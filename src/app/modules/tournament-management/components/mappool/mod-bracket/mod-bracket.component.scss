@@ -31,6 +31,10 @@
 			position: fixed;
 			right: 0;
 		}
+
+		&:hover {
+			cursor: pointer;
+		}
 	}
 
 	.body {

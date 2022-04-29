@@ -74,7 +74,11 @@ export class ModBracketComponent implements OnInit {
 	 *
 	 * @param bracket the bracket to collapse
 	 */
-	collapseBracket(bracket: WyModBracket): void {
+	collapseBracket(bracket: WyModBracket, event: MouseEvent): void {
+		if ((event.target as any).localName == 'button' || (event.target as any).localName == 'mat-icon') {
+			return;
+		}
+
 		bracket.collapsed = !bracket.collapsed;
 	}
 

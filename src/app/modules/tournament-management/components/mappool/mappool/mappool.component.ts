@@ -154,34 +154,27 @@ export class MappoolComponent implements OnInit {
 			beatmapIndex: 0
 		});
 
-		// Increment bracket count and push bracket to list of brackets
-		this.mappool.modBracketIndex++;
-		this.mappool.modBrackets.push(newModBracket);
-
 		// Create FormGroupControl to watch the text fields for them (and sync changes?)
 		// Important: Pass in the same name and acronym as the initial values
 		this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-name`, new FormControl(name, Validators.required));
 		this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-acronym`, new FormControl(acronym, Validators.required));
 
-		// Set var for current bracket index, code below uses it a lot and it was not very readable
-		const current_bracket_index = newModBracket.index;
-
-		// Loop list of mods we want on this bracket
 		modsEnabled.forEach(mod => {
 			// Create mod object with name and value = current mod
 			const newMod = new WyMod({
-				index: this.mappool.modBrackets[current_bracket_index].modIndex,
+				index: newModBracket.modIndex,
 				name: mod.name,
 				value: mod.value
 			});
 
-			// Increment mod count and push mod to list of mods
-			this.mappool.modBrackets[current_bracket_index].modIndex++;
-			this.mappool.modBrackets[current_bracket_index].mods.push(newMod);
+			newModBracket.modIndex++;
+			newModBracket.mods.push(newMod);
 
-			// Create FormGroupControl to watch the dropdown field for this mod (and sync changes?)
-			// Important: Pass in the same mod value as the initial value
-			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${current_bracket_index}-mod-${newMod.index}-value`, new FormControl(mod.value, Validators.required));
+			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-mod-${newMod.index}-value`, new FormControl(mod.value, Validators.required));
 		});
+
+		// Increment bracket count and push bracket to list of brackets
+		this.mappool.modBracketIndex++;
+		this.mappool.modBrackets.push(newModBracket);
 	}
 }

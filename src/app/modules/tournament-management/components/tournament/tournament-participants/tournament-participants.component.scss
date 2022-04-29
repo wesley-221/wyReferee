@@ -10,6 +10,24 @@
 	}
 }
 
+.margin-top {
+	margin-top: 8px;
+}
+
+.split {
+	display: flex;
+
+	.col {
+		flex: 1;
+
+		margin-right: 8px;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}
+
 .team {
 	overflow: hidden;
 
@@ -42,6 +60,10 @@
 		.collapse {
 			position: fixed;
 			right: 0;
+		}
+
+		&:hover {
+			cursor: pointer;
 		}
 	}
 
