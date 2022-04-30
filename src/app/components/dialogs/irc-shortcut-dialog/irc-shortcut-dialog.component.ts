@@ -23,7 +23,7 @@ export class IrcShortcutDialogComponent implements OnInit {
 
 	createGenericShortcutCommands(): void {
 		this.ircShortCutCommandsService.addIrcShortcutCommand('start', '!mp start 10');
-		this.ircShortCutCommandsService.addIrcShortcutCommand('timer', '!mp start 120');
+		this.ircShortCutCommandsService.addIrcShortcutCommand('timer', '!mp timer 120');
 		this.ircShortCutCommandsService.addIrcShortcutCommand('aborttimer', '!mp aborttimer');
 		this.ircShortCutCommandsService.addIrcShortcutCommand('settings', '!mp settings');
 		this.ircShortCutCommandsService.addIrcShortcutCommand('clearhost', '!mp clearhost');
