@@ -6,17 +6,16 @@ import { WyTeam } from 'app/models/wytournament/wy-team';
 })
 export class FilterTeamPipe implements PipeTransform {
 	transform(teams: WyTeam[], searchValue: string) {
-		const returnTeams: WyTeam[] = [];
+		let returnTeams: WyTeam[] = [];
 
-		for (const team of teams) {
-			if (searchValue == undefined || searchValue == null || searchValue == '') {
-				returnTeams.push(team);
-			}
-			else {
-				if (team.name.toLowerCase().includes(searchValue.toLowerCase())) {
-					returnTeams.push(team);
-				}
-			}
+		if (searchValue == null || searchValue == undefined || searchValue == '') {
+			return teams;
+		}
+
+		returnTeams = teams;
+
+		if (searchValue != null) {
+			returnTeams = returnTeams.filter(team => team.name.toLowerCase().includes(searchValue.toLowerCase()));
 		}
 
 		return returnTeams;
