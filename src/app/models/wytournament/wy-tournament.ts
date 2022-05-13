@@ -40,6 +40,7 @@ export class WyTournament {
 
 	invalidateBeatmaps: boolean;
 	allowDoublePick: boolean;
+	lobbyTeamNameWithBrackets: boolean;
 
 	availableTo: User[];
 
@@ -61,6 +62,7 @@ export class WyTournament {
 		this.mappools = [];
 		this.invalidateBeatmaps = true;
 		this.allowDoublePick = true;
+		this.lobbyTeamNameWithBrackets = false;
 		this.availableTo = [];
 		this.administrators = [];
 
@@ -92,7 +94,8 @@ export class WyTournament {
 			updateDate: new Date(tournament.updateDate),
 			creationDate: new Date(tournament.creationDate),
 			allowDoublePick: tournament.allowDoublePick,
-			invalidateBeatmaps: tournament.invalidateBeatmaps
+			invalidateBeatmaps: tournament.invalidateBeatmaps,
+			lobbyTeamNameWithBrackets: tournament.lobbyTeamNameWithBrackets
 		});
 
 		for (const team in tournament.teams) {

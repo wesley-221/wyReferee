@@ -47,7 +47,8 @@ export class TournamentEditComponent implements OnInit {
 							Validators.max(8)
 						]),
 						'allow-double-pick': new FormControl(tournament.allowDoublePick),
-						'invalidate-beatmaps': new FormControl(tournament.invalidateBeatmaps)
+						'invalidate-beatmaps': new FormControl(tournament.invalidateBeatmaps),
+						'lobby-team-name-with-brackets': new FormControl(tournament.lobbyTeamNameWithBrackets)
 					});
 
 					const calculateScoreInterfaces: Calculate = new Calculate();
