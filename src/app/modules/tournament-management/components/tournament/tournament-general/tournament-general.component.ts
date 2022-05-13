@@ -64,4 +64,12 @@ export class TournamentGeneralComponent implements OnInit {
 		this.validationForm.get('invalidate-beatmaps').setValue(event.checked);
 		this.tournament.invalidateBeatmaps = event.checked;
 	}
+
+	/**
+	 * Change if lobbies will be created with brackets or without
+	 */
+	changeLobbyTeamNameWithBrackets(event: { source: any; checked: boolean }) {
+		this.validationForm.get('lobby-team-name-with-brackets').setValue(event.checked);
+		this.tournament.lobbyTeamNameWithBrackets = event.checked;
+	}
 }

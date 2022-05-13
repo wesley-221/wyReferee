@@ -162,6 +162,16 @@
 			</div>
 		</div>
 
+		<div class="row margin-button" *ngIf="selectedTournament == null">
+			<div class="col">
+				<h2>Brackets around team names</h2>
+
+				<mat-slide-toggle [(ngModel)]="lobbyWithBrackets" [ngModelOptions]="{ standalone: true }">
+					Create lobby <span [ngClass]="{'green': lobbyWithBrackets == true, 'red': lobbyWithBrackets == false}">{{ lobbyWithBrackets == true ? 'with' : 'without' }}</span> brackets around the team names.
+				</mat-slide-toggle>
+			</div>
+		</div>
+
 		<div *ngIf="selectedTournament != null && challongeMatches.length <= 0">
 			<h1>Stage</h1>
 			<p>Select for which stage this match is supposed to be for.</p>

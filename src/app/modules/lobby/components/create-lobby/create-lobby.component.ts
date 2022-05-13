@@ -50,6 +50,7 @@ export class CreateLobbyComponent implements OnInit {
 
 	qualifier: boolean;
 	qualifierLobbyIdentifier: string;
+	lobbyWithBrackets: boolean;
 	webhook: boolean;
 
 	constructor(
@@ -62,6 +63,7 @@ export class CreateLobbyComponent implements OnInit {
 		this.calculateScoreInterfaces = new Calculate();
 
 		this.qualifier = false;
+		this.lobbyWithBrackets = false;
 		this.webhook = true;
 
 		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
@@ -133,6 +135,8 @@ export class CreateLobbyComponent implements OnInit {
 
 		this.validationForm.removeControl('challonge-match');
 		this.validationForm.removeControl('challonge-tournament');
+
+		this.lobbyWithBrackets = this.selectedTournament.lobbyTeamNameWithBrackets;
 
 		// TODO: re-implement challonge integration
 		// this.checkingChallongeIntegration = true;
@@ -242,10 +246,10 @@ export class CreateLobbyComponent implements OnInit {
 				if (lobby.tournament == undefined || lobby.tournament == null) {
 					const acronym: string = this.validationForm.get('tournament-acronym').value;
 
-					lobbyName = this.qualifier == true ? `${acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : `${acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+					lobbyName = this.qualifier == true ? `${acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : this.lobbyWithBrackets == true ? `${acronym}: (${lobby.teamOneName}) vs (${lobby.teamTwoName})` : `${acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
 				}
 				else {
-					lobbyName = this.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : `${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+					lobbyName = this.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : this.lobbyWithBrackets == true ? `${lobby.tournament.acronym}: (${lobby.teamOneName}) vs (${lobby.teamTwoName})` : `${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
 				}
 
 				from(this.ircService.client.createLobby(lobbyName)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
