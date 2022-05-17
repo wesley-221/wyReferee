@@ -2,7 +2,7 @@
 	<div class="user" *ngIf="authenticateService.loggedIn">
 		<img [src]="authenticateService.loggedInUser.getAvatarUrl()" />
 
-		<div>
+		<div class="details">
 			{{ authenticateService.loggedInUser.username }}
 
 			<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
@@ -14,7 +14,7 @@
 	<div class="user" *ngIf="!authenticateService.loggedIn">
 		<img [src]="'assets/images/osulogo.png'" />
 
-		<div>
+		<div class="details">
 			You are not logged in.
 
 			<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
@@ -24,15 +24,14 @@
 	</div>
 </div>
 
-<mat-list>
-	<div *ngFor="let navigationItem of allNavigations">
-		<a [routerLink]="[navigationItem.link]" routerLinkActive="active" class="sidebar-link" *ngIf="navigationItem.showIf == undefined || navigationItem.showIf == true">
-			<mat-list-item class="sidebar-item">
-				<mat-icon matListIcon>{{ navigationItem.icon }}</mat-icon>
-				<p matLine>
-					<span>{{ navigationItem.header }}</span>
-				</p>
-			</mat-list-item>
-		</a>
-	</div>
-</mat-list>
+<div class="sidebar">
+	<a class="sidebar-item" [routerLink]="[navigationItem.link]" routerLinkActive="active" *ngFor="let navigationItem of allNavigations">
+		<div class="sidebar-link" *ngIf="navigationItem.showIf == undefined || navigationItem.showIf == true">
+			<mat-icon>{{ navigationItem.icon }}</mat-icon>
+
+			<p class="details">
+				<span>{{ navigationItem.header }}</span>
+			</p>
+		</div>
+	</a>
+</div>
