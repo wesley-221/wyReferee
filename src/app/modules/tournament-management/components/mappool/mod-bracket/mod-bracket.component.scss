@@ -2,7 +2,6 @@
 
 .mod-bracket {
 	margin-bottom: 8px;
-	padding: 16px;
 
 	border: 1px solid darken(#3c4452, 15%);
 
@@ -13,6 +12,8 @@
 	.header {
 		display: flex;
 		justify-content: space-between;
+
+		padding: 16px;
 
 		.information {
 			display: flex;
@@ -33,11 +34,21 @@
 		}
 
 		&:hover {
+			background: darken($background-color, 5%);
 			cursor: pointer;
 		}
 	}
 
 	.body {
+		padding: 16px;
+
+		.mod-details {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			row-gap: 8px;
+			column-gap: 8px;
+		}
+
 		.all-mods {
 			display: flex;
 			flex-direction: row;

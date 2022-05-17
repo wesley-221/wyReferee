@@ -32,7 +32,6 @@
 	overflow: hidden;
 
 	margin-bottom: 8px;
-	padding: 16px;
 
 	border: 1px solid darken(#3c4452, 15%);
 
@@ -43,6 +42,12 @@
 	.header {
 		display: flex;
 		justify-content: space-between;
+
+		padding: 16px;
+
+		&:hover {
+			background-color: darken($background-color, 5%);
+		}
 
 		.information {
 			display: flex;
@@ -68,6 +73,8 @@
 	}
 
 	.body {
+		padding: 16px;
+
 		.team-players {
 			margin-top: 8px;
 
