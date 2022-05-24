@@ -72,7 +72,7 @@ export class CreateLobbyComponent implements OnInit {
 
 		this.validationForm = new FormGroup({
 			'multiplayer-link': new FormControl('', [
-				Validators.pattern(/https:\/\/osu.ppy.sh\/community\/matches\/[0-9]+/)
+				Validators.pattern(/https:\/\/osu\.ppy\.sh\/(?:community\/matches|mp)\/([0-9]+)/)
 			]),
 			'tournament-acronym': new FormControl('', [
 				Validators.required,
