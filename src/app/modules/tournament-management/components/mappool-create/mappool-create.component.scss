@@ -1,3 +1,5 @@
+@import "variables";
+
 .container-fluid {
 	margin-top: 8px;
 }
@@ -15,7 +17,6 @@
 		flex-direction: column;
 
 		margin-bottom: 8px;
-		padding: 16px;
 
 		border: 1px solid darken(#3c4452, 15%);
 
@@ -28,6 +29,8 @@
 			flex-direction: row;
 
 			justify-content: space-between;
+
+			padding: 16px;
 
 			.name {
 				align-self: center;
@@ -48,13 +51,13 @@
 			}
 
 			&:hover {
+				background: darken($background-color, 5%);
 				cursor: pointer;
 			}
 		}
 
 		.body {
-			margin-top: 16px;
-			padding-top: 16px;
+			padding: 16px;
 
 			border-top: 1px solid darken(#3c4452, 15%);
 
