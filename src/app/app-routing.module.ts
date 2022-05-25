@@ -17,6 +17,10 @@ const routes: Routes = [
 					import('./modules/information/information.module').then(m => m.InformationModule)
 			},
 			{
+				path: 'changelog', loadChildren: () =>
+					import('./modules/changelog/changelog.module').then(m => m.ChangelogModule)
+			},
+			{
 				path: 'settings', loadChildren: () =>
 					import('./modules/settings/settings.module').then(m => m.SettingsModule)
 			},

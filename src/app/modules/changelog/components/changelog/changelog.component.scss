@@ -1,0 +1,46 @@
+@import "variables";
+
+.changelog {
+	display: flex;
+	flex-direction: column;
+
+	padding: 16px;
+
+	height: 100%;
+
+	.header {
+		font-size: 28px;
+		font-weight: bold;
+
+		margin-bottom: 8px;
+
+		color: $primary;
+	}
+
+	.description {
+		margin-bottom: 8px;
+	}
+
+	.changelog-releases {
+		overflow-x: auto;
+
+		height: calc(100% - 40px);
+
+		.release {
+			margin-bottom: 32px;
+
+			h2 {
+				width: 100%;
+				text-align: center;
+				border-bottom: 1px solid $primary;
+				line-height: 0.1em;
+				margin: 8px 0 8px;
+
+				span {
+					padding: 0 10px;
+					background-color: $background-color;
+				}
+			}
+		}
+	}
+}

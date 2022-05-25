@@ -26,6 +26,9 @@
 							"src/styles.scss",
 							"src/bootstrap.scss"
 						],
+						"scripts": [
+							"node_modules/marked/marked.min.js"
+						],
 						"stylePreprocessorOptions": {
 							"includePaths": [
 								"src/styles"
@@ -96,6 +99,9 @@
 						],
 						"styles": [
 							"src/styles.scss"
+						],
+						"scripts": [
+							"node_modules/marked/marked.min.js"
 						],
 						"stylePreprocessorOptions": {
 							"includePaths": [

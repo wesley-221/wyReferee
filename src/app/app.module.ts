@@ -29,6 +29,7 @@ import { MainComponent } from './layout/main/main.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { ToastComponent } from './layout/toast/toast.component';
 import { UpdaterComponent } from './layout/updater/updater.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
 	declarations: [
@@ -55,13 +56,14 @@ import { UpdaterComponent } from './layout/updater/updater.component';
 		DeleteTeamDialogComponent,
 		IrcShortcutDialogComponent,
 		IrcPickMapSameModBracketComponent,
-		IrcShortcutWarningDialogComponent
+		IrcShortcutWarningDialogComponent,
 	],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
 		AppRoutingModule,
+		MarkdownModule.forRoot(),
 		SharedModule
 	],
 	providers: [

@@ -14,6 +14,7 @@ export class SidebarComponent implements OnInit {
 
 	allNavigations: { icon: string; header: string; link: string; showIf?: boolean }[] = [
 		{ icon: 'info', header: 'information', link: 'information' },
+		{ icon: 'update', header: 'changelog', link: 'changelog' },
 		{ icon: 'settings', header: 'settings', link: 'settings' },
 		{ icon: 'dashboard', header: 'management', link: 'tournament-management' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
