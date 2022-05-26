@@ -1,37 +1,39 @@
-<div class="login">
-	<div class="user" *ngIf="authenticateService.loggedIn">
-		<img [src]="authenticateService.loggedInUser.getAvatarUrl()" />
+<div class="full">
+	<div class="login">
+		<div class="user" *ngIf="authenticateService.loggedIn">
+			<img [src]="authenticateService.loggedInUser.getAvatarUrl()" />
 
-		<div class="details">
-			{{ authenticateService.loggedInUser.username }}
+			<div class="details">
+				{{ authenticateService.loggedInUser.username }}
 
-			<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
-				<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
+				<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
+					<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
+				</div>
+			</div>
+		</div>
+
+		<div class="user" *ngIf="!authenticateService.loggedIn">
+			<img [src]="'assets/images/osulogo.png'" />
+
+			<div class="details">
+				You are not logged in.
+
+				<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
+					<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="user" *ngIf="!authenticateService.loggedIn">
-		<img [src]="'assets/images/osulogo.png'" />
+	<div class="sidebar">
+		<a class="sidebar-item" [routerLink]="[navigationItem.link]" routerLinkActive="active" *ngFor="let navigationItem of allNavigations">
+			<div class="sidebar-link" *ngIf="navigationItem.showIf == undefined || navigationItem.showIf == true">
+				<mat-icon>{{ navigationItem.icon }}</mat-icon>
 
-		<div class="details">
-			You are not logged in.
-
-			<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
-				<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
+				<p class="details">
+					<span>{{ navigationItem.header }}</span>
+				</p>
 			</div>
-		</div>
+		</a>
 	</div>
-</div>
-
-<div class="sidebar">
-	<a class="sidebar-item" [routerLink]="[navigationItem.link]" routerLinkActive="active" *ngFor="let navigationItem of allNavigations">
-		<div class="sidebar-link" *ngIf="navigationItem.showIf == undefined || navigationItem.showIf == true">
-			<mat-icon>{{ navigationItem.icon }}</mat-icon>
-
-			<p class="details">
-				<span>{{ navigationItem.header }}</span>
-			</p>
-		</div>
-	</a>
 </div>
