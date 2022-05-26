@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthenticateService } from 'app/services/authenticate.service';
 import { GenericService } from 'app/services/generic.service';
 import { IrcService } from 'app/services/irc.service';
@@ -12,9 +13,12 @@ import { IrcService } from 'app/services/irc.service';
 export class SidebarComponent implements OnInit {
 	ircConnectionStatus: number;
 
-	allNavigations: { icon: string; header: string; link: string; showIf?: boolean }[] = [
-		{ icon: 'info', header: 'information', link: 'information' },
-		{ icon: 'update', header: 'changelog', link: 'changelog' },
+	allNavigations: { icon: string; header: string; link: string; showIf?: boolean, subMenu?: { icon: string, header: string, link: string }[] }[] = [
+		{
+			icon: 'info', header: 'information', link: 'information', subMenu: [
+				{ icon: 'update', header: 'changelog', link: 'changelog' }
+			]
+		},
 		{ icon: 'settings', header: 'settings', link: 'settings' },
 		{ icon: 'dashboard', header: 'management', link: 'tournament-management' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
@@ -22,7 +26,7 @@ export class SidebarComponent implements OnInit {
 		{ icon: 'hdr_auto', header: 'AxS', link: 'axs', showIf: false }
 	];
 
-	constructor(private genericService: GenericService, public authenticateService: AuthenticateService, public ircService: IrcService) {
+	constructor(private genericService: GenericService, public authenticateService: AuthenticateService, public ircService: IrcService, public router: Router) {
 		this.ircConnectionStatus = 0;
 
 		genericService.getAxSMenuStatus().subscribe(active => {

@@ -3,7 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 
 const routes: Routes = [
-	{ path: '', component: ChangelogComponent }
+	{ path: '', component: ChangelogComponent },
+	{ path: '**', component: ChangelogComponent }
 ];
 
 @NgModule({
