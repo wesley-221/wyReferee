@@ -25,7 +25,49 @@ $hyperlink-background-color: #2b4576;
 		flex-direction: column;
 		flex: 0 0 21%;
 
+		.join-channel-button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.join-channel-text {
+				display: block;
+			}
+
+			.join-channel-icon {
+				display: none;
+			}
+		}
+
 		background-color: darken($background-color-irc, 5%);
+
+		@media only screen and (max-width: 1200px) {
+			flex: 0 0 5%;
+
+			.join-channel-button {
+				.join-channel-text {
+					display: none;
+				}
+
+				.join-channel-icon {
+					display: block;
+				}
+			}
+
+			&:hover {
+				flex: 0 0 21%;
+
+				.join-channel-button {
+					.join-channel-text {
+						display: block;
+					}
+
+					.join-channel-icon {
+						display: none;
+					}
+				}
+			}
+		}
 
 		.header {
 			.btn {
@@ -59,6 +101,10 @@ $hyperlink-background-color: #2b4576;
 				height: 40px;
 
 				border-left: 3px solid transparent;
+
+				@media only screen and (max-width: 1200px) {
+					overflow: hidden;
+				}
 
 				.channel-name {
 					display: flex;
@@ -468,6 +514,16 @@ $hyperlink-background-color: #2b4576;
 										margin-left: 0;
 									}
 								}
+							}
+						}
+
+						@media only screen and (max-width: 1200px) {
+							.author {
+								flex: 0 0 100px;
+
+								white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
 							}
 						}
 					}
