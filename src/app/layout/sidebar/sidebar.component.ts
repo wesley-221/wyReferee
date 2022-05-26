@@ -13,7 +13,7 @@ import { IrcService } from 'app/services/irc.service';
 export class SidebarComponent implements OnInit {
 	ircConnectionStatus: number;
 
-	allNavigations: { icon: string; header: string; link: string; showIf?: boolean, subMenu?: { icon: string, header: string, link: string }[] }[] = [
+	allNavigations: { icon: string; header: string; link: string; showIf?: boolean; subMenu?: { icon: string; header: string; link: string }[] }[] = [
 		{
 			icon: 'info', header: 'information', link: 'information', subMenu: [
 				{ icon: 'update', header: 'changelog', link: 'changelog' }

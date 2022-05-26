@@ -7,13 +7,13 @@ import { ElectronService } from 'app/services/electron.service';
 export class ClickableLinksDirective {
 	constructor(private electronService: ElectronService) { }
 
-	@HostListener("click", ["$event"])
+	@HostListener('click', ['$event'])
 	onClick($event: MouseEvent) {
-		const target = $event.target as any
+		const target = $event.target as any;
 
 		switch ($event.target.constructor) {
 			case HTMLAnchorElement:
-				$event.preventDefault()
+				$event.preventDefault();
 				this.electronService.openLink((target as HTMLAnchorElement).href);
 				break;
 		}

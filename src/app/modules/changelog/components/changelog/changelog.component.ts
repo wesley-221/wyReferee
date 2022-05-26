@@ -7,18 +7,18 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./changelog.component.scss']
 })
 export class ChangelogComponent implements OnInit {
+	changelogReleases: { version: string; body: string }[];
+
 	private readonly GIT_OWNER = 'wesley-221';
 	private readonly GIT_REPOSITORY = 'wyReferee';
 	private readonly GIT_RELEASE_URL = `https://api.github.com/repos/${this.GIT_OWNER}/${this.GIT_REPOSITORY}/releases`;
-
-	changelogReleases: { version: string; body: string; }[];
 
 	constructor(private http: HttpClient) {
 		this.changelogReleases = [];
 
 		this.http.get(this.GIT_RELEASE_URL).subscribe((releases: any) => {
 			for (const release of releases) {
-				const newRelease: { version: string; body: string; } = {
+				const newRelease: { version: string; body: string } = {
 					version: null,
 					body: null
 				};
