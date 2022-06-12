@@ -42,7 +42,8 @@ $hyperlink-background-color: #2b4576;
 		background-color: darken($background-color-irc, 5%);
 
 		@media only screen and (max-width: 1200px) {
-			flex: 0 0 5%;
+			flex: 0 0 9%;
+			max-width: 9%;
 
 			.join-channel-button {
 				.join-channel-text {
@@ -56,6 +57,7 @@ $hyperlink-background-color: #2b4576;
 
 			&:hover {
 				flex: 0 0 21%;
+				max-width: fit-content;
 
 				.join-channel-button {
 					.join-channel-text {
@@ -64,6 +66,16 @@ $hyperlink-background-color: #2b4576;
 
 					.join-channel-icon {
 						display: none;
+					}
+				}
+
+				.all-channels {
+					.channel {
+						.channel-name,
+						.channel-name-label {
+							font-size: 14px;
+							line-height: normal;
+						}
 					}
 				}
 			}
@@ -102,8 +114,16 @@ $hyperlink-background-color: #2b4576;
 
 				border-left: 3px solid transparent;
 
+				margin-bottom: 3px;
+
 				@media only screen and (max-width: 1200px) {
 					overflow: hidden;
+
+					.channel-name,
+					.channel-name-label {
+						font-size: 13px;
+						line-height: 13px;
+					}
 				}
 
 				.channel-name {
