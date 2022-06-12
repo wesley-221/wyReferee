@@ -1,0 +1,19 @@
+<div class="changelog">
+	<div class="header">
+		CHANGELOG
+	</div>
+
+	<div class="description">
+		Our latest changelog for new features and updates for wyReferee.
+	</div>
+
+	<div class="changelog-releases">
+		<div class="release" *ngFor="let release of changelogReleases">
+			<h2><span>{{ release.version }}</span></h2>
+
+			<div class="body">
+				<markdown [data]="release.body" clickableLinks></markdown>
+			</div>
+		</div>
+	</div>
+</div>

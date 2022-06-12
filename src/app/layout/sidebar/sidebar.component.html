@@ -25,13 +25,23 @@
 </div>
 
 <div class="sidebar">
-	<a class="sidebar-item" [routerLink]="[navigationItem.link]" routerLinkActive="active" *ngFor="let navigationItem of allNavigations">
-		<div class="sidebar-link" *ngIf="navigationItem.showIf == undefined || navigationItem.showIf == true">
+	<div class="sidebar-item" *ngFor="let navigationItem of allNavigations">
+		<div class="sidebar-link" [routerLink]="[navigationItem.link]" routerLinkActive="active">
 			<mat-icon>{{ navigationItem.icon }}</mat-icon>
 
 			<p class="details">
 				<span>{{ navigationItem.header }}</span>
 			</p>
 		</div>
-	</a>
+
+		<div class="sidebar-submenu" *ngIf="router.url.indexOf(navigationItem.link) > -1">
+			<div class="sidebar-submenu-link" [routerLink]="[subMenuNavigationItem.link, navigationItem.link]" routerLinkActive="active" *ngFor="let subMenuNavigationItem of navigationItem.subMenu">
+				<mat-icon>{{ subMenuNavigationItem.icon }}</mat-icon>
+
+				<p class="details">
+					<span>{{ subMenuNavigationItem.header }}</span>
+				</p>
+			</div>
+		</div>
+	</div>
 </div>

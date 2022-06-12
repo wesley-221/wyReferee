@@ -14,6 +14,7 @@ import { DebugComponent } from './components/debug/debug.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { NgVarDirective } from './directives/ng-var.directive';
 import { FilterTeamPipe } from './pipes/filter-team.pipe';
+import { ClickableLinksDirective } from 'app/core/directive/clickable-links.directive';
 
 const declerations = [
 	FilterTournamentPipe,
@@ -24,7 +25,8 @@ const declerations = [
 	DebugComponent,
 	AlertComponent,
 	NgVarDirective,
-	FilterTeamPipe
+	FilterTeamPipe,
+	ClickableLinksDirective
 ];
 
 const modules = [
@@ -40,7 +42,7 @@ const modules = [
 
 @NgModule({
 	declarations: [declerations],
-	imports: [modules],
+	imports: [...modules],
 	exports: [...modules, ...declerations]
 })
 export class SharedModule { }
