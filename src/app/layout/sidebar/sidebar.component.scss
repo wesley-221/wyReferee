@@ -172,4 +172,29 @@
 			}
 		}
 	}
+
+	&:hover {
+		.login {
+			.user {
+				justify-content: left;
+
+				.details {
+					display: flex;
+				}
+			}
+		}
+
+		.sidebar {
+			.sidebar-item {
+				.sidebar-link {
+					justify-content: left;
+
+					p {
+						display: block;
+						margin-left: 16px;
+					}
+				}
+			}
+		}
+	}
 }
