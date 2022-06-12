@@ -1,28 +1,29 @@
-<div class="login">
-	<div class="user" *ngIf="authenticateService.loggedIn">
-		<img [src]="authenticateService.loggedInUser.getAvatarUrl()" />
+<div class="full">
+	<div class="login">
+		<div class="user" *ngIf="authenticateService.loggedIn">
+			<img [src]="authenticateService.loggedInUser.getAvatarUrl()" />
 
-		<div class="details">
-			{{ authenticateService.loggedInUser.username }}
+			<div class="details">
+				{{ authenticateService.loggedInUser.username }}
 
-			<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
-				<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
+				<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
+					<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
+				</div>
+			</div>
+		</div>
+
+		<div class="user" *ngIf="!authenticateService.loggedIn">
+			<img [src]="'assets/images/osulogo.png'" />
+
+			<div class="details">
+				You are not logged in.
+
+				<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
+					<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
+				</div>
 			</div>
 		</div>
 	</div>
-
-	<div class="user" *ngIf="!authenticateService.loggedIn">
-		<img [src]="'assets/images/osulogo.png'" />
-
-		<div class="details">
-			You are not logged in.
-
-			<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
-				<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
-			</div>
-		</div>
-	</div>
-</div>
 
 <div class="sidebar">
 	<div class="sidebar-item" *ngFor="let navigationItem of allNavigations">

@@ -1,7 +1,10 @@
 <div class="irc">
 	<div class="channels">
 		<div class="header">
-			<button mat-flat-button class="full-width" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">Join channel</button>
+			<button mat-flat-button class="join-channel-button full-width" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">
+				<span class="join-channel-text">Join channel</span>
+				<mat-icon class="join-channel-icon">add</mat-icon>
+			</button>
 
 			<div class="connect-area" *ngIf="isAttemptingToJoin">
 				<div><mat-spinner [diameter]="40"></mat-spinner></div>
@@ -78,7 +81,7 @@
 							{{ chat.time }}
 						</div>
 
-						<div class="author" *ngVar="(selectedLobby != null ? selectedLobby.multiplayerLobbyPlayers.getPlayerByUsername(chat.author) : null) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
+						<div class="author" [matTooltip]="chat.author" *ngVar="(selectedLobby != null ? selectedLobby.multiplayerLobbyPlayers.getPlayerByUsername(chat.author) : null) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
 							'bancho': chat.author == 'BanchoBot',
 							'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
 							'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false}" (click)="openUserpage(chat.author)">
