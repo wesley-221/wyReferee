@@ -114,16 +114,16 @@
 						margin-left: 0;
 					}
 				}
-			}
 
-			&:hover,
-			&.active {
-				background-color: rgba(lighten($sidebar-color, 15%), 0.2);
-				color: $primary;
-				cursor: pointer;
-
-				p {
+				&:hover,
+				&.active {
+					background-color: rgba(lighten($sidebar-color, 15%), 0.2);
 					color: $primary;
+					cursor: pointer;
+
+					p {
+						color: $primary;
+					}
 				}
 			}
 		}
