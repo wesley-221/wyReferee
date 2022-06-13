@@ -78,47 +78,6 @@ export class WebhookService {
 	}
 
 	/**
-	 * Set the various customized fields if setup by the user
-	 *
-	 * @param embed the embed to add the customized fields to
-	 */
-	private setCustomizedFields(embed: any, useBottomImage: boolean) {
-		const isUndefined = ['', null, undefined];
-
-		if (!isUndefined.includes(this.authorImage)) {
-			embed.avatar_url = this.authorImage;
-		}
-
-		if (!isUndefined.includes(this.authorName)) {
-			embed.username = this.authorName;
-		}
-
-		if (!isUndefined.includes(this.bottomImage) && useBottomImage == true) {
-			if (!embed.embeds[0].hasOwnProperty('image')) {
-				embed.embeds[0].image = {};
-			}
-
-			embed.embeds[0].image.url = this.bottomImage;
-		}
-
-		if (!isUndefined.includes(this.footerIconUrl)) {
-			if (!embed.embeds[0].hasOwnProperty('footer')) {
-				embed.embeds[0].footer = {};
-			}
-
-			embed.embeds[0].footer.icon_url = this.footerIconUrl;
-		}
-
-		if (!isUndefined.includes(this.footerText)) {
-			if (!embed.embeds[0].hasOwnProperty('footer')) {
-				embed.embeds[0].footer = {};
-			}
-
-			embed.embeds[0].footer.text = this.footerText;
-		}
-	}
-
-	/**
 	 * Send final result to discord through a webhook
 	 *
 	 * @param selectedLobby the lobby to get the data from
@@ -617,5 +576,46 @@ export class WebhookService {
 	private getBeatmapnameFromMappools(beatmapId: number): CacheBeatmap {
 		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(beatmapId);
 		return (cachedBeatmap != null) ? cachedBeatmap : null;
+	}
+
+	/**
+	 * Set the various customized fields if setup by the user
+	 *
+	 * @param embed the embed to add the customized fields to
+	 */
+	private setCustomizedFields(embed: any, useBottomImage: boolean) {
+		const isUndefined = ['', null, undefined];
+
+		if (!isUndefined.includes(this.authorImage)) {
+			embed.avatar_url = this.authorImage;
+		}
+
+		if (!isUndefined.includes(this.authorName)) {
+			embed.username = this.authorName;
+		}
+
+		if (!isUndefined.includes(this.bottomImage) && useBottomImage == true) {
+			if (!embed.embeds[0].hasOwnProperty('image')) {
+				embed.embeds[0].image = {};
+			}
+
+			embed.embeds[0].image.url = this.bottomImage;
+		}
+
+		if (!isUndefined.includes(this.footerIconUrl)) {
+			if (!embed.embeds[0].hasOwnProperty('footer')) {
+				embed.embeds[0].footer = {};
+			}
+
+			embed.embeds[0].footer.icon_url = this.footerIconUrl;
+		}
+
+		if (!isUndefined.includes(this.footerText)) {
+			if (!embed.embeds[0].hasOwnProperty('footer')) {
+				embed.embeds[0].footer = {};
+			}
+
+			embed.embeds[0].footer.text = this.footerText;
+		}
 	}
 }
