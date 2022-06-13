@@ -20,6 +20,7 @@ export class SidebarComponent implements OnInit {
 			]
 		},
 		{ icon: 'settings', header: 'settings', link: 'settings' },
+		{ icon: 'webhook', header: 'webhook', link: 'webhook' },
 		{ icon: 'dashboard', header: 'management', link: 'tournament-management' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
 		{ icon: 'chat', header: 'irc', link: 'irc' },

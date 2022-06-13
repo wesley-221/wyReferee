@@ -1,0 +1,105 @@
+<h2>Customizing your own webhooks</h2>
+<p>Here you can give a personal touch to the webhooks that are being sent to Discord. Fill in the various fields to see what it will look like.</p>
+<hr />
+
+<div class="content">
+	<div class="settings">
+		<h3>Author</h3>
+
+		<div class="row">
+			<div class="col">
+				<mat-form-field class="full-width">
+					<mat-label>Author image (link)</mat-label>
+					<input matInput [(ngModel)]="webhookAuthorImage" />
+				</mat-form-field>
+			</div>
+
+			<div class="col">
+				<mat-form-field class="full-width">
+					<mat-label>Author name</mat-label>
+					<input matInput [(ngModel)]="webhookAuthorName" />
+				</mat-form-field>
+			</div>
+		</div>
+
+		<h3>Image</h3>
+
+		<mat-form-field class="full-width">
+			<mat-label>Bottom image (link)</mat-label>
+			<input matInput [(ngModel)]="webhookImage" />
+		</mat-form-field>
+
+		<h3>Footer</h3>
+
+		<div class="row">
+			<div class="col">
+				<mat-form-field class="full-width">
+					<mat-label>Footer image (link)</mat-label>
+					<input matInput [(ngModel)]="webhookFooterIconUrl" />
+				</mat-form-field>
+			</div>
+
+			<div class="col">
+				<mat-form-field class="full-width">
+					<mat-label>Footer text</mat-label>
+					<input matInput [(ngModel)]="webhookFooterText" />
+				</mat-form-field>
+			</div>
+		</div>
+	</div>
+
+	<div class="webhook-message">
+		<div class="avatar">
+			<img [src]="webhookAuthorImage" *ngIf="webhookAuthorImage" />
+		</div>
+
+		<div class="webhook-content">
+			<div class="author">
+				<span *ngIf="webhookAuthorName">{{ webhookAuthorName }}&nbsp;</span>
+				<span *ngIf="!webhookAuthorName">(will use default username)&nbsp;</span>
+
+				<span class="icon">Bot</span> <span class="timestamp">Today at 01:53 AM</span>
+			</div>
+
+			<div class="webhook">
+				<div class="webhook-title">
+					<markdown [data]="webhookTitle" clickableLinks></markdown>
+				</div>
+
+				<div class="webhook-description">
+					<markdown [data]="webhookDescription" clickableLinks></markdown>
+				</div>
+
+				<div class="fields">
+					<div class="field">
+						<div class="header">
+							{{ webhookTeamOneBans.name }}
+						</div>
+
+						<div class="body">
+							<markdown [data]="webhookTeamOneBans.value" clickableLinks></markdown>
+						</div>
+					</div>
+
+					<div class="field">
+						<div class="header">
+							{{ webhookTeamTwoBans.name }}
+						</div>
+
+						<div class="body">
+							<markdown [data]="webhookTeamTwoBans.value" clickableLinks></markdown>
+						</div>
+					</div>
+				</div>
+
+				<img class="image" [src]="webhookImage" />
+
+				<div class="footer">
+					<img class="footer-image" [src]="webhookFooterIconUrl" *ngIf="webhookFooterIconUrl" />
+					<span class="footer-content" *ngIf="webhookFooterText">{{ webhookFooterText }}</span>
+					<div class="footer-content" *ngIf="!webhookFooterText">Match referee was {{ ircService.authenticatedUser }}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
