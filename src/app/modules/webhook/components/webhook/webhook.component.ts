@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IrcService } from 'app/services/irc.service';
+import { ToastService } from 'app/services/toast.service';
+import { WebhookService } from 'app/services/webhook.service';
 
 @Component({
 	selector: 'app-webhook',
@@ -25,11 +27,25 @@ export class WebhookComponent implements OnInit {
 	webhookAuthorImage: string;
 	webhookAuthorName: string;
 
-	webhookImage: string;
+	webhookBottomImage: string;
 
 	webhookFooterIconUrl: string;
 	webhookFooterText: string;
 
-	constructor(public ircService: IrcService) { }
+	constructor(public ircService: IrcService, private webhookService: WebhookService, private toastService: ToastService) {
+		this.webhookAuthorImage = this.webhookService.authorImage;
+		this.webhookAuthorName = this.webhookService.authorName;
+		this.webhookBottomImage = this.webhookService.bottomImage;
+		this.webhookFooterIconUrl = this.webhookService.footerIconUrl;
+		this.webhookFooterText = this.webhookService.footerText;
+	}
 	ngOnInit(): void { }
+
+	/**
+	 * Update the webhook customizations
+	 */
+	updateWebhookCustomization(): void {
+		this.webhookService.updateWebhookCustomization(this.webhookAuthorImage, this.webhookAuthorName, this.webhookBottomImage, this.webhookFooterIconUrl, this.webhookFooterText);
+		this.toastService.addToast(`Successfully updated your personal webhook customizations.`);
+	}
 }

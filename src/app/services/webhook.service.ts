@@ -6,12 +6,117 @@ import { MultiplayerDataUser } from '../models/store-multiplayer/multiplayer-dat
 import { Lobby } from 'app/models/lobby';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { ToastService } from './toast.service';
+import { StoreService } from './store.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class WebhookService {
-	constructor(private http: HttpClient, private cacheService: CacheService, private toastService: ToastService) { }
+	authorImage: string;
+	authorName: string;
+	bottomImage: string;
+	footerIconUrl: string;
+	footerText: string;
+
+	constructor(private http: HttpClient, private cacheService: CacheService, private toastService: ToastService, private storeService: StoreService) {
+		const webhookStore = this.storeService.get('webhook');
+
+		if (webhookStore !== undefined) {
+			this.authorImage = webhookStore.authorImage;
+			this.authorName = webhookStore.authorName;
+			this.bottomImage = webhookStore.bottomImage;
+			this.footerIconUrl = webhookStore.footerIconUrl;
+			this.footerText = webhookStore.footerText;
+		}
+	}
+
+	/**
+	 * Update the webhook customizations
+	 */
+	updateWebhookCustomization(authorImage: string, authorName: string, bottomImage: string, footerIconUrl: string, footerText: string): void {
+		const isUndefined = ['', null, undefined];
+
+		if (!isUndefined.includes(authorImage)) {
+			this.storeService.set('webhook.authorImage', authorImage);
+			this.authorImage = authorImage;
+		}
+		else {
+			this.authorImage = null;
+		}
+
+		if (!isUndefined.includes(authorName)) {
+			this.storeService.set('webhook.authorName', authorName);
+			this.authorName = authorName;
+		}
+		else {
+			this.authorName = null;
+		}
+
+		if (!isUndefined.includes(bottomImage)) {
+			this.storeService.set('webhook.bottomImage', bottomImage);
+			this.bottomImage = bottomImage;
+		}
+		else {
+			this.bottomImage = null;
+		}
+
+		if (!isUndefined.includes(footerIconUrl)) {
+			this.storeService.set('webhook.footerIconUrl', footerIconUrl);
+			this.footerIconUrl = footerIconUrl;
+		}
+		else {
+			this.footerIconUrl = null;
+		}
+
+		if (!isUndefined.includes(footerText)) {
+			this.storeService.set('webhook.footerText', footerText);
+			this.footerText = footerText;
+		}
+		else {
+			this.footerText = null;
+		}
+	}
+
+	/**
+	 * Set the various customized fields if setup by the user
+	 *
+	 * @param embed the embed to add the customized fields to
+	 */
+	private setCustomizedFields(embed: any, useBottomImage: boolean) {
+		const isUndefined = ['', null, undefined];
+
+		if (!isUndefined.includes(this.authorImage)) {
+			embed.avatar_url = this.authorImage;
+		}
+
+		if (!isUndefined.includes(this.authorName)) {
+			embed.username = this.authorName;
+		}
+
+		if (!isUndefined.includes(this.bottomImage) && useBottomImage == true) {
+			if (!embed.embeds[0].hasOwnProperty('image')) {
+				embed.embeds[0].image = {};
+			}
+
+			embed.embeds[0].image.url = this.bottomImage;
+		}
+
+		if (!isUndefined.includes(this.footerIconUrl)) {
+			if (!embed.embeds[0].hasOwnProperty('footer')) {
+				embed.embeds[0].footer = {};
+			}
+
+			embed.embeds[0].footer.icon_url = this.footerIconUrl;
+		}
+
+		if (!isUndefined.includes(this.footerText)) {
+			if (!embed.embeds[0].hasOwnProperty('footer')) {
+				embed.embeds[0].footer = {};
+			}
+
+			embed.embeds[0].footer.text = this.footerText;
+		}
+	}
 
 	/**
 	 * Send final result to discord through a webhook
@@ -37,7 +142,6 @@ export class WebhookService {
 					url: selectedLobby.multiplayerLink,
 					description: `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n[${selectedLobby.multiplayerLink}](${selectedLobby.multiplayerLink})`,
 					color: 15258703,
-					timestamp: new Date(),
 					footer: {
 						text: `Match referee was ${referee}`
 					},
@@ -94,6 +198,8 @@ export class WebhookService {
 			});
 		}
 
+		this.setCustomizedFields(body, true);
+
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.finalResult == true) {
 				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(() => {
@@ -130,7 +236,6 @@ export class WebhookService {
 					title: `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
 					description: resultDescription,
 					color: 15258703,
-					timestamp: new Date(),
 					footer: {
 						text: `Match referee was ${referee}`
 					},
@@ -146,6 +251,8 @@ export class WebhookService {
 				value: extraMessage,
 			});
 		}
+
+		this.setCustomizedFields(body, false);
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.finalResult == true) {
@@ -176,7 +283,6 @@ export class WebhookService {
 					description: '',
 					url: selectedLobby.multiplayerLink,
 					color: 15258703,
-					timestamp: new Date(),
 					footer: {
 						text: `Match referee was ${referee}`
 					},
@@ -192,6 +298,8 @@ export class WebhookService {
 				value: extraMessage,
 			});
 		}
+
+		this.setCustomizedFields(body, true);
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.finalResult == true) {
@@ -223,7 +331,6 @@ export class WebhookService {
 					url: selectedLobby.multiplayerLink,
 					description: `**${teamName}** has banned [**${ban.beatmapName}**](${ban.beatmapUrl})`,
 					color: 15258703,
-					timestamp: new Date(),
 					footer: {
 						text: `Match referee was ${referee}`
 					},
@@ -235,6 +342,8 @@ export class WebhookService {
 				}
 			]
 		};
+
+		this.setCustomizedFields(body, false);
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.bans == true) {
@@ -361,7 +470,6 @@ export class WebhookService {
 					url: multiplayerLobby.multiplayerLink,
 					description: resultString,
 					color: lostTheirPick ? 0xad324f : 0x32a852,
-					timestamp: new Date(),
 					thumbnail: {
 						url: `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
 					},
@@ -373,6 +481,8 @@ export class WebhookService {
 				}
 			]
 		};
+
+		this.setCustomizedFields(body, false);
 
 		for (const webhook of multiplayerLobby.tournament.webhooks) {
 			if (webhook.matchResult == true) {
@@ -399,7 +509,6 @@ export class WebhookService {
 					title: '',
 					url: selectedLobby.multiplayerLink,
 					color: 15258703,
-					timestamp: new Date(),
 					footer: {
 						text: `Match referee was ${referee}`
 					},
@@ -435,6 +544,8 @@ export class WebhookService {
 				});
 		}
 
+		this.setCustomizedFields(body, false);
+
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.matchCreation == true) {
 				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
@@ -468,7 +579,6 @@ export class WebhookService {
 					url: selectedLobby.multiplayerLink,
 					description: `**${teamName}** has picked [**${pick.beatmapName}**](${pick.beatmapUrl})`,
 					color: 15258703,
-					timestamp: new Date(),
 					footer: {
 						text: `Match referee was ${referee}`
 					},
@@ -480,6 +590,8 @@ export class WebhookService {
 				}
 			]
 		};
+
+		this.setCustomizedFields(body, false);
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.picks == true) {

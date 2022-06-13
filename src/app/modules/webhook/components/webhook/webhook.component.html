@@ -26,7 +26,7 @@
 
 		<mat-form-field class="full-width">
 			<mat-label>Bottom image (link)</mat-label>
-			<input matInput [(ngModel)]="webhookImage" />
+			<input matInput [(ngModel)]="webhookBottomImage" />
 		</mat-form-field>
 
 		<h3>Footer</h3>
@@ -46,6 +46,8 @@
 				</mat-form-field>
 			</div>
 		</div>
+
+		<button mat-raised-button color="primary" (click)="updateWebhookCustomization()"><mat-icon>save</mat-icon> update webhook customization</button>
 	</div>
 
 	<div class="webhook-message">
@@ -92,7 +94,7 @@
 					</div>
 				</div>
 
-				<img class="image" [src]="webhookImage" />
+				<img class="image" [src]="webhookBottomImage" />
 
 				<div class="footer">
 					<img class="footer-image" [src]="webhookFooterIconUrl" *ngIf="webhookFooterIconUrl" />
