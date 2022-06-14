@@ -1,6 +1,7 @@
 import { ScoreInterface } from './calculation-types/score-interface';
 import { TeamVsCalculation } from './calculation-types/team-vs-calculation';
 import { AxSCalculation } from './calculation-types/axs-calculation';
+import { ThreeCwcScoreCalculation } from './calculation-types/three-cwc-score-calculation';
 
 export class Calculate {
 	private scoreInterfaces: ScoreInterface[];
@@ -10,6 +11,7 @@ export class Calculate {
 
 		this.addScoreInterface(new TeamVsCalculation('Team vs.'));
 		this.addScoreInterface(new AxSCalculation('AxS', 3));
+		this.addScoreInterface(new ThreeCwcScoreCalculation('osu!catch 3 Digit World Cup', 3));
 	}
 
 	/**
