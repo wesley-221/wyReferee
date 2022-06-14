@@ -15,7 +15,7 @@ export class ThreeCwcScoreCalculation extends ScoreInterface {
 
 	calculatePlayerScore(player: MultiplayerDataUser): number {
 		// Check if the mod bracket is Mixed mod, if so change scores
-		if (this.modBracket.name.toLowerCase() == "mixed mod") {
+		if (this.modBracket.name.toLowerCase() == 'mixed mod') {
 			let newScore = player.score;
 
 			if (player.mods & (Mods.HardRock || Mods.HardRock + Mods.Hidden)) {
