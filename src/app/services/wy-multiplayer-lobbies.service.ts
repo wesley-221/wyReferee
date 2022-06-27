@@ -8,6 +8,7 @@ import { Lobby } from 'app/models/lobby';
 import { MultiplayerMatch } from 'app/models/osu-models/multiplayer-match';
 import { Calculate } from 'app/models/score-calculation/calculate';
 import { AxSCalculation } from 'app/models/score-calculation/calculation-types/axs-calculation';
+import { ThreeCwcScoreCalculation } from 'app/models/score-calculation/calculation-types/three-cwc-score-calculation';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { MultiplayerDataUser } from 'app/models/store-multiplayer/multiplayer-data-user';
 import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
@@ -176,7 +177,7 @@ export class WyMultiplayerLobbiesService {
 					multiplayerLobby.tournament = this.tournamentService.getTournamentById(multiplayerLobby.tournamentId);
 				}
 
-				// Have to check if this works
+				// Set the modifier if AxS score interface is being used
 				if (multiplayerLobby.tournament.scoreInterface instanceof AxSCalculation) {
 					modifier = multiplayerLobby.tournament.getModifierFromBeatmapId(currentGame.beatmap_id);
 				}
@@ -257,10 +258,29 @@ export class WyMultiplayerLobbiesService {
 				scoreInterface.setTeamSize(multiplayerLobby.tournament.teamSize);
 				scoreInterface.addUserScores(multiplayerData.getPlayers());
 
-				// Have to check if this works
-				// Otherwise > if(scoreInterface.getIdentifier() == 'AxS')
+				// Set the modifier if AxS score interface is being used
 				if (scoreInterface instanceof AxSCalculation) {
 					scoreInterface.setModifier(modifier);
+				}
+
+				// Provide the mod bracket to the interface
+				if (scoreInterface instanceof ThreeCwcScoreCalculation) {
+					let foundModBracket: WyModBracket;
+
+					for (const mappool of multiplayerLobby.tournament.mappools) {
+						for (const modBracket of mappool.modBrackets) {
+							for (const beatmap of modBracket.beatmaps) {
+								if (beatmap.beatmapId == currentGame.beatmap_id) {
+									foundModBracket = modBracket;
+									break;
+								}
+							}
+						}
+					}
+
+					if (foundModBracket) {
+						scoreInterface.setModBracket(foundModBracket);
+					}
 				}
 
 				multiplayerData.team_one_score = scoreInterface.calculateTeamOneScore();
