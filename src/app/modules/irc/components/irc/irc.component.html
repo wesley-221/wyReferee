@@ -55,7 +55,11 @@
 	<div class="chat-content">
 		<div class="chat-container" [ngClass]="{'in': !isPlayerManagementMinimized && selectedChannel != null && selectedChannel.name.startsWith('#mp_') }">
 			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.name.startsWith('#mp_')) && this.selectedLobby != null && selectedLobby.isQualifierLobby == false">
-				Score: {{ selectedLobby.teamOneName }} : {{ teamOneScore }} - {{ teamTwoScore }} : {{ selectedLobby.teamTwoName }} <span *ngIf="this.hasWon == null">| Next pick: <b>{{ nextPick }}</b></span> <br />
+				Score: {{ selectedLobby.teamOneName }} :
+				<div class="change-score" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">{{ teamOneScore }}</div> -
+				<div class="change-score" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(2, 'middle') : $event.which == 3 ? adjustScore(2, 'right') : adjustScore(2, 'left')">{{ teamTwoScore }}</div> :
+				{{ selectedLobby.teamTwoName }}
+				<span *ngIf="this.hasWon == null">| Next pick: <b>{{ nextPick }}</b></span> <br />
 
 				<div *ngIf="selectedChannel != null && this.matchpoint != null">
 					Matchpoint for <b>{{ this.matchpoint }}</b>

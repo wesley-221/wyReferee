@@ -208,8 +208,8 @@ export class IrcComponent implements OnInit {
 		this.refreshIrcHeader(this.selectedLobby);
 
 		if (this.selectedLobby != undefined) {
-			this.teamOneScore = this.selectedLobby.teamOneScore;
-			this.teamTwoScore = this.selectedLobby.teamTwoScore;
+			this.teamOneScore = this.selectedLobby.getTeamOneScore();
+			this.teamTwoScore = this.selectedLobby.getTeamTwoScore();
 			this.nextPick = this.selectedLobby.getNextPick();
 			this.matchpoint = this.selectedLobby.getMatchPoint();
 			this.hasWon = this.selectedLobby.teamHasWon();
@@ -516,8 +516,8 @@ export class IrcComponent implements OnInit {
 		}
 
 		if (!this.selectedLobby.ircChannel.isPublicChannel && !this.selectedLobby.ircChannel.isPrivateChannel) {
-			this.teamOneScore = multiplayerLobby.teamOneScore;
-			this.teamTwoScore = multiplayerLobby.teamTwoScore;
+			this.teamOneScore = multiplayerLobby.getTeamOneScore();
+			this.teamTwoScore = multiplayerLobby.getTeamTwoScore();
 			this.nextPick = multiplayerLobby.getNextPick();
 			this.matchpoint = multiplayerLobby.getMatchPoint();
 			this.hasWon = multiplayerLobby.teamHasWon();
@@ -885,5 +885,41 @@ export class IrcComponent implements OnInit {
 		}
 
 		this.toastService.addToast(`Unable to pick ${chatPiece.message}.`);
+	}
+
+	/**
+	 * Adjust the score for the selected team
+	 *
+	 * @param team the team to adjust the score for
+	 * @param mouseClick left or right to increase or decrease
+	 */
+	adjustScore(team: number, mouseClick: string) {
+		if (mouseClick == 'left') {
+			if (team == 1) {
+				this.selectedLobby.teamOneOverwriteScore++;
+			}
+			else if (team == 2) {
+				this.selectedLobby.teamTwoOverwriteScore++;
+			}
+		}
+		else if (mouseClick == 'right') {
+			if (team == 1) {
+				this.selectedLobby.teamOneOverwriteScore--;
+			}
+			else if (team == 2) {
+				this.selectedLobby.teamTwoOverwriteScore--;
+			}
+		}
+		else if (mouseClick == 'middle') {
+			if (team == 1) {
+				this.selectedLobby.teamOneOverwriteScore = 0;
+			}
+			else if (team == 2) {
+				this.selectedLobby.teamTwoOverwriteScore = 0;
+			}
+		}
+
+		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+		this.refreshIrcHeader(this.selectedLobby);
 	}
 }

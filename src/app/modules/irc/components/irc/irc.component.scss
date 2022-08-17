@@ -363,6 +363,27 @@ $hyperlink-background-color: #2b4576;
 				.warning {
 					background-color: $danger;
 				}
+
+				.change-score {
+					display: inline-block;
+
+					background-color: $primary;
+					color: #000000;
+
+					padding: 3px;
+					width: 18px;
+
+					-webkit-touch-callout: none;
+					-webkit-user-select: none;
+					-khtml-user-select: none;
+					-moz-user-select: none;
+					-ms-user-select: none;
+					user-select: none;
+
+					&:hover {
+						cursor: pointer;
+					}
+				}
 			}
 
 			.first-pick-dialog {

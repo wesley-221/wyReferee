@@ -44,6 +44,9 @@ export class Lobby {
 	teamOneScore: number;
 	teamTwoScore: number;
 
+	teamOneOverwriteScore: number;
+	teamTwoOverwriteScore: number;
+
 	teamOneBans: number[];
 	teamTwoBans: number[];
 
@@ -86,6 +89,9 @@ export class Lobby {
 		this.teamOneScore = 0;
 		this.teamTwoScore = 0;
 
+		this.teamOneOverwriteScore = 0;
+		this.teamTwoOverwriteScore = 0;
+
 		this.ircConnected = false;
 
 		this.isQualifierLobby = false;
@@ -119,6 +125,8 @@ export class Lobby {
 			teamTwoName: lobby.teamTwoName,
 			teamOneScore: lobby.teamOneScore,
 			teamTwoScore: lobby.teamTwoScore,
+			teamOneOverwriteScore: !isNaN(lobby.teamOneOverwriteScore) ? lobby.teamOneOverwriteScore : 0,
+			teamTwoOverwriteScore: !isNaN(lobby.teamTwoOverwriteScore) ? lobby.teamTwoOverwriteScore : 0,
 			teamOneBans: lobby.teamOneBans,
 			teamTwoBans: lobby.teamTwoBans,
 			teamOnePicks: lobby.teamOnePicks,
@@ -247,10 +255,10 @@ export class Lobby {
 	 * Check if a team is on a matchpoint
 	 */
 	getMatchPoint(): string {
-		if (this.teamOneScore == Math.floor(this.bestOf / 2)) {
+		if (this.getTeamOneScore() == Math.floor(this.bestOf / 2)) {
 			return this.teamOneName;
 		}
-		else if (this.teamTwoScore == Math.floor(this.bestOf / 2)) {
+		else if (this.getTeamTwoScore() == Math.floor(this.bestOf / 2)) {
 			return this.teamTwoName;
 		}
 
@@ -261,10 +269,10 @@ export class Lobby {
 	 * Check if a team has won the match
 	 */
 	teamHasWon(): string {
-		if (this.teamOneScore == Math.ceil(this.bestOf / 2)) {
+		if (this.getTeamOneScore() == Math.ceil(this.bestOf / 2)) {
 			return this.teamOneName;
 		}
-		else if (this.teamTwoScore == Math.ceil(this.bestOf / 2)) {
+		else if (this.getTeamTwoScore() == Math.ceil(this.bestOf / 2)) {
 			return this.teamTwoName;
 		}
 
@@ -467,5 +475,19 @@ export class Lobby {
 		multiplayerLobbies.updateMultiplayerLobby(this);
 
 		ircService.sendMessage(selectedChannel.name, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
+	}
+
+	/**
+	 * Calculate the score of team one with score overwriting
+	 */
+	getTeamOneScore(): number {
+		return this.teamOneScore + this.teamOneOverwriteScore;
+	}
+
+	/**
+	 * Calculate the score of team two with score overwriting
+	 */
+	getTeamTwoScore(): number {
+		return this.teamTwoScore + this.teamTwoOverwriteScore;
 	}
 }
