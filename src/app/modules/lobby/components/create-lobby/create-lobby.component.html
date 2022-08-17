@@ -35,10 +35,15 @@
 
 		<div>
 			Select a tournament for which you will be making a multiplayer match for. <br />
-			<app-alert alertType="info" *ngIf="selectedTournament == null">
-				You can leave this empty if you want to manually enter all the data.
-			</app-alert>
 		</div>
+
+		<app-alert alertType="warn" *ngIf="tournamentService.allTournaments.length <= 0">
+			You have no tournaments imported. Go to "management > all tournaments" in the sidebar to import a tournament.
+		</app-alert>
+
+		<app-alert alertType="info" *ngIf="selectedTournament == null">
+			You can leave this empty if you want to manually enter all the data.
+		</app-alert>
 
 		<hr />
 
