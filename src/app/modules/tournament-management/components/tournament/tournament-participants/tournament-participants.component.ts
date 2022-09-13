@@ -121,6 +121,32 @@ export class TournamentParticipantsComponent implements OnInit {
 			const newTeam = new WyTeam();
 			newTeam.name = team.trim();
 
+			newTeam.index = this.tournament.teamIndex;
+			this.tournament.teamIndex++;
+
+			this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+
+			this.tournament.teams.push(newTeam);
+		});
+
+		this.teamsToAdd = null;
+	}
+
+	/**
+	 * Bulk add players to the tournament
+	 */
+	addBulkPlayersSoloTournament(): void {
+		const allTeams = this.teamsToAdd.split('\n');
+
+		allTeams.forEach(team => {
+			const newTeam = new WyTeam();
+			newTeam.name = team.trim();
+
+			newTeam.index = this.tournament.teamIndex;
+			this.tournament.teamIndex++;
+
+			this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+
 			this.tournament.teams.push(newTeam);
 		});
 

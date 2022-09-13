@@ -31,7 +31,19 @@
 				<h3>Players</h3>
 				<p>Add a player to the tournament.</p>
 
-				<button mat-raised-button (click)="addTeam()" color="primary"><mat-icon>add</mat-icon> add new player</button>
+				<div class="buttons">
+					<button mat-raised-button (click)="addTeam()" color="primary"><mat-icon>add</mat-icon> add new player</button>
+					<button mat-raised-button (click)="addBulkPlayersSoloTournament()" color="primary" [disabled]="teamsToAdd == null || teamsToAdd.length <= 0"><mat-icon>add</mat-icon> add bulk players</button>
+				</div>
+
+				<div class="split">
+					<div class="col">
+						<mat-form-field class="full-width margin-top">
+							<mat-label>Bulk add players, list all players. 1 player per line (click me)</mat-label>
+							<textarea matInput [(ngModel)]="teamsToAdd" [ngModelOptions]="{standalone: true}"></textarea>
+						</mat-form-field>
+					</div>
+				</div>
 			</div>
 
 			<hr />
