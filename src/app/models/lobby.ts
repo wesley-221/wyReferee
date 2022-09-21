@@ -6,7 +6,7 @@ import { ToastService } from 'app/services/toast.service';
 import { WebhookService } from 'app/services/webhook.service';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { IrcChannel } from './irc/irc-channel';
-import { MultiplayerLobbyPlayers } from './mutliplayer-lobby-players/multiplayer-lobby-players';
+import { MultiplayerLobbyPlayers } from './multiplayer-lobby-players/multiplayer-lobby-players';
 import { PickedCategory } from './picked-category';
 import { MultiplayerData } from './store-multiplayer/multiplayer-data';
 import { ToastType } from './toast';

@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { JoinIrcChannelComponent } from '../../../../components/dialogs/join-irc-channel/join-irc-channel.component';
 import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { BanBeatmapComponent } from '../../../../components/dialogs/ban-beatmap/ban-beatmap.component';
-import { MultiplayerLobbyPlayersPlayer } from 'app/models/mutliplayer-lobby-players/multiplayer-lobby-players-player';
+import { MultiplayerLobbyPlayersPlayer } from 'app/models/multiplayer-lobby-players/multiplayer-lobby-players-player';
 import { MultiplayerLobbyMovePlayerComponent } from '../../../../components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
 import { SendBeatmapResultComponent } from '../../../../components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
