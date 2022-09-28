@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IMultiplayerLobbyMovePlayerDialogData } from 'app/interfaces/i-multiplayer-lobby-move-player-dialog-data';
-import { MultiplayerLobbyPlayersPlayer } from 'app/models/mutliplayer-lobby-players/multiplayer-lobby-players-player';
+import { MultiplayerLobbyPlayersPlayer } from 'app/models/multiplayer-lobby-players/multiplayer-lobby-players-player';
 
 @Component({
 	selector: 'app-multiplayer-lobby-move-player',
