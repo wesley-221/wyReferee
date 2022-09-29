@@ -16,6 +16,8 @@ jobs:
       matrix:
         os:
           - ubuntu-18.04
+          - macos-latest
+          - windows-2019
         node_version: [16.x]
     name: Node ${{ matrix.node_version }} - ${{ matrix.os }}
     steps:
@@ -33,5 +35,17 @@ jobs:
       - name: Checking linter
         run: yarn run lint
 
-      - name: Building app for Linux
+      - if: runner.os == 'Linux'
+        name: Building app for Linux
         run: yarn run electron:linux
+
+      - if: runner.os == 'Windows'
+        name: Building app for Windows
+        run: yarn run electron:windows
+
+      - if: runner.os == 'macOs'
+        name: Building app for macOS
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: yarn run electron:mac
