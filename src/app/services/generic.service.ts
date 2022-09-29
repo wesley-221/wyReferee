@@ -22,7 +22,7 @@ export class GenericService {
 		if (apiKey != undefined && apiKey != null) {
 			this.apiKeyValidation.validate(apiKey).subscribe(() => {
 				console.log('Valid api-key provided');
-			}, (error) => {
+			}, () => {
 				this.storeService.delete('api-key');
 				this.toastService.addToast('The api key you have saved is invalid. Your api key has been deleted, in 10 seconds the application will restart and you will have to re-enter your api key on the settings page.', ToastType.Error, 10);
 
