@@ -790,12 +790,16 @@ export class IrcComponent implements OnInit {
 				if (result == true) {
 					const ircCommand = ircShortcutCommand.parseIrcCommand(this.selectedLobby);
 					this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
+
+					this.chatMessage.nativeElement.focus();
 				}
 			});
 		}
 		else {
 			const ircCommand = ircShortcutCommand.parseIrcCommand(this.selectedLobby);
 			this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
+
+			this.chatMessage.nativeElement.focus();
 		}
 	}
 
