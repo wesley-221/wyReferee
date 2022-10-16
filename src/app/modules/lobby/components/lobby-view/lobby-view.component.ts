@@ -56,19 +56,6 @@ export class LobbyViewComponent implements OnInit {
 			if (ircService.getChannelByName(this.selectedLobby.ircChannel.name) != null && ircService.getChannelByName(this.selectedLobby.ircChannel.name).active) {
 				this.selectedLobby.ircConnected = true;
 			}
-
-			this.selectedLobby.teamOneSlotArray = [];
-			this.selectedLobby.teamTwoSlotArray = [];
-
-			// Setup the team arrays
-			for (let i: any = 0; i < this.selectedLobby.teamSize * 2; i++) {
-				if (i < this.selectedLobby.teamSize) {
-					this.selectedLobby.teamOneSlotArray.push(parseInt(i));
-				}
-				else {
-					this.selectedLobby.teamTwoSlotArray.push(parseInt(i));
-				}
-			}
 		});
 	}
 

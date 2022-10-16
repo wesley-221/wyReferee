@@ -15,6 +15,7 @@ import { WyModBracket } from './wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from './wytournament/mappool/wy-mod-bracket-map';
 import { WyModCategory } from './wytournament/mappool/wy-mod-category';
 import { WyStage } from './wytournament/wy-stage';
+import { WyTeam } from './wytournament/wy-team';
 import { WyTeamPlayer } from './wytournament/wy-team-player';
 import { WyTournament } from './wytournament/wy-tournament';
 
@@ -78,8 +79,7 @@ export class Lobby {
 		this.teamOnePicks = [];
 		this.teamTwoPicks = [];
 
-		this.teamOneSlotArray = [];
-		this.teamTwoSlotArray = [];
+		Lobby.initializeTeamSlotArray(this);
 
 		this.gamesCountTowardsScore = {};
 
@@ -100,6 +100,20 @@ export class Lobby {
 		this.multiplayerLobbyPlayers = new MultiplayerLobbyPlayers();
 
 		Object.assign(this, init);
+	}
+
+	private static initializeTeamSlotArray(lobby: Lobby): void {
+		lobby.teamOneSlotArray = [];
+		lobby.teamTwoSlotArray = [];
+
+		for (let i: number = 0; i < lobby.teamSize * 2; i++) {
+			if (i < lobby.teamSize) {
+				lobby.teamOneSlotArray.push(i);
+			}
+			else {
+				lobby.teamTwoSlotArray.push(i);
+			}
+		}
 	}
 
 	/**
@@ -131,12 +145,12 @@ export class Lobby {
 			teamTwoBans: lobby.teamTwoBans,
 			teamOnePicks: lobby.teamOnePicks,
 			teamTwoPicks: lobby.teamTwoPicks,
-			teamOneSlotArray: lobby.teamOneSlotArray,
-			teamTwoSlotArray: lobby.teamTwoSlotArray,
 			gamesCountTowardsScore: lobby.gamesCountTowardsScore,
 			isQualifierLobby: lobby.isQualifierLobby,
 			sendWebhooks: lobby.sendWebhooks
 		});
+
+		Lobby.initializeTeamSlotArray(newLobby);
 
 		for (const pickedCategory in lobby.pickedCategories) {
 			newLobby.pickedCategories.push(PickedCategory.makeTrueCopy(lobby.pickedCategories[pickedCategory]));
@@ -489,5 +503,143 @@ export class Lobby {
 	 */
 	getTeamTwoScore(): number {
 		return this.teamTwoScore + this.teamTwoOverwriteScore;
+	}
+
+	/**
+	 * Check if the user is in the correct slot of the multiplayer lobby
+	 *
+	 * @param username the user to check if they are in the correct slot
+	 */
+	isInCorrectSlot(username: string): boolean {
+		let foundTeam: WyTeam = null;
+		let foundUser: WyTeamPlayer = null;
+
+		if (!this.tournament.isSoloTournament()) {
+			for (const team of this.tournament.teams) {
+				if (this.teamOneName == team.name) {
+					foundTeam = team;
+
+					for (const player of team.players) {
+						if (player.name == username) {
+							foundUser = player;
+							break;
+						}
+					}
+
+					if (foundUser != null) {
+						break;
+					}
+				}
+			}
+		}
+
+		for (const player of this.multiplayerLobbyPlayers.players) {
+			// Solo tournament
+			if (this.tournament.isSoloTournament()) {
+				if (player.username == username) {
+					if (this.teamOneName == username) {
+						if (player.slot == 1) {
+							return true;
+						}
+					}
+					else if (this.teamTwoName == username) {
+						if (player.slot == 2) {
+							return true;
+						}
+					}
+
+					break;
+				}
+			}
+			// Team tournament
+			else {
+				if (foundUser != null && foundTeam != null) {
+					if (this.teamOneName == foundTeam.name) {
+						if (player.username == foundUser.name) {
+							if (this.teamOneSlotArray.indexOf(player.slot - 1) > -1) {
+								return true;
+							}
+						}
+					}
+					else if (this.teamTwoName == foundTeam.name) {
+						if (player.username == foundUser.name) {
+							if (this.teamTwoSlotArray.indexOf(player.slot - 1) > -1) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the correct slot the player has to be in
+	 *
+	 * @param username the username to get the correct slot for
+	 */
+	getCorrectSlot(username: string): string {
+		// Solo tournament
+		if (this.tournament.isSoloTournament()) {
+			if (this.teamOneName == username) {
+				return '1';
+			}
+			else if (this.teamTwoName == username) {
+				return '2';
+			}
+		}
+		// Team tournament
+		else {
+			for (const team of this.tournament.teams) {
+				for (const player of team.players) {
+					if (player.name == username) {
+						if (this.teamOneName == team.name) {
+							let teamSlotString = '';
+
+							for (let i = 0; i < this.teamOneSlotArray.length; i++) {
+								teamSlotString += (this.teamOneSlotArray[i] + 1);
+
+								console.log(i, this.teamOneSlotArray.length);
+
+								if (i != (this.teamOneSlotArray.length - 2)) {
+									teamSlotString += ', ';
+								}
+								else {
+									teamSlotString += ' or ';
+								}
+							}
+
+							teamSlotString = teamSlotString.substring(0, teamSlotString.length - 2);
+
+							return teamSlotString;
+						}
+						else if (this.teamTwoName == team.name) {
+							let teamSlotString = '';
+
+							for (let i = 0; i < this.teamTwoSlotArray.length; i++) {
+								teamSlotString += (this.teamTwoSlotArray[i] + 1);
+
+								console.log(i, this.teamTwoSlotArray.length);
+
+								if (i != (this.teamTwoSlotArray.length - 2)) {
+									teamSlotString += ', ';
+								}
+								else {
+									teamSlotString += ' or ';
+								}
+							}
+
+							teamSlotString = teamSlotString.substring(0, teamSlotString.length - 2);
+
+							return teamSlotString;
+						}
+					}
+				}
+			}
+		}
+
+		return 'Unknown';
 	}
 }

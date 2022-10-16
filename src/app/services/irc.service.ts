@@ -152,8 +152,6 @@ export class IrcService {
 		});
 
 		this.client.on('CM', (message: ChannelMessage) => {
-			this.sendChannelMessage(message);
-
 			// Make sure message is send in a multiplayer channel as well as by BanchoBot
 			if (message.channel.name.startsWith('#mp_') && message.user.ircUsername == 'BanchoBot') {
 				const multiplayerInitialization = Regex.multiplayerInitialization.run(message.message);
@@ -183,12 +181,23 @@ export class IrcService {
 				// Gets called when !mp settings is ran
 				if (playerInSlot) {
 					this.multiplayerLobbyChanged$.next({ action: 'playerInSlot', data: playerInSlot });
+
+					const multiplayerLobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(message.channel.name);
+
+					// Check if the player is in the correct slot
+					if (multiplayerLobby) {
+						if (!multiplayerLobby.isInCorrectSlot(playerInSlot.username)) {
+							message.message += ` | Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}`;
+						}
+					}
 				}
 			}
 
 			if (message.channel.name.startsWith('#mp_') && message.user.ircUsername != 'BanchoBot' && message.message.startsWith('!')) {
 				this.handleIrcCommand(message);
 			}
+
+			this.sendChannelMessage(message);
 		});
 
 		this.client.on('nochannel', (channel: BanchoChannel) => {
