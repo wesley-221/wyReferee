@@ -52,8 +52,8 @@ export class SendFinalResultComponent implements OnInit {
 			losingTeam = winningTeam == this.data.multiplayerLobby.teamOneName ? this.data.multiplayerLobby.teamTwoName : this.data.multiplayerLobby.teamOneName;
 		}
 		else {
-			winningTeam = this.data.multiplayerLobby.teamOneScore > this.data.multiplayerLobby.teamTwoScore ? this.data.multiplayerLobby.teamOneName : this.data.multiplayerLobby.teamTwoName;
-			losingTeam = this.data.multiplayerLobby.teamOneScore > this.data.multiplayerLobby.teamTwoScore ? this.data.multiplayerLobby.teamTwoName : this.data.multiplayerLobby.teamOneName;
+			winningTeam = this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamOneName : this.data.multiplayerLobby.teamTwoName;
+			losingTeam = this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamTwoName : this.data.multiplayerLobby.teamOneName;
 		}
 
 		return {

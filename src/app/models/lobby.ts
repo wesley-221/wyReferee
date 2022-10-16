@@ -257,7 +257,7 @@ export class Lobby {
 	 * Get the name of the team that has to pick next
 	 */
 	getNextPick() {
-		const totalMapsPlayed = this.teamOneScore + this.teamTwoScore;
+		const totalMapsPlayed = this.getTeamOneScore() + this.getTeamTwoScore();
 		let nextPick = '';
 
 		if (totalMapsPlayed % 2 == 0) {
