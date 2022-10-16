@@ -90,9 +90,9 @@ export class WebhookService {
 			return;
 		}
 
-		const scoreString = (selectedLobby.teamOneScore > selectedLobby.teamTwoScore) ?
-			`**Score:** __${selectedLobby.teamOneName}__ | **${selectedLobby.teamOneScore}** - ${selectedLobby.teamTwoScore} | ${selectedLobby.teamTwoName}` :
-			`**Score:** ${selectedLobby.teamOneName} | ${selectedLobby.teamOneScore} - **${selectedLobby.teamTwoScore}** | __${selectedLobby.teamTwoName}__`;
+		const scoreString = (selectedLobby.getTeamOneScore() > selectedLobby.getTeamTwoScore()) ?
+			`**Score:** __${selectedLobby.teamOneName}__ | **${selectedLobby.getTeamOneScore()}** - ${selectedLobby.getTeamTwoScore()} | ${selectedLobby.teamTwoName}` :
+			`**Score:** ${selectedLobby.teamOneName} | ${selectedLobby.getTeamOneScore()} - **${selectedLobby.getTeamTwoScore()}** | __${selectedLobby.teamTwoName}__`;
 
 		const body = {
 			embeds: [
@@ -391,9 +391,9 @@ export class WebhookService {
 
 		resultString += `[**${cachedBeatmap.name}**](${cachedBeatmap.beatmapUrl})\n\n`;
 
-		resultString += (multiplayerLobby.teamOneScore > multiplayerLobby.teamTwoScore) ?
-			`**Score:** __${multiplayerLobby.teamOneName}__ | **${multiplayerLobby.teamOneScore}** - ${multiplayerLobby.teamTwoScore} | ${multiplayerLobby.teamTwoName}\n\n` :
-			`**Score:** ${multiplayerLobby.teamOneName} | ${multiplayerLobby.teamOneScore} - **${multiplayerLobby.teamTwoScore}** | __${multiplayerLobby.teamTwoName}__\n\n`;
+		resultString += (multiplayerLobby.getTeamOneScore() > multiplayerLobby.getTeamTwoScore()) ?
+			`**Score:** __${multiplayerLobby.teamOneName}__ | **${multiplayerLobby.getTeamOneScore()}** - ${multiplayerLobby.getTeamTwoScore()} | ${multiplayerLobby.teamTwoName}\n\n` :
+			`**Score:** ${multiplayerLobby.teamOneName} | ${multiplayerLobby.getTeamOneScore()} - **${multiplayerLobby.getTeamTwoScore()}** | __${multiplayerLobby.teamTwoName}__\n\n`;
 
 		let highestScorePlayer: MultiplayerDataUser = new MultiplayerDataUser();
 		let highestAccuracyPlayer: MultiplayerDataUser = new MultiplayerDataUser();
@@ -566,16 +566,6 @@ export class WebhookService {
 	 */
 	private doSendWebhooks(lobby: Lobby): boolean {
 		return !(lobby.sendWebhooks == null || lobby.sendWebhooks == undefined || lobby.sendWebhooks == false);
-	}
-
-	/**
-	 * Get a beatmap from any given mappool
-	 *
-	 * @param beatmapId the beatmapid
-	 */
-	private getBeatmapnameFromMappools(beatmapId: number): CacheBeatmap {
-		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(beatmapId);
-		return (cachedBeatmap != null) ? cachedBeatmap : null;
 	}
 
 	/**

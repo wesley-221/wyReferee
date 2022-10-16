@@ -10,7 +10,7 @@
 				</div>
 
 				<div class="column">
-					<span class="red-team">{{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="selectedLobby.teamOneScore > selectedLobby.teamTwoScore ? 'win' : 'lose'">{{ selectedLobby.teamOneScore }}</span> | <span [ngClass]="selectedLobby.teamTwoScore > selectedLobby.teamOneScore ? 'win' : 'lose'">{{ selectedLobby.teamTwoScore }}</span> : score <span class="blue-team">{{ selectedLobby.teamTwoName }}</span>
+					<span class="red-team">{{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="selectedLobby.getTeamOneScore() > selectedLobby.getTeamTwoScore() ? 'win' : 'lose'">{{ selectedLobby.getTeamOneScore() }}</span> | <span [ngClass]="selectedLobby.getTeamTwoScore() > selectedLobby.getTeamOneScore() ? 'win' : 'lose'">{{ selectedLobby.getTeamTwoScore() }}</span> : score <span class="blue-team">{{ selectedLobby.teamTwoName }}</span>
 				</div>
 			</div>
 		</div>
