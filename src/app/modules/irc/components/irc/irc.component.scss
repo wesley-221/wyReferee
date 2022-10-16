@@ -598,47 +598,6 @@ $hyperlink-background-color: #2b4576;
 				}
 			}
 
-			.action-bar {
-				display: flex;
-				justify-content: space-between;
-
-				.actions {
-					display: flex;
-
-					.action {
-						display: flex;
-						align-items: center;
-
-						background-color: $primary;
-						color: black;
-
-						padding: 4px;
-
-						margin-right: 2px;
-
-						-webkit-touch-callout: none;
-						-webkit-user-select: none;
-						-khtml-user-select: none;
-						-moz-user-select: none;
-						-ms-user-select: none;
-						user-select: none;
-
-						&:hover {
-							background-color: darken($primary, 15%);
-							cursor: pointer;
-						}
-
-						&:last-child {
-							margin-right: 0px;
-						}
-
-						&.disabled {
-							cursor: not-allowed;
-						}
-					}
-				}
-			}
-
 			.side-menu {
 				display: flex;
 				flex-direction: row;

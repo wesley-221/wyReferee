@@ -22,13 +22,10 @@ import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
-import { IrcShortcutDialogComponent } from '../../../../components/dialogs/irc-shortcut-dialog/irc-shortcut-dialog.component';
 import { IrcShortcutCommandsService } from 'app/services/irc-shortcut-commands.service';
-import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
 import { MultiplayerLobbySettingsComponent } from '../../../../components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { IrcPickMapSameModBracketComponent } from '../../../../components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
-import { IrcShortcutWarningDialogComponent } from '../../../../components/dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
 import { MessageBuilder } from 'app/models/irc/message-builder';
 import { IBanBeatmapDialogData } from 'app/interfaces/i-ban-beatmap-dialog-data';
 import { IMultiplayerLobbyMovePlayerDialogData } from 'app/interfaces/i-multiplayer-lobby-move-player-dialog-data';
@@ -753,52 +750,12 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
-	 * Open a dialog to manage irc shortcut commands
-	 */
-	shortcutSettings(): void {
-		const dialogRef = this.dialog.open(IrcShortcutDialogComponent);
-
-		dialogRef.afterClosed().subscribe(result => {
-			if (result == false) {
-				this.ircShortcutCommandsService.loadIrcShortcutCommands();
-			}
-			else {
-				this.ircShortcutCommandsService.saveIrcShortcutCommands();
-			}
-		});
-	}
-
-	/**
-	 * Execute an irc shortcut command and process variables
+	 * Focus the chat
 	 *
-	 * @param ircShortcutCommand the command that was executed
+	 * @param focus whether to focus
 	 */
-	executeIrcShortcutCommand(ircShortcutCommand: IrcShortcutCommand): void {
-		if (!this.ircService.isAuthenticated) {
-			return;
-		}
-
-		if (ircShortcutCommand.warning == true) {
-			const dialogRef = this.dialog.open(IrcShortcutWarningDialogComponent, {
-				data: {
-					ircShortcutCommand: ircShortcutCommand,
-					lobby: this.selectedLobby
-				}
-			});
-
-			dialogRef.afterClosed().subscribe(result => {
-				if (result == true) {
-					const ircCommand = ircShortcutCommand.parseIrcCommand(this.selectedLobby);
-					this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
-
-					this.chatMessage.nativeElement.focus();
-				}
-			});
-		}
-		else {
-			const ircCommand = ircShortcutCommand.parseIrcCommand(this.selectedLobby);
-			this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
-
+	focusChat(focus: boolean): void {
+		if (focus == true) {
 			this.chatMessage.nativeElement.focus();
 		}
 	}
