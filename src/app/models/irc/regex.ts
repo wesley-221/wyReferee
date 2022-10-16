@@ -157,43 +157,38 @@ export class Regex {
 	};
 
 	static playerInSlot = {
-		regexTeam: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[Team\s+(Blue|Red)\s?\]/,
-		regexTeamHost: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)\s+\/\s+Team\s+(Blue|Red)\s?\]/,
-		regexTeamHostMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)\s+\/\s+Team\s+(Blue|Red)\s+\/\s+(.*)\]/,
-		regexTeamMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[Team\s+(Blue|Red)\s+\/\s+(.*)\]/,
-		regexSolo: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s*$/,
-		regexSoloHost: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)]/,
-		regexSoloHostMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(Host)\s+\/\s+(.*)\]/,
-		regexSoloMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(\S*)\s+\[(.*)\]/,
+		regexTeam: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(.*)\s+\[Team\s+(Blue|Red)\s?\]/,
+		regexTeamHost: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(.*)\s+\[(Host)\s+\/\s+Team\s+(Blue|Red)\s?\]/,
+		regexTeamHostMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(.*)\s+\[(Host)\s+\/\s+Team\s+(Blue|Red)\s+\/\s+(.*)\]/,
+		regexTeamMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(.*)\s+\[Team\s+(Blue|Red)\s+\/\s+(.*)\]/,
+		regexSolo: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(.*)$/,
+		regexSoloHost: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(.*)\s+\[(Host)]/,
+		regexSoloHostMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(.*)\s+\[(Host)\s+\/\s+(.*)\]/,
+		regexSoloMods: /^Slot\s+(\d+)\s+([a-zA-Z\s]+)\s+https:\/\/osu\.ppy\.sh\/u\/\d+\s+(.*)\s+\[(.*)\]/,
 		run: (message: string): { type: string; slotId: number; status: string; username: string; host: boolean; team: string; mods: string } => {
+			message = message.trim();
 			const regexTeamRegex = RegExp(Regex.playerInSlot.regexTeam).exec(message);
 
 			if (regexTeamRegex !== null) {
-				return { type: 'regexTeam', slotId: parseInt(regexTeamRegex[1]), status: regexTeamRegex[2], username: regexTeamRegex[3], team: regexTeamRegex[4], host: false, mods: 'none' };
+				return { type: 'regexTeam', slotId: parseInt(regexTeamRegex[1]), status: regexTeamRegex[2], username: regexTeamRegex[3].trim(), team: regexTeamRegex[4].trim(), host: false, mods: 'none' };
 			}
 
 			const regexTeamModsRegex = RegExp(Regex.playerInSlot.regexTeamMods).exec(message);
 
 			if (regexTeamModsRegex !== null) {
-				return { type: 'regexTeamMods', slotId: parseInt(regexTeamModsRegex[1]), status: regexTeamModsRegex[2], username: regexTeamModsRegex[3], team: regexTeamModsRegex[4], mods: regexTeamModsRegex[5], host: false };
+				return { type: 'regexTeamMods', slotId: parseInt(regexTeamModsRegex[1]), status: regexTeamModsRegex[2], username: regexTeamModsRegex[3].trim(), team: regexTeamModsRegex[4].trim(), mods: regexTeamModsRegex[5], host: false };
 			}
 
 			const regexTeamHostRegex = RegExp(Regex.playerInSlot.regexTeamHost).exec(message);
 
 			if (regexTeamHostRegex !== null) {
-				return { type: 'regexTeamHost', slotId: parseInt(regexTeamHostRegex[1]), status: regexTeamHostRegex[2], username: regexTeamHostRegex[3], team: regexTeamHostRegex[5], host: true, mods: 'none' };
+				return { type: 'regexTeamHost', slotId: parseInt(regexTeamHostRegex[1]), status: regexTeamHostRegex[2], username: regexTeamHostRegex[3].trim(), team: regexTeamHostRegex[5].trim(), host: true, mods: 'none' };
 			}
 
 			const regexTeamHostModsRegex = RegExp(Regex.playerInSlot.regexTeamHostMods).exec(message);
 
 			if (regexTeamHostModsRegex !== null) {
-				return { type: 'regexTeamHost', slotId: parseInt(regexTeamHostModsRegex[1]), status: regexTeamHostModsRegex[2], username: regexTeamHostModsRegex[3], team: regexTeamHostModsRegex[5], host: true, mods: regexTeamHostModsRegex[6] };
-			}
-
-			const regexSoloRegex = RegExp(Regex.playerInSlot.regexSolo).exec(message);
-
-			if (regexSoloRegex !== null) {
-				return { type: 'regexSolo', slotId: parseInt(regexSoloRegex[1]), status: regexSoloRegex[2], username: regexSoloRegex[3], team: null, host: false, mods: 'none' };
+				return { type: 'regexTeamHost', slotId: parseInt(regexTeamHostModsRegex[1]), status: regexTeamHostModsRegex[2], username: regexTeamHostModsRegex[3].trim(), team: regexTeamHostModsRegex[5].trim(), host: true, mods: regexTeamHostModsRegex[6] };
 			}
 
 			const regexSoloModsRegex = RegExp(Regex.playerInSlot.regexSoloMods).exec(message);
@@ -204,18 +199,25 @@ export class Regex {
 					const regexSoloHostRegex = RegExp(Regex.playerInSlot.regexSoloHost).exec(message);
 
 					if (regexSoloHostRegex !== null) {
-						return { type: 'regexSoloHost', slotId: parseInt(regexSoloHostRegex[1]), status: regexSoloHostRegex[2], username: regexSoloHostRegex[3], team: null, host: true, mods: 'none' };
+						return { type: 'regexSoloHost', slotId: parseInt(regexSoloHostRegex[1]), status: regexSoloHostRegex[2], username: regexSoloHostRegex[3].trim(), team: null, host: true, mods: 'none' };
 					}
 
 					const regexSoloHostModsRegex = RegExp(Regex.playerInSlot.regexSoloHostMods).exec(message);
 
 					if (regexSoloHostModsRegex !== null) {
-						return { type: 'regexSoloHostMods', slotId: parseInt(regexSoloHostModsRegex[1]), status: regexSoloHostModsRegex[2], username: regexSoloHostModsRegex[3], team: null, host: true, mods: regexSoloHostModsRegex[5] };
+						return { type: 'regexSoloHostMods', slotId: parseInt(regexSoloHostModsRegex[1]), status: regexSoloHostModsRegex[2], username: regexSoloHostModsRegex[3].trim(), team: null, host: true, mods: regexSoloHostModsRegex[5] };
 					}
 				}
 				// User is not the host of the match
 				else {
-					return { type: 'regexSoloHostMods', slotId: parseInt(regexSoloModsRegex[1]), status: regexSoloModsRegex[2], username: regexSoloModsRegex[3], team: null, host: false, mods: regexSoloModsRegex[4] };
+					return { type: 'regexSoloHostMods', slotId: parseInt(regexSoloModsRegex[1]), status: regexSoloModsRegex[2], username: regexSoloModsRegex[3].trim(), team: null, host: false, mods: regexSoloModsRegex[4] };
+				}
+			}
+			else {
+				const regexSoloRegex = RegExp(Regex.playerInSlot.regexSolo).exec(message);
+
+				if (regexSoloRegex !== null) {
+					return { type: 'regexSolo', slotId: parseInt(regexSoloRegex[1]), status: regexSoloRegex[2], username: regexSoloRegex[3].trim(), team: null, host: false, mods: 'none' };
 				}
 			}
 
