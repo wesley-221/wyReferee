@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-18.04
+          - ubuntu-latest
         node_version: [16.x]
     name: Node ${{ matrix.node_version }} - ${{ matrix.os }}
     steps:
