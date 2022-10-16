@@ -102,20 +102,6 @@ export class Lobby {
 		Object.assign(this, init);
 	}
 
-	private static initializeTeamSlotArray(lobby: Lobby): void {
-		lobby.teamOneSlotArray = [];
-		lobby.teamTwoSlotArray = [];
-
-		for (let i: number = 0; i < lobby.teamSize * 2; i++) {
-			if (i < lobby.teamSize) {
-				lobby.teamOneSlotArray.push(i);
-			}
-			else {
-				lobby.teamTwoSlotArray.push(i);
-			}
-		}
-	}
-
 	/**
 	 * Make a true copy of the given lobby
 	 *
@@ -176,6 +162,25 @@ export class Lobby {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Initialize the team slot arrays
+	 *
+	 * @param lobby the lobby to initialize the team slot arrays for
+	 */
+	private static initializeTeamSlotArray(lobby: Lobby): void {
+		lobby.teamOneSlotArray = [];
+		lobby.teamTwoSlotArray = [];
+
+		for (let i = 0; i < lobby.teamSize * 2; i++) {
+			if (i < lobby.teamSize) {
+				lobby.teamOneSlotArray.push(i);
+			}
+			else {
+				lobby.teamTwoSlotArray.push(i);
+			}
+		}
 	}
 
 	/**
