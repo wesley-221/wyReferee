@@ -55,10 +55,14 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="player-management">
+			<app-irc-player-management [lobby]="selectedLobby" [channel]="selectedChannel"></app-irc-player-management>
+		</div>
 	</div>
 
 	<div class="chat-content">
-		<div class="chat-container" [ngClass]="{'in': !isPlayerManagementMinimized && selectedChannel != null && selectedChannel.name.startsWith('#mp_') }">
+		<div class="chat-container">
 			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.name.startsWith('#mp_')) && this.selectedLobby != null && selectedLobby.isQualifierLobby == false">
 				Score: {{ selectedLobby.teamOneName }} :
 				<div class="change-score" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">{{ teamOneScore }}</div> -
@@ -130,7 +134,6 @@
 					<button mat-mini-fab color="primary" matTooltip="Open referee settings" (click)="isOptionMenuMinimized = !isOptionMenuMinimized"><mat-icon>sports_score</mat-icon></button>
 					<button mat-mini-fab color="primary" matTooltip="Open lobby settings" (click)="openLobbyDialog()"><mat-icon>settings</mat-icon></button>
 					<button mat-mini-fab color="primary" matTooltip="Go to multiplayer lobby match overview" (click)="navigateLobbyOverview()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)"><mat-icon>list</mat-icon></button>
-					<button mat-mini-fab color="primary" matTooltip="Show all the players in the current lobby" (click)="togglePlayerManagement()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)"><mat-icon>people</mat-icon></button>
 					<button mat-mini-fab color="primary" matTooltip="Send beatmap result to irc" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)"><mat-icon>send</mat-icon></button>
 				</div>
 
@@ -196,12 +199,12 @@
 											</div>
 
 											<div class="actions">
-												<div class="custom-button" (click)="invitePlayer(player)" matTooltip="Click to invite player">
+												<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
 													<mat-icon>add</mat-icon>
 												</div>
 
 												<!-- TODO: implement captain for rng -->
-												<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 1)" matTooltip="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamOneCaptain == player}">
+												<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 1)" title="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamOneCaptain == player}">
 													<mat-icon>star</mat-icon>
 												</div> -->
 											</div>
@@ -217,12 +220,12 @@
 											</div>
 
 											<div class="actions">
-												<div class="custom-button" (click)="invitePlayer(player)" matTooltip="Click to invite player">
+												<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
 													<mat-icon>add</mat-icon>
 												</div>
 
 												<!-- TODO: implement captain for rng -->
-												<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 2)" matTooltip="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamTwoCaptain == player}">
+												<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 2)" title="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamTwoCaptain == player}">
 													<mat-icon>star</mat-icon>
 												</div> -->
 											</div>
@@ -311,10 +314,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<div class="player-management" [ngClass]="{'in': !isPlayerManagementMinimized }">
-			<app-irc-player-management [lobby]="selectedLobby" [channel]="selectedChannel"></app-irc-player-management>
 		</div>
 	</div>
 </div>

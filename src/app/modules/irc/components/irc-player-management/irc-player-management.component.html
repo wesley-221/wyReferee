@@ -1,37 +1,35 @@
-<div class="player-management" *ngIf="channel != null && lobby && channel.name.startsWith('#mp_')">
-	<div class="players" *ngIf="lobby.multiplayerLobbyPlayers != null">
+<div class="player-management" *ngIf="channel != null && lobby && channel.name.startsWith('#mp_') && lobby.multiplayerLobbyPlayers != null">
+	<div class="players">
 		<div class="player" *ngFor="let player of lobby.multiplayerLobbyPlayers.players" [ngClass]="{'red': player.team == 'Red', 'blue': player.team == 'Blue'}">
-			<div class="top-row">
-				<div class="column">
-					<div class="column">
-						Slot {{ player.slot }}
+			<div class="player-column">
+				<div class="player-data">
+					<div class="player-slot">
+						{{ player.slot }}
 					</div>
 
-					<div class="column">
+					<div class="player-username" [title]="player.username">
 						<b>{{ player.username }}</b>
 					</div>
 				</div>
 
-				<div class="column">
-					<button mat-mini-fab color="accent" [matTooltip]="'Move ' + player.username" [disabled]="player.username == 'Open'" (click)="movePlayer(player)"><mat-icon>open_with</mat-icon></button>
-					<button mat-mini-fab color="accent" [matTooltip]="'Change ' + player.username + '\'s team'" [disabled]="player.username == 'Open'" (click)="changeTeam(player)"><mat-icon>groups</mat-icon></button>
-					<button mat-mini-fab color="primary" [matTooltip]="'Give host to ' + player.username" [disabled]="player.isHost || player.username == 'Open'" (click)="setHost(player)"><mat-icon>star</mat-icon></button>
-					<button mat-mini-fab color="warn" [matTooltip]="'Kick ' + player.username" [disabled]="player.username == 'Open'" (click)="kickPlayer(player)"><mat-icon>cancel</mat-icon></button>
+				<div class="player-buttons">
+					<div class="player-button" [ngClass]="{'disabled': player.username == 'Open' }" [title]="'Move ' + player.username" (click)="movePlayer(player)"><mat-icon>open_with</mat-icon></div>
+					<div class="player-button" [ngClass]="{'disabled': player.username == 'Open' }" [title]="'Change ' + player.username + '\'s team'" (click)="changeTeam(player)"><mat-icon>groups</mat-icon></div>
+					<div class="player-button" [ngClass]="{'disabled': player.isHost || player.username == 'Open' }" [title]="'Give host to ' + player.username" (click)="setHost(player)"><mat-icon>star</mat-icon></div>
+					<div class="player-button" [ngClass]="{'disabled': player.username == 'Open' }" [title]="'Kick ' + player.username" (click)="kickPlayer(player)"><mat-icon>cancel</mat-icon></div>
 				</div>
 			</div>
 
-			<div class="second-row">
-				<div class="column">
+			<div class="player-information">
+				<div class="player-status">
 					<div class="red" *ngIf="player.status != 'Ready'">{{ player.status }}</div>
 					<div class="green" *ngIf="player.status == 'Ready'">{{ player.status }}</div>
 				</div>
 
-				<div class="column">
-					<div class="mods">
-						<div class="mod-icon" *ngFor="let mod of player.mods">
-							<img *ngIf="mod" [src]="'assets/osu-mods/' + mod + '.png'" [matTooltip]="mod | uppercase" />
-							<img *ngIf="mod == null" src="assets/osu-mods/nm.png" [matTooltip]="'nm' | uppercase" />
-						</div>
+				<div class="player-mods">
+					<div class="mod-icon" *ngFor="let mod of player.mods">
+						<img *ngIf="mod" [src]="'assets/osu-mods/' + mod + '.png'" [matTooltip]="mod | uppercase" />
+						<img *ngIf="mod == null" src="assets/osu-mods/nm.png" [matTooltip]="'nm' | uppercase" />
 					</div>
 				</div>
 			</div>

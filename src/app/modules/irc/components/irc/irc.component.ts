@@ -56,7 +56,6 @@ export class IrcComponent implements OnInit {
 	attemptingToJoinChannel: string;
 
 	isOptionMenuMinimized = true;
-	isPlayerManagementMinimized = true;
 	isInvitesMinimized = true;
 
 	searchValue: string;
@@ -670,17 +669,6 @@ export class IrcComponent implements OnInit {
 		}
 		else {
 			this.pickBeatmap(randomMap, modBracket, this.selectedLobby.tournament.gamemodeId, true);
-		}
-	}
-
-	/**
-	 * Toggle the player management tab
-	 */
-	togglePlayerManagement() {
-		this.isPlayerManagementMinimized = !this.isPlayerManagementMinimized;
-
-		if (!this.isPlayerManagementMinimized) {
-			this.scrollToTop();
 		}
 	}
 

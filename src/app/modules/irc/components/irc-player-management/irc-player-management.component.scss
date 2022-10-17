@@ -4,54 +4,102 @@ $background-color-irc: #282828;
 
 .player-management {
 	display: flex;
-	flex: 1 1 auto;
 	overflow-y: auto;
 
 	background-color: $background-color-irc;
 
 	.players {
 		display: flex;
-		flex: 1 1 auto;
-		flex-flow: row wrap;
+		flex-direction: column;
+
+		flex: 1;
+		max-width: 100%;
 
 		.player {
 			display: flex;
 			flex-direction: column;
-			flex: 1 0 33%;
 
-			padding: 8px;
+			padding: 4px;
 			margin: 4px;
 
 			background-color: rgba(0, 0, 0, 0.1);
 
-			.top-row {
+			.player-column {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 
-				margin-bottom: 8px;
+				margin-bottom: 4px;
 
-				.column {
+				.player-data {
 					display: flex;
-					padding-right: 4px;
+					overflow: hidden;
 
-					button {
-						margin-right: 4px;
+					.player-slot {
+						display: flex;
+						justify-content: center;
+						align-items: center;
 
-						&:last-child {
-							margin-right: 0px;
+						background-color: $primary;
+						color: black;
+
+						border-radius: 25px;
+
+						width: 20px;
+						height: 20px;
+
+						min-width: 20px;
+						min-height: 20px;
+
+						margin-right: 2px;
+
+						font-weight: bold;
+					}
+
+					.player-username {
+						text-overflow: ellipsis;
+
+						white-space: nowrap;
+						overflow: hidden;
+
+						font-size: 13px;
+					}
+				}
+
+				.player-buttons {
+					display: flex;
+
+					@media only screen and (max-width: 1200px) {
+						display: grid;
+
+						grid-auto-flow: column wrap;
+						grid-template-columns: 1fr 1fr;
+					}
+
+					.player-button {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+
+						background-color: $primary;
+						color: black;
+						padding: 4px;
+
+						&:hover {
+							background-color: darken($primary, 15%);
+							cursor: pointer;
 						}
 					}
 				}
 			}
 
-			.second-row {
+			.player-information {
 				display: flex;
 				justify-content: space-between;
 
 				align-items: center;
 
-				.column {
+				.player-status {
 					.red {
 						color: red;
 						text-shadow: 1px 1px black;
@@ -61,20 +109,24 @@ $background-color-irc: #282828;
 						color: green;
 						text-shadow: 1px 1px black;
 					}
+				}
 
-					.mods {
+				.player-mods {
+					display: flex;
+					flex-direction: row;
+
+					.mod-icon {
 						display: flex;
-						flex-direction: row;
+						align-items: center;
 
-						.mod-icon {
-							display: flex;
-							align-items: center;
+						margin-right: 4px;
 
-							margin-right: 4px;
+						img {
+							height: 25px;
+						}
 
-							&:last-child {
-								margin-right: 0;
-							}
+						&:last-child {
+							margin-right: 0;
 						}
 					}
 				}

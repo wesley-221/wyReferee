@@ -21,8 +21,9 @@ $hyperlink-background-color: #2b4576;
 	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
 
 	.channels {
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-auto-flow: row;
+		grid-auto-rows: min-content 250px 9fr;
 		flex: 0 0 21%;
 
 		.go-back-button {
@@ -57,66 +58,6 @@ $hyperlink-background-color: #2b4576;
 
 		background-color: darken($background-color-irc, 5%);
 
-		@media only screen and (max-width: 1200px) {
-			flex: 0 0 9%;
-			max-width: 9%;
-
-			.go-back-button {
-				.go-back-text {
-					display: none;
-				}
-
-				.go-back-icon {
-					display: block;
-				}
-			}
-
-			.join-channel-button {
-				.join-channel-text {
-					display: none;
-				}
-
-				.join-channel-icon {
-					display: block;
-				}
-			}
-
-			&:hover {
-				flex: 0 0 21%;
-				max-width: fit-content;
-
-				.go-back-button {
-					.go-back-text {
-						display: block;
-					}
-
-					.go-back-icon {
-						display: none;
-					}
-				}
-
-				.join-channel-button {
-					.join-channel-text {
-						display: block;
-					}
-
-					.join-channel-icon {
-						display: none;
-					}
-				}
-
-				.all-channels {
-					.channel {
-						.channel-name,
-						.channel-name-label {
-							font-size: 14px;
-							line-height: normal;
-						}
-					}
-				}
-			}
-		}
-
 		.header {
 			.btn {
 				width: 100%;
@@ -139,6 +80,8 @@ $hyperlink-background-color: #2b4576;
 		}
 
 		.all-channels {
+			overflow-y: auto;
+
 			.channel {
 				display: flex;
 				flex-direction: row;
@@ -283,6 +226,10 @@ $hyperlink-background-color: #2b4576;
 					color: white;
 				}
 			}
+		}
+
+		.player-management {
+			overflow-y: auto;
 		}
 	}
 
@@ -619,6 +566,7 @@ $hyperlink-background-color: #2b4576;
 						&.active {
 							cursor: pointer;
 							background-color: $primary;
+							color: black;
 
 							margin-bottom: 0;
 						}
@@ -663,6 +611,7 @@ $hyperlink-background-color: #2b4576;
 										justify-content: center;
 
 										background-color: $primary;
+										color: black;
 
 										padding: 4px;
 
@@ -855,18 +804,6 @@ $hyperlink-background-color: #2b4576;
 						opacity: 1;
 					}
 				}
-			}
-
-			&.in {
-				height: 60%;
-			}
-		}
-
-		.player-management {
-			overflow-y: auto;
-
-			&.in {
-				height: 40%;
 			}
 		}
 	}
