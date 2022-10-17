@@ -40,14 +40,18 @@ export class IrcComponent implements OnInit {
 	@ViewChild('winCondition') winCondition: MatSelect;
 	@ViewChild('players') players: MatSelect;
 
-	@ViewChild(VirtualScrollerComponent, { static: true }) private virtualScroller: VirtualScrollerComponent;
+	@ViewChild('normalVirtualScroller') private normalVirtualScroller: VirtualScrollerComponent;
+	@ViewChild('banchoBotVirtualScroller') private banchoBotVirtualScroller: VirtualScrollerComponent;
 
 	selectedChannel: IrcChannel;
 	selectedLobby: Lobby;
 	channels: IrcChannel[];
 
-	chats: IrcMessage[] = [];
-	viewPortItems: IrcMessage[];
+	normalChats: IrcMessage[] = [];
+	normalViewPortItems: IrcMessage[];
+
+	banchoBotChats: IrcMessage[] = [];
+	banchoBotViewPortItems: IrcMessage[];
 
 	chatLength = 0;
 	keyPressed = false;
@@ -100,16 +104,24 @@ export class IrcComponent implements OnInit {
 
 		// Initialize the scroll
 		this.ircService.hasMessageBeenSend().subscribe(() => {
-			if (!this.viewPortItems) {
-				return;
+			if (this.normalViewPortItems) {
+				if (this.normalViewPortItems[this.normalViewPortItems.length - 1] === this.normalChats[this.normalChats.length - 2]) {
+					this.scrollToTop();
+				}
+
+				if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
+					ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
+				}
 			}
 
-			if (this.viewPortItems[this.viewPortItems.length - 1] === this.chats[this.chats.length - 2]) {
-				this.scrollToTop();
-			}
+			if (this.banchoBotViewPortItems) {
+				if (this.banchoBotViewPortItems[this.banchoBotViewPortItems.length - 1] === this.banchoBotChats[this.banchoBotChats.length - 2]) {
+					this.scrollToTop();
+				}
 
-			if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
-				ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
+				if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
+					ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
+				}
 			}
 		});
 
@@ -203,7 +215,9 @@ export class IrcComponent implements OnInit {
 		this.ircService.changeLastActiveChannel(this.selectedChannel, true);
 
 		this.selectedChannel.hasUnreadMessages = false;
-		this.chats = this.selectedChannel.messages;
+
+		this.normalChats = this.selectedChannel.messages;
+		this.banchoBotChats = this.selectedChannel.banchoBotMessages;
 
 		this.refreshIrcHeader(this.selectedLobby);
 
@@ -255,7 +269,9 @@ export class IrcComponent implements OnInit {
 
 		if (this.selectedChannel != undefined && (this.selectedChannel.name == channelName)) {
 			this.selectedChannel = undefined;
-			this.chats = [];
+
+			this.normalChats = [];
+			this.banchoBotChats = [];
 		}
 	}
 
@@ -676,7 +692,8 @@ export class IrcComponent implements OnInit {
 	 * Scroll irc chat to top
 	 */
 	scrollToTop() {
-		this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+		this.normalVirtualScroller.scrollToIndex(this.normalChats.length - 1, true, 0, 0);
+		this.banchoBotVirtualScroller.scrollToIndex(this.banchoBotChats.length - 1, true, 0, 0);
 	}
 
 	/**

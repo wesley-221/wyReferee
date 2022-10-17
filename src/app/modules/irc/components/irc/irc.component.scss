@@ -263,10 +263,13 @@ $hyperlink-background-color: #2b4576;
 			.messages {
 				float: left;
 
-				width: 100%;
 				height: 100%;
 
 				overflow-y: auto;
+
+				&.banchobot {
+					height: 30%;
+				}
 
 				.chat {
 					.chat-content {
@@ -443,6 +446,12 @@ $hyperlink-background-color: #2b4576;
 						}
 					}
 				}
+			}
+
+			.messages-divider {
+				background-color: $primary;
+
+				padding: 4px;
 			}
 
 			.send-message {

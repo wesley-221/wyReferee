@@ -79,11 +79,50 @@
 				</div>
 			</div>
 
-			<virtual-scroller class="messages" [items]="chats" [stripedTable]="true" (vsUpdate)="viewPortItems = $event">
-				<app-alert alertType="warn" *ngIf="chats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
-				<app-alert alertType="warn" *ngIf="chats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
+			<!-- Banchobot messages -->
+			<virtual-scroller #banchoBotVirtualScroller *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')" class="messages banchobot" [items]="banchoBotChats" [stripedTable]="true" (vsUpdate)="banchoBotViewPortItems = $event">
+				<app-alert alertType="warn" *ngIf="banchoBotChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
+				<app-alert alertType="warn" *ngIf="banchoBotChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
 
-				<div class="chat" *ngFor="let chat of viewPortItems">
+				<div class="chat" *ngFor="let chat of banchoBotViewPortItems">
+					<div class="chat-content">
+						<div class="time" [title]="chat.date">
+							{{ chat.time }}
+						</div>
+
+						<div class="author" [matTooltip]="chat.author" *ngVar="(selectedLobby != null ? selectedLobby.multiplayerLobbyPlayers.getPlayerByUsername(chat.author) : null) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
+							'bancho': chat.author == 'BanchoBot',
+							'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
+							'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false}" (click)="openUserpage(chat.author)">
+							{{ chat.author }}
+						</div>
+
+						<div class="message">
+							<div class="message-piece" *ngFor="let chatPiece of chat.messageBuilder">
+								<span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
+
+								<div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
+									<span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
+									<span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
+								</div>
+
+								<div class="pick-beatmap" *ngIf="chatPiece.messageType == 'ModAcronymPick'" (click)="pickBeatmapFromAcronym(chatPiece)" matTooltip="Click to pick beatmap" matTooltipPosition="above">
+									<span class="url">{{ chatPiece.message }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</virtual-scroller>
+
+			<div class="messages-divider" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')"></div>
+
+			<!-- Normal messages -->
+			<virtual-scroller #normalVirtualScroller class="messages normal" [items]="normalChats" [stripedTable]="true" (vsUpdate)="normalViewPortItems = $event">
+				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
+				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
+
+				<div class="chat" *ngFor="let chat of normalViewPortItems">
 					<div class="chat-content divider" *ngIf="!chat.isADivider">
 						<div class="time" [title]="chat.date">
 							{{ chat.time }}
