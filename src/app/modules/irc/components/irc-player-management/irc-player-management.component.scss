@@ -1,0 +1,92 @@
+@import "variables";
+
+$background-color-irc: #282828;
+
+.player-management {
+	display: flex;
+	flex: 1 1 auto;
+	overflow-y: auto;
+
+	background-color: $background-color-irc;
+
+	.players {
+		display: flex;
+		flex: 1 1 auto;
+		flex-flow: row wrap;
+
+		.player {
+			display: flex;
+			flex-direction: column;
+			flex: 1 0 33%;
+
+			padding: 8px;
+			margin: 4px;
+
+			background-color: rgba(0, 0, 0, 0.1);
+
+			.top-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				margin-bottom: 8px;
+
+				.column {
+					display: flex;
+					padding-right: 4px;
+
+					button {
+						margin-right: 4px;
+
+						&:last-child {
+							margin-right: 0px;
+						}
+					}
+				}
+			}
+
+			.second-row {
+				display: flex;
+				justify-content: space-between;
+
+				align-items: center;
+
+				.column {
+					.red {
+						color: red;
+						text-shadow: 1px 1px black;
+					}
+
+					.green {
+						color: green;
+						text-shadow: 1px 1px black;
+					}
+
+					.mods {
+						display: flex;
+						flex-direction: row;
+
+						.mod-icon {
+							display: flex;
+							align-items: center;
+
+							margin-right: 4px;
+
+							&:last-child {
+								margin-right: 0;
+							}
+						}
+					}
+				}
+			}
+
+			&.red {
+				background-color: rgba(255, 0, 0, 0.1);
+			}
+
+			&.blue {
+				background-color: rgba(0, 0, 255, 0.1);
+			}
+		}
+	}
+}

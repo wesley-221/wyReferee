@@ -12,8 +12,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { JoinIrcChannelComponent } from '../../../../components/dialogs/join-irc-channel/join-irc-channel.component';
 import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { BanBeatmapComponent } from '../../../../components/dialogs/ban-beatmap/ban-beatmap.component';
-import { MultiplayerLobbyPlayersPlayer } from 'app/models/multiplayer-lobby-players/multiplayer-lobby-players-player';
-import { MultiplayerLobbyMovePlayerComponent } from '../../../../components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
 import { SendBeatmapResultComponent } from '../../../../components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { IrcChannel } from 'app/models/irc/irc-channel';
@@ -28,7 +26,6 @@ import { IrcPickMapSameModBracketComponent } from '../../../../components/dialog
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { MessageBuilder } from 'app/models/irc/message-builder';
 import { IBanBeatmapDialogData } from 'app/interfaces/i-ban-beatmap-dialog-data';
-import { IMultiplayerLobbyMovePlayerDialogData } from 'app/interfaces/i-multiplayer-lobby-move-player-dialog-data';
 
 @Component({
 	selector: 'app-irc',
@@ -678,54 +675,6 @@ export class IrcComponent implements OnInit {
 		if (!this.isPlayerManagementMinimized) {
 			this.scrollToTop();
 		}
-	}
-
-	/**
-	 * Change the host to a different player
-	 *
-	 * @param player
-	 */
-	setHost(player: MultiplayerLobbyPlayersPlayer) {
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp host ${player.username}`);
-	}
-
-	/**
-	 * Kick the player from the match
-	 *
-	 * @param player
-	 */
-	kickPlayer(player: MultiplayerLobbyPlayersPlayer) {
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp kick ${player.username}`);
-	}
-
-	/**
-	 * Move the player to a different slot
-	 *
-	 * @param player
-	 */
-	movePlayer(player: MultiplayerLobbyPlayersPlayer) {
-		const dialogRef = this.dialog.open(MultiplayerLobbyMovePlayerComponent, {
-			data: {
-				movePlayer: player,
-				allPlayers: this.selectedLobby.multiplayerLobbyPlayers
-			}
-		});
-
-		dialogRef.afterClosed().subscribe((result: IMultiplayerLobbyMovePlayerDialogData) => {
-			if (result != undefined) {
-				this.ircService.sendMessage(this.selectedChannel.name, `!mp move ${result.movePlayer.username} ${result.moveToSlot}`);
-			}
-		});
-	}
-
-	/**
-	 * Change the colour of the current player
-	 *
-	 * @param player
-	 */
-	changeTeam(player: MultiplayerLobbyPlayersPlayer) {
-		const newTeamColour = player.team == 'Red' ? 'blue' : 'red';
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp team ${player.username} ${newTeamColour}`);
 	}
 
 	/**
