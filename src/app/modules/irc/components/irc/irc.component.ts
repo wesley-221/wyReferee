@@ -76,6 +76,8 @@ export class IrcComponent implements OnInit {
 	popupBannedMap: WyModBracketMap = null;
 	popupBannedBracket: WyModBracket = null;
 
+	dividerHeightPercentage: number;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -88,6 +90,16 @@ export class IrcComponent implements OnInit {
 		public ircShortcutCommandsService: IrcShortcutCommandsService,
 		private ref: ChangeDetectorRef) {
 		this.channels = ircService.allChannels;
+
+		const dividerHeightStore = this.storeService.get('dividerHeight');
+
+		if (dividerHeightStore == undefined) {
+			this.storeService.set('dividerHeight', 30);
+			this.dividerHeightPercentage = 30;
+		}
+		else {
+			this.dividerHeightPercentage = dividerHeightStore;
+		}
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
 			// Check if the user was authenticated
@@ -195,6 +207,30 @@ export class IrcComponent implements OnInit {
 	 */
 	goBack(): void {
 		this.router.navigate(['/']);
+	}
+
+	/**
+	 * Expand the divider by 5%
+	 */
+	expandDivider(): void {
+		this.dividerHeightPercentage += 5;
+		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+	}
+
+	/**
+	 * Reset the divider to 30%
+	 */
+	resetDivider(): void {
+		this.dividerHeightPercentage = 30;
+		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+	}
+
+	/**
+	 * Shrink the divider by 5%
+	 */
+	shrinkDivider(): void {
+		this.dividerHeightPercentage -= 5;
+		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
 	}
 
 	/**

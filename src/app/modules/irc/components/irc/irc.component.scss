@@ -449,9 +449,35 @@ $hyperlink-background-color: #2b4576;
 			}
 
 			.messages-divider {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
 				background-color: $primary;
+				z-index: 100;
 
 				padding: 4px;
+
+				.divider-buttons {
+					display: flex;
+					flex-direction: row;
+					position: absolute;
+
+					.divider-smaller,
+					.divider-reset,
+					.divider-bigger {
+						display: flex;
+						align-items: center;
+
+						background-color: $primary;
+						color: black;
+
+						&:hover {
+							background-color: darken($primary, 15%);
+							cursor: pointer;
+						}
+					}
+				}
 			}
 
 			.send-message {

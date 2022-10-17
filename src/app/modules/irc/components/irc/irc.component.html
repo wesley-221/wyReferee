@@ -80,7 +80,7 @@
 			</div>
 
 			<!-- Banchobot messages -->
-			<virtual-scroller #banchoBotVirtualScroller *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')" class="messages banchobot" [items]="banchoBotChats" [stripedTable]="true" (vsUpdate)="banchoBotViewPortItems = $event">
+			<virtual-scroller #banchoBotVirtualScroller *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')" [ngStyle]="{'height': dividerHeightPercentage + '%'}" class="messages banchobot" [items]="banchoBotChats" [stripedTable]="true" (vsUpdate)="banchoBotViewPortItems = $event">
 				<app-alert alertType="warn" *ngIf="banchoBotChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
 				<app-alert alertType="warn" *ngIf="banchoBotChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
 
@@ -115,7 +115,21 @@
 				</div>
 			</virtual-scroller>
 
-			<div class="messages-divider" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')"></div>
+			<div class="messages-divider" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
+				<div class="divider-buttons">
+					<div class="divider-bigger" (click)="expandDivider()">
+						<mat-icon>expand_more</mat-icon>
+					</div>
+
+					<div class="divider-reset" (click)="resetDivider()">
+						<mat-icon>restart_alt</mat-icon>
+					</div>
+
+					<div class="divider-smaller" (click)="shrinkDivider()">
+						<mat-icon>expand_less</mat-icon>
+					</div>
+				</div>
+			</div>
 
 			<!-- Normal messages -->
 			<virtual-scroller #normalVirtualScroller class="messages normal" [items]="normalChats" [stripedTable]="true" (vsUpdate)="normalViewPortItems = $event">
