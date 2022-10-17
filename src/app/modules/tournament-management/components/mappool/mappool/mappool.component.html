@@ -14,6 +14,8 @@
 			</mat-form-field>
 
 			<p>Select the name of the mappool</p>
+
+			<app-alert alertType="warn" *ngIf="tournament.stages.length <= 0">To make a mappool you have to create a stage first.</app-alert>
 		</div>
 
 		<div class="col">
