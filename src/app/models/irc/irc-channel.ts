@@ -19,6 +19,7 @@ export class IrcChannel {
 	label: string;
 	active: boolean;
 	messages: IrcMessage[];
+	banchoBotMessages: IrcMessage[];
 
 	lastActiveChannel: boolean;
 	isPrivateChannel: boolean;
@@ -37,6 +38,7 @@ export class IrcChannel {
 		this.editingLabel = false;
 		this.oldLabel = '';
 		this.messages = [];
+		this.banchoBotMessages = [];
 
 		Object.assign(this, init);
 	}
@@ -58,6 +60,10 @@ export class IrcChannel {
 
 		for (const message in ircChannel.messages) {
 			newIrcChannel.messages.push(IrcMessage.makeTrueCopy(ircChannel.messages[message]));
+		}
+
+		for (const message in ircChannel.banchoBotMessages) {
+			newIrcChannel.banchoBotMessages.push(IrcMessage.makeTrueCopy(ircChannel.banchoBotMessages[message]));
 		}
 
 		return newIrcChannel;

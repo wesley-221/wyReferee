@@ -13,8 +13,8 @@ function createWindow() {
 	win = new BrowserWindow({
 		x: 0,
 		y: 0,
-		width: size.width / 0.5,
-		height: size.height / 0.5,
+		width: size.width * 0.75,
+		height: size.height * 0.80,
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false,

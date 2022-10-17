@@ -12,8 +12,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { JoinIrcChannelComponent } from '../../../../components/dialogs/join-irc-channel/join-irc-channel.component';
 import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { BanBeatmapComponent } from '../../../../components/dialogs/ban-beatmap/ban-beatmap.component';
-import { MultiplayerLobbyPlayersPlayer } from 'app/models/multiplayer-lobby-players/multiplayer-lobby-players-player';
-import { MultiplayerLobbyMovePlayerComponent } from '../../../../components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
 import { SendBeatmapResultComponent } from '../../../../components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { IrcChannel } from 'app/models/irc/irc-channel';
@@ -22,16 +20,12 @@ import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
-import { IrcShortcutDialogComponent } from '../../../../components/dialogs/irc-shortcut-dialog/irc-shortcut-dialog.component';
 import { IrcShortcutCommandsService } from 'app/services/irc-shortcut-commands.service';
-import { IrcShortcutCommand } from 'app/models/irc-shortcut-command';
 import { MultiplayerLobbySettingsComponent } from '../../../../components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { IrcPickMapSameModBracketComponent } from '../../../../components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
-import { IrcShortcutWarningDialogComponent } from '../../../../components/dialogs/irc-shortcut-warning-dialog/irc-shortcut-warning-dialog.component';
 import { MessageBuilder } from 'app/models/irc/message-builder';
 import { IBanBeatmapDialogData } from 'app/interfaces/i-ban-beatmap-dialog-data';
-import { IMultiplayerLobbyMovePlayerDialogData } from 'app/interfaces/i-multiplayer-lobby-move-player-dialog-data';
 
 @Component({
 	selector: 'app-irc',
@@ -46,14 +40,18 @@ export class IrcComponent implements OnInit {
 	@ViewChild('winCondition') winCondition: MatSelect;
 	@ViewChild('players') players: MatSelect;
 
-	@ViewChild(VirtualScrollerComponent, { static: true }) private virtualScroller: VirtualScrollerComponent;
+	@ViewChild('normalVirtualScroller') private normalVirtualScroller: VirtualScrollerComponent;
+	@ViewChild('banchoBotVirtualScroller') private banchoBotVirtualScroller: VirtualScrollerComponent;
 
 	selectedChannel: IrcChannel;
 	selectedLobby: Lobby;
 	channels: IrcChannel[];
 
-	chats: IrcMessage[] = [];
-	viewPortItems: IrcMessage[];
+	normalChats: IrcMessage[] = [];
+	normalViewPortItems: IrcMessage[];
+
+	banchoBotChats: IrcMessage[] = [];
+	banchoBotViewPortItems: IrcMessage[];
 
 	chatLength = 0;
 	keyPressed = false;
@@ -62,7 +60,6 @@ export class IrcComponent implements OnInit {
 	attemptingToJoinChannel: string;
 
 	isOptionMenuMinimized = true;
-	isPlayerManagementMinimized = true;
 	isInvitesMinimized = true;
 
 	searchValue: string;
@@ -79,6 +76,8 @@ export class IrcComponent implements OnInit {
 	popupBannedMap: WyModBracketMap = null;
 	popupBannedBracket: WyModBracket = null;
 
+	dividerHeightPercentage: number;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -91,6 +90,16 @@ export class IrcComponent implements OnInit {
 		public ircShortcutCommandsService: IrcShortcutCommandsService,
 		private ref: ChangeDetectorRef) {
 		this.channels = ircService.allChannels;
+
+		const dividerHeightStore = this.storeService.get('dividerHeight');
+
+		if (dividerHeightStore == undefined) {
+			this.storeService.set('dividerHeight', 30);
+			this.dividerHeightPercentage = 30;
+		}
+		else {
+			this.dividerHeightPercentage = dividerHeightStore;
+		}
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
 			// Check if the user was authenticated
@@ -107,16 +116,24 @@ export class IrcComponent implements OnInit {
 
 		// Initialize the scroll
 		this.ircService.hasMessageBeenSend().subscribe(() => {
-			if (!this.viewPortItems) {
-				return;
+			if (this.normalViewPortItems) {
+				if (this.normalViewPortItems[this.normalViewPortItems.length - 1] === this.normalChats[this.normalChats.length - 2]) {
+					this.scrollToTop();
+				}
+
+				if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
+					ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
+				}
 			}
 
-			if (this.viewPortItems[this.viewPortItems.length - 1] === this.chats[this.chats.length - 2]) {
-				this.scrollToTop();
-			}
+			if (this.banchoBotViewPortItems) {
+				if (this.banchoBotViewPortItems[this.banchoBotViewPortItems.length - 1] === this.banchoBotChats[this.banchoBotChats.length - 2]) {
+					this.scrollToTop();
+				}
 
-			if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
-				ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
+				if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
+					ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
+				}
 			}
 		});
 
@@ -186,6 +203,37 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Go back to normal menu
+	 */
+	goBack(): void {
+		this.router.navigate(['/']);
+	}
+
+	/**
+	 * Expand the divider by 5%
+	 */
+	expandDivider(): void {
+		this.dividerHeightPercentage += 5;
+		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+	}
+
+	/**
+	 * Reset the divider to 30%
+	 */
+	resetDivider(): void {
+		this.dividerHeightPercentage = 30;
+		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+	}
+
+	/**
+	 * Shrink the divider by 5%
+	 */
+	shrinkDivider(): void {
+		this.dividerHeightPercentage -= 5;
+		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+	}
+
+	/**
 	 * Change the channel
 	 *
 	 * @param channel the channel to change to
@@ -203,7 +251,9 @@ export class IrcComponent implements OnInit {
 		this.ircService.changeLastActiveChannel(this.selectedChannel, true);
 
 		this.selectedChannel.hasUnreadMessages = false;
-		this.chats = this.selectedChannel.messages;
+
+		this.normalChats = this.selectedChannel.messages;
+		this.banchoBotChats = this.selectedChannel.banchoBotMessages;
 
 		this.refreshIrcHeader(this.selectedLobby);
 
@@ -255,7 +305,9 @@ export class IrcComponent implements OnInit {
 
 		if (this.selectedChannel != undefined && (this.selectedChannel.name == channelName)) {
 			this.selectedChannel = undefined;
-			this.chats = [];
+
+			this.normalChats = [];
+			this.banchoBotChats = [];
 		}
 	}
 
@@ -673,69 +725,11 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
-	 * Toggle the player management tab
-	 */
-	togglePlayerManagement() {
-		this.isPlayerManagementMinimized = !this.isPlayerManagementMinimized;
-
-		if (!this.isPlayerManagementMinimized) {
-			this.scrollToTop();
-		}
-	}
-
-	/**
-	 * Change the host to a different player
-	 *
-	 * @param player
-	 */
-	setHost(player: MultiplayerLobbyPlayersPlayer) {
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp host ${player.username}`);
-	}
-
-	/**
-	 * Kick the player from the match
-	 *
-	 * @param player
-	 */
-	kickPlayer(player: MultiplayerLobbyPlayersPlayer) {
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp kick ${player.username}`);
-	}
-
-	/**
-	 * Move the player to a different slot
-	 *
-	 * @param player
-	 */
-	movePlayer(player: MultiplayerLobbyPlayersPlayer) {
-		const dialogRef = this.dialog.open(MultiplayerLobbyMovePlayerComponent, {
-			data: {
-				movePlayer: player,
-				allPlayers: this.selectedLobby.multiplayerLobbyPlayers
-			}
-		});
-
-		dialogRef.afterClosed().subscribe((result: IMultiplayerLobbyMovePlayerDialogData) => {
-			if (result != undefined) {
-				this.ircService.sendMessage(this.selectedChannel.name, `!mp move ${result.movePlayer.username} ${result.moveToSlot}`);
-			}
-		});
-	}
-
-	/**
-	 * Change the colour of the current player
-	 *
-	 * @param player
-	 */
-	changeTeam(player: MultiplayerLobbyPlayersPlayer) {
-		const newTeamColour = player.team == 'Red' ? 'blue' : 'red';
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp team ${player.username} ${newTeamColour}`);
-	}
-
-	/**
 	 * Scroll irc chat to top
 	 */
 	scrollToTop() {
-		this.virtualScroller.scrollToIndex(this.chats.length - 1, true, 0, 0);
+		this.normalVirtualScroller.scrollToIndex(this.normalChats.length - 1, true, 0, 0);
+		this.banchoBotVirtualScroller.scrollToIndex(this.banchoBotChats.length - 1, true, 0, 0);
 	}
 
 	/**
@@ -753,52 +747,12 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
-	 * Open a dialog to manage irc shortcut commands
-	 */
-	shortcutSettings(): void {
-		const dialogRef = this.dialog.open(IrcShortcutDialogComponent);
-
-		dialogRef.afterClosed().subscribe(result => {
-			if (result == false) {
-				this.ircShortcutCommandsService.loadIrcShortcutCommands();
-			}
-			else {
-				this.ircShortcutCommandsService.saveIrcShortcutCommands();
-			}
-		});
-	}
-
-	/**
-	 * Execute an irc shortcut command and process variables
+	 * Focus the chat
 	 *
-	 * @param ircShortcutCommand the command that was executed
+	 * @param focus whether to focus
 	 */
-	executeIrcShortcutCommand(ircShortcutCommand: IrcShortcutCommand): void {
-		if (!this.ircService.isAuthenticated) {
-			return;
-		}
-
-		if (ircShortcutCommand.warning == true) {
-			const dialogRef = this.dialog.open(IrcShortcutWarningDialogComponent, {
-				data: {
-					ircShortcutCommand: ircShortcutCommand,
-					lobby: this.selectedLobby
-				}
-			});
-
-			dialogRef.afterClosed().subscribe(result => {
-				if (result == true) {
-					const ircCommand = ircShortcutCommand.parseIrcCommand(this.selectedLobby);
-					this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
-
-					this.chatMessage.nativeElement.focus();
-				}
-			});
-		}
-		else {
-			const ircCommand = ircShortcutCommand.parseIrcCommand(this.selectedLobby);
-			this.ircService.sendMessage(this.selectedChannel.name, ircCommand);
-
+	focusChat(focus: boolean): void {
+		if (focus == true) {
 			this.chatMessage.nativeElement.focus();
 		}
 	}

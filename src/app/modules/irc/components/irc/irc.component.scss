@@ -21,69 +21,25 @@ $hyperlink-background-color: #2b4576;
 	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
 
 	.channels {
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-auto-flow: row;
+		grid-auto-rows: min-content 250px 9fr;
 		flex: 0 0 21%;
-
-		.join-channel-button {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-
-			.join-channel-text {
-				display: block;
-			}
-
-			.join-channel-icon {
-				display: none;
-			}
-		}
 
 		background-color: darken($background-color-irc, 5%);
 
-		@media only screen and (max-width: 1200px) {
-			flex: 0 0 9%;
-			max-width: 9%;
-
-			.join-channel-button {
-				.join-channel-text {
-					display: none;
-				}
-
-				.join-channel-icon {
-					display: block;
-				}
-			}
-
-			&:hover {
-				flex: 0 0 21%;
-				max-width: fit-content;
-
-				.join-channel-button {
-					.join-channel-text {
-						display: block;
-					}
-
-					.join-channel-icon {
-						display: none;
-					}
-				}
-
-				.all-channels {
-					.channel {
-						.channel-name,
-						.channel-name-label {
-							font-size: 14px;
-							line-height: normal;
-						}
-					}
-				}
-			}
-		}
-
 		.header {
-			.btn {
-				width: 100%;
+			.header-buttons {
+				display: flex;
+
+				button {
+					flex: 1;
+					margin-right: 4px;
+
+					&:last-child {
+						margin-right: 0;
+					}
+				}
 			}
 
 			.connect-area {
@@ -103,6 +59,8 @@ $hyperlink-background-color: #2b4576;
 		}
 
 		.all-channels {
+			overflow-y: auto;
+
 			.channel {
 				display: flex;
 				flex-direction: row;
@@ -248,6 +206,10 @@ $hyperlink-background-color: #2b4576;
 				}
 			}
 		}
+
+		.player-management {
+			overflow-y: auto;
+		}
 	}
 
 	.chat-content {
@@ -255,100 +217,6 @@ $hyperlink-background-color: #2b4576;
 		flex-direction: column;
 
 		flex: 1 1 auto;
-
-		.player-management {
-			display: none;
-			flex: 1 1 auto;
-			overflow-y: auto;
-
-			background-color: $background-color-irc;
-
-			.players {
-				display: flex;
-				flex: 1 1 auto;
-				flex-flow: row wrap;
-
-				.player {
-					display: flex;
-					flex-direction: column;
-					flex: 1 0 33%;
-
-					padding: 8px;
-					margin: 4px;
-
-					background-color: rgba(0, 0, 0, 0.1);
-
-					.top-row {
-						display: flex;
-						justify-content: space-between;
-						align-items: center;
-
-						margin-bottom: 8px;
-
-						.column {
-							display: flex;
-							padding-right: 4px;
-
-							button {
-								margin-right: 4px;
-
-								&:last-child {
-									margin-right: 0px;
-								}
-							}
-						}
-					}
-
-					.second-row {
-						display: flex;
-						justify-content: space-between;
-
-						align-items: center;
-
-						.column {
-							.red {
-								color: red;
-								text-shadow: 1px 1px black;
-							}
-
-							.green {
-								color: green;
-								text-shadow: 1px 1px black;
-							}
-
-							.mods {
-								display: flex;
-								flex-direction: row;
-
-								.mod-icon {
-									display: flex;
-									align-items: center;
-
-									margin-right: 4px;
-
-									&:last-child {
-										margin-right: 0;
-									}
-								}
-							}
-						}
-					}
-
-					&.red {
-						background-color: rgba(255, 0, 0, 0.1);
-					}
-
-					&.blue {
-						background-color: rgba(0, 0, 255, 0.1);
-					}
-				}
-			}
-
-			&.in {
-				display: flex;
-				height: 40%;
-			}
-		}
 
 		.chat-container {
 			display: flex;
@@ -395,10 +263,13 @@ $hyperlink-background-color: #2b4576;
 			.messages {
 				float: left;
 
-				width: 100%;
 				height: 100%;
 
 				overflow-y: auto;
+
+				&.banchobot {
+					height: 30%;
+				}
 
 				.chat {
 					.chat-content {
@@ -577,6 +448,38 @@ $hyperlink-background-color: #2b4576;
 				}
 			}
 
+			.messages-divider {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				background-color: $primary;
+				z-index: 100;
+
+				padding: 4px;
+
+				.divider-buttons {
+					display: flex;
+					flex-direction: row;
+					position: absolute;
+
+					.divider-smaller,
+					.divider-reset,
+					.divider-bigger {
+						display: flex;
+						align-items: center;
+
+						background-color: $primary;
+						color: black;
+
+						&:hover {
+							background-color: darken($primary, 15%);
+							cursor: pointer;
+						}
+					}
+				}
+			}
+
 			.send-message {
 				// height: $send-message-height;
 
@@ -595,47 +498,6 @@ $hyperlink-background-color: #2b4576;
 
 					border: 1px solid darken($background-color, 15%);
 					outline: 0;
-				}
-			}
-
-			.action-bar {
-				display: flex;
-				justify-content: space-between;
-
-				.actions {
-					display: flex;
-
-					.action {
-						display: flex;
-						align-items: center;
-
-						background-color: $primary;
-						color: black;
-
-						padding: 4px;
-
-						margin-right: 2px;
-
-						-webkit-touch-callout: none;
-						-webkit-user-select: none;
-						-khtml-user-select: none;
-						-moz-user-select: none;
-						-ms-user-select: none;
-						user-select: none;
-
-						&:hover {
-							background-color: darken($primary, 15%);
-							cursor: pointer;
-						}
-
-						&:last-child {
-							margin-right: 0px;
-						}
-
-						&.disabled {
-							cursor: not-allowed;
-						}
-					}
 				}
 			}
 
@@ -718,6 +580,7 @@ $hyperlink-background-color: #2b4576;
 						&.active {
 							cursor: pointer;
 							background-color: $primary;
+							color: black;
 
 							margin-bottom: 0;
 						}
@@ -762,6 +625,7 @@ $hyperlink-background-color: #2b4576;
 										justify-content: center;
 
 										background-color: $primary;
+										color: black;
 
 										padding: 4px;
 
@@ -954,10 +818,6 @@ $hyperlink-background-color: #2b4576;
 						opacity: 1;
 					}
 				}
-			}
-
-			&.in {
-				height: 60%;
 			}
 		}
 	}

@@ -402,10 +402,22 @@ export class IrcService {
 				});
 			}
 
-			channel.messages.push(newMessage);
-			this.setChannelUnreadMessages$.next(channel);
+			if (user.startsWith('#mp_')) {
+				if (recipient == 'BanchoBot') {
+					channel.banchoBotMessages.push(newMessage);
+					this.saveMessageToHistory(user, newMessage, true);
+				}
+				else {
+					channel.messages.push(newMessage);
+					this.saveMessageToHistory(user, newMessage);
+				}
+			}
+			else {
+				channel.messages.push(newMessage);
+				this.saveMessageToHistory(user, newMessage);
+			}
 
-			this.saveMessageToHistory(user, newMessage);
+			this.setChannelUnreadMessages$.next(channel);
 
 			if (channel.playSoundOnMessage) {
 				const sound = new Howl({
@@ -639,14 +651,22 @@ export class IrcService {
 	 *
 	 * @param channelName the channel to save it in
 	 * @param message the message object to save
+	 * @param saveInBanchoMessages whether to save the message as a BanchoBot message
 	 */
-	saveMessageToHistory(channelName: string, message: IrcMessage) {
+	saveMessageToHistory(channelName: string, message: IrcMessage, saveInBanchoMessages?: boolean) {
 		if (message.isADivider) {
 			return;
 		}
 
 		const storeChannel: IrcChannel = this.storeService.get(`irc.channels.${channelName}`);
-		storeChannel.messages.push(message);
+
+		if (saveInBanchoMessages == true) {
+			storeChannel.banchoBotMessages.push(message);
+		}
+		else {
+			storeChannel.messages.push(message);
+		}
+
 		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
 	}
 
