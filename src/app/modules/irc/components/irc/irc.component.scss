@@ -26,41 +26,20 @@ $hyperlink-background-color: #2b4576;
 		grid-auto-rows: min-content 250px 9fr;
 		flex: 0 0 21%;
 
-		.go-back-button {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-
-			margin-bottom: 8px;
-
-			.go-back-text {
-				display: block;
-			}
-
-			.go-back-icon {
-				display: none;
-			}
-		}
-
-		.join-channel-button {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-
-			.join-channel-text {
-				display: block;
-			}
-
-			.join-channel-icon {
-				display: none;
-			}
-		}
-
 		background-color: darken($background-color-irc, 5%);
 
 		.header {
-			.btn {
-				width: 100%;
+			.header-buttons {
+				display: flex;
+
+				button {
+					flex: 1;
+					margin-right: 4px;
+
+					&:last-child {
+						margin-right: 0;
+					}
+				}
 			}
 
 			.connect-area {

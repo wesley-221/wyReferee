@@ -1,15 +1,10 @@
 <div class="irc">
 	<div class="channels">
 		<div class="header">
-			<button mat-flat-button class="go-back-button full-width" (click)="goBack()">
-				<span class="go-back-text">Go back</span>
-				<mat-icon class="go-back-icon">arrow_back</mat-icon>
-			</button>
-
-			<button mat-flat-button class="join-channel-button full-width" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">
-				<span class="join-channel-text">Join channel</span>
-				<mat-icon class="join-channel-icon">add</mat-icon>
-			</button>
+			<div class="header-buttons">
+				<button mat-flat-button class="go-back-button" (click)="goBack()">Go back</button>
+				<button mat-flat-button class="join-channel-button" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">Join</button>
+			</div>
 
 			<div class="connect-area" *ngIf="isAttemptingToJoin">
 				<div><mat-spinner [diameter]="40"></mat-spinner></div>
