@@ -1,6 +1,11 @@
 <div class="irc">
 	<div class="channels">
 		<div class="header">
+			<button mat-flat-button class="go-back-button full-width" (click)="goBack()">
+				<span class="go-back-text">Go back</span>
+				<mat-icon class="go-back-icon">arrow_back</mat-icon>
+			</button>
+
 			<button mat-flat-button class="join-channel-button full-width" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">
 				<span class="join-channel-text">Join channel</span>
 				<mat-icon class="join-channel-icon">add</mat-icon>

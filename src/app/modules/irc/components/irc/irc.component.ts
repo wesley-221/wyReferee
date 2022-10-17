@@ -180,6 +180,13 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Go back to normal menu
+	 */
+	goBack(): void {
+		this.router.navigate(['/']);
+	}
+
+	/**
 	 * Change the channel
 	 *
 	 * @param channel the channel to change to

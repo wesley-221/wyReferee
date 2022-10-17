@@ -25,6 +25,22 @@ $hyperlink-background-color: #2b4576;
 		flex-direction: column;
 		flex: 0 0 21%;
 
+		.go-back-button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			margin-bottom: 8px;
+
+			.go-back-text {
+				display: block;
+			}
+
+			.go-back-icon {
+				display: none;
+			}
+		}
+
 		.join-channel-button {
 			display: flex;
 			align-items: center;
@@ -45,6 +61,16 @@ $hyperlink-background-color: #2b4576;
 			flex: 0 0 9%;
 			max-width: 9%;
 
+			.go-back-button {
+				.go-back-text {
+					display: none;
+				}
+
+				.go-back-icon {
+					display: block;
+				}
+			}
+
 			.join-channel-button {
 				.join-channel-text {
 					display: none;
@@ -58,6 +84,16 @@ $hyperlink-background-color: #2b4576;
 			&:hover {
 				flex: 0 0 21%;
 				max-width: fit-content;
+
+				.go-back-button {
+					.go-back-text {
+						display: block;
+					}
+
+					.go-back-icon {
+						display: none;
+					}
+				}
 
 				.join-channel-button {
 					.join-channel-text {

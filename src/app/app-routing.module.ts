@@ -5,6 +5,10 @@ import { ErrorComponent } from './layout/error/error.component';
 
 const routes: Routes = [
 	{
+		path: 'irc', loadChildren: () =>
+			import('./modules/irc/irc.module').then(m => m.IrcModule)
+	},
+	{
 		path: '',
 		component: MainComponent,
 		children: [
@@ -39,10 +43,6 @@ const routes: Routes = [
 			{
 				path: 'axs', loadChildren: () =>
 					import('./modules/axs/axs.module').then(m => m.AxsModule)
-			},
-			{
-				path: 'irc', loadChildren: () =>
-					import('./modules/irc/irc.module').then(m => m.IrcModule)
 			},
 			{ path: '**', component: ErrorComponent }
 		]
