@@ -26,6 +26,7 @@ import { IrcPickMapSameModBracketComponent } from '../../../../components/dialog
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { MessageBuilder } from 'app/models/irc/message-builder';
 import { IBanBeatmapDialogData } from 'app/interfaces/i-ban-beatmap-dialog-data';
+import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
 
 @Component({
 	selector: 'app-irc',
@@ -88,7 +89,8 @@ export class IrcComponent implements OnInit {
 		private webhookService: WebhookService,
 		private dialog: MatDialog,
 		public ircShortcutCommandsService: IrcShortcutCommandsService,
-		private ref: ChangeDetectorRef) {
+		private ref: ChangeDetectorRef,
+		public multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService) {
 		this.channels = ircService.allChannels;
 
 		const dividerHeightStore = this.storeService.get('dividerHeight');
@@ -145,40 +147,6 @@ export class IrcComponent implements OnInit {
 			if (data == this.selectedLobby.lobbyId) {
 				this.selectedLobby = this.multiplayerLobbies.getMultiplayerLobby(data);
 				this.refreshIrcHeader(this.selectedLobby);
-			}
-		});
-
-		this.ircService.hasMultiplayerLobbyChanged().subscribe(changed => {
-			if (changed == null) {
-				return;
-			}
-
-			const data = changed.data;
-
-			if (changed.action == 'playerJoined') {
-				this.selectedLobby.multiplayerLobbyPlayers.playerJoined(data.player, (data.slot + 1), data.team);
-			}
-			else if (changed.action == 'playerLeft') {
-				this.selectedLobby.multiplayerLobbyPlayers.playerLeft(data);
-			}
-			else if (changed.action == 'playerMoved') {
-				this.selectedLobby.multiplayerLobbyPlayers.movePlayerToSlot(data.player, (data.slot + 1));
-			}
-			else if (changed.action == 'host') {
-				// Somehow gets triggered by hostCleared as well sometimes
-				// Add null check for when that happens
-				if (data != null) {
-					this.selectedLobby.multiplayerLobbyPlayers.changeHost(data);
-				}
-			}
-			else if (changed.action == 'hostCleared') {
-				this.selectedLobby.multiplayerLobbyPlayers.clearMatchHost();
-			}
-			else if (changed.action == 'playerChangedTeam') {
-				this.selectedLobby.multiplayerLobbyPlayers.playerChangedTeam(data.player, data.team);
-			}
-			else if (changed.action == 'playerInSlot') {
-				this.selectedLobby.multiplayerLobbyPlayers.playerChanged(data);
 			}
 		});
 

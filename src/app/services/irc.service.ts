@@ -1,4 +1,3 @@
-/* eslint-disable no-prototype-builtins */
 import { Injectable } from '@angular/core';
 import { BanchoClient, PrivateMessage, ChannelMessage, BanchoChannel, BanchoMultiplayerChannel, BanchoLobbyPlayer } from 'bancho.js';
 import { ToastService } from './toast.service';
@@ -12,6 +11,7 @@ import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyMultiplayerLobbiesService } from './wy-multiplayer-lobbies.service';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { Lobby } from 'app/models/lobby';
+import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -38,7 +38,6 @@ export class IrcService {
 	isJoiningChannel$: BehaviorSubject<boolean>;
 	messageHasBeenSend$: BehaviorSubject<boolean>;
 
-	multiplayerLobbyChanged$: BehaviorSubject<{ action: string; data: any }>;
 	setChannelUnreadMessages$: BehaviorSubject<IrcChannel>;
 
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
@@ -51,14 +50,14 @@ export class IrcService {
 
 	constructor(private toastService: ToastService,
 		private storeService: StoreService,
-		private multiplayerLobbiesService: WyMultiplayerLobbiesService) {
+		private multiplayerLobbiesService: WyMultiplayerLobbiesService,
+		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService) {
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
 		this.isJoiningChannel$ = new BehaviorSubject<boolean>(false);
 		this.messageHasBeenSend$ = new BehaviorSubject<boolean>(false);
 		this.isAuthenticated$ = new BehaviorSubject<boolean>(false);
-		this.multiplayerLobbyChanged$ = new BehaviorSubject(null);
 		this.setChannelUnreadMessages$ = new BehaviorSubject<IrcChannel>(null);
 
 		// Connect to irc if the credentials are saved
@@ -180,13 +179,13 @@ export class IrcService {
 
 				// Gets called when !mp settings is ran
 				if (playerInSlot) {
-					this.multiplayerLobbyChanged$.next({ action: 'playerInSlot', data: playerInSlot });
-
 					const multiplayerLobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(message.channel.name);
+
+					this.multiplayerLobbyPlayersService.lobbyChange(multiplayerLobby.lobbyId, 'playerInSlot', playerInSlot);
 
 					// Check if the player is in the correct slot
 					if (multiplayerLobby) {
-						if (!multiplayerLobby.isInCorrectSlot(playerInSlot.username)) {
+						if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
 							message.message += ` | Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}`;
 						}
 					}
@@ -238,8 +237,10 @@ export class IrcService {
 	 * @param channel
 	 */
 	initializeChannelListeners(channel: BanchoMultiplayerChannel) {
+		const lobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name);
+
 		channel.lobby.on('matchFinished', () => {
-			this.multiplayerLobbiesService.synchronizeMultiplayerMatch(this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name), true, true);
+			this.multiplayerLobbiesService.synchronizeMultiplayerMatch(lobby, true, true);
 		});
 
 		channel.lobby.on('size', (size: number) => {
@@ -248,28 +249,29 @@ export class IrcService {
 
 		channel.lobby.on('playerJoined', (obj: { player: BanchoLobbyPlayer; slot: number; team: string }) => {
 			// Slot starts at 0 instead of 1
-			this.multiplayerLobbyChanged$.next({ action: 'playerJoined', data: obj });
+
+			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'playerJoined', obj);
 		});
 
 		channel.lobby.on('playerLeft', (player: BanchoLobbyPlayer) => {
-			this.multiplayerLobbyChanged$.next({ action: 'playerLeft', data: player });
+			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'playerLeft', player);
 		});
 
 		channel.lobby.on('playerMoved', (obj: { player: BanchoLobbyPlayer; slot: number }) => {
 			// Slot starts at 0 instead of 1
-			this.multiplayerLobbyChanged$.next({ action: 'playerMoved', data: obj });
+			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'playerMoved', obj);
 		});
 
 		channel.lobby.on('host', (player: BanchoLobbyPlayer) => {
-			this.multiplayerLobbyChanged$.next({ action: 'host', data: player });
+			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'host', player);
 		});
 
 		channel.lobby.on('hostCleared', () => {
-			this.multiplayerLobbyChanged$.next({ action: 'hostCleared', data: null });
+			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'hostCleared', null);
 		});
 
 		channel.lobby.on('playerChangedTeam', (obj: { player: BanchoLobbyPlayer; team: string }) => {
-			this.multiplayerLobbyChanged$.next({ action: 'playerChangedTeam', data: obj });
+			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'playerChangedTeam', obj);
 		});
 	}
 
@@ -923,13 +925,6 @@ export class IrcService {
 				// pick the map
 			}
 		}
-	}
-
-	/**
-	 * Whenever a user changes anything in a multiplayer lobby
-	 */
-	hasMultiplayerLobbyChanged(): BehaviorSubject<{ action: string; data: any }> {
-		return this.multiplayerLobbyChanged$;
 	}
 
 	/**

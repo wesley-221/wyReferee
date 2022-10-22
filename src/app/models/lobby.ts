@@ -2,11 +2,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { IrcPickMapSameModBracketComponent } from 'app/components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
 import { MultiplayerLobbySettingsComponent } from 'app/components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { IrcService } from 'app/services/irc.service';
+import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
 import { ToastService } from 'app/services/toast.service';
 import { WebhookService } from 'app/services/webhook.service';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { IrcChannel } from './irc/irc-channel';
 import { MultiplayerLobbyPlayers } from './multiplayer-lobby-players/multiplayer-lobby-players';
+import { MultiplayerLobbyPlayersPlayer } from './multiplayer-lobby-players/multiplayer-lobby-players-player';
 import { PickedCategory } from './picked-category';
 import { MultiplayerData } from './store-multiplayer/multiplayer-data';
 import { ToastType } from './toast';
@@ -15,7 +17,6 @@ import { WyModBracket } from './wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from './wytournament/mappool/wy-mod-bracket-map';
 import { WyModCategory } from './wytournament/mappool/wy-mod-category';
 import { WyStage } from './wytournament/wy-stage';
-import { WyTeam } from './wytournament/wy-team';
 import { WyTeamPlayer } from './wytournament/wy-team-player';
 import { WyTournament } from './wytournament/wy-tournament';
 
@@ -70,8 +71,6 @@ export class Lobby {
 	isQualifierLobby: boolean;
 	sendWebhooks: boolean;
 
-	multiplayerLobbyPlayers: MultiplayerLobbyPlayers;
-
 	constructor(init?: Partial<Lobby>) {
 		this.teamOneBans = [];
 		this.teamTwoBans = [];
@@ -96,8 +95,6 @@ export class Lobby {
 
 		this.isQualifierLobby = false;
 		this.sendWebhooks = true;
-
-		this.multiplayerLobbyPlayers = new MultiplayerLobbyPlayers();
 
 		Object.assign(this, init);
 	}
@@ -511,73 +508,21 @@ export class Lobby {
 	}
 
 	/**
-	 * Check if the user is in the correct slot of the multiplayer lobby
+	 * Get a player by the username
 	 *
-	 * @param username the user to check if they are in the correct slot
+	 * @param username the username of the user to get
+	 * @returns
 	 */
-	isInCorrectSlot(username: string): boolean {
-		let foundTeam: WyTeam = null;
-		let foundUser: WyTeamPlayer = null;
+	getPlayerByUsername(username: string, multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService): MultiplayerLobbyPlayersPlayer {
+		const multiplayerLobbyPlayers: MultiplayerLobbyPlayers = multiplayerLobbyPlayersService.multiplayerLobbies[this.lobbyId].players;
 
-		if (!this.tournament.isSoloTournament()) {
-			for (const team of this.tournament.teams) {
-				if (this.teamOneName == team.name) {
-					foundTeam = team;
-
-					for (const player of team.players) {
-						if (player.name == username) {
-							foundUser = player;
-							break;
-						}
-					}
-
-					if (foundUser != null) {
-						break;
-					}
-				}
+		for (const user of multiplayerLobbyPlayers.players) {
+			if (user.username == username) {
+				return user;
 			}
 		}
 
-		for (const player of this.multiplayerLobbyPlayers.players) {
-			// Solo tournament
-			if (this.tournament.isSoloTournament()) {
-				if (player.username == username) {
-					if (this.teamOneName == username) {
-						if (player.slot == 1) {
-							return true;
-						}
-					}
-					else if (this.teamTwoName == username) {
-						if (player.slot == 2) {
-							return true;
-						}
-					}
-
-					break;
-				}
-			}
-			// Team tournament
-			else {
-				if (foundUser != null && foundTeam != null) {
-					if (this.teamOneName == foundTeam.name) {
-						if (player.username == foundUser.name) {
-							if (this.teamOneSlotArray.indexOf(player.slot - 1) > -1) {
-								return true;
-							}
-						}
-					}
-					else if (this.teamTwoName == foundTeam.name) {
-						if (player.username == foundUser.name) {
-							if (this.teamTwoSlotArray.indexOf(player.slot - 1) > -1) {
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return false;
+		return null;
 	}
 
 	/**

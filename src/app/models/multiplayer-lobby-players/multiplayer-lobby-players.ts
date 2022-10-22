@@ -45,7 +45,9 @@ export class MultiplayerLobbyPlayers {
 			if (mpSlot.username == player.user.username) {
 				mpSlot.username = 'Open';
 				mpSlot.team = 'invalid';
+				mpSlot.status = 'Not ready';
 				mpSlot.mods = [];
+				mpSlot.isHost = false;
 
 				break;
 			}
@@ -61,11 +63,19 @@ export class MultiplayerLobbyPlayers {
 	 * @param slot the slot the player moved to
 	 */
 	movePlayerToSlot(player: BanchoLobbyPlayer, slot: number) {
+		let oldStatus: string;
+		let oldMods: string[];
+
 		for (const mpSlot of this.players) {
 			if (mpSlot.username == player.user.username) {
+				oldStatus = mpSlot.status;
+				oldMods = mpSlot.mods;
+
 				mpSlot.username = 'Open';
 				mpSlot.team = 'invalid';
+				mpSlot.status = 'Not ready';
 				mpSlot.mods = [];
+				mpSlot.isHost = false;
 
 				break;
 			}
@@ -75,10 +85,9 @@ export class MultiplayerLobbyPlayers {
 			if (mpSlot.slot == slot) {
 				mpSlot.username = player.user.username;
 				mpSlot.team = player.team;
-
-				for (const mod of player.mods) {
-					mpSlot.mods.push(OsuHelper.getModAbbreviation(mod.longMod));
-				}
+				mpSlot.status = oldStatus;
+				mpSlot.isHost = player.isHost;
+				mpSlot.mods = oldMods;
 
 				break;
 			}
@@ -167,21 +176,5 @@ export class MultiplayerLobbyPlayers {
 		}
 
 		return this.players;
-	}
-
-	/**
-	 * Get a player by the username
-	 *
-	 * @param username the username of the user to get
-	 * @returns
-	 */
-	getPlayerByUsername(username: string) {
-		for (const user of this.players) {
-			if (user.username == username) {
-				return user;
-			}
-		}
-
-		return null;
 	}
 }

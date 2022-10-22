@@ -1,6 +1,6 @@
-<div class="player-management" *ngIf="channel != null && lobby && channel.name.startsWith('#mp_') && lobby.multiplayerLobbyPlayers != null">
+<div class="player-management">
 	<div class="players">
-		<div class="player" *ngFor="let player of lobby.multiplayerLobbyPlayers.players" [ngClass]="{'red': player.team == 'Red', 'blue': player.team == 'Blue'}">
+		<div class="player" *ngFor="let player of multiplayerLobbyPlayers.players" [ngClass]="{'red': player.team == 'Red', 'blue': player.team == 'Blue'}">
 			<div class="player-column">
 				<div class="player-data">
 					<div class="player-slot">
