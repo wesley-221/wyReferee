@@ -9,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 	providedIn: 'root'
 })
 export class MultiplayerLobbyPlayersService {
-	multiplayerLobbyChanged$: BehaviorSubject<{ lobbyId: number, action: string; data: any }>;
+	multiplayerLobbyChanged$: BehaviorSubject<{ lobbyId: number; action: string; data: any }>;
 
 	multiplayerLobbies: any;
 
