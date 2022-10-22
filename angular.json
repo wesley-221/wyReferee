@@ -36,15 +36,20 @@
 						},
 						"customWebpackConfig": {
 							"path": "./angular.webpack.js"
-						}
+						},
+						"vendorChunk": true,
+						"extractLicenses": false,
+						"buildOptimizer": false,
+						"sourceMap": true,
+						"optimization": false,
+						"namedChunks": true
 					},
 					"configurations": {
 						"dev": {
 							"optimization": false,
 							"outputHashing": "all",
 							"sourceMap": true,
-							"namedChunks": false,
-							"aot": true,
+							"namedChunks": true,
 							"extractLicenses": true,
 							"vendorChunk": false,
 							"buildOptimizer": false,
@@ -60,7 +65,6 @@
 							"outputHashing": "all",
 							"sourceMap": false,
 							"namedChunks": false,
-							"aot": true,
 							"extractLicenses": true,
 							"vendorChunk": false,
 							"buildOptimizer": true,
