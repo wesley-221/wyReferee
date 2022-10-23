@@ -51,7 +51,7 @@
 			</div>
 		</div>
 
-		<div class="player-management">
+		<div class="player-management" *ngIf="selectedLobby != undefined && selectedChannel != undefined && selectedChannel.name.startsWith('#mp_')">
 			<app-irc-player-management [lobby]="selectedLobby" [channel]="selectedChannel"></app-irc-player-management>
 		</div>
 	</div>
@@ -90,7 +90,7 @@
 							{{ chat.time }}
 						</div>
 
-						<div class="author" [matTooltip]="chat.author" *ngVar="(selectedLobby != null ? selectedLobby.multiplayerLobbyPlayers.getPlayerByUsername(chat.author) : null) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
+						<div class="author" [matTooltip]="chat.author" *ngVar="(selectedLobby != null ? selectedLobby.getPlayerByUsername(chat.author, multiplayerLobbyPlayersService) : null) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
 							'bancho': chat.author == 'BanchoBot',
 							'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
 							'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false}" (click)="openUserpage(chat.author)">
@@ -142,7 +142,7 @@
 							{{ chat.time }}
 						</div>
 
-						<div class="author" [matTooltip]="chat.author" *ngVar="(selectedLobby != null ? selectedLobby.multiplayerLobbyPlayers.getPlayerByUsername(chat.author) : null) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
+						<div class="author" [matTooltip]="chat.author" *ngVar="(selectedLobby != null ? selectedLobby.getPlayerByUsername(chat.author, multiplayerLobbyPlayersService) : null) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
 							'bancho': chat.author == 'BanchoBot',
 							'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
 							'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false}" (click)="openUserpage(chat.author)">

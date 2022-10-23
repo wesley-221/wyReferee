@@ -15,6 +15,7 @@ import { AlertComponent } from './components/alert/alert.component';
 import { NgVarDirective } from './directives/ng-var.directive';
 import { FilterTeamPipe } from './pipes/filter-team.pipe';
 import { ClickableLinksDirective } from 'app/core/directive/clickable-links.directive';
+import { ToastComponent } from './components/toast/toast.component';
 
 const declerations = [
 	FilterTournamentPipe,
@@ -26,7 +27,8 @@ const declerations = [
 	AlertComponent,
 	NgVarDirective,
 	FilterTeamPipe,
-	ClickableLinksDirective
+	ClickableLinksDirective,
+	ToastComponent
 ];
 
 const modules = [

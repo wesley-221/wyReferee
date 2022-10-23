@@ -1,10 +1,10 @@
-/* eslint-disable no-prototype-builtins */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CacheBeatmap } from 'app/models/cache/cache-beatmap';
 import { CacheUser } from 'app/models/cache/cache-user';
 import { Calculations } from 'app/models/calculations';
 import { Lobby } from 'app/models/lobby';
+import { MultiplayerLobbyPlayers } from 'app/models/multiplayer-lobby-players/multiplayer-lobby-players';
 import { MultiplayerMatch } from 'app/models/osu-models/multiplayer-match';
 import { Calculate } from 'app/models/score-calculation/calculate';
 import { AxSCalculation } from 'app/models/score-calculation/calculation-types/axs-calculation';
@@ -18,6 +18,7 @@ import { AppConfig } from 'environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CacheService } from './cache.service';
 import { GenericService } from './generic.service';
+import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 import { GetBeatmap } from './osu-api/get-beatmap.service';
 import { GetMultiplayerService } from './osu-api/get-multiplayer.service';
 import { GetUser } from './osu-api/get-user.service';
@@ -44,9 +45,12 @@ export class WyMultiplayerLobbiesService {
 		private toastService: ToastService,
 		private webhookService: WebhookService,
 		private http: HttpClient,
-		private genericService: GenericService) {
+		private genericService: GenericService,
+		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService) {
 		this.allLobbies = [];
 		this.availableLobbyId = 0;
+
+		this.synchronizeDone$ = new BehaviorSubject(-1);
 
 		this.genericService.getCacheHasBeenChecked().subscribe(checked => {
 			if (checked == true) {
@@ -61,11 +65,13 @@ export class WyMultiplayerLobbiesService {
 						}
 					});
 
+					this.multiplayerLobbyPlayersService.multiplayerLobbies[newLobby.lobbyId] = {
+						players: new MultiplayerLobbyPlayers()
+					};
+
 					this.allLobbies.push(newLobby);
 					this.availableLobbyId = newLobby.lobbyId + 1;
 				}
-
-				this.synchronizeDone$ = new BehaviorSubject(-1);
 			}
 		});
 	}

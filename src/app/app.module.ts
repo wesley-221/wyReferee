@@ -27,7 +27,6 @@ import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shor
 import { SharedModule } from './shared/shared.module';
 import { MainComponent } from './layout/main/main.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
-import { ToastComponent } from './layout/toast/toast.component';
 import { UpdaterComponent } from './layout/updater/updater.component';
 import { MarkdownModule } from 'ngx-markdown';
 
@@ -37,7 +36,6 @@ import { MarkdownModule } from 'ngx-markdown';
 		MainComponent,
 		SidebarComponent,
 		ErrorComponent,
-		ToastComponent,
 		RegisterComponent,
 		RemoveSettingsComponent,
 		DeleteLobbyComponent,
