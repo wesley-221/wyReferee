@@ -4,7 +4,6 @@ import { CacheBeatmap } from 'app/models/cache/cache-beatmap';
 import { CacheUser } from 'app/models/cache/cache-user';
 import { Calculations } from 'app/models/calculations';
 import { Lobby } from 'app/models/lobby';
-import { MultiplayerLobbyPlayers } from 'app/models/multiplayer-lobby-players/multiplayer-lobby-players';
 import { MultiplayerMatch } from 'app/models/osu-models/multiplayer-match';
 import { Calculate } from 'app/models/score-calculation/calculate';
 import { AxSCalculation } from 'app/models/score-calculation/calculation-types/axs-calculation';
@@ -65,9 +64,7 @@ export class WyMultiplayerLobbiesService {
 						}
 					});
 
-					this.multiplayerLobbyPlayersService.multiplayerLobbies[newLobby.lobbyId] = {
-						players: new MultiplayerLobbyPlayers()
-					};
+					this.multiplayerLobbyPlayersService.createNewMultiplayerLobbyObject(newLobby.lobbyId);
 
 					this.allLobbies.push(newLobby);
 					this.availableLobbyId = newLobby.lobbyId + 1;

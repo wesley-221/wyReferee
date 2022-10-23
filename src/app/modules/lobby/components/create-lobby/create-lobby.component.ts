@@ -9,6 +9,7 @@ import { ScoreInterface } from 'app/models/score-calculation/calculation-types/s
 import { WyTeam } from 'app/models/wytournament/wy-team';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { IrcService } from 'app/services/irc.service';
+import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { WebhookService } from 'app/services/webhook.service';
@@ -59,7 +60,8 @@ export class CreateLobbyComponent implements OnInit {
 		private ircService: IrcService,
 		public tournamentService: TournamentService,
 		private router: Router,
-		private webhookService: WebhookService) {
+		private webhookService: WebhookService,
+		private multiplayerLobbiesPlayersService: MultiplayerLobbyPlayersService) {
 		this.calculateScoreInterfaces = new Calculate();
 
 		this.qualifier = false;
@@ -236,6 +238,8 @@ export class CreateLobbyComponent implements OnInit {
 					}
 				}
 			}
+
+			this.multiplayerLobbiesPlayersService.createNewMultiplayerLobbyObject(lobby.lobbyId);
 
 			this.ircService.isCreatingMultiplayerLobby = lobby.lobbyId;
 
