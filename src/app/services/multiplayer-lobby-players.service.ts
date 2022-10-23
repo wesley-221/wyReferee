@@ -54,6 +54,17 @@ export class MultiplayerLobbyPlayersService {
 	}
 
 	/**
+	 * Create a new multiplayer lobby players object
+	 *
+	 * @param lobbyId the id of the lobby
+	 */
+	createNewMultiplayerLobbyObject(lobbyId: number): void {
+		this.multiplayerLobbies[lobbyId] = {
+			players: new MultiplayerLobbyPlayers()
+		};
+	}
+
+	/**
 	 * Change the lobby data
 	 *
 	 * @param lobbyId the id of the lobby a player was changed in
