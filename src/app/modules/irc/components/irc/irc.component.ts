@@ -696,8 +696,13 @@ export class IrcComponent implements OnInit {
 	 * Scroll irc chat to top
 	 */
 	scrollToTop() {
-		this.normalVirtualScroller.scrollToIndex(this.normalChats.length - 1, true, 0, 0);
-		this.banchoBotVirtualScroller.scrollToIndex(this.banchoBotChats.length - 1, true, 0, 0);
+		if (this.normalVirtualScroller != undefined) {
+			this.normalVirtualScroller.scrollToIndex(this.normalChats.length - 1, true, 0, 0);
+		}
+
+		if (this.banchoBotVirtualScroller != undefined) {
+			this.banchoBotVirtualScroller.scrollToIndex(this.banchoBotChats.length - 1, true, 0, 0);
+		}
 	}
 
 	/**
