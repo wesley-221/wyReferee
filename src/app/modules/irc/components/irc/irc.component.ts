@@ -60,7 +60,6 @@ export class IrcComponent implements OnInit {
 	isAttemptingToJoin = false;
 	attemptingToJoinChannel: string;
 
-	isOptionMenuMinimized = true;
 	isInvitesMinimized = true;
 
 	searchValue: string;
