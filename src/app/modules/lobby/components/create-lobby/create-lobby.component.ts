@@ -264,7 +264,7 @@ export class CreateLobbyComponent implements OnInit {
 						this.ircService.joinChannel(multiplayerChannel.name, `${lobby.teamOneName} vs. ${lobby.teamTwoName}`);
 					}
 
-					this.ircService.initializeChannelListeners(multiplayerChannel);
+					this.ircService.initializeChannelListeners(multiplayerChannel, lobby);
 
 					this.lobbyHasBeenCreatedTrigger();
 
@@ -286,7 +286,7 @@ export class CreateLobbyComponent implements OnInit {
 
 				from(multiplayerChannel.join()).subscribe(() => {
 					this.ircService.joinChannel(multiplayerChannel.name);
-					this.ircService.initializeChannelListeners(multiplayerChannel);
+					this.ircService.initializeChannelListeners(multiplayerChannel, lobby);
 
 					this.lobbyHasBeenCreatedTrigger();
 

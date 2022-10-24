@@ -32,7 +32,7 @@ import { WebhookService } from './webhook.service';
 export class WyMultiplayerLobbiesService {
 	allLobbies: Lobby[];
 	availableLobbyId: number;
-	synchronizeDone$: BehaviorSubject<number>;
+	synchronizeDone$: BehaviorSubject<Lobby>;
 
 	constructor(
 		private storeService: StoreService,
@@ -49,7 +49,7 @@ export class WyMultiplayerLobbiesService {
 		this.allLobbies = [];
 		this.availableLobbyId = 0;
 
-		this.synchronizeDone$ = new BehaviorSubject(-1);
+		this.synchronizeDone$ = new BehaviorSubject(null);
 
 		this.genericService.getCacheHasBeenChecked().subscribe(checked => {
 			if (checked == true) {
@@ -150,7 +150,7 @@ export class WyMultiplayerLobbiesService {
 	/**
 	 * Check if the synchronization has been completed
 	 */
-	synchronizeIsCompleted(): Observable<number> {
+	synchronizeIsCompleted(): Observable<Lobby> {
 		return this.synchronizeDone$.asObservable();
 	}
 
@@ -308,7 +308,7 @@ export class WyMultiplayerLobbiesService {
 				}
 			}
 
-			this.synchronizeDone$.next(multiplayerLobby.lobbyId);
+			this.synchronizeDone$.next(multiplayerLobby);
 
 			this.updateMultiplayerLobby(multiplayerLobby);
 

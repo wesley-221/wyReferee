@@ -236,8 +236,10 @@ export class IrcService {
 	 *
 	 * @param channel
 	 */
-	initializeChannelListeners(channel: BanchoMultiplayerChannel) {
-		const lobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name);
+	initializeChannelListeners(channel: BanchoMultiplayerChannel, lobby?: Lobby) {
+		if (lobby == undefined) {
+			lobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(channel.name);
+		}
 
 		channel.lobby.on('matchFinished', () => {
 			this.multiplayerLobbiesService.synchronizeMultiplayerMatch(lobby, true, true);

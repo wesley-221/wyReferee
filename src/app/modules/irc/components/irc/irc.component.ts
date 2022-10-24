@@ -144,8 +144,8 @@ export class IrcComponent implements OnInit {
 				return;
 			}
 
-			if (data == this.selectedLobby.lobbyId) {
-				this.selectedLobby = this.multiplayerLobbies.getMultiplayerLobby(data);
+			if (data.lobbyId == this.selectedLobby.lobbyId) {
+				this.selectedLobby = data;
 				this.refreshIrcHeader(this.selectedLobby);
 			}
 		});
