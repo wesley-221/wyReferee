@@ -1,3 +1,5 @@
+<app-toast></app-toast>
+
 <div class="irc">
 	<div class="channels">
 		<div class="header">
@@ -59,11 +61,16 @@
 	<div class="chat-content">
 		<div class="chat-container">
 			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.name.startsWith('#mp_')) && this.selectedLobby != null && selectedLobby.isQualifierLobby == false">
-				Score: {{ selectedLobby.teamOneName }} :
-				<div class="change-score" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">{{ teamOneScore }}</div> -
-				<div class="change-score" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(2, 'middle') : $event.which == 3 ? adjustScore(2, 'right') : adjustScore(2, 'left')">{{ teamTwoScore }}</div> :
-				{{ selectedLobby.teamTwoName }}
-				<span *ngIf="this.hasWon == null">| Next pick: <b>{{ nextPick }}</b></span> <br />
+				<div class="match-header-header">
+					<div class="synchronize-lobby" (click)="synchronizeLobby(selectedLobby)">
+						<mat-icon>sync</mat-icon>
+					</div>
+					&nbsp;Score: {{ selectedLobby.teamOneName }} :&nbsp;
+					<div class="change-score" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">{{ teamOneScore }}</div>&nbsp;-&nbsp;
+					<div class="change-score" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(2, 'middle') : $event.which == 3 ? adjustScore(2, 'right') : adjustScore(2, 'left')">{{ teamTwoScore }}</div>&nbsp;:&nbsp;
+					{{ selectedLobby.teamTwoName }}&nbsp;
+					<span *ngIf="this.hasWon == null">| Next pick: <b>{{ nextPick }}</b></span>
+				</div>
 
 				<div *ngIf="selectedChannel != null && this.matchpoint != null">
 					Matchpoint for <b>{{ this.matchpoint }}</b>

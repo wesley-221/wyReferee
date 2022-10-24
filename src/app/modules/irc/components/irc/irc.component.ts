@@ -819,6 +819,15 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Synchronize the given lobby
+	 *
+	 * @param lobby the lobby to synchronize
+	 */
+	synchronizeLobby(lobby: Lobby) {
+		this.multiplayerLobbies.synchronizeMultiplayerMatch(lobby, true);
+	}
+
+	/**
 	 * Adjust the score for the selected team
 	 *
 	 * @param team the team to adjust the score for

@@ -225,6 +225,28 @@ $hyperlink-background-color: #2b4576;
 			height: 100%;
 
 			.match-header {
+				display: flex;
+				flex-direction: column;
+
+				.match-header-header {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					.synchronize-lobby {
+						display: flex;
+
+						background-color: $primary;
+						color: #000000;
+
+						padding: 3px;
+
+						&:hover {
+							cursor: pointer;
+						}
+					}
+				}
+
 				border-bottom: 3px solid $primary;
 				text-align: center;
 
@@ -233,13 +255,16 @@ $hyperlink-background-color: #2b4576;
 				}
 
 				.change-score {
-					display: inline-block;
+					display: flex;
+
+					align-items: center;
+					justify-content: center;
+
+					width: 18px;
+					padding: 3px;
 
 					background-color: $primary;
 					color: #000000;
-
-					padding: 3px;
-					width: 18px;
 
 					-webkit-touch-callout: none;
 					-webkit-user-select: none;

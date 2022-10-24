@@ -20,6 +20,8 @@ $toast-border-height: 4px;
 
 	overflow: hidden;
 
+	pointer-events: none;
+
 	.toast {
 		.border {
 			background-color: lighten($toast-background-color, 30%);
@@ -57,6 +59,8 @@ $toast-border-height: 4px;
 			background-color: $toast-background-color;
 
 			justify-content: space-between;
+
+			pointer-events: all;
 
 			.icon {
 				display: flex;
