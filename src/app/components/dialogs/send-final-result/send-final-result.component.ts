@@ -77,7 +77,9 @@ export class SendFinalResultComponent implements OnInit {
 				opponentTwo: this.data.multiplayerLobby.teamTwoName,
 				opponentOneScore: this.data.multiplayerLobby.getTeamOneScore(),
 				opponentTwoScore: this.data.multiplayerLobby.getTeamTwoScore(),
-				winByDefaultWinner: this.secondStepFormGroup.get('winning-team').value
+				winByDefaultWinner: this.secondStepFormGroup.get('winning-team').value,
+				opponentOneBans: this.data.multiplayerLobby.teamOneBans,
+				opponentTwoBans: this.data.multiplayerLobby.teamTwoBans
 			}).subscribe(() => {
 				this.closeDialog(winningTeam, losingTeam);
 			}, (err: HttpErrorResponse) => {
