@@ -671,121 +671,190 @@ $hyperlink-background-color: #2b4576;
 						}
 					}
 
-					.map {
+					.beatmaps {
 						display: flex;
-						position: relative;
-						flex-direction: row;
-						justify-content: space-between;
+						flex-direction: column;
 
-						background-color: $background-color-irc;
-
-						overflow: hidden;
-
-						padding: 4px;
-
-						.has-been-picked {
-							display: none;
-							position: absolute;
-							top: 0;
-							left: 0;
-							bottom: 0;
-							right: calc(132px + 8px);
-
-							justify-content: center;
-							align-items: center;
+						.beatmap {
+							display: flex;
 
 							flex-direction: column;
-
-							.text {
-								color: white;
-
-								padding: 4px;
-
-								background-color: rgba(0, 0, 0, 0.589);
-							}
-
-							&.beatmap-picked-team-one {
-								display: flex;
-								background-color: #e94f647c;
-							}
-
-							&.beatmap-picked-team-two {
-								display: flex;
-								background-color: #229abb7c;
-							}
-						}
-
-						.has-been-banned {
-							display: none;
-							position: absolute;
-							top: 0;
-							left: 0;
-							bottom: 0;
-							right: calc(88px + 8px);
-
-							justify-content: center;
-							align-items: center;
-
-							background-color: rgba(128, 128, 128, 0.637);
-
-							.text {
-								color: white;
-
-								padding: 4px;
-
-								background-color: rgba(0, 0, 0, 0.589);
-							}
-
-							&.is-banned-one,
-							&.is-banned-two {
-								display: flex;
-							}
-						}
-
-						.name {
-							display: flex;
-
-							align-items: center;
+							justify-content: space-between;
 
 							overflow: hidden;
-							word-wrap: none;
 
-							&:hover {
-								cursor: pointer;
-								color: $primary;
-								font-weight: bold;
-							}
+							background-color: $background-color-irc;
 
-							&.beatmapBanned {
-								background-color: #730101;
-								text-decoration: line-through;
+							padding: 0;
 
-								&:hover {
-									color: white;
-									font-weight: normal;
+							.beatmap-information {
+								position: relative;
+								padding: 4px;
+
+								.has-been-picked {
+									display: none;
+									position: absolute;
+
+									justify-content: center;
+									align-items: center;
+
+									flex-direction: column;
+
+									top: 0;
+									left: 0;
+
+									width: 100%;
+									height: 100%;
+
+									.text {
+										color: white;
+
+										padding: 4px;
+
+										background-color: rgba(0, 0, 0, 0.589);
+									}
+
+									&.beatmap-picked-team-one {
+										display: flex;
+										background-color: #e94f647c;
+									}
+
+									&.beatmap-picked-team-two {
+										display: flex;
+										background-color: #229abb7c;
+									}
+								}
+
+								.has-been-banned {
+									display: none;
+									position: absolute;
+
+									justify-content: center;
+									align-items: center;
+
+									flex-direction: column;
+
+									top: 0;
+									left: 0;
+
+									width: 100%;
+									height: 100%;
+
+									background-color: rgba(128, 128, 128, 0.637);
+
+									.text {
+										color: white;
+
+										padding: 4px;
+
+										background-color: rgba(0, 0, 0, 0.589);
+									}
+
+									&.is-banned-one,
+									&.is-banned-two {
+										display: flex;
+									}
+								}
+
+								.name {
+									display: flex;
+
+									align-items: center;
+
+									overflow: hidden;
+									word-wrap: none;
+
+									&:hover {
+										cursor: pointer;
+										color: $primary;
+										font-weight: bold;
+									}
+
+									&.beatmapBanned {
+										background-color: #730101;
+										text-decoration: line-through;
+
+										&:hover {
+											color: white;
+											font-weight: normal;
+										}
+									}
 								}
 							}
-						}
 
-						.buttons {
-							display: flex;
-							flex-direction: row;
-							align-items: center;
-
-							margin-left: 4px;
-
-							button {
+							.beatmap-actions {
 								display: flex;
+								flex-direction: row;
+								align-items: center;
+
 								justify-content: center;
-								align-items: flex-end;
 
-								box-sizing: border-box;
-								margin-right: 4px;
+								margin-left: 4px;
+
+								.beatmap-button {
+									display: flex;
+
+									align-items: center;
+									justify-content: center;
+
+									width: 35px;
+									height: 35px;
+
+									&.warn {
+										color: black;
+										background-color: $warning;
+
+										&:hover {
+											background-color: darken($warning, 15%);
+											cursor: pointer;
+										}
+									}
+
+									&.accent {
+										background-color: $success;
+
+										&:hover {
+											background-color: darken($success, 15%);
+											cursor: pointer;
+										}
+									}
+
+									&.primary {
+										color: black;
+										background-color: $primary;
+
+										&:hover {
+											background-color: darken($primary, 15%);
+											cursor: pointer;
+										}
+									}
+
+									&.disabled {
+										background-color: rgba(255, 255, 255, 0.12);
+										color: rgba(255, 255, 255, 0.3);
+										cursor: default;
+
+										&:hover {
+											background-color: rgba(255, 255, 255, 0.12);
+											color: rgba(255, 255, 255, 0.3);
+											cursor: default;
+										}
+									}
+								}
+
+								button {
+									display: flex;
+									justify-content: center;
+									align-items: flex-end;
+
+									box-sizing: border-box;
+									margin-right: 4px;
+								}
 							}
-						}
 
-						&:nth-child(even) {
-							background-color: lighten($background-color-irc, 5%);
+							&:nth-child(even) {
+								background-color: lighten($background-color-irc, 5%);
+							}
 						}
 					}
 				}
