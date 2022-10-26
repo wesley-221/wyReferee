@@ -75,8 +75,12 @@
 
 			<hr />
 
+			<div class="loading" *ngIf="loading == true">
+				<mat-spinner [diameter]="35" class="spinner"></mat-spinner> updating the score on the wyBin tournament...
+			</div>
+
 			<mat-dialog-actions align="end">
-				<button mat-raised-button [mat-dialog-close]="returnData()" color="primary">Send final result</button>
+				<button mat-raised-button (click)="returnData()" color="primary">Send final result</button>
 			</mat-dialog-actions>
 		</mat-step>
 	</mat-horizontal-stepper>
