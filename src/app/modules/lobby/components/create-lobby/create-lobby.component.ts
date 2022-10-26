@@ -98,6 +98,12 @@ export class CreateLobbyComponent implements OnInit {
 			'selected-tournament': new FormControl('')
 		});
 
+		this.initializeFilters();
+	}
+
+	ngOnInit() { }
+
+	private initializeFilters() {
 		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
 			startWith(''),
 			map((value: string) => {
@@ -114,8 +120,6 @@ export class CreateLobbyComponent implements OnInit {
 			})
 		);
 	}
-
-	ngOnInit() { }
 
 	changeTournament() {
 		this.selectedTournament = this.tournamentService.getTournamentById(this.validationForm.get('selected-tournament').value);
@@ -139,6 +143,8 @@ export class CreateLobbyComponent implements OnInit {
 		this.validationForm.removeControl('challonge-tournament');
 
 		this.lobbyWithBrackets = this.selectedTournament.lobbyTeamNameWithBrackets;
+
+		this.initializeFilters();
 
 		// TODO: re-implement challonge integration
 		// this.checkingChallongeIntegration = true;
