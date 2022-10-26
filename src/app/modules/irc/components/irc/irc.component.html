@@ -283,7 +283,7 @@
 								<h3>{{ selectedLobby.teamOneName }}</h3>
 
 								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
-									<div class="name">
+									<div class="name" [title]="player.name">
 										{{ player.name }}
 									</div>
 
@@ -304,7 +304,7 @@
 								<h3>{{ selectedLobby.teamTwoName }}</h3>
 
 								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
-									<div class="name">
+									<div class="name" [title]="player.name">
 										{{ player.name }}
 									</div>
 
@@ -329,7 +329,7 @@
 						<div class="invite-body">
 							<div class="invite-team">
 								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
-									<div class="name">
+									<div class="name" [title]="player.name">
 										{{ player.name }}
 									</div>
 
@@ -343,7 +343,7 @@
 
 							<div class="invite-team">
 								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
-									<div class="name">
+									<div class="name" [title]="player.name">
 										{{ player.name }}
 									</div>
 

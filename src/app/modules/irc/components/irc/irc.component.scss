@@ -696,7 +696,7 @@ $hyperlink-background-color: #2b4576;
 
 			.invite-body {
 				display: grid;
-				grid-auto-columns: 1fr 1fr;
+				grid-auto-columns: minmax(0, 1fr);
 				grid-auto-flow: column;
 				column-gap: 8px;
 
@@ -717,6 +717,11 @@ $hyperlink-background-color: #2b4576;
 
 						margin-bottom: 4px;
 						padding: 4px;
+
+						.name {
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
 
 						.actions {
 							display: flex;
