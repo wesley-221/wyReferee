@@ -71,7 +71,7 @@ export class IrcComponent implements OnInit {
 	teamTwoScore = 0;
 	nextPick: string = null;
 	matchpoint: string = null;
-	tiebreaker: boolean = false;
+	tiebreaker = false;
 	hasWon: string = null;
 
 	popupBannedMap: WyModBracketMap = null;
