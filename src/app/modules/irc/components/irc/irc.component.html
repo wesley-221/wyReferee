@@ -196,8 +196,8 @@
 			</div>
 
 			<div class="header">
-				<div class="row">
-					<div class="col">
+				<div class="header-row">
+					<div class="header-col">
 						<mat-form-field class="full-width">
 							<mat-label>Team mode</mat-label>
 							<mat-select #teamMode (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
@@ -210,7 +210,7 @@
 						</mat-form-field>
 					</div>
 
-					<div class="col">
+					<div class="header-col">
 						<mat-form-field class="full-width">
 							<mat-label>Win condition</mat-label>
 							<mat-select #winCondition (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
@@ -223,9 +223,9 @@
 					</div>
 				</div>
 
-				<div class="row">
-					<div class="col">
-						<mat-form-field class="full-width">
+				<div class="header-row">
+					<div class="header-col">
+						<mat-form-field class="full-width no-max-width">
 							<mat-label>Players</mat-label>
 							<mat-select #players (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.players">
 								<mat-option></mat-option>
@@ -235,8 +235,8 @@
 					</div>
 				</div>
 
-				<div class="row" *ngIf="selectedLobby && selectedLobby.tournament != null && selectedLobby.tournament.format == 'teams'">
-					<div class="col">
+				<div class="header-row" *ngIf="selectedLobby && selectedLobby.tournament != null && selectedLobby.tournament.format == 'teams'">
+					<div class="header-col">
 						<div class="invite-header" [ngClass]="{'active': isInvitesMinimized == false}" (click)="isInvitesMinimized = !isInvitesMinimized">
 							<div class="invite-header-icon">
 								<mat-icon *ngIf="isInvitesMinimized == true">chevron_right</mat-icon>

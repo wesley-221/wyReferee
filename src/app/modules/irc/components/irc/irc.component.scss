@@ -520,6 +520,7 @@ $hyperlink-background-color: #2b4576;
 
 			.header-buttons {
 				display: flex;
+				margin-bottom: 4px;
 
 				.header-button {
 					display: flex;
@@ -541,7 +542,32 @@ $hyperlink-background-color: #2b4576;
 			}
 
 			.header {
-				padding: 16px;
+				padding: 0 16px 0 16px;
+
+				.header-row {
+					display: flex;
+					justify-content: space-evenly;
+
+					.header-col {
+						flex: 1;
+
+						margin-right: 4px;
+
+						.full-width {
+							@media only screen and (max-width: 1366px) {
+								max-width: 125px;
+							}
+
+							&.no-max-width {
+								max-width: none;
+							}
+						}
+
+						&:last-child {
+							margin-right: 0;
+						}
+					}
+				}
 			}
 
 			.invite-header {
@@ -577,6 +603,7 @@ $hyperlink-background-color: #2b4576;
 				&:hover {
 					cursor: pointer;
 					background-color: $primary;
+					color: black;
 				}
 			}
 
