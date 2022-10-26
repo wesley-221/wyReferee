@@ -188,6 +188,14 @@ export class Lobby {
 	getTeamPlayersFromTournament(teamName: string): WyTeamPlayer[] {
 		for (const team of this.tournament.teams) {
 			if (team.name == teamName) {
+				if (this.tournament != null) {
+					if (this.tournament.isSoloTournament()) {
+						return [
+							new WyTeamPlayer({ name: team.name })
+						];
+					}
+				}
+
 				return team.players;
 			}
 		}

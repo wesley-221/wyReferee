@@ -292,6 +292,40 @@
 					</div>
 				</div>
 
+				<div class="header-row" *ngIf="selectedLobby && selectedLobby.tournament != null && selectedLobby.tournament.format == 'solo'">
+					<div class="header-col">
+						<div class="invite-body">
+							<div class="invite-team">
+								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
+									<div class="name">
+										{{ player.name }}
+									</div>
+
+									<div class="actions">
+										<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
+											<mat-icon>add</mat-icon>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="invite-team">
+								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
+									<div class="name">
+										{{ player.name }}
+									</div>
+
+									<div class="actions">
+										<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
+											<mat-icon>add</mat-icon>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div class="row" *ngIf="selectedLobby && selectedLobby.tournament != null">
 					<div class="col">
 						<mat-form-field class="full-width">
