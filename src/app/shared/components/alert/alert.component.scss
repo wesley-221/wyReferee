@@ -65,9 +65,11 @@ $danger-background-dark-color: #de2d23;
 
 	&.warn {
 		background-color: $warn-background-light-color;
+		color: #000000;
 
 		.header {
 			background-color: $warn-background-dark-color;
+			color: #ffffff;
 		}
 	}
 

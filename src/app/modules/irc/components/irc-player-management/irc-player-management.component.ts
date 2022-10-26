@@ -44,6 +44,10 @@ export class IrcPlayerManagementComponent implements OnInit, OnChanges {
 	 * @param player
 	 */
 	movePlayer(player: MultiplayerLobbyPlayersPlayer): void {
+		if (player.username == 'Open') {
+			return;
+		}
+
 		const dialogRef = this.dialog.open(MultiplayerLobbyMovePlayerComponent, {
 			data: {
 				movePlayer: player,
@@ -64,6 +68,10 @@ export class IrcPlayerManagementComponent implements OnInit, OnChanges {
 	 * @param player
 	 */
 	changeTeam(player: MultiplayerLobbyPlayersPlayer): void {
+		if (player.username == 'Open') {
+			return;
+		}
+
 		const newTeamColour = player.team == 'Red' ? 'blue' : 'red';
 		this.ircService.sendMessage(this.channel.name, `!mp team ${player.username} ${newTeamColour}`);
 	}
@@ -74,6 +82,10 @@ export class IrcPlayerManagementComponent implements OnInit, OnChanges {
 	 * @param player
 	 */
 	setHost(player: MultiplayerLobbyPlayersPlayer): void {
+		if (player.username == 'Open') {
+			return;
+		}
+
 		this.ircService.sendMessage(this.channel.name, `!mp host ${player.username}`);
 	}
 
@@ -83,6 +95,10 @@ export class IrcPlayerManagementComponent implements OnInit, OnChanges {
 	 * @param player
 	 */
 	kickPlayer(player: MultiplayerLobbyPlayersPlayer): void {
+		if (player.username == 'Open') {
+			return;
+		}
+
 		this.ircService.sendMessage(this.channel.name, `!mp kick ${player.username}`);
 	}
 }
