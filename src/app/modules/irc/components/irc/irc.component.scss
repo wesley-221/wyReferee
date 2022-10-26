@@ -509,24 +509,6 @@ $hyperlink-background-color: #2b4576;
 
 		flex: 0 0 21%;
 
-		// .side-menu-button {
-		// 	width: 40px;
-		// 	height: 88px;
-
-		// 	margin-top: 8px;
-
-		// 	z-index: 70;
-
-		// 	button {
-		// 		float: right;
-
-		// 		width: 40px;
-		// 		height: 40px;
-
-		// 		margin-bottom: 4px;
-		// 	}
-		// }
-
 		.side-menu-content {
 			display: flex;
 			flex-direction: column;
@@ -534,6 +516,28 @@ $hyperlink-background-color: #2b4576;
 			float: right;
 
 			background-color: darken($background-color-irc, 5%);
+
+			.header-buttons {
+				display: flex;
+
+				.header-button {
+					display: flex;
+
+					align-items: center;
+					justify-content: center;
+
+					width: 35px;
+					height: 35px;
+
+					background-color: $primary;
+					color: black;
+
+					&:hover {
+						background-color: darken($primary, 15%);
+						cursor: pointer;
+					}
+				}
+			}
 
 			.header {
 				padding: 16px;

@@ -180,13 +180,21 @@
 	</div>
 
 	<div class="side-menu" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
-		<!-- <div class="side-menu-button">
-			<button mat-mini-fab color="primary" matTooltip="Open lobby settings" (click)="openLobbyDialog()"><mat-icon>settings</mat-icon></button>
-			<button mat-mini-fab color="primary" matTooltip="Go to multiplayer lobby match overview" (click)="navigateLobbyOverview()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)"><mat-icon>list</mat-icon></button>
-			<button mat-mini-fab color="primary" matTooltip="Send beatmap result to irc" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)"><mat-icon>send</mat-icon></button>
-		</div> -->
-
 		<div class="side-menu-content">
+			<div class="header-buttons">
+				<div class="header-button" matTooltip="Open lobby settings" (click)="openLobbyDialog()">
+					<mat-icon>settings</mat-icon>
+				</div>
+
+				<div class="header-button" matTooltip="Go to multiplayer lobby match overview" (click)="navigateLobbyOverview()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+					<mat-icon>list</mat-icon>
+				</div>
+
+				<div class="header-button" matTooltip="Send beatmap result to irc" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+					<mat-icon>send</mat-icon>
+				</div>
+			</div>
+
 			<div class="header">
 				<div class="row">
 					<div class="col">
