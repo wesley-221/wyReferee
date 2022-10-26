@@ -805,7 +805,11 @@ $hyperlink-background-color: #2b4576;
 
 							background-color: $background-color-irc;
 
+							background-position: center;
+							background-size: cover;
+
 							padding: 0;
+							margin-bottom: 2px;
 
 							.beatmap-information {
 								position: relative;
@@ -970,6 +974,10 @@ $hyperlink-background-color: #2b4576;
 									box-sizing: border-box;
 									margin-right: 4px;
 								}
+							}
+
+							&:last-child {
+								margin-bottom: 0;
 							}
 
 							&:nth-child(even) {

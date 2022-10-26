@@ -405,7 +405,7 @@
 					</div>
 
 					<div class="beatmaps" *ngIf="selectedLobby.mappool.type != 2">
-						<div class="beatmap" *ngFor="let beatmap of bracket.beatmaps">
+						<div class="beatmap" *ngFor="let beatmap of bracket.beatmaps" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(' + beatmap.getCoverImage() + ')' }">
 							<div class="beatmap-information">
 								<div class="has-been-picked" [ngClass]="{ 'beatmap-picked-team-one': beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId), 'beatmap-picked-team-two': beatmapIsPickedByTeamTwo(selectedLobby, beatmap.beatmapId) }">
 									<div class="text">
