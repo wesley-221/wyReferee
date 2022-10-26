@@ -264,16 +264,15 @@ export class CreateLobbyComponent implements OnInit {
 						this.ircService.joinChannel(multiplayerChannel.name, `${lobby.teamOneName} vs. ${lobby.teamTwoName}`);
 					}
 
-					this.ircService.initializeChannelListeners(multiplayerChannel);
 
 					this.lobbyHasBeenCreatedTrigger();
 
 					lobby.multiplayerLink = `https://osu.ppy.sh/community/matches/${multiplayerChannel.lobby.id}`;
-
 					this.multiplayerLobbies.addMultiplayerLobby(lobby);
 
-					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
+					this.ircService.initializeChannelListeners(multiplayerChannel);
 
+					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
 					this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 
 					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
