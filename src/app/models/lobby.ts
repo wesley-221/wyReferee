@@ -290,6 +290,20 @@ export class Lobby {
 	}
 
 	/**
+	 * Check if a tiebreaker is supposed to be played
+	 */
+	getTiebreaker(): boolean {
+		return this.getTeamOneScore() == Math.floor(this.bestOf / 2) && this.getTeamTwoScore() == Math.floor(this.bestOf / 2);
+	}
+
+	/**
+	 * Get an array of numbers to display the score circles with
+	 */
+	getMaxMatchPointsForIrcHeader(): number[] {
+		return Array(Math.floor(this.bestOf / 2) + 1).fill(0).map((x, i) => i + 1);
+	}
+
+	/**
 	 * Check if a team has won the match
 	 */
 	teamHasWon(): string {

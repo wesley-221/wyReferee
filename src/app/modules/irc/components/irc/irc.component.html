@@ -59,21 +59,53 @@
 	<div class="chat-content">
 		<div class="chat-container">
 			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.name.startsWith('#mp_')) && this.selectedLobby != null && selectedLobby.isQualifierLobby == false">
-				Score: {{ selectedLobby.teamOneName }} :
-				<div class="change-score" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">{{ teamOneScore }}</div> -
-				<div class="change-score" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(2, 'middle') : $event.which == 3 ? adjustScore(2, 'right') : adjustScore(2, 'left')">{{ teamTwoScore }}</div> :
-				{{ selectedLobby.teamTwoName }}
-				<span *ngIf="this.hasWon == null">| Next pick: <b>{{ nextPick }}</b></span> <br />
+				<div class="match-header-center">
+					<div class="match-information">
+						<div class="team-one">
+							<div class="team-name red">
+								{{ selectedLobby.teamOneName }}
+							</div>
 
-				<div *ngIf="selectedChannel != null && this.matchpoint != null">
-					Matchpoint for <b>{{ this.matchpoint }}</b>
+							<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">
+								<div class="circle red" [ngClass]="{ 'active': score <= teamOneScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
+							</div>
+						</div>
+
+						<div class="middle">
+							vs
+						</div>
+
+						<div class="team-two">
+							<div class="team-name blue">
+								{{ selectedLobby.teamTwoName }}
+							</div>
+
+							<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(2, 'middle') : $event.which == 3 ? adjustScore(2, 'right') : adjustScore(2, 'left')">
+								<div class="circle blue" [ngClass]="{ 'active': score <= teamTwoScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
+							</div>
+						</div>
+					</div>
 				</div>
 
-				<div *ngIf="selectedChannel != null && this.hasWon != null">
-					<b>{{ this.hasWon }}</b> has won the match, GG and wp!
+				<div class="next-pick" *ngIf="selectedChannel != null && hasWon == null && tiebreaker == false">
+					Next pick is for <div class="team-name" [ngClass]="{'red': nextPick == selectedLobby.teamOneName, 'blue': nextPick == selectedLobby.teamTwoName }">{{ nextPick }}</div>
 				</div>
 
-				<div class="warning first-pick-dialog" *ngIf="selectedLobby.firstPick == null || selectedLobby.bestOf == null" (click)="openLobbyDialog()">
+				<div class="match-point" *ngIf="selectedChannel != null && matchpoint != null && hasWon == null && tiebreaker == false">
+					Matchpoint for <div class="team-name" [ngClass]="{'red': matchpoint == selectedLobby.teamOneName, 'blue': matchpoint == selectedLobby.teamTwoName }">{{ matchpoint }}</div>
+				</div>
+
+				<div class="tiebreaker" *ngIf="selectedChannel != null && tiebreaker == true">
+					<div class="team-name primary">
+						Tiebreaker hype!
+					</div>
+				</div>
+
+				<div class="has-won" *ngIf="selectedChannel != null && hasWon != null">
+					<div class="team-name" [ngClass]="{'red': hasWon == selectedLobby.teamOneName, 'blue': hasWon == selectedLobby.teamTwoName }">{{ hasWon }}</div> has won the match, GG and wp!
+				</div>
+
+				<div class="first-pick-dialog" *ngIf="selectedLobby.firstPick == null || selectedLobby.bestOf == null" (click)="openLobbyDialog()">
 					You haven't set the <b>First pick</b> of the match yet. <br />
 					<b>Click on me to change who picks first.</b>
 				</div>

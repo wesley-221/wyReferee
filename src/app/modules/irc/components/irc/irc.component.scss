@@ -225,38 +225,125 @@ $hyperlink-background-color: #2b4576;
 			height: 100%;
 
 			.match-header {
+				display: flex;
+				flex-direction: column;
+
+				align-items: center;
+				justify-content: center;
+
 				border-bottom: 3px solid $primary;
 				text-align: center;
 
-				.warning {
-					background-color: $danger;
+				.match-header-center {
+					margin: 2px 0 2px 0;
+
+					.match-information {
+						display: flex;
+
+						.team-one,
+						.team-two {
+							display: flex;
+							flex-direction: column;
+							align-items: center;
+							justify-content: center;
+
+							.team-name {
+								margin-bottom: 2px;
+								padding: 2px 16px 2px 16px;
+
+								border-radius: 25px;
+
+								&.red {
+									background-color: $red-team-chat-colour;
+								}
+
+								&.blue {
+									background-color: $blue-team-chat-colour;
+								}
+							}
+
+							.circles {
+								display: flex;
+
+								.circle {
+									width: 15px;
+									height: 15px;
+
+									border-style: solid;
+									border-radius: 50%;
+									border-width: 3px;
+
+									margin-right: 2px;
+
+									&.red {
+										border-color: $red-team-chat-colour;
+
+										&.active {
+											background-color: $red-team-chat-colour;
+										}
+									}
+
+									&.blue {
+										border-color: $blue-team-chat-colour;
+
+										&.active {
+											background-color: $blue-team-chat-colour;
+										}
+									}
+
+									&:last-child {
+										margin-right: 0;
+									}
+								}
+
+								&:hover {
+									cursor: pointer;
+								}
+							}
+						}
+
+						.middle {
+							align-self: center;
+							margin: 0 4px 0 4px;
+						}
+					}
 				}
 
-				.change-score {
-					display: inline-block;
+				.next-pick,
+				.match-point,
+				.tiebreaker,
+				.has-won {
+					.team-name {
+						display: inline-block;
 
-					background-color: $primary;
-					color: #000000;
+						margin-bottom: 2px;
+						padding: 2px 16px 2px 16px;
 
-					padding: 3px;
-					width: 18px;
+						border-radius: 25px;
 
-					-webkit-touch-callout: none;
-					-webkit-user-select: none;
-					-khtml-user-select: none;
-					-moz-user-select: none;
-					-ms-user-select: none;
-					user-select: none;
+						&.red {
+							background-color: $red-team-chat-colour;
+						}
+
+						&.blue {
+							background-color: $blue-team-chat-colour;
+						}
+
+						&.primary {
+							background-color: $primary;
+							color: #000000;
+						}
+					}
+				}
+
+				.first-pick-dialog {
+					width: 100%;
+
+					background-color: $danger;
 
 					&:hover {
 						cursor: pointer;
 					}
-				}
-			}
-
-			.first-pick-dialog {
-				&:hover {
-					cursor: pointer;
 				}
 			}
 
