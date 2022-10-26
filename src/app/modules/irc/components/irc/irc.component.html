@@ -220,11 +220,19 @@
 					<mat-icon>settings</mat-icon>
 				</div>
 
+				<div class="header-button" matTooltip="Synchronize the scores of this multiplayer lobby" (click)="synchronizeMp()">
+					<mat-icon>sync</mat-icon>
+				</div>
+
 				<div class="header-button" matTooltip="Go to multiplayer lobby match overview" (click)="navigateLobbyOverview()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
 					<mat-icon>list</mat-icon>
 				</div>
 
 				<div class="header-button" matTooltip="Send beatmap result to irc" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+					<mat-icon>chat</mat-icon>
+				</div>
+
+				<div class="header-button" matTooltip="Send final result to Discord webhook" (click)="sendFinalResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
 					<mat-icon>send</mat-icon>
 				</div>
 			</div>
