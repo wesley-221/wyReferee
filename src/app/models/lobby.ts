@@ -114,7 +114,7 @@ export class Lobby {
 			teamSize: lobby.teamSize,
 			mappoolId: lobby.mappoolId,
 			mappool: lobby.mappool != null ? WyMappool.makeTrueCopy(lobby.mappool) : null,
-			ircChannel: lobby.ircChannel,
+			ircChannel: IrcChannel.makeTrueCopy(lobby.ircChannel),
 			firstPick: lobby.firstPick,
 			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
 			bestOf: lobby.bestOf,

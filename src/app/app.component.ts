@@ -5,6 +5,8 @@ import { CacheService } from './services/cache.service';
 import { GenericService } from './services/generic.service';
 import { gte, gt } from 'semver';
 import { Router } from '@angular/router';
+import { ToastService } from './services/toast.service';
+import { ToastType } from './models/toast';
 
 @Component({
 	selector: 'app-root',
@@ -14,10 +16,10 @@ import { Router } from '@angular/router';
 export class AppComponent {
 	clearDataBeforeVersion: string;
 
-	constructor(private ircService: IrcService, private auth: AuthenticateService, private cacheService: CacheService, private genericService: GenericService, private router: Router) {
+	constructor(private ircService: IrcService, private auth: AuthenticateService, private cacheService: CacheService, private genericService: GenericService, private router: Router, private toastService: ToastService) {
 		const currentVersion = require('../../package.json').version;
 
-		this.clearDataBeforeVersion = '5.5.0';
+		this.clearDataBeforeVersion = '6.5.0';
 
 		if (cacheService.cacheVersion == undefined) {
 			this.cacheService.setCacheVersion(currentVersion);
@@ -28,6 +30,8 @@ export class AppComponent {
 			if (!gte(cacheService.cacheVersion, this.clearDataBeforeVersion)) {
 				this.cacheService.clearAllData();
 				this.cacheService.setCacheVersion(currentVersion);
+
+				this.toastService.addToast('Your local data has been cleared. This is because a new update has been pushed which could cause problems because of your local data. Make sure to import your tournament(s) again!', ToastType.Warning, 30);
 
 				this.genericService.setCacheHasBeenChecked(true);
 			}
