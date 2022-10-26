@@ -40,4 +40,11 @@ export class WyModBracketMap {
 			isSynchronizing: modBracketMap.isSynchronizing
 		});
 	}
+
+	/**
+	 * Get the url of cover image of the beatmap
+	 */
+	public getCoverImage(): string {
+		return `https://assets.ppy.sh/beatmaps/${this.beatmapsetId}/covers/cover.jpg`;
+	}
 }

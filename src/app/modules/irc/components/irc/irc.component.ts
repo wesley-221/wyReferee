@@ -60,7 +60,6 @@ export class IrcComponent implements OnInit {
 	isAttemptingToJoin = false;
 	attemptingToJoinChannel: string;
 
-	isOptionMenuMinimized = true;
 	isInvitesMinimized = true;
 
 	searchValue: string;
@@ -72,6 +71,7 @@ export class IrcComponent implements OnInit {
 	teamTwoScore = 0;
 	nextPick: string = null;
 	matchpoint: string = null;
+	tiebreaker = false;
 	hasWon: string = null;
 
 	popupBannedMap: WyModBracketMap = null;
@@ -230,6 +230,7 @@ export class IrcComponent implements OnInit {
 			this.teamTwoScore = this.selectedLobby.getTeamTwoScore();
 			this.nextPick = this.selectedLobby.getNextPick();
 			this.matchpoint = this.selectedLobby.getMatchPoint();
+			this.tiebreaker = this.selectedLobby.getTiebreaker();
 			this.hasWon = this.selectedLobby.teamHasWon();
 		}
 
@@ -540,6 +541,7 @@ export class IrcComponent implements OnInit {
 			this.teamTwoScore = multiplayerLobby.getTeamTwoScore();
 			this.nextPick = multiplayerLobby.getNextPick();
 			this.matchpoint = multiplayerLobby.getMatchPoint();
+			this.tiebreaker = multiplayerLobby.getTiebreaker();
 			this.hasWon = multiplayerLobby.teamHasWon();
 		}
 	}
