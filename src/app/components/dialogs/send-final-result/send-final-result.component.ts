@@ -14,16 +14,14 @@ import { ToastService } from 'app/services/toast.service';
 	styleUrls: ['./send-final-result.component.scss']
 })
 export class SendFinalResultComponent implements OnInit {
-	private readonly apiUrl = AppConfig.apiUrl;
-
 	firstStepFormGroup: FormGroup;
 	secondStepFormGroup: FormGroup;
 
 	isWinByDefault = false;
-
 	canSend = false;
-
 	loading = false;
+
+	private readonly apiUrl = AppConfig.apiUrl;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySendFinalMessageDialogData, private dialogRef: MatDialogRef<LobbyViewComponent>, private http: HttpClient, private toastService: ToastService) {
 		this.firstStepFormGroup = new FormGroup({

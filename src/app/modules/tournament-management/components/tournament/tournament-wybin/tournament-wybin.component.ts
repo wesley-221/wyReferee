@@ -10,11 +10,10 @@ import { AppConfig } from 'environments/environment';
 	styleUrls: ['./tournament-wybin.component.scss']
 })
 export class TournamentWybinComponent implements OnInit {
-	private readonly apiUrl = AppConfig.apiUrl;
-
 	@Input() tournament: WyTournament;
+	tournaments: { id: number; name: string }[];
 
-	tournaments: { id: number, name: string }[];
+	private readonly apiUrl = AppConfig.apiUrl;
 
 	constructor(private http: HttpClient) {
 		this.tournaments = [];
@@ -25,7 +24,7 @@ export class TournamentWybinComponent implements OnInit {
 			for (const tournament of tournaments) {
 				this.tournaments.push({ id: tournament.id, name: tournament.name });
 			}
-		})
+		});
 	}
 
 	onWyBinTournamentChange(wyBinTournament: MatSelectChange) {

@@ -103,24 +103,6 @@ export class CreateLobbyComponent implements OnInit {
 
 	ngOnInit() { }
 
-	private initializeFilters() {
-		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
-			startWith(''),
-			map((value: string) => {
-				const filterValue = value.toLowerCase();
-				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
-			})
-		);
-
-		this.teamTwoFilter = this.validationForm.get('team-two-name').valueChanges.pipe(
-			startWith(''),
-			map((value: string) => {
-				const filterValue = value.toLowerCase();
-				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
-			})
-		);
-	}
-
 	changeTournament() {
 		this.selectedTournament = this.tournamentService.getTournamentById(this.validationForm.get('selected-tournament').value);
 		this.changeTeamSize(this.selectedTournament != null ? this.selectedTournament.teamSize : null);
@@ -365,5 +347,23 @@ export class CreateLobbyComponent implements OnInit {
 			this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
 			this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
 		}
+	}
+
+	private initializeFilters() {
+		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
+			startWith(''),
+			map((value: string) => {
+				const filterValue = value.toLowerCase();
+				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
+			})
+		);
+
+		this.teamTwoFilter = this.validationForm.get('team-two-name').valueChanges.pipe(
+			startWith(''),
+			map((value: string) => {
+				const filterValue = value.toLowerCase();
+				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
+			})
+		);
 	}
 }
