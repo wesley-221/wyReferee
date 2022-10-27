@@ -42,6 +42,8 @@ export class WyTournament {
 	allowDoublePick: boolean;
 	lobbyTeamNameWithBrackets: boolean;
 
+	wyBinTournamentId: number;
+
 	availableTo: User[];
 
 	administrators: User[];
@@ -95,7 +97,8 @@ export class WyTournament {
 			creationDate: new Date(tournament.creationDate),
 			allowDoublePick: tournament.allowDoublePick,
 			invalidateBeatmaps: tournament.invalidateBeatmaps,
-			lobbyTeamNameWithBrackets: tournament.lobbyTeamNameWithBrackets
+			lobbyTeamNameWithBrackets: tournament.lobbyTeamNameWithBrackets,
+			wyBinTournamentId: tournament.wyBinTournamentId
 		});
 
 		for (const team in tournament.teams) {

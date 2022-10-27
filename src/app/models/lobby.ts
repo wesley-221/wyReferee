@@ -114,7 +114,7 @@ export class Lobby {
 			teamSize: lobby.teamSize,
 			mappoolId: lobby.mappoolId,
 			mappool: lobby.mappool != null ? WyMappool.makeTrueCopy(lobby.mappool) : null,
-			ircChannel: IrcChannel.makeTrueCopy(lobby.ircChannel),
+			ircChannel: lobby.ircChannel,
 			firstPick: lobby.firstPick,
 			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
 			bestOf: lobby.bestOf,
@@ -573,8 +573,6 @@ export class Lobby {
 							for (let i = 0; i < this.teamOneSlotArray.length; i++) {
 								teamSlotString += (this.teamOneSlotArray[i] + 1);
 
-								console.log(i, this.teamOneSlotArray.length);
-
 								if (i != (this.teamOneSlotArray.length - 2)) {
 									teamSlotString += ', ';
 								}
@@ -592,8 +590,6 @@ export class Lobby {
 
 							for (let i = 0; i < this.teamTwoSlotArray.length; i++) {
 								teamSlotString += (this.teamTwoSlotArray[i] + 1);
-
-								console.log(i, this.teamTwoSlotArray.length);
 
 								if (i != (this.teamTwoSlotArray.length - 2)) {
 									teamSlotString += ', ';

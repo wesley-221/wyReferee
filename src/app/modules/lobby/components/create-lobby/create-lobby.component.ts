@@ -98,21 +98,7 @@ export class CreateLobbyComponent implements OnInit {
 			'selected-tournament': new FormControl('')
 		});
 
-		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
-			startWith(''),
-			map((value: string) => {
-				const filterValue = value.toLowerCase();
-				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
-			})
-		);
-
-		this.teamTwoFilter = this.validationForm.get('team-two-name').valueChanges.pipe(
-			startWith(''),
-			map((value: string) => {
-				const filterValue = value.toLowerCase();
-				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
-			})
-		);
+		this.initializeFilters();
 	}
 
 	ngOnInit() { }
@@ -139,6 +125,8 @@ export class CreateLobbyComponent implements OnInit {
 		this.validationForm.removeControl('challonge-tournament');
 
 		this.lobbyWithBrackets = this.selectedTournament.lobbyTeamNameWithBrackets;
+
+		this.initializeFilters();
 
 		// TODO: re-implement challonge integration
 		// this.checkingChallongeIntegration = true;
@@ -359,5 +347,23 @@ export class CreateLobbyComponent implements OnInit {
 			this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
 			this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
 		}
+	}
+
+	private initializeFilters() {
+		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
+			startWith(''),
+			map((value: string) => {
+				const filterValue = value.toLowerCase();
+				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
+			})
+		);
+
+		this.teamTwoFilter = this.validationForm.get('team-two-name').valueChanges.pipe(
+			startWith(''),
+			map((value: string) => {
+				const filterValue = value.toLowerCase();
+				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
+			})
+		);
 	}
 }

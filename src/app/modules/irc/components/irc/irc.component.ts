@@ -27,6 +27,8 @@ import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { MessageBuilder } from 'app/models/irc/message-builder';
 import { IBanBeatmapDialogData } from 'app/interfaces/i-ban-beatmap-dialog-data';
 import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
+import { SendFinalResultComponent } from 'app/components/dialogs/send-final-result/send-final-result.component';
+import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-multiplayer-lobby-send-final-message-dialog-data';
 
 @Component({
 	selector: 'app-irc',
@@ -719,6 +721,46 @@ export class IrcComponent implements OnInit {
 				ircChannel: this.selectedChannel.name
 			}
 		});
+	}
+
+	/**
+	 * Send the final result to discord
+	 */
+	sendFinalResult() {
+		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
+
+		const dialogRef = this.dialog.open(SendFinalResultComponent, {
+			data: {
+				multiplayerLobby: selectedMultiplayerLobby
+			}
+		});
+
+		dialogRef.afterClosed().subscribe((result: IMultiplayerLobbySendFinalMessageDialogData) => {
+			if (result != undefined) {
+				if (result.qualifierLobby) {
+					this.webhookService.sendQualifierResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+				}
+				else {
+					if (result.winByDefault) {
+						this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser);
+					}
+					else {
+						this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+					}
+				}
+			}
+		});
+	}
+
+	/**
+	 * Synchronizes the multiplayer lobby and calculates all the scores
+	 */
+	synchronizeMp() {
+		this.toastService.addToast('Synchronizing multiplayer lobby...');
+
+		// console.time('synchronize-lobby');
+		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby, true, false);
+		// console.timeEnd('synchronize-lobby');
 	}
 
 	/**
