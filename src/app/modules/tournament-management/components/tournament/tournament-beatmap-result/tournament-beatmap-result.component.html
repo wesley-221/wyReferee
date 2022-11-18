@@ -1,0 +1,29 @@
+<form [formGroup]="validationForm">
+	<h3>Beatmap result</h3>
+	<p>Customize the message that will be sent in irc when a match has finished playing.</p>
+
+	<button mat-raised-button color="primary" (click)="createNewMessage()"><mat-icon>add</mat-icon> create new message</button>
+
+	<div class="messages">
+		<div class="message" *ngIf="tournament.beatmapResultMessages.length <= 0">
+			<div class="content">
+				<app-alert alertType="info">There are no beatmap result messages.</app-alert>
+			</div>
+		</div>
+
+		<div class="message" *ngFor="let message of tournament.beatmapResultMessages">
+			<div class="content">
+				<mat-form-field class="full-width">
+					<mat-label>Message name</mat-label>
+					<input matInput [formControlName]="'beatmap-result-message-' + message.index" />
+
+					<mat-error *ngIf="validationForm.get('beatmap-result-message-' + message.index).errors && (validationForm.get('beatmap-result-message-' + message.index).touched || validationForm.get('beatmap-result-message-' + message.index).dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+			</div>
+
+			<button mat-mini-fab color="warn" (click)="removeBeatmapResultMessage(message)"><mat-icon>delete</mat-icon></button>
+		</div>
+	</div>
+</form>

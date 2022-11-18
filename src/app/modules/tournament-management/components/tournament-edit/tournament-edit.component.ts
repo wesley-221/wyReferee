@@ -79,6 +79,10 @@ export class TournamentEditComponent implements OnInit {
 						this.validationForm.addControl(`webhook-${webhook.index}-final-result`, new FormControl(webhook.finalResult, Validators.required));
 					}
 
+					for (const beatmapResultMessage of tournament.beatmapResultMessages) {
+						this.validationForm.addControl(`beatmap-result-message-${beatmapResultMessage.index}`, new FormControl(beatmapResultMessage.message, Validators.required));
+					}
+
 					for (const mappool of tournament.mappools) {
 						mappool.collapsed = true;
 
@@ -157,6 +161,10 @@ export class TournamentEditComponent implements OnInit {
 				webhook.bans = this.validationForm.get(`webhook-${webhook.index}-bans`).value;
 				webhook.matchResult = this.validationForm.get(`webhook-${webhook.index}-match-result`).value;
 				webhook.finalResult = this.validationForm.get(`webhook-${webhook.index}-final-result`).value;
+			}
+
+			for (const beatmapResultMessage of this.tournament.beatmapResultMessages) {
+				beatmapResultMessage.message = this.validationForm.get(`beatmap-result-message-${beatmapResultMessage.index}`).value;
 			}
 
 			this.tournamentService.updateTournament(this.tournament, this.tournament.id);

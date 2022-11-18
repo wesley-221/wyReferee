@@ -5,6 +5,7 @@ import { WyMappool } from './mappool/wy-mappool';
 import { WyWebhook } from './wy-webhook';
 import { WyTeam } from './wy-team';
 import { WyStage } from './wy-stage';
+import { WyBeatmapResultMessage } from './wy-beatmap-result-message';
 
 export enum TournamentFormat {
 	Solo = 'solo',
@@ -32,6 +33,9 @@ export class WyTournament {
 
 	webhooks: WyWebhook[];
 	webhookIndex: number;
+
+	beatmapResultMessages: WyBeatmapResultMessage[];
+	beatmapResultMessageIndex: number;
 
 	challongeIntegration: number;
 	challongeApiKey: string;
@@ -61,6 +65,8 @@ export class WyTournament {
 		this.mappoolIndex = 0;
 		this.webhooks = [];
 		this.webhookIndex = 0;
+		this.beatmapResultMessages = [];
+		this.beatmapResultMessageIndex = 0;
 		this.mappools = [];
 		this.invalidateBeatmaps = true;
 		this.allowDoublePick = true;
@@ -126,6 +132,15 @@ export class WyTournament {
 			newTournament.webhookIndex++;
 
 			newTournament.webhooks.push(newWebhook);
+		}
+
+		for (const beatmapMessage in tournament.beatmapResultMessages) {
+			const newBeatmapMessage = WyBeatmapResultMessage.makeTrueCopy(tournament.beatmapResultMessages[beatmapMessage]);
+
+			newBeatmapMessage.index = newTournament.beatmapResultMessageIndex;
+			newTournament.beatmapResultMessageIndex++;
+
+			newTournament.beatmapResultMessages.push(newBeatmapMessage);
 		}
 
 		for (const mappool in tournament.mappools) {
