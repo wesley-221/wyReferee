@@ -2,6 +2,27 @@
 	<h3>Beatmap result</h3>
 	<p>Customize the message that will be sent in irc when a match has finished playing.</p>
 
+	<hr />
+
+	<h3>Variables</h3>
+	<p>You can add variables to the messages to replace them with the appropriate data. The following variables can be used:</p>
+
+	<ul>
+		<li><code>{{ '{' }}{{ '{' }}beatmapWinner{{ '}' }}{{ '}' }}</code>: the name of the team that has won the beatmap</li>
+		<li><code>{{ '{' }}{{ '{' }}beatmap{{ '}' }}{{ '}' }}</code>: a hyperlink with the beatmap and link</li>
+		<li><code>{{ '{' }}{{ '{' }}beatmapTeamOneScore{{ '}' }}{{ '}' }}</code>: the score of team one of the beatmap</li>
+		<li><code>{{ '{' }}{{ '{' }}beatmapTeamTwoScore{{ '}' }}{{ '}' }}</code>: the score of team two of the beatmap</li>
+		<li><code>{{ '{' }}{{ '{' }}scoreDifference{{ '}' }}{{ '}' }}</code>: the score difference between the two scores</li>
+		<li><code>{{ '{' }}{{ '{' }}teamOneName{{ '}' }}{{ '}' }}</code>: the name of team one</li>
+		<li><code>{{ '{' }}{{ '{' }}teamTwoName{{ '}' }}{{ '}' }}</code>: the name of team two</li>
+		<li><code>{{ '{' }}{{ '{' }}matchTeamOneScore{{ '}' }}{{ '}' }}</code>: the match score of team one</li>
+		<li><code>{{ '{' }}{{ '{' }}matchTeamTwoScore{{ '}' }}{{ '}' }}</code>: the match score of team two</li>
+	</ul>
+
+	<p>Example message: <code>Score: {{ '{' }}{{ '{' }}matchTeamOneScore{{ '}' }}{{ '}' }} | {{ '{' }}{{ '{' }}matchTeamTwoScore{{ '}' }}{{ '}' }}</code></p>
+
+	<hr />
+
 	<button mat-raised-button color="primary" (click)="createNewMessage()"><mat-icon>add</mat-icon> create new message</button>
 
 	<div class="messages">
