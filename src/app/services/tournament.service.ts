@@ -26,15 +26,26 @@ export class TournamentService {
 
 		this.tournamentsInitialized$ = new BehaviorSubject(false);
 
+		this.updateFromPublishedTournaments(true);
+	}
+
+	/**
+	 * Update all local tournaments with the published tournaments if they are updated
+	 */
+	updateFromPublishedTournaments(initialLoad: boolean): void {
+		this.tournamentsInitialized$.next(false);
+
 		this.genericService.getCacheHasBeenChecked().subscribe(checked => {
 			if (checked == true) {
-				const storeAllTournaments = this.storeService.get('cache.tournaments');
+				if (initialLoad == true) {
+					const storeAllTournaments = this.storeService.get('cache.tournaments');
 
-				for (const tournament in storeAllTournaments) {
-					const newTournament = WyTournament.makeTrueCopy(storeAllTournaments[tournament]);
-					this.availableTournamentId = newTournament.id + 1;
+					for (const tournament in storeAllTournaments) {
+						const newTournament = WyTournament.makeTrueCopy(storeAllTournaments[tournament]);
+						this.availableTournamentId = newTournament.id + 1;
 
-					this.allTournaments.push(newTournament);
+						this.allTournaments.push(newTournament);
+					}
 				}
 
 				// TODO: make a better solution for this

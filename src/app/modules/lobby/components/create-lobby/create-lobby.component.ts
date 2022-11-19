@@ -98,6 +98,8 @@ export class CreateLobbyComponent implements OnInit {
 			'selected-tournament': new FormControl('')
 		});
 
+		this.tournamentService.updateFromPublishedTournaments(false);
+
 		this.initializeFilters();
 	}
 
