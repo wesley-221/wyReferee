@@ -1,0 +1,30 @@
+.messages {
+	margin-top: 8px;
+	margin-bottom: 8px;
+
+	.message {
+		display: flex;
+
+		.content {
+			flex: 1;
+		}
+
+		div {
+			margin-right: 8px;
+
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+
+		.options {
+			display: flex;
+
+			.option {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+		}
+	}
+}
