@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Mods } from 'app/models/osu-models/osu';
 import { ToastType } from 'app/models/toast';
+import { WyBeatmapResultMessage } from 'app/models/wytournament/wy-beatmap-result-message';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
@@ -43,6 +44,21 @@ export class TournamentCreateComponent implements OnInit {
 			'invalidate-beatmaps': new FormControl(true),
 			'lobby-team-name-with-brackets': new FormControl(false)
 		});
+
+		const beatmapResultMessages = [
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ beatmapWinner }} has won on {{ beatmap }}' }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference : {{ scoreDifference }}' }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ teamOneName }} | {{ matchTeamOneScore }} : {{ matchTeamTwoScore }} | {{ teamTwoName }}' }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'Next pick is for {{ nextPick }}', nextPickMessage: true }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'The next pick is the tiebreaker!', nextPickTiebreakerMessage: true }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ matchWinner }} has won the match, GG and WP!', matchWonMessage: true })
+		];
+
+		for (const beatmapResultMessage of beatmapResultMessages) {
+			this.validationForm.addControl(`beatmap-result-message-${beatmapResultMessage.index}`, new FormControl(beatmapResultMessage.message, Validators.required));
+
+			this.tournament.beatmapResultMessages.push(beatmapResultMessage);
+		}
 	}
 
 	ngOnInit(): void { }

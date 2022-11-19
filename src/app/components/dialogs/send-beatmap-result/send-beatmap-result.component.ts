@@ -48,7 +48,7 @@ export class SendBeatmapResultComponent implements OnInit {
 				'{{\\s{0,}beatmap\\s{0,}}}': `[https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}]`,
 				'{{\\s{0,}beatmapTeamOneScore\\s{0,}}}': this.addDot(match.team_one_score, ' '),
 				'{{\\s{0,}beatmapTeamTwoScore\\s{0,}}}': this.addDot(match.team_two_score, ' '),
-				'{{\\s{0,}scoreDifference\\s{0,}}}': this.addDot(match.team_one_score - match.team_two_score, ' '),
+				'{{\\s{0,}scoreDifference\\s{0,}}}': match.team_one_score > match.team_two_score ? this.addDot(match.team_one_score - match.team_two_score, ' ') : this.addDot(match.team_two_score - match.team_one_score, ' '),
 				'{{\\s{0,}teamOneName\\s{0,}}}': this.data.multiplayerLobby.teamOneName,
 				'{{\\s{0,}teamTwoName\\s{0,}}}': this.data.multiplayerLobby.teamTwoName,
 				'{{\\s{0,}matchTeamOneScore\\s{0,}}}': this.data.multiplayerLobby.getTeamOneScore(),
