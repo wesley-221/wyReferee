@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { WyBeatmapResultMessage } from 'app/models/wytournament/wy-beatmap-result-message';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
@@ -28,5 +29,17 @@ export class TournamentBeatmapResultComponent implements OnInit {
 		this.validationForm.removeControl(`beatmap-result-message-${message.index}`);
 
 		this.tournament.beatmapResultMessages.splice(this.tournament.beatmapResultMessages.indexOf(message), 1);
+	}
+
+	nextPickChange(message: WyBeatmapResultMessage, event: MatSlideToggleChange) {
+		message.nextPickMessage = event.checked;
+	}
+
+	nextpickTiebreakerChange(message: WyBeatmapResultMessage, event: MatSlideToggleChange) {
+		message.nextPickTiebreakerMessage = event.checked;
+	}
+
+	matchWonChange(message: WyBeatmapResultMessage, event: MatSlideToggleChange) {
+		message.matchWonMessage = event.checked;
 	}
 }

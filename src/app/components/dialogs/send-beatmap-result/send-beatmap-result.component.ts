@@ -43,17 +43,6 @@ export class SendBeatmapResultComponent implements OnInit {
 	sendBeatmapResult(match: MultiplayerData) {
 		// User is connected to irc channel
 		if (this.ircService.getChannelByName(this.data.ircChannel) != null) {
-			const totalMapsPlayed = this.data.multiplayerLobby.getTeamOneScore() + this.data.multiplayerLobby.getTeamTwoScore();
-			let nextPick = '';
-
-			// First pick goes to .firstPick
-			if (totalMapsPlayed % 2 == 0) {
-				nextPick = this.data.multiplayerLobby.firstPick;
-			}
-			else {
-				nextPick = this.data.multiplayerLobby.firstPick == this.data.multiplayerLobby.teamOneName ? this.data.multiplayerLobby.teamTwoName : this.data.multiplayerLobby.teamOneName;
-			}
-
 			const replaceWords = {
 				'{{\\s{0,}beatmapWinner\\s{0,}}}': match.team_one_score > match.team_two_score ? this.data.multiplayerLobby.teamOneName : this.data.multiplayerLobby.teamTwoName,
 				'{{\\s{0,}beatmap\\s{0,}}}': `[https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}]`,
@@ -64,7 +53,8 @@ export class SendBeatmapResultComponent implements OnInit {
 				'{{\\s{0,}teamTwoName\\s{0,}}}': this.data.multiplayerLobby.teamTwoName,
 				'{{\\s{0,}matchTeamOneScore\\s{0,}}}': this.data.multiplayerLobby.getTeamOneScore(),
 				'{{\\s{0,}matchTeamTwoScore\\s{0,}}}': this.data.multiplayerLobby.getTeamTwoScore(),
-				'{{\\s{0,}nextPick\\s{0,}}}': nextPick
+				'{{\\s{0,}nextPick\\s{0,}}}': this.data.multiplayerLobby.getNextPick(),
+				'{{\\s{0,}matchWinner\\s{0,}}}': this.data.multiplayerLobby.teamHasWon()
 			};
 
 			for (const beatmapResultMessage of this.data.multiplayerLobby.tournament.beatmapResultMessages) {
@@ -74,7 +64,24 @@ export class SendBeatmapResultComponent implements OnInit {
 					finalMessage = finalMessage.replace(new RegExp(regex), replaceWords[regex]);
 				}
 
-				this.ircService.sendMessage(this.data.ircChannel, finalMessage);
+				if (beatmapResultMessage.nextPickMessage) {
+					if (this.data.multiplayerLobby.teamHasWon() == null && !this.data.multiplayerLobby.getTiebreaker()) {
+						this.ircService.sendMessage(this.data.ircChannel, finalMessage);
+					}
+				}
+				else if (beatmapResultMessage.nextPickTiebreakerMessage) {
+					if (this.data.multiplayerLobby.teamHasWon() == null && this.data.multiplayerLobby.getTiebreaker()) {
+						this.ircService.sendMessage(this.data.ircChannel, finalMessage);
+					}
+				}
+				else if (beatmapResultMessage.matchWonMessage) {
+					if (this.data.multiplayerLobby.teamHasWon() != null) {
+						this.ircService.sendMessage(this.data.ircChannel, finalMessage);
+					}
+				}
+				else {
+					this.ircService.sendMessage(this.data.ircChannel, finalMessage);
+				}
 			}
 
 			this.dialogRef.close(true);

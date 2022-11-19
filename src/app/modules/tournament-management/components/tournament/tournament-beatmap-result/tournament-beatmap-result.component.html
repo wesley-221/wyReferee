@@ -17,6 +17,8 @@
 		<li><code>{{ '{' }}{{ '{' }}teamTwoName{{ '}' }}{{ '}' }}</code>: the name of team two</li>
 		<li><code>{{ '{' }}{{ '{' }}matchTeamOneScore{{ '}' }}{{ '}' }}</code>: the match score of team one</li>
 		<li><code>{{ '{' }}{{ '{' }}matchTeamTwoScore{{ '}' }}{{ '}' }}</code>: the match score of team two</li>
+		<li><code>{{ '{' }}{{ '{' }}nextPick{{ '}' }}{{ '}' }}</code>: the team name of the next pick</li>
+		<li><code>{{ '{' }}{{ '{' }}matchWinner{{ '}' }}{{ '}' }}</code>: the team name of the winner of the match</li>
 	</ul>
 
 	<p>Example message: <code>Score: {{ '{' }}{{ '{' }}matchTeamOneScore{{ '}' }}{{ '}' }} | {{ '{' }}{{ '{' }}matchTeamTwoScore{{ '}' }}{{ '}' }}</code></p>
@@ -35,13 +37,30 @@
 		<div class="message" *ngFor="let message of tournament.beatmapResultMessages">
 			<div class="content">
 				<mat-form-field class="full-width">
-					<mat-label>Message name</mat-label>
+					<mat-label>Message</mat-label>
 					<input matInput [formControlName]="'beatmap-result-message-' + message.index" />
 
 					<mat-error *ngIf="validationForm.get('beatmap-result-message-' + message.index).errors && (validationForm.get('beatmap-result-message-' + message.index).touched || validationForm.get('beatmap-result-message-' + message.index).dirty)">
 						This field is required
 					</mat-error>
 				</mat-form-field>
+			</div>
+
+			<div class="options">
+				<div class="option" matTooltip="If checked, this message will only be sent if there is a valid next pick, meaning the match isn't over yet or the next pick isn't a tiebreaker.">
+					<label>Next pick</label>
+					<mat-slide-toggle [checked]="message.nextPickMessage" (change)="nextPickChange(message, $event)"></mat-slide-toggle>
+				</div>
+
+				<div class="option" matTooltip="If checked, this message will only be sent when the next pick is a tiebreaker.">
+					<label>Next pick tiebreaker</label>
+					<mat-slide-toggle [checked]="message.nextPickTiebreakerMessage" (change)="nextpickTiebreakerChange(message, $event)"></mat-slide-toggle>
+				</div>
+
+				<div class="option" matTooltip="If checked, this message will only be sent when the match has been won.">
+					<label>Match won</label>
+					<mat-slide-toggle [checked]="message.matchWonMessage" (change)="matchWonChange(message, $event)"></mat-slide-toggle>
+				</div>
 			</div>
 
 			<button mat-mini-fab color="warn" (click)="removeBeatmapResultMessage(message)"><mat-icon>delete</mat-icon></button>
