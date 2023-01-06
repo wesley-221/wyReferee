@@ -7,6 +7,7 @@ import { Lobby } from 'app/models/lobby';
 import { MultiplayerMatch } from 'app/models/osu-models/multiplayer-match';
 import { Calculate } from 'app/models/score-calculation/calculate';
 import { AxSCalculation } from 'app/models/score-calculation/calculation-types/axs-calculation';
+import { OMLScoreCalculation } from 'app/models/score-calculation/calculation-types/oml-score-calculation';
 import { ThreeCwcScoreCalculation } from 'app/models/score-calculation/calculation-types/three-cwc-score-calculation';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { MultiplayerDataUser } from 'app/models/store-multiplayer/multiplayer-data-user';
@@ -268,6 +269,26 @@ export class WyMultiplayerLobbiesService {
 
 				// Provide the mod bracket to the interface
 				if (scoreInterface instanceof ThreeCwcScoreCalculation) {
+					let foundModBracket: WyModBracket;
+
+					for (const mappool of multiplayerLobby.tournament.mappools) {
+						for (const modBracket of mappool.modBrackets) {
+							for (const beatmap of modBracket.beatmaps) {
+								if (beatmap.beatmapId == currentGame.beatmap_id) {
+									foundModBracket = modBracket;
+									break;
+								}
+							}
+						}
+					}
+
+					if (foundModBracket) {
+						scoreInterface.setModBracket(foundModBracket);
+					}
+				}
+
+				// Provide the mod bracket to the interface
+				if (scoreInterface instanceof OMLScoreCalculation) {
 					let foundModBracket: WyModBracket;
 
 					for (const mappool of multiplayerLobby.tournament.mappools) {
