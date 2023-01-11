@@ -26,6 +26,16 @@ export class OMLScoreCalculation extends ScoreInterface {
 				newScore /= 1.12;
 			}
 
+			if (player.mods & (Mods.Easy + Mods.DoubleTime + Mods.Flashlight)) {
+				newScore /= 0.63;
+			}
+			if (player.mods & (Mods.Easy + Mods.Flashlight || Mods.Easy + Mods.DoubleTime)) {
+				newScore /= 0.56;
+			}
+			else if (player.mods & Mods.Easy) {
+				newScore /= 0.5;
+			}
+
 			// Score is now without any modifiers
 			newScore = Math.ceil(newScore);
 
