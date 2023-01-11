@@ -8,7 +8,7 @@
 <mat-form-field class="full-width" *ngIf="tournaments.length > 0">
 	<mat-label>wyBin tournaments</mat-label>
 	<mat-select (selectionChange)="onWyBinTournamentChange($event)" [value]="tournament.wyBinTournamentId">
-		<mat-option [value]="tournament.id" *ngFor="let tournament of tournaments">{{ tournament.name }}</mat-option>
+		<mat-option [value]="tIndex.id" *ngFor="let tIndex of tournaments">{{ tIndex.name }}</mat-option>
 	</mat-select>
 </mat-form-field>
 
