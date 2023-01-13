@@ -228,6 +228,9 @@ export class CreateLobbyComponent implements OnInit {
 					}
 				}
 			}
+			else {
+				lobby.bestOf = 3;
+			}
 
 			this.multiplayerLobbiesPlayersService.createNewMultiplayerLobbyObject(lobby.lobbyId);
 
