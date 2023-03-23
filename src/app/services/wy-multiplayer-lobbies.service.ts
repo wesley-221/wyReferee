@@ -259,8 +259,11 @@ export class WyMultiplayerLobbiesService {
 				const calculate = new Calculate();
 				const scoreInterface = calculate.getScoreInterface(multiplayerLobby.tournament.scoreInterfaceIdentifier);
 
-				scoreInterface.setTeamSize(multiplayerLobby.tournament.teamSize);
 				scoreInterface.addUserScores(multiplayerData.getPlayers());
+
+				if (scoreInterface.getTeamSize() == undefined || scoreInterface.getTeamSize() == null || scoreInterface.getTeamSize() == 0) {
+					scoreInterface.setTeamSize(multiplayerLobby.tournament.teamSize);
+				}
 
 				// Set the modifier if AxS score interface is being used
 				if (scoreInterface instanceof AxSCalculation) {
@@ -306,6 +309,8 @@ export class WyMultiplayerLobbiesService {
 						scoreInterface.setModBracket(foundModBracket);
 					}
 				}
+
+				scoreInterface.addUserScores(multiplayerData.getPlayers());
 
 				multiplayerData.team_one_score = scoreInterface.calculateTeamOneScore();
 				multiplayerData.team_two_score = scoreInterface.calculateTeamTwoScore();
