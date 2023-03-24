@@ -116,7 +116,7 @@ export class WyMappool {
 					beatmapId: beatmap.beatmapId,
 					beatmapName: beatmap.name,
 					beatmapsetId: beatmap.beatmapsetId,
-					beatmapUrl: `https://osu.ppy.sh/beatmaps/${beatmap.beatmapId}`,
+					beatmapUrl: 'https://osu.ppy.sh/beatmaps/' + beatmap.beatmapId,
 					index: newModBracket.beatmapIndex
 				});
 
