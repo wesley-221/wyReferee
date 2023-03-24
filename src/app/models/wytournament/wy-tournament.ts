@@ -78,6 +78,13 @@ export class WyTournament {
 	}
 
 	/**
+	 * Check whether there is a wyBin tournament connected
+	 */
+	hasWyBinConnected(): boolean {
+		return this.wyBinTournamentId != null && this.wyBinTournamentId != undefined;
+	}
+
+	/**
 	 * Create a true copy of the object
 	 *
 	 * @param tournament the object to copy
