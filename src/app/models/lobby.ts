@@ -191,7 +191,7 @@ export class Lobby {
 				if (this.tournament != null) {
 					if (this.tournament.isSoloTournament()) {
 						return [
-							new WyTeamPlayer({ name: team.name })
+							new WyTeamPlayer({ name: team.name, userId: team.userId })
 						];
 					}
 				}

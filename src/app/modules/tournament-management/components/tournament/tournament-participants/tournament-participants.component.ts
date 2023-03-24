@@ -36,6 +36,10 @@ export class TournamentParticipantsComponent implements OnInit {
 		this.tournament.teams.push(newTeam);
 
 		this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl('', Validators.required));
+
+		if (this.tournament.isSoloTournament()) {
+			this.validationForm.addControl(`tournament-player-user-id-${newTeam.index}`, new FormControl(''));
+		}
 	}
 
 	/**
@@ -53,6 +57,10 @@ export class TournamentParticipantsComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
 				this.validationForm.removeControl(`tournament-team-name-${team.index}`);
+
+				if (this.tournament.isSoloTournament()) {
+					this.validationForm.removeControl(`tournament-player-user-id-${team.index}`);
+				}
 
 				this.tournament.teams.splice(this.tournament.teams.indexOf(team), 1);
 
@@ -85,6 +93,16 @@ export class TournamentParticipantsComponent implements OnInit {
 	}
 
 	/**
+	 * Change the id of the user
+	 *
+	 * @param team the team to change the user id of
+	 * @param event the changed value
+	 */
+	changePlayerUserId(team: WyTeam, event: any) {
+		team.userId = event.target.value;
+	}
+
+	/**
 	 * Add a player to the given team
 	 *
 	 * @param team the team to add the player to
@@ -103,7 +121,10 @@ export class TournamentParticipantsComponent implements OnInit {
 
 		allUsers.forEach(user => {
 			const teamPlayer = new WyTeamPlayer();
-			teamPlayer.name = user.trim();
+			const [username, userId] = user.trim().split(',');
+
+			teamPlayer.name = username.trim();
+			teamPlayer.userId = parseInt(userId.trim());
 
 			team.players.push(teamPlayer);
 		});
@@ -126,6 +147,10 @@ export class TournamentParticipantsComponent implements OnInit {
 
 			this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
 
+			if (this.tournament.isSoloTournament()) {
+				this.validationForm.addControl(`tournament-player-user-id-${newTeam.index}`, new FormControl(''));
+			}
+
 			this.tournament.teams.push(newTeam);
 		});
 
@@ -140,12 +165,19 @@ export class TournamentParticipantsComponent implements OnInit {
 
 		allTeams.forEach(team => {
 			const newTeam = new WyTeam();
-			newTeam.name = team.trim();
+			const [username, userId] = team.trim().split(',');
+
+			newTeam.name = username.trim();
+			newTeam.userId = parseInt(userId.trim());
 
 			newTeam.index = this.tournament.teamIndex;
 			this.tournament.teamIndex++;
 
 			this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+
+			if (this.tournament.isSoloTournament()) {
+				this.validationForm.addControl(`tournament-player-user-id-${newTeam.index}`, new FormControl(newTeam.userId));
+			}
 
 			this.tournament.teams.push(newTeam);
 		});

@@ -780,7 +780,13 @@ export class IrcComponent implements OnInit {
 	 * @param player the player to invite
 	 */
 	invitePlayer(player: WyTeamPlayer): void {
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp invite ${player.name}`);
+		if (player.userId == null || player.userId == undefined) {
+			this.ircService.sendMessage(this.selectedChannel.name, `!mp invite ${player.name}`);
+		}
+		else {
+			this.ircService.sendMessage(this.selectedChannel.name, `!mp invite #${player.userId}`);
+		}
+
 		this.toastService.addToast(`Invited ${player.name} to the multiplayer lobby.`);
 	}
 

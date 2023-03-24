@@ -39,7 +39,7 @@
 				<div class="split">
 					<div class="col">
 						<mat-form-field class="full-width margin-top">
-							<mat-label>Bulk add players, list all players. 1 player per line (click me)</mat-label>
+							<mat-label>Bulk add players, list all players. 1 player (comma seperated: Username, userid) per line (click me)</mat-label>
 							<textarea matInput [(ngModel)]="teamsToAdd" [ngModelOptions]="{standalone: true}"></textarea>
 						</mat-form-field>
 					</div>
@@ -67,19 +67,37 @@
 							<h3 *ngIf="!tournament.isSoloTournament()">Create a new team</h3>
 							<h3 *ngIf="tournament.isSoloTournament()">Create a new player</h3>
 
-							<mat-form-field class="full-width">
-								<mat-label *ngIf="!tournament.isSoloTournament()">Team name</mat-label>
-								<mat-label *ngIf="tournament.isSoloTournament()">Player name</mat-label>
+							<div class="split">
+								<div class="col">
+									<mat-form-field class="full-width">
+										<mat-label *ngIf="!tournament.isSoloTournament()">Team name</mat-label>
+										<mat-label *ngIf="tournament.isSoloTournament()">Player name</mat-label>
 
-								<input matInput [formControlName]="'tournament-team-name-' + team.index" (change)="changeTeamName(team, $event)" />
+										<input matInput [formControlName]="'tournament-team-name-' + team.index" (change)="changeTeamName(team, $event)" />
 
-								<mat-error *ngIf="validationForm.get('tournament-team-name-' + team.index) != null && validationForm.get('tournament-team-name-' + team.index).errors && (validationForm.get('tournament-team-name-' + team.index).touched || validationForm.get('tournament-team-name-' + team.index).dirty)">
-									This field is required
-								</mat-error>
-							</mat-form-field>
+										<mat-error *ngIf="validationForm.get('tournament-team-name-' + team.index) != null && validationForm.get('tournament-team-name-' + team.index).errors && (validationForm.get('tournament-team-name-' + team.index).touched || validationForm.get('tournament-team-name-' + team.index).dirty)">
+											This field is required
+										</mat-error>
+									</mat-form-field>
 
-							<p *ngIf="!tournament.isSoloTournament()">The name of the team</p>
-							<p *ngIf="tournament.isSoloTournament()">The name of the player</p>
+									<p *ngIf="!tournament.isSoloTournament()">The name of the team</p>
+									<p *ngIf="tournament.isSoloTournament()">The name of the player</p>
+								</div>
+
+								<div class="col" *ngIf="tournament.isSoloTournament()">
+									<mat-form-field class="full-width">
+										<mat-label>User id</mat-label>
+
+										<input matInput [formControlName]="'tournament-player-user-id-' + team.index" (change)="changePlayerUserId(team, $event)" />
+
+										<mat-error *ngIf="validationForm.get('tournament-player-user-id-' + team.index) != null && validationForm.get('tournament-player-user-id-' + team.index).errors && (validationForm.get('tournament-player-user-id-' + team.index).touched || validationForm.get('tournament-player-user-id-' + team.index).dirty)">
+											This field is required
+										</mat-error>
+									</mat-form-field>
+
+									<p>The id of the user. Used to invite players and will work regardless of a name change. The id of the user are the numbers at the end of their profile link: https://osu.ppy.sh/users/2407265 (in this case 2407265)</p>
+								</div>
+							</div>
 
 							<div *ngIf="!tournament.isSoloTournament()">
 								<h3>Manage players</h3>
@@ -89,18 +107,32 @@
 								<button mat-raised-button (click)="addBulkPlayers(team)" color="primary" [disabled]="usersToAdd == null || usersToAdd.length <= 0"><mat-icon>add</mat-icon> add bulk players</button>
 
 								<mat-form-field class="full-width">
-									<mat-label>List with all players. 1 player per line (click me)</mat-label>
+									<mat-label>List with all players. 1 player (comma seperated: Username, userid) per line (click me)</mat-label>
 									<textarea matInput [(ngModel)]="usersToAdd" [ngModelOptions]="{standalone: true}"></textarea>
 								</mat-form-field>
 
 								<div class="team-players">
 									<div class="player" *ngFor="let player of team.players">
-										<div class="player-name">
-											<mat-form-field class="full-width">
-												<mat-label>Player name</mat-label>
+										<div class="split">
+											<div class="col">
+												<mat-form-field class="full-width">
+													<mat-label>Player name</mat-label>
 
-												<input matInput [(ngModel)]="player.name" [ngModelOptions]="{ standalone: true }" />
-											</mat-form-field>
+													<input matInput [(ngModel)]="player.name" [ngModelOptions]="{ standalone: true }" />
+												</mat-form-field>
+
+												<p>The name of the player</p>
+											</div>
+
+											<div class="col">
+												<mat-form-field class="full-width">
+													<mat-label>User id</mat-label>
+
+													<input matInput [(ngModel)]="player.userId" [ngModelOptions]="{ standalone: true }" />
+												</mat-form-field>
+
+												<p>The id of the user. Used to invite players and will work regardless of a name change. The id of the user are the numbers at the end of their profile link: https://osu.ppy.sh/users/2407265 (in this case 2407265)</p>
+											</div>
 										</div>
 
 										<div class="manage-buttons">
