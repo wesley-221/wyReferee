@@ -3,6 +3,7 @@ import { WyTeamPlayer } from './wy-team-player';
 export class WyTeam {
 	id: number;
 	name: string;
+	userId: number;
 	collapsed: boolean;
 	players: WyTeamPlayer[];
 	index: number;
@@ -22,6 +23,7 @@ export class WyTeam {
 		const newTeam = new WyTeam({
 			id: team.id,
 			name: team.name,
+			userId: team.userId,
 			collapsed: team.collapsed,
 			index: team.index
 		});

@@ -90,6 +90,10 @@
 					padding: 8px;
 				}
 
+				.col {
+					padding: 8px;
+				}
+
 				&:nth-child(odd) {
 					background-color: lighten($background-color, 15%);
 				}

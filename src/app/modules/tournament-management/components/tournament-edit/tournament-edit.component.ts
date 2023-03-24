@@ -61,6 +61,10 @@ export class TournamentEditComponent implements OnInit {
 					for (const team of tournament.teams) {
 						team.collapsed = true;
 						this.validationForm.addControl(`tournament-team-name-${team.index}`, new FormControl(team.name, Validators.required));
+
+						if (tournament.isSoloTournament()) {
+							this.validationForm.addControl(`tournament-player-user-id-${team.index}`, new FormControl(team.userId));
+						}
 					}
 
 					for (const stage of tournament.stages) {

@@ -1,6 +1,7 @@
 export class WyTeamPlayer {
 	id: number;
 	name: string;
+	userId: number;
 
 	constructor(init?: Partial<WyTeamPlayer>) {
 		Object.assign(this, init);
@@ -14,7 +15,8 @@ export class WyTeamPlayer {
 	public static makeTrueCopy(teamPlayer: WyTeamPlayer): WyTeamPlayer {
 		return new WyTeamPlayer({
 			id: teamPlayer.id,
-			name: teamPlayer.name
+			name: teamPlayer.name,
+			userId: teamPlayer.userId
 		});
 	}
 }
