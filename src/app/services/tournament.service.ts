@@ -210,5 +210,23 @@ export class TournamentService {
 	getWyBinTournamentMappools(tournamentId: number) {
 		return this.httpClient.get(`${this.apiUrl}tournament-mappools/${tournamentId}`);
 	}
+
+	/**
+	 * Get the players from the wyBin tournament
+	 *
+	 * @param tournamentId the id of the tournament
+	 */
+	getWyBinTournamentPlayers(tournamentId: number) {
+		return this.httpClient.get(`${this.apiUrl}tournament-players/${tournamentId}`);
+	}
+
+	/**
+	 * Get the teams from the wyBin tournament
+	 *
+	 * @param tournamentId the id of the tournament
+	 */
+	getWyBinTournamentTeams(tournamentId: number) {
+		return this.httpClient.get(`${this.apiUrl}tournament-teams/${tournamentId}`);
+	}
 }
 
