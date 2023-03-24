@@ -211,6 +211,7 @@ export class TournamentParticipantsComponent implements OnInit {
 			for (const player of players) {
 				const newTeam = new WyTeam({
 					name: player.user.username,
+					userId: player.user.userOsu.id,
 					index: this.tournament.teamIndex,
 					collapsed: true
 				});
@@ -218,9 +219,7 @@ export class TournamentParticipantsComponent implements OnInit {
 				this.tournament.teamIndex++;
 
 				this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
-
-				// TODO: add user id control
-				// this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+				this.validationForm.addControl(`tournament-player-user-id-${newTeam.index}`, new FormControl(newTeam.userId));
 
 				this.tournament.teams.push(newTeam);
 			}
