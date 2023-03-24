@@ -185,8 +185,10 @@ export class IrcService {
 
 					// Check if the player is in the correct slot
 					if (multiplayerLobby) {
-						if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
-							message.message += ` | Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}`;
+						if (multiplayerLobby.isQualifierLobby != true) {
+							if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
+								message.message += ` | Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}`;
+							}
 						}
 					}
 				}
