@@ -236,20 +236,26 @@ export class TournamentParticipantsComponent implements OnInit {
 
 		this.tournamentService.getWyBinTournamentTeams(this.tournament.wyBinTournamentId).subscribe((teams: any) => {
 			for (const team of teams) {
-				// const newTeam = new WyTeam({
-				// 	name: player.user.username,
-				// 	index: this.tournament.teamIndex,
-				// 	collapsed: true
-				// });
+				const newTeam = new WyTeam({
+					name: team.name,
+					index: this.tournament.teamIndex,
+					collapsed: true
+				});
 
-				// this.tournament.teamIndex++;
+				this.tournament.teamIndex++;
 
-				// this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+				for (const teamMember of team.teamMembers) {
+					const newPlayer = new WyTeamPlayer({
+						name: teamMember.user.username,
+						userId: teamMember.user.userOsu.id
+					});
 
-				// // TODO: add user id control
-				// // this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+					newTeam.players.push(newPlayer);
+				}
 
-				// this.tournament.teams.push(newTeam);
+				this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+
+				this.tournament.teams.push(newTeam);
 			}
 
 			this.importingFromWyBin = false;
