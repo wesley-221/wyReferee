@@ -1,6 +1,9 @@
 import { Gamemodes } from 'app/models/osu-models/osu';
+import { WyMod } from './wy-mod';
 import { WyModBracket } from './wy-mod-bracket';
+import { WyModBracketMap } from './wy-mod-bracket-map';
 import { WyModCategory } from './wy-mod-category';
+import { OsuHelper } from '../../osu-models/osu';
 
 export enum Availability {
 	ToEveryone = 0,
@@ -74,6 +77,54 @@ export class WyMappool {
 			newMappool.modCategoryIndex++;
 
 			newMappool.modCategories.push(newModCategory);
+		}
+
+		return newMappool;
+	}
+
+	public static parseFromWyBin(mappool: any) {
+		const newMappool = new WyMappool({
+			name: mappool.name,
+			type: MappoolType.Normal,
+			modBracketIndex: 0,
+			modCategoryIndex: 0,
+			collapsed: false
+		});
+
+		for (const modBracket of mappool.modBrackets) {
+			const newModBracket = new WyModBracket({
+				index: newMappool.modBracketIndex,
+				beatmapIndex: 0,
+				modIndex: 0,
+				name: modBracket.name,
+				acronym: OsuHelper.getModAbbreviation(modBracket.name)
+			});
+
+			const newMod = new WyMod({
+				index: newModBracket.modIndex,
+				name: modBracket.name,
+				value: OsuHelper.getBitFromMods([modBracket.mods])
+			});
+
+			newModBracket.mods.push(newMod);
+
+			newModBracket.modIndex++;
+			newMappool.modBracketIndex++;
+
+			for (const beatmap of modBracket.beatmaps) {
+				const newBeatmap = new WyModBracketMap({
+					beatmapId: beatmap.beatmapId,
+					beatmapName: beatmap.name,
+					beatmapsetId: beatmap.beatmapsetId,
+					beatmapUrl: 'https://osu.ppy.sh/beatmaps/' + beatmap.beatmapId,
+					index: newModBracket.beatmapIndex
+				});
+
+				newModBracket.beatmapIndex++;
+				newModBracket.beatmaps.push(newBeatmap);
+			}
+
+			newMappool.modBrackets.push(newModBracket);
 		}
 
 		return newMappool;

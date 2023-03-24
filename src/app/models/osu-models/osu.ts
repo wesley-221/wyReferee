@@ -117,6 +117,7 @@ export class OsuHelper {
 	 */
 	public static getModAbbreviation(mod: string): string {
 		const allMods: ModAbbreviation[] = [
+			new ModAbbreviation(Mods.None, 'nm'),
 			new ModAbbreviation(Mods.HardRock, 'hr'),
 			new ModAbbreviation(Mods.Hidden, 'hd'),
 			new ModAbbreviation(Mods.DoubleTime, 'dt'),
@@ -136,6 +137,13 @@ export class OsuHelper {
 			if (abbreviation.fullModName.toString().toLowerCase() == mod.trim().toLowerCase()) {
 				modAbbreviations = abbreviation.abbreviationModName;
 			}
+		}
+
+		if (mod.trim().toLowerCase() == 'mixed mod') {
+			modAbbreviations = 'mm';
+		}
+		else if (mod.trim().toLowerCase() == 'tiebreaker') {
+			modAbbreviations = 'tb';
 		}
 
 		return modAbbreviations;

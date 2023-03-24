@@ -202,96 +202,13 @@ export class TournamentService {
 		return this.httpClient.get<WyTournament>(`${this.apiUrl}wyreferee/tournament/${tournamentId}`);
 	}
 
-	// /**
-	//  * Update a published tournament
-	//  * @param tournament the tournament to update
-	//  */
-	// public updatePublishedTournament(tournament: Tournament) {
-	// 	return this.httpClient.post<Tournament>(`${this.apiUrl}wyreferee/tournament`, tournament, { observe: 'response' });
-	// }
-
-	// /**
-	//  * Replace the original tournament with the new tournament
-	//  * @param originalTournament the tournament to replace
-	//  * @param updatedTournament the tournament with the new values
-	//  */
-	// public replaceTournament(originalTournament: Tournament, updatedTournament: Tournament) {
-	// 	for (const i in this.allTournaments) {
-	// 		if (this.allTournaments[i].id == originalTournament.id) {
-	// 			updatedTournament.id = originalTournament.id;
-	// 			this.allTournaments[i] = updatedTournament;
-
-	// 			this.storeService.set(`cache.tournaments.${originalTournament.id}`, updatedTournament.convertToJson());
-	// 			return;
-	// 		}
-	// 	}
-	// }
-
-	// /**
-	//  * Publish a tournament
-	//  * @param tournament the tournament to publish
-	//  */
-	// publishTournament(tournament: Tournament): Observable<any> {
-	// 	return this.httpClient.post<Tournament>(`${this.apiUrl}wyreferee/tournament`, tournament, { observe: 'response' });
-	// }
-
-	// /**
-	//  * Get all the published tournaments from the given user
-	//  * @param user the user to get all the tournaments from
-	//  */
-	// getAllPublishedTournamentsFromUser(user: User) {
-	// 	return this.httpClient.get<Tournament[]>(`${this.apiUrl}wyreferee/tournament/created_by/${user.id}`);
-	// }
-
-	// /**
-	//  * Delete a tournament
-	//  * @param tournament the tournament to delete
-	//  */
-	// deletePublishedTournament(tournament: Tournament) {
-	// 	return this.httpClient.delete<Tournament>(`${this.apiUrl}wyreferee/tournament/${tournament.id}`);
-	// }
-
-	// /**
-	//  * Get a tournament by the given name
-	//  * @param tournamentName the tournament name
-	//  */
-	// getTournamentByName(tournamentName: string): Tournament {
-	// 	for (const tournament of this.allTournaments) {
-	// 		if (tournament.tournamentName == tournamentName) {
-	// 			return tournament;
-	// 		}
-	// 	}
-
-	// 	return null;
-	// }
-
-	// /**
-	//  * Get a tournament by the given acronym
-	//  * @param acronym the tournament acronym
-	//  */
-	// getTournamentByAcronym(acronym: string): Tournament {
-	// 	for (const tournament of this.allTournaments) {
-	// 		if (tournament.acronym == acronym) {
-	// 			return tournament;
-	// 		}
-	// 	}
-
-	// 	return null;
-	// }
-
-	// /**
-	//  * Get the team from the given tournament by the given name
-	//  * @param tournament the tournament to search in
-	//  * @param teamName the team to search for
-	//  */
-	// getTeamFromTournamentByName(tournament: Tournament, teamName: string) {
-	// 	for (const team of tournament.teams) {
-	// 		if (team.teamName == teamName) {
-	// 			return team;
-	// 		}
-	// 	}
-
-	// 	return null;
-	// }
+	/**
+	 * Get the mappools from the given wyBin tournament
+	 *
+	 * @param tournamentId the id of the tournament
+	 */
+	getWyBinTournamentMappools(tournamentId: number) {
+		return this.httpClient.get(`${this.apiUrl}tournament-mappools/${tournamentId}`);
+	}
 }
 

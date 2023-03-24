@@ -168,6 +168,13 @@ export class WyTournament {
 	}
 
 	/**
+	 * Check whether there is a wyBin tournament connected
+	 */
+	hasWyBinConnected(): boolean {
+		return this.wyBinTournamentId != null && this.wyBinTournamentId != undefined;
+	}
+
+	/**
 	 * Reset the ids of all objects
 	 */
 	resetAllIds(): void {

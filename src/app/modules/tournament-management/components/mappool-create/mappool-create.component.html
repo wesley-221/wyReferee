@@ -1,7 +1,16 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col">
-			<button mat-raised-button color="accent" (click)="createNewMappool()"><mat-icon>add</mat-icon> create new mappool</button>
+			<button mat-raised-button color="accent" (click)="createNewMappool()"><mat-icon>add</mat-icon> create new mappool</button>&nbsp;
+			<button mat-raised-button color="accent" (click)="importWyBinMappool()" *ngIf="tournament.hasWyBinConnected()">
+				<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import mappool from wyBin
+			</button>
+
+			<div class="wybin-mappools">
+				<div class="wybin-mappool" *ngFor="let mappool of wyBinMappools" (click)="importMappool(mappool)">
+					Import {{ mappool.name }}
+				</div>
+			</div>
 
 			<div class="mappool-spacing" *ngIf="tournament.mappools.length > 0"></div>
 
