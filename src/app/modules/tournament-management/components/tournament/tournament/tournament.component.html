@@ -1,6 +1,5 @@
 <form [formGroup]="validationForm">
-	<!-- TODO: remove selectedIndex -->
-	<mat-tab-group [selectedIndex]="6">
+	<mat-tab-group>
 		<mat-tab label="General">
 			<app-tournament-general [tournament]="tournament" [validationForm]="validationForm"></app-tournament-general>
 		</mat-tab>

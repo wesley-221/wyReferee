@@ -50,7 +50,8 @@ export enum Gamemodes {
 	Osu = 0,
 	Taiko = 1,
 	Catch = 2,
-	Mania = 3
+	Mania = 3,
+	AllModes = 4
 }
 
 export class OsuApi {

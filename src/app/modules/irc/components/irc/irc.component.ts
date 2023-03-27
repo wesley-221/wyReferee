@@ -29,6 +29,7 @@ import { IBanBeatmapDialogData } from 'app/interfaces/i-ban-beatmap-dialog-data'
 import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
 import { SendFinalResultComponent } from 'app/components/dialogs/send-final-result/send-final-result.component';
 import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-multiplayer-lobby-send-final-message-dialog-data';
+import { Gamemodes } from 'app/models/osu-models/osu';
 
 @Component({
 	selector: 'app-irc',
@@ -373,7 +374,13 @@ export class IrcComponent implements OnInit {
 			}
 		}
 
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp map ${beatmap.beatmapId} ${gamemode}`);
+		if (this.selectedLobby.tournament.gamemodeId == Gamemodes.AllModes) {
+			const gamemodeId = beatmap.gamemodeId != null && beatmap.gamemodeId != undefined ? beatmap.gamemodeId : 0;
+			this.ircService.sendMessage(this.selectedChannel.name, `!mp map ${beatmap.beatmapId} ${gamemodeId}`);
+		}
+		else {
+			this.ircService.sendMessage(this.selectedChannel.name, `!mp map ${beatmap.beatmapId} ${gamemode}`);
+		}
 
 		let modBit = 0;
 		let freemodEnabled = false;
