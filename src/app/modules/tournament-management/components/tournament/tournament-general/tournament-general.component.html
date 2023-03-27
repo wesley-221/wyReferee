@@ -40,7 +40,6 @@
 					<mat-option [value]="1">osu!taiko</mat-option>
 					<mat-option [value]="2">osu!catch</mat-option>
 					<mat-option [value]="3">osu!mania</mat-option>
-					<mat-option [value]="4">All modes</mat-option>
 				</mat-select>
 
 				<mat-error *ngIf="validationForm.get('tournament-gamemode').errors && (validationForm.get('tournament-gamemode').touched || validationForm.get('tournament-gamemode').dirty)">
