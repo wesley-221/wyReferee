@@ -12,6 +12,7 @@ export class WyModBracketMap {
 
 	modifier: number;
 	modCategory: WyModCategory;
+	gamemodeId: number;
 
 	picked: boolean;
 	isSynchronizing: boolean;
@@ -36,6 +37,7 @@ export class WyModBracketMap {
 			beatmapUrl: modBracketMap.beatmapUrl,
 			modifier: modBracketMap.modifier,
 			modCategory: modBracketMap.modCategory != undefined ? WyModCategory.makeTrueCopy(modBracketMap.modCategory) : null,
+			gamemodeId: modBracketMap.gamemodeId,
 			picked: modBracketMap.picked,
 			isSynchronizing: modBracketMap.isSynchronizing
 		});

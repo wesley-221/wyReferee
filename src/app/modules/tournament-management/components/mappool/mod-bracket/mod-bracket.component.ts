@@ -271,6 +271,16 @@ export class ModBracketComponent implements OnInit {
 	}
 
 	/**
+	 * Change the gamemode for the given map
+	 *
+	 * @param beatmap
+	 * @param event
+	 */
+	changeGamemode(beatmap: WyModBracketMap, event: MatSelectChange): void {
+		beatmap.gamemodeId = event.value;
+	}
+
+	/**
 	 * Change the picked status for the given map
 	 *
 	 * @param beatmap
