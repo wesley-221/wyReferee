@@ -6,6 +6,7 @@ import { WyTeam } from 'app/models/wytournament/wy-team';
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
+import { TournamentService } from 'app/services/tournament.service';
 
 @Component({
 	selector: 'app-tournament-participants',
@@ -21,7 +22,12 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	teamFilter: string;
 
-	constructor(private dialog: MatDialog, private toastService: ToastService) { }
+	importingFromWyBin: boolean;
+
+	constructor(private dialog: MatDialog, private toastService: ToastService, private tournamentService: TournamentService) {
+		this.importingFromWyBin = false;
+	}
+
 	ngOnInit(): void { }
 
 	/**
@@ -193,5 +199,66 @@ export class TournamentParticipantsComponent implements OnInit {
 	 */
 	removePlayer(team: WyTeam, player: WyTeamPlayer) {
 		team.players.splice(team.players.indexOf(player), 1);
+	}
+
+	/**
+	 * Import players from the given wyBin tournament
+	 */
+	importWyBinPlayers(): void {
+		this.importingFromWyBin = true;
+
+		this.tournamentService.getWyBinTournamentPlayers(this.tournament.wyBinTournamentId).subscribe((players: any) => {
+			for (const player of players) {
+				const newTeam = new WyTeam({
+					name: player.user.username,
+					userId: player.user.userOsu.id,
+					index: this.tournament.teamIndex,
+					collapsed: true
+				});
+
+				this.tournament.teamIndex++;
+
+				this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+				this.validationForm.addControl(`tournament-player-user-id-${newTeam.index}`, new FormControl(newTeam.userId));
+
+				this.tournament.teams.push(newTeam);
+			}
+
+			this.importingFromWyBin = false;
+		});
+	}
+
+	/**
+	 * Import teams from the given wyBin tournament
+	 */
+	importWyBinTeams(): void {
+		this.importingFromWyBin = true;
+
+		this.tournamentService.getWyBinTournamentTeams(this.tournament.wyBinTournamentId).subscribe((teams: any) => {
+			for (const team of teams) {
+				const newTeam = new WyTeam({
+					name: team.name,
+					index: this.tournament.teamIndex,
+					collapsed: true
+				});
+
+				this.tournament.teamIndex++;
+
+				for (const teamMember of team.teamMembers) {
+					const newPlayer = new WyTeamPlayer({
+						name: teamMember.user.username,
+						userId: teamMember.user.userOsu.id
+					});
+
+					newTeam.players.push(newPlayer);
+				}
+
+				this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+
+				this.tournament.teams.push(newTeam);
+			}
+
+			this.importingFromWyBin = false;
+		});
 	}
 }
