@@ -122,6 +122,19 @@
 									<span *ngIf="beatmap.picked == false || beatmap.picked == null">Not picked</span>
 								</mat-slide-toggle>
 							</div>
+
+							<!-- All modes -->
+							<div class="column" *ngIf="tournament.gamemodeId == 4">
+								<mat-form-field>
+									<mat-label>Gamemode</mat-label>
+									<mat-select (selectionChange)="changeGamemode(beatmap, $event)" [value]="beatmap.gamemodeId">
+										<mat-option [value]="0">osu!</mat-option>
+										<mat-option [value]="1">osu!taiko</mat-option>
+										<mat-option [value]="2">osu!catch</mat-option>
+										<mat-option [value]="3">osu!mania</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
 						</div>
 
 						<div class="information">
