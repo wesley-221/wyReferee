@@ -1,4 +1,4 @@
-import { MultiplayerDataUser } from '../../store-multiplayer/multiplayer-data-user';
+import { MultiplayerDataUser, Team } from '../../store-multiplayer/multiplayer-data-user';
 
 /**
  * An interface with some methods that help you implement different score calculations
@@ -9,6 +9,9 @@ export abstract class ScoreInterface {
 	private teamSize: number;
 	private soloTournament: boolean;
 	private allUsers: MultiplayerDataUser[];
+	private teamRedUsers: MultiplayerDataUser[];
+	private teamBlueUsers: MultiplayerDataUser[];
+	private useStaticSlots: boolean;
 
 	/**
 	 * Initialize the score interface with the given identifier
@@ -18,7 +21,10 @@ export abstract class ScoreInterface {
 	constructor(identifier: string) {
 		this.identifier = identifier;
 		this.allUsers = [];
+		this.teamRedUsers = [];
+		this.teamBlueUsers = [];
 		this.soloTournament = null;
+		this.useStaticSlots = false;
 	}
 
 	/**
@@ -31,7 +37,7 @@ export abstract class ScoreInterface {
 			return;
 		}
 
-		this.allUsers[user.slot] = user;
+		this.allUsers.push(user);
 	}
 
 	/**
@@ -43,6 +49,8 @@ export abstract class ScoreInterface {
 		for (const user of users) {
 			this.addUserScore(user);
 		}
+
+		this.populateTeamArrays();
 	}
 
 	/**
@@ -72,6 +80,20 @@ export abstract class ScoreInterface {
 		newUser.mods = null;
 
 		return newUser;
+	}
+
+	/**
+	 * Gets all the users that are part of team red
+	 */
+	public getTeamRedUsers(): MultiplayerDataUser[] {
+		return this.teamRedUsers;
+	}
+
+	/**
+	 * Get all the users that are part of team blue
+	 */
+	public getTeamBlueUsers(): MultiplayerDataUser[] {
+		return this.teamBlueUsers;
 	}
 
 	/**
@@ -132,6 +154,30 @@ export abstract class ScoreInterface {
 	 */
 	public setSoloTournament(solo: boolean): void {
 		this.soloTournament = solo;
+	}
+
+	/**
+	 * Set whether to use static slots or not. This is only to properly visualize the lobby screen.
+	 * The actual score calculations should be done in the appropriate score interface
+	 *
+	 * @param useStaticSlots whether to use static slots or not
+	 */
+	public setUseStaticSlots(useStaticSlots: boolean): void {
+		this.useStaticSlots = useStaticSlots;
+	}
+
+	/**
+	 * Populates the team arrays with the appropriate players
+	 */
+	private populateTeamArrays(): void {
+		for (const player of this.allUsers) {
+			if (player.team == Team.Red) {
+				this.teamRedUsers.push(player);
+			}
+			else if (player.team == Team.Blue) {
+				this.teamBlueUsers.push(player);
+			}
+		}
 	}
 
 	/**

@@ -214,12 +214,13 @@ export class WyMultiplayerLobbiesService {
 					}
 
 					const newMultiplayerDataUser = new MultiplayerDataUser({
-						user: currentScore.user_id,
-						score: currentScore.score,
+						user: +currentScore.user_id,
+						score: +currentScore.score,
 						accuracy: Calculations.getAccuracyOfScore(currentScore),
-						passed: currentScore.pass,
-						slot: currentScore.slot,
-						mods: currentScore.enabled_mods
+						passed: +currentScore.pass,
+						slot: +currentScore.slot,
+						mods: +currentScore.enabled_mods,
+						team: +currentScore.team
 					});
 
 					// Invalidate beatmaps that aren't part of the mappool
@@ -258,7 +259,6 @@ export class WyMultiplayerLobbiesService {
 
 				const calculate = new Calculate();
 				const scoreInterface = calculate.getScoreInterface(multiplayerLobby.tournament.scoreInterfaceIdentifier);
-
 				scoreInterface.addUserScores(multiplayerData.getPlayers());
 
 				if (scoreInterface.getTeamSize() == undefined || scoreInterface.getTeamSize() == null || scoreInterface.getTeamSize() == 0) {
@@ -271,7 +271,7 @@ export class WyMultiplayerLobbiesService {
 				}
 
 				// Provide the mod bracket to the interface
-				if (scoreInterface instanceof ThreeCwcScoreCalculation) {
+				if (scoreInterface instanceof ThreeCwcScoreCalculation || scoreInterface instanceof OMLScoreCalculation) {
 					let foundModBracket: WyModBracket;
 
 					for (const mappool of multiplayerLobby.tournament.mappools) {
@@ -289,28 +289,6 @@ export class WyMultiplayerLobbiesService {
 						scoreInterface.setModBracket(foundModBracket);
 					}
 				}
-
-				// Provide the mod bracket to the interface
-				if (scoreInterface instanceof OMLScoreCalculation) {
-					let foundModBracket: WyModBracket;
-
-					for (const mappool of multiplayerLobby.tournament.mappools) {
-						for (const modBracket of mappool.modBrackets) {
-							for (const beatmap of modBracket.beatmaps) {
-								if (beatmap.beatmapId == currentGame.beatmap_id) {
-									foundModBracket = modBracket;
-									break;
-								}
-							}
-						}
-					}
-
-					if (foundModBracket) {
-						scoreInterface.setModBracket(foundModBracket);
-					}
-				}
-
-				scoreInterface.addUserScores(multiplayerData.getPlayers());
 
 				multiplayerData.team_one_score = scoreInterface.calculateTeamOneScore();
 				multiplayerData.team_two_score = scoreInterface.calculateTeamTwoScore();

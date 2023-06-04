@@ -43,8 +43,8 @@ export class ThreeCwcScoreCalculation extends ScoreInterface {
 	calculateTeamOneScore() {
 		let teamScore = 0;
 
-		for (let i = 0; i < this.getTeamSize(); i++) {
-			teamScore += this.calculatePlayerScore(this.getUserBySlot(i));
+		for (const player of this.getTeamRedUsers()) {
+			teamScore += this.calculatePlayerScore(player);
 		}
 
 		return teamScore;
@@ -53,8 +53,8 @@ export class ThreeCwcScoreCalculation extends ScoreInterface {
 	calculateTeamTwoScore() {
 		let teamScore = 0;
 
-		for (let i = this.getTeamSize(); i < this.getTeamSize() * 2; i++) {
-			teamScore += this.calculatePlayerScore(this.getUserBySlot(i));
+		for (const player of this.getTeamBlueUsers()) {
+			teamScore += this.calculatePlayerScore(player);
 		}
 
 		return teamScore;
