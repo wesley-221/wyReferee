@@ -155,7 +155,7 @@
 						</div>
 
 						<div *ngIf="match.team_two_score > match.team_one_score">
-							<h3><span class="blue-text">{{ selectedLobby.teamTwoName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> {{ addDot(match.team_two_score, " ") }} | Score difference: {{ addDot(match.team_two_score - match.team_one_score, " ") }}
+							<h3><span class="blue-text">{{ selectedLobby.teamTwoName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> | Score difference: {{ addDot(match.team_two_score - match.team_one_score, " ") }}
 						</div>
 					</div>
 				</div>
