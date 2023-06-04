@@ -167,6 +167,13 @@ export abstract class ScoreInterface {
 	}
 
 	/**
+	 * Check whether the score interface uses static slots
+	 */
+	public usesStaticSlots(): boolean {
+		return this.useStaticSlots;
+	}
+
+	/**
 	 * Populates the team arrays with the appropriate players
 	 */
 	private populateTeamArrays(): void {
