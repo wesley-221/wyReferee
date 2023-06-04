@@ -1,5 +1,5 @@
 import { Mods } from '../osu-models/osu';
-import { MultiplayerDataUser } from './multiplayer-data-user';
+import { MultiplayerDataUser, Team } from './multiplayer-data-user';
 
 export class MultiplayerData {
 	game_id: number;
@@ -7,10 +7,14 @@ export class MultiplayerData {
 	mods: Mods;
 	team_one_score: number;
 	team_two_score: number;
+	teamRedPlayers: MultiplayerDataUser[];
+	teamBluePlayers: MultiplayerDataUser[];
 	private players: MultiplayerDataUser[];
 
 	constructor(init?: Partial<MultiplayerData>) {
 		this.players = [];
+		this.teamRedPlayers = [];
+		this.teamBluePlayers = [];
 
 		Object.assign(this, init);
 	}
@@ -27,6 +31,13 @@ export class MultiplayerData {
 		for (const player in multiplayerData.players) {
 			if (multiplayerData.players[player] != null) {
 				newMultiplayerData.players.push(MultiplayerDataUser.makeTrueCopy(multiplayerData.players[player]));
+
+				if (multiplayerData.players[player].team == Team.Red) {
+					newMultiplayerData.teamRedPlayers.push(multiplayerData.players[player]);
+				}
+				else if (multiplayerData.players[player].team == Team.Blue) {
+					newMultiplayerData.teamBluePlayers.push(multiplayerData.players[player]);
+				}
 			}
 		}
 
