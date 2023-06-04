@@ -60,7 +60,51 @@
 					<div class="team-scores">
 						<h4>{{ selectedLobby.teamOneName }}</h4>
 
-						<div class="score-table">
+						<!-- Doesnt use static slots, show users by what team they belong to -->
+						<div class="score-table" *ngIf="!selectedLobby.tournament.scoreInterface.usesStaticSlots()">
+							<div class="score" *ngFor="let player of match.teamRedPlayers">
+								<div class="column">
+									<div class="user">
+										{{ getUsernameFromUserId(player.user) }}
+									</div>
+
+									<div class="extra-spacing" *ngIf="player.passed == 0">
+										<s>Score: {{ player.score }}</s>
+									</div>
+
+									<div class="extra-spacing" *ngIf="player.passed == 1">
+										Score: {{ player.score }}
+									</div>
+								</div>
+
+								<div class="column">
+									<div class="extra-spacing mods">
+										<img *ngFor="let mod of getModsFromPlayer(player)" [src]="'assets/osu-mods/' + mod + '.png'" />
+									</div>
+
+									<s class="extra-spacing align-right" *ngIf="player.passed == 0">
+										{{ player.accuracy }}%
+									</s>
+
+									<div class="extra-spacing align-right" *ngIf="player.passed == 1">
+										{{ player.accuracy }}%
+									</div>
+								</div>
+							</div>
+
+							<div class="score">
+								<div class="column">
+									<b>Total score</b>
+								</div>
+
+								<div class="column">
+									{{ addDot(match.team_one_score, " ") }}
+								</div>
+							</div>
+						</div>
+
+						<!-- Uses static slots, show users by the given slots instead of actual teams -->
+						<div class="score-table" *ngIf="selectedLobby.tournament.scoreInterface.usesStaticSlots()">
 							<div class="score" *ngFor="let slot of selectedLobby.teamOneSlotArray">
 								<div class="column">
 									<div class="user">
@@ -78,7 +122,7 @@
 
 								<div class="column">
 									<div class="extra-spacing mods">
-										<img *ngFor="let mod of getMods(match, slot)" [src]="'assets/osu-mods/' + mod + '.png'" />
+										<img *ngFor="let mod of getModsBySlotId(match, slot)" [src]="'assets/osu-mods/' + mod + '.png'" />
 									</div>
 
 									<s class="extra-spacing align-right" *ngIf="match.getPlayer(slot).passed == 0">
@@ -106,7 +150,51 @@
 
 						<h4>{{ selectedLobby.teamTwoName }}</h4>
 
-						<div class="score-table">
+						<!-- Doesnt use static slots, show users by what team they belong to -->
+						<div class="score-table" *ngIf="!selectedLobby.tournament.scoreInterface.usesStaticSlots()">
+							<div class="score" *ngFor="let player of match.teamBluePlayers">
+								<div class="column">
+									<div class="user">
+										{{ getUsernameFromUserId(player.user) }}
+									</div>
+
+									<div class="extra-spacing" *ngIf="player.passed == 0">
+										<s>Score: {{ player.score }}</s>
+									</div>
+
+									<div class="extra-spacing" *ngIf="player.passed == 1">
+										Score: {{ player.score }}
+									</div>
+								</div>
+
+								<div class="column">
+									<div class="extra-spacing mods">
+										<img *ngFor="let mod of getModsFromPlayer(player)" [src]="'assets/osu-mods/' + mod + '.png'" />
+									</div>
+
+									<s class="extra-spacing align-right" *ngIf="player.passed == 0">
+										{{ player.accuracy }}%
+									</s>
+
+									<div class="extra-spacing align-right" *ngIf="player.passed == 1">
+										{{ player.accuracy }}%
+									</div>
+								</div>
+							</div>
+
+							<div class="score">
+								<div class="column">
+									<b>Total score</b>
+								</div>
+
+								<div class="column">
+									{{ addDot(match.team_one_score, " ") }}
+								</div>
+							</div>
+						</div>
+
+						<!-- Uses static slots, show users by the given slots instead of actual teams -->
+						<div class="score-table" *ngIf="selectedLobby.tournament.scoreInterface.usesStaticSlots()">
 							<div class="score" *ngFor="let slot of selectedLobby.teamTwoSlotArray">
 								<div class="column">
 									<div class="user">
@@ -124,7 +212,7 @@
 
 								<div class="column">
 									<div class="extra-spacing mods">
-										<img *ngFor="let mod of getMods(match, slot)" [src]="'assets/osu-mods/' + mod + '.png'" />
+										<img *ngFor="let mod of getModsBySlotId(match, slot)" [src]="'assets/osu-mods/' + mod + '.png'" />
 									</div>
 
 									<s class="extra-spacing align-right" *ngIf="match.getPlayer(slot).passed == 0">

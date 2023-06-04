@@ -271,7 +271,7 @@ export class LobbyViewComponent implements OnInit {
 	 * @param match the MultiplayerData
 	 * @param slotId the slot you want the mods from
 	 */
-	getMods(match: MultiplayerData, slotId: number): string[] {
+	getModsBySlotId(match: MultiplayerData, slotId: number): string[] {
 		const user: MultiplayerDataUser = match.getPlayer(slotId);
 		const mods: string[] = [];
 
@@ -282,6 +282,24 @@ export class LobbyViewComponent implements OnInit {
 		}
 
 		return (user != undefined || user.mods != undefined) ? mods : [];
+	}
+
+	/**
+	 * Get the mods of the player in the given slot
+	 *
+	 * @param match the MultiplayerData
+	 * @param slotId the slot you want the mods from
+	 */
+	getModsFromPlayer(player: MultiplayerDataUser): string[] {
+		const mods: string[] = [];
+
+		const selectedMods = OsuHelper.getModsFromBit(player.mods);
+
+		for (const mod of selectedMods) {
+			mods.push(OsuHelper.getModAbbreviation(mod));
+		}
+
+		return (player != undefined || player.mods != undefined) ? mods : [];
 	}
 
 	/**
