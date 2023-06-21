@@ -30,6 +30,8 @@ import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-p
 import { SendFinalResultComponent } from 'app/components/dialogs/send-final-result/send-final-result.component';
 import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-multiplayer-lobby-send-final-message-dialog-data';
 import { Gamemodes } from 'app/models/osu-models/osu';
+import { TournamentService } from 'app/services/tournament.service';
+import { WyTeam } from 'app/models/wytournament/wy-team';
 
 @Component({
 	selector: 'app-irc',
@@ -82,6 +84,9 @@ export class IrcComponent implements OnInit {
 
 	dividerHeightPercentage: number;
 
+	qualifierPrefix = 'Qualifier lobby:';
+	qualifierTeams: WyTeam[] = [];
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -93,7 +98,8 @@ export class IrcComponent implements OnInit {
 		private dialog: MatDialog,
 		public ircShortcutCommandsService: IrcShortcutCommandsService,
 		private ref: ChangeDetectorRef,
-		public multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService) {
+		public multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
+		private tournamentService: TournamentService) {
 		this.channels = ircService.allChannels;
 
 		const dividerHeightStore = this.storeService.get('dividerHeight');
@@ -235,6 +241,8 @@ export class IrcComponent implements OnInit {
 			this.matchpoint = this.selectedLobby.getMatchPoint();
 			this.tiebreaker = this.selectedLobby.getTiebreaker();
 			this.hasWon = this.selectedLobby.teamHasWon();
+
+			this.initializeQualifierTeams();
 		}
 
 		// Scroll to the bottom - delay it by 500 ms or do it instantly
@@ -918,5 +926,39 @@ export class IrcComponent implements OnInit {
 
 		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 		this.refreshIrcHeader(this.selectedLobby);
+	}
+
+	/**
+	 * Initialized the qualifier teams in the dropdown
+	 */
+	initializeQualifierTeams(): void {
+		this.qualifierTeams = [];
+
+		const qualifierIdentifier = this.selectedLobby.description.substring(this.qualifierPrefix.length).trim();
+
+		console.log(qualifierIdentifier);
+
+		this.tournamentService.getWyBinQualifierLobbyTeams(this.selectedLobby.tournament.wyBinTournamentId, qualifierIdentifier).subscribe(teams => {
+			for (const team in teams) {
+				const iTeam = teams[team];
+
+				const newTeam = new WyTeam({
+					name: iTeam.name
+				});
+
+				for (const player in iTeam.teamMembers) {
+					const iPlayer = iTeam.teamMembers[player];
+
+					const newPlayer = new WyTeamPlayer({
+						name: iPlayer.user.userOsu.username,
+						userId: iPlayer.user.userOsu.id
+					});
+
+					newTeam.players.push(newPlayer);
+				}
+
+				this.qualifierTeams.push(newTeam);
+			}
+		});
 	}
 }
