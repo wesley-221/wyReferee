@@ -84,7 +84,7 @@ export class IrcComponent implements OnInit {
 
 	dividerHeightPercentage: number;
 
-	qualifierPrefix: string = 'Qualifier lobby:';
+	qualifierPrefix = 'Qualifier lobby:';
 	qualifierTeams: WyTeam[] = [];
 
 	constructor(
