@@ -12,6 +12,7 @@ import { WyMultiplayerLobbiesService } from './wy-multiplayer-lobbies.service';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { Lobby } from 'app/models/lobby';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
+import { ElectronService } from './electron.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -51,7 +52,8 @@ export class IrcService {
 	constructor(private toastService: ToastService,
 		private storeService: StoreService,
 		private multiplayerLobbiesService: WyMultiplayerLobbiesService,
-		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService) {
+		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
+		private electronService: ElectronService) {
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
@@ -438,6 +440,11 @@ export class IrcService {
 				sound.on('end', () => {
 					this.soundIsPlaying = false;
 				});
+			}
+
+			// Flash window when a message has been sent and window is not focused
+			if (!this.electronService.remote.getCurrentWindow().isFocused()) {
+				this.electronService.remote.getCurrentWindow().flashFrame(true);
 			}
 		}
 
