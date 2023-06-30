@@ -3,6 +3,7 @@ import { TeamVsCalculation } from './calculation-types/team-vs-calculation';
 import { AxSCalculation } from './calculation-types/axs-calculation';
 import { ThreeCwcScoreCalculation } from './calculation-types/three-cwc-score-calculation';
 import { OMLScoreCalculation } from './calculation-types/oml-score-calculation';
+import { CTMCalculation } from './calculation-types/ctm-calculation';
 
 export class Calculate {
 	private scoreInterfaces: ScoreInterface[];
@@ -14,6 +15,7 @@ export class Calculate {
 		this.addScoreInterface(new AxSCalculation('AxS', 3));
 		this.addScoreInterface(new ThreeCwcScoreCalculation('osu!catch 3 Digit World Cup', 3));
 		this.addScoreInterface(new OMLScoreCalculation('osu!catch Master League', 2));
+		this.addScoreInterface(new CTMCalculation('CTM4', 3));
 	}
 
 	/**

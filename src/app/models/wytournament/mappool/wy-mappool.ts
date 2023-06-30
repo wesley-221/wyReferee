@@ -15,7 +15,8 @@ export enum MappoolType {
 	Normal = 0,
 	AxS = 1,
 	MysteryTournament = 2,
-	RNGTournament = 3
+	RNGTournament = 3,
+	CTMTournament = 4
 }
 
 export class WyMappool {
