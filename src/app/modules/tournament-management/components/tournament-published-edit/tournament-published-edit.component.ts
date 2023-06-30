@@ -95,6 +95,12 @@ export class TournamentPublishedEditComponent implements OnInit {
 									this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`, new FormControl(beatmap.modifier, Validators.required));
 								}
 							}
+
+							if (mappool.type == MappoolType.CTMTournament) {
+								for (const beatmap of modBracket.beatmaps) {
+									this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-damage-amount`, new FormControl(beatmap.damageAmount, Validators.required));
+								}
+							}
 						}
 					}
 

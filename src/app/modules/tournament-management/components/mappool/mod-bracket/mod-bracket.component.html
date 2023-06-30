@@ -98,12 +98,25 @@
 								</mat-form-field>
 							</div>
 
+							<!-- AxS modifier -->
 							<div class="column" *ngIf="mappool.type == 1">
 								<mat-form-field class="full-width">
 									<mat-label>Modifier</mat-label>
 									<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier'" [(ngModel)]="beatmap.modifier" />
 
 									<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier').dirty)">
+										This field is required
+									</mat-error>
+								</mat-form-field>
+							</div>
+
+							<!-- CTM damage amount -->
+							<div class="column" *ngIf="mappool.type == 4">
+								<mat-form-field class="full-width">
+									<mat-label>Damage amount</mat-label>
+									<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-damage-amount'" [(ngModel)]="beatmap.damageAmount" />
+
+									<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-damage-amount').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-damage-amount').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-damage-amount').dirty)">
 										This field is required
 									</mat-error>
 								</mat-form-field>

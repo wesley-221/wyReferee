@@ -11,6 +11,7 @@ export class WyModBracketMap {
 	beatmapUrl: string;
 
 	modifier: number;
+	damageAmount: number;
 	modCategory: WyModCategory;
 	gamemodeId: number;
 
@@ -36,6 +37,7 @@ export class WyModBracketMap {
 			beatmapName: modBracketMap.beatmapName,
 			beatmapUrl: modBracketMap.beatmapUrl,
 			modifier: modBracketMap.modifier,
+			damageAmount: modBracketMap.damageAmount,
 			modCategory: modBracketMap.modCategory != undefined ? WyModCategory.makeTrueCopy(modBracketMap.modCategory) : null,
 			gamemodeId: modBracketMap.gamemodeId,
 			picked: modBracketMap.picked,
