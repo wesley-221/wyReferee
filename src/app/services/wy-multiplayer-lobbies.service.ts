@@ -26,6 +26,8 @@ import { StoreService } from './store.service';
 import { ToastService } from './toast.service';
 import { TournamentService } from './tournament.service';
 import { WebhookService } from './webhook.service';
+import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
+import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 
 @Injectable({
 	providedIn: 'root'
@@ -167,6 +169,9 @@ export class WyMultiplayerLobbiesService {
 			multiplayerLobby.teamOneScore = 0;
 			multiplayerLobby.teamTwoScore = 0;
 
+			multiplayerLobby.teamOneHealth = 50;
+			multiplayerLobby.teamTwoHealth = 50;
+
 			for (const currentGame of multiplayerMatch.games) {
 				const multiplayerData = new MultiplayerData({
 					game_id: currentGame.game_id,
@@ -200,6 +205,8 @@ export class WyMultiplayerLobbiesService {
 					});
 				}
 
+				let foundModBracketBeatmap: WyModBracketMap;
+
 				for (const currentScore of currentGame.scores) {
 					const cachedUser: CacheUser = this.cacheService.getCachedUser(currentScore.user_id);
 
@@ -231,6 +238,7 @@ export class WyMultiplayerLobbiesService {
 							for (const map of modBracket.beatmaps) {
 								if (map.beatmapId == currentGame.beatmap_id) {
 									beatmapFound = true;
+									foundModBracketBeatmap = map;
 									break;
 								}
 							}
@@ -296,11 +304,19 @@ export class WyMultiplayerLobbiesService {
 				if (multiplayerData.team_one_score > multiplayerData.team_two_score) {
 					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
 						multiplayerLobby.teamOneScore++;
+
+						if (scoreInterface instanceof CTMCalculation) {
+							multiplayerLobby.teamTwoHealth -= foundModBracketBeatmap.damageAmount;
+						}
 					}
 				}
 				else {
 					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
 						multiplayerLobby.teamTwoScore++;
+
+						if (scoreInterface instanceof CTMCalculation) {
+							multiplayerLobby.teamOneHealth -= foundModBracketBeatmap.damageAmount;
+						}
 					}
 				}
 
