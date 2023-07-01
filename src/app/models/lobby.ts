@@ -49,6 +49,13 @@ export class Lobby {
 	teamOneOverwriteScore: number;
 	teamTwoOverwriteScore: number;
 
+	// CTM health
+	teamOneHealth: number;
+	teamTwoHealth: number;
+
+	teamOneOverwriteHealth: number;
+	teamTwoOverwriteHealth: number;
+
 	teamOneBans: number[];
 	teamTwoBans: number[];
 
@@ -91,6 +98,12 @@ export class Lobby {
 		this.teamOneOverwriteScore = 0;
 		this.teamTwoOverwriteScore = 0;
 
+		this.teamOneHealth = 50;
+		this.teamTwoHealth = 50;
+
+		this.teamOneOverwriteHealth = 0;
+		this.teamTwoOverwriteHealth = 0;
+
 		this.ircConnected = false;
 
 		this.isQualifierLobby = false;
@@ -124,6 +137,10 @@ export class Lobby {
 			teamTwoScore: lobby.teamTwoScore,
 			teamOneOverwriteScore: !isNaN(lobby.teamOneOverwriteScore) ? lobby.teamOneOverwriteScore : 0,
 			teamTwoOverwriteScore: !isNaN(lobby.teamTwoOverwriteScore) ? lobby.teamTwoOverwriteScore : 0,
+			teamOneHealth: lobby.teamOneHealth,
+			teamTwoHealth: lobby.teamTwoHealth,
+			teamOneOverwriteHealth: !isNaN(lobby.teamOneOverwriteHealth) ? lobby.teamOneOverwriteScore : 0,
+			teamTwoOverwriteHealth: !isNaN(lobby.teamTwoOverwriteHealth) ? lobby.teamTwoOverwriteScore : 0,
 			teamOneBans: lobby.teamOneBans,
 			teamTwoBans: lobby.teamTwoBans,
 			teamOnePicks: lobby.teamOnePicks,
@@ -527,6 +544,20 @@ export class Lobby {
 	 */
 	getTeamTwoScore(): number {
 		return this.teamTwoScore + this.teamTwoOverwriteScore;
+	}
+
+	/**
+	 * Calculate the health of team one with health overwriting
+	 */
+	getTeamOneHealth(): number {
+		return this.teamOneHealth + this.teamOneOverwriteHealth;
+	}
+
+	/**
+	 * Calculate the health of team two with health overwriting
+	 */
+	getTeamTwoHealth(): number {
+		return this.teamTwoHealth + this.teamTwoOverwriteHealth;
 	}
 
 	/**

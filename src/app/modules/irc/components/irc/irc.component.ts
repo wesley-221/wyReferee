@@ -74,6 +74,10 @@ export class IrcComponent implements OnInit {
 
 	teamOneScore = 0;
 	teamTwoScore = 0;
+
+	teamOneHealth = 0;
+	teamTwoHealth = 0;
+
 	nextPick: string = null;
 	matchpoint: string = null;
 	tiebreaker = false;
@@ -237,6 +241,8 @@ export class IrcComponent implements OnInit {
 		if (this.selectedLobby != undefined) {
 			this.teamOneScore = this.selectedLobby.getTeamOneScore();
 			this.teamTwoScore = this.selectedLobby.getTeamTwoScore();
+			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
+			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
 			this.nextPick = this.selectedLobby.getNextPick();
 			this.matchpoint = this.selectedLobby.getMatchPoint();
 			this.tiebreaker = this.selectedLobby.getTiebreaker();
@@ -556,6 +562,8 @@ export class IrcComponent implements OnInit {
 		if (!this.selectedLobby.ircChannel.isPublicChannel && !this.selectedLobby.ircChannel.isPrivateChannel) {
 			this.teamOneScore = multiplayerLobby.getTeamOneScore();
 			this.teamTwoScore = multiplayerLobby.getTeamTwoScore();
+			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
+			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
 			this.nextPick = multiplayerLobby.getNextPick();
 			this.matchpoint = multiplayerLobby.getMatchPoint();
 			this.tiebreaker = multiplayerLobby.getTiebreaker();
@@ -921,6 +929,42 @@ export class IrcComponent implements OnInit {
 			}
 			else if (team == 2) {
 				this.selectedLobby.teamTwoOverwriteScore = 0;
+			}
+		}
+
+		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+		this.refreshIrcHeader(this.selectedLobby);
+	}
+
+	/**
+	 * Adjust the health for the selected team
+	 *
+	 * @param team the team to adjust the health for
+	 * @param mouseClick left or right to increase or decrease
+	 */
+	adjustHealth(team: number, mouseClick: string) {
+		if (mouseClick == 'left') {
+			if (team == 1) {
+				this.selectedLobby.teamOneOverwriteHealth++;
+			}
+			else if (team == 2) {
+				this.selectedLobby.teamTwoOverwriteHealth++;
+			}
+		}
+		else if (mouseClick == 'right') {
+			if (team == 1) {
+				this.selectedLobby.teamOneOverwriteHealth--;
+			}
+			else if (team == 2) {
+				this.selectedLobby.teamTwoOverwriteHealth--;
+			}
+		}
+		else if (mouseClick == 'middle') {
+			if (team == 1) {
+				this.selectedLobby.teamOneOverwriteHealth = 0;
+			}
+			else if (team == 2) {
+				this.selectedLobby.teamTwoOverwriteHealth = 0;
 			}
 		}
 
