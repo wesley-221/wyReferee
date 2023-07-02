@@ -1,8 +1,10 @@
 import { ScoreInterface } from './score-interface';
 import { MultiplayerDataUser } from '../../store-multiplayer/multiplayer-data-user';
 import { Mods } from 'app/models/osu-models/osu';
+import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 
 export class CTMCalculation extends ScoreInterface {
+	private readonly ADD_BONUS_SCORE_FOR_DAMAGE_AMOUNT = [6, 8];
 	private readonly MAX_BONUS_SCORE = 150000;
 
 	private readonly EASY_BONUS_SCORE = 525000;
@@ -16,6 +18,8 @@ export class CTMCalculation extends ScoreInterface {
 
 	private teamOneUsedEasy: boolean;
 	private teamTwoUsedEasy: boolean;
+
+	private beatmap: WyModBracketMap;
 
 	constructor(identifier: string, teamSize: number) {
 		super(identifier);
@@ -68,7 +72,10 @@ export class CTMCalculation extends ScoreInterface {
 			teamScore += this.calculatePlayerScore(player, 1);
 		}
 
-		teamScore += this.getBonusScore(1);
+		// Only add bonus score when the the proper damageAmount is used
+		if (this.ADD_BONUS_SCORE_FOR_DAMAGE_AMOUNT.includes(this.beatmap.damageAmount)) {
+			teamScore += this.getBonusScore(1);
+		}
 
 		return teamScore;
 	}
@@ -80,9 +87,22 @@ export class CTMCalculation extends ScoreInterface {
 			teamScore += this.calculatePlayerScore(player, 2);
 		}
 
-		teamScore += this.getBonusScore(2);
+		// Only add bonus score when the the proper damageAmount is used
+		if (this.ADD_BONUS_SCORE_FOR_DAMAGE_AMOUNT.includes(this.beatmap.damageAmount)) {
+			teamScore += this.getBonusScore(2);
+		}
+
 
 		return teamScore;
+	}
+
+	/**
+	 * Set the beatmap so we can use the damageAmount
+	 *
+	 * @param beatmap the beatmap to use for the calculation
+	 */
+	setBeatmap(beatmap: WyModBracketMap) {
+		this.beatmap = beatmap;
 	}
 
 	/**

@@ -298,6 +298,10 @@ export class WyMultiplayerLobbiesService {
 					}
 				}
 
+				if (scoreInterface instanceof CTMCalculation) {
+					scoreInterface.setBeatmap(foundModBracketBeatmap);
+				}
+
 				multiplayerData.team_one_score = scoreInterface.calculateTeamOneScore();
 				multiplayerData.team_two_score = scoreInterface.calculateTeamTwoScore();
 
