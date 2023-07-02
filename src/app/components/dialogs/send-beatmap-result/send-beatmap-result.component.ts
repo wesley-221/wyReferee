@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ISendBeatmapResultDialogData } from 'app/interfaces/i-send-beatmap-result-dialog-data';
+import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { CacheService } from 'app/services/cache.service';
 import { IrcService } from 'app/services/irc.service';
@@ -56,6 +57,20 @@ export class SendBeatmapResultComponent implements OnInit {
 				'{{\\s{0,}nextPick\\s{0,}}}': this.data.multiplayerLobby.getNextPick(),
 				'{{\\s{0,}matchWinner\\s{0,}}}': this.data.multiplayerLobby.teamHasWon()
 			};
+
+			if (this.data.multiplayerLobby.tournament.scoreInterface instanceof CTMCalculation) {
+				replaceWords['{{\\s{0,}teamOneHitpoints\\s{0,}}}'] = this.data.multiplayerLobby.teamOneHealth;
+				replaceWords['{{\\s{0,}teamTwoHitpoints\\s{0,}}}'] = this.data.multiplayerLobby.teamTwoHealth;
+
+				for (const modBracket of this.data.multiplayerLobby.mappool.modBrackets) {
+					for (const beatmap of modBracket.beatmaps) {
+						if (beatmap.beatmapId == match.beatmap_id) {
+							replaceWords['{{\\s{0,}damageDealt\\s{0,}}}'] = beatmap.damageAmount;
+							break;
+						}
+					}
+				}
+			}
 
 			for (const beatmapResultMessage of this.data.multiplayerLobby.tournament.beatmapResultMessages) {
 				let finalMessage = beatmapResultMessage.message;
