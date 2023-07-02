@@ -116,6 +116,12 @@ export class ModBracketComponent implements OnInit {
 					}
 				}
 
+				if (this.mappool.type == MappoolType.CTMTournament) {
+					for (const beatmap in modBracket.beatmaps) {
+						this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${modBracket.beatmaps[beatmap].index}-damage-amount`);
+					}
+				}
+
 				this.toastService.addToast(`Successfully removed "${modBracket.name}" from the mappool.`);
 			}
 		});
@@ -172,6 +178,10 @@ export class ModBracketComponent implements OnInit {
 		if (this.mappool.type == MappoolType.AxS) {
 			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
 		}
+
+		if (this.mappool.type == MappoolType.CTMTournament) {
+			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${newModBracketMap.index}-damage-amount`, new FormControl('', Validators.required));
+		}
 	}
 
 	/**
@@ -194,6 +204,10 @@ export class ModBracketComponent implements OnInit {
 
 			if (this.mappool.type == MappoolType.AxS) {
 				this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
+			}
+
+			if (this.mappool.type == MappoolType.CTMTournament) {
+				this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${newModBracketMap.index}-damage-amount`, new FormControl('', Validators.required));
 			}
 		});
 	}
@@ -250,6 +264,10 @@ export class ModBracketComponent implements OnInit {
 
 		if (this.mappool.type == MappoolType.AxS) {
 			this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${beatmap.index}-modifier`);
+		}
+
+		if (this.mappool.type == MappoolType.CTMTournament) {
+			this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${beatmap.index}-damage-amount`);
 		}
 	}
 

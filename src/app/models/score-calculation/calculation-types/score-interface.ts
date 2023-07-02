@@ -191,9 +191,10 @@ export abstract class ScoreInterface {
 	 * Calculate the score of the given player
 	 *
 	 * @param player the player object to use the score calculations with
+	 * @param team the team the player belongs to
 	 * @returns the score of the player
 	 */
-	public abstract calculatePlayerScore(player: MultiplayerDataUser): number;
+	public abstract calculatePlayerScore(player: MultiplayerDataUser, team?: number): number;
 
 	/**
 	 * Calculate the final score of team one

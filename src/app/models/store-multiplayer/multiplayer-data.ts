@@ -7,6 +7,8 @@ export class MultiplayerData {
 	mods: Mods;
 	team_one_score: number;
 	team_two_score: number;
+	team_one_health: number;
+	team_two_health: number;
 	teamRedPlayers: MultiplayerDataUser[];
 	teamBluePlayers: MultiplayerDataUser[];
 	private players: MultiplayerDataUser[];
@@ -25,7 +27,9 @@ export class MultiplayerData {
 			beatmap_id: multiplayerData.beatmap_id,
 			mods: multiplayerData.mods,
 			team_one_score: multiplayerData.team_one_score,
-			team_two_score: multiplayerData.team_two_score
+			team_two_score: multiplayerData.team_two_score,
+			team_one_health: multiplayerData.team_one_health,
+			team_two_health: multiplayerData.team_two_health
 		});
 
 		for (const player in multiplayerData.players) {

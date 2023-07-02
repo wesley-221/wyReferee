@@ -213,6 +213,9 @@ export class CreateLobbyComponent implements OnInit {
 						lobby.selectedStage = stage;
 						lobby.bestOf = stage.bestOf;
 
+						lobby.teamOneHealth = Number(stage.hitpoints);
+						lobby.teamTwoHealth = Number(stage.hitpoints);
+
 						break;
 					}
 				}

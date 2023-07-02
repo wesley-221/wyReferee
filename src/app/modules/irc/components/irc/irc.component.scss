@@ -300,6 +300,29 @@ $hyperlink-background-color: #2b4576;
 									cursor: pointer;
 								}
 							}
+
+							.heart-container {
+								display: flex;
+								align-items: center;
+								justify-content: center;
+
+								margin-top: 5px;
+								user-select: none;
+
+								.heart-text {
+									position: absolute;
+									margin-bottom: 5px;
+								}
+
+								.heart {
+									height: 50px;
+									fill: #ff0000;
+								}
+
+								&:hover {
+									cursor: pointer;
+								}
+							}
 						}
 
 						.middle {

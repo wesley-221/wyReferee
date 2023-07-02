@@ -74,6 +74,10 @@ export class IrcComponent implements OnInit {
 
 	teamOneScore = 0;
 	teamTwoScore = 0;
+
+	teamOneHealth = 0;
+	teamTwoHealth = 0;
+
 	nextPick: string = null;
 	matchpoint: string = null;
 	tiebreaker = false;
@@ -237,12 +241,16 @@ export class IrcComponent implements OnInit {
 		if (this.selectedLobby != undefined) {
 			this.teamOneScore = this.selectedLobby.getTeamOneScore();
 			this.teamTwoScore = this.selectedLobby.getTeamTwoScore();
+			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
+			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
 			this.nextPick = this.selectedLobby.getNextPick();
 			this.matchpoint = this.selectedLobby.getMatchPoint();
 			this.tiebreaker = this.selectedLobby.getTiebreaker();
 			this.hasWon = this.selectedLobby.teamHasWon();
 
-			this.initializeQualifierTeams();
+			if (this.selectedLobby.isQualifierLobby) {
+				this.initializeQualifierTeams();
+			}
 		}
 
 		// Scroll to the bottom - delay it by 500 ms or do it instantly
@@ -556,6 +564,8 @@ export class IrcComponent implements OnInit {
 		if (!this.selectedLobby.ircChannel.isPublicChannel && !this.selectedLobby.ircChannel.isPrivateChannel) {
 			this.teamOneScore = multiplayerLobby.getTeamOneScore();
 			this.teamTwoScore = multiplayerLobby.getTeamTwoScore();
+			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
+			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
 			this.nextPick = multiplayerLobby.getNextPick();
 			this.matchpoint = multiplayerLobby.getMatchPoint();
 			this.tiebreaker = multiplayerLobby.getTiebreaker();
@@ -929,14 +939,48 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Adjust the health for the selected team
+	 *
+	 * @param team the team to adjust the health for
+	 * @param mouseClick left or right to increase or decrease
+	 */
+	adjustHealth(team: number, mouseClick: string) {
+		if (mouseClick == 'left') {
+			if (team == 1) {
+				this.selectedLobby.teamOneOverwriteHealth++;
+			}
+			else if (team == 2) {
+				this.selectedLobby.teamTwoOverwriteHealth++;
+			}
+		}
+		else if (mouseClick == 'right') {
+			if (team == 1) {
+				this.selectedLobby.teamOneOverwriteHealth--;
+			}
+			else if (team == 2) {
+				this.selectedLobby.teamTwoOverwriteHealth--;
+			}
+		}
+		else if (mouseClick == 'middle') {
+			if (team == 1) {
+				this.selectedLobby.teamOneOverwriteHealth = 0;
+			}
+			else if (team == 2) {
+				this.selectedLobby.teamTwoOverwriteHealth = 0;
+			}
+		}
+
+		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+		this.refreshIrcHeader(this.selectedLobby);
+	}
+
+	/**
 	 * Initialized the qualifier teams in the dropdown
 	 */
 	initializeQualifierTeams(): void {
 		this.qualifierTeams = [];
 
 		const qualifierIdentifier = this.selectedLobby.description.substring(this.qualifierPrefix.length).trim();
-
-		console.log(qualifierIdentifier);
 
 		this.tournamentService.getWyBinQualifierLobbyTeams(this.selectedLobby.tournament.wyBinTournamentId, qualifierIdentifier).subscribe(teams => {
 			for (const team in teams) {

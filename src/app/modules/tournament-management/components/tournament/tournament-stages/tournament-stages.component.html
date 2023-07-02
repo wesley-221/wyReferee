@@ -12,7 +12,7 @@
 		<div class="row">
 			<div class="col">
 				<div class="all-stages">
-					<div class="stage" *ngFor="let stage of tournament.stages">
+					<div class="stage" *ngFor="let stage of tournament.stages" [ngStyle]="{'grid-template-columns': tournament.scoreInterfaceIdentifier == CTM_SCORE_IDENTIFIER ? '2fr 1fr 1fr 50px' : '2fr 1fr 50px'}">
 						<div class="name">
 							<mat-form-field class="full-width">
 								<mat-label>Stage name</mat-label>
@@ -20,6 +20,18 @@
 								<input matInput [formControlName]="'tournament-stage-name-' + stage.index" (change)="changeStageName(stage, $event)" />
 
 								<mat-error *ngIf="validationForm.get('tournament-stage-name-' + stage.index) != null && validationForm.get('tournament-stage-name-' + stage.index).errors && (validationForm.get('tournament-stage-name-' + stage.index).touched || validationForm.get('tournament-stage-name-' + stage.index).dirty)">
+									This field is required
+								</mat-error>
+							</mat-form-field>
+						</div>
+
+						<div class="health-start" *ngIf="tournament.scoreInterfaceIdentifier == CTM_SCORE_IDENTIFIER">
+							<mat-form-field class="full-width">
+								<mat-label>Hitpoints start amount</mat-label>
+
+								<input matInput [formControlName]="'tournament-stage-hitpoints-' + stage.index" (change)="changeStageHitpoints(stage, $event)" />
+
+								<mat-error *ngIf="validationForm.get('tournament-stage-hitpoints-' + stage.index) != null && validationForm.get('tournament-stage-hitpoints-' + stage.index).errors && (validationForm.get('tournament-stage-hitpoints-' + stage.index).touched || validationForm.get('tournament-stage-hitpoints-' + stage.index).dirty)">
 									This field is required
 								</mat-error>
 							</mat-form-field>

@@ -28,6 +28,7 @@
 					<mat-option [value]="1">AxS</mat-option>
 					<mat-option [value]="2">Mystery tournament</mat-option>
 					<mat-option [value]="3">RNG tournament</mat-option>
+					<mat-option [value]="4">CTM tournament</mat-option>
 				</mat-select>
 
 				<mat-error *ngIf="validationForm.get('mappool-' + mappool.index + '-type').errors && (validationForm.get('mappool-' + mappool.index + '-type').touched || validationForm.get('mappool-' + mappool.index + '-type').dirty)">

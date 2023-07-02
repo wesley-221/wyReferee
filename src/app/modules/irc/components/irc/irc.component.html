@@ -61,7 +61,8 @@
 	<div class="chat-content">
 		<div class="chat-container">
 			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.name.startsWith('#mp_')) && this.selectedLobby != null && selectedLobby.isQualifierLobby == false">
-				<div class="match-header-center">
+				<!-- The mappool is for any tournament that is NOT Catch The Magic -->
+				<div class="match-header-center" *ngIf="selectedLobby.mappool.type != 4">
 					<div class="match-information">
 						<div class="team-one">
 							<div class="team-name red">
@@ -84,6 +85,45 @@
 
 							<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(2, 'middle') : $event.which == 3 ? adjustScore(2, 'right') : adjustScore(2, 'left')">
 								<div class="circle blue" [ngClass]="{ 'active': score <= teamTwoScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- The mappool is for Catch The Magic -->
+				<div class="match-header-center" *ngIf="selectedLobby.mappool.type == 4">
+					<div class="match-information">
+						<div class="team-one">
+							<div class="team-name red">
+								{{ selectedLobby.teamOneName }}
+							</div>
+
+							<div class="heart-container" matTooltip="Left click to increase the hitpoints, Right click to decrease the hitpoints, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustHealth(1, 'middle') : $event.which == 3 ? adjustHealth(1, 'right') : adjustHealth(1, 'left')">
+								<span class="heart-text">{{ selectedLobby.getTeamOneHealth() }}</span>
+
+								<svg class="heart" viewBox="0 0 32 29.6">
+									<path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+										c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+								</svg>
+							</div>
+						</div>
+
+						<div class="middle">
+							vs
+						</div>
+
+						<div class="team-two">
+							<div class="team-name blue">
+								{{ selectedLobby.teamTwoName }}
+							</div>
+
+							<div class="heart-container" matTooltip="Left click to increase the hitpoints, Right click to decrease the hitpoints, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustHealth(2, 'middle') : $event.which == 3 ? adjustHealth(2, 'right') : adjustHealth(2, 'left')">
+								<span class="heart-text">{{ selectedLobby.getTeamTwoHealth() }}</span>
+
+								<svg class="heart" viewBox="0 0 32 29.6">
+									<path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+										c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+								</svg>
 							</div>
 						</div>
 					</div>

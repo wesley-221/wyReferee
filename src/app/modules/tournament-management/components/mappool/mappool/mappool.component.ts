@@ -43,10 +43,18 @@ export class MappoolComponent implements OnInit {
 				}
 			}
 		}
+		else if (event.value == MappoolType.CTMTournament) {
+			for (const modBracket of this.mappool.modBrackets) {
+				for (const beatmap of modBracket.beatmaps) {
+					this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-damage-amount`, new FormControl(beatmap.modifier, Validators.required));
+				}
+			}
+		}
 		else {
 			for (const modBracket of this.mappool.modBrackets) {
 				for (const beatmap of modBracket.beatmaps) {
 					this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`);
+					this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-damage-amount`);
 				}
 			}
 		}
