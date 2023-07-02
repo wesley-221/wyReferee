@@ -248,7 +248,9 @@ export class IrcComponent implements OnInit {
 			this.tiebreaker = this.selectedLobby.getTiebreaker();
 			this.hasWon = this.selectedLobby.teamHasWon();
 
-			this.initializeQualifierTeams();
+			if (this.selectedLobby.isQualifierLobby) {
+				this.initializeQualifierTeams();
+			}
 		}
 
 		// Scroll to the bottom - delay it by 500 ms or do it instantly
@@ -979,8 +981,6 @@ export class IrcComponent implements OnInit {
 		this.qualifierTeams = [];
 
 		const qualifierIdentifier = this.selectedLobby.description.substring(this.qualifierPrefix.length).trim();
-
-		console.log(qualifierIdentifier);
 
 		this.tournamentService.getWyBinQualifierLobbyTeams(this.selectedLobby.tournament.wyBinTournamentId, qualifierIdentifier).subscribe(teams => {
 			for (const team in teams) {
