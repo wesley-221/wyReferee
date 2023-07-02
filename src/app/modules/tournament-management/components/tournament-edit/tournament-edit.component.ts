@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Mods } from 'app/models/osu-models/osu';
 import { Calculate } from 'app/models/score-calculation/calculate';
+import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { ToastType } from 'app/models/toast';
 import { MappoolType } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
@@ -70,6 +71,10 @@ export class TournamentEditComponent implements OnInit {
 					for (const stage of tournament.stages) {
 						this.validationForm.addControl(`tournament-stage-name-${stage.index}`, new FormControl(stage.name, Validators.required));
 						this.validationForm.addControl(`tournament-stage-best-of-${stage.index}`, new FormControl(Number(stage.bestOf), Validators.required));
+
+						if (tournament.scoreInterface instanceof CTMCalculation) {
+							this.validationForm.addControl(`tournament-stage-hitpoints-${stage.index}`, new FormControl(stage.hitpoints, Validators.required));
+						}
 					}
 
 					for (const webhook of tournament.webhooks) {

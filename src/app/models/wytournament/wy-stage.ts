@@ -2,6 +2,7 @@ export class WyStage {
 	id: string;
 	name: string;
 	index: number;
+	hitpoints: number;
 	bestOf: number;
 
 	constructor(init?: Partial<WyStage>) {
@@ -12,6 +13,7 @@ export class WyStage {
 		return new WyStage({
 			id: stage.id,
 			name: stage.name,
+			hitpoints: stage.hitpoints,
 			bestOf: stage.bestOf
 		});
 	}
