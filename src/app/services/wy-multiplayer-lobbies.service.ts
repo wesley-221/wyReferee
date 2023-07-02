@@ -169,8 +169,8 @@ export class WyMultiplayerLobbiesService {
 			multiplayerLobby.teamOneScore = 0;
 			multiplayerLobby.teamTwoScore = 0;
 
-			multiplayerLobby.teamOneHealth = 50;
-			multiplayerLobby.teamTwoHealth = 50;
+			multiplayerLobby.teamOneHealth = Number(multiplayerLobby.selectedStage.hitpoints);
+			multiplayerLobby.teamTwoHealth = Number(multiplayerLobby.selectedStage.hitpoints);
 
 			for (const currentGame of multiplayerMatch.games) {
 				const multiplayerData = new MultiplayerData({

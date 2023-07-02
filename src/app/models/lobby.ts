@@ -98,8 +98,8 @@ export class Lobby {
 		this.teamOneOverwriteScore = 0;
 		this.teamTwoOverwriteScore = 0;
 
-		this.teamOneHealth = 50;
-		this.teamTwoHealth = 50;
+		this.teamOneHealth = 0;
+		this.teamTwoHealth = 0;
 
 		this.teamOneOverwriteHealth = 0;
 		this.teamTwoOverwriteHealth = 0;
