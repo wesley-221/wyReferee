@@ -62,7 +62,7 @@
 		<div class="chat-container">
 			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.name.startsWith('#mp_')) && this.selectedLobby != null && selectedLobby.isQualifierLobby == false">
 				<!-- The mappool is for any tournament that is NOT Catch The Magic -->
-				<div class="match-header-center" *ngIf="selectedLobby.mappool.type != 4">
+				<div class="match-header-center" *ngIf="selectedLobby.mappool && selectedLobby.mappool.type != 4">
 					<div class="match-information">
 						<div class="team-one">
 							<div class="team-name red">
@@ -91,7 +91,7 @@
 				</div>
 
 				<!-- The mappool is for Catch The Magic -->
-				<div class="match-header-center" *ngIf="selectedLobby.mappool.type == 4">
+				<div class="match-header-center" *ngIf="selectedLobby.mappool && selectedLobby.mappool.type == 4">
 					<div class="match-information">
 						<div class="team-one">
 							<div class="team-name red">
