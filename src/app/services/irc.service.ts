@@ -358,9 +358,10 @@ export class IrcService {
 			});
 
 			channel.messages.push(newMessage);
+			channel.plainMessageHistory.push(message);
 			this.setChannelUnreadMessages$.next(channel);
 
-			this.saveMessageToHistory(recipient, newMessage);
+			this.saveMessageToHistory(recipient, newMessage, message);
 		}
 		// =============================
 		// The message is being received
@@ -413,16 +414,16 @@ export class IrcService {
 			if (user.startsWith('#mp_')) {
 				if (recipient == 'BanchoBot') {
 					channel.banchoBotMessages.push(newMessage);
-					this.saveMessageToHistory(user, newMessage, true);
+					this.saveMessageToHistory(user, newMessage, message, true);
 				}
 				else {
 					channel.messages.push(newMessage);
-					this.saveMessageToHistory(user, newMessage);
+					this.saveMessageToHistory(user, newMessage, message);
 				}
 			}
 			else {
 				channel.messages.push(newMessage);
-				this.saveMessageToHistory(user, newMessage);
+				this.saveMessageToHistory(user, newMessage, message);
 			}
 
 			this.setChannelUnreadMessages$.next(channel);
@@ -452,7 +453,7 @@ export class IrcService {
 	}
 
 	/**
-	 * Join a
+	 * Join a channel
 	 *
 	 * @param channelName
 	 */
@@ -664,9 +665,10 @@ export class IrcService {
 	 *
 	 * @param channelName the channel to save it in
 	 * @param message the message object to save
+	 * @param plainMessage the plain message that was sent
 	 * @param saveInBanchoMessages whether to save the message as a BanchoBot message
 	 */
-	saveMessageToHistory(channelName: string, message: IrcMessage, saveInBanchoMessages?: boolean) {
+	saveMessageToHistory(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoMessages?: boolean) {
 		if (message.isADivider) {
 			return;
 		}
@@ -678,6 +680,16 @@ export class IrcService {
 		}
 		else {
 			storeChannel.messages.push(message);
+
+			if (storeChannel.plainMessageHistory == undefined || storeChannel.plainMessageHistory == null) {
+				storeChannel.plainMessageHistory = [];
+			}
+
+			storeChannel.plainMessageHistory.push(plainMessage);
+
+			if (storeChannel.plainMessageHistory.length > 20) {
+				storeChannel.plainMessageHistory.shift();
+			}
 		}
 
 		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
