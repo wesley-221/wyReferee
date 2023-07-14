@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, HostListener } from '@angular/core';
 import { IrcService } from '../../../../services/irc.service';
 import { ElectronService } from '../../../../services/electron.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -91,6 +91,8 @@ export class IrcComponent implements OnInit {
 	qualifierPrefix = 'Qualifier lobby:';
 	qualifierTeams: WyTeam[] = [];
 
+	currentMessageHistoryIndex: number;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -107,6 +109,7 @@ export class IrcComponent implements OnInit {
 		this.channels = ircService.allChannels;
 
 		const dividerHeightStore = this.storeService.get('dividerHeight');
+		this.currentMessageHistoryIndex = -1;
 
 		if (dividerHeightStore == undefined) {
 			this.storeService.set('dividerHeight', 30);
@@ -175,6 +178,21 @@ export class IrcComponent implements OnInit {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Track which key has been pressed so we can navigate through the message history
+	 *
+	 * @param event what key has been pressed
+	 */
+	@HostListener('document:keyup', ['$event'])
+	handleKeyboardEvent(event: KeyboardEvent) {
+		if (event.key == 'ArrowUp') {
+			this.navigateMessageHistory(-1);
+		}
+		else if (event.key == 'ArrowDown') {
+			this.navigateMessageHistory(1);
+		}
 	}
 
 	ngOnInit() {
@@ -306,9 +324,30 @@ export class IrcComponent implements OnInit {
 		if (event.key == 'Enter') {
 			if (this.chatMessage.nativeElement.value != '') {
 				this.ircService.sendMessage(this.selectedChannel.name, this.chatMessage.nativeElement.value);
+
+				this.currentMessageHistoryIndex = -1;
+
 				this.chatMessage.nativeElement.value = '';
 			}
 		}
+	}
+
+	/**
+	 * Navigate through the message history and set the input to that value
+	 *
+	 * @param direction whether to go up or down in the message history
+	 */
+	navigateMessageHistory(direction: number): void {
+		const messageHistory = this.selectedChannel.plainMessageHistory;
+		const messageCount = messageHistory.length;
+
+		this.currentMessageHistoryIndex -= direction;
+
+		this.currentMessageHistoryIndex = Math.max(0, Math.min(this.currentMessageHistoryIndex, messageCount - 1));
+
+		const inputElement = this.chatMessage.nativeElement;
+		inputElement.value = messageHistory[messageCount - this.currentMessageHistoryIndex - 1];
+		inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
 	}
 
 	/**
