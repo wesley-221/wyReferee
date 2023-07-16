@@ -18,10 +18,12 @@ export class MappoolCreateComponent implements OnInit {
 
 	wyBinMappools: WyMappool[];
 	importingFromWyBin: boolean;
+	addNoFail: boolean;
 
 	constructor(private dialog: MatDialog, private toastService: ToastService, private tournamentService: TournamentService) {
 		this.wyBinMappools = [];
 		this.importingFromWyBin = false;
+		this.addNoFail = false;
 	}
 
 	ngOnInit(): void { }
@@ -55,7 +57,7 @@ export class MappoolCreateComponent implements OnInit {
 			mappools.sort((a, b) => a.startDate - b.startDate);
 
 			for (const mappool of mappools) {
-				const newMappool = WyMappool.parseFromWyBin(mappool);
+				const newMappool = WyMappool.parseFromWyBin(mappool, this.addNoFail);
 				this.wyBinMappools.push(newMappool);
 			}
 

@@ -1,4 +1,4 @@
-import { Gamemodes } from 'app/models/osu-models/osu';
+import { Gamemodes, Mods } from 'app/models/osu-models/osu';
 import { WyMod } from './wy-mod';
 import { WyModBracket } from './wy-mod-bracket';
 import { WyModBracketMap } from './wy-mod-bracket-map';
@@ -83,7 +83,7 @@ export class WyMappool {
 		return newMappool;
 	}
 
-	public static parseFromWyBin(mappool: any) {
+	public static parseFromWyBin(mappool: any, addNofail?: boolean) {
 		const newMappool = new WyMappool({
 			name: mappool.name,
 			type: MappoolType.Normal,
@@ -111,6 +111,19 @@ export class WyMappool {
 
 			newModBracket.modIndex++;
 			newMappool.modBracketIndex++;
+
+			if (addNofail == true) {
+				const nofail = new WyMod({
+					index: newModBracket.modIndex,
+					name: modBracket.name,
+					value: Mods.NoFail
+				});
+
+				newModBracket.mods.push(nofail);
+
+				newModBracket.modIndex++;
+				newMappool.modBracketIndex++;
+			}
 
 			for (const beatmap of modBracket.beatmaps) {
 				const newBeatmap = new WyModBracketMap({
