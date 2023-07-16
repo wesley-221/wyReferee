@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
@@ -14,6 +15,7 @@ import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { WebhookService } from 'app/services/webhook.service';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
+import { WybinService } from 'app/services/wybin.service';
 import { BanchoMultiplayerChannel } from 'bancho.js';
 import { Observable, startWith, map, from } from 'rxjs';
 
@@ -61,7 +63,8 @@ export class CreateLobbyComponent implements OnInit {
 		public tournamentService: TournamentService,
 		private router: Router,
 		private webhookService: WebhookService,
-		private multiplayerLobbiesPlayersService: MultiplayerLobbyPlayersService) {
+		private multiplayerLobbiesPlayersService: MultiplayerLobbyPlayersService,
+		private wybinService: WybinService) {
 		this.calculateScoreInterfaces = new Calculate();
 
 		this.qualifier = false;
@@ -268,7 +271,38 @@ export class CreateLobbyComponent implements OnInit {
 					this.ircService.initializeChannelListeners(multiplayerChannel);
 
 					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
-					this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
+
+					if (this.selectedTournament.hasWyBinConnected()) {
+						this.wybinService.getMatch(this.selectedTournament.wyBinTournamentId, lobby.selectedStage.name, lobby.teamOneName, lobby.teamTwoName).subscribe((match: any) => {
+							if (match == null) {
+								this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
+								return;
+							}
+
+							const commentatorNames: string[] = [];
+							const streamerNames: string[] = [];
+							const refereeNames: string[] = [];
+
+							for (const commentator of match.assignedCommentators) {
+								commentatorNames.push(commentator.user.username);
+							}
+
+							for (const streamer of match.assignedStreamers) {
+								streamerNames.push(streamer.user.username);
+							}
+
+							for (const referee of match.assignedReferees) {
+								refereeNames.push(referee.user.username);
+							}
+
+							this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser, streamerNames, commentatorNames);
+						}, (error: HttpErrorResponse) => {
+							this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
+						});
+					}
+					else {
+						this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
+					}
 
 					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
 				});

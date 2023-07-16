@@ -456,7 +456,7 @@ export class WebhookService {
 	 * @param selectedLobby the lobby to get the data from
 	 * @param referee the referee
 	 */
-	sendMatchCreation(selectedLobby: Lobby, referee: string): void {
+	sendMatchCreation(selectedLobby: Lobby, referee: string, streamerList?: string[], commentatorList?: string[]): void {
 		// Dont send webhooks if its disabled
 		if (!this.doSendWebhooks(selectedLobby)) {
 			return;
@@ -501,6 +501,26 @@ export class WebhookService {
 					name: 'Twitch stream title command',
 					value: `\`!title ${selectedLobby.tournament.name} - ${selectedLobby.selectedStage.name}: ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}\``
 				});
+
+			if (streamerList != null && streamerList.length > 0) {
+				const streamers = streamerList.length == 1 ? streamerList[0] : streamerList.join(' and ');
+
+				body.embeds[0].fields.push(
+					{
+						name: 'Twitch streamer command',
+						value: `\`!editcom !streamer Streaming this match is ${streamers}\``
+					});
+			}
+
+			if (commentatorList != null && commentatorList.length > 0) {
+				const casters = commentatorList.length == 1 ? commentatorList[0] : commentatorList.join(' and ');
+
+				body.embeds[0].fields.push(
+					{
+						name: 'Twitch casters command',
+						value: `\`!editcom !casters Casting this match is ${casters}\``
+					});
+			}
 		}
 
 		this.setCustomizedFields(body, false);
