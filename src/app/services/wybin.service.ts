@@ -13,4 +13,8 @@ export class WybinService {
 	importStages(tournamentId: number) {
 		return this.http.get(`${this.API_URL}tournament-stages/${tournamentId}`);
 	}
+
+	importStaff(tournamentId: number) {
+		return this.http.get(`${this.API_URL}tournament-staff-member/${tournamentId}`);
+	}
 }
