@@ -7,6 +7,7 @@ import { LobbyViewComponent } from 'app/modules/lobby/components/lobby-view/lobb
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AppConfig } from 'environments/environment';
 import { ToastService } from 'app/services/toast.service';
+import { WybinService } from 'app/services/wybin.service';
 
 @Component({
 	selector: 'app-send-final-result',
@@ -23,7 +24,7 @@ export class SendFinalResultComponent implements OnInit {
 
 	private readonly apiUrl = AppConfig.apiUrl;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySendFinalMessageDialogData, private dialogRef: MatDialogRef<LobbyViewComponent>, private http: HttpClient, private toastService: ToastService) {
+	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySendFinalMessageDialogData, private dialogRef: MatDialogRef<LobbyViewComponent>, private http: HttpClient, private toastService: ToastService, private wybinService: WybinService) {
 		this.firstStepFormGroup = new FormGroup({
 			'match-outcome': new FormControl('', Validators.required),
 			'extra-message': new FormControl()
@@ -67,23 +68,21 @@ export class SendFinalResultComponent implements OnInit {
 		if (wyBinTournamentId != null && wyBinTournamentId != undefined) {
 			this.loading = true;
 
-			this.http.post<any>(`${this.apiUrl}tournament-wyreferee-score-update`, {
-				tournamentId: wyBinTournamentId,
-				stageName: this.data.multiplayerLobby.selectedStage.name,
-				multiplayerLink: this.data.multiplayerLobby.multiplayerLink,
-				opponentOne: this.data.multiplayerLobby.teamOneName,
-				opponentTwo: this.data.multiplayerLobby.teamTwoName,
-				opponentOneScore: this.data.multiplayerLobby.getTeamOneScore(),
-				opponentTwoScore: this.data.multiplayerLobby.getTeamTwoScore(),
-				winByDefaultWinner: this.secondStepFormGroup.get('winning-team').value,
-				opponentOneBans: this.data.multiplayerLobby.teamOneBans,
-				opponentTwoBans: this.data.multiplayerLobby.teamTwoBans
-			}).subscribe(() => {
-				this.closeDialog(winningTeam, losingTeam);
-			}, (err: HttpErrorResponse) => {
-				this.toastService.addToast(err.error.message);
-				this.closeDialog(winningTeam, losingTeam);
-			});
+			this.wybinService.updateMatchScore(wyBinTournamentId,
+				this.data.multiplayerLobby.selectedStage.name,
+				this.data.multiplayerLobby.multiplayerLink,
+				this.data.multiplayerLobby.teamOneName,
+				this.data.multiplayerLobby.teamTwoName,
+				this.data.multiplayerLobby.getTeamOneScore(),
+				this.data.multiplayerLobby.getTeamTwoScore(),
+				this.secondStepFormGroup.get('winning-team').value,
+				this.data.multiplayerLobby.teamOneBans,
+				this.data.multiplayerLobby.teamTwoBans).subscribe(() => {
+					this.closeDialog(winningTeam, losingTeam);
+				}, (err: HttpErrorResponse) => {
+					this.toastService.addToast(err.error.message);
+					this.closeDialog(winningTeam, losingTeam);
+				});
 		}
 		else {
 			this.closeDialog(winningTeam, losingTeam);
