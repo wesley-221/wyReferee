@@ -140,7 +140,10 @@ export class OsuHelper {
 			}
 		}
 
-		if (mod.trim().toLowerCase() == 'mixed mod') {
+		if (mod.trim().toLowerCase() == 'nomod') {
+			modAbbreviations = 'nm';
+		}
+		else if (mod.trim().toLowerCase() == 'mixed mod') {
 			modAbbreviations = 'mm';
 		}
 		else if (mod.trim().toLowerCase() == 'tiebreaker') {
