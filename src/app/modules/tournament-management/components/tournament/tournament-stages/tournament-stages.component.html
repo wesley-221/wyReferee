@@ -5,7 +5,10 @@
 				<h2>Stages</h2>
 				<p>Add a stage to the tournament.</p>
 
-				<button mat-raised-button (click)="addStage()" color="primary"><mat-icon>add</mat-icon> add new stage</button>
+				<button mat-raised-button (click)="addStage()" color="primary"><mat-icon>add</mat-icon> add new stage</button>&nbsp;
+				<button mat-raised-button color="accent" (click)="importWyBinStages()" *ngIf="tournament.hasWyBinConnected()">
+					<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import stages from wyBin
+				</button>
 			</div>
 		</div>
 
