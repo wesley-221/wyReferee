@@ -187,6 +187,12 @@ export class IrcComponent implements OnInit {
 	 */
 	@HostListener('document:keyup', ['$event'])
 	handleKeyboardEvent(event: KeyboardEvent) {
+		const modifiers = ['Shift', 'Alt', 'Control'];
+
+		if (modifiers.some(modifier => event.getModifierState(modifier))) {
+			return;
+		}
+
 		if (event.key == 'ArrowUp') {
 			this.navigateMessageHistory(-1);
 		}
