@@ -83,7 +83,7 @@ export class WyMappool {
 		return newMappool;
 	}
 
-	public static parseFromWyBin(mappool: any, addNofail?: boolean) {
+	public static parseFromWyBin(mappool: any, addNofail?: boolean, gamemodeId?: number) {
 		const newMappool = new WyMappool({
 			name: mappool.name,
 			type: MappoolType.Normal,
@@ -101,16 +101,68 @@ export class WyMappool {
 				acronym: OsuHelper.getModAbbreviation(modBracket.name)
 			});
 
-			const newMod = new WyMod({
-				index: newModBracket.modIndex,
-				name: modBracket.name,
-				value: OsuHelper.getBitFromMods([modBracket.mods])
-			});
+			// osu!catch handles mods different from other modes
+			if (gamemodeId == Gamemodes.Catch) {
+				if (Mods.HardRock == OsuHelper.getBitFromMods([modBracket.mods]) || ['mixed mod', 'mixedmod'].includes(modBracket.name.toLowerCase())) {
+					const newMod = new WyMod({
+						index: newModBracket.modIndex,
+						name: modBracket.name,
+						value: 'freemod'
+					});
 
-			newModBracket.mods.push(newMod);
+					newModBracket.mods.push(newMod);
 
-			newModBracket.modIndex++;
-			newMappool.modBracketIndex++;
+					newModBracket.modIndex++;
+					newMappool.modBracketIndex++;
+				}
+				else if (Mods.DoubleTime == OsuHelper.getBitFromMods([modBracket.mods])) {
+					const doubletimeMod = new WyMod({
+						index: newModBracket.modIndex,
+						name: modBracket.name,
+						value: OsuHelper.getBitFromMods([modBracket.mods])
+					});
+
+					newModBracket.mods.push(doubletimeMod);
+
+					newModBracket.modIndex++;
+					newMappool.modBracketIndex++;
+
+					const freemodMod = new WyMod({
+						index: newModBracket.modIndex,
+						name: modBracket.name,
+						value: 'freemod'
+					});
+
+					newModBracket.mods.push(freemodMod);
+
+					newModBracket.modIndex++;
+					newMappool.modBracketIndex++;
+				}
+				else {
+					const newMod = new WyMod({
+						index: newModBracket.modIndex,
+						name: modBracket.name,
+						value: OsuHelper.getBitFromMods([modBracket.mods])
+					});
+
+					newModBracket.mods.push(newMod);
+
+					newModBracket.modIndex++;
+					newMappool.modBracketIndex++;
+				}
+			}
+			else {
+				const newMod = new WyMod({
+					index: newModBracket.modIndex,
+					name: modBracket.name,
+					value: OsuHelper.getBitFromMods([modBracket.mods])
+				});
+
+				newModBracket.mods.push(newMod);
+
+				newModBracket.modIndex++;
+				newMappool.modBracketIndex++;
+			}
 
 			if (addNofail == true) {
 				const nofail = new WyMod({

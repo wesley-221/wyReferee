@@ -57,7 +57,7 @@ export class MappoolCreateComponent implements OnInit {
 			mappools.sort((a, b) => a.startDate - b.startDate);
 
 			for (const mappool of mappools) {
-				const newMappool = WyMappool.parseFromWyBin(mappool, this.addNoFail);
+				const newMappool = WyMappool.parseFromWyBin(mappool, this.addNoFail, this.tournament.gamemodeId);
 				this.wyBinMappools.push(newMappool);
 			}
 

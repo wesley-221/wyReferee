@@ -49,7 +49,7 @@ export class TournamentAccessComponent implements OnInit {
 				}
 
 				if (isTournamentHost == true) {
-					this.tournament.administrators.push(User.makeTrueCopy(staff.user))
+					this.tournament.administrators.push(User.makeTrueCopy(staff.user));
 				}
 
 				if (isReferee == true) {
