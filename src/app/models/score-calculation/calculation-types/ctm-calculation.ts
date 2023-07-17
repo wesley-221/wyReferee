@@ -5,13 +5,13 @@ import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-
 
 export class CTMCalculation extends ScoreInterface {
 	private readonly ADD_BONUS_SCORE_FOR_DAMAGE_AMOUNT = [6, 8];
-	private readonly MAX_BONUS_SCORE = 150000;
+	private readonly MAX_BONUS_SCORE = 100000;
 
-	private readonly EASY_BONUS_SCORE = 525000;
-	private readonly HARDROCK_BONUS_SCORE = 50000;
-	private readonly DOUBLETIME_BONUS_SCORE = 75000;
-	private readonly FLASHLIGHT_BONUS_SCORE = 100000;
-	private readonly SUDDEN_DEATH_BONUS_SCORE = 150000;
+	private readonly EASY_BONUS_SCORE = 500000;
+	private readonly HARDROCK_BONUS_SCORE = 20000;
+	private readonly DOUBLETIME_BONUS_SCORE = 40000;
+	private readonly FLASHLIGHT_BONUS_SCORE = 80000;
+	private readonly SUDDEN_DEATH_BONUS_SCORE = 100000;
 
 	private teamOneBonusScore: number;
 	private teamTwoBonusScore: number;
