@@ -16,5 +16,29 @@ export class WybinService {
 
 	importStaff(tournamentId: number) {
 		return this.http.get(`${this.API_URL}tournament-staff-member/${tournamentId}`);
+  }
+
+	getMatch(tournamentId: number, stageName: string, opponentOne: string, opponentTwo: string) {
+		return this.http.post(`${this.API_URL}tournament-wyreferee-match`, {
+			tournamentId,
+			stageName,
+			opponentOne,
+			opponentTwo
+		});
+	}
+
+	updateMatchScore(tournamentId: number, stageName: string, multiplayerLink: string, opponentOne: string, opponentTwo: string, opponentOneScore: number, opponentTwoScore: number, winByDefaultWinner: string, opponentOneBans: number[], opponentTwoBans: number[]) {
+		return this.http.post(`${this.API_URL}tournament-wyreferee-score-update`, {
+			tournamentId: tournamentId,
+			stageName: stageName,
+			multiplayerLink: multiplayerLink,
+			opponentOne: opponentOne,
+			opponentTwo: opponentTwo,
+			opponentOneScore: opponentOneScore,
+			opponentTwoScore: opponentTwoScore,
+			winByDefaultWinner: winByDefaultWinner,
+			opponentOneBans: opponentOneBans,
+			opponentTwoBans: opponentTwoBans
+		});
 	}
 }
