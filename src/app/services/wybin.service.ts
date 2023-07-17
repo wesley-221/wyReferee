@@ -10,6 +10,14 @@ export class WybinService {
 
 	constructor(private http: HttpClient) { }
 
+	importStages(tournamentId: number) {
+		return this.http.get(`${this.API_URL}tournament-stages/${tournamentId}`);
+	}
+
+	importStaff(tournamentId: number) {
+		return this.http.get(`${this.API_URL}tournament-staff-member/${tournamentId}`);
+  }
+
 	getMatch(tournamentId: number, stageName: string, opponentOne: string, opponentTwo: string) {
 		return this.http.post(`${this.API_URL}tournament-wyreferee-match`, {
 			tournamentId,

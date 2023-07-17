@@ -1,4 +1,14 @@
 <div class="container-fluid">
+	<ng-container *ngIf="tournament.hasWyBinConnected()">
+		<h3>Import staff from wyBin</h3>
+		<p>Importing staff from wyBin will put Tournament hosts into the Administrator category and Referees into Tournament access.</p>
+
+		<button mat-raised-button color="accent" (click)="importWyBinStaff()" *ngIf="tournament.hasWyBinConnected()">
+			<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import stages from wyBin
+		</button>
+		<hr />
+	</ng-container>
+
 	<h3>Administrator</h3>
 	<p>Manage the users that you want to give full permission to. They will be able to change data, which will then trigger an update for all the users that have imported the tournament.</p>
 	<button mat-raised-button color="accent" (click)="addUserAsAdministrator()"><mat-icon>add</mat-icon> add new administrator</button>

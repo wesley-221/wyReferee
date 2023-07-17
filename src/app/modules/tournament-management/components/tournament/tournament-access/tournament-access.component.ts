@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TournamentAddUserDialogComponent } from 'app/components/dialogs/tournament-add-user-dialog/tournament-add-user-dialog.component';
@@ -6,6 +7,7 @@ import { ToastType } from 'app/models/toast';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ElectronService } from 'app/services/electron.service';
 import { ToastService } from 'app/services/toast.service';
+import { WybinService } from 'app/services/wybin.service';
 
 @Component({
 	selector: 'app-tournament-access',
@@ -15,8 +17,55 @@ import { ToastService } from 'app/services/toast.service';
 export class TournamentAccessComponent implements OnInit {
 	@Input() tournament: WyTournament;
 
-	constructor(public electronService: ElectronService, private toastService: ToastService, private dialog: MatDialog) { }
+	importingFromWyBin: boolean;
+
+	constructor(public electronService: ElectronService, private toastService: ToastService, private dialog: MatDialog, private wybinService: WybinService) {
+		this.importingFromWyBin = false;
+	}
+
 	ngOnInit(): void { }
+
+	/**
+	 * Import staff members from wyBin
+	 */
+	importWyBinStaff() {
+		this.importingFromWyBin = true;
+
+		this.wybinService.importStaff(this.tournament.wyBinTournamentId).subscribe((allStaff: any[]) => {
+			for (const staff of allStaff) {
+				let isTournamentHost = false;
+				let isReferee = false;
+
+				for (const role of staff.roles) {
+					if (role.tournamentHostPermission == true) {
+						isTournamentHost = true;
+						break;
+					}
+
+					if (role.refereePermission == true) {
+						isReferee = true;
+						break;
+					}
+				}
+
+				if (isTournamentHost == true) {
+					this.tournament.administrators.push(User.makeTrueCopy(staff.user));
+				}
+
+				if (isReferee == true) {
+					this.tournament.availableTo.push(User.makeTrueCopy(staff.user));
+				}
+			}
+
+			this.toastService.addToast('All staff members have been imported from wyBin');
+
+			this.importingFromWyBin = false;
+		}, (error: HttpErrorResponse) => {
+			this.toastService.addToast(error.error.message, ToastType.Error);
+
+			this.importingFromWyBin = false;
+		});
+	}
 
 	/**
 	 * Add a new user as an administrator

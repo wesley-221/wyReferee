@@ -17,4 +17,11 @@ export class WyStage {
 			bestOf: stage.bestOf
 		});
 	}
+
+	public static parseFromWyBin(stage: any): WyStage {
+		return new WyStage({
+			name: stage.name,
+			bestOf: stage.bestOf
+		});
+	}
 }

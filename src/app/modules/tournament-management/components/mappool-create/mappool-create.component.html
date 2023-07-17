@@ -6,6 +6,12 @@
 				<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import mappool from wyBin
 			</button>
 
+			<div class="wybin-import-nofail" *ngIf="tournament.hasWyBinConnected()">
+				<mat-slide-toggle [(ngModel)]="addNoFail">Add NoFail to all mod brackets when importing</mat-slide-toggle>
+
+				<hr />
+			</div>
+
 			<div class="wybin-mappools">
 				<div class="wybin-mappool" *ngFor="let mappool of wyBinMappools" (click)="importMappool(mappool)">
 					Import {{ mappool.name }}
