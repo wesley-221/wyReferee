@@ -99,7 +99,7 @@ export class WebhookService {
 				{
 					title: `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
 					url: selectedLobby.multiplayerLink,
-					description: `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n[${selectedLobby.multiplayerLink}](${selectedLobby.multiplayerLink})`,
+					description: `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n${selectedLobby.multiplayerLink}`,
 					color: 15258703,
 					footer: {
 						text: `Match referee was ${referee}`
