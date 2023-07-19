@@ -132,33 +132,6 @@ export class CreateLobbyComponent implements OnInit {
 		this.lobbyWithBrackets = this.selectedTournament.lobbyTeamNameWithBrackets;
 
 		this.initializeFilters();
-
-		// TODO: re-implement challonge integration
-		// this.checkingChallongeIntegration = true;
-
-		// this.challongeService.getChallongeMatchups(this.selectedTournament).subscribe((result: any) => {
-		// 	if (result == null) {
-		// 		this.checkingChallongeIntegration = false;
-		// 		return;
-		// 	}
-
-		// 	// TODO: add check for Group stage matches, ignore those
-		// 	// this.challongeMatches = this.challongeService.parseChallongeEndpoint(result);
-
-		// 	if (this.challongeMatches.length > 0) {
-		// 		this.challongeMatches.sort((firstMatch, secondMatch) => firstMatch.suggested_play_order - secondMatch.suggested_play_order);
-
-		// 		this.validationForm.removeControl('team-one-name');
-		// 		this.validationForm.removeControl('team-two-name');
-
-		// 		this.validationForm.addControl('challonge-match', new FormControl('', Validators.required));
-		// 		this.validationForm.addControl('challonge-tournament', new FormControl());
-		// 	}
-
-		// 	this.checkingChallongeIntegration = false;
-		// }, () => {
-		// 	this.checkingChallongeIntegration = false;
-		// });
 	}
 
 	changeScoreInterface(event: MatSelectChange) {
