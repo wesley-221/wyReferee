@@ -32,6 +32,7 @@ import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-mu
 import { Gamemodes } from 'app/models/osu-models/osu';
 import { TournamentService } from 'app/services/tournament.service';
 import { WyTeam } from 'app/models/wytournament/wy-team';
+import { ChallongeService } from 'app/services/challonge.service';
 
 @Component({
 	selector: 'app-irc',
@@ -105,7 +106,8 @@ export class IrcComponent implements OnInit {
 		public ircShortcutCommandsService: IrcShortcutCommandsService,
 		private ref: ChangeDetectorRef,
 		public multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
-		private tournamentService: TournamentService) {
+		private tournamentService: TournamentService,
+		private challongeService: ChallongeService) {
 		this.channels = ircService.allChannels;
 
 		const dividerHeightStore = this.storeService.get('dividerHeight');
@@ -817,6 +819,10 @@ export class IrcComponent implements OnInit {
 					else {
 						this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
 					}
+
+					if (this.selectedLobby.tournament.hasWyBinConnected()) {
+						this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe();
+					}
 				}
 			}
 		});
@@ -976,6 +982,12 @@ export class IrcComponent implements OnInit {
 			}
 			else if (team == 2) {
 				this.selectedLobby.teamTwoOverwriteScore = 0;
+			}
+		}
+
+		if (this.selectedLobby.isQualifierLobby == false) {
+			if (this.selectedLobby.tournament.hasWyBinConnected()) {
+				this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe();
 			}
 		}
 
