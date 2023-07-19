@@ -618,6 +618,12 @@ export class IrcComponent implements OnInit {
 			this.tiebreaker = multiplayerLobby.getTiebreaker();
 			this.hasWon = multiplayerLobby.teamHasWon();
 		}
+
+		if (this.selectedLobby.isQualifierLobby == false) {
+			if (this.selectedLobby.tournament.hasWyBinConnected()) {
+				this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe();
+			}
+		}
 	}
 
 	/**
@@ -819,10 +825,6 @@ export class IrcComponent implements OnInit {
 					else {
 						this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
 					}
-
-					if (this.selectedLobby.tournament.hasWyBinConnected()) {
-						this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe();
-					}
 				}
 			}
 		});
@@ -982,12 +984,6 @@ export class IrcComponent implements OnInit {
 			}
 			else if (team == 2) {
 				this.selectedLobby.teamTwoOverwriteScore = 0;
-			}
-		}
-
-		if (this.selectedLobby.isQualifierLobby == false) {
-			if (this.selectedLobby.tournament.hasWyBinConnected()) {
-				this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe();
 			}
 		}
 
