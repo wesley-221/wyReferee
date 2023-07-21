@@ -171,6 +171,7 @@ export class TournamentPublishedEditComponent implements OnInit {
 				webhook.matchCreation = this.validationForm.get(`webhook-${webhook.index}-match-creation`).value;
 				webhook.picks = this.validationForm.get(`webhook-${webhook.index}-picks`).value;
 				webhook.bans = this.validationForm.get(`webhook-${webhook.index}-bans`).value;
+				webhook.matchSummary = this.validationForm.get(`webhook-${webhook.index}-match-summary`).value;
 				webhook.matchResult = this.validationForm.get(`webhook-${webhook.index}-match-result`).value;
 				webhook.finalResult = this.validationForm.get(`webhook-${webhook.index}-final-result`).value;
 			}

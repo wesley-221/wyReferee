@@ -45,12 +45,12 @@ export class WyWebhook {
 			index: webhook.index,
 			name: webhook.name,
 			url: webhook.url,
-			matchCreation: webhook.matchCreation,
-			picks: webhook.picks,
-			bans: webhook.bans,
-			matchSummary: webhook.matchSummary,
-			matchResult: webhook.matchResult,
-			finalResult: webhook.finalResult
+			matchCreation: webhook.matchCreation == null ? false : webhook.matchCreation,
+			picks: webhook.picks == null ? false : webhook.picks,
+			bans: webhook.bans == null ? false : webhook.bans,
+			matchSummary: webhook.matchSummary == null ? false : webhook.matchSummary,
+			matchResult: webhook.matchResult == null ? false : webhook.matchResult,
+			finalResult: webhook.finalResult == null ? false : webhook.finalResult
 		});
 	}
 }
