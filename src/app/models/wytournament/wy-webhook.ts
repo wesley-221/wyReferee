@@ -21,6 +21,11 @@ export class WyWebhook {
 	bans: boolean;
 
 	/**
+	 * Whenever a button gets pressed by the referee, an embed with the match summary will be sent to the channel
+	 */
+	matchSummary: boolean;
+
+	/**
 	 * Whenever a beatmap finishes, an embed will be sent to the channel
 	 */
 	matchResult: boolean;
@@ -43,6 +48,7 @@ export class WyWebhook {
 			matchCreation: webhook.matchCreation,
 			picks: webhook.picks,
 			bans: webhook.bans,
+			matchSummary: webhook.matchSummary,
 			matchResult: webhook.matchResult,
 			finalResult: webhook.finalResult
 		});

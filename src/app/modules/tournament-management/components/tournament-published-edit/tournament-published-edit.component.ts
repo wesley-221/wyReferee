@@ -121,6 +121,7 @@ export class TournamentPublishedEditComponent implements OnInit {
 					this.validationForm.addControl(`webhook-${webhook.index}-match-creation`, new FormControl(webhook.matchCreation, Validators.required));
 					this.validationForm.addControl(`webhook-${webhook.index}-picks`, new FormControl(webhook.picks, Validators.required));
 					this.validationForm.addControl(`webhook-${webhook.index}-bans`, new FormControl(webhook.bans, Validators.required));
+					this.validationForm.addControl(`webhook-${webhook.index}-match-summary`, new FormControl(webhook.matchSummary, Validators.required));
 					this.validationForm.addControl(`webhook-${webhook.index}-match-result`, new FormControl(webhook.matchResult, Validators.required));
 					this.validationForm.addControl(`webhook-${webhook.index}-final-result`, new FormControl(webhook.finalResult, Validators.required));
 				}
