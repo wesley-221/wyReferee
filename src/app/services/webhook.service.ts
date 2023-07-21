@@ -344,20 +344,20 @@ export class WebhookService {
 			if (firstPickTeam === 1) {
 				if (i < teamOneLength) {
 					const teamOnePick = selectedLobby.teamOnePicks[i];
-					picks.push(`**${selectedLobby.teamOneName}** picked ${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)}`);
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)} was picked by **${selectedLobby.teamOneName}**`);
 				}
 				if (i < teamTwoLength) {
 					const teamTwoPick = selectedLobby.teamTwoPicks[i];
-					picks.push(`**${selectedLobby.teamTwoName}** picked ${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)}`);
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)} was picked by **${selectedLobby.teamTwoName}**`);
 				}
 			} else if (firstPickTeam === 2) {
 				if (i < teamTwoLength) {
 					const teamTwoPick = selectedLobby.teamTwoPicks[i];
-					picks.push(`**${selectedLobby.teamTwoName}** picked ${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)}`);
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)} was picked by **${selectedLobby.teamTwoName}**`);
 				}
 				if (i < teamOneLength) {
 					const teamOnePick = selectedLobby.teamOnePicks[i];
-					picks.push(`**${selectedLobby.teamOneName}** picked ${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)}`);
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)} was picked by **${selectedLobby.teamOneName}**`);
 				}
 			}
 		}

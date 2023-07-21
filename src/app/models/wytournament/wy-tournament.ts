@@ -282,7 +282,7 @@ export class WyTournament {
 			}
 		}
 
-		return `**${foundModBracket.acronym}${foundBeatmap.index + 1}**: [${foundBeatmap.beatmapName}](${foundBeatmap.beatmapUrl})`;
+		return `[${foundModBracket.acronym}${foundBeatmap.index + 1}](${foundBeatmap.beatmapUrl})`;
 	}
 
 	/**
