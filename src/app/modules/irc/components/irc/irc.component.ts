@@ -624,7 +624,7 @@ export class IrcComponent implements OnInit {
 			if (this.selectedLobby.tournament.hasWyBinConnected()) {
 				this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe(() => {
 				}, (error: HttpErrorResponse) => {
-					this.toastService.addToast(`Unable to update the match score to Challonge: ${error.error.message}`, ToastType.Error);
+					this.toastService.addToast('Unable to update the match score to Challonge: ' + error.error.message, ToastType.Error);
 				});
 			}
 		}

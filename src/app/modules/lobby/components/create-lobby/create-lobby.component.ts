@@ -269,7 +269,7 @@ export class CreateLobbyComponent implements OnInit {
 							}
 
 							this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser, streamerNames, commentatorNames);
-						}, (error: HttpErrorResponse) => {
+						}, () => {
 							this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 						});
 					}
