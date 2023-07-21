@@ -33,6 +33,7 @@ import { Gamemodes } from 'app/models/osu-models/osu';
 import { TournamentService } from 'app/services/tournament.service';
 import { WyTeam } from 'app/models/wytournament/wy-team';
 import { ChallongeService } from 'app/services/challonge.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	selector: 'app-irc',
@@ -621,7 +622,10 @@ export class IrcComponent implements OnInit {
 
 		if (this.selectedLobby.isQualifierLobby == false) {
 			if (this.selectedLobby.tournament.hasWyBinConnected()) {
-				this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe();
+				this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe(() => {
+				}, (error: HttpErrorResponse) => {
+					this.toastService.addToast(`Unable to update the match score to Challonge: ${error.error.message}`, ToastType.Error);
+				});
 			}
 		}
 	}
