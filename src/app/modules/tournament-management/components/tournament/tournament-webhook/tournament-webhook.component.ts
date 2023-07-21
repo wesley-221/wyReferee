@@ -23,6 +23,7 @@ export class TournamentWebhookComponent implements OnInit {
 		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-match-creation`, new FormControl(false, Validators.required));
 		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-picks`, new FormControl(false, Validators.required));
 		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-bans`, new FormControl(true, Validators.required));
+		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-match-summary`, new FormControl(false, Validators.required));
 		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-match-result`, new FormControl(true, Validators.required));
 		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-final-result`, new FormControl(true, Validators.required));
 
@@ -40,6 +41,7 @@ export class TournamentWebhookComponent implements OnInit {
 		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-match-creation`);
 		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-picks`);
 		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-bans`);
+		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-match-summary`);
 		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-match-result`);
 		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-final-result`);
 

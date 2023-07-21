@@ -21,6 +21,53 @@
 
 	<hr />
 
+	<h3>Webhook options explanation</h3>
+	<ul>
+		<li>
+			Match creation
+			<ul>
+				<li>Whenever a match gets created, an embed message will be sent to the channel with information of the match</li>
+			</ul>
+		</li>
+
+		<li>
+			Picks
+			<ul>
+				<li>Whenever a beatmap gets picked, an embed message will be sent to the channel with which player/team has picked which beatmap</li>
+			</ul>
+		</li>
+
+		<li>
+			Bans
+			<ul>
+				<li>Whenever a beatmap gets banned, an embed message will be sent to the channel with which player/team has banned which beatmap</li>
+			</ul>
+		</li>
+
+		<li>
+			Match summary
+			<ul>
+				<li>Whenever a referee presses the button for the match summary, an embed message will be sent to the channel with the full match summary such as picks and bans</li>
+			</ul>
+		</li>
+
+		<li>
+			Match result
+			<ul>
+				<li>Whenever the players/teams have finished the beatmap, an embed message will be sent to the channel showing which team has won the pick as well as showing the current match score</li>
+			</ul>
+		</li>
+
+		<li>
+			Final creation
+			<ul>
+				<li>Whenever a referee clicks on the dialog to send the final result, an embed message will be sent to the channel showing the final score, multiplayer link, first pick and bans of the match</li>
+			</ul>
+		</li>
+	</ul>
+
+	<hr />
+
 	<button mat-raised-button color="primary" (click)="createWebhook()"><mat-icon>add</mat-icon> add new webhook</button>
 
 	<app-alert alertType="info" *ngIf="tournament.webhooks.length <= 0">
@@ -88,6 +135,14 @@
 					</div>
 
 					<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-bans'"></mat-slide-toggle>
+				</div>
+
+				<div class="option">
+					<div class="description">
+						Match summary
+					</div>
+
+					<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-match-summary'"></mat-slide-toggle>
 				</div>
 
 				<div class="option">

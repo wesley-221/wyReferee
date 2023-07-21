@@ -272,6 +272,10 @@
 					<mat-icon>chat</mat-icon>
 				</div>
 
+				<div class="header-button" matTooltip="Send match summary" (click)="sendMatchSummary()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+					<mat-icon>view_list</mat-icon>
+				</div>
+
 				<div class="header-button" matTooltip="Send final result to Discord webhook" (click)="sendFinalResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
 					<mat-icon>send</mat-icon>
 				</div>

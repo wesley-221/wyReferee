@@ -312,6 +312,98 @@ export class WebhookService {
 	}
 
 	/**
+	 * Send a summary of the match through a discord webhook
+	 *
+	 * @param selectedLobby the lobby to get the data from
+	 * @param referee the referee that is running the lobby
+	 */
+	sendMatchSummary(selectedLobby: Lobby, referee: string) {
+		if (!this.doSendWebhooks(selectedLobby)) {
+			return;
+		}
+
+		const teamOneBans = [];
+		const teamTwoBans = [];
+
+		for (const ban of selectedLobby.teamOneBans) {
+			teamOneBans.push(selectedLobby.tournament.getBeatmapForMatchSummary(ban));
+		}
+
+		for (const ban of selectedLobby.teamTwoBans) {
+			teamTwoBans.push(selectedLobby.tournament.getBeatmapForMatchSummary(ban));
+		}
+
+		const firstPickTeam = selectedLobby.firstPick == selectedLobby.teamOneName ? 1 : 2;
+		const teamOneLength = selectedLobby.teamOnePicks.length;
+		const teamTwoLength = selectedLobby.teamTwoPicks.length;
+		const maxLength = Math.max(teamOneLength, teamTwoLength);
+
+		const picks: string[] = [];
+
+		for (let i = 0; i < maxLength; i++) {
+			if (firstPickTeam === 1) {
+				if (i < teamOneLength) {
+					const teamOnePick = selectedLobby.teamOnePicks[i];
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)} was picked by **${selectedLobby.teamOneName}**`);
+				}
+				if (i < teamTwoLength) {
+					const teamTwoPick = selectedLobby.teamTwoPicks[i];
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)} was picked by **${selectedLobby.teamTwoName}**`);
+				}
+			} else if (firstPickTeam === 2) {
+				if (i < teamTwoLength) {
+					const teamTwoPick = selectedLobby.teamTwoPicks[i];
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)} was picked by **${selectedLobby.teamTwoName}**`);
+				}
+				if (i < teamOneLength) {
+					const teamOnePick = selectedLobby.teamOnePicks[i];
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)} was picked by **${selectedLobby.teamOneName}**`);
+				}
+			}
+		}
+
+		const body = {
+			embeds: [
+				{
+					title: `Match summary - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					url: selectedLobby.multiplayerLink,
+					color: 15258703,
+					footer: {
+						text: `Match referee was ${referee}`
+					},
+					fields: [
+					]
+				}
+			]
+		};
+
+		body.embeds[0].fields.push(
+			{
+				name: `${selectedLobby.teamOneName} bans`,
+				value: teamOneBans.join('\n'),
+				inline: true
+			},
+			{
+				name: `${selectedLobby.teamTwoName} bans`,
+				value: teamTwoBans.join('\n'),
+				inline: true
+			});
+
+		body.embeds[0].fields.push(
+			{
+				name: 'Match picks',
+				value: picks.join('\n')
+			});
+
+		for (const webhook of selectedLobby.tournament.webhooks) {
+			if (webhook.matchSummary == true) {
+				console.log('found webhook, sending');
+				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+			}
+		}
+	}
+
+	/**
 	 * Send the result of the last played beatmap to a discord webhook
 	 *
 	 * @param multiplayerLobby the lobby to get the data from

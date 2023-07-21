@@ -84,6 +84,7 @@ export class TournamentEditComponent implements OnInit {
 						this.validationForm.addControl(`webhook-${webhook.index}-match-creation`, new FormControl(webhook.matchCreation, Validators.required));
 						this.validationForm.addControl(`webhook-${webhook.index}-picks`, new FormControl(webhook.picks, Validators.required));
 						this.validationForm.addControl(`webhook-${webhook.index}-bans`, new FormControl(webhook.bans, Validators.required));
+						this.validationForm.addControl(`webhook-${webhook.index}-match-summary`, new FormControl(webhook.matchSummary, Validators.required));
 						this.validationForm.addControl(`webhook-${webhook.index}-match-result`, new FormControl(webhook.matchResult, Validators.required));
 						this.validationForm.addControl(`webhook-${webhook.index}-final-result`, new FormControl(webhook.finalResult, Validators.required));
 					}
@@ -174,6 +175,7 @@ export class TournamentEditComponent implements OnInit {
 				webhook.matchCreation = this.validationForm.get(`webhook-${webhook.index}-match-creation`).value;
 				webhook.picks = this.validationForm.get(`webhook-${webhook.index}-picks`).value;
 				webhook.bans = this.validationForm.get(`webhook-${webhook.index}-bans`).value;
+				webhook.matchSummary = this.validationForm.get(`webhook-${webhook.index}-match-summary`).value;
 				webhook.matchResult = this.validationForm.get(`webhook-${webhook.index}-match-result`).value;
 				webhook.finalResult = this.validationForm.get(`webhook-${webhook.index}-final-result`).value;
 			}
