@@ -6,6 +6,8 @@ import { WyWebhook } from './wy-webhook';
 import { WyTeam } from './wy-team';
 import { WyStage } from './wy-stage';
 import { WyBeatmapResultMessage } from './wy-beatmap-result-message';
+import { WyModBracket } from './mappool/wy-mod-bracket';
+import { WyModBracketMap } from './mappool/wy-mod-bracket-map';
 
 export enum TournamentFormat {
 	Solo = 'solo',
@@ -257,6 +259,30 @@ export class WyTournament {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get the beatmap for the match summary
+	 *
+	 * @param beatmapId the id of the beatmap to get
+	 */
+	getBeatmapForMatchSummary(beatmapId: number): string {
+		let foundModBracket: WyModBracket = null;
+		let foundBeatmap: WyModBracketMap = null;
+
+		for (const mappool of this.mappools) {
+			for (const modBracket of mappool.modBrackets) {
+				for (const beatmap of modBracket.beatmaps) {
+					if (beatmap.beatmapId == beatmapId) {
+						foundModBracket = modBracket;
+						foundBeatmap = beatmap;
+						break;
+					}
+				}
+			}
+		}
+
+		return `**${foundModBracket.acronym}${foundBeatmap.index + 1}**: [${foundBeatmap.beatmapName}](${foundBeatmap.beatmapUrl})`;
 	}
 
 	/**

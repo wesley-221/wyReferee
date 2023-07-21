@@ -794,6 +794,14 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Send the match summary to the given Discord webhooks
+	 */
+	sendMatchSummary() {
+		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
+		this.webhookService.sendMatchSummary(selectedMultiplayerLobby, this.ircService.authenticatedUser);
+	}
+
+	/**
 	 * Send the final result to discord
 	 */
 	sendFinalResult() {
