@@ -260,7 +260,7 @@
 			</div>
 
 			<div class="send-message">
-				<input type="text" placeholder="Message..." #chatMessage [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" (keypress)="sendMessage($event)" (keydown)="preventDefault($event)" />
+				<input type="text" placeholder="Message..." #chatMessage (keypress)="sendMessage($event)" (keydown)="preventDefault($event)" />
 			</div>
 		</div>
 	</div>

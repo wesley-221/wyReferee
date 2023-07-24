@@ -377,6 +377,10 @@ export class IrcComponent implements OnInit {
 	 */
 	sendMessage(event: KeyboardEvent) {
 		if (event.key == 'Enter') {
+			if (!this.ircService.isAuthenticated || (this.selectedChannel == undefined || !this.selectedChannel.active)) {
+				return;
+			}
+
 			if (this.chatMessage.nativeElement.value.startsWith('/')) {
 				if (this.activeSlashCommand) {
 					this.chatMessage.nativeElement.value = `/${this.activeSlashCommand.name}`;
