@@ -34,6 +34,8 @@ import { TournamentService } from 'app/services/tournament.service';
 import { WyTeam } from 'app/models/wytournament/wy-team';
 import { ChallongeService } from 'app/services/challonge.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SlashCommandService } from 'app/services/slash-command.service';
+import { SlashCommand } from 'app/models/slash-command';
 
 @Component({
 	selector: 'app-irc',
@@ -95,6 +97,11 @@ export class IrcComponent implements OnInit {
 
 	currentMessageHistoryIndex: number;
 
+	slashCommandIndex: number;
+	allSlashCommands: SlashCommand[];
+	allSlashCommandsFiltered: SlashCommand[];
+	activeSlashCommand: SlashCommand;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -108,11 +115,13 @@ export class IrcComponent implements OnInit {
 		private ref: ChangeDetectorRef,
 		public multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
 		private tournamentService: TournamentService,
-		private challongeService: ChallongeService) {
+		private challongeService: ChallongeService,
+		public slashCommandService: SlashCommandService) {
 		this.channels = ircService.allChannels;
 
 		const dividerHeightStore = this.storeService.get('dividerHeight');
 		this.currentMessageHistoryIndex = -1;
+		this.slashCommandIndex = -1;
 
 		if (dividerHeightStore == undefined) {
 			this.storeService.set('dividerHeight', 30);
@@ -181,6 +190,21 @@ export class IrcComponent implements OnInit {
 				}
 			}
 		});
+
+		this.slashCommandService.registerCommand(new SlashCommand({
+			name: 'savelog',
+			description: 'Saves the chatlog of the current irc channel to a file',
+			execute: () => slashCommandService.saveLog(this.selectedChannel)
+		}));
+
+		this.slashCommandService.registerCommand(new SlashCommand({
+			name: 'savedebug',
+			description: 'Saves debug data of the current multiplayer lobby to a file',
+			execute: () => slashCommandService.saveDebug(this.selectedLobby, this.selectedChannel)
+		}));
+
+		this.allSlashCommands = this.slashCommandService.getSlashCommands();
+		this.allSlashCommandsFiltered = this.slashCommandService.getSlashCommands();
 	}
 
 	/**
@@ -196,11 +220,24 @@ export class IrcComponent implements OnInit {
 			return;
 		}
 
-		if (event.key == 'ArrowUp') {
-			this.navigateMessageHistory(-1);
+		if (this.chatMessage.nativeElement.value.startsWith('/')) {
+			this.allSlashCommandsFiltered = this.allSlashCommands.filter(command =>
+				command.name.toLowerCase().includes(this.chatMessage.nativeElement.value.toLowerCase().substring(1)));
+
+			if (event.key == 'ArrowUp') {
+				this.navigateSlashCommandSelection(1);
+			}
+			else if (event.key == 'ArrowDown') {
+				this.navigateSlashCommandSelection(-1);
+			}
 		}
-		else if (event.key == 'ArrowDown') {
-			this.navigateMessageHistory(1);
+		else {
+			if (event.key == 'ArrowUp') {
+				this.navigateMessageHistory(-1);
+			}
+			else if (event.key == 'ArrowDown') {
+				this.navigateMessageHistory(1);
+			}
 		}
 	}
 
@@ -208,6 +245,15 @@ export class IrcComponent implements OnInit {
 		this.ircService.getIsJoiningChannel().subscribe(value => {
 			this.isAttemptingToJoin = value;
 		});
+	}
+
+	/**
+	 * Prevent the arrow Up and Down from moving the cursor around
+	 */
+	preventDefault(event: KeyboardEvent) {
+		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+			event.preventDefault();
+		}
 	}
 
 	/**
@@ -331,7 +377,29 @@ export class IrcComponent implements OnInit {
 	 */
 	sendMessage(event: KeyboardEvent) {
 		if (event.key == 'Enter') {
-			if (this.chatMessage.nativeElement.value != '') {
+			if (this.chatMessage.nativeElement.value.startsWith('/')) {
+				if (this.activeSlashCommand) {
+					this.chatMessage.nativeElement.value = `/${this.activeSlashCommand.name}`;
+
+					this.activeSlashCommand = null;
+					this.slashCommandIndex = -1;
+				}
+				else {
+					const slashCommand = this.slashCommandService.getSlashCommand(this.chatMessage.nativeElement.value.substring(1));
+
+					if (slashCommand != undefined) {
+						slashCommand.execute();
+						this.currentMessageHistoryIndex = -1;
+					}
+
+					this.chatMessage.nativeElement.value = '';
+				}
+			}
+			else if (this.chatMessage.nativeElement.value != '') {
+				if (!this.ircService.isAuthenticated || (this.selectedChannel == undefined || !this.selectedChannel.active)) {
+					return;
+				}
+
 				this.ircService.sendMessage(this.selectedChannel.name, this.chatMessage.nativeElement.value);
 
 				this.currentMessageHistoryIndex = -1;
@@ -357,6 +425,26 @@ export class IrcComponent implements OnInit {
 		const inputElement = this.chatMessage.nativeElement;
 		inputElement.value = messageHistory[messageCount - this.currentMessageHistoryIndex - 1];
 		inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
+	}
+
+	/**
+	 * Navigate through the slash commands
+	 *
+	 * @param direction whether to go up or down in the slash command selection
+	 */
+	navigateSlashCommandSelection(direction: number): void {
+		this.slashCommandIndex = (this.slashCommandIndex + direction + this.allSlashCommandsFiltered.length) % this.allSlashCommandsFiltered.length;
+		this.activeSlashCommand = this.allSlashCommandsFiltered[this.slashCommandIndex];
+	}
+
+	/**
+	 * Select a slash command
+	 *
+	 * @param slashCommand the slash command to select
+	 */
+	selectSlashCommand(slashCommand: SlashCommand) {
+		this.chatMessage.nativeElement.value = `/ ${slashCommand.name} `;
+		this.chatMessage.nativeElement.focus();
 	}
 
 	/**
@@ -1071,3 +1159,4 @@ export class IrcComponent implements OnInit {
 		});
 	}
 }
+

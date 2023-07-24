@@ -29,4 +29,14 @@ export class IrcMessage {
 
 		return newIrcMessage;
 	}
+
+	getRawMessage(): string {
+		let rawMessage = '';
+
+		for (const message of this.messageBuilder) {
+			rawMessage += message.message;
+		}
+
+		return rawMessage;
+	}
 }
