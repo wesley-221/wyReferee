@@ -14,6 +14,16 @@ export class IrcMessage {
 		Object.assign(this, init);
 	}
 
+	getRawMessage(): string {
+		let rawMessage = '';
+
+		for (const message of this.messageBuilder) {
+			rawMessage += message.message;
+		}
+
+		return rawMessage;
+	}
+
 	public static makeTrueCopy(ircMessage: IrcMessage): IrcMessage {
 		const newIrcMessage = new IrcMessage({
 			messageId: ircMessage.messageId,

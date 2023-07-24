@@ -342,6 +342,13 @@ export class Lobby {
 	}
 
 	/**
+	 * Get slug of the name of the lobby
+	 */
+	getLobbyNameSlug(): string {
+		return this.getLobbyName().replace(/\s/g, '-').replace(/[^\w\-]+/g, '').toLowerCase();
+	}
+
+	/**
 	 * Get the name of the lobby if it's a qualifier lobby
 	 */
 	getQualifierName(): string {

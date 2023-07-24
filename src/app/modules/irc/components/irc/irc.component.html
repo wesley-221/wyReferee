@@ -247,8 +247,20 @@
 
 			<app-irc-shortcut-commands [lobby]="selectedLobby" [channel]="selectedChannel" (focusChat)="focusChat($event)"></app-irc-shortcut-commands>
 
+			<div class="slash-commands" *ngIf="chatMessage.value.startsWith('/')">
+				<div class="slash-command" [ngClass]="{'active': activeSlashCommand && activeSlashCommand.name == slashCommand.name}" *ngFor="let slashCommand of allSlashCommandsFiltered | reverse" (click)="selectSlashCommand(slashCommand)">
+					<div class="slash-command-name">
+						/{{ slashCommand.name }}
+					</div>
+
+					<div class="slash-command-description">
+						{{ slashCommand.description }}
+					</div>
+				</div>
+			</div>
+
 			<div class="send-message">
-				<input type="text" placeholder="Message..." #chatMessage [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" (keypress)="sendMessage($event)" />
+				<input type="text" placeholder="Message..." #chatMessage [disabled]="!ircService.isAuthenticated || (selectedChannel == undefined || !selectedChannel.active)" (keypress)="sendMessage($event)" (keydown)="preventDefault($event)" />
 			</div>
 		</div>
 	</div>
