@@ -221,9 +221,8 @@ export class IrcComponent implements OnInit {
 		}
 
 		if (this.chatMessage.nativeElement.value.startsWith('/')) {
-			this.allSlashCommandsFiltered = this.allSlashCommands.filter(command => {
-				return command.name.toLowerCase().includes(this.chatMessage.nativeElement.value.toLowerCase().substring(1));
-			});
+			this.allSlashCommandsFiltered = this.allSlashCommands.filter(command =>
+				command.name.toLowerCase().includes(this.chatMessage.nativeElement.value.toLowerCase().substring(1)));
 
 			if (event.key == 'ArrowUp') {
 				this.navigateSlashCommandSelection(1);

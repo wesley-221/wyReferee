@@ -10,7 +10,7 @@ import { ToastType } from 'app/models/toast';
 	providedIn: 'root'
 })
 export class SlashCommandService {
-	slashCommands: Map<String, SlashCommand>;
+	slashCommands: Map<string, SlashCommand>;
 
 	constructor(private electronService: ElectronService, private toastService: ToastService) {
 		this.slashCommands = new Map();
