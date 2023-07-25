@@ -10,7 +10,6 @@ export class DebugComponent implements OnInit {
 	@Input() data: any;
 
 	constructor(public debugService: DebugService) { }
-	ngOnInit(): void { }
 
 	@HostListener('window:keydown', ['$event'])
 	triggerDebugMenu(event: KeyboardEvent) {
@@ -18,6 +17,8 @@ export class DebugComponent implements OnInit {
 			this.debugService.menuActive = !this.debugService.menuActive;
 		}
 	}
+
+	ngOnInit(): void { }
 
 	/**
 	 * Get the size of the object
