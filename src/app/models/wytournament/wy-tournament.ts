@@ -39,11 +39,6 @@ export class WyTournament {
 	beatmapResultMessages: WyBeatmapResultMessage[];
 	beatmapResultMessageIndex: number;
 
-	challongeIntegration: number;
-	challongeApiKey: string;
-	challongeTournamentId: number;
-	challongeCreationType: number;
-
 	invalidateBeatmaps: boolean;
 	allowDoublePick: boolean;
 	lobbyTeamNameWithBrackets: boolean;
@@ -97,10 +92,6 @@ export class WyTournament {
 			format: tournament.format,
 			scoreInterface: calc.getScoreInterface(tournament.scoreInterfaceIdentifier),
 			scoreInterfaceIdentifier: tournament.scoreInterfaceIdentifier,
-			challongeIntegration: tournament.challongeIntegration,
-			challongeApiKey: tournament.challongeApiKey,
-			challongeTournamentId: tournament.challongeTournamentId,
-			challongeCreationType: tournament.challongeCreationType,
 			updateDate: new Date(tournament.updateDate),
 			creationDate: new Date(tournament.creationDate),
 			allowDoublePick: tournament.allowDoublePick,
