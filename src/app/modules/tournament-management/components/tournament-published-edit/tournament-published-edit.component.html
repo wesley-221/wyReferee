@@ -1,4 +1,6 @@
 <div class="scroll" *ngIf="tournament">
+	<app-debug [data]="{ tournament }"></app-debug>
+
 	<h1>Updating {{ tournament.name }}</h1>
 
 	<app-alert alertType="info">
