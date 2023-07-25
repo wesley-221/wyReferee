@@ -126,11 +126,6 @@
 
 		<hr *ngIf="selectedTournament == null" />
 
-		<app-alert alertType="info" *ngIf="checkingChallongeIntegration == true">
-			<mat-spinner [diameter]="32"></mat-spinner>
-			<div>Checking for Challonge integration...</div>
-		</app-alert>
-
 		<div class="row r-2" *ngIf="selectedTournament == null">
 			<div class="col">
 				<h2>Team one name</h2>
@@ -177,7 +172,7 @@
 			</div>
 		</div>
 
-		<div *ngIf="selectedTournament != null && challongeMatches.length <= 0">
+		<div *ngIf="selectedTournament != null">
 			<h1>Stage</h1>
 			<p>Select for which stage this match is supposed to be for.</p>
 
@@ -274,28 +269,6 @@
 				<p>{{ selectedTournament.acronym }}: Qualifier lobby: {{ qualifierLobbyIdentifier }}</p>
 			</div>
 		</div>
-
-		<!-- <div class="row" *ngIf="selectedTournament != null && challongeMatches.length > 0">
-			<div class="col">
-				<h2>Challonge matchups</h2>
-
-				<mat-form-field class="full-width">
-					<mat-label>Challonge matchup</mat-label>
-					<mat-select formControlName="challonge-match" (selectionChange)="changeChallongeMatch($event)">
-						<mat-option *ngFor="let match of challongeMatches" [value]="match.id">
-							Match {{ match.suggested_play_order }}: ({{ match.getPlayer1Name.call() }}) vs. ({{ match.getPlayer2Name.call() }})
-							- Reported score: {{ match.getScore.call() }}
-						</mat-option>
-					</mat-select>
-
-					<mat-error *ngIf="getValidation('challonge-match').errors && (getValidation('challonge-match').touched || getValidation('challonge-match').dirty)">
-						This field is required
-					</mat-error>
-				</mat-form-field>
-
-				<p>Select a matchup straight from Challonge. Scores will be updated in real-time.</p>
-			</div>
-		</div> -->
 
 		<button mat-raised-button color="accent" class="margin-button" (click)="createLobby()" [disabled]="!ircAuthenticated">Create</button>
 	</form>

@@ -44,9 +44,6 @@ export class CreateLobbyComponent implements OnInit {
 	teamOneArray: number[] = [];
 	teamTwoArray: number[] = [];
 
-	challongeMatches: ChallongeMatch[] = [];
-	checkingChallongeIntegration = false;
-
 	teamOneFilter: Observable<WyTeam[]>;
 	teamTwoFilter: Observable<WyTeam[]>;
 
@@ -117,16 +114,10 @@ export class CreateLobbyComponent implements OnInit {
 		this.validationForm.get('tournament-acronym').setValue(this.selectedTournament != null ? this.selectedTournament.acronym : null);
 		this.validationForm.get('score-interface').setValue(this.selectedScoreInterface ? this.selectedScoreInterface.getIdentifier() : null);
 
-		// Make sure to reset challonge matches
-		this.challongeMatches = [];
-
 		this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
 		this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
 
 		this.validationForm.addControl('stage', new FormControl('', Validators.required));
-
-		this.validationForm.removeControl('challonge-match');
-		this.validationForm.removeControl('challonge-tournament');
 
 		this.lobbyWithBrackets = this.selectedTournament.lobbyTeamNameWithBrackets;
 
@@ -138,13 +129,6 @@ export class CreateLobbyComponent implements OnInit {
 
 		this.teamSize = this.selectedScoreInterface.getTeamSize();
 		this.validationForm.get('team-size').setValue(this.teamSize);
-	}
-
-	changeChallongeMatch(event: MatSelectChange) {
-		const findMatch = this.challongeMatches.find(match => match.id == event.value);
-
-		this.validationForm.get('challonge-match').setValue(findMatch.id);
-		this.validationForm.get('challonge-tournament').setValue(findMatch.tournament_id);
 	}
 
 	createLobby() {
