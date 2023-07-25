@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { DebugService } from 'app/services/debug.service';
 
 @Component({
@@ -9,7 +9,14 @@ import { DebugService } from 'app/services/debug.service';
 export class DebugComponent implements OnInit {
 	@Input() data: any;
 
-	constructor(private debugService: DebugService) { }
+	constructor(public debugService: DebugService) { }
+
+	@HostListener('window:keydown', ['$event'])
+	triggerDebugMenu(event: KeyboardEvent) {
+		if (event.key == 'F1') {
+			this.debugService.menuActive = !this.debugService.menuActive;
+		}
+	}
 
 	ngOnInit(): void { }
 
