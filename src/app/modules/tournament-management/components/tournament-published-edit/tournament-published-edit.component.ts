@@ -94,17 +94,17 @@ export class TournamentPublishedEditComponent implements OnInit {
 							else {
 								this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
 							}
+						}
 
-							if (mappool.type == MappoolType.AxS) {
-								for (const beatmap of modBracket.beatmaps) {
-									this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`, new FormControl(beatmap.modifier, Validators.required));
-								}
+						if (mappool.type == MappoolType.AxS) {
+							for (const beatmap of modBracket.beatmaps) {
+								this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`, new FormControl(beatmap.modifier, Validators.required));
 							}
+						}
 
-							if (mappool.type == MappoolType.CTMTournament) {
-								for (const beatmap of modBracket.beatmaps) {
-									this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-damage-amount`, new FormControl(beatmap.damageAmount, Validators.required));
-								}
+						if (mappool.type == MappoolType.CTMTournament) {
+							for (const beatmap of modBracket.beatmaps) {
+								this.validationForm.addControl(`mappool-${mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-damage-amount`, new FormControl(beatmap.damageAmount, Validators.required));
 							}
 						}
 					}
