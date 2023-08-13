@@ -220,7 +220,7 @@ export class WyMappool {
 		const regexOptions: string[] = [];
 
 		for (const modBracket of this.modBrackets) {
-			if (modBracket.acronym) {
+			if (modBracket.acronym && modBracket.beatmaps.length > 0) {
 				if (fullRegex == true) {
 					regexOptions.push(`(${modBracket.acronym}\\s?[1-${modBracket.beatmaps.length}])`);
 				}
