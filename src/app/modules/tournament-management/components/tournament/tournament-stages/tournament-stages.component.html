@@ -12,6 +12,12 @@
 			</div>
 		</div>
 
+		<app-alert alertType="info" *ngIf="tournament.hasWyBinConnected()">
+			Make sure that the stage names here are identical to the stage names on wyBin. If they do not match, the scores and such will not automatically be updated when the final result has been sent.
+			<br /><br />
+			By using the <code>import stages from wyBin</code> button it is guaranteed that the stage names match.
+		</app-alert>
+
 		<div class="row">
 			<div class="col">
 				<div class="all-stages">
