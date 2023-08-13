@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MappoolCreateComponent } from './mappool-create.component';
+import { MappoolOverviewComponent } from './mappool-overview.component';
 
-describe('MappoolCreateComponent', () => {
-	let component: MappoolCreateComponent;
-	let fixture: ComponentFixture<MappoolCreateComponent>;
+describe('MappoolOverviewComponent', () => {
+	let component: MappoolOverviewComponent;
+	let fixture: ComponentFixture<MappoolOverviewComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [MappoolCreateComponent]
+			declarations: [MappoolOverviewComponent]
 		})
 			.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(MappoolCreateComponent);
+		fixture = TestBed.createComponent(MappoolOverviewComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
