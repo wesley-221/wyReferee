@@ -6,6 +6,10 @@
 		<button mat-raised-button color="accent" (click)="importWyBinStaff()" *ngIf="tournament.hasWyBinConnected()">
 			<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import stages from wyBin
 		</button>
+
+		<app-alert alertType="info">
+			In order for matches to be updated on wyBin when the final result has been sent, make sure that all the referee's have access to the tournament on wyReferee as well as have the Referee role on wyBin.
+		</app-alert>
 		<hr />
 	</ng-container>
 
