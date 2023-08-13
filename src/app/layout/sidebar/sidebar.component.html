@@ -26,7 +26,7 @@
 	</div>
 
 <div class="sidebar">
-	<div class="sidebar-item" *ngFor="let navigationItem of allNavigations">
+	<div class="sidebar-item" *ngFor="let navigationItem of allNavigations" [ngClass]="{'hidden': navigationItem.showIf == false }">
 		<div class="sidebar-link" [routerLink]="[navigationItem.link]" routerLinkActive="active">
 			<mat-icon>{{ navigationItem.icon }}</mat-icon>
 

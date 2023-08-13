@@ -126,6 +126,10 @@
 					}
 				}
 			}
+
+			&.hidden {
+				display: none;
+			}
 		}
 
 		.sidebar-submenu {
