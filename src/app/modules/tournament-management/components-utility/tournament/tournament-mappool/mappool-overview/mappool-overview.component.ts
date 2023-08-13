@@ -8,11 +8,11 @@ import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 
 @Component({
-	selector: 'app-mappool-create',
-	templateUrl: './mappool-create.component.html',
-	styleUrls: ['./mappool-create.component.scss']
+	selector: 'app-mappool-overview',
+	templateUrl: './mappool-overview.component.html',
+	styleUrls: ['./mappool-overview.component.scss']
 })
-export class MappoolCreateComponent implements OnInit {
+export class MappoolOverviewComponent implements OnInit {
 	@Input() tournament: WyTournament;
 	@Input() validationForm: FormGroup;
 
