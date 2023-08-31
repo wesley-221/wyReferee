@@ -16,6 +16,8 @@ import { NgVarDirective } from './directives/ng-var.directive';
 import { FilterTeamPipe } from './pipes/filter-team.pipe';
 import { ClickableLinksDirective } from 'app/core/directive/clickable-links.directive';
 import { ToastComponent } from './components/toast/toast.component';
+import { TutorialComponent } from './components/tutorial/tutorial.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 const declerations = [
 	FilterTournamentPipe,
@@ -28,7 +30,8 @@ const declerations = [
 	NgVarDirective,
 	FilterTeamPipe,
 	ClickableLinksDirective,
-	ToastComponent
+	ToastComponent,
+	TutorialComponent
 ];
 
 const modules = [
@@ -39,7 +42,8 @@ const modules = [
 	RouterModule,
 	DragDropModule,
 	VirtualScrollerModule,
-	ClipboardModule
+	ClipboardModule,
+	MarkdownModule
 ];
 
 @NgModule({

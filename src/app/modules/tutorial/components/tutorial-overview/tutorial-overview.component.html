@@ -1,0 +1,15 @@
+<h1>Tutorials</h1>
+<p>Welcome to wyReferee's tutorials section, designed to provide you with an in-depth understanding of how wyReferee works and how to make the most out of its features.</p>
+<p>If you would like to see a different tutorial that is not yet listed here, feel free to reach out and create an <a [routerLink]="[]" (click)="electronService.openLink('https://github.com/wesley-221/wyReferee/issues')">issue (click me)</a>.</p>
+
+<div class="all-tutorials">
+	<div class="tutorial" *ngFor="let tutorial of tutorialService.allTutorials" (click)="selectTutorial(tutorial)">
+		<div class="tutorial-name">
+			<h3>{{ tutorial.name }}</h3>
+		</div>
+
+		<div class="tutorial-description">
+			{{ tutorial.description }}
+		</div>
+	</div>
+</div>

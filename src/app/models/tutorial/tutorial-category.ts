@@ -6,6 +6,7 @@ export class TutorialCategory {
 	private steps: TutorialStep[];
 
 	constructor(init?: Partial<TutorialCategory>) {
+		this.steps = [];
 		Object.assign(this, init);
 	}
 

@@ -2,12 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { TutorialRoutingModule } from './tutorial-routing.module';
-import { TutorialComponent } from './components/tutorial/tutorial.component';
-
+import { TutorialOverviewComponent } from './components/tutorial-overview/tutorial-overview.component';
 
 @NgModule({
 	declarations: [
-		TutorialComponent
+		TutorialOverviewComponent
 	],
 	imports: [
 		CommonModule,

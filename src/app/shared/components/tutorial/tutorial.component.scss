@@ -1,0 +1,84 @@
+@import "variables";
+
+.active-tutorial {
+	background-color: $background-color;
+	border: 1px solid $primary;
+
+	position: fixed;
+
+	right: 0;
+	top: 0;
+
+	max-width: 35%;
+
+	margin: 16px;
+
+	z-index: 5000;
+
+
+	&.left {
+		right: initial;
+		left: 0;
+	}
+
+	&.bottom-left {
+		right: initial;
+		top: initial;
+		left: 0;
+		bottom: 0;
+	}
+
+	&.bottom-right {
+		right: 0;
+		top: initial;
+		left: initial;
+		bottom: 0;
+	}
+
+	.tutorial-title-bar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		background-color: $primary;
+
+		.tutorial-title {
+			color: black;
+			padding: 8px;
+		}
+
+		.tutorial-title-bar-end {
+			display: flex;
+
+			.tutorial-minimize {
+				padding: 8px;
+
+				&:hover {
+					cursor: pointer;
+				}
+			}
+
+			.tutorial-close {
+				display: flex;
+
+				padding: 8px;
+				color: $danger;
+
+				&:hover {
+					cursor: pointer;
+					color: darken($danger, 15%);
+				}
+			}
+		}
+	}
+
+	.tutorial-content {
+		.current-step {
+			padding: 8px;
+		}
+
+		&.minimized {
+			display: none;
+		}
+	}
+}
