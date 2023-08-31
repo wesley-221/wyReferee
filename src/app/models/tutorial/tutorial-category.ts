@@ -1,4 +1,4 @@
-import { TutorialStep } from "./tutorial-step";
+import { TutorialStep } from './tutorial-step';
 
 export class TutorialCategory {
 	name: string;

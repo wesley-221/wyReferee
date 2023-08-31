@@ -1,5 +1,5 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TutorialService } from 'app/services/tutorial.service';
 import { MarkdownService } from 'ngx-markdown';
 
@@ -35,7 +35,7 @@ export class TutorialComponent implements OnInit {
 	 * Listens to when the page gets changed
 	 *
 	 * @param event the index of the new page
-	*/
+	 */
 	onPageChange(event: any) {
 		this.clearCurrentStepStyling();
 		this.tutorialService.goToPage(event.pageIndex);
