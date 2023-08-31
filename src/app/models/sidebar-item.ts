@@ -6,6 +6,7 @@ export class SidebarItem {
 	subMenuItem: boolean;
 	onlyShowAsTournamentHost: boolean;
 	onlyShowAsAdministrator: boolean;
+	htmlElementId: string;
 
 	constructor(init?: Partial<SidebarItem>) {
 		Object.assign(this, init);
