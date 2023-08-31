@@ -203,7 +203,7 @@ export class TutorialService {
 				'Once you have imported a tournament, you will be able to see the tournament in the `local tournaments` tab.'
 		}));
 
-		return tournamentTutorial
+		return tournamentTutorial;
 	}
 
 	/**
@@ -220,7 +220,7 @@ export class TutorialService {
 			content: 'This tutorial has not been made yet.'
 		}));
 
-		return createLobbyTutorial
+		return createLobbyTutorial;
 	}
 
 	/**
@@ -237,6 +237,6 @@ export class TutorialService {
 			content: 'This tutorial has not been made yet.'
 		}));
 
-		return ircTutorial
+		return ircTutorial;
 	}
 }
