@@ -46,7 +46,9 @@ export class TutorialComponent implements OnInit {
 	 * Clears the styling from the current step
 	 */
 	private clearCurrentStepStyling() {
-		this.router.navigate([this.tutorialService.currentStep.route]);
+		if (this.tutorialService.currentStep.route) {
+			this.router.navigate([this.tutorialService.currentStep.route]);
+		}
 
 		this.tutorialService.currentStep.targetElementIds.forEach(target => {
 			document.getElementById(target).classList.remove('tutorial-highlight');
@@ -57,7 +59,9 @@ export class TutorialComponent implements OnInit {
 	 * Adds the styling of the current step with a slight delay
 	 */
 	private addCurrentStepStyling() {
-		this.router.navigate([this.tutorialService.currentStep.route]);
+		if (this.tutorialService.currentStep.route) {
+			this.router.navigate([this.tutorialService.currentStep.route]);
+		}
 
 		setTimeout(() => {
 			this.tutorialService.currentStep.targetElementIds.forEach(target => {

@@ -20,6 +20,9 @@ export class TutorialOverviewComponent implements OnInit {
 	 */
 	selectTutorial(tutorial: TutorialCategory) {
 		this.tutorialService.setCurrentTutorial(tutorial);
-		this.router.navigate([this.tutorialService.currentStep.route]);
+
+		if (this.tutorialService.currentStep && this.tutorialService.currentStep.route) {
+			this.router.navigate([this.tutorialService.currentStep.route]);
+		}
 	}
 }

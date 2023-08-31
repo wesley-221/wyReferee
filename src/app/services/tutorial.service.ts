@@ -34,7 +34,9 @@ export class TutorialService {
 		this.currentStepIndex = 0;
 		this.isMinimized = false;
 
+		if (tutorial != null) {
 		this.currentStep = this.currentTutorial.getSteps()[0];
+	}
 	}
 
 	/**
