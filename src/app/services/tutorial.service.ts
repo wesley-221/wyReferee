@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { TutorialCategory } from 'app/models/tutorial/tutorial-category';
 import { TutorialStep } from 'app/models/tutorial/tutorial-step';
+import { TournamentService } from './tournament.service';
+import { WyTournament } from 'app/models/wytournament/wy-tournament';
+
+import TUTORIAL_TOURNAMENT from 'assets/tutorial-tournament-template.json';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,7 +17,9 @@ export class TutorialService {
 	currentStepIndex: number;
 	isMinimized: boolean;
 
-	constructor() {
+	tutorialTournament: WyTournament;
+
+	constructor(private tournamentService: TournamentService) {
 		this.currentTutorial = null;
 		this.currentStep = null;
 		this.currentStepIndex = 0;
@@ -25,6 +31,8 @@ export class TutorialService {
 			// this.createLobbyTutorial(),
 			// this.ircTutorial()
 		];
+
+		this.tutorialTournament = WyTournament.makeTrueCopy(TUTORIAL_TOURNAMENT as any);
 	}
 
 	/**
@@ -165,7 +173,10 @@ export class TutorialService {
 	private tournamentTutorial(): TutorialCategory {
 		const tournamentTutorial = new TutorialCategory({
 			name: 'Tournament',
-			description: 'This tutorial will help you with figure out how tournaments work.'
+			description: 'This tutorial will help you with figure out how tournaments work.',
+			onCloseAction: () => {
+				this.tournamentService.deleteTournament(this.tutorialTournament);
+			}
 		});
 
 		tournamentTutorial.addStep(new TutorialStep({
@@ -182,10 +193,13 @@ export class TutorialService {
 			],
 			windowLocation: 'bottom-left',
 			content: 'On this page you will see all the tournaments that you have imported. You can click on a tournament to view the selected tournament.\n\r' +
-				'_If you see no tournaments on this page, that means you do not have any tournaments imported yet._\n\r' +
+				'The tournament called `Tutorial tournament` is an example of what a tournament looks like. **Note**: this tournament will be deleted once this tutorial is done.\n\r' +
 				'Tournaments that you see here allow you to create a match that makes use of all the teams, players and mappools of that tournament.\n\r' +
 				'If you update a tournament from here, it will not be updated for everyone else that has access to this tournament. This will only change your local copy of the tournament.\n\r' +
-				'When an administrator updates the tournament, the changes will automatically be made to this tournament once you restart wyReferee or when you try to create a new multiplayer lobby.'
+				'When an administrator updates the tournament, the changes will automatically be made to this tournament once you restart wyReferee or when you try to create a new multiplayer lobby.',
+			action: () => {
+				this.tournamentService.saveTournament(this.tutorialTournament);
+			}
 		}));
 
 		tournamentTutorial.addStep(new TutorialStep({
@@ -216,7 +230,10 @@ export class TutorialService {
 				'tutorial-all-tournaments'
 			],
 			content: 'If you have access to at least one tournament, you will be able to click on the button on the right side of the tournament to import that tournament to your local tournaments.\n\r' +
-				'Once you have imported a tournament, you will be able to see the tournament in the `local tournaments` tab.'
+				'Once you have imported a tournament, you will be able to see the tournament in the `local tournaments` tab.',
+			action: () => {
+				this.tournamentService.deleteTournament(this.tutorialTournament);
+			}
 		}));
 
 		return tournamentTutorial;
