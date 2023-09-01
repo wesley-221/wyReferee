@@ -4,6 +4,7 @@ export class TutorialCategory {
 	name: string;
 	description: string;
 	private steps: TutorialStep[];
+	onCloseAction: Function;
 
 	constructor(init?: Partial<TutorialCategory>) {
 		this.steps = [];

@@ -2,6 +2,7 @@ export class TutorialStep {
 	route: string;
 	targetElementIds: string[];
 	content: string;
+	action: Function;
 
 	/**
 	 * Currently supported window locations:
