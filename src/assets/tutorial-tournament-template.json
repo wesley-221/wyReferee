@@ -1,0 +1,145 @@
+{
+	"stages": [
+		{
+			"name": "Qualifiers",
+			"bestOf": 0,
+			"index": 0
+		},
+		{
+			"name": "Round of 16",
+			"bestOf": 7,
+			"index": 1
+		},
+		{
+			"name": "Quarter finals",
+			"bestOf": 7,
+			"index": 2
+		},
+		{
+			"name": "Semi finals",
+			"bestOf": 9,
+			"index": 3
+		},
+		{
+			"name": "Finals",
+			"bestOf": 11,
+			"index": 4
+		},
+		{
+			"name": "Grand finals",
+			"bestOf": 11,
+			"index": 5
+		}
+	],
+	"teams": [
+		{
+			"players": [],
+			"index": 0,
+			"name": "Wesley",
+			"userId": "2407265",
+			"collapsed": true
+		},
+		{
+			"players": [],
+			"index": 1,
+			"name": "Snowleopard",
+			"userId": "3790227"
+		}
+	],
+	"mappools": [
+		{
+			"modBrackets": [
+				{
+					"mods": [
+						{
+							"name": "NoFail",
+							"value": 1,
+							"index": 0
+						}
+					],
+					"beatmaps": [
+						{
+							"index": 0,
+							"beatmapId": "920470",
+							"isSynchronizing": false,
+							"beatmapName": "D-Fence - Pompen [POMPENdose] (Sartan)",
+							"beatmapUrl": "https://osu.ppy.sh/beatmaps/920470",
+							"beatmapsetId": "415726",
+							"invalid": false
+						}
+					],
+					"name": "Nomod",
+					"acronym": "NM",
+					"collapsed": false,
+					"index": 0,
+					"modIndex": 1,
+					"beatmapIndex": 1
+				}
+			],
+			"modCategories": [],
+			"modBracketIndex": 1,
+			"modCategoryIndex": 0,
+			"name": "Qualifiers",
+			"type": 0,
+			"collapsed": false,
+			"index": 0
+		}
+	],
+	"invalidateBeatmaps": true,
+	"allowDoublePick": true,
+	"lobbyTeamNameWithBrackets": false,
+	"availableTo": [],
+	"administrators": [
+		{
+			"id": 2,
+			"slug": "wesley",
+			"username": "Wesley",
+			"userOsu": {
+				"id": 2407265,
+				"username": "Wesley",
+				"flag": "NL",
+				"pp": 3984,
+				"rank": 126345,
+				"cover_url": "https://assets.ppy.sh/user-profile-covers/2407265/d8b9abbb703297ec01c8d1e2168111f5039caef7b2539219804b18167ce29aa4.jpeg",
+				"avatar_url": "https://a.ppy.sh/2407265?1655495256.jpeg"
+			}
+		},
+		{
+			"id": 4,
+			"slug": "snowleopard",
+			"username": "Snowleopard",
+			"userOsu": {
+				"id": 3790227,
+				"username": "Snowleopard",
+				"flag": "US",
+				"pp": 0,
+				"rank": null,
+				"cover_url": "https://assets.ppy.sh/user-profile-covers/3790227/9165a5285fa3c494451151308d175fe29455353a28155937c9b7a7e49092333e.jpeg",
+				"avatar_url": "https://a.ppy.sh/3790227?1602028682.jpeg"
+			}
+		}
+	],
+	"id": 18,
+	"name": "Tutorial tournament",
+	"acronym": "TUT",
+	"gamemodeId": 2,
+	"teamSize": 1,
+	"format": "solo",
+	"scoreInterface": {
+		"identifier": "Team vs.",
+		"allUsers": [],
+		"teamRedUsers": [],
+		"teamBlueUsers": [],
+		"soloTournament": null,
+		"useStaticSlots": false,
+		"description": "The regular team versus team score calculation."
+	},
+	"scoreInterfaceIdentifier": "Team vs.",
+	"updateDate": "1970-01-01T00:00:00.000Z",
+	"creationDate": "1970-01-01T00:00:00.000Z",
+	"createdBy": {
+		"roles": [],
+		"username": "Wesley",
+		"userOsu": null
+	}
+}
