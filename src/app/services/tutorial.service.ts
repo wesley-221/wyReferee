@@ -33,6 +33,10 @@ export class TutorialService {
 	 * @param tutorial the tutorial to use
 	 */
 	setCurrentTutorial(tutorial: TutorialCategory): void {
+		if (this.currentTutorial && this.currentTutorial.onCloseAction != null) {
+			this.currentTutorial.onCloseAction();
+		}
+
 		this.currentTutorial = tutorial;
 		this.currentStepIndex = 0;
 		this.isMinimized = false;
@@ -57,6 +61,10 @@ export class TutorialService {
 
 		if (this.currentStepIndex >= 0 && this.currentStepIndex < this.currentTutorial.getSteps().length) {
 			this.currentStep = steps[this.currentStepIndex];
+
+			if (this.currentStep.action != null) {
+				this.currentStep.action();
+			}
 		}
 	}
 
@@ -71,6 +79,10 @@ export class TutorialService {
 		if (this.currentStepIndex < this.currentTutorial.getSteps().length - 1) {
 			this.currentStepIndex++;
 			this.currentStep = this.currentTutorial.getSteps()[this.currentStepIndex];
+
+			if (this.currentStep.action != null) {
+				this.currentStep.action();
+			}
 		}
 	}
 
@@ -85,6 +97,10 @@ export class TutorialService {
 		if (this.currentStepIndex > 0) {
 			this.currentStepIndex--;
 			this.currentStep = this.currentTutorial.getSteps()[this.currentStepIndex];
+
+			if (this.currentStep.action != null) {
+				this.currentStep.action();
+			}
 		}
 	}
 
