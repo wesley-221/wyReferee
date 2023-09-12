@@ -36,6 +36,7 @@ import { ChallongeService } from 'app/services/challonge.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SlashCommandService } from 'app/services/slash-command.service';
 import { SlashCommand } from 'app/models/slash-command';
+import { GenericService } from 'app/services/generic.service';
 
 @Component({
 	selector: 'app-irc',
@@ -62,6 +63,8 @@ export class IrcComponent implements OnInit {
 
 	banchoBotChats: IrcMessage[] = [];
 	banchoBotViewPortItems: IrcMessage[];
+
+	splitBanchoMessages: boolean;
 
 	chatLength = 0;
 	keyPressed = false;
@@ -116,7 +119,8 @@ export class IrcComponent implements OnInit {
 		public multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
 		private tournamentService: TournamentService,
 		private challongeService: ChallongeService,
-		public slashCommandService: SlashCommandService) {
+		public slashCommandService: SlashCommandService,
+		private genericService: GenericService) {
 		this.channels = ircService.allChannels;
 
 		const dividerHeightStore = this.storeService.get('dividerHeight');
@@ -205,6 +209,10 @@ export class IrcComponent implements OnInit {
 
 		this.allSlashCommands = this.slashCommandService.getSlashCommands();
 		this.allSlashCommandsFiltered = this.slashCommandService.getSlashCommands();
+
+		this.genericService.getSplitBanchoMessages().subscribe(status => {
+			this.splitBanchoMessages = status;
+		});
 	}
 
 	/**

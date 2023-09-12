@@ -123,5 +123,22 @@
 				<button mat-raised-button color="primary" (click)="option.action()">{{ option.buttonText }}</button>
 			</div>
 		</div>
+
+		<div class="option">
+			<div class="content">
+				<div class="icon">
+					<mat-icon>chat</mat-icon>
+				</div>
+
+				<div class="text">
+					<span>Split up the messages from Bancho and regular players in a multiplayer lobby.</span>
+				</div>
+			</div>
+
+			<div class="button">
+				{{ splitIrcMessages }}
+				<button mat-raised-button color="primary" (click)="toggleSplitIrcMessages()">{{ splitIrcMessages == true ? 'On' : 'Off' }}</button>
+			</div>
+		</div>
 	</div>
 </div>

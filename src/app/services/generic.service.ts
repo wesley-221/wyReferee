@@ -11,11 +11,15 @@ import { ToastService } from './toast.service';
 export class GenericService {
 	private showAxSMenu$: BehaviorSubject<boolean>;
 	private cacheCheck$: BehaviorSubject<boolean>;
+	private splitBanchoMessages$: BehaviorSubject<boolean>;
 
 	constructor(private storeService: StoreService, private apiKeyValidation: ApiKeyValidation, private toastService: ToastService) {
 		const showAxSMenu = this.storeService.get('show-axs');
+		const splitBanchoMessages = this.storeService.get('split-bancho-messages');
+
 		this.showAxSMenu$ = new BehaviorSubject(showAxSMenu == undefined ? false : showAxSMenu);
 		this.cacheCheck$ = new BehaviorSubject(false);
+		this.splitBanchoMessages$ = new BehaviorSubject(splitBanchoMessages == undefined ? false : splitBanchoMessages);
 
 		const apiKey = this.storeService.get('api-key');
 
@@ -64,5 +68,22 @@ export class GenericService {
 	 */
 	getCacheHasBeenChecked(): BehaviorSubject<boolean> {
 		return this.cacheCheck$;
+	}
+
+	/**
+	 * Split the Bancho messages or not
+	 *
+	 * @param active the status of the AxS menu
+	 */
+	setSplitBanchoMessages(active: boolean): void {
+		this.splitBanchoMessages$.next(active);
+		this.storeService.set('split-bancho-messages', active);
+	}
+
+	/**
+	 * Get the status of whether to split Bancho messages or not
+	 */
+	getSplitBanchoMessages(): BehaviorSubject<boolean> {
+		return this.splitBanchoMessages$;
 	}
 }
