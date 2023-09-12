@@ -3,8 +3,8 @@ import { TutorialStep } from './tutorial-step';
 export class TutorialCategory {
 	name: string;
 	description: string;
+	onCloseAction: () => void;
 	private steps: TutorialStep[];
-	onCloseAction: Function;
 
 	constructor(init?: Partial<TutorialCategory>) {
 		this.steps = [];
