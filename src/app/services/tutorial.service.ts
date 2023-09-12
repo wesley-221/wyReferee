@@ -27,7 +27,7 @@ export class TutorialService {
 
 		this.allTutorials = [
 			this.loginTutorial(),
-			this.tournamentTutorial(),
+			this.importTournamentTutorial(),
 			// this.createLobbyTutorial(),
 			// this.ircTutorial()
 		];
@@ -168,24 +168,22 @@ export class TutorialService {
 	}
 
 	/**
-	 * The tutorial for importing a tournament
+	 * The tutorial on how to import a tutorial
 	 */
-	private tournamentTutorial(): TutorialCategory {
-		const tournamentTutorial = new TutorialCategory({
-			name: 'Tournament',
-			description: 'This tutorial will help you with figure out how tournaments work.',
-			onCloseAction: () => {
-				this.tournamentService.deleteTournament(this.tutorialTournament);
-			}
+	private importTournamentTutorial(): TutorialCategory {
+		const importTournamentTutorial = new TutorialCategory({
+			name: 'Importing tournaments',
+			description: 'This tutorial will help you to figure out how to import a tournament.',
+			onCloseAction: () => this.tournamentService.deleteTournament(this.tutorialTournament)
 		});
 
-		tournamentTutorial.addStep(new TutorialStep({
+		importTournamentTutorial.addStep(new TutorialStep({
 			route: 'tournament-management/tournament-overview',
-			content: 'This tutorial will help you figure out how to view your tournaments as well as how to import them.\n\r' +
+			content: 'This tutorial will help you to figure out how to import a tournament.\n\r' +
 				'Click on the arrows on the bottom to navigate through this tutorial.'
 		}));
 
-		tournamentTutorial.addStep(new TutorialStep({
+		importTournamentTutorial.addStep(new TutorialStep({
 			route: 'tournament-management/tournament-overview',
 			targetElementIds: [
 				'tutorial-local-tournament',
@@ -195,48 +193,28 @@ export class TutorialService {
 			content: 'On this page you will see all the tournaments that you have imported. You can click on a tournament to view the selected tournament.\n\r' +
 				'The tournament called `Tutorial tournament` is an example of what a tournament looks like. **Note**: this tournament will be deleted once this tutorial is done.\n\r' +
 				'Tournaments that you see here allow you to create a match that makes use of all the teams, players and mappools of that tournament.\n\r' +
-				'If you update a tournament from here, it will not be updated for everyone else that has access to this tournament. This will only change your local copy of the tournament.\n\r' +
 				'When an administrator updates the tournament, the changes will automatically be made to this tournament once you restart wyReferee or when you try to create a new multiplayer lobby.',
 			action: () => {
 				this.tournamentService.saveTournament(this.tutorialTournament);
 			}
 		}));
 
-		tournamentTutorial.addStep(new TutorialStep({
-			route: 'tournament-management/tournament-overview',
-			targetElementIds: [
-				'tutorial-my-published-tournament',
-				'tutorial-all-tournaments'
-			],
-			windowLocation: 'bottom-left',
-			content: 'First click on `my published tournaments`. This will navigate you to the tournaments that you have published yourself. You can click on a tournament to view the selected tournament.\n\r' +
-				'_If you see no tournaments on this page, that means you have not published any tournaments yet._\n\r' +
-				'If you update a tournament from here, it will be updated for everyone else that has access to this tournament.\n\r' +
-				'When a referee that has this tournament imported has wyReferee running, it will not automatically update the tournament. They would have to restart wyReferee or try to create a new multiplayer lobby to download the latest version.'
-		}));
-
-		tournamentTutorial.addStep(new TutorialStep({
+		importTournamentTutorial.addStep(new TutorialStep({
 			route: 'tournament-management/tournament-overview/tournament-all-published',
 			targetElementIds: [
-				'tutorial-side-bar-all-tournaments',
-				'tutorial-all-tournaments'
+				'tutorial-all-tournaments',
+				'tutorial-side-bar-all-tournaments'
 			],
-			content: 'On this page you will see all the tournaments that you have access to. This means a tournament host has given you access to view their tournament. If you do not have permisson to view a tournament, you will not be able to see that tournament in this list.'
-		}));
-
-		tournamentTutorial.addStep(new TutorialStep({
-			targetElementIds: [
-				'tutorial-side-bar-all-tournaments',
-				'tutorial-all-tournaments'
-			],
-			content: 'If you have access to at least one tournament, you will be able to click on the button on the right side of the tournament to import that tournament to your local tournaments.\n\r' +
-				'Once you have imported a tournament, you will be able to see the tournament in the `local tournaments` tab.',
+			windowLocation: 'bottom-left',
+			content: 'On this page you will see all the tournaments that you have access to. In order to gain access or even be able to see the tournament on this page, you need to be added by an Administrator of the tournament. \n\r' +
+				'To import one of the tournaments, all you have to do is click on the button on the right side of the tournament. Once you have pressed on this button, it will appear under the "Local tournaments" on the previous page.\n\r' +
+				'You can now start to referee a match using the imported tournament!',
 			action: () => {
 				this.tournamentService.deleteTournament(this.tutorialTournament);
 			}
 		}));
 
-		return tournamentTutorial;
+		return importTournamentTutorial;
 	}
 
 	/**
