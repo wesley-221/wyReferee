@@ -13,6 +13,7 @@ import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { Lobby } from 'app/models/lobby';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 import { ElectronService } from './electron.service';
+import { GenericService } from './generic.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -53,7 +54,8 @@ export class IrcService {
 		private storeService: StoreService,
 		private multiplayerLobbiesService: WyMultiplayerLobbiesService,
 		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
-		private electronService: ElectronService) {
+		private electronService: ElectronService,
+		private genericService: GenericService) {
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
@@ -412,9 +414,15 @@ export class IrcService {
 			}
 
 			if (user.startsWith('#mp_')) {
-				if (recipient == 'BanchoBot') {
-					channel.banchoBotMessages.push(newMessage);
-					this.saveMessageToHistory(user, newMessage, message, true);
+				if (this.genericService.getSplitBanchoMessages().value == true) {
+					if (recipient == 'BanchoBot') {
+						channel.banchoBotMessages.push(newMessage);
+						this.saveMessageToHistory(user, newMessage, message, true);
+					}
+					else {
+						channel.messages.push(newMessage);
+						this.saveMessageToHistory(user, newMessage, message);
+					}
 				}
 				else {
 					channel.messages.push(newMessage);

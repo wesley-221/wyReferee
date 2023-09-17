@@ -36,6 +36,8 @@ export class SettingsComponent implements OnInit {
 
 	axsMenuStatus: boolean;
 
+	splitIrcMessages: boolean;
+
 	allOptions: { icon: string; message: string; buttonText: string; action: any }[] = [
 		{ icon: 'settings', message: 'This will export the config file and save it as a file in case you need to share it with someone. <br /><b>Note:</b> This will not export any authentication data such as login information or API keys <br />', buttonText: 'Export config file', action: () => this.exportConfigFile() },
 		{ icon: 'cached', message: 'This will clear all the cache.', buttonText: 'Clear cache', action: () => this.openDialog(0) },
@@ -253,5 +255,10 @@ export class SettingsComponent implements OnInit {
 	toggleAxSMenu(): void {
 		this.axsMenuStatus = !this.axsMenuStatus;
 		this.genericService.setAxSMenu(this.axsMenuStatus);
+	}
+
+	toggleSplitIrcMessages(): void {
+		this.splitIrcMessages = !this.splitIrcMessages;
+		this.genericService.setSplitBanchoMessages(this.splitIrcMessages);
 	}
 }
