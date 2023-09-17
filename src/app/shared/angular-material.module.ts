@@ -26,6 +26,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 const modules: any[] = [
 	LayoutModule,
@@ -51,7 +52,8 @@ const modules: any[] = [
 	MatStepperModule,
 	MatButtonToggleModule,
 	MatProgressBarModule,
-	MatAutocompleteModule
+	MatAutocompleteModule,
+	MatPaginatorModule
 ];
 
 @NgModule({

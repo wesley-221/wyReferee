@@ -1,0 +1,29 @@
+<ng-container *ngIf="tutorialService.currentTutorial">
+	<div class="active-tutorial" [ngClass]="tutorialService.currentStep.windowLocation">
+		<div class="tutorial-title-bar">
+			<div class="tutorial-title">
+				{{ tutorialService.currentTutorial.name }}
+			</div>
+
+			<div class="tutorial-title-bar-end">
+				<div class="tutorial-minimize" (click)="minimizeTutorial()">
+					<mat-icon>minimize</mat-icon>
+				</div>
+
+				<div class="tutorial-close" (click)="closeTutorial()">
+					<mat-icon>close</mat-icon>
+				</div>
+			</div>
+		</div>
+
+		<div class="tutorial-content" [ngClass]="{'minimized': tutorialService.isMinimized == true }">
+			<div class="current-step">
+				<markdown [data]="tutorialService.currentStep.content" clickableLinks></markdown>
+			</div>
+
+			<div class="tutorial-progress">
+				<mat-paginator [length]="tutorialService.currentTutorial && tutorialService.currentTutorial.getSteps().length" [pageSize]="1" [pageIndex]="tutorialService.currentStepIndex" (page)="onPageChange($event)"></mat-paginator>
+			</div>
+		</div>
+	</div>
+</ng-container>

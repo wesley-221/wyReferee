@@ -1,5 +1,5 @@
 <div class="button-row">
-	<div class="button" (click)="click('local')" [ngClass]="{'active': active == 'local'}">
+	<div id="tutorial-local-tournament" class="button" (click)="click('local')" [ngClass]="{'active': active == 'local'}">
 		<div class="logo">
 			<mat-icon svgIcon="trophy"></mat-icon>
 		</div>
@@ -9,7 +9,7 @@
 		</div>
 	</div>
 
-	<div class="button" (click)="click('published')" [ngClass]="{'active': active == 'published'}">
+	<div id="tutorial-my-published-tournament" class="button" (click)="click('published')" [ngClass]="{'active': active == 'published'}">
 		<div class="logo">
 			<mat-icon>cloud_upload</mat-icon>
 		</div>
@@ -20,7 +20,7 @@
 	</div>
 </div>
 
-<div class="all-tournaments">
+<div id="tutorial-all-tournaments" class="all-tournaments">
 	<div *ngIf="active == 'local'">
 		<div *ngFor="let tournament of allTournaments">
 			<app-tournament-card [tournament]="tournament"></app-tournament-card>
