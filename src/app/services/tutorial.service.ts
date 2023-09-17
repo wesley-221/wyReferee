@@ -5,6 +5,7 @@ import { TournamentService } from './tournament.service';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
 import TUTORIAL_TOURNAMENT from 'assets/tutorial-tournament-template.json';
+import { StoreService } from './store.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,7 +20,7 @@ export class TutorialService {
 
 	tutorialTournament: WyTournament;
 
-	constructor(private tournamentService: TournamentService) {
+	constructor(private tournamentService: TournamentService, private storeService: StoreService) {
 		this.currentTutorial = null;
 		this.currentStep = null;
 		this.currentStepIndex = 0;
@@ -121,6 +122,15 @@ export class TutorialService {
 			description: 'This tutorial will help you login to the client.'
 		});
 
+		let apiKeyStepContent = 'First off, we have to enter an api key. To get your api key, you can click [here](https://osu.ppy.sh/home/account/edit#legacy-api).\n\r' +
+			'Create a new api key if you have no api key yet. For the application url you can simply enter anything.\n\r' +
+			'Now that you have an api key, you are gonna have to copy this key and paste it in the highlighted field and click on Save.\n\r' +
+			'If your api key was correct, the highlighted area should dissapear and you can continue to the next step.';
+
+		if (this.storeService.get('api-key') != undefined) {
+			apiKeyStepContent = '**You have already setup the api key. You can continue to the next step.**\n\n---\n\r' + apiKeyStepContent;
+		}
+
 		loginTutorial.addStep(new TutorialStep({
 			route: 'settings',
 			content: 'This tutorial will help you login with your osu! account and connect to Bancho using IRC.\n\r' +
@@ -133,10 +143,7 @@ export class TutorialService {
 				'tutorial-api-key',
 				'tutorial-api-key-input'
 			],
-			content: 'First off, we have to enter an api key. To get your api key, you can click [here](https://osu.ppy.sh/home/account/edit#legacy-api).\n\r' +
-				'Create a new api key if you have no api key yet. For the application url you can simply enter anything.\n\r' +
-				'Now that you have an api key, you are gonna have to copy this key and paste it in the highlighted field and click on Save.\n\r' +
-				'If your api key was correct, the highlighted area should dissapear and you can continue to the next step.'
+			content: apiKeyStepContent
 		}));
 
 		loginTutorial.addStep(new TutorialStep({
@@ -222,7 +229,7 @@ export class TutorialService {
 	 */
 	private createLobbyTutorial(): TutorialCategory {
 		const createLobbyTutorial = new TutorialCategory({
-			name: 'Creating a match',
+			name: 'Creating a multiplayer lobby',
 			description: 'This tutorial will help you create a new multiplayer lobby.'
 		});
 
