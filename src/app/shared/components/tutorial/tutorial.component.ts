@@ -51,7 +51,11 @@ export class TutorialComponent implements OnInit {
 		}
 
 		this.tutorialService.currentStep.targetElementIds.forEach(target => {
-			document.getElementById(target).classList.remove('tutorial-highlight');
+			const targetElement = document.getElementById(target);
+
+			if (targetElement != null) {
+				targetElement.classList.remove('tutorial-highlight');
+			}
 		});
 	}
 
@@ -65,7 +69,11 @@ export class TutorialComponent implements OnInit {
 
 		setTimeout(() => {
 			this.tutorialService.currentStep.targetElementIds.forEach(target => {
-				document.getElementById(target).classList.add('tutorial-highlight');
+				const targetElement = document.getElementById(target);
+
+				if (targetElement != null) {
+					targetElement.classList.add('tutorial-highlight');
+				}
 			});
 		}, 5);
 	}
