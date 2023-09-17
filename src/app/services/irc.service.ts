@@ -186,13 +186,14 @@ export class IrcService {
 					this.multiplayerLobbyPlayersService.lobbyChange(multiplayerLobby.lobbyId, 'playerInSlot', playerInSlot);
 
 					// Check if the player is in the correct slot
-					if (multiplayerLobby) {
-						if (multiplayerLobby.isQualifierLobby != true) {
-							if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
-								message.message += ` | Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}`;
-							}
-						}
-					}
+					// TODO: Fix the isInCorrectSlot check, doesn't always work
+					// if (multiplayerLobby) {
+					// 	if (multiplayerLobby.isQualifierLobby != true) {
+					// 		if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
+					// 			message.message += ` | Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}`;
+					// 		}
+					// 	}
+					// }
 				}
 			}
 
