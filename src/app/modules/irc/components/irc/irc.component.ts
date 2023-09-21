@@ -1143,26 +1143,44 @@ export class IrcComponent implements OnInit {
 
 		const qualifierIdentifier = this.selectedLobby.description.substring(this.qualifierPrefix.length).trim();
 
-		this.tournamentService.getWyBinQualifierLobbyTeams(this.selectedLobby.tournament.wyBinTournamentId, qualifierIdentifier).subscribe(teams => {
-			for (const team in teams) {
-				const iTeam = teams[team];
+		this.tournamentService.getWyBinQualifierLobbyTeams(this.selectedLobby.tournament.wyBinTournamentId, qualifierIdentifier).subscribe((qualifierHelper: any) => {
+			if (qualifierHelper.teamMembers != null) {
+				for (const player in qualifierHelper.teamMembers) {
+					const iPlayer = qualifierHelper.teamMembers[player];
 
-				const newTeam = new WyTeam({
-					name: iTeam.name
-				});
-
-				for (const player in iTeam.teamMembers) {
-					const iPlayer = iTeam.teamMembers[player];
-
-					const newPlayer = new WyTeamPlayer({
-						name: iPlayer.user.userOsu.username,
-						userId: iPlayer.user.userOsu.id
+					const newTeam = new WyTeam({
+						name: iPlayer.user.username
 					});
 
-					newTeam.players.push(newPlayer);
-				}
+					newTeam.players.push(new WyTeamPlayer({
+						name: iPlayer.user.username,
+						userId: iPlayer.user.userOsu.id
+					}));
 
-				this.qualifierTeams.push(newTeam);
+					this.qualifierTeams.push(newTeam);
+				}
+			}
+			else if (qualifierHelper.teams != null) {
+				for (const team in qualifierHelper.teams) {
+					const iTeam = qualifierHelper.teams[team];
+
+					const newTeam = new WyTeam({
+						name: iTeam.name
+					});
+
+					for (const player in iTeam.teamMembers) {
+						const iPlayer = iTeam.teamMembers[player];
+
+						const newPlayer = new WyTeamPlayer({
+							name: iPlayer.user.userOsu.username,
+							userId: iPlayer.user.userOsu.id
+						});
+
+						newTeam.players.push(newPlayer);
+					}
+
+					this.qualifierTeams.push(newTeam);
+				}
 			}
 		});
 	}
