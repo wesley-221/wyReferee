@@ -421,7 +421,7 @@
 				</div>
 
 				<div class="header-row" *ngIf="selectedLobby && selectedLobby.tournament != null && selectedLobby.tournament.format == 'solo'">
-					<div class="header-col">
+					<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == false">
 						<div class="invite-body">
 							<div class="invite-team">
 								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
@@ -439,6 +439,33 @@
 
 							<div class="invite-team">
 								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
+									<div class="name" [title]="player.name">
+										{{ player.name }}
+									</div>
+
+									<div class="actions">
+										<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
+											<mat-icon>add</mat-icon>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == true">
+						<div class="invite-header" [ngClass]="{'active': isInvitesMinimized == false}" (click)="isInvitesMinimized = !isInvitesMinimized">
+							<div class="invite-header-icon">
+								<mat-icon *ngIf="isInvitesMinimized == true">chevron_right</mat-icon>
+								<mat-icon *ngIf="isInvitesMinimized == false">expand_more</mat-icon>
+							</div>
+
+							<div>Players</div>
+						</div>
+
+						<div class="invite-body" *ngIf="isInvitesMinimized == false">
+							<div class="invite-team" *ngFor="let team of qualifierTeams">
+								<div class="player" *ngFor="let player of team.players">
 									<div class="name" [title]="player.name">
 										{{ player.name }}
 									</div>
