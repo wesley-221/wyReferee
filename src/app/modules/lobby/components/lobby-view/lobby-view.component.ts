@@ -17,6 +17,9 @@ import { ToastService } from 'app/services/toast.service';
 import { WebhookService } from 'app/services/webhook.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-multiplayer-lobby-send-final-message-dialog-data';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastType } from 'app/models/toast';
+import { ChallongeService } from 'app/services/challonge.service';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -47,7 +50,8 @@ export class LobbyViewComponent implements OnInit {
 		private clipboardService: ClipboardService,
 		private router: Router,
 		private webhookService: WebhookService,
-		private dialog: MatDialog) {
+		private dialog: MatDialog,
+		private challongeService: ChallongeService) {
 		this.route.params.subscribe(params => {
 			this.selectedLobby = multiplayerLobbies.getMultiplayerLobby(params.id);
 
@@ -410,6 +414,13 @@ export class LobbyViewComponent implements OnInit {
 					}
 					else {
 						this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+					}
+
+					if (this.selectedLobby.tournament.hasWyBinConnected()) {
+						this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe(() => {
+						}, (error: HttpErrorResponse) => {
+							this.toastService.addToast('Unable to update the match score to Challonge: ' + error.error.message, ToastType.Error);
+						});
 					}
 				}
 			}
