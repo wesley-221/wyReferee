@@ -200,6 +200,8 @@
 					<p>Use this option to disable webhooks from being sent. Could be used for practice lobby, testing, etc.</p>
 
 					<mat-slide-toggle [(ngModel)]="webhook" [ngModelOptions]="{ standalone: true }">Webhooks <span [ngClass]="{ 'green': webhook == true, 'red': webhook == false }">{{ webhook == true ? 'will' : 'wont' }}</span> be sent</mat-slide-toggle>
+
+					<app-alert alertType="info" *ngIf="qualifier == true">Because you are creating a Qualifier lobby, only the <code>Match creation</code> webhook will be sent. All other webhooks will <b>NOT</b> be sent.</app-alert>
 				</div>
 			</div>
 

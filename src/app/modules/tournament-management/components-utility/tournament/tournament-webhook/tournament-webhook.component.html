@@ -68,6 +68,11 @@
 
 	<hr />
 
+	<h3>Qualifier lobby</h3>
+	<p>When creating a lobby you can mark that lobby as a Qualifier lobby. When a lobby is marked as such, the only webhook that will be sent is <code>Match creation</code>. All other webhooks will <b>not</b> be sent.</p>
+
+	<hr />
+
 	<button mat-raised-button color="primary" (click)="createWebhook()"><mat-icon>add</mat-icon> add new webhook</button>
 
 	<app-alert alertType="info" *ngIf="tournament.webhooks.length <= 0">
