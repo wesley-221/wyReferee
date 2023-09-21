@@ -715,15 +715,6 @@ export class IrcComponent implements OnInit {
 			this.tiebreaker = multiplayerLobby.getTiebreaker();
 			this.hasWon = multiplayerLobby.teamHasWon();
 		}
-
-		if (this.selectedLobby.isQualifierLobby == false) {
-			if (this.selectedLobby.tournament.hasWyBinConnected()) {
-				this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe(() => {
-				}, (error: HttpErrorResponse) => {
-					this.toastService.addToast('Unable to update the match score to Challonge: ' + error.error.message, ToastType.Error);
-				});
-			}
-		}
 	}
 
 	/**
@@ -932,6 +923,13 @@ export class IrcComponent implements OnInit {
 					}
 					else {
 						this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+					}
+
+					if (this.selectedLobby.tournament.hasWyBinConnected()) {
+						this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe(() => {
+						}, (error: HttpErrorResponse) => {
+							this.toastService.addToast('Unable to update the match score to Challonge: ' + error.error.message, ToastType.Error);
+						});
 					}
 				}
 			}
