@@ -9,9 +9,7 @@ import { RemoveSettingsComponent } from '../../../../components/dialogs/remove-s
 import { AuthenticateService } from 'app/services/authenticate.service';
 import { IrcService } from 'app/services/irc.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { OauthService } from 'app/services/oauth.service';
 import { GenericService } from 'app/services/generic.service';
-import { User } from 'app/models/authentication/user';
 
 @Component({
 	selector: 'app-settings',

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RegisterRequest } from '../models/authentication/register-request';
 import { AppConfig } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from 'app/models/authentication/user';
@@ -55,29 +54,7 @@ export class AuthenticateService {
 	}
 
 	/**
-	 * Register a new user
-	 * TODO: probably delete
-	 *
-	 * @param registerRequest
-	 */
-	public register(registerRequest: RegisterRequest): Observable<User> {
-		return this.httpClient.post<User>(`${this.apiUrl}register`, registerRequest);
-	}
-
-	/**
-	 * Login with the given email and password
-	 * TODO: probably delete
-	 *
-	 * @param email the email to login with
-	 * @param password the password to login with
-	 */
-	public login(registerRequest: RegisterRequest): Observable<any> {
-		return this.httpClient.post<RegisterRequest>(`${this.apiUrl}login`, registerRequest);
-	}
-
-	/**
 	 * Get all the users
-	 * TODO: probably delete
 	 */
 	public getAllUser(): Observable<any> {
 		return this.httpClient.get(`${this.apiUrl}users`);

@@ -5,7 +5,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErrorComponent } from './layout/error/error.component';
-import { RegisterComponent } from './components/register/register.component';
 import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
 import { DeleteLobbyComponent } from './components/dialogs/delete-lobby/delete-lobby.component';
 import { MultiplayerLobbySettingsComponent } from './components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
@@ -36,7 +35,6 @@ import { CredentialsInterceptor } from './core/interceptors/credentials.intercep
 		MainComponent,
 		SidebarComponent,
 		ErrorComponent,
-		RegisterComponent,
 		RemoveSettingsComponent,
 		DeleteLobbyComponent,
 		MultiplayerLobbySettingsComponent,
