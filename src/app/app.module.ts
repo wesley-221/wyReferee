@@ -5,7 +5,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErrorComponent } from './layout/error/error.component';
-import { AuthInterceptor } from './core/interceptors/auth-interceptor';
 import { RegisterComponent } from './components/register/register.component';
 import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
 import { DeleteLobbyComponent } from './components/dialogs/delete-lobby/delete-lobby.component';
@@ -29,6 +28,7 @@ import { MainComponent } from './layout/main/main.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { UpdaterComponent } from './layout/updater/updater.component';
 import { MarkdownModule } from 'ngx-markdown';
+import { CredentialsInterceptor } from './core/interceptors/credentials.interceptor';
 
 @NgModule({
 	declarations: [
@@ -65,7 +65,7 @@ import { MarkdownModule } from 'ngx-markdown';
 		SharedModule
 	],
 	providers: [
-		{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+		{ provide: HTTP_INTERCEPTORS, useClass: CredentialsInterceptor, multi: true }
 	],
 	bootstrap: [AppComponent]
 })

@@ -51,11 +51,9 @@ export class SettingsComponent implements OnInit {
 		private toastService: ToastService,
 		private apiKeyValidation: ApiKeyValidation,
 		private dialog: MatDialog,
-		public auth: AuthenticateService,
+		public authService: AuthenticateService,
 		public ircService: IrcService,
-		private oauthService: OauthService,
-		private genericService: GenericService,
-		private authenticateService: AuthenticateService
+		private genericService: GenericService
 	) {
 		this.apiKey = this.storeService.get('api-key');
 		this.isAuthenticating = false;
@@ -105,17 +103,10 @@ export class SettingsComponent implements OnInit {
 	authenticateOsu(): void {
 		this.isAuthenticating = true;
 
-		this.authenticateService.startOsuOauthProcess().subscribe(token => {
+		this.authService.startOsuOauthProcess().subscribe(token => {
 			if (token != null) {
-				this.oauthService.cacheOsuOauth(token);
-
-				this.auth.getMeData(true).subscribe(data => {
-					this.auth.loggedInUser = User.makeTrueCopy(data.user);
-					this.auth.loggedIn = true;
-
-					this.oauthService.cacheOauth(data.oauthToken);
-
-					this.toastService.addToast(`Successfully logged in, welcome ${this.auth.loggedInUser.username}!`);
+				this.authService.handleOauth(token).subscribe(user => {
+					this.authService.loginUser(user);
 				});
 			}
 
@@ -124,12 +115,7 @@ export class SettingsComponent implements OnInit {
 	}
 
 	logoutOsu(): void {
-		this.storeService.delete('oauth');
-		this.storeService.delete('osu-oauth');
-		this.auth.loggedIn = false;
-		this.auth.loggedInUser = null;
-
-		this.toastService.addToast('You have been logged out.');
+		this.authService.logout();
 	}
 
 	/**
