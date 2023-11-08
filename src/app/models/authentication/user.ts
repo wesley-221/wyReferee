@@ -7,10 +7,6 @@ export class User {
 	username: string;
 	isAdmin: boolean;
 	isTournamentManager: boolean;
-	uploadSecretKey: string;
-	uploadSecret: string;
-	password: string;
-	passwordConfirm: string;
 	roles: Role[] = [];
 	userOsu: UserOsu;
 
@@ -25,10 +21,6 @@ export class User {
 		newUser.username = user.username;
 		newUser.isAdmin = user.isAdmin;
 		newUser.isTournamentManager = user.isTournamentManager;
-		newUser.uploadSecretKey = user.uploadSecretKey;
-		newUser.uploadSecret = user.uploadSecret;
-		newUser.password = user.password;
-		newUser.passwordConfirm = user.passwordConfirm;
 		newUser.roles = [];
 		newUser.userOsu = UserOsu.makeTrueCopy(user.userOsu);
 
@@ -60,10 +52,6 @@ export class User {
 		newUser.username = json.username;
 		newUser.isAdmin = json.isAdmin;
 		newUser.isTournamentManager = json.isTournamentManager;
-		newUser.uploadSecretKey = json.uploadSecretKey;
-		newUser.uploadSecret = json.uploadSecret;
-		newUser.password = json.password;
-		newUser.passwordConfirm = json.passwordConfirm;
 		newUser.userOsu = UserOsu.makeTrueCopy(json.userOsu);
 
 		for (const role in json.roles) {

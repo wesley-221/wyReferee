@@ -16,7 +16,7 @@ import { ToastType } from './models/toast';
 export class AppComponent {
 	clearDataBeforeVersion: string;
 
-	constructor(private ircService: IrcService, private auth: AuthenticateService, private cacheService: CacheService, private genericService: GenericService, private router: Router, private toastService: ToastService) {
+	constructor(private ircService: IrcService, private authService: AuthenticateService, private cacheService: CacheService, private genericService: GenericService, private router: Router, private toastService: ToastService) {
 		const currentVersion = require('../../package.json').version;
 
 		this.clearDataBeforeVersion = '6.5.0';
@@ -42,6 +42,10 @@ export class AppComponent {
 		}
 
 		this.showChangelog(currentVersion);
+
+		authService.getMeData().subscribe(user => {
+			this.authService.loginUser(user);
+		});
 	}
 
 	/**

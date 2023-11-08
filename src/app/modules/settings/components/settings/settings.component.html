@@ -27,7 +27,7 @@
 			</div>
 
 			<div class="login-content">
-				<div class="login-form" *ngIf="!auth.loggedIn">
+				<div class="login-form" *ngIf="!authService.loggedIn">
 					<h3 class="header">osu! authentication</h3>
 					<button mat-raised-button color="primary" class="full-width margin-button" (click)="authenticateOsu()">Login</button>
 
@@ -42,9 +42,9 @@
 					</app-alert>
 				</div>
 
-				<div class="login-form" *ngIf="auth.loggedIn">
+				<div class="login-form" *ngIf="authService.loggedIn">
 					<h3 class="header">osu! authentication</h3>
-					<p align="center">Logged in as {{ auth.loggedInUser.username }}</p>
+					<p align="center">Logged in as {{ authService.loggedInUser.username }}</p>
 
 					<button mat-raised-button color="warn" class="full-width margin-button" (click)="logoutOsu()">Logout</button>
 				</div>
