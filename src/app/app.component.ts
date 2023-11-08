@@ -19,7 +19,7 @@ export class AppComponent {
 	constructor(private ircService: IrcService, private authService: AuthenticateService, private cacheService: CacheService, private genericService: GenericService, private router: Router, private toastService: ToastService) {
 		const currentVersion = require('../../package.json').version;
 
-		this.clearDataBeforeVersion = '6.5.0';
+		this.clearDataBeforeVersion = '6.6.0';
 
 		if (cacheService.cacheVersion == undefined) {
 			this.cacheService.setCacheVersion(currentVersion);
