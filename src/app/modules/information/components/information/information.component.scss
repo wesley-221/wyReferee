@@ -1,5 +1,26 @@
+@import "variables";
+
 .hover {
 	&:hover {
 		cursor: pointer;
+	}
+}
+
+.scroll {
+	height: 100%;
+	overflow-y: auto;
+}
+
+.row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+
+	gap: 8px;
+	padding: 8px;
+
+	border-bottom: 1px solid $primary;
+
+	&.single-row {
+		grid-template-columns: 1fr;
 	}
 }

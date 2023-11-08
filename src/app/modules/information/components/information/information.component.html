@@ -1,59 +1,57 @@
-<h1>wyReferee</h1>
-<p>
-	Welcome to wyReferee client. This client allows you to create, manage, publish and import both mappools and
-	tournaments. It has a lot of QoL features for osu! multiplayer lobbies, such as picking maps from a mappool with
-	just a single click on a button.
-</p>
+<div class="scroll container-fluid">
+	<div class="row single-row">
+		<div class="column">
+			<h1>wyReferee</h1>
+			<p>
+				Welcome to wyReferee! This client will help you with everything referee related.
+				You can create or import a tournament, which allows you to pick maps from a mappool with a single click on a button.
+				It keeps track of the current picks, bans and score and a lot more!
+			</p>
+		</div>
+	</div>
 
-<h1>How to use the client</h1>
-<p>
-	Visit <a routerLink="" (click)="electronService.openLink('https://github.com/wesley-221/wyReferee/wiki')">Github</a>
-	for a detailed guide on how to use this client. Know your way around already, but forgot how to set it all up again?
-	Simply follow the steps listed below and you're good to go!
-</p>
+	<div class="row single-row">
+		<div class="column">
+			<h1>Help! I found a bug/I want to request a new feature</h1>
+			<p>Head on over to <a routerLink="" (click)="electronService.openLink('https://github.com/wesley-221/wyReferee/issues')">Github</a> and create an issue.</p>
+		</div>
+	</div>
 
-<hr />
+	<div class="row single-row">
+		<div class="column">
+			<h1>Getting started</h1>
+			<p>Because wyReferee has a lot of functionality, it might be daunting to get started. To help you get acquinted with wyReferee there will be a couple of steps listed below to help you get started.</p>
+		</div>
+	</div>
 
-<h1>Help! I found a bug/I want to request a new feature</h1>
-<p>
-	Head on over to <a routerLink=""
-		(click)="electronService.openLink('https://github.com/wesley-221/wyReferee/issues')">Github</a> and create an
-	issue.
-</p>
+	<div class="row">
+		<div class="column">
+			<h2>Login</h2>
+			<p>To get you all ready to go, we need to know who you are. To login, you can follow the <code>Login</code> tutorial which can be found <a routerLink="/tutorial">here (click me)</a>, or simply go to <a routerLink="/settings">settings (click me)</a> and follow the steps there.</p>
+		</div>
 
-<hr />
+		<div class="column">
+			<h2>Customizing Discord results</h2>
+			<p>wyReferee will send messages to Discord when a team picks a map, bans a map, wins or loses a map, etc. You can customize how this message looks by going to <a routerLink="/webhook">webhook (click me)</a>. Simply fill in the text fields and you can see what the Discord message will look like.</p>
+		</div>
+	</div>
 
-<h1>Getting started</h1>
-<p>
-	Head on over to <a [routerLink]="['settings']">Settings</a> where all the general settings are located.
-</p>
+	<div class="row">
+		<div class="column">
+			<h2>Importing a tournament</h2>
+			<p>For wyReferee to work to its fullest extend, you will need to import a tournament (or create one yourself!). To get you started with importing a tournament, you can follow the <code>Importing tournaments</code> tutorial which can be found <a routerLink="/tutorial">here (click me)</a>.</p>
+		</div>
 
-<h2>osu! authentication</h2>
-<p>
-	This is used to identify who you are. A new window will pop up where you will have to give permission for wyReferee
-	to read public data on your behalf. This basically means that wyReferee will be able to tell who is logged in, which
-	then will be used to give you permissions to create, edit and view tournaments.
-</p>
+		<div class="column">
+			<h2>Creating and managing a lobby</h2>
+			<p>Of course you also have to create a lobby, otherwise it'll be hard to actually referee a match. Once again to help you out with this, you can head over to the wiki by clicking <a routerLink="" (click)="electronService.openLink('https://github.com/wesley-221/wyReferee/wiki/5.1-Create-a-multiplayer-lobby')">here (create a lobby)</a> and <a routerLink="" (click)="electronService.openLink('https://github.com/wesley-221/wyReferee/wiki/5.2-Lobby-view-(WIP)')">here (lobby view)</a>. These might be slightly outdated, but should get you started either way. Eventually these two tutorials will also be updated to a tutorial.</p>
+		</div>
+	</div>
 
-<h2>osu! irc</h2>
-<p>
-	Probably the single most important feature of this client. The irc connection is used to create multiplayer lobbies,
-	as well as communicate in those multiplayer lobbies. Get your irc credentials by clicking on the link just below the
-	Connect button.
-</p>
-
-<h2>osu!api key</h2>
-<p>
-	This client requires you to set your api key to get various data from the osu server. In order for the client to
-	show everything properly, we have to get data from the osu! servers. This way we will be able to get all multiplayer
-	match data and beatmap data.
-</p>
-
-<h2>Making your own tournament</h2>
-<p>
-	<b>NEW: Publishing your tournaments is now publicly available.</b> <br />
-
-	Do you want to make your own Tournament in wyReferee? Go to the <a class="hover"
-		(click)="electronService.openLink('https://github.com/wesley-221/wyReferee/wiki/4.-Management')">wiki (click
-		me)</a> and simply follow the steps to get started!
-</p>
+	<div class="row single-row">
+		<div class="column">
+			<h2>Irc</h2>
+			<p>And this is where you will be spending most of your time, the irc side of the client! This is where most of the magic happens and will help you referee a match without having to worry of keeping track of score, pick order, who won the match and so forth. To learn more about how this part of the client is all setup, you can head over to the wiki by clicking <a routerLink="" (click)="electronService.openLink('https://github.com/wesley-221/wyReferee/wiki/6-Irc')">here (click me)</a>.</p>
+		</div>
+	</div>
+</div>
