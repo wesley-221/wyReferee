@@ -804,6 +804,7 @@ $hyperlink-background-color: #2b4576;
 
 								&:hover {
 									cursor: pointer;
+									background-color: darken($primary, 15%);
 								}
 
 								&.disabled {

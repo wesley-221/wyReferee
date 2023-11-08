@@ -975,6 +975,15 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Opens a dm channel with the given player
+	 *
+	 * @param player the player to open the dm channel for
+	 */
+	openDMChannel(player: WyTeamPlayer): void {
+		this.ircService.joinChannel(player.name);
+	}
+
+	/**
 	 * Invite a player to the current multiplayer lobby
 	 *
 	 * @param player the player to invite
