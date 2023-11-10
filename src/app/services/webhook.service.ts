@@ -415,11 +415,6 @@ export class WebhookService {
 			return;
 		}
 
-		// Dont send webhook if its a qualifier lobby
-		if (multiplayerLobby.isQualifierLobby == true) {
-			return;
-		}
-
 		const lastMultiplayerData = multiplayerLobby.multiplayerData[multiplayerLobby.multiplayerData.length - 1];
 
 		let cachedBeatmap: CacheBeatmap = null;
@@ -550,7 +545,7 @@ export class WebhookService {
 	 */
 	sendMatchCreation(selectedLobby: Lobby, referee: string, streamerList?: string[], commentatorList?: string[]): void {
 		// Dont send webhooks if its disabled
-		if (!this.doSendWebhooks(selectedLobby)) {
+		if (!this.doSendWebhooks(selectedLobby, true)) {
 			return;
 		}
 
@@ -676,8 +671,21 @@ export class WebhookService {
 	 *
 	 * @param lobby the lobby to check
 	 */
-	private doSendWebhooks(lobby: Lobby): boolean {
-		return !(lobby.sendWebhooks == null || lobby.sendWebhooks == undefined || lobby.sendWebhooks == false);
+	private doSendWebhooks(lobby: Lobby, matchCreation?: boolean): boolean {
+		if (lobby.sendWebhooks == null || lobby.sendWebhooks == undefined || lobby.sendWebhooks == false) {
+			return false;
+		}
+
+		if (lobby.isQualifierLobby == true) {
+			if (matchCreation == true) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
