@@ -19,6 +19,7 @@ export class SidebarComponent implements OnInit {
 				{ icon: 'update', header: 'changelog', link: 'changelog' }
 			]
 		},
+		{ icon: 'login', header: 'authentication', link: 'authentication' },
 		{ icon: 'school', header: 'tutorial', link: 'tutorial' },
 		{ icon: 'settings', header: 'settings', link: 'settings' },
 		{ icon: 'webhook', header: 'webhook', link: 'webhook' },
