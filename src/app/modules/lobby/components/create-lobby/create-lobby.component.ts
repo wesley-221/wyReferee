@@ -235,6 +235,10 @@ export class CreateLobbyComponent implements OnInit {
 								return;
 							}
 
+							console.log(match);
+							// TODO: update match to be data.match
+							// TODO: implement bans here somewhere
+
 							const commentatorNames: string[] = [];
 							const streamerNames: string[] = [];
 							const refereeNames: string[] = [];
