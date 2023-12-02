@@ -132,13 +132,13 @@ export class TutorialService {
 		}
 
 		loginTutorial.addStep(new TutorialStep({
-			route: 'settings',
+			route: 'authentication',
 			content: 'This tutorial will help you login with your osu! account and connect to Bancho using IRC.\n\r' +
 				'Click on the arrows on the bottom to navigate through this tutorial.'
 		}));
 
 		loginTutorial.addStep(new TutorialStep({
-			route: 'settings',
+			route: 'authentication',
 			targetElementIds: [
 				'tutorial-api-key',
 				'tutorial-api-key-input'
@@ -147,7 +147,7 @@ export class TutorialService {
 		}));
 
 		loginTutorial.addStep(new TutorialStep({
-			route: 'settings',
+			route: 'authentication',
 			targetElementIds: [
 				'tutorial-login-irc'
 			],
@@ -159,16 +159,14 @@ export class TutorialService {
 		}));
 
 		loginTutorial.addStep(new TutorialStep({
-			route: 'settings',
+			route: 'authentication',
 			targetElementIds: [
 				'tutorial-login-osu-oauth'
 			],
-			content: '**This is the final step of this tutorial. Make sure to read through this all first before continueing. Because of how login in works this tutorial will close right after you login and wont reopen.**\n\r' +
-				'---\n\r' +
-				'When you click on Login, a new window will pop up. This window will ask you to login with your osu! details. Enter your osu! details here.\n\r' +
-				'Once you are logged in, osu! will ask you if you want to authorize wyReferee for certain permissions. Click on Authorize to grant the permissions.\m\r' +
-				'Once you have clicked on Authorize, wyReferee will refresh and you will be logged in.\n\r' +
-				'This tutorial will be automatically closed and you will be all setup to use the client to its fullest potential!'
+			content: 'When you click on Login, a new window will pop up. This window will ask you to login with your osu! details. Enter your osu! details here.\n\r' +
+				'Once you are logged in, osu! will ask you if you want to authorize wyReferee for "Read public data" permissions. Click on Authorize to grant the permissions.\n\r' +
+				'Once you have clicked on Authorize, wyReferee will now log you in.\n\r' +
+				'You are now all setup to use wyReferee to its fullest potential!'
 		}));
 
 		return loginTutorial;
