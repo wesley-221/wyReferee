@@ -1,1 +1,109 @@
-<p>authentication works!</p>
+<div class="scroll container-fluid">
+	<div id="tutorial-api-key" *ngIf="!apiKeyIsValid">
+		<h2>osu!api key</h2>
+		<p>In order for wyReferee to work properly, you have to enter your osu! api key in the textbox below. wyReferee uses this api key to grab relevant data from the osu! servers, for example multiplayer data andbeatmap data.</p>
+		<p>You can find your api key <a [routerLink]="[]" (click)="electronService.openLink('https://osu.ppy.sh/home/account/edit#legacy-api');">here</a>.</p>
+
+		<mat-form-field id="tutorial-api-key-input" class="full-width">
+			<mat-label>osu!api key</mat-label>
+			<input matInput [(ngModel)]="apiKey" type="password" class="full-width">
+		</mat-form-field>
+
+		<button mat-raised-button color="primary" (click)="saveApiKey()">Save</button>
+
+		<div class="center" *ngIf="apiKeyIsValid == false">
+			<app-alert alertType="danger">
+				You have to set the api key before being able to continue.
+			</app-alert>
+		</div>
+
+		<hr />
+	</div>
+
+	<div class="login-containers">
+		<div id="tutorial-login-osu-oauth" class="login-container">
+			<div class="login-icon-container">
+				<div class="icon osu"></div>
+			</div>
+
+			<div class="login-content">
+				<div class="login-form" *ngIf="!authService.loggedIn">
+					<h3 class="header">osu! authentication</h3>
+					<button mat-raised-button color="primary" class="full-width margin-button" (click)="authenticateOsu()">Login</button>
+
+					<app-alert alertType="info" *ngIf="isAuthenticating == true">
+						<div class="spinner-container">
+							<mat-spinner [diameter]="32" class="spinner"></mat-spinner>
+						</div>
+
+						<div class="text">
+							<p>Attempting to login, hold on tight!</p>
+						</div>
+					</app-alert>
+				</div>
+
+				<div class="login-form" *ngIf="authService.loggedIn">
+					<h3 class="header">osu! authentication</h3>
+					<p align="center">Logged in as {{ authService.loggedInUser.username }}</p>
+
+					<button mat-raised-button color="warn" class="full-width margin-button" (click)="logoutOsu()">Logout</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="tutorial-login-irc" class="login-container">
+			<div class="login-icon-container">
+				<div class="icon osu"></div>
+			</div>
+
+			<div class="login-content">
+				<div class="login-form">
+					<h3 class="header">osu! irc</h3>
+
+					<form [formGroup]="ircLoginForm" *ngIf="!ircService.isAuthenticated">
+						<mat-form-field class="full-width">
+							<mat-label>Username</mat-label>
+							<input matInput placeholder="Username" formControlName="irc-username">
+
+							<mat-error *ngIf="ircLoginForm.get('irc-username').invalid && (ircLoginForm.get('irc-username').dirty || ircLoginForm.get('irc-username').touched)">
+								This field is required.
+							</mat-error>
+						</mat-form-field>
+
+						<mat-form-field class="full-width">
+							<mat-label>Password</mat-label>
+							<input matInput type="password" formControlName="irc-password">
+
+							<mat-error *ngIf="ircLoginForm.get('irc-password').invalid && (ircLoginForm.get('irc-password').dirty || ircLoginForm.get('irc-password').touched)">
+								This field is required.
+							</mat-error>
+						</mat-form-field>
+
+						<button mat-raised-button color="primary" class="full-width align-spinner margin-button" (click)="connectIrc()" [disabled]="apiKeyIsValid == false">Connect</button>
+
+						<div class="center" *ngIf="isConnecting">
+							<mat-spinner [diameter]="40"></mat-spinner>
+							<div class="text">Attempting to login...</div>
+						</div>
+
+						<div class="center" *ngIf="apiKeyIsValid == false">
+							<app-alert alertType="danger">
+								You have to set the api key before being able to login to irc.
+							</app-alert>
+						</div>
+					</form>
+
+					<div class="footer" *ngIf="ircService.isAuthenticated">
+						Logged in as&nbsp;<b>{{ ircService.authenticatedUser }}</b>
+
+						<button mat-raised-button color="warn" class="full-width margin-button" (click)="disconnectIrc()">Disconnect</button>
+					</div>
+
+					<div class="footer">
+						<a [routerLink]="[]" (click)="electronService.openLink('https://osu.ppy.sh/p/irc')" *ngIf="!ircService.isAuthenticated">Lookup your irc credentials</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
+import { SharedModule } from 'app/shared/shared.module';
 
 
 @NgModule({
@@ -11,6 +12,7 @@ import { AuthenticationComponent } from './components/authentication/authenticat
 	],
 	imports: [
 		CommonModule,
+		SharedModule,
 		AuthenticationRoutingModule
 	]
 })
