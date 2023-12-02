@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { StoreService } from 'app/services/store.service';
 import { TournamentService } from 'app/services/tournament.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class TournamentOverviewComponent implements OnInit {
 	allTournaments: WyTournament[];
 	active: string;
 
-	constructor(private tournamentService: TournamentService) {
+	constructor(private tournamentService: TournamentService, private storeService: StoreService) {
 		this.allTournaments = this.tournamentService.allTournaments;
 		this.active = 'local';
 	}
@@ -23,6 +24,20 @@ export class TournamentOverviewComponent implements OnInit {
 		}
 		else if (type == 'published') {
 			this.active = 'published';
+		}
+	}
+
+	/**
+	 * Updates the local tournament to represent the published tournament and delete the local one from the cache
+	 *
+	 * @param data the tournament and local id of the tournament
+	 */
+	onTournamentPublished(data: { tournament: WyTournament, id: number }) {
+		if (data != null) {
+			data.tournament.publishId = data.tournament.id;
+			this.tournamentService.updateTournament(data.tournament, data.id, false);
+
+			this.storeService.delete(`cache.tournaments.${data.id}`);
 		}
 	}
 }

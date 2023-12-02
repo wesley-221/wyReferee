@@ -5,7 +5,6 @@ import { DeleteTournamentDialogComponent } from 'app/components/dialogs/delete-t
 import { PublishTournamentDialogComponent } from 'app/components/dialogs/publish-tournament-dialog/publish-tournament-dialog.component';
 import { ToastType } from 'app/models/toast';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
-import { AuthenticateService } from 'app/services/authenticate.service';
 import { ElectronService } from 'app/services/electron.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
@@ -19,18 +18,13 @@ export class TournamentCardComponent implements OnInit {
 	@Input() tournament: WyTournament;
 	@Input() publishedTournament: boolean;
 	@Output() deletedTournamentEmitter: EventEmitter<boolean>;
+	@Output() tournamentPublishedEmitter: EventEmitter<{ tournament: WyTournament, id: number }>;
 
-	constructor(private tournamentService: TournamentService, private authService: AuthenticateService, private dialog: MatDialog, private router: Router, private toastService: ToastService, public electronService: ElectronService) {
+	constructor(private tournamentService: TournamentService, private dialog: MatDialog, private router: Router, private toastService: ToastService, public electronService: ElectronService) {
 		this.deletedTournamentEmitter = new EventEmitter(false);
+		this.tournamentPublishedEmitter = new EventEmitter(null);
 	}
 	ngOnInit(): void { }
-
-	/**
-	 * Check if the user has sufficient permissions to publish the mappool
-	 */
-	canPublish(): boolean {
-		return this.authService.loggedIn && (this.authService.loggedInUser.isTournamentManager == true || this.authService.loggedInUser.isAdmin == true);
-	}
 
 	/**
 	 * Edit a tournament
@@ -107,6 +101,11 @@ export class TournamentCardComponent implements OnInit {
 				publishTournament.resetAllIds();
 
 				this.tournamentService.publishTournament(publishTournament).subscribe((data: WyTournament) => {
+					this.tournamentPublishedEmitter.next({
+						id: tournament.id,
+						tournament: data
+					});
+
 					this.toastService.addToast(`Successfully published the tournament "${data.name}" with the id ${data.id}.`);
 				});
 			}
