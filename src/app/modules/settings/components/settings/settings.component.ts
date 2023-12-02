@@ -7,8 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { RemoveSettingsComponent } from '../../../../components/dialogs/remove-settings/remove-settings.component';
 import { AuthenticateService } from 'app/services/authenticate.service';
 import { IrcService } from 'app/services/irc.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { GenericService } from 'app/services/generic.service';
+import { OptionsMenu } from '../../models/options-menu';
 
 @Component({
 	selector: 'app-settings',
@@ -18,15 +18,17 @@ import { GenericService } from 'app/services/generic.service';
 
 export class SettingsComponent implements OnInit {
 	dialogMessage: string;
-	dialogAction = 0;
 
 	axsMenuStatus: boolean;
 	splitIrcMessages: boolean;
 
-	allOptions: { icon: string; message: string; buttonText: string; action: any }[] = [
-		{ icon: 'settings', message: 'This will export the config file and save it as a file in case you need to share it with someone. <br /><b>Note:</b> This will not export any authentication data such as login information or API keys <br />', buttonText: 'Export config file', action: () => this.exportConfigFile() },
+	allConfigurationOptions: OptionsMenu[] = [
+		{ icon: 'settings', message: 'This will export the config file and save it as a file in case you need to share it with someone. <br /><br /><b>Disclaimer:</b> This will export everything wyReferee has saved, however to keep you save anything authentication related (API keys, irc credentials, etc.) will <b>NOT</b> be exported.<br />', buttonText: 'Export config file', action: () => this.exportConfigFile() },
 		{ icon: 'cached', message: 'This will clear all the cache.', buttonText: 'Clear cache', action: () => this.openDialog(0) },
-		{ icon: 'api', message: 'This will remove the API key.', buttonText: 'Remove API key', action: () => this.openDialog(1) },
+		{ icon: 'api', message: 'This will remove the API key.', buttonText: 'Remove API key', action: () => this.openDialog(1) }
+	];
+
+	generalOptions: OptionsMenu[] = [
 		{ icon: 'settings', message: 'Show or hide the AxS menu item.', buttonText: 'Toggle', action: () => this.toggleAxSMenu() }
 	];
 

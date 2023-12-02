@@ -5,6 +5,13 @@
 	overflow-y: auto;
 }
 
+h1 {
+	background-color: $primary;
+	color: black;
+
+	padding: 8px;
+}
+
 .options {
 	display: flex;
 	flex-direction: column;

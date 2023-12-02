@@ -1,20 +1,10 @@
 <div class="scroll container-fluid">
+	<h1>General settings</h1>
+
 	<div class="options">
-		<div class="option" *ngFor="let option of allOptions">
-			<div class="content">
-				<div class="icon">
-					<mat-icon>{{ option.icon }}</mat-icon>
-				</div>
-
-				<div class="text">
-					<span [innerHTML]="option.message"></span>
-				</div>
-			</div>
-
-			<div class="button">
-				<button mat-raised-button color="primary" (click)="option.action()">{{ option.buttonText }}</button>
-			</div>
-		</div>
+		<ng-container *ngFor="let option of generalOptions">
+			<ng-template *ngTemplateOutlet="optionTemplate; context: {$implicit: option}"></ng-template>
+		</ng-container>
 
 		<div class="option">
 			<div class="content">
@@ -28,9 +18,34 @@
 			</div>
 
 			<div class="button">
-				{{ splitIrcMessages }}
 				<button mat-raised-button color="primary" (click)="toggleSplitIrcMessages()">{{ splitIrcMessages == true ? 'On' : 'Off' }}</button>
 			</div>
 		</div>
 	</div>
+
+	<h1>Configuration</h1>
+
+	<div class="options">
+		<ng-container *ngFor="let option of allConfigurationOptions">
+			<ng-template *ngTemplateOutlet="optionTemplate; context: {$implicit: option}"></ng-template>
+		</ng-container>
+	</div>
 </div>
+
+<ng-template #optionTemplate let-option>
+	<div class="option">
+		<div class="content">
+			<div class="icon">
+				<mat-icon>{{ option.icon }}</mat-icon>
+			</div>
+
+			<div class="text">
+				<span [innerHTML]="option.message"></span>
+			</div>
+		</div>
+
+		<div class="button">
+			<button mat-raised-button color="primary" (click)="option.action()">{{ option.buttonText }}</button>
+		</div>
+	</div>
+</ng-template>
