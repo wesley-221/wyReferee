@@ -32,7 +32,7 @@ export class TournamentOverviewComponent implements OnInit {
 	 *
 	 * @param data the tournament and local id of the tournament
 	 */
-	onTournamentPublished(data: { tournament: WyTournament, id: number }) {
+	onTournamentPublished(data: { tournament: WyTournament; id: number }) {
 		if (data != null) {
 			data.tournament.publishId = data.tournament.id;
 			this.tournamentService.updateTournament(data.tournament, data.id, false);

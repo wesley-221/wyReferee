@@ -18,7 +18,7 @@ export class TournamentCardComponent implements OnInit {
 	@Input() tournament: WyTournament;
 	@Input() publishedTournament: boolean;
 	@Output() deletedTournamentEmitter: EventEmitter<boolean>;
-	@Output() tournamentPublishedEmitter: EventEmitter<{ tournament: WyTournament, id: number }>;
+	@Output() tournamentPublishedEmitter: EventEmitter<{ tournament: WyTournament; id: number }>;
 
 	constructor(private tournamentService: TournamentService, private dialog: MatDialog, private router: Router, private toastService: ToastService, public electronService: ElectronService) {
 		this.deletedTournamentEmitter = new EventEmitter(false);
