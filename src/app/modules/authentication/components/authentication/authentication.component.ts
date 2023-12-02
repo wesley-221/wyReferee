@@ -23,7 +23,6 @@ export class AuthenticationComponent implements OnInit {
 
 	ircLoginForm: FormGroup;
 
-	// TODO: move apiKeyValidation service to this module
 	constructor(private apiKeyValidation: ApiKeyValidation, private storeService: StoreService, private toastService: ToastService, public authService: AuthenticateService, public ircService: IrcService, public electronService: ElectronService) {
 		this.apiKeyIsValid = false;
 		this.isAuthenticating = false;
