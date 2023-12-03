@@ -496,6 +496,11 @@ export class IrcComponent implements OnInit {
 	 * @param bracket the bracket where the beatmap is from
 	 */
 	pickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number, forcePick = false) {
+		// Check whether the beatmap is banned
+		if(this.selectedLobby.beatmapIsBanned(beatmap.beatmapId)) {
+			return;
+		}
+
 		// Prevent picking when firstPick isn't set
 		if (this.selectedLobby.firstPick == undefined && (this.selectedLobby.isQualifierLobby == undefined || this.selectedLobby.isQualifierLobby == false)) {
 			this.toastService.addToast('You haven\'t set who picks first yet.', ToastType.Error);
