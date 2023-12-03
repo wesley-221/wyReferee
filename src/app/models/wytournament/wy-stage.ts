@@ -4,6 +4,7 @@ export class WyStage {
 	index: number;
 	hitpoints: number;
 	bestOf: number;
+	bans: number;
 
 	constructor(init?: Partial<WyStage>) {
 		Object.assign(this, init);
@@ -14,14 +15,16 @@ export class WyStage {
 			id: stage.id,
 			name: stage.name,
 			hitpoints: stage.hitpoints,
-			bestOf: stage.bestOf
+			bestOf: stage.bestOf,
+			bans: stage.bans
 		});
 	}
 
 	public static parseFromWyBin(stage: any): WyStage {
 		return new WyStage({
 			name: stage.name,
-			bestOf: stage.bestOf
+			bestOf: stage.bestOf,
+			bans: stage.bans
 		});
 	}
 }
