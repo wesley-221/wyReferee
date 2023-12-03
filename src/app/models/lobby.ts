@@ -59,6 +59,9 @@ export class Lobby {
 	teamOneBans: number[];
 	teamTwoBans: number[];
 
+	teamOneProtects: number[];
+	teamTwoProtects: number[];
+
 	teamOnePicks: number[];
 	teamTwoPicks: number[];
 
@@ -81,6 +84,9 @@ export class Lobby {
 	constructor(init?: Partial<Lobby>) {
 		this.teamOneBans = [];
 		this.teamTwoBans = [];
+
+		this.teamOneProtects = [];
+		this.teamTwoProtects = [];
 
 		this.teamOnePicks = [];
 		this.teamTwoPicks = [];
@@ -143,6 +149,8 @@ export class Lobby {
 			teamTwoOverwriteHealth: !isNaN(lobby.teamTwoOverwriteHealth) ? lobby.teamTwoOverwriteScore : 0,
 			teamOneBans: lobby.teamOneBans,
 			teamTwoBans: lobby.teamTwoBans,
+			teamOneProtects: lobby.teamOneProtects == undefined ? [] : lobby.teamOneProtects,
+			teamTwoProtects: lobby.teamTwoProtects == undefined ? [] : lobby.teamTwoProtects,
 			teamOnePicks: lobby.teamOnePicks,
 			teamTwoPicks: lobby.teamTwoPicks,
 			gamesCountTowardsScore: lobby.gamesCountTowardsScore,
@@ -382,7 +390,7 @@ export class Lobby {
 	}
 
 	/**
-	 * Check if a beatmap is banned int he current lobby
+	 * Check if a beatmap is banned in the current lobby
 	 *
 	 * @param beatmapId the beatmap to check
 	 */
@@ -406,6 +414,33 @@ export class Lobby {
 	 */
 	beatmapIsBannedByTeamTwo(beatmapId: number) {
 		return this.teamTwoBans.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if a beatmap is protected in the current lobby
+	 *
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsProtected(beatmapId: number) {
+		return this.teamOneProtects.indexOf(beatmapId) > -1 || this.teamTwoProtects.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if the beatmap is protected by team one
+	 *
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsProtectedByTeamOne(beatmapId: number) {
+		return this.teamOneProtects.indexOf(beatmapId) > -1;
+	}
+
+	/**
+	 * Check if the beatmap is protected by team two
+	 *
+	 * @param beatmapId the beatmap to check
+	 */
+	beatmapIsProtectedByTeamTwo(beatmapId: number) {
+		return this.teamTwoProtects.indexOf(beatmapId) > -1;
 	}
 
 	/**

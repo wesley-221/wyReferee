@@ -37,6 +37,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { SlashCommandService } from 'app/services/slash-command.service';
 import { SlashCommand } from 'app/models/slash-command';
 import { GenericService } from 'app/services/generic.service';
+import { ProtectBeatmapDialogComponent } from 'app/components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
+import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dialog-data';
 
 @Component({
 	selector: 'app-irc',
@@ -790,6 +792,71 @@ export class IrcComponent implements OnInit {
 	}
 
 	/**
+	 * Unban a beatmap
+	 *
+	 * @param beatmap
+	 * @param bracket
+	 */
+	unbanBeatmap(beatmap: WyModBracketMap) {
+		if (this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamOneBans.splice(this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId), 1);
+		}
+		else if (this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamTwoBans.splice(this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId), 1);
+		}
+
+		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+	}
+
+	/**
+	 * Protect the given beatmap
+	 *
+	 * @param beatmap the beatmap to protect
+	 * @param modBracket the mod bracket the beatmap belongs to
+	 * @param multiplayerLobby the lobby the beatmap should be protected in
+	 */
+	protectBeatmap(beatmap: WyModBracketMap, modBracket: WyModBracket, multiplayerLobby: Lobby) {
+		const dialogRef = this.dialog.open(ProtectBeatmapDialogComponent, {
+			data: {
+				beatmap: beatmap,
+				modBracket: modBracket,
+				multiplayerLobby: multiplayerLobby
+			}
+		});
+
+		dialogRef.afterClosed().subscribe((result: IProtectBeatmapDialogData) => {
+			if (result != null) {
+				if (result.protectForTeam == result.multiplayerLobby.teamOneName) {
+					this.selectedLobby.teamOneProtects.push(result.beatmap.beatmapId);
+					this.webhookService.sendProtectResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser);
+				}
+				else {
+					this.selectedLobby.teamTwoProtects.push(result.beatmap.beatmapId);
+					this.webhookService.sendProtectResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser);
+				}
+
+				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+			}
+		});
+	}
+
+	/**
+	 * Unprotect a beatmap
+	 *
+	 * @param beatmap the beatmap to unprotect
+	 */
+	unprotectBeatmap(beatmap: WyModBracketMap) {
+		if (this.selectedLobby.teamOneProtects.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamOneProtects.splice(this.selectedLobby.teamOneProtects.indexOf(beatmap.beatmapId), 1);
+		}
+		else if (this.selectedLobby.teamTwoProtects.indexOf(beatmap.beatmapId) > -1) {
+			this.selectedLobby.teamTwoProtects.splice(this.selectedLobby.teamTwoProtects.indexOf(beatmap.beatmapId), 1);
+		}
+
+		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+	}
+
+	/**
 	 * Check if a beatmap has been picked by team one in the current lobby
 	 *
 	 * @param multiplayerLobby the multiplayerlobby to check from
@@ -807,23 +874,6 @@ export class IrcComponent implements OnInit {
 	 */
 	beatmapIsPickedByTeamTwo(multiplayerLobby: Lobby, beatmapId: number) {
 		return multiplayerLobby.teamTwoPicks != null && multiplayerLobby.teamTwoPicks.indexOf(beatmapId) > -1;
-	}
-
-	/**
-	 * Unban a beatmap
-	 *
-	 * @param beatmap
-	 * @param bracket
-	 */
-	unbanBeatmap(beatmap: WyModBracketMap) {
-		if (this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId) > -1) {
-			this.selectedLobby.teamOneBans.splice(this.selectedLobby.teamOneBans.indexOf(beatmap.beatmapId), 1);
-		}
-		else if (this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId) > -1) {
-			this.selectedLobby.teamTwoBans.splice(this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId), 1);
-		}
-
-		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 	}
 
 	/**

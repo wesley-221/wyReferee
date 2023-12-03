@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Protect beatmap</h2>
+
+<mat-dialog-content class="mat-typography">
+	<div>
+		Select what team is protecting <a [routerLink]="[]" (click)="electronService.openLink(data.beatmap.beatmapUrl)"><b>{{ data.beatmap.beatmapName }}</b></a>
+	</div>
+
+	<hr />
+
+	<mat-button-toggle-group (change)="teamChange($event)">
+		<mat-button-toggle [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-button-toggle>
+		<mat-button-toggle [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-button-toggle>
+	  </mat-button-toggle-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="data" color="warn" [disabled]="data.protectForTeam == null">Protect</button>
+</mat-dialog-actions>

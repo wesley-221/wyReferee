@@ -28,6 +28,7 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { UpdaterComponent } from './layout/updater/updater.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { CredentialsInterceptor } from './core/interceptors/credentials.interceptor';
+import { ProtectBeatmapDialogComponent } from './components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -53,6 +54,7 @@ import { CredentialsInterceptor } from './core/interceptors/credentials.intercep
 		IrcShortcutDialogComponent,
 		IrcPickMapSameModBracketComponent,
 		IrcShortcutWarningDialogComponent,
+		ProtectBeatmapDialogComponent,
 	],
 	imports: [
 		BrowserModule,

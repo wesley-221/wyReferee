@@ -1000,6 +1000,16 @@ $hyperlink-background-color: #2b4576;
 										}
 									}
 
+									&.danger {
+										color: white;
+										background-color: $danger;
+
+										&:hover {
+											background-color: darken($danger, 15%);
+											cursor: pointer;
+										}
+									}
+
 									&.accent {
 										background-color: $success;
 
