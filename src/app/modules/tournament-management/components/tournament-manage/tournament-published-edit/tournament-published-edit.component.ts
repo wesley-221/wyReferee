@@ -38,6 +38,9 @@ export class TournamentPublishedEditComponent implements OnInit {
 					'tournament-score-system': new FormControl('', [
 						Validators.required
 					]),
+					'tournament-protects': new FormControl(tournament.protects, [
+						Validators.required
+					]),
 					'tournament-format': new FormControl(tournament.format, [
 						Validators.required
 					]),

@@ -49,6 +49,14 @@ export class TournamentGeneralComponent implements OnInit {
 	}
 
 	/**
+	 * Change whether the tournament uses protects
+	 */
+	changeProtects(event: MatSelectChange): void {
+		this.validationForm.get('tournament-protects').setValue(event.value);
+		this.tournament.protects = event.value;
+	}
+
+	/**
 	 * Change the tournament format (solo or teams)
 	 */
 	changeTeamFormat(event: MatSelectChange): void {

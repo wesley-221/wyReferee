@@ -52,6 +52,26 @@
 		</div>
 	</div>
 
+	<div class="row">
+		<div class="col">
+			<h3>Protects</h3>
+
+			<mat-form-field class="full-width">
+				<mat-label>Protects</mat-label>
+				<mat-select formControlName="tournament-protects" (selectionChange)="changeProtects($event)">
+					<mat-option [value]="true">True</mat-option>
+					<mat-option [value]="false">False</mat-option>
+				</mat-select>
+
+				<mat-error *ngIf="validationForm.get('tournament-protects').errors && (validationForm.get('tournament-protects').touched || validationForm.get('tournament-protects').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
+
+			<p>Whether the tournament uses protects. Protecting a beatmap will prevent a team from banning the given beatmap.</p>
+		</div>
+	</div>
+
 	<hr />
 
 	<div class="row r-3">
