@@ -171,6 +171,7 @@ export class CreateLobbyComponent implements OnInit {
 					if (stage.name == selectedStage) {
 						lobby.selectedStage = stage;
 						lobby.bestOf = stage.bestOf;
+						lobby.banCount = stage.bans;
 
 						lobby.teamOneHealth = Number(stage.hitpoints);
 						lobby.teamTwoHealth = Number(stage.hitpoints);
@@ -234,10 +235,6 @@ export class CreateLobbyComponent implements OnInit {
 								this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 								return;
 							}
-
-							console.log(match);
-							// TODO: update match to be data.match
-							// TODO: implement bans here somewhere
 
 							const commentatorNames: string[] = [];
 							const streamerNames: string[] = [];

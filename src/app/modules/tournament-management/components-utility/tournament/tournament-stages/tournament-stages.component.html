@@ -46,6 +46,18 @@
 							</mat-form-field>
 						</div>
 
+						<div class="bans">
+							<mat-form-field class="full-width">
+								<mat-label>Bans</mat-label>
+
+								<input matInput [formControlName]="'tournament-stage-bans-' + stage.index" (change)="changeBanCount(stage, $event)" />
+
+								<mat-error *ngIf="validationForm.get('tournament-stage-bans-' + stage.index) != null && validationForm.get('tournament-stage-bans-' + stage.index).errors && (validationForm.get('tournament-stage-bans-' + stage.index).touched || validationForm.get('tournament-stage-bans-' + stage.index).dirty)">
+									This field is required
+								</mat-error>
+							</mat-form-field>
+						</div>
+
 						<div class="bestof">
 							<mat-form-field class="full-width">
 								<mat-label>Best of</mat-label>

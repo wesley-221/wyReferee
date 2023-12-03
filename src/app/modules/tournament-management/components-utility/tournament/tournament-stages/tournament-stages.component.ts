@@ -55,6 +55,7 @@ export class TournamentStagesComponent implements OnInit {
 
 		this.validationForm.addControl(`tournament-stage-name-${newStage.index}`, new FormControl(newStage.name, Validators.required));
 		this.validationForm.addControl(`tournament-stage-best-of-${newStage.index}`, new FormControl(newStage.bestOf, Validators.required));
+		this.validationForm.addControl(`tournament-stage-bans-${newStage.index}`, new FormControl(newStage.bans));
 
 		if (this.tournament.scoreInterface instanceof CTMCalculation) {
 			this.validationForm.addControl(`tournament-stage-hitpoints-${newStage.index}`, new FormControl('', Validators.required));
@@ -118,6 +119,16 @@ export class TournamentStagesComponent implements OnInit {
 	}
 
 	/**
+	 * Change the bans for the stage
+	 *
+	 * @param stage the stage to change the bans of
+	 * @param event the changed value
+	 */
+	changeBanCount(stage: WyStage, event: any) {
+		stage.bans = event.value;
+	}
+
+	/**
 	 * Remove a stage from the tournament
 	 *
 	 * @param stage the stage to remove
@@ -125,6 +136,7 @@ export class TournamentStagesComponent implements OnInit {
 	removeStage(stage: WyStage) {
 		this.validationForm.removeControl(`tournament-stage-name-${stage.index}`);
 		this.validationForm.removeControl(`tournament-stage-best-of-${stage.index}`);
+		this.validationForm.removeControl(`tournament-stage-bans-${stage.index}`);
 
 		if (this.tournament.scoreInterface instanceof CTMCalculation) {
 			this.validationForm.removeControl(`tournament-stage-hitpoints-${stage.index}`);
