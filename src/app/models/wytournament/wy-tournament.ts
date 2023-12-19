@@ -20,6 +20,7 @@ export class WyTournament {
 	name: string;
 	acronym: string;
 	gamemodeId: number;
+	protects: boolean;
 	teamSize: number;
 	format: TournamentFormat;
 
@@ -88,6 +89,7 @@ export class WyTournament {
 			name: tournament.name,
 			acronym: tournament.acronym,
 			gamemodeId: tournament.gamemodeId,
+			protects: tournament.protects,
 			teamSize: tournament.teamSize,
 			format: tournament.format,
 			scoreInterface: calc.getScoreInterface(tournament.scoreInterfaceIdentifier),

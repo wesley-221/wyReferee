@@ -312,6 +312,48 @@ export class WebhookService {
 	}
 
 	/**
+	 * Send the protect through a discord webhook
+	 *
+	 * @param selectedLobby the lobby to get the data from
+	 * @param teamName the name of the banner
+	 * @param protect the map that was protected
+	 * @param referee the referee
+	 */
+	sendProtectResult(selectedLobby: Lobby, teamName: string, protect: WyModBracketMap, referee: string) {
+		// Dont send webhooks if its disabled
+		if (!this.doSendWebhooks(selectedLobby)) {
+			return;
+		}
+
+		const body = {
+			embeds: [
+				{
+					title: `🛡 Protect update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					url: selectedLobby.multiplayerLink,
+					description: `**${teamName}** has protected [**${protect.beatmapName}**](${protect.beatmapUrl})`,
+					color: 15258703,
+					footer: {
+						text: `Match referee was ${referee}`
+					},
+					thumbnail: {
+						url: `https://b.ppy.sh/thumb/${protect.beatmapsetId}.jpg`
+					},
+					fields: [
+					]
+				}
+			]
+		};
+
+		this.setCustomizedFields(body, false);
+
+		for (const webhook of selectedLobby.tournament.webhooks) {
+			if (webhook.bans == true) {
+				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+			}
+		}
+	}
+
+	/**
 	 * Send a summary of the match through a discord webhook
 	 *
 	 * @param selectedLobby the lobby to get the data from

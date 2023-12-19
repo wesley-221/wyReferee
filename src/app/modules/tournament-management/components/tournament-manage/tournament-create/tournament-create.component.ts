@@ -32,6 +32,9 @@ export class TournamentCreateComponent implements OnInit {
 			'tournament-score-system': new FormControl('', [
 				Validators.required
 			]),
+			'tournament-protects': new FormControl('', [
+				Validators.required
+			]),
 			'tournament-format': new FormControl('', [
 				Validators.required
 			]),
