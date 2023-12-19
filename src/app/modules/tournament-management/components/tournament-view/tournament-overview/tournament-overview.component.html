@@ -23,7 +23,7 @@
 <div id="tutorial-all-tournaments" class="all-tournaments">
 	<div *ngIf="active == 'local'">
 		<div *ngFor="let tournament of allTournaments">
-			<app-tournament-card [tournament]="tournament"></app-tournament-card>
+			<app-tournament-card [tournament]="tournament" (tournamentPublishedEmitter)="onTournamentPublished($event)"></app-tournament-card>
 		</div>
 	</div>
 

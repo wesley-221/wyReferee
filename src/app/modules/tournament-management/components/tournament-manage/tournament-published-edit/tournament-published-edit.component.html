@@ -10,5 +10,9 @@
 
 	<app-tournament [tournament]="tournament" [validationForm]="validationForm"></app-tournament>
 
+	<app-alert alertType="info">
+		You are currently editing {{ tournament.name }}. Any changes made here will be saved <u>publicly</u>,&nbsp;
+		meaning anyone that has this tournament imported will get their tournament updated once their client has been restarted.
+	</app-alert>
 	<button mat-raised-button class="extra-padding" color="primary" (click)="updateTournament()">Update</button>
 </div>
