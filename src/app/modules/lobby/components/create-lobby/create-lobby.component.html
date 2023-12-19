@@ -275,5 +275,9 @@
 		</div>
 
 		<button id="tutorial-create-lobby" mat-raised-button color="accent" class="margin-button" (click)="createLobby()" [disabled]="!ircAuthenticated">Create</button>
+
+		<app-alert alertType="warn">
+			You are not logged in to IRC and are unable to create a lobby because of this. Go to <a routerLink="/authentication"><code>Authentication</code></a> to login to IRC.
+		</app-alert>
 	</form>
 </div>
