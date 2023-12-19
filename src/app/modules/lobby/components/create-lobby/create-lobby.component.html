@@ -2,7 +2,7 @@
 	<form [formGroup]="validationForm">
 		<h2>Multiplayer link</h2>
 
-		<mat-form-field class="full-width">
+		<mat-form-field id="tutorial-multiplayer-link" class="full-width">
 			<mat-label>Multiplayer link</mat-label>
 			<input matInput formControlName="multiplayer-link" />
 
@@ -24,7 +24,7 @@
 
 		<h2>Select a tournament</h2>
 
-		<mat-form-field class="full-width">
+		<mat-form-field id="tutorial-select-tournament" class="full-width">
 			<mat-label>Select a tournament</mat-label>
 			<mat-select formControlName="selected-tournament" (selectionChange)="changeTournament()">
 				<mat-option *ngFor="let tournament of tournamentService.allTournaments" [value]="tournament.id">
@@ -52,7 +52,7 @@
 				<div class="tournament-acronym">
 					<h2>Tournament acronym</h2>
 
-					<mat-form-field class="full-width">
+					<mat-form-field id="tutorial-tournament-acronym" class="full-width">
 						<mat-label>Tournament acronym</mat-label>
 						<input matInput formControlName="tournament-acronym" />
 
@@ -74,7 +74,7 @@
 			<div class="col" *ngIf="selectedTournament == null">
 				<h2>Score system</h2>
 
-				<mat-form-field class="full-width">
+				<mat-form-field id="tutorial-score-system" class="full-width">
 					<mat-label>Select a score system</mat-label>
 					<mat-select formControlName="score-interface" (selectionChange)="changeScoreInterface($event)">
 						<mat-option *ngFor="let scoreInterface of this.calculateScoreInterfaces.getAllScoreInterfaces()" [value]="scoreInterface.getIdentifier()">{{ scoreInterface.getIdentifier() }}</mat-option>
@@ -97,7 +97,7 @@
 			<div class="col" *ngIf="selectedTournament == null && (this.teamSize == 0 || this.teamSize == null)">
 				<h2>Team size</h2>
 
-				<mat-form-field class="full-width">
+				<mat-form-field id="tutorial-team-size" class="full-width">
 					<mat-label>Team size</mat-label>
 					<input matInput formControlName="team-size" (change)="changeTeamSize()" />
 
@@ -176,7 +176,7 @@
 			<h1>Stage</h1>
 			<p>Select for which stage this match is supposed to be for.</p>
 
-			<mat-form-field class="full-width">
+			<mat-form-field id="tutorial-select-stage" class="full-width">
 				<mat-label>Stage</mat-label>
 				<mat-select formControlName="stage">
 					<mat-option [value]="stage.name" *ngFor="let stage of selectedTournament.stages">{{ stage.name }}</mat-option>
@@ -188,14 +188,14 @@
 			</mat-form-field>
 
 			<div class="row r-2">
-				<div class="col">
+				<div id="tutorial-qualifier" class="col">
 					<h1>Qualifier lobby</h1>
 					<p>Use this option if the lobby you are creating is supposed to be a qualifier lobby.</p>
 
 					<mat-slide-toggle [(ngModel)]="qualifier" (change)="changeQualifierLobby()" [ngModelOptions]="{ standalone: true }"></mat-slide-toggle>
 				</div>
 
-				<div class="col">
+				<div id="tutorial-webhooks" class="col">
 					<h1>Webhooks</h1>
 					<p>Use this option to disable webhooks from being sent. Could be used for practice lobby, testing, etc.</p>
 
@@ -207,71 +207,77 @@
 
 			<hr />
 
-			<div class="row r-2" *ngIf="qualifier == false">
-				<div class="col">
-					<h2>Team one name</h2>
+			<div id="tutorial-participants">
+				<div class="row r-2" *ngIf="qualifier == false">
+					<div class="col">
+						<h2>Team one name</h2>
 
+						<mat-form-field class="full-width">
+							<mat-label>Team one name</mat-label>
+
+							<input matInput type="text" formControlName="team-one-name" class="form-control" [matAutocomplete]="teamOneAutoComplete" />
+
+							<mat-autocomplete #teamOneAutoComplete="matAutocomplete">
+								<mat-option *ngFor="let team of teamOneFilter | async" [value]="team.name">
+									{{ team.name }}
+								</mat-option>
+							</mat-autocomplete>
+
+							<mat-error *ngIf="getValidation('team-one-name').errors && (getValidation('team-one-name').touched || getValidation('team-one-name').dirty)">
+								This field is required
+							</mat-error>
+						</mat-form-field>
+
+						<p>
+							Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot {{ teamOneArray.join(", ") }}.
+						</p>
+					</div>
+
+					<div class="col">
+						<h2>Team two name</h2>
+
+						<mat-form-field class="full-width">
+							<mat-label>Team two name</mat-label>
+
+							<input matInput type="text" formControlName="team-two-name" class="form-control" [matAutocomplete]="teamTwoAutoComplete" />
+
+							<mat-autocomplete #teamTwoAutoComplete="matAutocomplete">
+								<mat-option *ngFor="let team of teamTwoFilter | async" [value]="team.name">
+									{{ team.name }}
+								</mat-option>
+							</mat-autocomplete>
+
+							<mat-error *ngIf="getValidation('team-two-name').errors && (getValidation('team-two-name').touched || getValidation('team-two-name').dirty)">
+								This field is required
+							</mat-error>
+						</mat-form-field>
+
+						<p>
+							Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot {{ teamTwoArray.join(", ") }}.
+						</p>
+					</div>
+				</div>
+
+				<div *ngIf="qualifier == true">
 					<mat-form-field class="full-width">
-						<mat-label>Team one name</mat-label>
+						<mat-label>Qualifier lobby identifier</mat-label>
+						<input matInput formControlName="qualifier-lobby-identifier" />
 
-						<input matInput type="text" formControlName="team-one-name" class="form-control" [matAutocomplete]="teamOneAutoComplete" />
-
-						<mat-autocomplete #teamOneAutoComplete="matAutocomplete">
-							<mat-option *ngFor="let team of teamOneFilter | async" [value]="team.name">
-								{{ team.name }}
-							</mat-option>
-						</mat-autocomplete>
-
-						<mat-error *ngIf="getValidation('team-one-name').errors && (getValidation('team-one-name').touched || getValidation('team-one-name').dirty)">
-							This field is required
+						<mat-error *ngIf="getValidation('qualifier-lobby-identifier').errors && getValidation('qualifier-lobby-identifier').errors.pattern">
+							You have to enter an identifier
 						</mat-error>
 					</mat-form-field>
 
-					<p>
-						Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot {{ teamOneArray.join(", ") }}.
-					</p>
+					<p>Enter the identifier of the qualifier lobby (for example, "B"). Current name of the lobby:</p>
+					<p>{{ selectedTournament.acronym }}: Qualifier lobby: {{ qualifierLobbyIdentifier }}</p>
 				</div>
-
-				<div class="col">
-					<h2>Team two name</h2>
-
-					<mat-form-field class="full-width">
-						<mat-label>Team two name</mat-label>
-
-						<input matInput type="text" formControlName="team-two-name" class="form-control" [matAutocomplete]="teamTwoAutoComplete" />
-
-						<mat-autocomplete #teamTwoAutoComplete="matAutocomplete">
-							<mat-option *ngFor="let team of teamTwoFilter | async" [value]="team.name">
-								{{ team.name }}
-							</mat-option>
-						</mat-autocomplete>
-
-						<mat-error *ngIf="getValidation('team-two-name').errors && (getValidation('team-two-name').touched || getValidation('team-two-name').dirty)">
-							This field is required
-						</mat-error>
-					</mat-form-field>
-
-					<p>
-						Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot {{ teamTwoArray.join(", ") }}.
-					</p>
-				</div>
-			</div>
-
-			<div *ngIf="qualifier == true">
-				<mat-form-field class="full-width">
-					<mat-label>Qualifier lobby identifier</mat-label>
-					<input matInput formControlName="qualifier-lobby-identifier" />
-
-					<mat-error *ngIf="getValidation('qualifier-lobby-identifier').errors && getValidation('qualifier-lobby-identifier').errors.pattern">
-						You have to enter an identifier
-					</mat-error>
-				</mat-form-field>
-
-				<p>Enter the identifier of the qualifier lobby (for example, "B"). Current name of the lobby:</p>
-				<p>{{ selectedTournament.acronym }}: Qualifier lobby: {{ qualifierLobbyIdentifier }}</p>
 			</div>
 		</div>
 
-		<button mat-raised-button color="accent" class="margin-button" (click)="createLobby()" [disabled]="!ircAuthenticated">Create</button>
+		<button id="tutorial-create-lobby" mat-raised-button color="accent" class="margin-button" (click)="createLobby()" [disabled]="!ircAuthenticated">Create</button>
+
+		<app-alert alertType="warn">
+			You are not logged in to IRC and are unable to create a lobby because of this. Go to <a routerLink="/authentication"><code>Authentication</code></a> to login to IRC.
+		</app-alert>
 	</form>
 </div>

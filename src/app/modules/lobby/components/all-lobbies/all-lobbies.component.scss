@@ -1,5 +1,9 @@
 @import "variables";
 
+.tutorial-button-width {
+	width: fit-content;
+}
+
 .lobby-interface {
 	display: flex;
 	flex-direction: column;

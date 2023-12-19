@@ -29,7 +29,7 @@ export class TutorialService {
 		this.allTutorials = [
 			this.loginTutorial(),
 			this.importTournamentTutorial(),
-			// this.createLobbyTutorial(),
+			this.createLobbyTutorial(),
 			// this.ircTutorial()
 		];
 
@@ -52,6 +52,10 @@ export class TutorialService {
 
 		if (tutorial != null) {
 			this.currentStep = this.currentTutorial.getSteps()[0];
+
+			if (this.currentStep.action != null) {
+				this.currentStep.action();
+			}
 		}
 	}
 
@@ -232,8 +236,113 @@ export class TutorialService {
 		});
 
 		createLobbyTutorial.addStep(new TutorialStep({
-			targetElementIds: [],
-			content: 'This tutorial has not been made yet.'
+			route: 'lobby-overview',
+			content: 'This tutorial will help you create a new multiplayer lobby.\n\r' +
+				'Click on the arrows on the bottom to navigate through this tutorial.',
+			action: () => {
+				this.tournamentService.saveTournament(this.tutorialTournament);
+			}
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview',
+			targetElementIds: [
+				'tutorial-create-new-multiplayer-lobby'
+			],
+			content: 'On this page you will see all the multiplayer lobbies you have created. We are gonna be making a multiplayer lobby first, you can do this by clicking on the `create new Multiplayer lobby` button. \n\rOnce you have clicked on the button, you can go to the next step.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-multiplayer-link'
+			],
+			content: 'This field is usually ignored when creating a new multiplayer lobby. It is only used when you want to join an existing multiplayer lobby (which will also connect you to the appropriate IRC channel if you have been addreffed) that you did not initially create. \n\rFor this example, we will not be using this field so you can safely ignore it.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-tournament-acronym'
+			],
+			content: 'As you might have noticed, we are skipping the `Select a tournament` dropdown. This is intentional and we will go back to this dropdown after the next few steps.\n\r' +
+				'The next 3 steps can be skipped if you are gonna be selecting a tournament, as these 3 steps will not be relevant for you.\n\r' +
+				'---\n\r' +
+				'The tournament acronym is exactly what you would assume it is, it is the acronym used to create the multiplayer lobby.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-score-system'
+			],
+			content: 'The score system determines how scores are calculated when a beatmap has been played. If a normal tournament is being hosted, `Team vs.` should be used, as this is the default scoring system that osu! uses. \n\rThe other score systems will make various changes real-time to scores when a beatmap has been finished, giving you unwanted results if you are expecting the normal `Team vs.` scoring.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-team-size'
+			],
+			content: 'Team size should also be fairly straight forward, this is the amount of players are allowed to be on a team. \n\rIf it is a 1v1 tournament, this can be set to 1, if it is a 2v2 tournament, this can be set to 2 and so on.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-select-tournament'
+			],
+			content: 'This field lets you select a tournament for which you will be refereeing a match. For this example we will select the `Tutorial tournament`. \n\rOnce you have selected the tournament, you can continue to the next step.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-select-stage'
+			],
+			content: 'For this dropdown you will select the stage for which you are refereeing the match for. When a stage is selected, the mappool for that stage will be used when you go to the IRC part of the client.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-qualifier'
+			],
+			content: 'Here you will select whether the lobby is supposed to be a qualifier lobby. If it is not a qualifier lobby, you can safely ignore this option.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-webhooks'
+			],
+			content: 'Webhooks are sent when certain things happen in a multiplayer lobby, a couple of examples are: \n\r' +
+				'- When a multiplayer lobby gets created\n' +
+				'- When a beatmap gets picked, banned or protected\n' +
+				'- When a beatmap has finished\n\r' +
+				'To disable these webhooks from being sent, you can toggle this option off. \n\r' +
+				'---\n\r' +
+				'**NOTE**: When you are refereeing a qualifier lobby, you can safely have this turned on. \n\rFor a qualifier lobby the only webhook that will be sent when this option is turned on is when a multiplayer lobby gets created. \n\rAs long as the channel on Discord is visible to tournament staff, it will not leak any information to any other participant.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-participants'
+			],
+			content: '## Normal lobby \n\r' +
+				'When creating a normal lobby, you will be able to enter `Team one/two name`. As you can probably figure out, these are the names for the 2 teams (or players, if it is a 1v1 tournament). Below the text boxes you also see which team colour and team slot they are. \n\r' +
+				'## Qualifier lobby \n\r' +
+				'When creating a qualifier lobby, you will be able to enter a `Qualifier lobby identifier`, which essentially is the name for that given lobby.'
+		}));
+
+		createLobbyTutorial.addStep(new TutorialStep({
+			route: 'lobby-overview/create-lobby',
+			targetElementIds: [
+				'tutorial-create-lobby'
+			],
+			content: 'Now that you have entered all the details needed for the match you are gonna be a referee for, you can go ahead and click on the `Create` button to create the multiplayer lobby. \n\r' +
+				'This will create a new multiplayer lobby so that you can go ahead and start refereeing the match!'
 		}));
 
 		return createLobbyTutorial;
