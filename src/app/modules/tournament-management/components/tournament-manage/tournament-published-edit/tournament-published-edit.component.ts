@@ -70,6 +70,7 @@ export class TournamentPublishedEditComponent implements OnInit {
 				for (const stage of tournament.stages) {
 					this.validationForm.addControl(`tournament-stage-name-${stage.index}`, new FormControl(stage.name, Validators.required));
 					this.validationForm.addControl(`tournament-stage-best-of-${stage.index}`, new FormControl(Number(stage.bestOf), Validators.required));
+					this.validationForm.addControl(`tournament-stage-bans-${stage.index}`, new FormControl(Number(stage.bans)));
 
 					if (tournament.scoreInterface instanceof CTMCalculation) {
 						this.validationForm.addControl(`tournament-stage-hitpoints-${stage.index}`, new FormControl(stage.hitpoints, Validators.required));

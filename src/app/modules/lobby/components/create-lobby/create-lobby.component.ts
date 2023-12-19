@@ -171,6 +171,7 @@ export class CreateLobbyComponent implements OnInit {
 					if (stage.name == selectedStage) {
 						lobby.selectedStage = stage;
 						lobby.bestOf = stage.bestOf;
+						lobby.banCount = stage.bans;
 
 						lobby.teamOneHealth = Number(stage.hitpoints);
 						lobby.teamTwoHealth = Number(stage.hitpoints);

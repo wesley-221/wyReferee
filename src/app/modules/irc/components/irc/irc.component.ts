@@ -513,6 +513,25 @@ export class IrcComponent implements OnInit {
 			return;
 		}
 
+		// Prevent picking when the not enough maps have been banned
+		if (this.selectedLobby.banCount != undefined && this.selectedLobby.banCount != null) {
+			let bansNotMet = false;
+
+			if (this.selectedLobby.teamOneBans.length < this.selectedLobby.banCount) {
+				this.toastService.addToast(`${this.selectedLobby.teamOneName} has not banned ${this.selectedLobby.banCount} map(s) yet.`, ToastType.Error, 10);
+				bansNotMet = true;
+			}
+
+			if (this.selectedLobby.teamTwoBans.length < this.selectedLobby.banCount) {
+				this.toastService.addToast(`${this.selectedLobby.teamTwoName} has not banned ${this.selectedLobby.banCount} map(s) yet.`, ToastType.Error, 10);
+				bansNotMet = true;
+			}
+
+			if (bansNotMet == true) {
+				return;
+			}
+		}
+
 		// Check if teams are allowed to pick from the same modbracket twice in a row
 		if (this.selectedLobby.tournament.allowDoublePick == false) {
 			if (this.wasBeatmapPickedFromSamePreviousModBracket(bracket) && forcePick == false) {

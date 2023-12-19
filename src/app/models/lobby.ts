@@ -39,6 +39,7 @@ export class Lobby {
 	firstPick: string;
 	selectedStage: WyStage;
 	bestOf: number;
+	banCount: number;
 
 	teamOneName: string;
 	teamTwoName: string;
@@ -131,6 +132,7 @@ export class Lobby {
 			firstPick: lobby.firstPick,
 			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
 			bestOf: lobby.bestOf,
+			banCount: lobby.banCount,
 			teamOneName: lobby.teamOneName,
 			teamTwoName: lobby.teamTwoName,
 			teamOneScore: lobby.teamOneScore,
