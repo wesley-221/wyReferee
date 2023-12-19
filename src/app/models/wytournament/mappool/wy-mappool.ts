@@ -178,11 +178,14 @@ export class WyMappool {
 			}
 
 			for (const beatmap of modBracket.beatmaps) {
+				const gamemodeId = beatmap.gamemodeId == null || beatmap.gamemodeId == undefined ? null : beatmap.gamemodeId;
+
 				const newBeatmap = new WyModBracketMap({
 					beatmapId: beatmap.beatmapId,
 					beatmapName: beatmap.name,
 					beatmapsetId: beatmap.beatmapsetId,
 					beatmapUrl: 'https://osu.ppy.sh/beatmaps/' + beatmap.beatmapId,
+					gamemodeId: gamemodeId,
 					index: newModBracket.beatmapIndex
 				});
 
