@@ -12,11 +12,11 @@ import { TournamentService } from 'app/services/tournament.service';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 
 @Component({
-	selector: 'app-tournament-edit-new',
-	templateUrl: './tournament-edit-new.component.html',
-	styleUrls: ['./tournament-edit-new.component.scss']
+	selector: 'app-tournament-edit',
+	templateUrl: './tournament-edit.component.html',
+	styleUrls: ['./tournament-edit.component.scss']
 })
-export class TournamentEditNewComponent implements OnInit {
+export class TournamentEditComponent implements OnInit {
 	tournament: WyTournament;
 	isPublishedTournament: boolean;
 	validationForm: FormGroup;
