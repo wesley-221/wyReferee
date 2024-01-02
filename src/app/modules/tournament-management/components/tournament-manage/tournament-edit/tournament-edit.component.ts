@@ -21,7 +21,7 @@ export class TournamentEditComponent implements OnInit {
 	isPublishedTournament: boolean;
 	validationForm: FormGroup;
 
-	tournamentLoaded$: EventEmitter<{ loaded: boolean, tournament: WyTournament }>;
+	tournamentLoaded$: EventEmitter<{ loaded: boolean; tournament: WyTournament }>;
 
 	constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private lobbyService: WyMultiplayerLobbiesService, private toastService: ToastService) {
 		this.tournamentLoaded$ = new EventEmitter();
