@@ -35,10 +35,10 @@ export class TournamentCardComponent implements OnInit {
 		// Check if click wasn't on a button
 		if (event.toElement.localName == 'div') {
 			if (this.publishedTournament == undefined || this.publishedTournament == false) {
-				this.router.navigate(['/tournament-management/tournament-overview/tournament-edit', tournament.id]);
+				this.router.navigate(['/tournament-management/tournament-overview/tournament-edit-new', tournament.id, 0]);
 			}
 			else {
-				this.router.navigate(['/tournament-management/tournament-overview/tournament-my-published/tournament-published-edit', tournament.id]);
+				this.router.navigate(['/tournament-management/tournament-overview/tournament-edit-new', tournament.id, 1]);
 			}
 		}
 	}

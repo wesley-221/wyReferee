@@ -23,6 +23,7 @@ import { TournamentOverviewComponent } from './components/tournament-view/tourna
 import { TournamentPublishedEditComponent } from './components/tournament-manage/tournament-published-edit/tournament-published-edit.component';
 import { TournamentWybinComponent } from './components-utility/tournament/tournament-wybin/tournament-wybin.component';
 import { TournamentBeatmapResultComponent } from './components-utility/tournament/tournament-beatmap-result/tournament-beatmap-result.component';
+import { TournamentEditNewComponent } from './components/tournament-manage/tournament-edit-new/tournament-edit-new.component';
 
 @NgModule({
 	declarations: [
@@ -45,7 +46,8 @@ import { TournamentBeatmapResultComponent } from './components-utility/tournamen
 		TournamentOverviewComponent,
 		TournamentPublishedEditComponent,
 		TournamentWybinComponent,
-		TournamentBeatmapResultComponent
+		TournamentBeatmapResultComponent,
+		TournamentEditNewComponent
 	],
 	imports: [
 		CommonModule,
