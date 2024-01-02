@@ -17,10 +17,8 @@ import { TournamentAllPublishedComponent } from './components/tournament-view/to
 import { TournamentAllPublishedAdministratorComponent } from './components/tournament-view/tournament-all-published-administrator/tournament-all-published-administrator.component';
 import { TournamentCardComponent } from './components-utility/tournament-card/tournament-card.component';
 import { TournamentCreateComponent } from './components/tournament-manage/tournament-create/tournament-create.component';
-import { TournamentEditComponent } from './components/tournament-manage/tournament-edit/tournament-edit.component';
 import { TournamentMyPublishedComponent } from './components/tournament-view/tournament-my-published/tournament-my-published.component';
 import { TournamentOverviewComponent } from './components/tournament-view/tournament-overview/tournament-overview.component';
-import { TournamentPublishedEditComponent } from './components/tournament-manage/tournament-published-edit/tournament-published-edit.component';
 import { TournamentWybinComponent } from './components-utility/tournament/tournament-wybin/tournament-wybin.component';
 import { TournamentBeatmapResultComponent } from './components-utility/tournament/tournament-beatmap-result/tournament-beatmap-result.component';
 import { TournamentEditNewComponent } from './components/tournament-manage/tournament-edit-new/tournament-edit-new.component';
@@ -41,10 +39,8 @@ import { TournamentEditNewComponent } from './components/tournament-manage/tourn
 		TournamentAllPublishedAdministratorComponent,
 		TournamentCardComponent,
 		TournamentCreateComponent,
-		TournamentEditComponent,
 		TournamentMyPublishedComponent,
 		TournamentOverviewComponent,
-		TournamentPublishedEditComponent,
 		TournamentWybinComponent,
 		TournamentBeatmapResultComponent,
 		TournamentEditNewComponent
