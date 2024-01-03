@@ -11,7 +11,7 @@ export class ValidationErrorService {
 		this.validators = [
 			new ValidationError('tournament-name', 'You have to fill in the tournament name.'),
 			new ValidationError('tournament-acronym', 'You have to fill in the tournament acronym.'),
-			new ValidationError('tournament-gamemode', 'You have to select gamemode.'),
+			new ValidationError('tournament-gamemode', 'You have to select a gamemode.'),
 			new ValidationError('tournament-score-system', 'You have to select a score system.'),
 			new ValidationError('tournament-protects', 'You have to select whether to use protects.'),
 			new ValidationError('tournament-format', 'You have to select the tournament format.'),
