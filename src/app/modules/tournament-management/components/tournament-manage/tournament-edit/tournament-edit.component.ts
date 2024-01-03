@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Mods } from 'app/models/osu-models/osu';
@@ -7,6 +7,7 @@ import { CTMCalculation } from 'app/models/score-calculation/calculation-types/c
 import { ToastType } from 'app/models/toast';
 import { MappoolType } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { ValidationErrorService } from 'app/modules/tournament-management/services/validation-error.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
@@ -17,13 +18,17 @@ import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies
 	styleUrls: ['./tournament-edit.component.scss']
 })
 export class TournamentEditComponent implements OnInit {
+	@ViewChild('container') container: ElementRef;
+	tournamentLoaded$: EventEmitter<{ loaded: boolean; tournament: WyTournament }>;
+
 	tournament: WyTournament;
 	isPublishedTournament: boolean;
 	validationForm: FormGroup;
 
-	tournamentLoaded$: EventEmitter<{ loaded: boolean; tournament: WyTournament }>;
+	errors: string[];
 
-	constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private lobbyService: WyMultiplayerLobbiesService, private toastService: ToastService) {
+	constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private lobbyService: WyMultiplayerLobbiesService, private validationErrorService: ValidationErrorService, private toastService: ToastService) {
+		this.errors = [];
 		this.tournamentLoaded$ = new EventEmitter();
 
 		this.tournamentLoaded$.subscribe(tournamentLoaded => {
@@ -176,9 +181,23 @@ export class TournamentEditComponent implements OnInit {
 	updateTournament(): void {
 		if (this.validationForm.invalid) {
 			this.validationForm.markAllAsTouched();
-			this.toastService.addToast('The mappool wasn\'t filled in correctly. Look for the marked fields to see what you did wrong.', ToastType.Error);
+			this.errors = [];
+
+			for (const validatorKey in this.validationForm.controls) {
+				const control = this.validationForm.controls[validatorKey];
+
+				if (control.errors != null) {
+					const errorMessage = this.validationErrorService.getErrorMessage(validatorKey);
+					this.errors.push(errorMessage);
+				}
+			}
+
+			this.container.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
 			return;
 		}
+
+		this.errors = [];
 
 		this.tournament.name = this.validationForm.get('tournament-name').value;
 		this.tournament.acronym = this.validationForm.get('tournament-acronym').value;

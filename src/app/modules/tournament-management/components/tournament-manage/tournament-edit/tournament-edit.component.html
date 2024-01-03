@@ -1,4 +1,4 @@
-<div class="scroll" *ngIf="tournament">
+<div #container class="scroll" *ngIf="tournament">
 	<app-debug [data]="{ tournament }"></app-debug>
 
 	<h1>Updating {{ tournament.name }}</h1>
@@ -11,6 +11,14 @@
 	<app-alert alertType="info" *ngIf="isPublishedTournament == true">
 		You are currently editing {{ tournament.name }}. Any changes made here will be saved <u>publicly</u>,&nbsp;
 		meaning anyone that has this tournament imported will get their tournament updated once their client has been restarted.
+	</app-alert>
+
+	<app-alert alertType="danger" *ngIf="errors.length > 0">
+		<b>One or more fields have not been filled in correctly.</b>
+
+		<ul>
+			<li *ngFor="let error of errors">{{ error }}</li>
+		</ul>
 	</app-alert>
 
 	<app-tournament [tournament]="tournament" [validationForm]="validationForm"></app-tournament>

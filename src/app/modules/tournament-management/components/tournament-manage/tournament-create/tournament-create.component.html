@@ -1,7 +1,15 @@
-<div class="scroll">
+<div #container class="scroll">
 	<h1>Creating a new tournament</h1>
+
+	<app-alert alertType="danger" *ngIf="errors.length > 0">
+		<b>One or more fields have not been filled in correctly.</b>
+
+		<ul>
+			<li *ngFor="let error of errors">{{ error }}</li>
+		</ul>
+	</app-alert>
 
 	<app-tournament [tournament]="tournament" [validationForm]="validationForm"></app-tournament>
 
-	<button mat-raised-button class="extra-spacing" color="primary" (click)="createTournament()">Create</button>
+	<button mat-raised-button class="extra-padding" color="primary" (click)="createTournament()">Create</button>
 </div>
