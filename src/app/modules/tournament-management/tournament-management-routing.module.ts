@@ -13,7 +13,7 @@ const routes: Routes = [
 		path: '', component: ManagementRouterComponent, children: [
 			{ path: 'tournament-overview', component: TournamentOverviewComponent },
 			{ path: 'tournament-overview/tournament-create', component: TournamentCreateComponent },
-			{ path: 'tournament-overview/tournament-edit-new/:id/:published', component: TournamentEditComponent },
+			{ path: 'tournament-overview/tournament-edit/:id/:published', component: TournamentEditComponent },
 			{ path: 'tournament-overview/tournament-my-published', component: TournamentMyPublishedComponent },
 			{ path: 'tournament-overview/tournament-all-published', component: TournamentAllPublishedComponent },
 			{ path: 'tournament-overview/tournament-all-published-administrator', component: TournamentAllPublishedAdministratorComponent }
