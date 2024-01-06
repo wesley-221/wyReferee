@@ -23,7 +23,7 @@ export class SidebarComponent implements OnInit {
 		{ icon: 'school', header: 'tutorial', link: 'tutorial' },
 		{ icon: 'settings', header: 'settings', link: 'settings' },
 		{ icon: 'webhook', header: 'webhook', link: 'webhook' },
-		{ icon: 'dashboard', header: 'management', link: 'tournament-management' },
+		{ icon: 'dashboard', header: 'management', link: 'tournament-management/tournament-overview' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
 		{ icon: 'chat', header: 'irc', link: 'irc' },
 		{ icon: 'hdr_auto', header: 'AxS', link: 'axs', showIf: false }
