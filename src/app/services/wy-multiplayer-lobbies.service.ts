@@ -28,6 +28,7 @@ import { TournamentService } from './tournament.service';
 import { WebhookService } from './webhook.service';
 import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
+import { DodgeTheBeatNames, TeamVsDodgeTheBeatCalculation } from 'app/models/score-calculation/calculation-types/team-vs-dtb-calculation';
 
 @Injectable({
 	providedIn: 'root'
@@ -205,6 +206,7 @@ export class WyMultiplayerLobbiesService {
 					});
 				}
 
+				let foundModBracket: WyModBracket;
 				let foundModBracketBeatmap: WyModBracketMap;
 
 				for (const currentScore of currentGame.scores) {
@@ -238,6 +240,7 @@ export class WyMultiplayerLobbiesService {
 							for (const map of modBracket.beatmaps) {
 								if (map.beatmapId == currentGame.beatmap_id) {
 									beatmapFound = true;
+									foundModBracket = modBracket;
 									foundModBracketBeatmap = map;
 									break;
 								}
@@ -307,7 +310,18 @@ export class WyMultiplayerLobbiesService {
 
 				if (multiplayerData.team_one_score > multiplayerData.team_two_score) {
 					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
-						multiplayerLobby.teamOneScore++;
+						if (scoreInterface instanceof TeamVsDodgeTheBeatCalculation) {
+							// Check if the mod bracket is a Dodge The Beat mod bracket, if give the point to the team with the least score
+							if (DodgeTheBeatNames.includes(foundModBracket.name.toLowerCase())) {
+								multiplayerLobby.teamTwoScore++;
+							}
+							else {
+								multiplayerLobby.teamOneScore++;
+							}
+						}
+						else {
+							multiplayerLobby.teamOneScore++;
+						}
 
 						if (scoreInterface instanceof CTMCalculation) {
 							multiplayerLobby.teamTwoHealth -= foundModBracketBeatmap.damageAmount;
@@ -316,7 +330,18 @@ export class WyMultiplayerLobbiesService {
 				}
 				else {
 					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
-						multiplayerLobby.teamTwoScore++;
+						if (scoreInterface instanceof TeamVsDodgeTheBeatCalculation) {
+							// Check if the mod bracket is a Dodge The Beat mod bracket, if give the point to the team with the least score
+							if (DodgeTheBeatNames.includes(foundModBracket.name.toLowerCase())) {
+								multiplayerLobby.teamOneScore++;
+							}
+							else {
+								multiplayerLobby.teamTwoScore++;
+							}
+						}
+						else {
+							multiplayerLobby.teamTwoScore++;
+						}
 
 						if (scoreInterface instanceof CTMCalculation) {
 							multiplayerLobby.teamOneHealth -= foundModBracketBeatmap.damageAmount;
