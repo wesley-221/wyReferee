@@ -7,7 +7,9 @@ export class AxSCalculation extends ScoreInterface {
 	constructor(identifier: string, teamSize: number) {
 		super(identifier);
 
-		this.setTeamSize(teamSize);
+		// TODO: make a fix for this, currently adds an array with 0 scores and adds existing scores below that in the array
+		// so the calculations are using the 0 scores instead of the actual scores
+		// this.setTeamSize(teamSize);
 		this.setDescription(`The score calculation that is used for a tournament called AxS. The team size is set to ${teamSize}, where the first player in the multiplayerlobby is the accuracy player and the second and third are score players.`);
 		this.setSoloTournament(false);
 		this.setUseStaticSlots(true);
@@ -43,6 +45,11 @@ export class AxSCalculation extends ScoreInterface {
 
 	public calculateTeamOneScore() {
 		const users: MultiplayerDataUser[] = [];
+
+		console.log('@@@@@@@@@@@@@@@');
+		console.log('Team 1');
+
+		console.log(this.getUserScores());
 
 		for (let i = 0; i < this.getTeamSize(); i++) {
 			const currentUser = this.getUserBySlot(i);
