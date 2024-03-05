@@ -23,7 +23,7 @@ export class MappoolOverviewComponent implements OnInit {
 	constructor(private dialog: MatDialog, private toastService: ToastService, private tournamentService: TournamentService) {
 		this.wyBinMappools = [];
 		this.importingFromWyBin = false;
-		this.addNoFail = false;
+		this.addNoFail = true;
 	}
 
 	ngOnInit(): void { }
