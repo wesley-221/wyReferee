@@ -7,9 +7,7 @@ export class AxSCalculation extends ScoreInterface {
 	constructor(identifier: string, teamSize: number) {
 		super(identifier);
 
-		// TODO: make a fix for this, currently adds an array with 0 scores and adds existing scores below that in the array
-		// so the calculations are using the 0 scores instead of the actual scores
-		// this.setTeamSize(teamSize);
+		this.setTeamSize(3, false);
 		this.setDescription(`The score calculation that is used for a tournament called AxS. The team size is set to ${teamSize}, where the first player in the multiplayerlobby is the accuracy player and the second and third are score players.`);
 		this.setSoloTournament(false);
 		this.setUseStaticSlots(true);
@@ -44,12 +42,7 @@ export class AxSCalculation extends ScoreInterface {
 	}
 
 	public calculateTeamOneScore() {
-		const users: MultiplayerDataUser[] = [];
-
-		console.log('@@@@@@@@@@@@@@@');
-		console.log('Team 1');
-
-		console.log(this.getUserScores());
+		const users = {};
 
 		for (let i = 0; i < this.getTeamSize(); i++) {
 			const currentUser = this.getUserBySlot(i);
@@ -63,14 +56,28 @@ export class AxSCalculation extends ScoreInterface {
 				currentUser.caption = 'Score player';
 			}
 
-			users.push(currentUser);
+			users[currentUser.slot] = currentUser;
+		}
+
+		for (const slot of [0, 1, 2]) {
+			if (!users.hasOwnProperty(slot)) {
+				const newUser = new MultiplayerDataUser();
+
+				newUser.slot = slot;
+				newUser.score = 0;
+				newUser.passed = 0;
+				newUser.accuracy = 0;
+				newUser.mods = null;
+
+				users[slot] = newUser;
+			}
 		}
 
 		return AxSCalculation.calculateTeamScore(users[0], users[1], users[2], this.modifier);
 	}
 
 	public calculateTeamTwoScore() {
-		const users: MultiplayerDataUser[] = [];
+		const users = {};
 
 		for (let i = this.getTeamSize(); i < this.getTeamSize() * 2; i++) {
 			const currentUser = this.getUserBySlot(i);
@@ -84,7 +91,21 @@ export class AxSCalculation extends ScoreInterface {
 				currentUser.caption = 'Score player';
 			}
 
-			users.push(currentUser);
+			users[currentUser.slot - 3] = currentUser;
+		}
+
+		for (const slot of [3, 4, 5]) {
+			if (!users.hasOwnProperty(slot - 3)) {
+				const newUser = new MultiplayerDataUser();
+
+				newUser.slot = slot;
+				newUser.score = 0;
+				newUser.passed = 0;
+				newUser.accuracy = 0;
+				newUser.mods = null;
+
+				users[slot - 3] = newUser;
+			}
 		}
 
 		return AxSCalculation.calculateTeamScore(users[0], users[1], users[2], this.modifier);

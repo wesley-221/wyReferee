@@ -107,13 +107,16 @@ export abstract class ScoreInterface {
 	 * Set the size of the teams
 	 *
 	 * @param teamSize the size of a single team
+	 * @param initialize whether to initialize the user slots
 	 */
-	public setTeamSize(teamSize: number): void {
+	public setTeamSize(teamSize: number, initialize: boolean = true): void {
 		this.teamSize = teamSize;
 
-		// Initialize the array with empty users
-		for (let i = 0; i < this.teamSize * 2; i++) {
-			this.addUserScore(this.getUserBySlot(i));
+		if (initialize == true) {
+			// Initialize the array with empty users
+			for (let i = 0; i < this.teamSize * 2; i++) {
+				this.addUserScore(this.getUserBySlot(i));
+			}
 		}
 	}
 
