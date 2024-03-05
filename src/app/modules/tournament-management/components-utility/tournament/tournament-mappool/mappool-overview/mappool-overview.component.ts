@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteMappoolDialogComponent } from 'app/components/dialogs/delete-mappool-dialog/delete-mappool-dialog.component';
-import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
+import { MappoolType, WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
@@ -53,11 +53,16 @@ export class MappoolOverviewComponent implements OnInit {
 
 		this.importingFromWyBin = true;
 
-		this.tournamentService.getWyBinTournamentMappools(this.tournament.wyBinTournamentId).subscribe((mappools: any[]) => {
-			mappools.sort((a, b) => a.startDate - b.startDate);
+		this.tournamentService.getWyBinTournamentMappools(this.tournament.wyBinTournamentId).subscribe((tournament: any) => {
+			tournament.stages.sort((a, b) => a.startDate - b.startDate);
 
-			for (const mappool of mappools) {
-				const newMappool = WyMappool.parseFromWyBin(mappool, this.addNoFail, this.tournament.gamemodeId);
+			for (const stage of tournament.stages) {
+				const newMappool = WyMappool.parseFromWyBin(stage, this.addNoFail, this.tournament.gamemodeId);
+
+				if (tournament.axsTournament == true) {
+					newMappool.type = MappoolType.AxS;
+				}
+
 				this.wyBinMappools.push(newMappool);
 			}
 
@@ -92,6 +97,12 @@ export class MappoolOverviewComponent implements OnInit {
 				}
 				else {
 					this.validationForm.addControl(`mappool-${newMappool.index}-mod-bracket-${modBracket.index}-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
+				}
+			}
+
+			if (mappool.type == MappoolType.AxS) {
+				for (const beatmap of modBracket.beatmaps) {
+					this.validationForm.addControl(`mappool-${newMappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`, new FormControl(beatmap.modifier, Validators.required));
 				}
 			}
 		}
