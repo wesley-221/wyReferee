@@ -11,7 +11,9 @@ export class TeamVsDodgeTheBeatCalculation extends ScoreInterface {
 	constructor(identifier: string) {
 		super(identifier);
 
-		this.setDescription('The regular team versus team score calculation. Uses reverse scoring for Dodge The Beat.');
+		const dtbString = DodgeTheBeatNames.join(', ');
+
+		this.setDescription('The regular team versus team score calculation. Uses reverse scoring for Dodge The Beat. Dodge The Beat mod bracket should be named one of the following names in order for it to work: ' + dtbString + '.');
 	}
 
 	calculatePlayerScore(player: MultiplayerDataUser): number {
