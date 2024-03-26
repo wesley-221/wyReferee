@@ -283,19 +283,6 @@ export class WyMultiplayerLobbiesService {
 
 				// Provide the mod bracket to the interface
 				if (scoreInterface instanceof ThreeCwcScoreCalculation || scoreInterface instanceof OMLScoreCalculation) {
-					let foundModBracket: WyModBracket;
-
-					for (const mappool of multiplayerLobby.tournament.mappools) {
-						for (const modBracket of mappool.modBrackets) {
-							for (const beatmap of modBracket.beatmaps) {
-								if (beatmap.beatmapId == currentGame.beatmap_id) {
-									foundModBracket = modBracket;
-									break;
-								}
-							}
-						}
-					}
-
 					if (foundModBracket) {
 						scoreInterface.setModBracket(foundModBracket);
 					}

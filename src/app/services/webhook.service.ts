@@ -8,7 +8,6 @@ import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-
 import { ToastService } from './toast.service';
 import { StoreService } from './store.service';
 import { DodgeTheBeatNames } from 'app/models/score-calculation/calculation-types/team-vs-dtb-calculation';
-import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 
 @Injectable({
 	providedIn: 'root'
