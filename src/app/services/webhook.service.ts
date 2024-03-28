@@ -7,6 +7,7 @@ import { Lobby } from 'app/models/lobby';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { ToastService } from './toast.service';
 import { StoreService } from './store.service';
+import { DodgeTheBeatNames } from 'app/models/score-calculation/calculation-types/team-vs-dtb-calculation';
 
 @Injectable({
 	providedIn: 'root'
@@ -487,40 +488,90 @@ export class WebhookService {
 		let embedHeader = '';
 		let lostTheirPick = false;
 
+		let isDodgeTheBeatModBracket = false;
+
+		if ((multiplayerLobby.tournament && multiplayerLobby.tournament.scoreInterfaceIdentifier == 'Team vs. + Dodge The Beat') && multiplayerLobby.mappool) {
+			for (const modBracket of multiplayerLobby.mappool.modBrackets) {
+				for (const beatmap of modBracket.beatmaps) {
+					if (beatmap.beatmapId == cachedBeatmap.beatmapId && DodgeTheBeatNames.includes(modBracket.name.toLowerCase())) {
+						isDodgeTheBeatModBracket = true;
+						break;
+					}
+				}
+			}
+		}
+
 		// The pick was from team two
 		if (multiplayerLobby.getNextPick() == multiplayerLobby.teamOneName) {
 			embedHeader += `${multiplayerLobby.teamTwoName} `;
 
-			// Team two has won their pick
-			if (lastMultiplayerData.team_two_score > lastMultiplayerData.team_one_score) {
-				embedHeader += `won their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
-				lostTheirPick = false;
+			if (isDodgeTheBeatModBracket == true) {
+				// Team two has won their pick
+				if (lastMultiplayerData.team_one_score > lastMultiplayerData.team_two_score) {
+					embedHeader += `won their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
+					lostTheirPick = true;
+				}
+				// Team two has lost their pick
+				else {
+					embedHeader += `lost their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
+					lostTheirPick = false;
+				}
 			}
-			// Team two has lost their pick
 			else {
-				embedHeader += `lost their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
-				lostTheirPick = true;
+				// Team two has won their pick
+				if (lastMultiplayerData.team_two_score > lastMultiplayerData.team_one_score) {
+					embedHeader += `won their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
+					lostTheirPick = false;
+				}
+				// Team two has lost their pick
+				else {
+					embedHeader += `lost their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
+					lostTheirPick = true;
+				}
 			}
 		}
 		// The pick was from team one
 		else {
 			embedHeader += `${multiplayerLobby.teamOneName} `;
 
-			// Team one has won their pick
-			if (lastMultiplayerData.team_one_score > lastMultiplayerData.team_two_score) {
-				embedHeader += `won their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
-				lostTheirPick = false;
+			if (isDodgeTheBeatModBracket == true) {
+				// Team one has won their pick
+				if (lastMultiplayerData.team_two_score > lastMultiplayerData.team_one_score) {
+					embedHeader += `won their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
+					lostTheirPick = true;
+				}
+				// Team one has lost their pick
+				else {
+					embedHeader += `lost their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
+					lostTheirPick = false;
+				}
 			}
-			// Team one has lost their pick
 			else {
-				embedHeader += `lost their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
-				lostTheirPick = true;
+				// Team one has won their pick
+				if (lastMultiplayerData.team_one_score > lastMultiplayerData.team_two_score) {
+					embedHeader += `won their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
+					lostTheirPick = false;
+				}
+				// Team one has lost their pick
+				else {
+					embedHeader += `lost their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
+					lostTheirPick = true;
+				}
 			}
 		}
 
 		resultString += `[**${cachedBeatmap.name}**](${cachedBeatmap.beatmapUrl})\n\n`;
 
-		resultString += (multiplayerLobby.getTeamOneScore() > multiplayerLobby.getTeamTwoScore()) ?
+		let winner = null;
+
+		if (isDodgeTheBeatModBracket == true) {
+			winner = multiplayerLobby.getTeamTwoScore() > multiplayerLobby.getTeamOneScore() ? 1 : 2;
+		}
+		else {
+			winner = multiplayerLobby.getTeamOneScore() > multiplayerLobby.getTeamTwoScore() ? 1 : 2;
+		}
+
+		resultString += (winner == 1) ?
 			`**Score:** __${multiplayerLobby.teamOneName}__ | **${multiplayerLobby.getTeamOneScore()}** - ${multiplayerLobby.getTeamTwoScore()} | ${multiplayerLobby.teamTwoName}\n\n` :
 			`**Score:** ${multiplayerLobby.teamOneName} | ${multiplayerLobby.getTeamOneScore()} - **${multiplayerLobby.getTeamTwoScore()}** | __${multiplayerLobby.teamTwoName}__\n\n`;
 
