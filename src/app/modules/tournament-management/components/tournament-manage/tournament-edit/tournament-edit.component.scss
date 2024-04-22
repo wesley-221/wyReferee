@@ -1,7 +1,88 @@
+@import "variables";
+
+$local-mappool-color: $primary;
+$public-mappool-color: $success;
+
 .extra-padding {
 	margin-bottom: 15px;
 }
 
 .scroll {
 	padding-right: 8px;
+}
+
+.tournament-edit-header {
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+
+	background: linear-gradient(
+		45deg,
+		$local-mappool-color 25%,
+		lighten($local-mappool-color, 15%) 25%,
+		lighten($local-mappool-color, 15%) 50%,
+		$local-mappool-color 50%,
+		$local-mappool-color 75%,
+		lighten($local-mappool-color, 15%) 75%,
+		lighten($local-mappool-color, 15%)
+	);
+
+	background-size: 32px 32px;
+
+	&.public {
+		background: linear-gradient(
+			45deg,
+			$public-mappool-color 25%,
+			lighten($public-mappool-color, 15%) 25%,
+			lighten($public-mappool-color, 15%) 50%,
+			$public-mappool-color 50%,
+			$public-mappool-color 75%,
+			lighten($public-mappool-color, 15%) 75%,
+			lighten($public-mappool-color, 15%)
+		);
+
+		background-size: 32px 32px;
+
+		.icon {
+			background-color: darken($public-mappool-color, 15%);
+		}
+	}
+
+	.icon {
+		display: flex;
+		align-items: center;
+
+		padding: 16px;
+
+		background-color: darken($local-mappool-color, 15%);
+
+		.mat-icon {
+			font-size: 32px;
+
+			height: 32px;
+			width: 32px;
+		}
+	}
+
+	.text {
+		flex: 1;
+
+		background-color: rgba(0, 0, 0, 0.342);
+		text-shadow: 1px 1px #000000;
+		color: white;
+
+		padding: 8px;
+
+		.upper-text {
+			font-size: 32px;
+			line-height: 32px;
+
+			margin-bottom: 4px;
+		}
+
+		.lower-text {
+			font-size: 18px;
+			line-height: 18px;
+		}
+	}
 }
