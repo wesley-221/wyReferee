@@ -1,7 +1,26 @@
 <div #container class="scroll" *ngIf="tournament">
 	<app-debug [data]="{ tournament }"></app-debug>
 
-	<h1>Updating {{ tournament.name }}</h1>
+	<div class="tournament-edit-header" [ngClass]="{ 'public': isPublishedTournament == true }">
+		<div class="icon">
+			<mat-icon *ngIf="isPublishedTournament == false">lock</mat-icon>
+			<mat-icon *ngIf="isPublishedTournament == true">language</mat-icon>
+		</div>
+
+		<div class="text">
+			<div class="upper-text">
+				Updating {{ tournament.name }}
+			</div>
+
+			<div class="lower-text" *ngIf="isPublishedTournament == false">
+				Local mappool
+			</div>
+
+			<div class="lower-text" *ngIf="isPublishedTournament == true">
+				Public mappool
+			</div>
+		</div>
+	</div>
 
 	<app-alert alertType="info" *ngIf="isPublishedTournament == false">
 		You are currently editing {{ tournament.name }}.
