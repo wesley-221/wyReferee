@@ -654,12 +654,14 @@ $hyperlink-background-color: #2b4576;
 		display: flex;
 		flex-direction: row;
 
-		flex: 0 0 21%;
+		flex: 0 0 25%;
+		max-width: 25%;
 
 		.side-menu-content {
 			display: flex;
 			flex-direction: column;
 			flex: 1;
+			max-width: 100%;
 
 			float: right;
 
@@ -692,26 +694,15 @@ $hyperlink-background-color: #2b4576;
 				padding: 0 16px 0 16px;
 
 				.header-row {
-					display: flex;
-					justify-content: space-evenly;
+					display: grid;
+					grid-template-columns: 1fr;
+					gap: 4px;
 
-					.header-col {
-						flex: 1;
+					&.double-column {
+						grid-template-columns: 1fr 1fr;
 
-						margin-right: 4px;
-
-						.full-width {
-							@media only screen and (max-width: 1366px) {
-								max-width: 125px;
-							}
-
-							&.no-max-width {
-								max-width: none;
-							}
-						}
-
-						&:last-child {
-							margin-right: 0;
+						@media only screen and (max-width: 1600px) {
+							grid-template-columns: 1fr;
 						}
 					}
 				}
@@ -952,7 +943,7 @@ $hyperlink-background-color: #2b4576;
 									align-items: center;
 
 									overflow: hidden;
-									word-wrap: none;
+									word-wrap: break-word;
 
 									&:hover {
 										cursor: pointer;
