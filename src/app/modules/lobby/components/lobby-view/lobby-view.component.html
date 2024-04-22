@@ -238,26 +238,14 @@
 
 						<hr />
 
-						<ng-container *ngIf="selectedLobby.tournament.scoreInterfaceIdentifier == 'Team vs. + Dodge The Beat'; else normalScoreInterface">
-							<ng-container *ngIf="isDodgeTheBeatModBracket(match.beatmap_id); else notDodgeTheBeat">
-								<div *ngIf="match.team_two_score > match.team_one_score">
-									<h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> | Score difference: {{ addDot(match.team_two_score - match.team_one_score, " ") }}
-								</div>
+						<ng-container *ngIf="isReverseScoreBeatmap(match.beatmap_id); else normalScoreInterface">
+							<div *ngIf="match.team_two_score > match.team_one_score">
+								<h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> | Score difference: {{ addDot(match.team_two_score - match.team_one_score, " ") }}
+							</div>
 
-								<div *ngIf="match.team_one_score > match.team_two_score">
-									<h3><span class="blue-text">{{ selectedLobby.teamTwoName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> | Score difference: {{ addDot(match.team_one_score - match.team_two_score, " ") }}
-								</div>
-							</ng-container>
-
-							<ng-template #notDodgeTheBeat>
-								<div *ngIf="match.team_one_score > match.team_two_score">
-									<h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> | Score difference: {{ addDot(match.team_one_score - match.team_two_score, " ") }}
-								</div>
-
-								<div *ngIf="match.team_two_score > match.team_one_score">
-									<h3><span class="blue-text">{{ selectedLobby.teamTwoName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> | Score difference: {{ addDot(match.team_two_score - match.team_one_score, " ") }}
-								</div>
-							</ng-template>
+							<div *ngIf="match.team_one_score > match.team_two_score">
+								<h3><span class="blue-text">{{ selectedLobby.teamTwoName }}</span> has won.</h3><span class="red-text">{{ selectedLobby.teamOneName }}</span> score : {{ addDot(match.team_one_score, " ")}} | {{ addDot(match.team_two_score, " ") }} : score <span class="blue-text">{{ selectedLobby.teamTwoName }}</span> | Score difference: {{ addDot(match.team_one_score - match.team_two_score, " ") }}
+							</div>
 						</ng-container>
 
 						<ng-template #normalScoreInterface>

@@ -15,6 +15,7 @@ export class WyModBracketMap {
 	modCategory: WyModCategory;
 	gamemodeId: number;
 
+	reverseScore: boolean;
 	picked: boolean;
 	isSynchronizing: boolean;
 
@@ -40,6 +41,7 @@ export class WyModBracketMap {
 			damageAmount: modBracketMap.damageAmount,
 			modCategory: modBracketMap.modCategory != undefined ? WyModCategory.makeTrueCopy(modBracketMap.modCategory) : null,
 			gamemodeId: modBracketMap.gamemodeId,
+			reverseScore: modBracketMap.reverseScore,
 			picked: modBracketMap.picked,
 			isSynchronizing: modBracketMap.isSynchronizing
 		});

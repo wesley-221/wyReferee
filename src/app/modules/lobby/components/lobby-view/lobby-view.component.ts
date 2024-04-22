@@ -20,7 +20,6 @@ import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-mu
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastType } from 'app/models/toast';
 import { ChallongeService } from 'app/services/challonge.service';
-import { DodgeTheBeatNames } from 'app/models/score-calculation/calculation-types/team-vs-dtb-calculation';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -325,15 +324,15 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Check whether the beatmap is in a Dodge The Beat mod bracket
+	 * Check whether the beatmap uses reverse scoring
 	 *
 	 * @param beatmapId the beatmap to check
 	 */
-	isDodgeTheBeatModBracket(beatmapId: number) {
+	isReverseScoreBeatmap(beatmapId: number) {
 		if (this.selectedLobby.mappool) {
 			for (const modBracket of this.selectedLobby.mappool.modBrackets) {
 				for (const beatmap of modBracket.beatmaps) {
-					if (beatmap.beatmapId == beatmapId && DodgeTheBeatNames.includes(modBracket.name.toLowerCase())) {
+					if (beatmap.beatmapId == beatmapId && beatmap.reverseScore == true) {
 						return true;
 					}
 				}

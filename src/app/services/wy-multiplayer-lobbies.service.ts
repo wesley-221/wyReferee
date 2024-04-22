@@ -28,7 +28,6 @@ import { TournamentService } from './tournament.service';
 import { WebhookService } from './webhook.service';
 import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
-import { DodgeTheBeatNames, TeamVsDodgeTheBeatCalculation } from 'app/models/score-calculation/calculation-types/team-vs-dtb-calculation';
 
 @Injectable({
 	providedIn: 'root'
@@ -297,17 +296,12 @@ export class WyMultiplayerLobbiesService {
 
 				if (multiplayerData.team_one_score > multiplayerData.team_two_score) {
 					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
-						if (scoreInterface instanceof TeamVsDodgeTheBeatCalculation) {
-							// Check if the mod bracket is a Dodge The Beat mod bracket, if give the point to the team with the least score
-							if (DodgeTheBeatNames.includes(foundModBracket.name.toLowerCase())) {
-								multiplayerLobby.teamTwoScore++;
-							}
-							else {
-								multiplayerLobby.teamOneScore++;
-							}
+						// Team one has won, reverse score was not enabled, give point to team one
+						if (foundModBracketBeatmap.reverseScore != true) {
+							multiplayerLobby.teamOneScore++;
 						}
 						else {
-							multiplayerLobby.teamOneScore++;
+							multiplayerLobby.teamTwoScore++;
 						}
 
 						if (scoreInterface instanceof CTMCalculation) {
@@ -317,17 +311,12 @@ export class WyMultiplayerLobbiesService {
 				}
 				else {
 					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
-						if (scoreInterface instanceof TeamVsDodgeTheBeatCalculation) {
-							// Check if the mod bracket is a Dodge The Beat mod bracket, if give the point to the team with the least score
-							if (DodgeTheBeatNames.includes(foundModBracket.name.toLowerCase())) {
-								multiplayerLobby.teamOneScore++;
-							}
-							else {
-								multiplayerLobby.teamTwoScore++;
-							}
+						// Team two has won, reverse score was not enabled, give point to team two
+						if (foundModBracketBeatmap.reverseScore != true) {
+							multiplayerLobby.teamTwoScore++;
 						}
 						else {
-							multiplayerLobby.teamTwoScore++;
+							multiplayerLobby.teamOneScore++;
 						}
 
 						if (scoreInterface instanceof CTMCalculation) {

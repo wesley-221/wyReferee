@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CacheService } from './cache.service';
-import { CacheBeatmap } from '../models/cache/cache-beatmap';
 import { MultiplayerDataUser } from '../models/store-multiplayer/multiplayer-data-user';
 import { Lobby } from 'app/models/lobby';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { ToastService } from './toast.service';
 import { StoreService } from './store.service';
-import { DodgeTheBeatNames } from 'app/models/score-calculation/calculation-types/team-vs-dtb-calculation';
 
 @Injectable({
 	providedIn: 'root'
@@ -460,18 +458,13 @@ export class WebhookService {
 
 		const lastMultiplayerData = multiplayerLobby.multiplayerData[multiplayerLobby.multiplayerData.length - 1];
 
-		let cachedBeatmap: CacheBeatmap = null;
+		let foundBeatmap: WyModBracketMap = null;
 
 		for (const mappool of multiplayerLobby.tournament.mappools) {
 			for (const modBracket of mappool.modBrackets) {
 				for (const beatmap of modBracket.beatmaps) {
 					if (beatmap.beatmapId == lastMultiplayerData.beatmap_id) {
-						cachedBeatmap = new CacheBeatmap({
-							name: beatmap.beatmapName,
-							beatmapId: beatmap.beatmapId,
-							beatmapSetId: beatmap.beatmapsetId,
-							beatmapUrl: beatmap.beatmapUrl
-						});
+						foundBeatmap = WyModBracketMap.makeTrueCopy(beatmap);
 
 						break;
 					}
@@ -480,7 +473,7 @@ export class WebhookService {
 		}
 
 		// Map is a warmup map most likely, skip
-		if (cachedBeatmap == null) {
+		if (foundBeatmap == null) {
 			return;
 		}
 
@@ -488,13 +481,13 @@ export class WebhookService {
 		let embedHeader = '';
 		let lostTheirPick = false;
 
-		let isDodgeTheBeatModBracket = false;
+		let isReverseScoreBeatMap = false;
 
 		if ((multiplayerLobby.tournament && multiplayerLobby.tournament.scoreInterfaceIdentifier == 'Team vs. + Dodge The Beat') && multiplayerLobby.mappool) {
 			for (const modBracket of multiplayerLobby.mappool.modBrackets) {
 				for (const beatmap of modBracket.beatmaps) {
-					if (beatmap.beatmapId == cachedBeatmap.beatmapId && DodgeTheBeatNames.includes(modBracket.name.toLowerCase())) {
-						isDodgeTheBeatModBracket = true;
+					if (beatmap.beatmapId == foundBeatmap.beatmapId && foundBeatmap.reverseScore == true) {
+						isReverseScoreBeatMap = true;
 						break;
 					}
 				}
@@ -505,7 +498,7 @@ export class WebhookService {
 		if (multiplayerLobby.getNextPick() == multiplayerLobby.teamOneName) {
 			embedHeader += `${multiplayerLobby.teamTwoName} `;
 
-			if (isDodgeTheBeatModBracket == true) {
+			if (isReverseScoreBeatMap == true) {
 				// Team two has won their pick
 				if (lastMultiplayerData.team_one_score > lastMultiplayerData.team_two_score) {
 					embedHeader += `won their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
@@ -534,7 +527,7 @@ export class WebhookService {
 		else {
 			embedHeader += `${multiplayerLobby.teamOneName} `;
 
-			if (isDodgeTheBeatModBracket == true) {
+			if (isReverseScoreBeatMap == true) {
 				// Team one has won their pick
 				if (lastMultiplayerData.team_two_score > lastMultiplayerData.team_one_score) {
 					embedHeader += `won their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
@@ -560,11 +553,11 @@ export class WebhookService {
 			}
 		}
 
-		resultString += `[**${cachedBeatmap.name}**](${cachedBeatmap.beatmapUrl})\n\n`;
+		resultString += `[**${foundBeatmap.beatmapName}**](${foundBeatmap.beatmapUrl})\n\n`;
 
 		let winner = null;
 
-		if (isDodgeTheBeatModBracket == true) {
+		if (isReverseScoreBeatMap == true) {
 			winner = multiplayerLobby.getTeamTwoScore() > multiplayerLobby.getTeamOneScore() ? 1 : 2;
 		}
 		else {
@@ -610,7 +603,7 @@ export class WebhookService {
 					description: resultString,
 					color: lostTheirPick ? 0xad324f : 0x32a852,
 					thumbnail: {
-						url: `https://b.ppy.sh/thumb/${cachedBeatmap.beatmapSetId}.jpg`
+						url: `https://b.ppy.sh/thumb/${foundBeatmap.beatmapsetId}.jpg`
 					},
 					footer: {
 						text: `Match referee was ${referee}`

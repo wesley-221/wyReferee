@@ -161,6 +161,11 @@
 								<mat-icon [ngClass]="{'rotate': beatmap.isSynchronizing}">sync</mat-icon>
 							</button>
 
+							<button mat-mini-fab color="accent" [matTooltip]="beatmap.reverseScore != true ? 'Beatmap will use normal score (Highest score wins)' : 'Beatmap will use reverse score (Lowest score wins)'" (click)="reverseScore(beatmap)">
+								<mat-icon *ngIf="beatmap.reverseScore != true">expand_less</mat-icon>
+								<mat-icon *ngIf="beatmap.reverseScore == true">expand_more</mat-icon>
+							</button>
+
 							<button mat-mini-fab color="warn" (click)="removeBeatmap(modBracket, beatmap)"><mat-icon>delete</mat-icon></button>
 						</div>
 					</div>
