@@ -15,7 +15,7 @@ export class Calculate {
 		this.addScoreInterface(new AxSCalculation('AxS', 3));
 		this.addScoreInterface(new ThreeCwcScoreCalculation('osu!catch 3 Digit World Cup', 3));
 		this.addScoreInterface(new OMLScoreCalculation('osu!catch Master League', 2));
-		this.addScoreInterface(new CTMCalculation('CTM4', 3));
+		this.addScoreInterface(new CTMCalculation('CTM'));
 	}
 
 	/**

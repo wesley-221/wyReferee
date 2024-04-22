@@ -281,14 +281,10 @@ export class WyMultiplayerLobbiesService {
 				}
 
 				// Provide the mod bracket to the interface
-				if (scoreInterface instanceof ThreeCwcScoreCalculation || scoreInterface instanceof OMLScoreCalculation) {
+				if (scoreInterface instanceof ThreeCwcScoreCalculation || scoreInterface instanceof OMLScoreCalculation || scoreInterface instanceof CTMCalculation) {
 					if (foundModBracket) {
 						scoreInterface.setModBracket(foundModBracket);
 					}
-				}
-
-				if (scoreInterface instanceof CTMCalculation) {
-					scoreInterface.setBeatmap(foundModBracketBeatmap);
 				}
 
 				multiplayerData.team_one_score = scoreInterface.calculateTeamOneScore();
