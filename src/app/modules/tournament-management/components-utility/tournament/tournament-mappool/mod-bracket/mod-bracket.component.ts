@@ -237,6 +237,15 @@ export class ModBracketComponent implements OnInit {
 	}
 
 	/**
+	 * Reverses the score win condition for the given beatmap
+	 *
+	 * @param beatmap the beatmap to reverse the score for
+	 */
+	reverseScore(beatmap: WyModBracketMap): void {
+		beatmap.reverseScore = !beatmap.reverseScore;
+	}
+
+	/**
 	 * Synchronize all beatmaps from the bracket
 	 *
 	 * @param modBracket

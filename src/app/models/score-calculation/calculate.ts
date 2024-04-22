@@ -4,7 +4,6 @@ import { AxSCalculation } from './calculation-types/axs-calculation';
 import { ThreeCwcScoreCalculation } from './calculation-types/three-cwc-score-calculation';
 import { OMLScoreCalculation } from './calculation-types/oml-score-calculation';
 import { CTMCalculation } from './calculation-types/ctm-calculation';
-import { TeamVsDodgeTheBeatCalculation } from './calculation-types/team-vs-dtb-calculation';
 
 export class Calculate {
 	private scoreInterfaces: ScoreInterface[];
@@ -13,7 +12,6 @@ export class Calculate {
 		this.scoreInterfaces = [];
 
 		this.addScoreInterface(new TeamVsCalculation('Team vs.'));
-		this.addScoreInterface(new TeamVsDodgeTheBeatCalculation('Team vs. + Dodge The Beat'));
 		this.addScoreInterface(new AxSCalculation('AxS', 3));
 		this.addScoreInterface(new ThreeCwcScoreCalculation('osu!catch 3 Digit World Cup', 3));
 		this.addScoreInterface(new OMLScoreCalculation('osu!catch Master League', 2));
