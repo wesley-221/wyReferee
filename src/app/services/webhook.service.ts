@@ -483,7 +483,7 @@ export class WebhookService {
 
 		let isReverseScoreBeatMap = false;
 
-		if ((multiplayerLobby.tournament && multiplayerLobby.tournament.scoreInterfaceIdentifier == 'Team vs. + Dodge The Beat') && multiplayerLobby.mappool) {
+		if (multiplayerLobby.tournament && multiplayerLobby.mappool) {
 			for (const modBracket of multiplayerLobby.mappool.modBrackets) {
 				for (const beatmap of modBracket.beatmaps) {
 					if (beatmap.beatmapId == foundBeatmap.beatmapId && foundBeatmap.reverseScore == true) {
@@ -502,12 +502,12 @@ export class WebhookService {
 				// Team two has won their pick
 				if (lastMultiplayerData.team_one_score > lastMultiplayerData.team_two_score) {
 					embedHeader += `won their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
-					lostTheirPick = true;
+					lostTheirPick = false;
 				}
 				// Team two has lost their pick
 				else {
 					embedHeader += `lost their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
-					lostTheirPick = false;
+					lostTheirPick = true;
 				}
 			}
 			else {
@@ -531,12 +531,12 @@ export class WebhookService {
 				// Team one has won their pick
 				if (lastMultiplayerData.team_two_score > lastMultiplayerData.team_one_score) {
 					embedHeader += `won their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
-					lostTheirPick = true;
+					lostTheirPick = false;
 				}
 				// Team one has lost their pick
 				else {
 					embedHeader += `lost their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
-					lostTheirPick = false;
+					lostTheirPick = true;
 				}
 			}
 			else {
