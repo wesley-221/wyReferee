@@ -5,7 +5,6 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-multiplayer-lobby-send-final-message-dialog-data';
 import { LobbyViewComponent } from 'app/modules/lobby/components/lobby-view/lobby-view.component';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AppConfig } from 'environments/environment';
 import { ToastService } from 'app/services/toast.service';
 import { WybinService } from 'app/services/wybin.service';
 
@@ -19,10 +18,9 @@ export class SendFinalResultComponent implements OnInit {
 	secondStepFormGroup: FormGroup;
 
 	isWinByDefault = false;
+	isQualifierMatch = false;
 	canSend = false;
 	loading = false;
-
-	private readonly apiUrl = AppConfig.apiUrl;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySendFinalMessageDialogData, private dialogRef: MatDialogRef<LobbyViewComponent>, private http: HttpClient, private toastService: ToastService, private wybinService: WybinService) {
 		this.firstStepFormGroup = new FormGroup({
@@ -39,6 +37,7 @@ export class SendFinalResultComponent implements OnInit {
 
 	changeMatchOutcome(event: MatButtonToggleChange) {
 		this.isWinByDefault = event.value == 'win-by-default' ? true : false;
+		this.isQualifierMatch = event.value == 'qualifier-result' ? true : false;
 
 		if (this.isWinByDefault == false) {
 			this.secondStepFormGroup.get('winning-team').setValue(null);
@@ -67,6 +66,11 @@ export class SendFinalResultComponent implements OnInit {
 
 		if (wyBinTournamentId != null && wyBinTournamentId != undefined) {
 			this.loading = true;
+			let qualifierIdentifier = null;
+
+			if (this.isQualifierMatch) {
+				qualifierIdentifier = this.data.multiplayerLobby.description.replace('Qualifier lobby:', '').trim();
+			}
 
 			this.wybinService.updateMatchScore(wyBinTournamentId,
 				this.data.multiplayerLobby.selectedStage.name,
@@ -77,7 +81,8 @@ export class SendFinalResultComponent implements OnInit {
 				this.data.multiplayerLobby.getTeamTwoScore(),
 				this.secondStepFormGroup.get('winning-team').value,
 				this.data.multiplayerLobby.teamOneBans,
-				this.data.multiplayerLobby.teamTwoBans).subscribe(() => {
+				this.data.multiplayerLobby.teamTwoBans,
+				qualifierIdentifier).subscribe(() => {
 					this.closeDialog(winningTeam, losingTeam);
 				}, (err: HttpErrorResponse) => {
 					this.toastService.addToast(err.error.message);
