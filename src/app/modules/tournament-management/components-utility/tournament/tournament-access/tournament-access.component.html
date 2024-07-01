@@ -4,7 +4,7 @@
 		<p>Importing staff from wyBin will put Tournament hosts into the Administrator category and Referees into Tournament access.</p>
 
 		<button mat-raised-button color="accent" (click)="importWyBinStaff()" *ngIf="tournament.hasWyBinConnected()">
-			<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import stages from wyBin
+			<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import staff from wyBin
 		</button>
 
 		<app-alert alertType="info">
