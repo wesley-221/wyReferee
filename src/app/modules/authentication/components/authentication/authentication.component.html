@@ -4,6 +4,8 @@
 		<p>In order for wyReferee to work properly, you have to enter your osu! api key in the textbox below. wyReferee uses this api key to grab relevant data from the osu! servers, for example multiplayer data andbeatmap data.</p>
 		<p>You can find your api key <a [routerLink]="[]" (click)="electronService.openLink('https://osu.ppy.sh/home/account/edit#legacy-api');">here</a>.</p>
 
+		<p>If you are unsure what to fill in for the <code>Application name</code> and <code>Application url</code>, you can simply enter <code>wyReferee</code> for the name and <code>none</code> for the url.</p>
+
 		<mat-form-field id="tutorial-api-key-input" class="full-width">
 			<mat-label>osu!api key</mat-label>
 			<input matInput [(ngModel)]="apiKey" type="password" class="full-width">
@@ -20,7 +22,7 @@
 		<hr />
 	</div>
 
-	<div class="login-containers">
+	<div class="login-containers" *ngIf="apiKeyIsValid">
 		<div id="tutorial-login-osu-oauth" class="login-container">
 			<div class="login-icon-container">
 				<div class="icon osu"></div>
@@ -79,17 +81,11 @@
 							</mat-error>
 						</mat-form-field>
 
-						<button mat-raised-button color="primary" class="full-width align-spinner margin-button" (click)="connectIrc()" [disabled]="apiKeyIsValid == false">Connect</button>
+						<button mat-raised-button color="primary" class="full-width align-spinner margin-button" (click)="connectIrc()">Connect</button>
 
 						<div class="center" *ngIf="isConnecting">
 							<mat-spinner [diameter]="40"></mat-spinner>
 							<div class="text">Attempting to login...</div>
-						</div>
-
-						<div class="center" *ngIf="apiKeyIsValid == false">
-							<app-alert alertType="danger">
-								You have to set the api key before being able to login to irc.
-							</app-alert>
 						</div>
 					</form>
 
