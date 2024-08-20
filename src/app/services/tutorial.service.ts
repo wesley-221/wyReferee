@@ -255,14 +255,6 @@ export class TutorialService {
 		createLobbyTutorial.addStep(new TutorialStep({
 			route: 'lobby-overview/create-lobby',
 			targetElementIds: [
-				'tutorial-multiplayer-link'
-			],
-			content: 'This field is usually ignored when creating a new multiplayer lobby. It is only used when you want to join an existing multiplayer lobby (which will also connect you to the appropriate IRC channel if you have been addreffed) that you did not initially create. \n\rFor this example, we will not be using this field so you can safely ignore it.'
-		}));
-
-		createLobbyTutorial.addStep(new TutorialStep({
-			route: 'lobby-overview/create-lobby',
-			targetElementIds: [
 				'tutorial-tournament-acronym'
 			],
 			content: 'As you might have noticed, we are skipping the `Select a tournament` dropdown. This is intentional and we will go back to this dropdown after the next few steps.\n\r' +
