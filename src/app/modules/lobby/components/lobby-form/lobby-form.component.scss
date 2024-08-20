@@ -1,0 +1,40 @@
+.red-text {
+	color: #e94f64;
+}
+
+.blue-text {
+	color: #2299bb;
+}
+
+.discord-webhook-header {
+	font-size: 18px;
+}
+
+.margin-button {
+	margin-bottom: 8px;
+}
+
+.red {
+	color: red;
+	font-style: bold;
+}
+
+.green {
+	color: #00ff00;
+	font-style: bold;
+}
+
+.row {
+	display: grid;
+	grid-auto-flow: column;
+
+	column-gap: 8px;
+
+	&.r-2 {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	&.r-3 {
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+}

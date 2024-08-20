@@ -1,13 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Lobby } from 'app/models/lobby';
 import { OsuHelper } from 'app/models/osu-models/osu';
-import { Calculate } from 'app/models/score-calculation/calculate';
-import { ScoreInterface } from 'app/models/score-calculation/calculation-types/score-interface';
-import { WyTeam } from 'app/models/wytournament/wy-team';
-import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { IrcService } from 'app/services/irc.service';
 import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
 import { ToastService } from 'app/services/toast.service';
@@ -16,7 +11,8 @@ import { WebhookService } from 'app/services/webhook.service';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { WybinService } from 'app/services/wybin.service';
 import { BanchoMultiplayerChannel } from 'bancho.js';
-import { Observable, startWith, map, from } from 'rxjs';
+import { from } from 'rxjs';
+import { LobbyFormComponent } from '../lobby-form/lobby-form.component';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -25,32 +21,12 @@ import { Observable, startWith, map, from } from 'rxjs';
 })
 
 export class CreateLobbyComponent implements OnInit {
-	teamOneName: string;
-	teamTwoName: string;
-	multiplayerLobby: string;
-	tournamentAcronym: string;
-	matchDescription: string;
-	selectedTournament: WyTournament;
-	teamSize: number;
-	selectedScoreInterface: ScoreInterface;
+	@ViewChild(LobbyFormComponent) lobbyFormComponent: LobbyFormComponent;
 
 	validationForm: FormGroup;
 	lobbyHasBeenCreated = false;
 
 	ircAuthenticated = false;
-
-	calculateScoreInterfaces: Calculate;
-
-	teamOneArray: number[] = [];
-	teamTwoArray: number[] = [];
-
-	teamOneFilter: Observable<WyTeam[]>;
-	teamTwoFilter: Observable<WyTeam[]>;
-
-	qualifier: boolean;
-	qualifierLobbyIdentifier: string;
-	lobbyWithBrackets: boolean;
-	webhook: boolean;
 
 	constructor(
 		private multiplayerLobbies: WyMultiplayerLobbiesService,
@@ -61,13 +37,8 @@ export class CreateLobbyComponent implements OnInit {
 		private webhookService: WebhookService,
 		private multiplayerLobbiesPlayersService: MultiplayerLobbyPlayersService,
 		private wybinService: WybinService) {
-		this.calculateScoreInterfaces = new Calculate();
 
-		this.qualifier = false;
-		this.lobbyWithBrackets = false;
-		this.webhook = true;
-
-		ircService.getIsAuthenticated().subscribe(isAuthenticated => {
+		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
 			this.ircAuthenticated = isAuthenticated;
 		});
 
@@ -98,64 +69,37 @@ export class CreateLobbyComponent implements OnInit {
 		});
 
 		this.tournamentService.updateFromPublishedTournaments(false);
-
-		this.initializeFilters();
 	}
 
 	ngOnInit() { }
 
-	changeTournament() {
-		this.selectedTournament = this.tournamentService.getTournamentById(this.validationForm.get('selected-tournament').value);
-		this.changeTeamSize(this.selectedTournament != null ? this.selectedTournament.teamSize : null);
-
-		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(this.selectedTournament ? this.selectedTournament.scoreInterfaceIdentifier : null);
-		this.teamSize = this.selectedScoreInterface ? this.selectedScoreInterface.getTeamSize() : null;
-		this.validationForm.get('team-size').setValue(this.selectedTournament != null ? this.selectedTournament.teamSize : this.teamSize);
-		this.validationForm.get('tournament-acronym').setValue(this.selectedTournament != null ? this.selectedTournament.acronym : null);
-		this.validationForm.get('score-interface').setValue(this.selectedScoreInterface ? this.selectedScoreInterface.getIdentifier() : null);
-
-		this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
-		this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
-
-		this.validationForm.addControl('stage', new FormControl('', Validators.required));
-
-		this.lobbyWithBrackets = this.selectedTournament.lobbyTeamNameWithBrackets;
-
-		this.initializeFilters();
-	}
-
-	changeScoreInterface(event: MatSelectChange) {
-		this.selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(event.value);
-
-		this.teamSize = this.selectedScoreInterface.getTeamSize();
-		this.validationForm.get('team-size').setValue(this.teamSize);
-	}
-
 	createLobby() {
+		const lobbyForm = this.lobbyFormComponent.getVariables();
+
 		if (this.validationForm.valid) {
 			let lobby: Lobby;
 
-			if (this.qualifier == true) {
+			if (lobbyForm.qualifier == true) {
 				lobby = new Lobby({
 					lobbyId: this.multiplayerLobbies.availableLobbyId,
 					teamSize: this.validationForm.get('team-size').value,
 					multiplayerLink: this.validationForm.get('multiplayer-link').value,
-					tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
-					tournament: this.selectedTournament,
+					tournamentId: lobbyForm.selectedTournament != null ? lobbyForm.selectedTournament.id : null,
+					tournament: lobbyForm.selectedTournament,
 					teamOneName: 'Qualifier lobby',
 					teamTwoName: 'Qualifier lobby',
 					isQualifierLobby: true
 				});
 
-				lobby.description = `Qualifier lobby: ${this.qualifierLobbyIdentifier}`;
+				lobby.description = `Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}`;
 			}
 			else {
 				lobby = new Lobby({
 					lobbyId: this.multiplayerLobbies.availableLobbyId,
 					teamSize: this.validationForm.get('team-size').value,
 					multiplayerLink: this.validationForm.get('multiplayer-link').value,
-					tournamentId: this.selectedTournament != null ? this.selectedTournament.id : null,
-					tournament: this.selectedTournament,
+					tournamentId: lobbyForm.selectedTournament != null ? lobbyForm.selectedTournament.id : null,
+					tournament: lobbyForm.selectedTournament,
 					teamOneName: this.validationForm.get('team-one-name').value,
 					teamTwoName: this.validationForm.get('team-two-name').value,
 					isQualifierLobby: false
@@ -164,10 +108,10 @@ export class CreateLobbyComponent implements OnInit {
 				lobby.description = `${lobby.teamOneName} vs ${lobby.teamTwoName}`;
 			}
 
-			if (this.selectedTournament != undefined || this.selectedTournament != null) {
+			if (lobbyForm.selectedTournament != undefined || lobbyForm.selectedTournament != null) {
 				const selectedStage = this.validationForm.get('stage').value;
 
-				for (const stage of this.selectedTournament.stages) {
+				for (const stage of lobbyForm.selectedTournament.stages) {
 					if (stage.name == selectedStage) {
 						lobby.selectedStage = stage;
 						lobby.bestOf = stage.bestOf;
@@ -180,9 +124,9 @@ export class CreateLobbyComponent implements OnInit {
 					}
 				}
 
-				lobby.sendWebhooks = this.webhook;
+				lobby.sendWebhooks = lobbyForm.webhook;
 
-				for (const mappool of this.selectedTournament.mappools) {
+				for (const mappool of lobbyForm.selectedTournament.mappools) {
 					if (mappool.name == selectedStage) {
 						lobby.mappoolId = mappool.id;
 						lobby.mappool = mappool;
@@ -206,10 +150,10 @@ export class CreateLobbyComponent implements OnInit {
 				if (lobby.tournament == undefined || lobby.tournament == null) {
 					const acronym: string = this.validationForm.get('tournament-acronym').value;
 
-					lobbyName = this.qualifier == true ? `${acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : this.lobbyWithBrackets == true ? `${acronym}: (${lobby.teamOneName}) vs (${lobby.teamTwoName})` : `${acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+					lobbyName = lobbyForm.qualifier == true ? `${acronym}: Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}` : lobbyForm.lobbyWithBrackets == true ? `${acronym}: (${lobby.teamOneName}) vs (${lobby.teamTwoName})` : `${acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
 				}
 				else {
-					lobbyName = this.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${this.qualifierLobbyIdentifier}` : this.lobbyWithBrackets == true ? `${lobby.tournament.acronym}: (${lobby.teamOneName}) vs (${lobby.teamTwoName})` : `${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+					lobbyName = lobbyForm.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}` : lobbyForm.lobbyWithBrackets == true ? `${lobby.tournament.acronym}: (${lobby.teamOneName}) vs (${lobby.teamTwoName})` : `${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
 				}
 
 				from(this.ircService.client.createLobby(lobbyName)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
@@ -229,8 +173,8 @@ export class CreateLobbyComponent implements OnInit {
 
 					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
 
-					if (this.selectedTournament.hasWyBinConnected()) {
-						this.wybinService.getMatch(this.selectedTournament.wyBinTournamentId, lobby.selectedStage.name, lobby.teamOneName, lobby.teamTwoName).subscribe((match: any) => {
+					if (lobbyForm.selectedTournament.hasWyBinConnected()) {
+						this.wybinService.getMatch(lobbyForm.selectedTournament.wyBinTournamentId, lobby.selectedStage.name, lobby.teamOneName, lobby.teamTwoName).subscribe((match: any) => {
 							if (match == null) {
 								this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 								return;
@@ -301,68 +245,5 @@ export class CreateLobbyComponent implements OnInit {
 		setTimeout(() => {
 			this.lobbyHasBeenCreated = false;
 		}, 3000);
-	}
-
-	getValidation(key: string): any {
-		return this.validationForm.get(key);
-	}
-
-	changeTeamSize(teamSize?: number) {
-		this.teamOneArray = [];
-		this.teamTwoArray = [];
-
-		let teamSizeVal: any;
-
-		if (teamSize == null || teamSize == undefined) {
-			teamSizeVal = parseInt(this.getValidation('team-size').value >= 8 ? 8 : this.getValidation('team-size').value);
-		}
-		else {
-			teamSizeVal = teamSize >= 8 ? 8 : teamSize;
-		}
-
-		teamSizeVal = parseInt(teamSizeVal);
-
-		for (let i = 1; i < (teamSizeVal + 1); i++) {
-			this.teamOneArray.push(i);
-		}
-
-		for (let i = teamSizeVal + 1; i < ((teamSizeVal * 2) + 1); i++) {
-			this.teamTwoArray.push(i);
-		}
-	}
-
-	changeQualifierLobby(): void {
-		if (this.qualifier == true) {
-			this.validationForm.addControl('qualifier-lobby-identifier', new FormControl('', Validators.required));
-			this.validationForm.removeControl('team-one-name');
-			this.validationForm.removeControl('team-two-name');
-
-			this.validationForm.controls['qualifier-lobby-identifier'].valueChanges.subscribe(value => {
-				this.qualifierLobbyIdentifier = value;
-			});
-		}
-		else {
-			this.validationForm.removeControl('qualifier-lobby-identifier');
-			this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
-			this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
-		}
-	}
-
-	private initializeFilters() {
-		this.teamOneFilter = this.validationForm.get('team-one-name').valueChanges.pipe(
-			startWith(''),
-			map((value: string) => {
-				const filterValue = value.toLowerCase();
-				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
-			})
-		);
-
-		this.teamTwoFilter = this.validationForm.get('team-two-name').valueChanges.pipe(
-			startWith(''),
-			map((value: string) => {
-				const filterValue = value.toLowerCase();
-				return this.selectedTournament.teams.filter(option => option.name.toLowerCase().includes(filterValue));
-			})
-		);
 	}
 }

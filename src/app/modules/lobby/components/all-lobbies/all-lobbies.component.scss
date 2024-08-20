@@ -2,6 +2,14 @@
 
 .tutorial-button-width {
 	width: fit-content;
+
+	button {
+		margin-right: 4px;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
 }
 
 .lobby-interface {
