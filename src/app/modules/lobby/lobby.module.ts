@@ -7,13 +7,15 @@ import { AllLobbiesComponent } from './components/all-lobbies/all-lobbies.compon
 import { CreateLobbyComponent } from './components/create-lobby/create-lobby.component';
 import { LobbyViewComponent } from './components/lobby-view/lobby-view.component';
 import { LobbyFormComponent } from './components/lobby-form/lobby-form.component';
+import { JoinLobbyComponent } from './components/join-lobby/join-lobby.component';
 
 @NgModule({
 	declarations: [
 		AllLobbiesComponent,
 		CreateLobbyComponent,
 		LobbyViewComponent,
-		LobbyFormComponent
+		LobbyFormComponent,
+		JoinLobbyComponent
 	],
 	imports: [
 		CommonModule,

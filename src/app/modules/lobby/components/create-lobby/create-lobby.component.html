@@ -1,4 +1,7 @@
 <div class="scroll">
+	<h1>Create a new multiplayer lobby</h1>
+	<hr />
+
 	<app-lobby-form [validationForm]="validationForm"></app-lobby-form>
 
 	<button id="tutorial-create-lobby" mat-raised-button color="accent" class="margin-button" (click)="createLobby()" [disabled]="!ircAuthenticated">Create</button>
