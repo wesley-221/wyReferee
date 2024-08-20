@@ -1,0 +1,12 @@
+<div class="scroll">
+	<h1>Join an existing multiplayer lobby</h1>
+	<p>You can join an existing multiplayer lobby and have all the wyReferee functionality by following the steps below.</p>
+
+	<app-alert alertType="info">Note that if you want to be able to join the IRC chat, you need to be addreffed by the referee of the multiplayer lobby.</app-alert>
+
+	<hr />
+
+	<app-lobby-form [validationForm]="validationForm" [isJoinLobbyForm]="true"></app-lobby-form>
+
+	<button id="tutorial-create-lobby" mat-raised-button color="accent" class="margin-button" (click)="joinLobby()" [disabled]="!ircAuthenticated">Join</button>
+</div>

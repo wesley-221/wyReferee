@@ -1,31 +1,30 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Lobby } from 'app/models/lobby';
 import { OsuHelper } from 'app/models/osu-models/osu';
 import { IrcService } from 'app/services/irc.service';
-import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
-import { ToastService } from 'app/services/toast.service';
-import { TournamentService } from 'app/services/tournament.service';
-import { WebhookService } from 'app/services/webhook.service';
-import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
-import { WybinService } from 'app/services/wybin.service';
 import { BanchoMultiplayerChannel } from 'bancho.js';
 import { from } from 'rxjs';
 import { LobbyFormComponent } from '../lobby-form/lobby-form.component';
+import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
+import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
+import { Router } from '@angular/router';
+import { ToastService } from 'app/services/toast.service';
+import { TournamentService } from 'app/services/tournament.service';
+import { WebhookService } from 'app/services/webhook.service';
+import { WybinService } from 'app/services/wybin.service';
 
 @Component({
-	selector: 'app-create-lobby',
-	templateUrl: './create-lobby.component.html',
-	styleUrls: ['./create-lobby.component.scss']
+	selector: 'app-join-lobby',
+	templateUrl: './join-lobby.component.html',
+	styleUrls: ['./join-lobby.component.scss']
 })
-
-export class CreateLobbyComponent implements OnInit {
+export class JoinLobbyComponent implements OnInit {
 	@ViewChild(LobbyFormComponent) lobbyFormComponent: LobbyFormComponent;
 
 	validationForm: FormGroup;
-	lobbyHasBeenCreated = false;
 
+	lobbyHasBeenCreated = false;
 	ircAuthenticated = false;
 
 	constructor(
@@ -67,19 +66,17 @@ export class CreateLobbyComponent implements OnInit {
 			]),
 			'selected-tournament': new FormControl('')
 		});
-
-		this.tournamentService.updateFromPublishedTournaments(false);
 	}
 
-	ngOnInit() { }
+	ngOnInit(): void { }
 
 	/**
-	 * Create a new multiplayer lobby
+	 * Join a multiplayer lobby
 	 *
-	 * Note: Currently exactly the same function as JoinLobbyComponent#joinLobby().
+	 * Note: Currently exactly the same function as CreateLobbyComponent#createLobby().
 	 * If you make any changes, make sure to change them there as well
 	 */
-	createLobby() {
+	joinLobby() {
 		const lobbyForm = this.lobbyFormComponent.getVariables();
 
 		if (this.validationForm.valid) {
