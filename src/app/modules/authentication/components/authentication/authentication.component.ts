@@ -111,13 +111,8 @@ export class AuthenticationComponent implements OnInit {
 		this.apiKeyValidation.validate(this.apiKey).subscribe(() => {
 			this.storeService.set('api-key', this.apiKey);
 			this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
-			this.toastService.addToast('The client will reload itself in 10 seconds.', ToastType.Information, 10);
 
 			this.apiKeyIsValid = true;
-
-			setTimeout(() => {
-				window.location.reload();
-			}, 10000);
 		},
 			// Key is invalid
 			() => {
