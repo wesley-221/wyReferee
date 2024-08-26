@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MappoolType } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyBeatmapResultMessage } from 'app/models/wytournament/wy-beatmap-result-message';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
@@ -13,9 +14,22 @@ export class TournamentBeatmapResultComponent implements OnInit {
 	@Input() tournament: WyTournament;
 	@Input() validationForm: FormGroup;
 
-	constructor() { }
+	hasCTMMappool: boolean;
 
-	ngOnInit(): void { }
+	constructor() {
+		this.hasCTMMappool = false;
+	}
+
+	ngOnInit(): void {
+		if (this.tournament.mappools && this.tournament.mappools.length > 0) {
+			for (const mappool of this.tournament.mappools) {
+				if (mappool.type == MappoolType.CTMTournament) {
+					this.hasCTMMappool = true;
+					return;
+				}
+			}
+		}
+	}
 
 	createNewMessage(): void {
 		this.validationForm.addControl(`beatmap-result-message-${this.tournament.beatmapResultMessageIndex}`, new FormControl('', Validators.required));
