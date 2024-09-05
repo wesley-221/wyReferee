@@ -1,6 +1,6 @@
 <form [formGroup]="validationForm">
-	<h3>Beatmap result</h3>
-	<p>Customize the message that will be sent in irc when a match has finished playing.</p>
+	<h3>Conditional messages</h3>
+	<p>Customize the message that will be sent in irc when a certain condition has been met.</p>
 
 	<hr />
 
@@ -45,6 +45,9 @@
 		</div>
 
 		<div class="message" *ngFor="let message of tournament.beatmapResultMessages">
+			<h2>Message</h2>
+			<p>The message that will be sent when one of the conditions are met.</p>
+
 			<div class="content">
 				<mat-form-field class="full-width">
 					<mat-label>Message</mat-label>
@@ -56,24 +59,52 @@
 				</mat-form-field>
 			</div>
 
+			<h2>Conditions</h2>
+			<p>The conditions that have to be met for when the message will be sent.</p>
+
 			<div class="options">
-				<div class="option" matTooltip="If checked, this message will only be sent if there is a valid next pick, meaning the match isn't over yet or the next pick isn't a tiebreaker.">
-					<label>Next pick</label>
-					<mat-slide-toggle [checked]="message.nextPickMessage" (change)="nextPickChange(message, $event)"></mat-slide-toggle>
+				<div class="option" [ngClass]="{ 'active': message.beatmapEnded }" (click)="message.beatmapEnded = !message.beatmapEnded">
+					<mat-icon>check</mat-icon>
+
+					Beatmap ended
 				</div>
 
-				<div class="option" matTooltip="If checked, this message will only be sent when the next pick is a tiebreaker.">
-					<label>Next pick tiebreaker</label>
-					<mat-slide-toggle [checked]="message.nextPickTiebreakerMessage" (change)="nextpickTiebreakerChange(message, $event)"></mat-slide-toggle>
+				<div class="option" [ngClass]="{ 'active': message.beatmapPicked }" (click)="message.beatmapPicked = !message.beatmapPicked">
+					<mat-icon>check</mat-icon>
+
+					Beatmap picked
 				</div>
 
-				<div class="option" matTooltip="If checked, this message will only be sent when the match has been won.">
-					<label>Match won</label>
-					<mat-slide-toggle [checked]="message.matchWonMessage" (change)="matchWonChange(message, $event)"></mat-slide-toggle>
+				<div class="option" [ngClass]="{ 'active': message.nextPickMessage }" (click)="message.nextPickMessage = !message.nextPickMessage">
+					<mat-icon>check</mat-icon>
+
+					Next pick
+				</div>
+
+				<div class="option" [ngClass]="{ 'active': message.nextPickTiebreakerMessage }" (click)="message.nextPickTiebreakerMessage = !message.nextPickTiebreakerMessage">
+					<mat-icon>check</mat-icon>
+
+					Next pick tiebreaker
+				</div>
+
+				<div class="option" [ngClass]="{ 'active': message.matchWonMessage }" (click)="message.matchWonMessage = !message.matchWonMessage">
+					<mat-icon>check</mat-icon>
+
+					Match won
 				</div>
 			</div>
 
-			<button mat-mini-fab color="warn" (click)="removeBeatmapResultMessage(message)"><mat-icon>delete</mat-icon></button>
+			<ul>
+				<li *ngIf="message.beatmapEnded">This message will only be sent after a beatmap has ended.</li>
+				<li *ngIf="message.beatmapPicked">This message will only be sent after a map has been picked.</li>
+				<li *ngIf="message.nextPickMessage">This message will only be sent if there is a valid next pick, meaning the match isn't over yet or the next pick isn't a tiebreaker</li>
+				<li *ngIf="message.nextPickTiebreakerMessage">This message will only be sent when the next pick is a tiebreaker.</li>
+				<li *ngIf="message.matchWonMessage">This message will only be sent when the match has been won.</li>
+			</ul>
+
+			<div class="actions">
+				<button mat-raised-button color="warn" (click)="removeBeatmapResultMessage(message)"><mat-icon>delete</mat-icon> delete conditional message</button>
+			</div>
 		</div>
 	</div>
 </form>
