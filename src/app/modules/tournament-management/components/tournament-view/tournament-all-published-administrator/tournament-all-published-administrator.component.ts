@@ -73,7 +73,7 @@ export class TournamentAllPublishedAdministratorComponent implements OnInit {
 	 * Edit a tournament from the entered tournament id
 	 */
 	editTournament(tournament: WyTournament) {
-		this.router.navigate(['/tournament-management/tournament-overview/tournament-my-published/tournament-published-edit', tournament.id]);
+		this.router.navigate(['/tournament-management/tournament-overview/tournament-edit/', tournament.id, '1']);
 	}
 
 	/**

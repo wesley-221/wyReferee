@@ -497,7 +497,7 @@ export class IrcComponent implements OnInit {
 	 */
 	pickBeatmap(beatmap: WyModBracketMap, bracket: WyModBracket, gamemode: number, forcePick = false) {
 		// Check whether the beatmap is banned
-		if(this.selectedLobby.beatmapIsBanned(beatmap.beatmapId)) {
+		if (this.selectedLobby.beatmapIsBanned(beatmap.beatmapId)) {
 			return;
 		}
 
@@ -602,6 +602,15 @@ export class IrcComponent implements OnInit {
 		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 
 		this.ircService.sendMessage(this.selectedChannel.name, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
+
+		// Send the conditional messages if applicable
+		for (const beatmapResultMessage of this.selectedLobby.tournament.conditionalMessages) {
+			const finalMessage = beatmapResultMessage.message;
+
+			if (beatmapResultMessage.beatmapPicked) {
+				this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
+			}
+		}
 	}
 
 	/**
