@@ -1,7 +1,7 @@
-import { Misc } from "app/shared/misc";
-import { Lobby } from "../lobby";
-import { CTMCalculation } from "../score-calculation/calculation-types/ctm-calculation";
-import { MultiplayerData } from "../store-multiplayer/multiplayer-data";
+import { Misc } from 'app/shared/misc';
+import { Lobby } from '../lobby';
+import { CTMCalculation } from '../score-calculation/calculation-types/ctm-calculation';
+import { MultiplayerData } from '../store-multiplayer/multiplayer-data';
 
 export class WyConditionalMessage {
 	id: number;

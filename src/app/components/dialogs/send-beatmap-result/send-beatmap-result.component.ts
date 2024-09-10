@@ -45,7 +45,7 @@ export class SendBeatmapResultComponent implements OnInit {
 		// User is connected to irc channel
 		if (this.ircService.getChannelByName(this.data.ircChannel) != null) {
 			for (const conditionalMessage of this.data.multiplayerLobby.tournament.conditionalMessages) {
-				let finalMessage = WyConditionalMessage.translateMessage(conditionalMessage.message, match, this.data.multiplayerLobby, this.getBeatmapname(match.beatmap_id));
+				const finalMessage = WyConditionalMessage.translateMessage(conditionalMessage.message, match, this.data.multiplayerLobby, this.getBeatmapname(match.beatmap_id));
 
 				if (conditionalMessage.beatmapResult) {
 					if (conditionalMessage.nextPickMessage) {

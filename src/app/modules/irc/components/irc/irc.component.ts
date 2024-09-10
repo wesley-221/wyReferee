@@ -605,7 +605,7 @@ export class IrcComponent implements OnInit {
 
 		// Send the conditional messages if applicable
 		for (const beatmapResultMessage of this.selectedLobby.tournament.conditionalMessages) {
-			let finalMessage = beatmapResultMessage.message;
+			const finalMessage = beatmapResultMessage.message;
 
 			if (beatmapResultMessage.beatmapPicked) {
 				this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
