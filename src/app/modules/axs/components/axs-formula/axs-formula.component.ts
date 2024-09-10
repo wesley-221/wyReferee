@@ -6,6 +6,7 @@ import { AxSCalculation } from 'app/models/score-calculation/calculation-types/a
 import { ProposedCalculation } from 'app/models/score-calculation/calculation-types/proposed-calculation';
 import { MultiplayerDataUser } from 'app/models/store-multiplayer/multiplayer-data-user';
 import { GetMultiplayerService } from 'app/services/osu-api/get-multiplayer.service';
+import { Misc } from 'app/shared/misc';
 
 @Component({
 	selector: 'app-axs-formula',
@@ -134,16 +135,6 @@ export class AxsFormulaComponent implements OnInit {
 	 * @param splitter the character to split the string with
 	 */
 	addDot(nStr: string, splitter: string) {
-		nStr += '';
-		const x = nStr.split('.');
-		let x1: string = x[0];
-		const x2 = x.length > 1 ? `.${x[1]}` : '';
-		const rgx = /(\d+)(\d{3})/;
-
-		while (rgx.test(x1)) {
-			x1 = x1.replace(rgx, `$1${splitter}$2`);
-		}
-
-		return x1 + x2;
+		return Misc.addDot(nStr, splitter);
 	}
 }
