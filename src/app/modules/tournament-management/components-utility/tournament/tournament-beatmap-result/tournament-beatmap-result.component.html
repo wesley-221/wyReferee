@@ -66,7 +66,7 @@
 				<div class="option" [ngClass]="{ 'active': message.beatmapEnded }" (click)="message.beatmapEnded = !message.beatmapEnded">
 					<mat-icon>check</mat-icon>
 
-					Beatmap ended
+					Beatmap result
 				</div>
 
 				<div class="option" [ngClass]="{ 'active': message.beatmapPicked }" (click)="message.beatmapPicked = !message.beatmapPicked">
@@ -95,7 +95,7 @@
 			</div>
 
 			<ul>
-				<li *ngIf="message.beatmapEnded">This message will only be sent after a beatmap has ended.</li>
+				<li *ngIf="message.beatmapEnded">This message will only be sent when the referee sends the beatmap result on the IRC screen.</li>
 				<li *ngIf="message.beatmapPicked">This message will only be sent after a map has been picked.</li>
 				<li *ngIf="message.nextPickMessage">This message will only be sent if there is a valid next pick, meaning the match isn't over yet or the next pick isn't a tiebreaker</li>
 				<li *ngIf="message.nextPickTiebreakerMessage">This message will only be sent when the next pick is a tiebreaker.</li>
