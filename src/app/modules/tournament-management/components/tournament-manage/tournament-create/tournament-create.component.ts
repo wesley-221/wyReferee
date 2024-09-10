@@ -54,12 +54,14 @@ export class TournamentCreateComponent implements OnInit {
 		});
 
 		const beatmapResultMessages = [
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ beatmapWinner }} has won on {{ beatmap }}' }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference : {{ scoreDifference }}' }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ teamOneName }} | {{ matchTeamOneScore }} : {{ matchTeamTwoScore }} | {{ teamTwoName }}' }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'Next pick is for {{ nextPick }}', nextPickMessage: true }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'The next pick is the tiebreaker!', nextPickTiebreakerMessage: true }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ matchWinner }} has won the match, GG and WP!', matchWonMessage: true })
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ beatmapWinner }} has won on {{ beatmap }}', beatmapResult: true }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference : {{ scoreDifference }}', beatmapResult: true }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ teamOneName }} | {{ matchTeamOneScore }} : {{ matchTeamTwoScore }} | {{ teamTwoName }}', beatmapResult: true }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'Next pick is for {{ nextPick }}', beatmapResult: true, nextPickMessage: true }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'The next pick is the tiebreaker!', beatmapResult: true, nextPickTiebreakerMessage: true }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '!mp aborttimer', beatmapPicked: true }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '!mp timer 120', beatmapPicked: true }),
+			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ matchWinner }} has won the match, GG and WP!', beatmapResult: true, matchWonMessage: true })
 		];
 
 		for (const beatmapResultMessage of beatmapResultMessages) {
