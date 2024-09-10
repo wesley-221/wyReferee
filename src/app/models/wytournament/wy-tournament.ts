@@ -5,9 +5,9 @@ import { WyMappool } from './mappool/wy-mappool';
 import { WyWebhook } from './wy-webhook';
 import { WyTeam } from './wy-team';
 import { WyStage } from './wy-stage';
-import { WyBeatmapResultMessage } from './wy-beatmap-result-message';
 import { WyModBracket } from './mappool/wy-mod-bracket';
 import { WyModBracketMap } from './mappool/wy-mod-bracket-map';
+import { WyConditionalMessage } from './wy-conditional-message';
 
 export enum TournamentFormat {
 	Solo = 'solo',
@@ -37,8 +37,8 @@ export class WyTournament {
 	webhooks: WyWebhook[];
 	webhookIndex: number;
 
-	beatmapResultMessages: WyBeatmapResultMessage[];
-	beatmapResultMessageIndex: number;
+	conditionalMessages: WyConditionalMessage[];
+	conditionalMessageIndex: number;
 
 	invalidateBeatmaps: boolean;
 	allowDoublePick: boolean;
@@ -63,8 +63,8 @@ export class WyTournament {
 		this.mappoolIndex = 0;
 		this.webhooks = [];
 		this.webhookIndex = 0;
-		this.beatmapResultMessages = [];
-		this.beatmapResultMessageIndex = 0;
+		this.conditionalMessages = [];
+		this.conditionalMessageIndex = 0;
 		this.mappools = [];
 		this.invalidateBeatmaps = true;
 		this.allowDoublePick = true;
@@ -129,13 +129,13 @@ export class WyTournament {
 			newTournament.webhooks.push(newWebhook);
 		}
 
-		for (const beatmapMessage in tournament.beatmapResultMessages) {
-			const newBeatmapMessage = WyBeatmapResultMessage.makeTrueCopy(tournament.beatmapResultMessages[beatmapMessage]);
+		for (const conditionalMessage in tournament.conditionalMessages) {
+			const newConditionalMessage = WyConditionalMessage.makeTrueCopy(tournament.conditionalMessages[conditionalMessage]);
 
-			newBeatmapMessage.index = newTournament.beatmapResultMessageIndex;
-			newTournament.beatmapResultMessageIndex++;
+			newConditionalMessage.index = newTournament.conditionalMessageIndex;
+			newTournament.conditionalMessageIndex++;
 
-			newTournament.beatmapResultMessages.push(newBeatmapMessage);
+			newTournament.conditionalMessages.push(newConditionalMessage);
 		}
 
 		for (const mappool in tournament.mappools) {

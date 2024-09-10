@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Mods } from 'app/models/osu-models/osu';
-import { WyBeatmapResultMessage } from 'app/models/wytournament/wy-beatmap-result-message';
+import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ValidationErrorService } from 'app/modules/tournament-management/services/validation-error.service';
 import { ToastService } from 'app/services/toast.service';
@@ -53,21 +53,21 @@ export class TournamentCreateComponent implements OnInit {
 			'lobby-team-name-with-brackets': new FormControl(false)
 		});
 
-		const beatmapResultMessages = [
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ beatmapWinner }} has won on {{ beatmap }}', beatmapResult: true }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference : {{ scoreDifference }}', beatmapResult: true }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ teamOneName }} | {{ matchTeamOneScore }} : {{ matchTeamTwoScore }} | {{ teamTwoName }}', beatmapResult: true }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'Next pick is for {{ nextPick }}', beatmapResult: true, nextPickMessage: true }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: 'The next pick is the tiebreaker!', beatmapResult: true, nextPickTiebreakerMessage: true }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '!mp aborttimer', beatmapPicked: true }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '!mp timer 120', beatmapPicked: true }),
-			new WyBeatmapResultMessage({ index: this.tournament.beatmapResultMessageIndex++, message: '{{ matchWinner }} has won the match, GG and WP!', beatmapResult: true, matchWonMessage: true })
+		const conditionalMessages = [
+			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '{{ beatmapWinner }} has won on {{ beatmap }}', beatmapResult: true }),
+			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: 'Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference : {{ scoreDifference }}', beatmapResult: true }),
+			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '{{ teamOneName }} | {{ matchTeamOneScore }} : {{ matchTeamTwoScore }} | {{ teamTwoName }}', beatmapResult: true }),
+			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: 'Next pick is for {{ nextPick }}', beatmapResult: true, nextPickMessage: true }),
+			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: 'The next pick is the tiebreaker!', beatmapResult: true, nextPickTiebreakerMessage: true }),
+			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '!mp aborttimer', beatmapPicked: true }),
+			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '!mp timer 120', beatmapPicked: true }),
+			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '{{ matchWinner }} has won the match, GG and WP!', beatmapResult: true, matchWonMessage: true })
 		];
 
-		for (const beatmapResultMessage of beatmapResultMessages) {
-			this.validationForm.addControl(`beatmap-result-message-${beatmapResultMessage.index}`, new FormControl(beatmapResultMessage.message, Validators.required));
+		for (const beatmapResultMessage of conditionalMessages) {
+			this.validationForm.addControl(`conditional-message-${beatmapResultMessage.index}`, new FormControl(beatmapResultMessage.message, Validators.required));
 
-			this.tournament.beatmapResultMessages.push(beatmapResultMessage);
+			this.tournament.conditionalMessages.push(beatmapResultMessage);
 		}
 	}
 

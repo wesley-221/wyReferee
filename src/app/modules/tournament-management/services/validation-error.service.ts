@@ -29,7 +29,7 @@ export class ValidationErrorService {
 			new ValidationError('webhook-(\\d+)-name', 'You have to set the name for the {0} webhook.'),
 			new ValidationError('webhook-(\\d+)-url', 'You have to set the URL for the {0} webhook.'),
 
-			new ValidationError('beatmap-result-message-(\\d+)', 'You have to set the message for the {0} beatmap result.'),
+			new ValidationError('conditional-message-(\\d+)', 'You have to set the message for the {0} conditional message.'),
 
 			new ValidationError('mappool-(\\d+)-name', 'You have to set the name for the {0} mappool.'),
 			new ValidationError('mappool-(\\d+)-type', 'You have to set the type for the {0} mappool.'),

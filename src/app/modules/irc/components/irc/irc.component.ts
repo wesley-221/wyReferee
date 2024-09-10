@@ -604,7 +604,7 @@ export class IrcComponent implements OnInit {
 		this.ircService.sendMessage(this.selectedChannel.name, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
 
 		// Send the conditional messages if applicable
-		for (const beatmapResultMessage of this.selectedLobby.tournament.beatmapResultMessages) {
+		for (const beatmapResultMessage of this.selectedLobby.tournament.conditionalMessages) {
 			let finalMessage = beatmapResultMessage.message;
 
 			if (beatmapResultMessage.beatmapPicked) {

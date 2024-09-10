@@ -3,7 +3,7 @@ import { Lobby } from "../lobby";
 import { CTMCalculation } from "../score-calculation/calculation-types/ctm-calculation";
 import { MultiplayerData } from "../store-multiplayer/multiplayer-data";
 
-export class WyBeatmapResultMessage {
+export class WyConditionalMessage {
 	id: number;
 	index: number;
 	message: string;
@@ -13,7 +13,7 @@ export class WyBeatmapResultMessage {
 	nextPickTiebreakerMessage: boolean;
 	matchWonMessage: boolean;
 
-	constructor(init?: Partial<WyBeatmapResultMessage>) {
+	constructor(init?: Partial<WyConditionalMessage>) {
 		this.beatmapResult = false;
 		this.beatmapPicked = false;
 		this.nextPickMessage = false;
@@ -23,8 +23,8 @@ export class WyBeatmapResultMessage {
 		Object.assign(this, init);
 	}
 
-	public static makeTrueCopy(beatmapResultMessage: WyBeatmapResultMessage): WyBeatmapResultMessage {
-		return new WyBeatmapResultMessage({
+	public static makeTrueCopy(beatmapResultMessage: WyConditionalMessage): WyConditionalMessage {
+		return new WyConditionalMessage({
 			id: beatmapResultMessage.id,
 			index: beatmapResultMessage.index,
 			message: beatmapResultMessage.message,

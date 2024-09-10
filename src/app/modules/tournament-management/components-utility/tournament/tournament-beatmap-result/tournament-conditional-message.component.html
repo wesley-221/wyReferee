@@ -38,22 +38,22 @@
 	<button mat-raised-button color="primary" (click)="createNewMessage()"><mat-icon>add</mat-icon> create new message</button>
 
 	<div class="messages">
-		<div class="message" *ngIf="tournament.beatmapResultMessages.length <= 0">
+		<div class="message" *ngIf="tournament.conditionalMessages.length <= 0">
 			<div class="content">
-				<app-alert alertType="info">There are no beatmap result messages.</app-alert>
+				<app-alert alertType="info">There are no conditional messages.</app-alert>
 			</div>
 		</div>
 
-		<div class="message" *ngFor="let message of tournament.beatmapResultMessages">
+		<div class="message" *ngFor="let message of tournament.conditionalMessages">
 			<h2>Message</h2>
 			<p>The message that will be sent when one of the conditions are met.</p>
 
 			<div class="content">
 				<mat-form-field class="full-width">
 					<mat-label>Message</mat-label>
-					<input matInput [formControlName]="'beatmap-result-message-' + message.index" />
+					<input matInput [formControlName]="'conditional-message-' + message.index" />
 
-					<mat-error *ngIf="validationForm.get('beatmap-result-message-' + message.index).errors && (validationForm.get('beatmap-result-message-' + message.index).touched || validationForm.get('beatmap-result-message-' + message.index).dirty)">
+					<mat-error *ngIf="validationForm.get('conditional-message-' + message.index).errors && (validationForm.get('conditional-message-' + message.index).touched || validationForm.get('conditional-message-' + message.index).dirty)">
 						This field is required
 					</mat-error>
 				</mat-form-field>
@@ -103,7 +103,7 @@
 			</ul>
 
 			<div class="actions">
-				<button mat-raised-button color="warn" (click)="removeBeatmapResultMessage(message)"><mat-icon>delete</mat-icon> delete conditional message</button>
+				<button mat-raised-button color="warn" (click)="removeConditionalMessage(message)"><mat-icon>delete</mat-icon> delete conditional message</button>
 			</div>
 		</div>
 	</div>
