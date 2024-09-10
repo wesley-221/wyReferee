@@ -2,14 +2,14 @@ export class WyBeatmapResultMessage {
 	id: number;
 	index: number;
 	message: string;
-	beatmapEnded: boolean;
+	beatmapResult: boolean;
 	beatmapPicked: boolean;
 	nextPickMessage: boolean;
 	nextPickTiebreakerMessage: boolean;
 	matchWonMessage: boolean;
 
 	constructor(init?: Partial<WyBeatmapResultMessage>) {
-		this.beatmapEnded = false;
+		this.beatmapResult = false;
 		this.beatmapPicked = false;
 		this.nextPickMessage = false;
 		this.nextPickTiebreakerMessage = false;
@@ -23,7 +23,7 @@ export class WyBeatmapResultMessage {
 			id: beatmapResultMessage.id,
 			index: beatmapResultMessage.index,
 			message: beatmapResultMessage.message,
-			beatmapEnded: beatmapResultMessage.beatmapEnded,
+			beatmapResult: beatmapResultMessage.beatmapResult,
 			beatmapPicked: beatmapResultMessage.beatmapPicked,
 			nextPickMessage: beatmapResultMessage.nextPickMessage,
 			nextPickTiebreakerMessage: beatmapResultMessage.nextPickTiebreakerMessage,

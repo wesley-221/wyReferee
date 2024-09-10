@@ -79,23 +79,25 @@ export class SendBeatmapResultComponent implements OnInit {
 					finalMessage = finalMessage.replace(new RegExp(regex), replaceWords[regex]);
 				}
 
-				if (beatmapResultMessage.nextPickMessage) {
-					if (this.data.multiplayerLobby.teamHasWon() == null && !this.data.multiplayerLobby.getTiebreaker()) {
+				if (beatmapResultMessage.beatmapResult) {
+					if (beatmapResultMessage.nextPickMessage) {
+						if (this.data.multiplayerLobby.teamHasWon() == null && !this.data.multiplayerLobby.getTiebreaker()) {
+							this.ircService.sendMessage(this.data.ircChannel, finalMessage);
+						}
+					}
+					else if (beatmapResultMessage.nextPickTiebreakerMessage) {
+						if (this.data.multiplayerLobby.teamHasWon() == null && this.data.multiplayerLobby.getTiebreaker()) {
+							this.ircService.sendMessage(this.data.ircChannel, finalMessage);
+						}
+					}
+					else if (beatmapResultMessage.matchWonMessage) {
+						if (this.data.multiplayerLobby.teamHasWon() != null) {
+							this.ircService.sendMessage(this.data.ircChannel, finalMessage);
+						}
+					}
+					else {
 						this.ircService.sendMessage(this.data.ircChannel, finalMessage);
 					}
-				}
-				else if (beatmapResultMessage.nextPickTiebreakerMessage) {
-					if (this.data.multiplayerLobby.teamHasWon() == null && this.data.multiplayerLobby.getTiebreaker()) {
-						this.ircService.sendMessage(this.data.ircChannel, finalMessage);
-					}
-				}
-				else if (beatmapResultMessage.matchWonMessage) {
-					if (this.data.multiplayerLobby.teamHasWon() != null) {
-						this.ircService.sendMessage(this.data.ircChannel, finalMessage);
-					}
-				}
-				else {
-					this.ircService.sendMessage(this.data.ircChannel, finalMessage);
 				}
 			}
 
