@@ -31,6 +31,7 @@ export class IrcService {
 	 * The username of the authenticated user
 	 */
 	authenticatedUser = 'none';
+	ircConnectionError: string;
 
 	allChannels: IrcChannel[] = [];
 
@@ -222,6 +223,7 @@ export class IrcService {
 			this.storeService.set('irc.password', password);
 
 			this.isConnecting$.next(false);
+			this.ircConnectionError = null;
 
 			this.isAuthenticated$.next(true);
 
@@ -235,7 +237,10 @@ export class IrcService {
 					});
 				}
 			}
-		});
+		}, (error => {
+			this.isConnecting$.next(false);
+			this.ircConnectionError = error;
+		}));
 	}
 
 	/**

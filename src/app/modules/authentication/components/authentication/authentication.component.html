@@ -87,6 +87,10 @@
 							<mat-spinner [diameter]="40"></mat-spinner>
 							<div class="text">Attempting to login...</div>
 						</div>
+
+						<app-alert alertType="danger" *ngIf="ircService.ircConnectionError">
+							{{ ircService.ircConnectionError }}
+						</app-alert>
 					</form>
 
 					<div class="footer" *ngIf="ircService.isAuthenticated">
