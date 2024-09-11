@@ -86,7 +86,7 @@ export class AuthenticationComponent implements OnInit {
 	 * Login to irc with the given credentials
 	 */
 	connectIrc() {
-		const username = this.ircLoginForm.get('irc-username').value;
+		const username = this.ircLoginForm.get('irc-username').value.replace(/ /g, '_');
 		const password = this.ircLoginForm.get('irc-password').value;
 
 		this.ircService.connect(username, password);
