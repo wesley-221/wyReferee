@@ -6,6 +6,26 @@ let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
+const protocolCustomUri = 'wyreferee';
+const osuOauthCallback = 'osu-oauth-callback';
+
+const lock = app.requestSingleInstanceLock();
+
+if (!lock) {
+	app.quit();
+}
+else {
+	app.on('second-instance', (_, commandLine) => {
+		const customUri = commandLine.find(arg => arg.startsWith(`${protocolCustomUri}://`));
+
+		if (customUri && win) {
+			win.focus();
+
+			win.webContents.send(osuOauthCallback, customUri);
+		}
+	});
+}
+
 function createWindow() {
 	const size = screen.getPrimaryDisplay().workAreaSize;
 
@@ -46,6 +66,8 @@ function createWindow() {
 		win.webContents.openDevTools();
 	}
 
+	app.setAsDefaultProtocolClient(protocolCustomUri, process.execPath);
+
 	// Emitted when the window is closed.
 	win.on('closed', () => {
 		// Dereference the window object, usually you would store window
@@ -78,6 +100,15 @@ try {
 		}
 	});
 
+	app.on('open-url', (event, url) => {
+		event.preventDefault();
+
+		if (win) {
+			win.focus();
+		}
+
+		win.webContents.send(osuOauthCallback, url);
+	});
 } catch (e) {
 	// Catch Error
 	// throw e;
