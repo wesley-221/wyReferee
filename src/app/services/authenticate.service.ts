@@ -75,21 +75,12 @@ export class AuthenticateService {
 	 * Open a window for the osu oauth process
 	 */
 	private openOsuBrowserWindow(): void {
-		const oldWindow = this.electronService.remote.getCurrentWindow();
+		this.electronService.openLink(this.getOsuOauthUrl());
 
-		const win = new this.electronService.remote.BrowserWindow({
-			icon: 'src/assets/images/icon.png',
-			modal: true,
-			parent: oldWindow
-		});
+		this.electronService.ipcRenderer.on('osu-oauth-callback', (_, url) => {
+			const oauthToken = url.replace(`${AppConfig.osu.redirect_uri}/?code=`, '');
 
-		win.loadURL(this.getOsuOauthUrl());
-
-		const contents = win.webContents;
-		contents.on('will-redirect', (_, url) => {
-			const oauthToken = url.replace(`${AppConfig.osu.redirect_uri}?code=`, '');
 			this.oauthResponse$.next(oauthToken);
-			win.close();
 		});
 	}
 
