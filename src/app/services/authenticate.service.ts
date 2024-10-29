@@ -66,21 +66,23 @@ export class AuthenticateService {
 	 * @returns observable that contains the oauth token
 	 */
 	public startOsuOauthProcess(): Observable<string> {
-		this.openOsuBrowserWindow();
+		this.startExpressServer();
 
 		return this.oauthResponse$;
 	}
 
 	/**
-	 * Open a window for the osu oauth process
+	 * Start the express server and listen for events from the main process
 	 */
-	private openOsuBrowserWindow(): void {
-		this.electronService.openLink(this.getOsuOauthUrl());
+	private startExpressServer(): void {
+		this.electronService.ipcRenderer.send('start-express-server', true);
 
-		this.electronService.ipcRenderer.on('osu-oauth-callback', (_, url) => {
-			const oauthToken = url.replace(`${AppConfig.osu.redirect_uri}/?code=`, '');
+		this.electronService.ipcRenderer.on('express-server-started', () => {
+			this.electronService.openLink(this.getOsuOauthUrl());
+		});
 
-			this.oauthResponse$.next(oauthToken);
+		this.electronService.ipcRenderer.on('osu-oauth-code', (_, code) => {
+			this.oauthResponse$.next(code);
 		});
 	}
 
