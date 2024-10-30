@@ -6,7 +6,6 @@ import { DeleteTournamentDialogComponent } from 'app/components/dialogs/delete-t
 import { User } from 'app/models/authentication/user';
 import { ToastType } from 'app/models/toast';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
-import { AuthenticateService } from 'app/services/authenticate.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -29,7 +28,7 @@ export class TournamentAllPublishedAdministratorComponent implements OnInit {
 
 	usersImported$: BehaviorSubject<boolean>;
 
-	constructor(private tournamentService: TournamentService, private authenticateService: AuthenticateService, private toastService: ToastService, private router: Router, private dialog: MatDialog) {
+	constructor(private tournamentService: TournamentService, private toastService: ToastService, private router: Router, private dialog: MatDialog) {
 		this.usersImported$ = new BehaviorSubject(false);
 
 		this.allTournaments = [];
@@ -40,20 +39,17 @@ export class TournamentAllPublishedAdministratorComponent implements OnInit {
 
 		this.tournamentService.getAllPublishedTournamentsWithGlobalAdminPermissions().subscribe(tournaments => {
 			for (const tournament of tournaments) {
+				const newTournament = WyTournament.makeTrueCopy(tournament);
+
 				this.allTournaments.push(WyTournament.makeTrueCopy(tournament));
+
+				if (!this.allUsers.find(user => user.id == newTournament.createdBy.id)) {
+					this.allUsers.push(newTournament.createdBy);
+				}
 			}
 
 			this.allTournaments.reverse();
-		});
-
-		this.authenticateService.getAllUser().subscribe(data => {
-			for (const user in data) {
-				const newUser = User.serializeJson(data[user]);
-				this.allUsers.push(newUser);
-			}
-
 			this.allUsers.sort((a: User, b: User) => a.username.localeCompare(b.username));
-
 			this.usersImported$.next(true);
 		});
 	}

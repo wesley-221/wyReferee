@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { User } from 'app/models/authentication/user';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
-import { AuthenticateService } from 'app/services/authenticate.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { Observable, BehaviorSubject, startWith, map } from 'rxjs';
 
@@ -23,7 +22,7 @@ export class TournamentMyPublishedComponent implements OnInit {
 
 	usersImported$: BehaviorSubject<boolean>;
 
-	constructor(private tournamentService: TournamentService, private authenticateService: AuthenticateService) {
+	constructor(private tournamentService: TournamentService) {
 		this.populateTournamentArray();
 
 		this.usersImported$ = new BehaviorSubject(false);
@@ -32,17 +31,6 @@ export class TournamentMyPublishedComponent implements OnInit {
 
 		this.searchValue = '';
 		this.filterByUser = '';
-
-		this.authenticateService.getAllUser().subscribe(data => {
-			for (const user in data) {
-				const newUser = User.serializeJson(data[user]);
-				this.allUsers.push(newUser);
-			}
-
-			this.allUsers.sort((a: User, b: User) => a.username.localeCompare(b.username));
-
-			this.usersImported$.next(true);
-		});
 	}
 
 	ngOnInit(): void {
@@ -75,10 +63,18 @@ export class TournamentMyPublishedComponent implements OnInit {
 
 		this.tournamentService.getAllPublishedTournamentsWithAdminPermissions().subscribe(tournaments => {
 			for (const tournament of tournaments) {
+				const newTournament = WyTournament.makeTrueCopy(tournament);
+
 				this.allTournaments.push(WyTournament.makeTrueCopy(tournament));
+
+				if (!this.allUsers.find(user => user.id == newTournament.createdBy.id)) {
+					this.allUsers.push(newTournament.createdBy);
+				}
 			}
 
 			this.allTournaments.reverse();
+			this.allUsers.sort((a: User, b: User) => a.username.localeCompare(b.username));
+			this.usersImported$.next(true);
 		});
 	}
 
