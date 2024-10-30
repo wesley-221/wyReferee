@@ -1,30 +1,15 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, ipcMain, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import { OauthServer } from './oauth-server';
 
-let win, serve;
+let win: BrowserWindow | null;
+let serve: boolean;
+
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
-const protocolCustomUri = 'wyreferee';
-const osuOauthCallback = 'osu-oauth-callback';
-
-const lock = app.requestSingleInstanceLock();
-
-if (!lock) {
-	app.quit();
-}
-else {
-	app.on('second-instance', (_, commandLine) => {
-		const customUri = commandLine.find(arg => arg.startsWith(`${protocolCustomUri}://`));
-
-		if (customUri && win) {
-			win.focus();
-
-			win.webContents.send(osuOauthCallback, customUri);
-		}
-	});
-}
+let osuOauthServer: OauthServer;
 
 function createWindow() {
 	const size = screen.getPrimaryDisplay().workAreaSize;
@@ -66,14 +51,18 @@ function createWindow() {
 		win.webContents.openDevTools();
 	}
 
-	app.setAsDefaultProtocolClient(protocolCustomUri, process.execPath);
-
 	// Emitted when the window is closed.
 	win.on('closed', () => {
 		// Dereference the window object, usually you would store window
 		// in an array if your app supports multi windows, this is the time
 		// when you should delete the corresponding element.
 		win = null;
+	});
+
+	osuOauthServer = new OauthServer(win);
+
+	ipcMain.on('start-express-server', () => {
+		osuOauthServer.startServer();
 	});
 }
 
@@ -100,15 +89,7 @@ try {
 		}
 	});
 
-	app.on('open-url', (event, url) => {
-		event.preventDefault();
 
-		if (win) {
-			win.focus();
-		}
-
-		win.webContents.send(osuOauthCallback, url);
-	});
 } catch (e) {
 	// Catch Error
 	// throw e;
