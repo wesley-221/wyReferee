@@ -4,6 +4,6 @@ export const AppConfig = {
 	apiUrl: 'http://localhost:8080/',
 	osu: {
 		client_id: 8144,
-		redirect_uri: 'wyreferee://osu-oauth-callback'
+		redirect_uri: 'http://localhost:3000/osu-oauth-callback'
 	}
 };
