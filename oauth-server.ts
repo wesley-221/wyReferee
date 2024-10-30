@@ -1,10 +1,8 @@
 import { BrowserWindow } from 'electron';
 import * as express from 'express';
 import * as http from 'http';
-import * as net from 'net';
 
 const DEFAULT_PORT = 3000;
-const FALLBACK_PORT = 4000;
 
 export class OauthServer {
 	server: http.Server | null;
@@ -15,35 +13,10 @@ export class OauthServer {
 	}
 
 	/**
-	 * Checks if the specified port is available (not in use)
-	 *
-	 * @param port the port to check
-	 * @returns resolves with `true` if the port is available, or `false` if it is in use
-	 */
-	checkPort(port: number): Promise<boolean> {
-		return new Promise((resolve) => {
-			const testServer = net.createServer()
-				.once('error', () => resolve(false))
-				.once('listening', () => {
-					testServer.close(() => resolve(true));
-				})
-				.listen(port);
-		});
-	}
-
-	/**
 	 * Starts a local Express server to handle the `/osu-oauth-callback` route for OAuth.
 	 */
 	async startServer() {
 		this.stopServer();
-
-		let port = DEFAULT_PORT;
-
-		const isAvailable = await this.checkPort(port);
-
-		if (!isAvailable) {
-			port = FALLBACK_PORT;
-		}
 
 		const expressServer = express();
 
@@ -57,8 +30,8 @@ export class OauthServer {
 			this.stopServer();
 		});
 
-		this.server = expressServer.listen(port, () => {
-			console.log(`Started local server on http://localhost:${port}`);
+		this.server = expressServer.listen(DEFAULT_PORT, () => {
+			console.log(`Started local server on http://localhost:${DEFAULT_PORT}`);
 
 			if (this.win) {
 				this.win.webContents.send('express-server-started', true);
