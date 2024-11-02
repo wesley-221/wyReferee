@@ -5,3 +5,16 @@
 
 	padding-right: 8px;
 }
+
+.loading {
+	display: flex;
+	align-items: center;
+
+	.spinner {
+		margin-right: 4px;
+	}
+}
+
+.extra-spacing {
+	padding: 8px;
+}

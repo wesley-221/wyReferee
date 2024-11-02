@@ -8,5 +8,11 @@
 
 	<app-lobby-form [validationForm]="validationForm" [isJoinLobbyForm]="true"></app-lobby-form>
 
-	<button id="tutorial-create-lobby" mat-raised-button color="accent" class="margin-button" (click)="joinLobby()" [disabled]="!ircAuthenticated">Join</button>
+	<button id="tutorial-create-lobby" mat-raised-button color="accent" class="margin-button" (click)="joinLobby()" [disabled]="!ircAuthenticated">
+		<div class="loading">
+			<mat-spinner class="spinner" [diameter]="32" *ngIf="joiningMultiplayerLobby"></mat-spinner>&nbsp;Join multiplayer lobby
+		</div>
+	</button>
+
+	<div class="extra-spacing"></div>
 </div>
