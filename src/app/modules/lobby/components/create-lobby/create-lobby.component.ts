@@ -24,9 +24,10 @@ export class CreateLobbyComponent implements OnInit {
 	@ViewChild(LobbyFormComponent) lobbyFormComponent: LobbyFormComponent;
 
 	validationForm: FormGroup;
-	lobbyHasBeenCreated = false;
 
+	lobbyHasBeenCreated = false;
 	ircAuthenticated = false;
+	creatingMultiplayerLobby = false;
 
 	constructor(
 		private multiplayerLobbies: WyMultiplayerLobbiesService,
@@ -80,6 +81,10 @@ export class CreateLobbyComponent implements OnInit {
 	 * If you make any changes, make sure to change them there as well
 	 */
 	createLobby() {
+		if (this.creatingMultiplayerLobby == true) {
+			return;
+		}
+
 		const lobbyForm = this.lobbyFormComponent.getVariables();
 
 		if (this.validationForm.valid) {
@@ -162,6 +167,8 @@ export class CreateLobbyComponent implements OnInit {
 					lobbyName = lobbyForm.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}` : lobbyForm.lobbyWithBrackets == true ? `${lobby.tournament.acronym}: (${lobby.teamOneName}) vs (${lobby.teamTwoName})` : `${lobby.tournament.acronym}: ${lobby.teamOneName} vs ${lobby.teamTwoName}`;
 				}
 
+				this.creatingMultiplayerLobby = true;
+
 				from(this.ircService.client.createLobby(lobbyName)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
 					if (lobby.isQualifierLobby) {
 						this.ircService.joinChannel(multiplayerChannel.name, lobby.description);
@@ -211,6 +218,8 @@ export class CreateLobbyComponent implements OnInit {
 						this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 					}
 
+					this.creatingMultiplayerLobby = false;
+
 					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
 				});
 			}
@@ -219,25 +228,34 @@ export class CreateLobbyComponent implements OnInit {
 				const multiplayerId = OsuHelper.getMultiplayerIdFromLink(lobby.multiplayerLink);
 				const multiplayerChannel = this.ircService.client.getChannel(`#mp_${multiplayerId}`) as BanchoMultiplayerChannel;
 
-				from(multiplayerChannel.join()).subscribe(() => {
-					this.ircService.joinChannel(multiplayerChannel.name);
-					this.ircService.initializeChannelListeners(multiplayerChannel, lobby);
+				this.creatingMultiplayerLobby = true;
 
-					this.lobbyHasBeenCreatedTrigger();
+				multiplayerChannel.leave()
+					.finally(() => {
+						from(multiplayerChannel.join()).subscribe(() => {
+							this.ircService.joinChannel(multiplayerChannel.name);
+							this.ircService.initializeChannelListeners(multiplayerChannel, lobby);
 
-					this.multiplayerLobbies.addMultiplayerLobby(lobby);
+							this.lobbyHasBeenCreatedTrigger();
 
-					this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}!`);
+							this.multiplayerLobbies.addMultiplayerLobby(lobby);
 
-					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
-				}, () => {
-					this.lobbyHasBeenCreatedTrigger();
-					this.multiplayerLobbies.addMultiplayerLobby(lobby);
+							this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}!`);
 
-					this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}! Unable to connect to the irc channel, lobby is most likely closed already.`);
+							this.creatingMultiplayerLobby = false;
 
-					this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
-				});
+							this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
+						}, () => {
+							this.lobbyHasBeenCreatedTrigger();
+							this.multiplayerLobbies.addMultiplayerLobby(lobby);
+
+							this.toastService.addToast(`Successfully joined the multiplayer lobby ${multiplayerChannel.name}! Unable to connect to the irc channel, lobby is most likely closed already.`);
+
+							this.creatingMultiplayerLobby = false;
+
+							this.router.navigate(['lobby-overview/lobby-view', lobby.lobbyId]);
+						});
+					});
 			}
 		}
 		else {

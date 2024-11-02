@@ -4,5 +4,9 @@
 
 	<app-lobby-form [validationForm]="validationForm"></app-lobby-form>
 
-	<button id="tutorial-create-lobby" mat-raised-button color="accent" class="margin-button" (click)="createLobby()" [disabled]="!ircAuthenticated">Create</button>
+	<button id="tutorial-create-lobby" mat-raised-button color="accent" class="margin-button" (click)="createLobby()" [disabled]="!ircAuthenticated">
+		<div class="loading">
+			<mat-spinner class="spinner" [diameter]="32" *ngIf="creatingMultiplayerLobby"></mat-spinner>&nbsp;Create multiplayer lobby
+		</div>
+	</button>
 </div>
