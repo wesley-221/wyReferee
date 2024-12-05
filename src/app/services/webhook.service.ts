@@ -90,18 +90,18 @@ export class WebhookService {
 		}
 
 		const scoreString = (selectedLobby.getTeamOneScore() > selectedLobby.getTeamTwoScore()) ?
-			`**Score:** __${selectedLobby.teamOneName}__ | **${selectedLobby.getTeamOneScore()}** - ${selectedLobby.getTeamTwoScore()} | ${selectedLobby.teamTwoName}` :
-			`**Score:** ${selectedLobby.teamOneName} | ${selectedLobby.getTeamOneScore()} - **${selectedLobby.getTeamTwoScore()}** | __${selectedLobby.teamTwoName}__`;
+			`**Score:** __${this.escape(selectedLobby.teamOneName)}__ | **${selectedLobby.getTeamOneScore()}** - ${selectedLobby.getTeamTwoScore()} | ${this.escape(selectedLobby.teamTwoName)}` :
+			`**Score:** ${this.escape(selectedLobby.teamOneName)} | ${selectedLobby.getTeamOneScore()} - **${selectedLobby.getTeamTwoScore()}** | __${this.escape(selectedLobby.teamTwoName)}__`;
 
 		const body = {
 			embeds: [
 				{
-					title: `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
+					title: `${selectedLobby.selectedStage.name}: **${this.escape(selectedLobby.teamOneName)}** vs **${this.escape(selectedLobby.teamTwoName)}**`,
 					url: selectedLobby.multiplayerLink,
 					description: `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n${selectedLobby.multiplayerLink}`,
 					color: 15258703,
 					footer: {
-						text: `Match referee was ${referee}`
+						text: `Match referee was ${this.escape(referee)}`
 					},
 					fields: [
 					]
@@ -124,7 +124,7 @@ export class WebhookService {
 			}
 
 			body.embeds[0].fields.push({
-				name: `**${selectedLobby.teamOneName}** bans:`,
+				name: `**${this.escape(selectedLobby.teamOneName)}** bans:`,
 				value: teamOneBans.join('\n'),
 				inline: true
 			});
@@ -143,7 +143,7 @@ export class WebhookService {
 			}
 
 			body.embeds[0].fields.push({
-				name: `**${selectedLobby.teamTwoName}** bans:`,
+				name: `**${this.escape(selectedLobby.teamTwoName)}** bans:`,
 				value: teamTwoBans.join('\n'),
 				inline: true
 			});
@@ -151,7 +151,7 @@ export class WebhookService {
 
 		if (extraMessage != null) {
 			body.embeds[0].fields.push({
-				name: `**Additional message by ${referee}**`,
+				name: `**Additional message by ${this.escape(referee)}**`,
 				value: extraMessage,
 			});
 		}
@@ -182,20 +182,20 @@ export class WebhookService {
 			return;
 		}
 
-		let resultDescription = `**Score:** __${wbdWinningTeam}__ | 1 - 0 | ${wbdLosingTeam} \n\n__${wbdLosingTeam}__ failed to show up.`;
+		let resultDescription = `**Score:** __${this.escape(wbdWinningTeam)}__ | 1 - 0 | ${this.escape(wbdLosingTeam)} \n\n__${this.escape(wbdLosingTeam)}__ failed to show up.`;
 
 		if (wbdWinningTeam == 'no-one') {
-			resultDescription = `**Score:** ${selectedLobby.teamOneName} | 0 - 0 | ${selectedLobby.teamTwoName} \n\nBoth __${selectedLobby.teamOneName}__ and __${selectedLobby.teamTwoName}__ failed to show up.`;
+			resultDescription = `**Score:** ${this.escape(selectedLobby.teamOneName)} | 0 - 0 | ${this.escape(selectedLobby.teamTwoName)} \n\nBoth __${this.escape(selectedLobby.teamOneName)}__ and __${this.escape(selectedLobby.teamTwoName)}__ failed to show up.`;
 		}
 
 		const body = {
 			embeds: [
 				{
-					title: `${selectedLobby.selectedStage.name}: **${selectedLobby.teamOneName}** vs **${selectedLobby.teamTwoName}**`,
+					title: `${selectedLobby.selectedStage.name}: **${this.escape(selectedLobby.teamOneName)}** vs **${this.escape(selectedLobby.teamTwoName)}**`,
 					description: resultDescription,
 					color: 15258703,
 					footer: {
-						text: `Match referee was ${referee}`
+						text: `Match referee was ${this.escape(referee)}`
 					},
 					fields: [
 					]
@@ -205,7 +205,7 @@ export class WebhookService {
 
 		if (extraMessage != null) {
 			body.embeds[0].fields.push({
-				name: `**Additional message by ${referee}**`,
+				name: `**Additional message by ${this.escape(referee)}**`,
 				value: extraMessage,
 			});
 		}
@@ -242,7 +242,7 @@ export class WebhookService {
 					url: selectedLobby.multiplayerLink,
 					color: 15258703,
 					footer: {
-						text: `Match referee was ${referee}`
+						text: `Match referee was ${this.escape(referee)}`
 					},
 					fields: [
 					]
@@ -252,7 +252,7 @@ export class WebhookService {
 
 		if (extraMessage != null) {
 			body.embeds[0].fields.push({
-				name: `**Additional message by ${referee}**`,
+				name: `**Additional message by ${this.escape(referee)}**`,
 				value: extraMessage,
 			});
 		}
@@ -285,12 +285,12 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `🔨 Ban update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					title: `🔨 Ban update - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`,
 					url: selectedLobby.multiplayerLink,
-					description: `**${teamName}** has banned [**${ban.beatmapName}**](${ban.beatmapUrl})`,
+					description: `**${this.escape(teamName)}** has banned [**${ban.beatmapName}**](${ban.beatmapUrl})`,
 					color: 15258703,
 					footer: {
-						text: `Match referee was ${referee}`
+						text: `Match referee was ${this.escape(referee)}`
 					},
 					thumbnail: {
 						url: `https://b.ppy.sh/thumb/${ban.beatmapsetId}.jpg`
@@ -327,12 +327,12 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `🛡 Protect update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					title: `🛡 Protect update - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`,
 					url: selectedLobby.multiplayerLink,
-					description: `**${teamName}** has protected [**${protect.beatmapName}**](${protect.beatmapUrl})`,
+					description: `**${this.escape(teamName)}** has protected [**${protect.beatmapName}**](${protect.beatmapUrl})`,
 					color: 15258703,
 					footer: {
-						text: `Match referee was ${referee}`
+						text: `Match referee was ${this.escape(referee)}`
 					},
 					thumbnail: {
 						url: `https://b.ppy.sh/thumb/${protect.beatmapsetId}.jpg`
@@ -385,20 +385,20 @@ export class WebhookService {
 			if (firstPickTeam === 1) {
 				if (i < teamOneLength) {
 					const teamOnePick = selectedLobby.teamOnePicks[i];
-					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)} was picked by **${selectedLobby.teamOneName}**`);
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)} was picked by **${this.escape(selectedLobby.teamOneName)}**`);
 				}
 				if (i < teamTwoLength) {
 					const teamTwoPick = selectedLobby.teamTwoPicks[i];
-					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)} was picked by **${selectedLobby.teamTwoName}**`);
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)} was picked by **${this.escape(selectedLobby.teamTwoName)}**`);
 				}
 			} else if (firstPickTeam === 2) {
 				if (i < teamTwoLength) {
 					const teamTwoPick = selectedLobby.teamTwoPicks[i];
-					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)} was picked by **${selectedLobby.teamTwoName}**`);
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamTwoPick)} was picked by **${this.escape(selectedLobby.teamTwoName)}**`);
 				}
 				if (i < teamOneLength) {
 					const teamOnePick = selectedLobby.teamOnePicks[i];
-					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)} was picked by **${selectedLobby.teamOneName}**`);
+					picks.push(`${selectedLobby.tournament.getBeatmapForMatchSummary(teamOnePick)} was picked by **${this.escape(selectedLobby.teamOneName)}**`);
 				}
 			}
 		}
@@ -406,11 +406,11 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `Match summary - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					title: `Match summary - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`,
 					url: selectedLobby.multiplayerLink,
 					color: 15258703,
 					footer: {
-						text: `Match referee was ${referee}`
+						text: `Match referee was ${this.escape(referee)}`
 					},
 					fields: [
 					]
@@ -420,12 +420,12 @@ export class WebhookService {
 
 		body.embeds[0].fields.push(
 			{
-				name: `${selectedLobby.teamOneName} bans`,
+				name: `${this.escape(selectedLobby.teamOneName)} bans`,
 				value: teamOneBans.join('\n'),
 				inline: true
 			},
 			{
-				name: `${selectedLobby.teamTwoName} bans`,
+				name: `${this.escape(selectedLobby.teamTwoName)} bans`,
 				value: teamTwoBans.join('\n'),
 				inline: true
 			});
@@ -438,7 +438,6 @@ export class WebhookService {
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.matchSummary == true) {
-				console.log('found webhook, sending');
 				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
 			}
 		}
@@ -496,7 +495,7 @@ export class WebhookService {
 
 		// The pick was from team two
 		if (multiplayerLobby.getNextPick() == multiplayerLobby.teamOneName) {
-			embedHeader += `${multiplayerLobby.teamTwoName} `;
+			embedHeader += `${this.escape(multiplayerLobby.teamTwoName)} `;
 
 			if (isReverseScoreBeatMap == true) {
 				// Team two has won their pick
@@ -525,7 +524,7 @@ export class WebhookService {
 		}
 		// The pick was from team one
 		else {
-			embedHeader += `${multiplayerLobby.teamOneName} `;
+			embedHeader += `${this.escape(multiplayerLobby.teamOneName)} `;
 
 			if (isReverseScoreBeatMap == true) {
 				// Team one has won their pick
@@ -565,8 +564,8 @@ export class WebhookService {
 		}
 
 		resultString += (winner == 1) ?
-			`**Score:** __${multiplayerLobby.teamOneName}__ | **${multiplayerLobby.getTeamOneScore()}** - ${multiplayerLobby.getTeamTwoScore()} | ${multiplayerLobby.teamTwoName}\n\n` :
-			`**Score:** ${multiplayerLobby.teamOneName} | ${multiplayerLobby.getTeamOneScore()} - **${multiplayerLobby.getTeamTwoScore()}** | __${multiplayerLobby.teamTwoName}__\n\n`;
+			`**Score:** __${this.escape(multiplayerLobby.teamOneName)}__ | **${multiplayerLobby.getTeamOneScore()}** - ${multiplayerLobby.getTeamTwoScore()} | ${this.escape(multiplayerLobby.teamTwoName)}\n\n` :
+			`**Score:** ${this.escape(multiplayerLobby.teamOneName)} | ${multiplayerLobby.getTeamOneScore()} - **${multiplayerLobby.getTeamTwoScore()}** | __${this.escape(multiplayerLobby.teamTwoName)}__\n\n`;
 
 		let highestScorePlayer: MultiplayerDataUser = new MultiplayerDataUser();
 		let highestAccuracyPlayer: MultiplayerDataUser = new MultiplayerDataUser();
@@ -590,10 +589,10 @@ export class WebhookService {
 		const highestScorePlayerName = this.cacheService.getCachedUser(highestScorePlayer.user).username;
 		const highestAccuracyPlayerName = this.cacheService.getCachedUser(highestAccuracyPlayer.user).username;
 
-		resultString += `**MVP score**: __${highestScorePlayerName}__ with ${highestScorePlayer.score} points and ${highestScorePlayer.accuracy}% accuracy\n`;
-		resultString += `**MVP accuracy**: __${highestAccuracyPlayerName}__ with ${highestAccuracyPlayer.score} points and ${highestAccuracyPlayer.accuracy}% accuracy\n\n`;
+		resultString += `**MVP score**: __${this.escape(highestScorePlayerName)}__ with ${highestScorePlayer.score} points and ${highestScorePlayer.accuracy}% accuracy\n`;
+		resultString += `**MVP accuracy**: __${this.escape(highestAccuracyPlayerName)}__ with ${highestAccuracyPlayer.score} points and ${highestAccuracyPlayer.accuracy}% accuracy\n\n`;
 
-		resultString += `Next pick is for __${multiplayerLobby.getNextPick()}__`;
+		resultString += `Next pick is for __${this.escape(multiplayerLobby.getNextPick())}__`;
 
 		const body = {
 			embeds: [
@@ -642,7 +641,7 @@ export class WebhookService {
 					url: selectedLobby.multiplayerLink,
 					color: 15258703,
 					footer: {
-						text: `Match referee was ${referee}`
+						text: `Match referee was ${this.escape(referee)}`
 					},
 					fields: []
 				}
@@ -663,7 +662,7 @@ export class WebhookService {
 				});
 		}
 		else {
-			body.embeds[0].title = `Multiplayer lobby - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`;
+			body.embeds[0].title = `Multiplayer lobby - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`;
 
 			body.embeds[0].fields.push(
 				{
@@ -727,12 +726,12 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `📌 Pick update - ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}`,
+					title: `📌 Pick update - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`,
 					url: selectedLobby.multiplayerLink,
 					description: `**${teamName}** has picked [**${pick.beatmapName}**](${pick.beatmapUrl})`,
 					color: 15258703,
 					footer: {
-						text: `Match referee was ${referee}`
+						text: `Match referee was ${this.escape(referee)}`
 					},
 					thumbnail: {
 						url: `https://b.ppy.sh/thumb/${pick.beatmapsetId}.jpg`
@@ -750,6 +749,22 @@ export class WebhookService {
 				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
 			}
 		}
+	}
+
+
+	/**
+	 * Escape a string so it is safe to use inside of the webhook
+	 *
+	 * @param content the content to escape
+	 */
+	private escape(content: string): string {
+		return content
+			.replace(/\*/g, '\\*')
+			.replace(/_/g, '\\_')
+			.replace(/~/g, '\\~')
+			.replace(/`/g, '\\`')
+			.replace(/\|/g, '\\|')
+			.replace(/>/g, '\\>');
 	}
 
 	/**
