@@ -683,6 +683,13 @@ export class WebhookService {
 						value: `\`!editcom !streamer Streaming this match is ${streamers}\``
 					});
 			}
+			else {
+				body.embeds[0].fields.push(
+					{
+						name: 'Twitch streamer command',
+						value: `\`!editcom !streamer No streamers available for this match\``
+					});
+			}
 
 			if (commentatorList != null && commentatorList.length > 0) {
 				const casters = commentatorList.length == 1 ? commentatorList[0] : commentatorList.join(' and ');
@@ -691,6 +698,13 @@ export class WebhookService {
 					{
 						name: 'Twitch casters command',
 						value: `\`!editcom !casters Casting this match is ${casters}\``
+					});
+			}
+			else {
+				body.embeds[0].fields.push(
+					{
+						name: 'Twitch casters command',
+						value: `\`!editcom !casters No casters available for this\``
 					});
 			}
 		}
