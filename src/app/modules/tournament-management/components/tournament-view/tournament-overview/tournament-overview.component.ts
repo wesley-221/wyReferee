@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { AuthenticateService } from 'app/services/authenticate.service';
 import { StoreService } from 'app/services/store.service';
 import { TournamentService } from 'app/services/tournament.service';
 
@@ -12,7 +13,7 @@ export class TournamentOverviewComponent implements OnInit {
 	allTournaments: WyTournament[];
 	active: string;
 
-	constructor(private tournamentService: TournamentService, private storeService: StoreService) {
+	constructor(public authenticateService: AuthenticateService, private tournamentService: TournamentService, private storeService: StoreService) {
 		this.allTournaments = this.tournamentService.allTournaments;
 		this.active = 'local';
 	}

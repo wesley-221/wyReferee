@@ -9,7 +9,7 @@
 		</div>
 	</div>
 
-	<div id="tutorial-my-published-tournament" class="button" (click)="click('published')" [ngClass]="{'active': active == 'published'}">
+	<div id="tutorial-my-published-tournament" class="button" *ngIf="authenticateService.loggedIn == true" (click)="click('published')" [ngClass]="{'active': active == 'published'}">
 		<div class="logo">
 			<mat-icon>cloud_upload</mat-icon>
 		</div>
