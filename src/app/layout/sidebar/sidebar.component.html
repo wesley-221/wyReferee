@@ -1,5 +1,5 @@
 <div class="full">
-	<div class="login">
+	<div class="login" [ngClass]="{'not-logged-in': authenticateService.loggedIn == false }">
 		<div class="user" *ngIf="authenticateService.loggedIn">
 			<img [src]="authenticateService.loggedInUser.getAvatarUrl()" />
 
