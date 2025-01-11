@@ -5,6 +5,7 @@ import { DeleteTournamentDialogComponent } from 'app/components/dialogs/delete-t
 import { PublishTournamentDialogComponent } from 'app/components/dialogs/publish-tournament-dialog/publish-tournament-dialog.component';
 import { ToastType } from 'app/models/toast';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { AuthenticateService } from 'app/services/authenticate.service';
 import { ElectronService } from 'app/services/electron.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
@@ -20,7 +21,7 @@ export class TournamentCardComponent implements OnInit {
 	@Output() deletedTournamentEmitter: EventEmitter<boolean>;
 	@Output() tournamentPublishedEmitter: EventEmitter<{ tournament: WyTournament; id: number }>;
 
-	constructor(private tournamentService: TournamentService, private dialog: MatDialog, private router: Router, private toastService: ToastService, public electronService: ElectronService) {
+	constructor(public authenticateService: AuthenticateService, private tournamentService: TournamentService, private dialog: MatDialog, private router: Router, private toastService: ToastService, public electronService: ElectronService) {
 		this.deletedTournamentEmitter = new EventEmitter(false);
 		this.tournamentPublishedEmitter = new EventEmitter(null);
 	}

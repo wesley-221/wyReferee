@@ -1,9 +1,9 @@
 <div class="main">
 	<div class="sidebar">
 		<div *ngFor="let sidebarItem of sidebarMenu">
-			<div [id]="sidebarItem.htmlElementId" *ngIf="sidebarItem.onlyShowAsAdministrator == true ? authenticateService.loggedInUser && authenticateService.loggedInUser.isAdmin == true : sidebarItem.onlyShowAsTournamentHost == true ? authenticateService.loggedInUser && (authenticateService.loggedInUser.isAdmin == true || authenticateService.loggedInUser.isTournamentManager == true) : true"
+			<div [id]="sidebarItem.htmlElementId" *ngIf="sidebarItem.onlyShowWhenLoggedIn == true ? authenticateService.loggedIn == true : sidebarItem.onlyShowAsAdministrator == true ? authenticateService.loggedInUser && authenticateService.loggedInUser.isAdmin == true : sidebarItem.onlyShowAsTournamentHost == true ? authenticateService.loggedInUser && (authenticateService.loggedInUser.isAdmin == true || authenticateService.loggedInUser.isTournamentManager == true) : true"
 				[ngClass]="{ 'item': sidebarItem.subMenuItem == null || sidebarItem.subMenuItem != true,
-			'sub-item': sidebarItem.subMenuItem != null && sidebarItem.subMenuItem == true}" [routerLink]="sidebarItem.link"
+			'sub-item': sidebarItem.subMenuItem != null && sidebarItem.subMenuItem == true }" [routerLink]="sidebarItem.link"
 				routerLinkActive="active">
 				<div class="logo">
 					<mat-icon class="icon-2x" *ngIf="sidebarItem.logo">{{ sidebarItem.logo }}</mat-icon>

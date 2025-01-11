@@ -4,6 +4,7 @@ export class SidebarItem {
 	svgIcon: string;
 	link: string;
 	subMenuItem: boolean;
+	onlyShowWhenLoggedIn: boolean;
 	onlyShowAsTournamentHost: boolean;
 	onlyShowAsAdministrator: boolean;
 	htmlElementId: string;
