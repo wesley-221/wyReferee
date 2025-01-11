@@ -23,11 +23,15 @@ export class AuthenticationComponent implements OnInit {
 
 	ircLoginForm: FormGroup;
 
+	ircLoginTimeout: NodeJS.Timeout;
+	showIrcLoginTimeout: boolean;
+
 	constructor(private apiKeyValidation: ApiKeyValidation, private storeService: StoreService, private toastService: ToastService, public authService: AuthenticateService, public ircService: IrcService, public electronService: ElectronService) {
 		this.apiKeyIsValid = false;
 		this.isAuthenticating = false;
 		this.isConnecting = false;
 		this.isDisconnecting = false;
+		this.showIrcLoginTimeout = false;
 
 		this.ircLoginForm = new FormGroup({
 			'irc-username': new FormControl('', [
@@ -55,6 +59,14 @@ export class AuthenticationComponent implements OnInit {
 		// Subscribe to the isDisConnecting variable to show/hide the spinner
 		this.ircService.getIsDisconnecting().subscribe(value => {
 			this.isDisconnecting = value;
+		});
+
+		// Subscribe to the isAuthenticated variable to clear the irc login timeout message
+		this.ircService.getIsAuthenticated().subscribe(value => {
+			if (value == true) {
+				clearTimeout(this.ircLoginTimeout);
+				this.showIrcLoginTimeout = false;
+			}
 		});
 	}
 
@@ -95,6 +107,10 @@ export class AuthenticationComponent implements OnInit {
 		const password = this.ircLoginForm.get('irc-password').value;
 
 		this.ircService.connect(username, password);
+
+		this.ircLoginTimeout = setTimeout(() => {
+			this.showIrcLoginTimeout = true;
+		}, 7000);
 	}
 
 	disconnectIrc() {

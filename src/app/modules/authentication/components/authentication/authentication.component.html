@@ -91,6 +91,10 @@
 						<app-alert alertType="danger" *ngIf="ircService.ircConnectionError">
 							{{ ircService.ircConnectionError }}
 						</app-alert>
+
+						<app-alert alertType="warn" *ngIf="showIrcLoginTimeout == true">
+							It is taking a long time to log you in to IRC. If you have the osu! tourney spectate client open, make sure to open wyReferee first before starting the spectate client.
+						</app-alert>
 					</form>
 
 					<div class="footer" *ngIf="ircService.isAuthenticated">
