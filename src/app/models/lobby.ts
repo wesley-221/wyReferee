@@ -577,6 +577,20 @@ export class Lobby {
 	}
 
 	/**
+	 * Get the escaped name from team one
+	 */
+	getEscapedTeamOneName(): string {
+		return this.teamOneName.replace(/[\p{Emoji_Presentation}\p{Emoji}\uFE0F]/gu, '');
+	}
+
+	/**
+	 * Get the escaped name from team two
+	 */
+	getEscapedTeamTwoName(): string {
+		return this.teamTwoName.replace(/[\p{Emoji_Presentation}\p{Emoji}\uFE0F]/gu, '');
+	}
+
+	/**
 	 * Calculate the score of team one with score overwriting
 	 */
 	getTeamOneScore(): number {
