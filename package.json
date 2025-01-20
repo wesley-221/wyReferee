@@ -1,6 +1,6 @@
 {
 	"name": "wyreferee",
-	"version": "6.9.4",
+	"version": "6.9.5",
 	"description": "Referee client",
 	"author": {
 		"name": "Wesley"
@@ -99,7 +99,7 @@
 	"dependencies": {
 		"@angular/animations": "13.3.2",
 		"@angular/material": "13.3.2",
-		"bancho.js": "^0.9.7",
+		"bancho.js": "^0.12.0",
 		"electron-log": "^3.0.8",
 		"electron-store": "^5.0.0",
 		"electron-updater": "^4.1.2",
