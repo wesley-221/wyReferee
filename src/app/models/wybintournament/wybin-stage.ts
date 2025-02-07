@@ -1,5 +1,5 @@
-import { WyBinMatch } from "./wybin-match";
-import { WyBinOpponent } from "./wybin-opponent";
+import { WyBinMatch } from './wybin-match';
+import { WyBinOpponent } from './wybin-opponent';
 
 export class WyBinStage {
 	id: number;

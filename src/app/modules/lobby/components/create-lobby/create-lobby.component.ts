@@ -168,7 +168,7 @@ export class CreateLobbyComponent implements OnInit {
 
 			if (lobbyForm.selectedTournament.hasWyBinConnected()) {
 				lobby.wybinStageId = this.validationForm.get('stage-id').value;
-				lobby.wybinMatchId = this.validationForm.get('selected-match-id').value
+				lobby.wybinMatchId = this.validationForm.get('selected-match-id').value;
 			}
 
 			this.multiplayerLobbiesPlayersService.createNewMultiplayerLobbyObject(lobby.lobbyId);

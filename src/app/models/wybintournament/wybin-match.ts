@@ -1,4 +1,4 @@
-import { WyBinOpponent } from "./wybin-opponent";
+import { WyBinOpponent } from './wybin-opponent';
 
 export class WyBinMatch {
 	id: number;
