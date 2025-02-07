@@ -28,6 +28,9 @@ export class Lobby {
 	tournamentId: number;
 	tournament: WyTournament;
 
+	wybinStageId: number;
+	wybinMatchId: number;
+
 	teamSize: number;
 
 	mappoolId: number;
@@ -131,6 +134,8 @@ export class Lobby {
 			multiplayerLink: lobby.multiplayerLink,
 			tournamentId: lobby.tournamentId,
 			tournament: lobby.tournament != null ? WyTournament.makeTrueCopy(lobby.tournament) : null,
+			wybinStageId: lobby.wybinStageId,
+			wybinMatchId: lobby.wybinMatchId,
 			teamSize: lobby.teamSize,
 			mappoolId: lobby.mappoolId,
 			mappool: lobby.mappool != null ? WyMappool.makeTrueCopy(lobby.mappool) : null,

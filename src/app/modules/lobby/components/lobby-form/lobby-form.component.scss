@@ -38,3 +38,18 @@
 		grid-template-columns: 1fr 1fr 1fr;
 	}
 }
+
+.loading {
+	display: flex;
+
+	border: 1px solid darken(#3c4452, 15%);
+	color: white;
+
+	margin-top: 8px;
+	padding: 16px;
+
+	.spinner {
+		display: flex;
+		align-items: center;
+	}
+}

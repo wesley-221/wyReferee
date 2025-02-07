@@ -123,15 +123,31 @@ export class CreateLobbyComponent implements OnInit {
 				const selectedStage = this.validationForm.get('stage').value;
 
 				for (const stage of lobbyForm.selectedTournament.stages) {
-					if (stage.name == selectedStage) {
-						lobby.selectedStage = stage;
-						lobby.bestOf = stage.bestOf;
-						lobby.banCount = stage.bans;
+					if (stage.wyBinStageId != undefined || stage.wyBinStageId != null) {
+						const wyBinSelectedStageId = this.validationForm.get('stage-id').value;
 
-						lobby.teamOneHealth = Number(stage.hitpoints);
-						lobby.teamTwoHealth = Number(stage.hitpoints);
+						if (stage.wyBinStageId == wyBinSelectedStageId) {
+							lobby.selectedStage = stage;
+							lobby.bestOf = stage.bestOf;
+							lobby.banCount = stage.bans;
 
-						break;
+							lobby.teamOneHealth = Number(stage.hitpoints);
+							lobby.teamTwoHealth = Number(stage.hitpoints);
+
+							break;
+						}
+					}
+					else {
+						if (stage.name.toLowerCase() == selectedStage.toLowerCase()) {
+							lobby.selectedStage = stage;
+							lobby.bestOf = stage.bestOf;
+							lobby.banCount = stage.bans;
+
+							lobby.teamOneHealth = Number(stage.hitpoints);
+							lobby.teamTwoHealth = Number(stage.hitpoints);
+
+							break;
+						}
 					}
 				}
 
@@ -148,6 +164,11 @@ export class CreateLobbyComponent implements OnInit {
 			}
 			else {
 				lobby.bestOf = 3;
+			}
+
+			if (lobbyForm.selectedTournament.hasWyBinConnected()) {
+				lobby.wybinStageId = this.validationForm.get('stage-id').value;
+				lobby.wybinMatchId = this.validationForm.get('selected-match-id').value;
 			}
 
 			this.multiplayerLobbiesPlayersService.createNewMultiplayerLobbyObject(lobby.lobbyId);
@@ -187,7 +208,7 @@ export class CreateLobbyComponent implements OnInit {
 					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
 
 					if (lobbyForm.selectedTournament.hasWyBinConnected()) {
-						this.wybinService.getMatch(lobbyForm.selectedTournament.wyBinTournamentId, lobby.selectedStage.name, lobby.teamOneName, lobby.teamTwoName).subscribe((match: any) => {
+						this.wybinService.getMatch(lobbyForm.selectedTournament.wyBinTournamentId, lobby.wybinStageId, lobby.wybinMatchId, lobby.selectedStage.name, lobby.teamOneName, lobby.teamTwoName).subscribe((match: any) => {
 							if (match == null) {
 								this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 								return;

@@ -73,6 +73,8 @@ export class SendFinalResultComponent implements OnInit {
 			}
 
 			this.wybinService.updateMatchScore(wyBinTournamentId,
+				this.data.multiplayerLobby.wybinStageId,
+				this.data.multiplayerLobby.wybinMatchId,
 				this.data.multiplayerLobby.selectedStage.name,
 				this.data.multiplayerLobby.multiplayerLink,
 				this.data.multiplayerLobby.teamOneName,

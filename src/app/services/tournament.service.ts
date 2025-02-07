@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { GenericService } from './generic.service';
 import { ToastService } from './toast.service';
 import { ToastType } from 'app/models/toast';
+import { WyBinStage } from 'app/models/wybintournament/wybin-stage';
 
 @Injectable({
 	providedIn: 'root'
@@ -237,6 +238,15 @@ export class TournamentService {
 	 */
 	getWyBinQualifierLobbyTeams(tournamentId: number, qualifierIdentifier: string) {
 		return this.httpClient.get(`${this.apiUrl}tournament-qualifier-lobby-participants/${tournamentId}/${qualifierIdentifier}`);
+	}
+
+	/**
+	 * Get all wyBin stages from the given tournament
+	 *
+	 * @param tournamentId the id of the tournament
+	 */
+	getWyBinStages(tournamentId: number) {
+		return this.httpClient.get<WyBinStage[]>(`${this.apiUrl}tournament-stages/${tournamentId}`);
 	}
 }
 
