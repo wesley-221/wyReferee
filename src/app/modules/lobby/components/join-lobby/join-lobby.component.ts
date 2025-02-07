@@ -118,17 +118,32 @@ export class JoinLobbyComponent implements OnInit {
 
 			if (lobbyForm.selectedTournament != undefined || lobbyForm.selectedTournament != null) {
 				const selectedStage = this.validationForm.get('stage').value;
+				const wyBinSelectedStageId = this.validationForm.get('stage-id').value;
 
 				for (const stage of lobbyForm.selectedTournament.stages) {
-					if (stage.name == selectedStage) {
-						lobby.selectedStage = stage;
-						lobby.bestOf = stage.bestOf;
-						lobby.banCount = stage.bans;
+					if (stage.wyBinStageId != undefined || stage.wyBinStageId != null) {
+						if (stage.wyBinStageId == wyBinSelectedStageId) {
+							lobby.selectedStage = stage;
+							lobby.bestOf = stage.bestOf;
+							lobby.banCount = stage.bans;
 
-						lobby.teamOneHealth = Number(stage.hitpoints);
-						lobby.teamTwoHealth = Number(stage.hitpoints);
+							lobby.teamOneHealth = Number(stage.hitpoints);
+							lobby.teamTwoHealth = Number(stage.hitpoints);
 
-						break;
+							break;
+						}
+					}
+					else {
+						if (stage.name.toLowerCase() == selectedStage.toLowerCase()) {
+							lobby.selectedStage = stage;
+							lobby.bestOf = stage.bestOf;
+							lobby.banCount = stage.bans;
+
+							lobby.teamOneHealth = Number(stage.hitpoints);
+							lobby.teamTwoHealth = Number(stage.hitpoints);
+
+							break;
+						}
 					}
 				}
 
@@ -145,6 +160,11 @@ export class JoinLobbyComponent implements OnInit {
 			}
 			else {
 				lobby.bestOf = 3;
+			}
+
+			if (lobbyForm.selectedTournament.hasWyBinConnected()) {
+				lobby.wybinStageId = this.validationForm.get('stage-id').value;
+				lobby.wybinMatchId = this.validationForm.get('selected-match-id').value
 			}
 
 			this.multiplayerLobbiesPlayersService.createNewMultiplayerLobbyObject(lobby.lobbyId);

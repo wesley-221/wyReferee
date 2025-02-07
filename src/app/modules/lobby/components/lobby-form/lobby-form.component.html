@@ -170,7 +170,7 @@
 		<h1>Stage</h1>
 		<p>Select for which stage this match is supposed to be for.</p>
 
-		<mat-form-field id="tutorial-select-stage" class="full-width">
+		<mat-form-field id="tutorial-select-stage" class="full-width" *ngIf="!selectedTournament.hasWyBinConnected()">
 			<mat-label>Stage</mat-label>
 			<mat-select formControlName="stage">
 				<mat-option [value]="stage.name" *ngFor="let stage of selectedTournament.stages">{{ stage.name }}</mat-option>
@@ -180,6 +180,25 @@
 				This field is required
 			</mat-error>
 		</mat-form-field>
+
+		<mat-form-field id="tutorial-select-stage" class="full-width" *ngIf="selectedTournament.hasWyBinConnected()">
+			<mat-label>Stage</mat-label>
+			<mat-select formControlName="stage-id" (selectionChange)="changeStage()" [disabled]="wyBinStages.length <= 0">
+				<mat-option [value]="stage.id" *ngFor="let stage of wyBinStages">{{ stage.name }}</mat-option>
+			</mat-select>
+
+			<mat-error *ngIf="getValidation('stage-id').errors && (getValidation('stage-id').touched || getValidation('stage-id').dirty)">
+				This field is required
+			</mat-error>
+		</mat-form-field>
+
+		<div class="loading" *ngIf="loadingWyBinStages == true">
+			<div class="spinner">
+				<mat-spinner [diameter]="32"></mat-spinner>&nbsp;loading stages...
+			</div>
+		</div>
+
+		<hr />
 
 		<div class="row r-2">
 			<div id="tutorial-qualifier" class="col">
@@ -201,7 +220,33 @@
 
 		<hr />
 
-		<div id="tutorial-participants">
+		<div class="row" *ngIf="selectedTournament.hasWyBinConnected()">
+			<div class="col">
+				<h2>Select a match</h2>
+				<p>Choose a match to referee from the list below. Ensure you select the correct match before proceeding.</p>
+
+				<mat-form-field class="full-width">
+					<mat-label>Matches</mat-label>
+					<input matInput placeholder="Matches" formControlName="selected-match-name" [matAutocomplete]="matAutocomplete" [disabled]="wyBinMatches.length <= 0" />
+
+					<mat-autocomplete #matAutocomplete="matAutocomplete" (optionSelected)="selectMatch($event)">
+						<mat-option [value]="match.getMatchName()" *ngFor="let match of wyBinMatchesFilter | async">{{ match.getMatchName() }}</mat-option>
+					</mat-autocomplete>
+
+					<mat-error *ngIf="getValidation('selected-match-name').errors && (getValidation('selected-match-name').touched || getValidation('selected-match-name').dirty)">
+						The selected match is not valid. Choose a match from the provided list.
+					</mat-error>
+				</mat-form-field>
+
+				<app-alert alertType="info" *ngIf="wyBinMatches.length <= 0">
+					Make sure to select a stage, otherwise matches will not show up.
+				</app-alert>
+			</div>
+		</div>
+
+		<hr *ngIf="selectedTournament.hasWyBinConnected()" />
+
+		<div id="tutorial-participants" *ngIf="!selectedTournament.hasWyBinConnected()">
 			<div class="row r-2" *ngIf="qualifier == false">
 				<div class="col">
 					<h2>Team one name</h2>
