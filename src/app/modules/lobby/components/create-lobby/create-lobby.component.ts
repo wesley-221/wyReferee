@@ -121,10 +121,11 @@ export class CreateLobbyComponent implements OnInit {
 
 			if (lobbyForm.selectedTournament != undefined || lobbyForm.selectedTournament != null) {
 				const selectedStage = this.validationForm.get('stage').value;
-				const wyBinSelectedStageId = this.validationForm.get('stage-id').value;
 
 				for (const stage of lobbyForm.selectedTournament.stages) {
 					if (stage.wyBinStageId != undefined || stage.wyBinStageId != null) {
+						const wyBinSelectedStageId = this.validationForm.get('stage-id').value;
+
 						if (stage.wyBinStageId == wyBinSelectedStageId) {
 							lobby.selectedStage = stage;
 							lobby.bestOf = stage.bestOf;
@@ -207,7 +208,7 @@ export class CreateLobbyComponent implements OnInit {
 					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
 
 					if (lobbyForm.selectedTournament.hasWyBinConnected()) {
-						this.wybinService.getMatch(lobbyForm.selectedTournament.wyBinTournamentId, lobby.selectedStage.name, lobby.teamOneName, lobby.teamTwoName).subscribe((match: any) => {
+						this.wybinService.getMatch(lobbyForm.selectedTournament.wyBinTournamentId, lobby.wybinStageId, lobby.wybinMatchId, lobby.selectedStage.name, lobby.teamOneName, lobby.teamTwoName).subscribe((match: any) => {
 							if (match == null) {
 								this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 								return;
