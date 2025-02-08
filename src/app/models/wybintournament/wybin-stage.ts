@@ -28,13 +28,13 @@ export class WyBinStage {
 
 			if (newStage.qualifierStage == false) {
 				newMatch.opponentOne = new WyBinOpponent({
-					id: match.opponentOne.id,
-					name: match.opponentOne.name
+					id: match.opponentOne != null ? match.opponentOne.id : (match as any).playerOne.id,
+					name: match.opponentOne != null ? match.opponentOne.name : (match as any).playerOne.user.username
 				});
 
 				newMatch.opponentTwo = new WyBinOpponent({
-					id: match.opponentTwo.id,
-					name: match.opponentTwo.name
+					id: match.opponentTwo != null ? match.opponentOne.id : (match as any).playerTwo.id,
+					name: match.opponentTwo != null ? match.opponentTwo.name : (match as any).playerTwo.user.username
 				});
 			}
 
