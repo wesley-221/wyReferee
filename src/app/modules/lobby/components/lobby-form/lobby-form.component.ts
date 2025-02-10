@@ -190,14 +190,14 @@ export class LobbyFormComponent implements OnInit {
 	selectMatch(option: MatAutocompleteSelectedEvent) {
 		for (const match of this.wyBinMatches) {
 			if (match.getMatchName() == option.option.value) {
-				if (this.qualifier == false) {
-					this.validationForm.get('selected-match-id').setValue(match.id);
+				this.validationForm.get('selected-match-id').setValue(match.id);
 
+				if (this.qualifier == false) {
 					this.validationForm.get('team-one-name').setValue(match.opponentOne.name);
 					this.validationForm.get('team-two-name').setValue(match.opponentTwo.name);
 				}
 				else {
-					this.validationForm.get('qualifier-lobby-identifier').setValue(match.id);
+					this.validationForm.get('qualifier-lobby-identifier').setValue(match.qualifierIdentifier);
 				}
 			}
 		}
