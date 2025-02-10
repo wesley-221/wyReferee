@@ -11,7 +11,6 @@ import { StoreService } from './store.service';
 export class CacheService {
 	cacheVersion: string;
 
-
 	private cachedBeatmaps: CacheBeatmap[] = [];
 	private cachedUsers: CacheUser[] = [];
 	private cachedModifiers: CacheModifier[] = [];
@@ -85,6 +84,8 @@ export class CacheService {
 				}
 			}
 		}
+
+		return null;
 	}
 
 	/**
@@ -197,5 +198,25 @@ export class CacheService {
 	 */
 	public getVersion(): string {
 		return this.storeService.get('version');
+	}
+
+	/**
+	 * Get the cover image
+	 *
+	 * @param beatmapId the beatmapid
+	 */
+	getBeatmapCoverUrl(beatmapId: number): string {
+		const cachedBeatmap = this.getCachedBeatmap(beatmapId);
+		return (cachedBeatmap != null) ? `https://assets.ppy.sh/beatmaps/${cachedBeatmap.beatmapSetId}/covers/cover.jpg` : '';
+	}
+
+	/**
+	 * Get the cached beatmap if it exists
+	 *
+	 * @param beatmapId the beatmapid
+	 */
+	getBeatmapname(beatmapId: number) {
+		const cachedBeatmap = this.getCachedBeatmap(beatmapId);
+		return (cachedBeatmap != null) ? cachedBeatmap.name : 'Unknown beatmap, synchronize the lobby to get the map name.';
 	}
 }

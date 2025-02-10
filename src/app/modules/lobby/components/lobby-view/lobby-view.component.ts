@@ -6,7 +6,6 @@ import { SendFinalResultComponent } from 'app/components/dialogs/send-final-resu
 import { OsuHelper } from 'app/models/osu-models/osu';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { Lobby } from 'app/models/lobby';
-import { CacheBeatmap } from 'app/models/cache/cache-beatmap';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { MultiplayerDataUser } from 'app/models/store-multiplayer/multiplayer-data-user';
 import { CacheService } from 'app/services/cache.service';
@@ -44,7 +43,7 @@ export class LobbyViewComponent implements OnInit {
 		private route: ActivatedRoute,
 		private multiplayerLobbies: WyMultiplayerLobbiesService,
 		private toastService: ToastService,
-		private cacheService: CacheService,
+		public cacheService: CacheService,
 		public electronService: ElectronService,
 		private storeService: StoreService,
 		public ircService: IrcService,
@@ -79,7 +78,7 @@ export class LobbyViewComponent implements OnInit {
 
 	/**
 	 * Send the result of the beatmap to irc if connected
-	 * NOTE: Update in send-beatmap-result.component.ts as well
+	 * NOTE: Update in send-beatmap-result.component.ts and irc.component.ts as well
 	 *
 	 * @param match
 	 */
@@ -99,11 +98,11 @@ export class LobbyViewComponent implements OnInit {
 
 			if (match.team_one_score > match.team_two_score) {
 				const teamOneHasWon = (this.selectedLobby.getTeamOneScore() == Math.ceil(this.selectedLobby.bestOf / 2));
-				this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.getTeamOneScore()} : ${this.selectedLobby.getTeamTwoScore()} | ${this.selectedLobby.teamTwoName} ${!teamOneHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
+				this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.getTeamOneScore()} : ${this.selectedLobby.getTeamTwoScore()} | ${this.selectedLobby.teamTwoName} ${!teamOneHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
 			}
 			else {
 				const teamTwoHasWon = (this.selectedLobby.teamTwoScore == Math.ceil(this.selectedLobby.bestOf / 2));
-				this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_two_score - match.team_one_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.getTeamOneScore()} : ${this.selectedLobby.getTeamTwoScore()} | ${this.selectedLobby.teamTwoName} ${!teamTwoHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
+				this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_two_score - match.team_one_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.getTeamOneScore()} : ${this.selectedLobby.getTeamTwoScore()} | ${this.selectedLobby.teamTwoName} ${!teamTwoHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
 			}
 		}
 	}
@@ -117,15 +116,15 @@ export class LobbyViewComponent implements OnInit {
 		let beatmapResult = '';
 
 		if (match.team_one_score > match.team_two_score) {
-			beatmapResult = `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_one_score - match.team_two_score}`;
+			beatmapResult = `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_one_score - match.team_two_score}`;
 		}
 		else {
-			beatmapResult = `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_two_score - match.team_one_score}`;
+			beatmapResult = `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_two_score - match.team_one_score}`;
 		}
 
 		this.clipboardService.copyFromContent(beatmapResult);
 
-		this.toastService.addToast(`Copied the result for "${this.getBeatmapname(match.beatmap_id)}"`);
+		this.toastService.addToast(`Copied the result for "${this.cacheService.getBeatmapname(match.beatmap_id)}"`);
 	}
 
 	/**
@@ -174,10 +173,10 @@ export class LobbyViewComponent implements OnInit {
 		this.storeService.set(`lobby.${this.selectedLobby.lobbyId}.countForScore.${match.game_id}`, this.selectedLobby.gamesCountTowardsScore[match.game_id]);
 
 		if (this.selectedLobby.gamesCountTowardsScore[match.game_id]) {
-			this.toastService.addToast(`"${this.getBeatmapname(match.beatmap_id)}" will now count towards the score.`);
+			this.toastService.addToast(`"${this.cacheService.getBeatmapname(match.beatmap_id)}" will now count towards the score.`);
 		}
 		else {
-			this.toastService.addToast(`"${this.getBeatmapname(match.beatmap_id)}" will no longer count towards the score.`);
+			this.toastService.addToast(`"${this.cacheService.getBeatmapname(match.beatmap_id)}" will no longer count towards the score.`);
 		}
 
 		// Re-synchronize the lobby to change game counter
@@ -195,36 +194,6 @@ export class LobbyViewComponent implements OnInit {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Get the cached beatmap if it exists
-	 *
-	 * @param beatmapId the beatmapid
-	 */
-	getBeatmapname(beatmapId: number) {
-		const cachedBeatmap = this.cacheService.getCachedBeatmap(beatmapId);
-		return (cachedBeatmap != null) ? cachedBeatmap.name : 'Unknown beatmap, synchronize the lobby to get the map name.';
-	}
-
-	/**
-	 * Get a beatmap from any given mappool
-	 *
-	 * @param beatmapId the beatmapid
-	 */
-	getBeatmapnameFromMappools(beatmapId: number): CacheBeatmap {
-		const cachedBeatmap = this.cacheService.getCachedBeatmapFromMappools(beatmapId);
-		return (cachedBeatmap != null) ? cachedBeatmap : null;
-	}
-
-	/**
-	 * Get the cover image
-	 *
-	 * @param beatmapId the beatmapid
-	 */
-	getBeatmapCoverUrl(beatmapId: number): string {
-		const cachedBeatmap = this.cacheService.getCachedBeatmap(beatmapId);
-		return (cachedBeatmap != null) ? `https://assets.ppy.sh/beatmaps/${cachedBeatmap.beatmapSetId}/covers/cover.jpg` : '';
 	}
 
 	/**
