@@ -246,6 +246,51 @@
 				</div>
 			</virtual-scroller>
 
+			<div class="match-results" *ngIf="matchDialogHeaderName && (matchDialogMultiplayerData || matchDialogSendFinalResult)">
+				<div class="header">
+					<div class="text">
+						{{ matchDialogHeaderName }}
+					</div>
+
+					<div class="close" (click)="closeMatchDialog()">
+						<mat-icon>close</mat-icon>
+					</div>
+				</div>
+
+				<div *ngIf="matchDialogMultiplayerData" class="match-result-beatmap"[ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + cacheService.getBeatmapCoverUrl(matchDialogMultiplayerData.beatmap_id) + ')' }">
+					<div class="beatmap-header">
+						{{ cacheService.getBeatmapname(matchDialogMultiplayerData.beatmap_id) }}
+					</div>
+
+					<div class="teams">
+						<div class="red-team">
+							<span class="team-name">{{ selectedLobby.teamOneName }}</span>: {{ matchDialogMultiplayerData.team_one_score }}
+						</div>
+
+						<div class="blue-team">
+							<span class="team-name">{{ selectedLobby.teamTwoName }}</span>: {{ matchDialogMultiplayerData.team_two_score }}
+						</div>
+					</div>
+				</div>
+
+				<div class="match-result" *ngIf="matchDialogSendFinalResult">
+					<div class="match-score">
+						<span class="team-one">{{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="selectedLobby.getTeamOneScore() > selectedLobby.getTeamTwoScore() ? 'win' : 'lose'">{{ selectedLobby.getTeamOneScore() }}</span>
+					</div>
+
+					<div class="match-score">
+						<span class="team-two">{{ selectedLobby.teamTwoName }}</span> score : <span [ngClass]="selectedLobby.getTeamOneScore() < selectedLobby.getTeamTwoScore() ? 'win' : 'lose'">{{ selectedLobby.getTeamTwoScore() }}</span>
+					</div>
+
+					<div class="team-name" [ngClass]="{'red': hasWon == selectedLobby.teamOneName, 'blue': hasWon == selectedLobby.teamTwoName }">{{ hasWon }}</div> has won the match!
+				</div>
+
+				<div class="message">
+					<button *ngIf="matchDialogMultiplayerData" mat-raised-button color="primary" (click)="sendBeatmapResult(matchDialogMultiplayerData)"><mat-icon>send</mat-icon> send beatmap result</button>
+					<button *ngIf="matchDialogSendFinalResult" mat-raised-button color="primary" (click)="sendFinalResult()"><mat-icon>send</mat-icon> send final result to Discord</button>
+				</div>
+			</div>
+
 			<app-irc-shortcut-commands [lobby]="selectedLobby" [channel]="selectedChannel" (focusChat)="focusChat($event)"></app-irc-shortcut-commands>
 
 			<div class="slash-commands" *ngIf="chatMessage.value.startsWith('/')">

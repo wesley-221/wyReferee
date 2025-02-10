@@ -39,6 +39,9 @@ import { SlashCommand } from 'app/models/slash-command';
 import { GenericService } from 'app/services/generic.service';
 import { ProtectBeatmapDialogComponent } from 'app/components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
 import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dialog-data';
+import { CacheService } from 'app/services/cache.service';
+import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
+import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
 
 @Component({
 	selector: 'app-irc',
@@ -107,6 +110,10 @@ export class IrcComponent implements OnInit {
 	allSlashCommandsFiltered: SlashCommand[];
 	activeSlashCommand: SlashCommand;
 
+	matchDialogHeaderName: string;
+	matchDialogMultiplayerData: MultiplayerData;
+	matchDialogSendFinalResult: boolean;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -122,12 +129,15 @@ export class IrcComponent implements OnInit {
 		private tournamentService: TournamentService,
 		private challongeService: ChallongeService,
 		public slashCommandService: SlashCommandService,
-		private genericService: GenericService) {
+		private genericService: GenericService,
+		public cacheService: CacheService) {
 		this.channels = ircService.allChannels;
 
 		const dividerHeightStore = this.storeService.get('dividerHeight');
 		this.currentMessageHistoryIndex = -1;
 		this.slashCommandIndex = -1;
+
+		this.matchDialogSendFinalResult = false;
 
 		if (dividerHeightStore == undefined) {
 			this.storeService.set('dividerHeight', 30);
@@ -181,6 +191,12 @@ export class IrcComponent implements OnInit {
 			if (data.lobbyId == this.selectedLobby.lobbyId) {
 				this.selectedLobby = data;
 				this.refreshIrcHeader(this.selectedLobby);
+
+				if (this.selectedLobby.isQualifierLobby == false) {
+					this.matchDialogHeaderName = 'Last played beatmap';
+					this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
+					this.matchDialogSendFinalResult = false;
+				}
 			}
 		});
 
@@ -335,6 +351,8 @@ export class IrcComponent implements OnInit {
 				this.initializeQualifierTeams();
 			}
 		}
+
+		this.closeMatchDialog();
 
 		// Scroll to the bottom - delay it by 500 ms or do it instantly
 		if (delayScroll) {
@@ -1017,6 +1035,8 @@ export class IrcComponent implements OnInit {
 				}
 			}
 		});
+
+		this.closeMatchDialog();
 	}
 
 	/**
@@ -1028,6 +1048,67 @@ export class IrcComponent implements OnInit {
 		// console.time('synchronize-lobby');
 		this.multiplayerLobbies.synchronizeMultiplayerMatch(this.selectedLobby, true, false);
 		// console.timeEnd('synchronize-lobby');
+	}
+
+	/**
+	 * Closes the match dialog
+	 */
+	closeMatchDialog() {
+		if (this.selectedLobby.isQualifierLobby == true) {
+			this.matchDialogHeaderName = null;
+			this.matchDialogMultiplayerData = null;
+			this.matchDialogSendFinalResult = false;
+		}
+		else {
+			this.matchDialogHeaderName = null;
+			this.matchDialogMultiplayerData = null;
+
+			if (this.hasWon != null && this.matchDialogSendFinalResult == false) {
+				this.matchDialogHeaderName = 'Match has finished';
+				this.matchDialogSendFinalResult = true;
+			}
+			else {
+				this.matchDialogSendFinalResult = false;
+			}
+		}
+	}
+
+	/**
+	 * Send the result of the beatmap to irc if connected
+	 * NOTE: Update in lobby-view.component.ts and send-beatmap-result.component.ts as well
+	 *
+	 * @param lastPlayedBeatmap
+	 */
+	sendBeatmapResult(lastPlayedBeatmap: MultiplayerData) {
+		// User is connected to irc channel
+		if (this.selectedChannel.name != null) {
+			for (const conditionalMessage of this.selectedLobby.tournament.conditionalMessages) {
+				const finalMessage = WyConditionalMessage.translateMessage(conditionalMessage.message, lastPlayedBeatmap, this.selectedLobby, this.cacheService.getBeatmapname(lastPlayedBeatmap.beatmap_id));
+
+				if (conditionalMessage.beatmapResult) {
+					if (conditionalMessage.nextPickMessage) {
+						if (this.selectedLobby.teamHasWon() == null && !this.selectedLobby.getTiebreaker()) {
+							this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
+						}
+					}
+					else if (conditionalMessage.nextPickTiebreakerMessage) {
+						if (this.selectedLobby.teamHasWon() == null && this.selectedLobby.getTiebreaker()) {
+							this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
+						}
+					}
+					else if (conditionalMessage.matchWonMessage) {
+						if (this.selectedLobby.teamHasWon() != null) {
+							this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
+						}
+					}
+					else {
+						this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
+					}
+				}
+			}
+
+			this.closeMatchDialog();
+		}
 	}
 
 	/**

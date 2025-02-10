@@ -590,6 +590,139 @@ $hyperlink-background-color: #2b4576;
 				}
 			}
 
+			.match-results {
+				position: absolute;
+				z-index: 10;
+
+				bottom: 44px;
+				right: 25%;
+				max-width: 300px;
+
+				margin: 16px;
+
+				background-color: $background-color;
+				border: 1px solid $primary;
+
+				-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+				-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+				box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+
+				.header {
+					display: flex;
+					justify-content: space-between;
+
+					background-color: $primary;
+					color: black;
+
+					.text {
+						display: flex;
+						align-items: center;
+
+						font-weight: bold;
+					}
+
+					.close {
+						display: flex;
+
+						&:hover {
+							background-color: darken($primary, 15%);
+							cursor: pointer;
+						}
+					}
+				}
+
+				.match-result-beatmap {
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+
+					background-position: center;
+					background-size: cover;
+
+					padding: 8px;
+
+					.beatmap-header {
+						color: $primary;
+					}
+
+					.teams {
+						background-color: #0000004d;
+						padding: 4px;
+						margin: 4px;
+
+						.red-team {
+							.team-name {
+								color: #e94f64;
+							}
+						}
+
+						.blue-team {
+							.team-name {
+								color: #29b;
+							}
+						}
+					}
+
+					.send-button {
+						display: flex;
+						justify-content: flex-end;
+					}
+				}
+
+				.match-result {
+					padding: 8px;
+
+					.match-score {
+						.team-one {
+							color: $red-team-chat-colour;
+						}
+
+						.team-two {
+							color: $blue-team-chat-colour;
+						}
+
+						.win {
+							font-weight: bold;
+							color: #008000;
+						}
+
+						.lose {
+							color: #ff0000;
+						}
+					}
+
+					.team-name {
+						display: inline-block;
+
+						margin-top: 8px;
+						margin-bottom: 2px;
+						padding: 2px 16px 2px 16px;
+
+						border-radius: 25px;
+
+						&.red {
+							background-color: $red-team-chat-colour;
+						}
+
+						&.blue {
+							background-color: $blue-team-chat-colour;
+						}
+
+						&.primary {
+							background-color: $primary;
+							color: #000000;
+						}
+					}
+				}
+
+				.message {
+					display: flex;
+					justify-content: center;
+
+					padding: 4px;
+				}
+			}
+
 			.slash-commands {
 				position: fixed;
 				bottom: 44px;
