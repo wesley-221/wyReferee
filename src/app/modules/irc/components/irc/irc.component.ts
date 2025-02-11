@@ -192,10 +192,12 @@ export class IrcComponent implements OnInit {
 				this.selectedLobby = data;
 				this.refreshIrcHeader(this.selectedLobby);
 
-				if (this.selectedLobby.isQualifierLobby == false) {
-					this.matchDialogHeaderName = 'Last played beatmap';
-					this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
-					this.matchDialogSendFinalResult = false;
+				if (this.selectedLobby && this.selectedLobby.tournament.hasWyBinConnected()) {
+					if (this.selectedLobby.isQualifierLobby == false) {
+						this.matchDialogHeaderName = 'Last played beatmap';
+						this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
+						this.matchDialogSendFinalResult = false;
+					}
 				}
 			}
 		});
