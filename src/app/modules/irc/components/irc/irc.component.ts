@@ -1054,22 +1054,29 @@ export class IrcComponent implements OnInit {
 	 * Closes the match dialog
 	 */
 	closeMatchDialog() {
-		if (this.selectedLobby.isQualifierLobby == true) {
-			this.matchDialogHeaderName = null;
-			this.matchDialogMultiplayerData = null;
-			this.matchDialogSendFinalResult = false;
+		if (this.selectedLobby && this.selectedLobby.tournament.hasWyBinConnected()) {
+			if (this.selectedLobby.isQualifierLobby == true) {
+				this.matchDialogHeaderName = null;
+				this.matchDialogMultiplayerData = null;
+				this.matchDialogSendFinalResult = false;
+			}
+			else {
+				this.matchDialogHeaderName = null;
+				this.matchDialogMultiplayerData = null;
+
+				if (this.hasWon != null && this.matchDialogSendFinalResult == false) {
+					this.matchDialogHeaderName = 'Match has finished';
+					this.matchDialogSendFinalResult = true;
+				}
+				else {
+					this.matchDialogSendFinalResult = false;
+				}
+			}
 		}
 		else {
 			this.matchDialogHeaderName = null;
 			this.matchDialogMultiplayerData = null;
-
-			if (this.hasWon != null && this.matchDialogSendFinalResult == false) {
-				this.matchDialogHeaderName = 'Match has finished';
-				this.matchDialogSendFinalResult = true;
-			}
-			else {
-				this.matchDialogSendFinalResult = false;
-			}
+			this.matchDialogSendFinalResult = false;
 		}
 	}
 
