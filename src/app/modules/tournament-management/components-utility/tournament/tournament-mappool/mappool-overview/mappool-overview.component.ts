@@ -124,10 +124,29 @@ export class MappoolOverviewComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
-				for (const findMappool in this.tournament.mappools) {
-					if (this.tournament.mappools[findMappool].index == mappool.index) {
-						this.tournament.mappools.splice(Number(findMappool), 1);
-						break;
+				for (const iMappool in this.tournament.mappools) {
+					if (this.tournament.mappools[iMappool].index == mappool.index) {
+						const findMappool = this.tournament.mappools[iMappool];
+
+						this.tournament.mappools.splice(Number(iMappool), 1);
+
+						this.validationForm.removeControl(`mappool-${findMappool.index}-name`);
+						this.validationForm.removeControl(`mappool-${findMappool.index}-type`);
+
+						for (const modBracket of findMappool.modBrackets) {
+							this.validationForm.removeControl(`mappool-${findMappool.index}-mod-bracket-${modBracket.index}-name`);
+							this.validationForm.removeControl(`mappool-${findMappool.index}-mod-bracket-${modBracket.index}-acronym`);
+
+							for (const mod of modBracket.mods) {
+								this.validationForm.removeControl(`mappool-${findMappool.index}-mod-bracket-${modBracket.index}-mod-${mod.index}-value`);
+							}
+
+							if (mappool.type == MappoolType.AxS) {
+								for (const beatmap of modBracket.beatmaps) {
+									this.validationForm.removeControl(`mappool-${findMappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`);
+								}
+							}
+						}
 					}
 				}
 
