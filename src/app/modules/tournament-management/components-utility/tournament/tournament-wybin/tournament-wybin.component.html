@@ -5,12 +5,21 @@
 
 <h3>wyBin Tournament</h3>
 
-<mat-form-field class="full-width" *ngIf="tournaments.length > 0">
-	<mat-label>wyBin tournaments</mat-label>
-	<mat-select (selectionChange)="onWyBinTournamentChange($event)" [value]="tournament.wyBinTournamentId">
-		<mat-option [value]="tIndex.id" *ngFor="let tIndex of tournaments">{{ tIndex.name }}</mat-option>
-	</mat-select>
-</mat-form-field>
+<form [formGroup]="validationForm">
+	<mat-form-field class="full-width" *ngIf="tournaments.length > 0">
+		<mat-label>wyBin tournaments</mat-label>
+
+		<input type="text" matInput formControlName="tournamentName" [matAutocomplete]="auto" />
+
+		<mat-autocomplete #auto="matAutocomplete">
+			<mat-option [value]="tournament" *ngFor="let tournament of filteredOptions | async">{{ tournament }}</mat-option>
+		</mat-autocomplete>
+
+		<mat-error *ngIf="validationForm.get('tournamentName').errors && (validationForm.get('tournamentName').touched || validationForm.get('tournamentName').dirty)">
+			The selected wyBin tournament is not valid. Choose a wyBin tournament from the provided list.
+		</mat-error>
+	</mat-form-field>
+</form>
 
 <app-alert alertType="info" *ngIf="tournaments.length <= 0">No tournaments have been found. </app-alert>
 
