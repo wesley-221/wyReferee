@@ -197,6 +197,8 @@ export class IrcComponent implements OnInit {
 						this.matchDialogHeaderName = 'Last played beatmap';
 						this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
 						this.matchDialogSendFinalResult = false;
+
+						this.ref.detectChanges();
 					}
 				}
 			}
@@ -1080,6 +1082,8 @@ export class IrcComponent implements OnInit {
 			this.matchDialogMultiplayerData = null;
 			this.matchDialogSendFinalResult = false;
 		}
+
+		this.ref.detectChanges();
 	}
 
 	/**
