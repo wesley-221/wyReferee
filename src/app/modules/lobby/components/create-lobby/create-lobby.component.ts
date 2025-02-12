@@ -166,7 +166,7 @@ export class CreateLobbyComponent implements OnInit {
 				lobby.bestOf = 3;
 			}
 
-			if (lobbyForm.selectedTournament.hasWyBinConnected()) {
+			if (lobbyForm.selectedTournament && lobbyForm.selectedTournament.hasWyBinConnected()) {
 				lobby.wybinStageId = this.validationForm.get('stage-id').value;
 				lobby.wybinMatchId = this.validationForm.get('selected-match-id').value;
 			}
@@ -207,7 +207,7 @@ export class CreateLobbyComponent implements OnInit {
 
 					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
 
-					if (lobbyForm.selectedTournament.hasWyBinConnected()) {
+					if (lobbyForm.selectedTournament && lobbyForm.selectedTournament.hasWyBinConnected()) {
 						this.wybinService.getMatch(lobbyForm.selectedTournament.wyBinTournamentId, lobby.wybinStageId, lobby.wybinMatchId, lobby.selectedStage.name, lobby.teamOneName, lobby.teamTwoName).subscribe((match: any) => {
 							if (match == null) {
 								this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
@@ -234,9 +234,6 @@ export class CreateLobbyComponent implements OnInit {
 						}, () => {
 							this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 						});
-					}
-					else {
-						this.webhookService.sendMatchCreation(lobby, this.ircService.authenticatedUser);
 					}
 
 					this.creatingMultiplayerLobby = false;

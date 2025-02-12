@@ -6,8 +6,8 @@
 	</app-alert>
 
 	<div *ngFor="let match of data.multiplayerLobby.multiplayerData | reverse">
-		<div class="img" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + getBeatmapCoverUrl(match.beatmap_id) + ')' }">
-			<h2>{{ getBeatmapname(match.beatmap_id) }}</h2>
+		<div class="img" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + cacheService.getBeatmapCoverUrl(match.beatmap_id) + ')' }">
+			<h2>{{ cacheService.getBeatmapname(match.beatmap_id) }}</h2>
 
 			<div class="teams">
 				<div class="red-team">

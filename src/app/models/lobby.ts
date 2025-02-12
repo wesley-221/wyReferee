@@ -704,4 +704,12 @@ export class Lobby {
 
 		return 'Unknown';
 	}
+
+	/**
+	 * Get the last played beatmap from this lobby
+	 */
+	getLastPlayedBeatmap(): MultiplayerData {
+		const lastPlayedBeatmap = this.multiplayerData[this.multiplayerData.length - 1];
+		return lastPlayedBeatmap;
+	}
 }

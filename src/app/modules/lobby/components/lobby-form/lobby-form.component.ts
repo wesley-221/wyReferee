@@ -192,8 +192,13 @@ export class LobbyFormComponent implements OnInit {
 			if (match.getMatchName() == option.option.value) {
 				this.validationForm.get('selected-match-id').setValue(match.id);
 
-				this.validationForm.get('team-one-name').setValue(match.opponentOne.name);
-				this.validationForm.get('team-two-name').setValue(match.opponentTwo.name);
+				if (this.qualifier == false) {
+					this.validationForm.get('team-one-name').setValue(match.opponentOne.name);
+					this.validationForm.get('team-two-name').setValue(match.opponentTwo.name);
+				}
+				else {
+					this.validationForm.get('qualifier-lobby-identifier').setValue(match.qualifierIdentifier);
+				}
 			}
 		}
 	}
