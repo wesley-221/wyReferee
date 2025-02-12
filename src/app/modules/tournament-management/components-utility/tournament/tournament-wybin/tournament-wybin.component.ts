@@ -43,7 +43,7 @@ export class TournamentWybinComponent implements OnInit {
 
 			this.filteredOptions = this.validationForm.get('tournamentName').valueChanges.pipe(
 				startWith(''),
-				map(value => this._filter(value || ''))
+				map(value => this.filter(value || ''))
 			);
 
 			this.validationForm.get('tournamentName').valueChanges.subscribe(tournamentName => {
@@ -62,7 +62,7 @@ export class TournamentWybinComponent implements OnInit {
 		this.tournament.wyBinTournamentId = wyBinTournament.value;
 	}
 
-	private _filter(value: string): string[] {
+	private filter(value: string): string[] {
 		const filterValue = value.toLowerCase();
 
 		return this.options.filter(option => option.toLowerCase().includes(filterValue));
