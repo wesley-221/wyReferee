@@ -16,13 +16,18 @@ export class AuthenticateService {
 	private readonly apiUrl = AppConfig.apiUrl;
 	private oauthResponse$: BehaviorSubject<string>;
 
+	private userLoggedIn$: BehaviorSubject<boolean>;
+
 	constructor(private httpClient: HttpClient, private electronService: ElectronService) {
 		this.oauthResponse$ = new BehaviorSubject(null);
+		this.userLoggedIn$ = new BehaviorSubject(null);
 	}
 
 	public loginUser(user: User): void {
 		this.loggedInUser = User.makeTrueCopy(user);
 		this.loggedIn = true;
+
+		this.userLoggedIn$.next(true);
 	}
 
 	/**
@@ -69,6 +74,13 @@ export class AuthenticateService {
 		this.startExpressServer();
 
 		return this.oauthResponse$;
+	}
+
+	/**
+	 * Triggers when the user logs after authenticating
+	 */
+	public userLoggedIn() {
+		return this.userLoggedIn$.asObservable();
 	}
 
 	/**
