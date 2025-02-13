@@ -114,6 +114,8 @@ export class IrcComponent implements OnInit {
 	matchDialogMultiplayerData: MultiplayerData;
 	matchDialogSendFinalResult: boolean;
 
+	sidebarHeaderButtonActive = 1;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -1180,6 +1182,15 @@ export class IrcComponent implements OnInit {
 				this.toastService.addToast(`${player.name} has been assigned as captain for ${this.selectedLobby.teamTwoName}.`);
 			}
 		}
+	}
+
+	/**
+	 * Change the sidebar menu
+	 *
+	 * @param option the button that was pressed
+	 */
+	selectSidebarHeaderButton(option: number) {
+		this.sidebarHeaderButtonActive = option;
 	}
 
 	/**
