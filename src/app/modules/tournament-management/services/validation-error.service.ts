@@ -16,6 +16,11 @@ export class ValidationErrorService {
 			new ValidationError('tournament-protects', 'You have to select whether to use protects.'),
 			new ValidationError('tournament-format', 'You have to select the tournament format.'),
 			new ValidationError('tournament-team-size', 'You have to set the team size.'),
+
+			new ValidationError('default-team-mode', 'You have to set the team mode for the default multiplayer lobby settings.'),
+			new ValidationError('default-win-condition', 'You have to set the win condition for the default multiplayer lobby settings.'),
+			new ValidationError('default-players', 'You have to set the players amount for the default multiplayer lobby settings.'),
+
 			new ValidationError('allow-double-pick', 'You have to select whether to allow double picking from a mod bracket.'),
 			new ValidationError('invalidate-beatmaps', 'You have to select whether to invalidate beatmaps that are not part of the mappool.'),
 			new ValidationError('lobby-team-name-with-brackets', 'You have to select whether to use brackets when creating a lobby.'),

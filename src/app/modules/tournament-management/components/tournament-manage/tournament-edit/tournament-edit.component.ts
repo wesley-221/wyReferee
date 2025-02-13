@@ -59,6 +59,9 @@ export class TournamentEditComponent implements OnInit {
 						Validators.min(1),
 						Validators.max(8)
 					]),
+					'default-team-mode': new FormControl(tournament.defaultTeamMode, Validators.required),
+					'default-win-condition': new FormControl(tournament.defaultWinCondition, Validators.required),
+					'default-players': new FormControl(tournament.defaultPlayers, Validators.required),
 					'allow-double-pick': new FormControl(tournament.allowDoublePick),
 					'invalidate-beatmaps': new FormControl(tournament.invalidateBeatmaps),
 					'lobby-team-name-with-brackets': new FormControl(tournament.lobbyTeamNameWithBrackets)
@@ -205,6 +208,10 @@ export class TournamentEditComponent implements OnInit {
 
 		this.tournament.format = this.validationForm.get('tournament-format').value;
 		this.tournament.teamSize = this.validationForm.get('tournament-team-size').value;
+
+		this.tournament.defaultTeamMode = this.validationForm.get('default-team-mode').value;
+		this.tournament.defaultWinCondition = this.validationForm.get('default-win-condition').value;
+		this.tournament.defaultPlayers = this.validationForm.get('default-players').value;
 
 		for (const mappool of this.tournament.mappools) {
 			mappool.name = this.validationForm.get(`mappool-${mappool.index}-name`).value;

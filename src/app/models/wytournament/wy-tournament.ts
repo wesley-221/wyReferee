@@ -40,6 +40,10 @@ export class WyTournament {
 	conditionalMessages: WyConditionalMessage[];
 	conditionalMessageIndex: number;
 
+	defaultTeamMode: number;
+	defaultWinCondition: number;
+	defaultPlayers: number;
+
 	invalidateBeatmaps: boolean;
 	allowDoublePick: boolean;
 	lobbyTeamNameWithBrackets: boolean;
@@ -99,7 +103,10 @@ export class WyTournament {
 			allowDoublePick: tournament.allowDoublePick,
 			invalidateBeatmaps: tournament.invalidateBeatmaps,
 			lobbyTeamNameWithBrackets: tournament.lobbyTeamNameWithBrackets,
-			wyBinTournamentId: tournament.wyBinTournamentId
+			wyBinTournamentId: tournament.wyBinTournamentId,
+			defaultTeamMode: Number(tournament.defaultTeamMode),
+			defaultWinCondition: Number(tournament.defaultWinCondition),
+			defaultPlayers: Number(tournament.defaultPlayers)
 		});
 
 		for (const team in tournament.teams) {
