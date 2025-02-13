@@ -129,7 +129,12 @@ export class OsuHelper {
 			new ModAbbreviation(Mods.Relax, 'rx'),
 			new ModAbbreviation(Mods.NoFail, 'nf'),
 			new ModAbbreviation(Mods.Perfect, 'pf'),
-			new ModAbbreviation(Mods.SuddenDeath, 'sd')
+			new ModAbbreviation(Mods.SuddenDeath, 'sd'),
+			{ fullModName: 'Nomod', abbreviationModName: 'nm' },
+			{ fullModName: 'No mod', abbreviationModName: 'nm' },
+			{ fullModName: 'Mixed mod', abbreviationModName: 'mm' },
+			{ fullModName: 'Mixedmod', abbreviationModName: 'mm' },
+			{ fullModName: 'Tiebreaker', abbreviationModName: 'tb' },
 		];
 
 		let modAbbreviations: string = null;
@@ -140,14 +145,8 @@ export class OsuHelper {
 			}
 		}
 
-		if (mod.trim().toLowerCase() == 'nomod') {
-			modAbbreviations = 'nm';
-		}
-		else if (['mixed mod', 'mixedmod'].includes(mod.trim().toLowerCase())) {
-			modAbbreviations = 'mm';
-		}
-		else if (mod.trim().toLowerCase() == 'tiebreaker') {
-			modAbbreviations = 'tb';
+		if (modAbbreviations == null) {
+			return mod;
 		}
 
 		return modAbbreviations;
