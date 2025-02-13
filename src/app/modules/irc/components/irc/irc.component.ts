@@ -1004,6 +1004,11 @@ export class IrcComponent implements OnInit {
 	 */
 	sendMatchSummary() {
 		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
+
+		if (selectedMultiplayerLobby.sendWebhooks != true) {
+			return;
+		}
+
 		this.webhookService.sendMatchSummary(selectedMultiplayerLobby, this.ircService.authenticatedUser);
 	}
 
@@ -1012,6 +1017,10 @@ export class IrcComponent implements OnInit {
 	 */
 	sendFinalResult() {
 		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
+
+		if (selectedMultiplayerLobby.sendWebhooks != true) {
+			return;
+		}
 
 		const dialogRef = this.dialog.open(SendFinalResultComponent, {
 			data: {
