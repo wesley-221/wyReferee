@@ -322,7 +322,7 @@
 					<mat-icon>settings</mat-icon>
 				</div>
 
-				<div class="header-button" [ngClass]="{'active': sidebarHeaderButtonActive == 3}" (click)="selectSidebarHeaderButton(3)">
+				<div class="header-button" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)" [ngClass]="{'active': sidebarHeaderButtonActive == 3}" (click)="selectSidebarHeaderButton(3)">
 					<mat-icon>person_add</mat-icon>
 				</div>
 			</div>
