@@ -870,6 +870,12 @@ $hyperlink-background-color: #2b4576;
 								background-color: darken($primary, 15%);
 								cursor: pointer;
 							}
+
+							&.disabled {
+								background-color: gray;
+
+								cursor: not-allowed;
+							}
 						}
 					}
 

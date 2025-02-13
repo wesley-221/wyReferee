@@ -342,7 +342,7 @@
 							<mat-icon>list</mat-icon>&nbsp;lobby overview
 						</div>
 
-						<div class="home-button" (click)="sendMatchSummary()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+						<div class="home-button" (click)="sendMatchSummary()" [ngClass]="{'disabled': selectedLobby.sendWebhooks != true}" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
 							<mat-icon>send</mat-icon>&nbsp;send match summary
 						</div>
 
@@ -350,7 +350,7 @@
 							<mat-icon>send</mat-icon>&nbsp;send result to irc
 						</div>
 
-						<div class="home-button" (click)="sendFinalResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+						<div class="home-button" (click)="sendFinalResult()" [ngClass]="{'disabled': selectedLobby.sendWebhooks != true}" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
 							<mat-icon>send</mat-icon>&nbsp;send final result
 						</div>
 					</div>
