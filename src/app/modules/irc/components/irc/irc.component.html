@@ -314,15 +314,15 @@
 	<div class="side-menu" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
 		<div class="side-menu-content">
 			<div class="header-buttons">
-				<div class="header-button" [ngClass]="{'active': sidebarHeaderButtonActive == 1}" (click)="selectSidebarHeaderButton(1)">
+				<div title="IRC actions" class="header-button" [ngClass]="{'active': sidebarHeaderButtonActive == 1}" (click)="selectSidebarHeaderButton(1)">
 					<mat-icon>home</mat-icon>
 				</div>
 
-				<div class="header-button" [ngClass]="{'active': sidebarHeaderButtonActive == 2}" (click)="selectSidebarHeaderButton(2)">
+				<div title="Multiplayer lobby settings" class="header-button" [ngClass]="{'active': sidebarHeaderButtonActive == 2}" (click)="selectSidebarHeaderButton(2)">
 					<mat-icon>settings</mat-icon>
 				</div>
 
-				<div class="header-button" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)" [ngClass]="{'active': sidebarHeaderButtonActive == 3}" (click)="selectSidebarHeaderButton(3)">
+				<div title="Invite participants" class="header-button" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)" [ngClass]="{'active': sidebarHeaderButtonActive == 3}" (click)="selectSidebarHeaderButton(3)">
 					<mat-icon>person_add</mat-icon>
 				</div>
 			</div>
