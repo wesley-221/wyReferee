@@ -207,6 +207,11 @@ export class CreateLobbyComponent implements OnInit {
 
 					this.toastService.addToast(`Successfully created the multiplayer lobby ${lobby.description}!`);
 
+					// Set the default settings for irc lobby
+					if (lobbyForm.selectedTournament) {
+						this.ircService.sendMessage(multiplayerChannel.name, `!mp set ${lobbyForm.selectedTournament.defaultTeamMode} ${lobbyForm.selectedTournament.defaultWinCondition} ${lobbyForm.selectedTournament.defaultPlayers}`);
+					}
+
 					if (lobbyForm.selectedTournament && lobbyForm.selectedTournament.hasWyBinConnected()) {
 						this.wybinService.getMatch(lobbyForm.selectedTournament.wyBinTournamentId, lobby.wybinStageId, lobby.wybinMatchId, lobby.selectedStage.name, lobby.teamOneName, lobby.teamTwoName).subscribe((match: any) => {
 							if (match == null) {
