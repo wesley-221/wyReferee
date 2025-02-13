@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastType } from 'app/models/toast';
 import { AuthenticateService } from 'app/services/authenticate.service';
@@ -26,7 +26,15 @@ export class AuthenticationComponent implements OnInit {
 	ircLoginTimeout: NodeJS.Timeout;
 	showIrcLoginTimeout: boolean;
 
-	constructor(private apiKeyValidation: ApiKeyValidation, private storeService: StoreService, private toastService: ToastService, public authService: AuthenticateService, public ircService: IrcService, public electronService: ElectronService) {
+	constructor(
+		private apiKeyValidation: ApiKeyValidation,
+		private storeService: StoreService,
+		private toastService: ToastService,
+		public authService: AuthenticateService,
+		public ircService: IrcService,
+		public electronService: ElectronService,
+		private ref: ChangeDetectorRef
+	) {
 		this.apiKeyIsValid = false;
 		this.isAuthenticating = false;
 		this.isConnecting = false;
@@ -80,6 +88,8 @@ export class AuthenticationComponent implements OnInit {
 			if (token != null) {
 				this.authService.handleOauth(token).subscribe(user => {
 					this.authService.loginUser(user);
+
+					this.ref.detectChanges();
 				});
 			}
 
