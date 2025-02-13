@@ -712,4 +712,15 @@ export class Lobby {
 		const lastPlayedBeatmap = this.multiplayerData[this.multiplayerData.length - 1];
 		return lastPlayedBeatmap;
 	}
+
+	/**
+	 * Check whether there is a wyBin tournament connected
+	 */
+	hasWyBinConnected(): boolean {
+		if (this.tournament == null || this.tournament == undefined) {
+			return false;
+		}
+
+		return this.tournament.wyBinTournamentId != null && this.tournament.wyBinTournamentId != undefined;
+	}
 }

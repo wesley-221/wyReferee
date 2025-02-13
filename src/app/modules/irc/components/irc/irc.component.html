@@ -314,203 +314,163 @@
 	<div class="side-menu" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
 		<div class="side-menu-content">
 			<div class="header-buttons">
-				<div class="header-button" matTooltip="Open lobby settings" (click)="openLobbyDialog()">
+				<div title="IRC actions" class="header-button" [ngClass]="{'active': sidebarHeaderButtonActive == 1}" (click)="selectSidebarHeaderButton(1)">
+					<mat-icon>home</mat-icon>
+				</div>
+
+				<div title="Multiplayer lobby settings" class="header-button" [ngClass]="{'active': sidebarHeaderButtonActive == 2}" (click)="selectSidebarHeaderButton(2)">
 					<mat-icon>settings</mat-icon>
 				</div>
 
-				<div class="header-button" matTooltip="Synchronize the scores of this multiplayer lobby" (click)="synchronizeMp()">
-					<mat-icon>sync</mat-icon>
-				</div>
-
-				<div class="header-button" matTooltip="Go to multiplayer lobby match overview" (click)="navigateLobbyOverview()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-					<mat-icon>list</mat-icon>
-				</div>
-
-				<div class="header-button" matTooltip="Send beatmap result to irc" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-					<mat-icon>chat</mat-icon>
-				</div>
-
-				<div class="header-button" matTooltip="Send match summary" (click)="sendMatchSummary()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-					<mat-icon>view_list</mat-icon>
-				</div>
-
-				<div class="header-button" matTooltip="Send final result to Discord webhook" (click)="sendFinalResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-					<mat-icon>send</mat-icon>
+				<div title="Invite participants" class="header-button" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)" [ngClass]="{'active': sidebarHeaderButtonActive == 3}" (click)="selectSidebarHeaderButton(3)">
+					<mat-icon>person_add</mat-icon>
 				</div>
 			</div>
 
-			<div class="header">
-				<div class="header-row double-column">
-					<div class="header-col">
-						<mat-form-field class="full-width">
-							<mat-label>Team mode</mat-label>
-							<mat-select #teamMode (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
-								<mat-option></mat-option>
-								<mat-option [value]="0">Head To Head</mat-option>
-								<mat-option [value]="1">Tag Coop</mat-option>
-								<mat-option [value]="2">Team Vs</mat-option>
-								<mat-option [value]="3">Tag Team Vs</mat-option>
-							</mat-select>
-						</mat-form-field>
-					</div>
-
-					<div class="header-col">
-						<mat-form-field class="full-width">
-							<mat-label>Win condition</mat-label>
-							<mat-select #winCondition (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
-								<mat-option [value]="0">Score</mat-option>
-								<mat-option [value]="1">Accuracy</mat-option>
-								<mat-option [value]="2">Combo</mat-option>
-								<mat-option [value]="3">Score V2</mat-option>
-							</mat-select>
-						</mat-form-field>
-					</div>
-				</div>
-
-				<div class="header-row">
-					<div class="header-col">
-						<mat-form-field class="full-width no-max-width">
-							<mat-label>Players</mat-label>
-							<mat-select #players (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.players">
-								<mat-option></mat-option>
-								<mat-option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">{{ number }}</mat-option>
-							</mat-select>
-						</mat-form-field>
-					</div>
-				</div>
-
-				<div class="header-row" *ngIf="selectedLobby && selectedLobby.tournament != null && selectedLobby.tournament.format == 'teams'">
-					<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == false">
-						<div class="invite-header" [ngClass]="{'active': isInvitesMinimized == false}" (click)="isInvitesMinimized = !isInvitesMinimized">
-							<div class="invite-header-icon">
-								<mat-icon *ngIf="isInvitesMinimized == true">chevron_right</mat-icon>
-								<mat-icon *ngIf="isInvitesMinimized == false">expand_more</mat-icon>
-							</div>
-
-							<div>Teams</div>
+			<div class="active-header-settings">
+				<div class="active-header-setting no-padding" [ngClass]="{'active': sidebarHeaderButtonActive == 1}">
+					<div class="home-buttons">
+						<div class="home-button" (click)="openLobbyDialog()">
+							<mat-icon>settings</mat-icon>&nbsp;lobby settings
 						</div>
 
-						<div class="invite-body" *ngIf="isInvitesMinimized == false">
-							<div class="invite-team">
-								<h3>{{ selectedLobby.teamOneName }}</h3>
-
-								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
-									<div class="name" [title]="player.name">
-										{{ player.name }}
-									</div>
-
-									<div class="actions">
-										<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
-											<mat-icon>chat</mat-icon>
-										</div>
-
-										<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
-											<mat-icon>add</mat-icon>
-										</div>
-
-										<!-- TODO: implement captain for rng -->
-										<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 1)" title="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamOneCaptain == player}">
-											<mat-icon>star</mat-icon>
-										</div> -->
-									</div>
-								</div>
-							</div>
-
-							<div class="invite-team">
-								<h3>{{ selectedLobby.teamTwoName }}</h3>
-
-								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
-									<div class="name" [title]="player.name">
-										{{ player.name }}
-									</div>
-
-									<div class="actions">
-										<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
-											<mat-icon>chat</mat-icon>
-										</div>
-
-										<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
-											<mat-icon>add</mat-icon>
-										</div>
-
-										<!-- TODO: implement captain for rng -->
-										<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 2)" title="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamTwoCaptain == player}">
-											<mat-icon>star</mat-icon>
-										</div> -->
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == true">
-						<div class="invite-header" [ngClass]="{'active': isInvitesMinimized == false}" (click)="isInvitesMinimized = !isInvitesMinimized">
-							<div class="invite-header-icon">
-								<mat-icon *ngIf="isInvitesMinimized == true">chevron_right</mat-icon>
-								<mat-icon *ngIf="isInvitesMinimized == false">expand_more</mat-icon>
-							</div>
-
-							<div>Teams</div>
+						<div class="home-button" (click)="synchronizeMp()">
+							<mat-icon>sync</mat-icon>&nbsp;synchronize lobby
 						</div>
 
-						<div class="invite-body" *ngIf="isInvitesMinimized == false">
-							<div class="invite-team" *ngFor="let team of qualifierTeams">
-								<h3>{{ team.name }}</h3>
+						<div class="home-button" (click)="navigateLobbyOverview()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+							<mat-icon>list</mat-icon>&nbsp;lobby overview
+						</div>
 
-								<div class="player" *ngFor="let player of team.players">
-									<div class="name" [title]="player.name">
-										{{ player.name }}
-									</div>
+						<div class="home-button" (click)="sendMatchSummary()" [ngClass]="{'disabled': selectedLobby.sendWebhooks != true}" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+							<mat-icon>send</mat-icon>&nbsp;send match summary
+						</div>
 
-									<div class="actions">
-										<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
-											<mat-icon>chat</mat-icon>
-										</div>
+						<div class="home-button" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+							<mat-icon>send</mat-icon>&nbsp;send result to irc
+						</div>
 
-										<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
-											<mat-icon>add</mat-icon>
-										</div>
-									</div>
-								</div>
-							</div>
+						<div class="home-button" (click)="sendFinalResult()" [ngClass]="{'disabled': selectedLobby.sendWebhooks != true}" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+							<mat-icon>send</mat-icon>&nbsp;send final result
 						</div>
 					</div>
 				</div>
 
-				<div class="header-row" *ngIf="selectedLobby && selectedLobby.tournament != null && selectedLobby.tournament.format == 'solo'">
-					<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == false">
-						<div class="invite-body">
-							<div class="invite-team">
-								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
-									<div class="name" [title]="player.name">
-										{{ player.name }}
-									</div>
+				<div class="active-header-setting" [ngClass]="{'active': sidebarHeaderButtonActive == 2}">
+					<div class="header-row double-column">
+						<div class="header-col">
+							<mat-form-field class="full-width">
+								<mat-label>Team mode</mat-label>
+								<mat-select #teamMode (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
+									<mat-option></mat-option>
+									<mat-option [value]="0">Head To Head</mat-option>
+									<mat-option [value]="1">Tag Coop</mat-option>
+									<mat-option [value]="2">Team Vs</mat-option>
+									<mat-option [value]="3">Tag Team Vs</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
 
-									<div class="actions">
-										<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
-											<mat-icon>chat</mat-icon>
+						<div class="header-col">
+							<mat-form-field class="full-width">
+								<mat-label>Win condition</mat-label>
+								<mat-select #winCondition (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
+									<mat-option [value]="0">Score</mat-option>
+									<mat-option [value]="1">Accuracy</mat-option>
+									<mat-option [value]="2">Combo</mat-option>
+									<mat-option [value]="3">Score V2</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+					</div>
+
+					<div class="header-row">
+						<div class="header-col">
+							<mat-form-field class="full-width no-max-width">
+								<mat-label>Players</mat-label>
+								<mat-select #players (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.players">
+									<mat-option></mat-option>
+									<mat-option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">{{ number }}</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+					</div>
+				</div>
+
+				<div class="active-header-setting" [ngClass]="{'active': sidebarHeaderButtonActive == 3}">
+					<div class="header-row" *ngIf="selectedLobby && selectedLobby.tournament != null && selectedLobby.tournament.format == 'teams'">
+						<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == false">
+							<div class="invite-body">
+								<div class="invite-team">
+									<h3>{{ selectedLobby.teamOneName }}</h3>
+
+									<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
+										<div class="name" [title]="player.name">
+											{{ player.name }}
 										</div>
 
-										<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
-											<mat-icon>add</mat-icon>
+										<div class="actions">
+											<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
+												<mat-icon>chat</mat-icon>
+											</div>
+
+											<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
+												<mat-icon>add</mat-icon>
+											</div>
+
+											<!-- TODO: implement captain for rng -->
+											<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 1)" title="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamOneCaptain == player}">
+												<mat-icon>star</mat-icon>
+											</div> -->
+										</div>
+									</div>
+								</div>
+
+								<div class="invite-team">
+									<h3>{{ selectedLobby.teamTwoName }}</h3>
+
+									<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
+										<div class="name" [title]="player.name">
+											{{ player.name }}
+										</div>
+
+										<div class="actions">
+											<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
+												<mat-icon>chat</mat-icon>
+											</div>
+
+											<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
+												<mat-icon>add</mat-icon>
+											</div>
+
+											<!-- TODO: implement captain for rng -->
+											<!-- <div class="custom-button" (click)="assignPlayerAsCaptain(player, 2)" title="Assign player as captain" [ngClass]="{'disabled': selectedLobby.teamTwoCaptain == player}">
+												<mat-icon>star</mat-icon>
+											</div> -->
 										</div>
 									</div>
 								</div>
 							</div>
+						</div>
 
-							<div class="invite-team">
-								<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
-									<div class="name" [title]="player.name">
-										{{ player.name }}
-									</div>
+						<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == true">
+							<div class="invite-body">
+								<div class="invite-team" *ngFor="let team of qualifierTeams">
+									<h3>{{ team.name }}</h3>
 
-									<div class="actions">
-										<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
-											<mat-icon>chat</mat-icon>
+									<div class="player" *ngFor="let player of team.players">
+										<div class="name" [title]="player.name">
+											{{ player.name }}
 										</div>
 
-										<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
-											<mat-icon>add</mat-icon>
+										<div class="actions">
+											<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
+												<mat-icon>chat</mat-icon>
+											</div>
+
+											<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
+												<mat-icon>add</mat-icon>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -518,30 +478,63 @@
 						</div>
 					</div>
 
-					<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == true">
-						<div class="invite-header" [ngClass]="{'active': isInvitesMinimized == false}" (click)="isInvitesMinimized = !isInvitesMinimized">
-							<div class="invite-header-icon">
-								<mat-icon *ngIf="isInvitesMinimized == true">chevron_right</mat-icon>
-								<mat-icon *ngIf="isInvitesMinimized == false">expand_more</mat-icon>
-							</div>
-
-							<div>Players</div>
-						</div>
-
-						<div class="invite-body" *ngIf="isInvitesMinimized == false">
-							<div class="invite-team" *ngFor="let team of qualifierTeams">
-								<div class="player" *ngFor="let player of team.players">
-									<div class="name" [title]="player.name">
-										{{ player.name }}
-									</div>
-
-									<div class="actions">
-										<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
-											<mat-icon>chat</mat-icon>
+					<div class="header-row" *ngIf="selectedLobby && selectedLobby.tournament != null && selectedLobby.tournament.format == 'solo'">
+						<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == false">
+							<div class="invite-body">
+								<div class="invite-team">
+									<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
+										<div class="name" [title]="player.name">
+											{{ player.name }}
 										</div>
 
-										<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
-											<mat-icon>add</mat-icon>
+										<div class="actions">
+											<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
+												<mat-icon>chat</mat-icon>
+											</div>
+
+											<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
+												<mat-icon>add</mat-icon>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="invite-team">
+									<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
+										<div class="name" [title]="player.name">
+											{{ player.name }}
+										</div>
+
+										<div class="actions">
+											<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
+												<mat-icon>chat</mat-icon>
+											</div>
+
+											<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
+												<mat-icon>add</mat-icon>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="header-col" *ngIf="selectedLobby.isQualifierLobby == true">
+							<div class="invite-body">
+								<div class="invite-team" *ngFor="let team of qualifierTeams">
+									<div class="player" *ngFor="let player of team.players">
+										<div class="name" [title]="player.name">
+											{{ player.name }}
+										</div>
+
+										<div class="actions">
+											<div class="custom-button" (click)="openDMChannel(player)" title="Click to message the player">
+												<mat-icon>chat</mat-icon>
+											</div>
+
+											<div class="custom-button" (click)="invitePlayer(player)" title="Click to invite player">
+												<mat-icon>add</mat-icon>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -549,7 +542,9 @@
 						</div>
 					</div>
 				</div>
+			</div>
 
+			<div class="mappool-dropdown">
 				<div class="row" *ngIf="selectedLobby && selectedLobby.tournament != null">
 					<div class="col">
 						<mat-form-field class="full-width">
