@@ -194,7 +194,7 @@ export class IrcComponent implements OnInit {
 				this.selectedLobby = data;
 				this.refreshIrcHeader(this.selectedLobby);
 
-				if (this.selectedLobby && this.selectedLobby.tournament.hasWyBinConnected()) {
+				if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
 					if (this.selectedLobby.isQualifierLobby == false) {
 						this.matchDialogHeaderName = 'Last played beatmap';
 						this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
@@ -1032,7 +1032,7 @@ export class IrcComponent implements OnInit {
 						this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
 					}
 
-					if (this.selectedLobby.tournament.hasWyBinConnected()) {
+					if (this.selectedLobby.hasWyBinConnected()) {
 						this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.wybinStageId, this.selectedLobby.wybinMatchId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe(() => {
 						}, (error: HttpErrorResponse) => {
 							this.toastService.addToast('Unable to update the match score to Challonge: ' + error.error.message, ToastType.Error);
@@ -1060,7 +1060,7 @@ export class IrcComponent implements OnInit {
 	 * Closes the match dialog
 	 */
 	closeMatchDialog() {
-		if (this.selectedLobby && this.selectedLobby.tournament.hasWyBinConnected()) {
+		if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
 			if (this.selectedLobby.isQualifierLobby == true) {
 				this.matchDialogHeaderName = null;
 				this.matchDialogMultiplayerData = null;
