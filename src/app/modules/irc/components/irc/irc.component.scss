@@ -828,9 +828,9 @@ $hyperlink-background-color: #2b4576;
 				.active-header-setting {
 					display: none;
 
-					padding: 0 8px 0 8px;
+					padding: 8px 8px 0 8px;
 
-					background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+					background-color: rgba(lighten($sidebar-color, 35%), 0.2);
 
 					border: 1px solid $primary;
 					border-top: none;
