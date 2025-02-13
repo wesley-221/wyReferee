@@ -142,6 +142,70 @@
 
 	<hr />
 
+	<h1>Default multiplayer lobby settings</h1>
+	<p>These settings will be set when a multiplayer lobby is created.</p>
+
+	<div class="row r-3">
+		<div class="col">
+			<h2>Team mode</h2>
+
+			<mat-form-field class="full-width">
+				<mat-label>Team mode</mat-label>
+				<mat-select formControlName="default-team-mode">
+					<mat-option [value]="0">Head To Head</mat-option>
+					<mat-option [value]="1">Tag Coop</mat-option>
+					<mat-option [value]="2">Team Vs</mat-option>
+					<mat-option [value]="3">Tag Team Vs</mat-option>
+				</mat-select>
+
+				<mat-error *ngIf="validationForm.get('default-team-mode').errors && (validationForm.get('default-team-mode').touched || validationForm.get('default-team-mode').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
+
+			<p>The team mode for the multiplayer lobby</p>
+		</div>
+
+		<div class="col">
+			<h2>Win condition</h2>
+
+			<mat-form-field class="full-width">
+				<mat-label>Win condition</mat-label>
+				<mat-select formControlName="default-win-condition">
+					<mat-option [value]="0">Score</mat-option>
+					<mat-option [value]="1">Accuracy</mat-option>
+					<mat-option [value]="2">Combo</mat-option>
+					<mat-option [value]="3">Score V2</mat-option>
+				</mat-select>
+
+				<mat-error *ngIf="validationForm.get('default-win-condition').errors && (validationForm.get('default-win-condition').touched || validationForm.get('default-win-condition').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
+
+			<p>The win condition for the multiplayer lobby</p>
+		</div>
+
+		<div class="col">
+			<h2>Players</h2>
+
+			<mat-form-field class="full-width no-max-width">
+				<mat-label>Players</mat-label>
+				<mat-select formControlName="default-players">
+					<mat-option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">{{ number }}</mat-option>
+				</mat-select>
+
+				<mat-error *ngIf="validationForm.get('default-players').errors && (validationForm.get('default-players').touched || validationForm.get('default-players').dirty)">
+					This field is required
+				</mat-error>
+			</mat-form-field>
+
+			<p>The amount of open slots in the multiplayer lobby</p>
+		</div>
+	</div>
+
+	<hr />
+
 	<div class="row r-2">
 		<div class="col">
 			<h2>Invalidate beatmaps</h2>
