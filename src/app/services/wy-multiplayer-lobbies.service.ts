@@ -357,7 +357,7 @@ export class WyMultiplayerLobbiesService {
 			tournamentId: lobby.tournamentId,
 			mappoolId: mappool.publishId,
 			modBracketId: modBracket.id,
-			multiplayerLobbyName: `[${lobby.tournament.acronym}: (${lobby.teamOneName}) vs (${lobby.teamTwoName})](${lobby.multiplayerLink})`,
+			multiplayerLobbyName: `[${lobby.tournament.acronym}: (${lobby.teamOneName}) vs. (${lobby.teamTwoName})](${lobby.multiplayerLink})`,
 			refereeName: refereeName,
 			pickedCategories: lobby.pickedCategories
 		});

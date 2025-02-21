@@ -353,7 +353,7 @@ export class Lobby {
 	 * Get the name of the lobby
 	 */
 	getLobbyName(): string {
-		return this.tournament != null ? `${this.tournament.acronym}: ${this.teamOneName} vs ${this.teamTwoName}` : `${this.teamOneName} vs ${this.teamTwoName}`;
+		return this.tournament != null ? `${this.tournament.acronym}: ${this.teamOneName} vs. ${this.teamTwoName}` : `${this.teamOneName} vs. ${this.teamTwoName}`;
 	}
 
 	/**
