@@ -295,7 +295,7 @@ export class WyMultiplayerLobbiesService {
 				if (multiplayerData.team_one_score > multiplayerData.team_two_score) {
 					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
 						// Team one has won, reverse score was not enabled, give point to team one
-						if (foundModBracketBeatmap.reverseScore != true) {
+						if (foundModBracketBeatmap == undefined || foundModBracketBeatmap == null || foundModBracketBeatmap.reverseScore != true) {
 							multiplayerLobby.teamOneScore++;
 						}
 						else {
@@ -310,7 +310,7 @@ export class WyMultiplayerLobbiesService {
 				else {
 					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
 						// Team two has won, reverse score was not enabled, give point to team two
-						if (foundModBracketBeatmap.reverseScore != true) {
+						if (foundModBracketBeatmap == undefined || foundModBracketBeatmap == null || foundModBracketBeatmap.reverseScore != true) {
 							multiplayerLobby.teamTwoScore++;
 						}
 						else {
