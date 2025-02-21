@@ -96,7 +96,7 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `${selectedLobby.selectedStage.name}: **${this.escape(selectedLobby.teamOneName)}** vs **${this.escape(selectedLobby.teamTwoName)}**`,
+					title: `${selectedLobby.selectedStage.name}: **${this.escape(selectedLobby.teamOneName)}** vs. **${this.escape(selectedLobby.teamTwoName)}**`,
 					url: selectedLobby.multiplayerLink,
 					description: `${scoreString} \n\n**First pick**: ${selectedLobby.firstPick} \n\n${selectedLobby.multiplayerLink}`,
 					color: 15258703,
@@ -191,7 +191,7 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `${selectedLobby.selectedStage.name}: **${this.escape(selectedLobby.teamOneName)}** vs **${this.escape(selectedLobby.teamTwoName)}**`,
+					title: `${selectedLobby.selectedStage.name}: **${this.escape(selectedLobby.teamOneName)}** vs. **${this.escape(selectedLobby.teamTwoName)}**`,
 					description: resultDescription,
 					color: 15258703,
 					footer: {
@@ -285,7 +285,7 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `🔨 Ban update - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`,
+					title: `🔨 Ban update - ${this.escape(selectedLobby.teamOneName)} vs. ${this.escape(selectedLobby.teamTwoName)}`,
 					url: selectedLobby.multiplayerLink,
 					description: `**${this.escape(teamName)}** has banned [**${ban.beatmapName}**](${ban.beatmapUrl})`,
 					color: 15258703,
@@ -327,7 +327,7 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `🛡 Protect update - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`,
+					title: `🛡 Protect update - ${this.escape(selectedLobby.teamOneName)} vs. ${this.escape(selectedLobby.teamTwoName)}`,
 					url: selectedLobby.multiplayerLink,
 					description: `**${this.escape(teamName)}** has protected [**${protect.beatmapName}**](${protect.beatmapUrl})`,
 					color: 15258703,
@@ -406,7 +406,7 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `Match summary - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`,
+					title: `Match summary - ${this.escape(selectedLobby.teamOneName)} vs. ${this.escape(selectedLobby.teamTwoName)}`,
 					url: selectedLobby.multiplayerLink,
 					color: 15258703,
 					footer: {
@@ -662,16 +662,16 @@ export class WebhookService {
 				});
 		}
 		else {
-			body.embeds[0].title = `Multiplayer lobby - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`;
+			body.embeds[0].title = `Multiplayer lobby - ${this.escape(selectedLobby.teamOneName)} vs. ${this.escape(selectedLobby.teamTwoName)}`;
 
 			body.embeds[0].fields.push(
 				{
 					name: 'Twitch multiplayer link command',
-					value: `\`!editcom !mp ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}: ${selectedLobby.multiplayerLink}\``
+					value: `\`!editcom !mp ${selectedLobby.teamOneName} vs. ${selectedLobby.teamTwoName}: ${selectedLobby.multiplayerLink}\``
 				},
 				{
 					name: 'Twitch stream title command',
-					value: `\`!title ${selectedLobby.tournament.name} - ${selectedLobby.selectedStage.name}: ${selectedLobby.teamOneName} vs ${selectedLobby.teamTwoName}\``
+					value: `\`!title ${selectedLobby.tournament.name} - ${selectedLobby.selectedStage.name}: ${selectedLobby.teamOneName} vs. ${selectedLobby.teamTwoName}\``
 				});
 
 			if (streamerList != null && streamerList.length > 0) {
@@ -740,7 +740,7 @@ export class WebhookService {
 		const body = {
 			embeds: [
 				{
-					title: `📌 Pick update - ${this.escape(selectedLobby.teamOneName)} vs ${this.escape(selectedLobby.teamTwoName)}`,
+					title: `📌 Pick update - ${this.escape(selectedLobby.teamOneName)} vs. ${this.escape(selectedLobby.teamTwoName)}`,
 					url: selectedLobby.multiplayerLink,
 					description: `**${teamName}** has picked [**${pick.beatmapName}**](${pick.beatmapUrl})`,
 					color: 15258703,

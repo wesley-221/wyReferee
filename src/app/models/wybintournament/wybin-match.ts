@@ -13,7 +13,7 @@ export class WyBinMatch {
 
 	getMatchName() {
 		if (this.qualifierIdentifier == null) {
-			return `#${this.label}: ${this.opponentOne.name} vs ${this.opponentTwo.name}`;
+			return `#${this.label}: ${this.opponentOne.name} vs. ${this.opponentTwo.name}`;
 		}
 		else {
 			return `Qualifier lobby: ${this.qualifierIdentifier}`;

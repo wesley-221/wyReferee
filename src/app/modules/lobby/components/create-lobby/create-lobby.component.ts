@@ -116,7 +116,7 @@ export class CreateLobbyComponent implements OnInit {
 					isQualifierLobby: false
 				});
 
-				lobby.description = `${lobby.teamOneName} vs ${lobby.teamTwoName}`;
+				lobby.description = `${lobby.teamOneName} vs. ${lobby.teamTwoName}`;
 			}
 
 			if (lobbyForm.selectedTournament != undefined || lobbyForm.selectedTournament != null) {
@@ -182,10 +182,10 @@ export class CreateLobbyComponent implements OnInit {
 				if (lobby.tournament == undefined || lobby.tournament == null) {
 					const acronym: string = this.validationForm.get('tournament-acronym').value;
 
-					lobbyName = lobbyForm.qualifier == true ? `${acronym}: Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}` : lobbyForm.lobbyWithBrackets == true ? `${acronym}: (${lobby.getEscapedTeamOneName()}) vs (${lobby.getEscapedTeamTwoName()})` : `${acronym}: ${lobby.getEscapedTeamOneName()} vs ${lobby.getEscapedTeamTwoName()}`;
+					lobbyName = lobbyForm.qualifier == true ? `${acronym}: Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}` : lobbyForm.lobbyWithBrackets == true ? `${acronym}: (${lobby.getEscapedTeamOneName()}) vs. (${lobby.getEscapedTeamTwoName()})` : `${acronym}: ${lobby.getEscapedTeamOneName()} vs. ${lobby.getEscapedTeamTwoName()}`;
 				}
 				else {
-					lobbyName = lobbyForm.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}` : lobbyForm.lobbyWithBrackets == true ? `${lobby.tournament.acronym}: (${lobby.getEscapedTeamOneName()}) vs (${lobby.getEscapedTeamTwoName()})` : `${lobby.tournament.acronym}: ${lobby.getEscapedTeamOneName()} vs ${lobby.getEscapedTeamTwoName()}`;
+					lobbyName = lobbyForm.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}` : lobbyForm.lobbyWithBrackets == true ? `${lobby.tournament.acronym}: (${lobby.getEscapedTeamOneName()}) vs. (${lobby.getEscapedTeamTwoName()})` : `${lobby.tournament.acronym}: ${lobby.getEscapedTeamOneName()} vs. ${lobby.getEscapedTeamTwoName()}`;
 				}
 
 				this.creatingMultiplayerLobby = true;

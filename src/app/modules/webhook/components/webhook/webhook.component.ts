@@ -9,7 +9,7 @@ import { WebhookService } from 'app/services/webhook.service';
 	styleUrls: ['./webhook.component.scss']
 })
 export class WebhookComponent implements OnInit {
-	webhookTitle = 'Grand finals: **Team 1** vs **Team 2**';
+	webhookTitle = 'Grand finals: **Team 1** vs. **Team 2**';
 	webhookDescription = '**Score:** Team 1 | 5 - **7** | __Team 2__ \n\n**First pick**: Team 1\n\n[Link to multiplayer match](https://osu.ppy.sh/community/matches)';
 	webhookTeamOneBans = {
 		name: 'Team 1 bans:',
