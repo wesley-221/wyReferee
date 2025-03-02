@@ -73,6 +73,12 @@ export class WyConditionalMessage {
 			}
 		}
 
+		if (multiplayerLobby.tournament != null && multiplayerLobby.tournament != undefined) {
+			if (multiplayerLobby.tournament.getBeatmapFromId(match.beatmap_id).reverseScore == true) {
+				replaceWords['{{\\s{0,}beatmapWinner\\s{0,}}}'] = match.team_one_score > match.team_two_score ? multiplayerLobby.teamTwoName : multiplayerLobby.teamOneName;
+			}
+		}
+
 		let finalMessage = message;
 
 		for (const regex in replaceWords) {
