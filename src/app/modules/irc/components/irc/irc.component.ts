@@ -477,7 +477,7 @@ export class IrcComponent implements OnInit {
 	 * @param slashCommand the slash command to select
 	 */
 	selectSlashCommand(slashCommand: SlashCommand) {
-		this.chatMessage.nativeElement.value = `/ ${slashCommand.name} `;
+		this.chatMessage.nativeElement.value = `/${slashCommand.name}`;
 		this.chatMessage.nativeElement.focus();
 	}
 
