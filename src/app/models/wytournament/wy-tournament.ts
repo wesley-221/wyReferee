@@ -262,6 +262,23 @@ export class WyTournament {
 	}
 
 	/**
+	 * Get the beatmap from the given id
+	 *
+	 * @param beatmapId the id of the beatmap to get
+	 */
+	getBeatmapFromId(beatmapId: number): WyModBracketMap {
+		for (const mappool of this.mappools) {
+			for (const modBracket of mappool.modBrackets) {
+				for (const beatmap of modBracket.beatmaps) {
+					if (beatmap.beatmapId == beatmapId) {
+						return beatmap;
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Get the beatmap for the match summary
 	 *
 	 * @param beatmapId the id of the beatmap to get
