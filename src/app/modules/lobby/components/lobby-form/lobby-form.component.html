@@ -226,7 +226,7 @@
 					<h2>Select a match</h2>
 					<p>Choose a match to referee from the list below. Ensure you select the correct match before proceeding.</p>
 
-					<mat-slide-toggle [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()">Manually enter team/player names</mat-slide-toggle>
+					<mat-slide-toggle class="spacing-bottom" [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()">Manually enter participant names</mat-slide-toggle>
 
 					<div *ngIf="customMatch == false">
 						<mat-form-field class="full-width">
