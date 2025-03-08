@@ -191,11 +191,11 @@ export class LobbyFormComponent implements OnInit {
 			this.validationForm.get('selected-match-name').setValue(null);
 		}
 
-		const stage = this.wyBinStages.find(stage => stage.wyRefereeId == stageId || stage.id == stageId);
+		const findStage = this.wyBinStages.find(stage => stage.wyRefereeId == stageId || stage.id == stageId);
 
-		if (stage) {
-			this.wyBinMatches = stage.matches || [];
-			this.validationForm.get('stage').setValue(stage.name);
+		if (findStage) {
+			this.wyBinMatches = findStage.matches || [];
+			this.validationForm.get('stage').setValue(findStage.name);
 		}
 
 		this.initializeMatchFilter();
