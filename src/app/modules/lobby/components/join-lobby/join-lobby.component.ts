@@ -65,7 +65,8 @@ export class JoinLobbyComponent implements OnInit {
 			'team-two-name': new FormControl('', [
 				Validators.required
 			]),
-			'selected-tournament': new FormControl('')
+			'selected-tournament': new FormControl(''),
+			'custom-match': new FormControl(false)
 		});
 	}
 
@@ -163,9 +164,11 @@ export class JoinLobbyComponent implements OnInit {
 				lobby.bestOf = 3;
 			}
 
-			if (lobbyForm.selectedTournament.hasWyBinConnected()) {
-				lobby.wybinStageId = this.validationForm.get('stage-id').value;
-				lobby.wybinMatchId = this.validationForm.get('selected-match-id').value;
+			if (lobbyForm.selectedTournament && lobbyForm.selectedTournament.hasWyBinConnected()) {
+				if (this.validationForm.get('custom-match').value == false) {
+					lobby.wybinStageId = this.validationForm.get('stage-id').value;
+					lobby.wybinMatchId = this.validationForm.get('selected-match-id').value;
+				}
 			}
 
 			this.multiplayerLobbiesPlayersService.createNewMultiplayerLobbyObject(lobby.lobbyId);
