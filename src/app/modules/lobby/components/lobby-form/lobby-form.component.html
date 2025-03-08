@@ -184,7 +184,7 @@
 		<mat-form-field id="tutorial-select-stage" class="full-width" *ngIf="selectedTournament.hasWyBinConnected()">
 			<mat-label>Stage</mat-label>
 			<mat-select formControlName="stage-id" (selectionChange)="changeStage()" [disabled]="wyBinStages.length <= 0">
-				<mat-option [value]="stage.id" *ngFor="let stage of wyBinStages">{{ stage.name }}</mat-option>
+				<mat-option [value]="stage.wyRefereeId != null ? stage.wyRefereeId : stage.id" *ngFor="let stage of wyBinStages">{{ stage.name }}</mat-option>
 			</mat-select>
 
 			<mat-error *ngIf="getValidation('stage-id').errors && (getValidation('stage-id').touched || getValidation('stage-id').dirty)">
@@ -220,27 +220,51 @@
 
 		<hr />
 
-		<div class="row" *ngIf="selectedTournament.hasWyBinConnected()">
-			<div class="col">
-				<h2>Select a match</h2>
-				<p>Choose a match to referee from the list below. Ensure you select the correct match before proceeding.</p>
+		<div *ngIf="selectedTournament.hasWyBinConnected()">
+			<div class="row">
+				<div class="col">
+					<h2>Select a match</h2>
+					<p>Choose a match to referee from the list below. Ensure you select the correct match before proceeding.</p>
 
-				<mat-form-field class="full-width">
-					<mat-label>Matches</mat-label>
-					<input matInput placeholder="Matches" formControlName="selected-match-name" [matAutocomplete]="matAutocomplete" [disabled]="wyBinMatches.length <= 0" />
+					<mat-slide-toggle [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()">Manually enter team/player names</mat-slide-toggle>
 
-					<mat-autocomplete #matAutocomplete="matAutocomplete" (optionSelected)="selectMatch($event)">
-						<mat-option [value]="match.getMatchName()" *ngFor="let match of wyBinMatchesFilter | async">{{ match.getMatchName() }}</mat-option>
-					</mat-autocomplete>
+					<div *ngIf="customMatch == false">
+						<mat-form-field class="full-width">
+							<mat-label>Matches</mat-label>
+							<input matInput placeholder="Matches" formControlName="selected-match-name" [matAutocomplete]="matAutocomplete" [disabled]="wyBinMatches.length <= 0" />
 
-					<mat-error *ngIf="getValidation('selected-match-name').errors && (getValidation('selected-match-name').touched || getValidation('selected-match-name').dirty)">
-						The selected match is not valid. Choose a match from the provided list.
-					</mat-error>
-				</mat-form-field>
+							<mat-autocomplete #matAutocomplete="matAutocomplete" (optionSelected)="selectMatch($event)">
+								<mat-option [value]="match.getMatchName()" *ngFor="let match of wyBinMatchesFilter | async">{{ match.getMatchName() }}</mat-option>
+							</mat-autocomplete>
 
-				<app-alert alertType="info" *ngIf="wyBinMatches.length <= 0">
-					Make sure to select a stage, otherwise matches will not show up.
-				</app-alert>
+							<mat-error *ngIf="getValidation('selected-match-name').errors && (getValidation('selected-match-name').touched || getValidation('selected-match-name').dirty)">
+								The selected match is not valid. Choose a match from the provided list.
+							</mat-error>
+						</mat-form-field>
+
+						<app-alert alertType="info" *ngIf="wyBinMatches.length <= 0">
+							Make sure to select a stage, otherwise matches will not show up.
+						</app-alert>
+					</div>
+
+					<div *ngIf="customMatch == true">
+						<div class="row r-2">
+							<div class="col">
+								<ng-container *ngTemplateOutlet="teamInput; context: { controlName: 'team-one-name', label: 'Team one', filter: teamOneFilter, slots: teamOneArray, formGroup: validationForm }"></ng-container>
+							</div>
+
+							<div class="col">
+								<ng-container *ngTemplateOutlet="teamInput; context: { controlName: 'team-two-name', label: 'Team two', filter: teamTwoFilter, slots: teamTwoArray, formGroup: validationForm }"></ng-container>
+							</div>
+						</div>
+
+						<app-alert alertType="warn">
+							Because you are manually entering the participant names, sending the final result may not always update data (e.g., score, multiplayer link, bans, etc.) to wyBin automatically.
+							Ensure both team names match whatever is listed on wyBin in order for saving to work. <br />
+							<u>If you don't need to automatically update data to wyBin, you can safely ignore this warning.</u>
+						</app-alert>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -249,51 +273,11 @@
 		<div id="tutorial-participants" *ngIf="!selectedTournament.hasWyBinConnected()">
 			<div class="row r-2" *ngIf="qualifier == false">
 				<div class="col">
-					<h2>Team one name</h2>
-
-					<mat-form-field class="full-width">
-						<mat-label>Team one name</mat-label>
-
-						<input matInput type="text" formControlName="team-one-name" class="form-control" [matAutocomplete]="teamOneAutoComplete" />
-
-						<mat-autocomplete #teamOneAutoComplete="matAutocomplete">
-							<mat-option *ngFor="let team of teamOneFilter | async" [value]="team.name">
-								{{ team.name }}
-							</mat-option>
-						</mat-autocomplete>
-
-						<mat-error *ngIf="getValidation('team-one-name').errors && (getValidation('team-one-name').touched || getValidation('team-one-name').dirty)">
-							This field is required
-						</mat-error>
-					</mat-form-field>
-
-					<p>
-						Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot {{ teamOneArray.join(", ") }}.
-					</p>
+					<ng-container *ngTemplateOutlet="teamInput; context: { controlName: 'team-one-name', label: 'Team one', filter: teamOneFilter, slots: teamOneArray, formGroup: validationForm }"></ng-container>
 				</div>
 
 				<div class="col">
-					<h2>Team two name</h2>
-
-					<mat-form-field class="full-width">
-						<mat-label>Team two name</mat-label>
-
-						<input matInput type="text" formControlName="team-two-name" class="form-control" [matAutocomplete]="teamTwoAutoComplete" />
-
-						<mat-autocomplete #teamTwoAutoComplete="matAutocomplete">
-							<mat-option *ngFor="let team of teamTwoFilter | async" [value]="team.name">
-								{{ team.name }}
-							</mat-option>
-						</mat-autocomplete>
-
-						<mat-error *ngIf="getValidation('team-two-name').errors && (getValidation('team-two-name').touched || getValidation('team-two-name').dirty)">
-							This field is required
-						</mat-error>
-					</mat-form-field>
-
-					<p>
-						Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot {{ teamTwoArray.join(", ") }}.
-					</p>
+					<ng-container *ngTemplateOutlet="teamInput; context: { controlName: 'team-two-name', label: 'Team two', filter: teamTwoFilter, slots: teamTwoArray, formGroup: validationForm }"></ng-container>
 				</div>
 			</div>
 
@@ -317,3 +301,29 @@
 		You are not logged in to IRC and are unable to create a lobby because of this. Go to <a routerLink="/authentication"><code>Authentication</code></a> to login to IRC.
 	</app-alert>
 </form>
+
+<ng-template #teamInput let-controlName="controlName" let-label="label" let-filter="filter" let-slots="slots" let-formGroup="formGroup">
+	<h2>{{ label }}</h2>
+
+	<div [formGroup]="formGroup">
+		<mat-form-field class="full-width">
+			<mat-label>{{ label }} name</mat-label>
+
+			<input matInput type="text" [formControlName]="controlName" class="form-control" [matAutocomplete]="teamAutoComplete" />
+
+			<mat-autocomplete #teamAutoComplete="matAutocomplete">
+				<mat-option *ngFor="let team of filter | async" [value]="team.name">
+					{{ team.name }}
+				</mat-option>
+			</mat-autocomplete>
+
+			<mat-error *ngIf="formGroup.get(controlName)?.errors && (formGroup.get(controlName).touched || formGroup.get(controlName).dirty)">
+				This field is required
+			</mat-error>
+		</mat-form-field>
+	</div>
+
+	<p>
+		Enter the name of {{ label.toLowerCase() }}. This will be team <span class="red-text" *ngIf="label.includes('one')">red</span> <span class="blue-text" *ngIf="label.includes('two')">blue</span> and has slot {{ slots.join(", ") }}.
+	</p>
+</ng-template>

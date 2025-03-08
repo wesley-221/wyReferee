@@ -50,6 +50,8 @@ export class LobbyFormComponent implements OnInit {
 
 	loadingWyBinStages: boolean;
 
+	customMatch: boolean;
+
 	constructor(public tournamentService: TournamentService, private ircService: IrcService, private toastService: ToastService) {
 		this.isJoinLobbyForm = false;
 
@@ -66,6 +68,7 @@ export class LobbyFormComponent implements OnInit {
 
 		this.qualifier = false;
 		this.webhook = true;
+		this.customMatch = false;
 
 		this.wyBinStages = [];
 		this.wyBinMatches = [];
@@ -102,6 +105,25 @@ export class LobbyFormComponent implements OnInit {
 			this.tournamentService.getWyBinStages(this.selectedTournament.wyBinTournamentId).subscribe(stages => {
 				for (const stage of stages) {
 					this.wyBinStages.push(WyBinStage.makeTrueCopy(stage));
+				}
+
+				for (const wyRefereeStage of this.selectedTournament.stages) {
+					let stageFound = false;
+
+					for (const wyBinStage of this.wyBinStages) {
+						if (wyRefereeStage.name.toLowerCase() == wyBinStage.name.toLowerCase()) {
+							stageFound = true;
+							break;
+						}
+					}
+
+					// A wyReferee was not found in the wyBin stages, add it to the list
+					if (stageFound == false) {
+						this.wyBinStages.push(new WyBinStage({
+							wyRefereeId: parseInt(wyRefereeStage.id),
+							name: wyRefereeStage.name
+						}));
+					}
 				}
 
 				this.loadingWyBinStages = false;
@@ -167,22 +189,12 @@ export class LobbyFormComponent implements OnInit {
 		this.validationForm.get('selected-match-name').setValue(null);
 		this.validationForm.get('selected-match-id').setValue(null);
 
-		for (const stage of this.wyBinStages) {
-			if (stage.id == stageId) {
-				this.wyBinMatches = stage.matches;
+		const stage = this.wyBinStages.find(stage => stage.wyRefereeId == stageId || stage.id == stageId);
 
-				this.validationForm.get('stage').setValue(stage.name);
-			}
+		if (stage) {
+			this.wyBinMatches = stage.matches || [];
+			this.validationForm.get('stage').setValue(stage.name);
 		}
-
-		this.validatorWyBinMatchList = [];
-
-		for (const match of this.wyBinMatches) {
-			this.validatorWyBinMatchList.push(match.getMatchName());
-		}
-
-		this.validationForm.setControl('selected-match-name', new FormControl('', [(control) => this.matchValidator(control)]));
-		this.validationForm.setControl('selected-match-id', new FormControl(''));
 
 		this.initializeMatchFilter();
 	}
@@ -220,6 +232,24 @@ export class LobbyFormComponent implements OnInit {
 		}
 	}
 
+	changeCustomMatch() {
+		this.validationForm.get('custom-match').setValue(this.customMatch);
+
+		if (this.customMatch == true) {
+			this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
+			this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
+
+			this.validationForm.removeControl('selected-match-name');
+			this.validationForm.removeControl('selected-match-id');
+		}
+		else {
+			this.validationForm.removeControl('team-one-name');
+			this.validationForm.removeControl('team-two-name');
+
+			this.initializeMatchFilter();
+		}
+	}
+
 	getVariables() {
 		return {
 			selectedTournament: this.selectedTournament,
@@ -249,12 +279,22 @@ export class LobbyFormComponent implements OnInit {
 	}
 
 	private initializeMatchFilter() {
+		this.validatorWyBinMatchList = [];
+
+		for (const match of this.wyBinMatches) {
+			this.validatorWyBinMatchList.push(match.getMatchName());
+		}
+
+		this.validationForm.setControl('selected-match-name', new FormControl('', [(control) => this.matchValidator(control)]));
+		this.validationForm.setControl('selected-match-id', new FormControl(''));
+
 		if (this.wyBinMatches.length <= 0) {
 			this.wyBinMatchesFilter = new Observable();
 		}
 		else {
 			this.wyBinMatchesFilter = this.validationForm.get('selected-match-name').valueChanges.pipe(
 				startWith(''),
+				map((value: string) => value ?? ''),
 				map((value: string) => {
 					const filterValue = value.toLowerCase();
 					return this.wyBinMatches.filter(match => match.getMatchName().toLowerCase().includes(filterValue));
