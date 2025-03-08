@@ -7,6 +7,8 @@ export class WyBinStage {
 	qualifierStage: boolean;
 	matches: WyBinMatch[];
 
+	wyRefereeId: number;
+
 	constructor(init?: Partial<WyBinStage>) {
 		Object.assign(this, init);
 	}
