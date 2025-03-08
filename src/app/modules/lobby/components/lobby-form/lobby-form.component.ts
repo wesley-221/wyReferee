@@ -186,8 +186,10 @@ export class LobbyFormComponent implements OnInit {
 
 		this.wyBinMatches = [];
 
-		this.validationForm.get('selected-match-name').setValue(null);
-		this.validationForm.get('selected-match-id').setValue(null);
+		if (this.customMatch == false) {
+			this.validationForm.get('selected-match-id').setValue(null);
+			this.validationForm.get('selected-match-name').setValue(null);
+		}
 
 		const stage = this.wyBinStages.find(stage => stage.wyRefereeId == stageId || stage.id == stageId);
 
