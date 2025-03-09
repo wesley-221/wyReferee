@@ -245,8 +245,8 @@ export class LobbyFormComponent implements OnInit {
 			this.validationForm.removeControl('selected-match-id');
 		}
 		else {
-			this.validationForm.removeControl('team-one-name');
-			this.validationForm.removeControl('team-two-name');
+			this.validationForm.addControl('team-one-name', new FormControl());
+			this.validationForm.addControl('team-two-name', new FormControl());
 
 			this.initializeMatchFilter();
 		}
