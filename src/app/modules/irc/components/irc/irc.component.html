@@ -404,6 +404,10 @@
 								<div class="invite-team">
 									<h3>{{ selectedLobby.teamOneName }}</h3>
 
+									<div *ngIf="selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName).length == 0">
+										<div class="name">No players in team to invite.</div>
+									</div>
+
 									<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
 										<div class="name" [title]="player.name">
 											{{ player.name }}
@@ -428,6 +432,10 @@
 
 								<div class="invite-team">
 									<h3>{{ selectedLobby.teamTwoName }}</h3>
+
+									<div *ngIf="selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName).length == 0">
+										<div class="name">No players in team to invite.</div>
+									</div>
 
 									<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
 										<div class="name" [title]="player.name">
