@@ -40,6 +40,8 @@ export class LobbyFormComponent implements OnInit {
 	teamOneArray: number[];
 	teamTwoArray: number[];
 
+	tournamentAcronym: string;
+
 	ircAuthenticated: boolean;
 
 	wyBinStages: WyBinStage[];
@@ -172,6 +174,15 @@ export class LobbyFormComponent implements OnInit {
 		for (let i = teamSizeVal + 1; i < ((teamSizeVal * 2) + 1); i++) {
 			this.teamTwoArray.push(i);
 		}
+	}
+
+	/**
+	 * Update the tournament acronym when the user enters one manually
+	 *
+	 * @param tournamentAcronym the tournament acronym that was entered
+	 */
+	tournamentAcronymUpdate(tournamentAcronym: string) {
+		this.tournamentAcronym = tournamentAcronym;
 	}
 
 	changeScoreInterface(event: MatSelectChange) {

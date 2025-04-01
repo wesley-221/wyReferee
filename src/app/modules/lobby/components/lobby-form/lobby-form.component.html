@@ -48,7 +48,7 @@
 
 				<mat-form-field id="tutorial-tournament-acronym" class="full-width">
 					<mat-label>Tournament acronym</mat-label>
-					<input matInput formControlName="tournament-acronym" />
+					<input matInput formControlName="tournament-acronym" (ngModelChange)="tournamentAcronymUpdate($event)" />
 
 					<mat-error *ngIf="getValidation('tournament-acronym').errors && (getValidation('tournament-acronym').touched || getValidation('tournament-acronym').dirty)">
 						This field is required
@@ -120,40 +120,67 @@
 
 	<hr *ngIf="selectedTournament == null" />
 
-	<div class="row r-2" *ngIf="selectedTournament == null">
-		<div class="col">
-			<h2>Team one name</h2>
+	<div *ngIf="selectedTournament == null">
+		<div id="tutorial-qualifier" class="col">
+			<h1>Qualifier lobby</h1>
+			<p>Use this option if the lobby you are creating is supposed to be a qualifier lobby.</p>
 
+			<mat-slide-toggle [(ngModel)]="qualifier" (change)="changeQualifierLobby()" [ngModelOptions]="{ standalone: true }"></mat-slide-toggle>
+		</div>
+
+		<hr />
+
+		<div *ngIf="qualifier == true">
 			<mat-form-field class="full-width">
-				<mat-label>Team one name</mat-label>
-				<input matInput formControlName="team-one-name" />
+				<mat-label>Qualifier lobby identifier</mat-label>
+				<input matInput formControlName="qualifier-lobby-identifier" />
 
-				<mat-error *ngIf="getValidation('team-one-name').errors && (getValidation('team-one-name').touched || getValidation('team-one-name').dirty)">
-					This field is required
+				<mat-error *ngIf="getValidation('qualifier-lobby-identifier').errors && getValidation('qualifier-lobby-identifier').errors.pattern">
+					You have to enter an identifier
 				</mat-error>
 			</mat-form-field>
 
-			<p>
-				Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot {{ teamOneArray.join(", ") }}.
-			</p>
+			<p>Enter the identifier of the qualifier lobby (for example, "B"). Current name of the lobby:</p>
+			<p>{{ tournamentAcronym }}: Qualifier lobby: {{ qualifierLobbyIdentifier }}</p>
 		</div>
 
-		<div class="col">
-			<h2>Team two name</h2>
+		<div class="row r-2" *ngIf="qualifier == false">
+			<div class="col">
+				<h2>Team one name</h2>
 
-			<mat-form-field class="full-width">
-				<mat-label>Team two name</mat-label>
-				<input matInput formControlName="team-two-name" />
+				<mat-form-field class="full-width">
+					<mat-label>Team one name</mat-label>
+					<input matInput formControlName="team-one-name" />
 
-				<mat-error *ngIf="getValidation('team-two-name').errors && (getValidation('team-two-name').touched || getValidation('team-two-name').dirty)">
-					This field is required
-				</mat-error>
-			</mat-form-field>
+					<mat-error *ngIf="getValidation('team-one-name').errors && (getValidation('team-one-name').touched || getValidation('team-one-name').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
 
-			<p>
-				Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot {{ teamTwoArray.join(", ") }}.
-			</p>
+				<p>
+					Enter the name of the first team. This will be team <span class="red-text">red</span> and has slot {{ teamOneArray.join(", ") }}.
+				</p>
+			</div>
+
+			<div class="col">
+				<h2>Team two name</h2>
+
+				<mat-form-field class="full-width">
+					<mat-label>Team two name</mat-label>
+					<input matInput formControlName="team-two-name" />
+
+					<mat-error *ngIf="getValidation('team-two-name').errors && (getValidation('team-two-name').touched || getValidation('team-two-name').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>
+					Enter the name of the second team. This will be team <span class="blue-text">blue</span> and has slot {{ teamTwoArray.join(", ") }}.
+				</p>
+			</div>
 		</div>
+
+		<hr />
 	</div>
 
 	<div class="row margin-button" *ngIf="selectedTournament == null">
