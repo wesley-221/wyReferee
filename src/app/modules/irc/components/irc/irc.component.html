@@ -395,6 +395,12 @@
 							</mat-form-field>
 						</div>
 					</div>
+
+					<div class="header-row" *ngIf="roomSettingDelay > 0">
+						<div class="header-col">
+							<p>Updating multiplayer settings in {{ roomSettingDelay }}...</p>
+						</div>
+					</div>
 				</div>
 
 				<div class="active-header-setting" [ngClass]="{'active': sidebarHeaderButtonActive == 3}">

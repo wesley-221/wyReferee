@@ -82,7 +82,7 @@ export class IrcComponent implements OnInit {
 	searchValue: string;
 
 	roomSettingGoingOn = false;
-	roomSettingDelay = 3;
+	roomSettingDelay = 0;
 
 	teamOneScore = 0;
 	teamTwoScore = 0;
@@ -716,7 +716,7 @@ export class IrcComponent implements OnInit {
 		if (!this.roomSettingGoingOn) {
 			const timer =
 				setInterval(() => {
-					if (this.roomSettingDelay == 0) {
+					if (this.roomSettingDelay == 1) {
 						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.value as string} ${this.winCondition.value as string} ${this.players.value == undefined ? 8 : this.players.value as string}`);
 
 						this.ircService.getChannelByName(this.selectedChannel.name).teamMode = this.teamMode.value;
@@ -724,6 +724,8 @@ export class IrcComponent implements OnInit {
 						this.ircService.getChannelByName(this.selectedChannel.name).players = this.players.value;
 
 						this.roomSettingGoingOn = false;
+						this.roomSettingDelay = 0;
+
 						clearInterval(timer);
 					}
 
