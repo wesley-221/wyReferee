@@ -131,17 +131,7 @@
 		<hr />
 
 		<div *ngIf="qualifier == true">
-			<mat-form-field class="full-width">
-				<mat-label>Qualifier lobby identifier</mat-label>
-				<input matInput formControlName="qualifier-lobby-identifier" />
-
-				<mat-error *ngIf="getValidation('qualifier-lobby-identifier').errors && getValidation('qualifier-lobby-identifier').errors.pattern">
-					You have to enter an identifier
-				</mat-error>
-			</mat-form-field>
-
-			<p>Enter the identifier of the qualifier lobby (for example, "B"). Current name of the lobby:</p>
-			<p>{{ tournamentAcronym }}: Qualifier lobby: {{ qualifierLobbyIdentifier }}</p>
+			<ng-container *ngTemplateOutlet="qualifierInput; context: { tournamentAcronym: tournamentAcronym, qualifierLobbyIdentifier: qualifierLobbyIdentifier, formGroup: validationForm }"></ng-container>
 		</div>
 
 		<div class="row r-2" *ngIf="qualifier == false">
@@ -253,7 +243,8 @@
 					<h2>Select a match</h2>
 					<p>Choose a match to referee from the list below. Ensure you select the correct match before proceeding.</p>
 
-					<mat-slide-toggle class="spacing-bottom" [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()">Manually enter participant names</mat-slide-toggle>
+					<mat-slide-toggle class="spacing-bottom" [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()" *ngIf="qualifier == true">Manually enter qualifier identifier</mat-slide-toggle>
+					<mat-slide-toggle class="spacing-bottom" [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()" *ngIf="qualifier == false">Manually enter participant names</mat-slide-toggle>
 
 					<div *ngIf="customMatch == false">
 						<mat-form-field class="full-width">
@@ -275,7 +266,11 @@
 					</div>
 
 					<div *ngIf="customMatch == true">
-						<div class="row r-2">
+						<div *ngIf="qualifier == true">
+							<ng-container *ngTemplateOutlet="qualifierInput; context: { tournamentAcronym: selectedTournament.acronym, qualifierLobbyIdentifier: qualifierLobbyIdentifier, formGroup: validationForm }"></ng-container>
+						</div>
+
+						<div class="row r-2" *ngIf="qualifier == false">
 							<div class="col">
 								<ng-container *ngTemplateOutlet="teamInput; context: { controlName: 'team-one-name', label: 'Team one', filter: teamOneFilter, slots: teamOneArray, formGroup: validationForm }"></ng-container>
 							</div>
@@ -309,17 +304,7 @@
 			</div>
 
 			<div *ngIf="qualifier == true">
-				<mat-form-field class="full-width">
-					<mat-label>Qualifier lobby identifier</mat-label>
-					<input matInput formControlName="qualifier-lobby-identifier" />
-
-					<mat-error *ngIf="getValidation('qualifier-lobby-identifier').errors && getValidation('qualifier-lobby-identifier').errors.pattern">
-						You have to enter an identifier
-					</mat-error>
-				</mat-form-field>
-
-				<p>Enter the identifier of the qualifier lobby (for example, "B"). Current name of the lobby:</p>
-				<p>{{ selectedTournament.acronym }}: Qualifier lobby: {{ qualifierLobbyIdentifier }}</p>
+				<ng-container *ngTemplateOutlet="qualifierInput; context: { tournamentAcronym: selectedTournament.acronym, qualifierLobbyIdentifier: qualifierLobbyIdentifier, formGroup: validationForm }"></ng-container>
 			</div>
 		</div>
 	</div>
@@ -353,4 +338,20 @@
 	<p>
 		Enter the name of {{ label.toLowerCase() }}. This will be team <span class="red-text" *ngIf="label.includes('one')">red</span> <span class="blue-text" *ngIf="label.includes('two')">blue</span> and has slot {{ slots.join(", ") }}.
 	</p>
+</ng-template>
+
+<ng-template #qualifierInput let-tournamentAcronym="tournamentAcronym" let-qualifierLobbyIdentifier="qualifierLobbyIdentifier" let-formGroup="formGroup">
+	<div [formGroup]="formGroup">
+		<mat-form-field class="full-width">
+			<mat-label>Qualifier lobby identifier</mat-label>
+			<input matInput formControlName="qualifier-lobby-identifier" />
+
+			<mat-error *ngIf="getValidation('qualifier-lobby-identifier').errors && getValidation('qualifier-lobby-identifier').errors.pattern">
+				You have to enter an identifier
+			</mat-error>
+		</mat-form-field>
+
+		<p>Enter the identifier of the qualifier lobby (for example, "B"). Current name of the lobby:</p>
+		<p>{{ tournamentAcronym }}: Qualifier lobby: {{ qualifierLobbyIdentifier }}</p>
+	</div>
 </ng-template>
