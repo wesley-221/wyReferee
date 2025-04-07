@@ -29,6 +29,7 @@ import { UpdaterComponent } from './layout/updater/updater.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { CredentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { ProtectBeatmapDialogComponent } from './components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
+import { AddBulkTeamsDialogComponent } from './components/dialogs/add-bulk-teams-dialog/add-bulk-teams-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -55,6 +56,7 @@ import { ProtectBeatmapDialogComponent } from './components/dialogs/protect-beat
 		IrcPickMapSameModBracketComponent,
 		IrcShortcutWarningDialogComponent,
 		ProtectBeatmapDialogComponent,
+		AddBulkTeamsDialogComponent,
 	],
 	imports: [
 		BrowserModule,

@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Add bulk teams</h2>
+
+<mat-dialog-content class="mat-typography">
+	<p>Enter one team per line using the following format:</p>
+	<code>Team name, Player 1 name, Player 1 id, Player 2 name, Player 2 id, ...</code>
+
+	<ul>
+		<li><b>Team name</b> is required</li>
+		<li>You can add multiple players per team, or none at all</li>
+		<li>Each player must follow the format: <code>username, user ID</code></li>
+		<li>If a player is added, both the <b>username</b> and <b>user ID</b> are required</li>
+		<ul>
+			<li>However, the <b>user ID</b> may be left empty if unknown. See the last example.</li>
+		</ul>
+		<li>Separate each player with a comma</li>
+	</ul>
+
+	<p>Examples:</p>
+
+	<code>Team 1, Player 1, 1234567, Player 2, 7654321</code><br />
+	<code>Team 2, Player 4, 1234567, Player 5, 7654321, Player 6, 1726354</code><br />
+	<code>Team 3, Player 7, 1234567</code><br />
+	<code>Team 4</code><br />
+	<code>Team 5, Player 8, , Player 9, </code><br />
+
+	<hr />
+
+	<mat-form-field class="full-width margin-top">
+		<mat-label>Teams (click on me)</mat-label>
+		<textarea matInput [(ngModel)]="bulkTeams" [ngModelOptions]="{ standalone: true }" rows="8"></textarea>
+	</mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="bulkTeams" [disabled]="bulkTeams.length <= 0" color="accent">Create teams</button>
+</mat-dialog-actions>
