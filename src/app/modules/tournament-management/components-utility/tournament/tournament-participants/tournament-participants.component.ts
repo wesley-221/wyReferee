@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { AddBulkTeamsDialogComponent } from 'app/components/dialogs/add-bulk-teams-dialog/add-bulk-teams-dialog.component';
 import { DeleteTeamDialogComponent } from 'app/components/dialogs/delete-team-dialog/delete-team-dialog.component';
 import { WyTeam } from 'app/models/wytournament/wy-team';
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
@@ -142,25 +143,41 @@ export class TournamentParticipantsComponent implements OnInit {
 	 * Bulk add teams to the tournament
 	 */
 	addBulkTeams(): void {
-		const allTeams = this.teamsToAdd.split('\n');
+		const dialogRef = this.dialog.open(AddBulkTeamsDialogComponent);
 
-		allTeams.forEach(team => {
-			const newTeam = new WyTeam();
-			newTeam.name = team.trim();
+		dialogRef.afterClosed().subscribe(result => {
+			if (result != null) {
+				const allTeams = result.split('\n');
 
-			newTeam.index = this.tournament.teamIndex;
-			this.tournament.teamIndex++;
+				allTeams.forEach((team: string) => {
+					const [teamName, ...players] = team.trim().split(',');
 
-			this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+					const newTeam = new WyTeam({
+						name: teamName.trim(),
+						index: this.tournament.teamIndex,
+						collapsed: true
+					});
 
-			if (this.tournament.isSoloTournament()) {
-				this.validationForm.addControl(`tournament-player-user-id-${newTeam.index}`, new FormControl(''));
+					for (let i = 0; i < players.length; i += 2) {
+						const playerName = players[i].trim();
+						const playerId = parseInt(players[i + 1]?.trim() || '') || null;
+
+						const newPlayer = new WyTeamPlayer({
+							name: playerName,
+							userId: playerId
+						});
+
+						newTeam.players.push(newPlayer);
+					}
+
+					this.tournament.teamIndex++;
+
+					this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
+
+					this.tournament.teams.push(newTeam);
+				});
 			}
-
-			this.tournament.teams.push(newTeam);
 		});
-
-		this.teamsToAdd = null;
 	}
 
 	/**
