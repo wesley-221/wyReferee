@@ -226,7 +226,7 @@ export class WyMultiplayerLobbiesService {
 					const newMultiplayerDataUser = new MultiplayerDataUser({
 						user: +currentScore.user_id,
 						score: +currentScore.score,
-						accuracy: Calculations.getAccuracyOfScore(currentScore),
+						accuracy: Calculations.getAccuracyOfScore(currentScore, multiplayerLobby.tournament.gamemodeId),
 						passed: +currentScore.pass,
 						slot: +currentScore.slot,
 						mods: +currentScore.enabled_mods,
