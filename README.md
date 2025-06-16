@@ -1,60 +1,46 @@
-[![Windows Build][windows-build-badge]][windows-build]
-[![Linux Build][linux-build-badge]][linux-build]
-[![MacOS Build][macos-build-badge]][macos-build]
+[![Made with Angular](https://img.shields.io/badge/Built%20with-Angular-DD0031?style=flat&logo=angular&logoColor=white)](https://angular.io/)
+[![Electron](https://img.shields.io/badge/Electron-202020?style=flat&logo=electron&logoColor=9FEAF9)](https://www.electronjs.org/)
+[![MIT License](https://img.shields.io/github/license/wesley-221/wyReferee)](./LICENSE)
+[![Discord](https://img.shields.io/discord/1078366521916666048?label=Join%20Discord&logo=discord&color=5865F2)](https://discord.gg/wEaXFJ58kE)
 
-# Introduction
-wyReferee is an irc client made for osu!. Create a tournament, add participants, webhooks and even mappools, all with quality of life features for every single thing.
-wyReferee also has an auto-updater, meaning when a new update is available, this will be automatically downloaded and installed to ensure you have the latest version.
+# wyReferee
+**wyReferee** is a cross-platform referee client for your osu! tournament to help you manage your tournament matches with ease and automation.
 
-# Getting started
-There are several ways on how to use the client. The easiest way is to simply download the `.exe` file (currently only support Windows builds out of the box, Mac and Linux have to be built manually, see below).
+<p align="center">
+	<img src="./src/assets/screenshots/irc.png" alt="IRC" width="48%" />
+	<img src="./src/assets/screenshots/mappool-management.png" alt="Tournament management" width="48%" />
+</p>
 
-## Downloading the latest version
-To download the latest version of wyReferee, click on [this](https://github.com/wesley-221/wyReferee/releases/latest) and download `wyReferee-Setup-x.x.x.exe`. As mentioned above, only Windows builds are supported for now.
+## Features
+- IRC: 
+	- All your usual IRC functionality
+	- Keeping track of match progression:
+		- Match score being tracked
+		- Which maps have been picked or banned
+		- Which player or team picks next
+	- A list of beatmaps (with buttons to pick them) for the current match stage
+	- Clickable links in chat when a player types `NM1`, `DT3`, `FM4`, etc. 
+	- List with all players for the current match with buttons to invite them
+- Tournament management:
+	- Manage your tournament, add referees, participants and mappools to essentially automate everything referee related
+	- Configure webhooks to be sent to a specific channel when a certain event happens during the match, ie. match creation, beatmap picked, beatmap banned, match finished
+	- Configure conditional messages that will be sent to the multiplayer lobby when a certain event is triggered during the match, ie. when sending the beatmap result or when a beatmap has been picked
+		- These mssages are also fully customizeable with variables, example: 
+			- `Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference : {{ scoreDifference }}` will get transformed to `Score: 989 323 - 222 541 | score difference : 766 782`
+	- Configure mappools per stage: 
+		- Every stage has their own mappool with mod brackets and beatmaps
+		- Each mod bracket can have their own separate mods, which will be selected alongside the beatmap
+- Custom score system support:
+	- Ability to change up how score is calculated in realtime
+	- Change mod score modifiers to something different (ie. Hardrock to 1.78x, Hidden to 2.23x, etc.)
+	- Change how score is calculated alltogether, see ["calculations" header](https://osu.ppy.sh/community/forums/topics/1874028?n=1) for this tournament
+	- _Disclaimer: custom score systems requires some development (usually isn't too much effort for most things), if you want to request a custom one make sure to do so ahead of time to see if it is feasible. Are you a developer yourself (or do you know someone who is willing to help), feel free to ask for help in the Discord server!_
+- Full wyBin integration:
+	- Import staff, participants, stages and mappools straight from your wyBin tournament, so you only have to enter it manually once
+	- Submit match results (score, bans and stats) straight from wyReferee to wyBin
 
-## Building the client yourself
-Building the client yourself does not provide an auto-update like with the pre-built `.exe` straight from Github. When a new update comes out, you will have to build wyReferee again.
+## Download
+Head over to the [Releases](https://github.com/wesley-221/wyReferee/releases) page to download the install wizard.
 
-To build the client, you need the following software:
-- git
-- Node v12 (v12 is guaranteed to work)
-
-Once you have git and Node installed, run the following steps in a terminal.
-
-Clone the repository (this will put the files of wyReferee in the current working directory):
-```bash
-git clone git@github.com:wesley-221/wyReferee.git
-```
-
-Install dependencies:
-```bash
-yarn install
-```
-
-Updating to the latest version of wyReferee (run this from the wyReferee directory):
-```bash
-git fetch
-git pull
-```
-Once you have pulled the new changes, you have to install the dependencies again just to be safe.
-
-Building wyReferee:
-- If you are on a Windows machine, run `yarn run electron:windows` (this builds the same `.exe` as in the latest release)
-- If you are on a Mac, run `yarn run electron:mac`
-- If you are on a Linux distro, run `yarn run electron:linux`
-
-## Building for development
-If you want to develop the client, you can follow all the steps show above (Building the client yourself), except for the `Building wyReferee` part.
-Instead of that, you have to run the client like so:
-```bash
-yarn start
-```
-
-This will launch wyReferee in a hot-reloaded Electron window, where any change you make will reload the client with the new changes.
-
-[linux-build-badge]: https://github.com/wesley-221/wyreferee/workflows/Linux%20Build/badge.svg
-[linux-build]: https://github.com/wesley-221/wyreferee/actions?query=workflow%3A%22Linux+Build%22
-[macos-build-badge]: https://github.com/wesley-221/wyreferee/workflows/MacOS%20Build/badge.svg
-[macos-build]: https://github.com/wesley-221/wyreferee/actions?query=workflow%3A%22MacOS+Build%22
-[windows-build-badge]: https://github.com/wesley-221/wyreferee/workflows/Windows%20Build/badge.svg
-[windows-build]: https://github.com/wesley-221/wyreferee/actions?query=workflow%3A%22Windows+Build%22
+## Contribute
+You can find instructions on how to contribute code and bug reports [here](./CONTRIBUTING.md).
