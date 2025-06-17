@@ -4,7 +4,7 @@
 [![Discord](https://img.shields.io/discord/1078366521916666048?label=Join%20Discord&logo=discord&color=5865F2)](https://discord.gg/wEaXFJ58kE)
 
 # wyReferee
-**wyReferee** is a cross-platform referee client for your osu! tournament to help you manage your tournament matches with ease and automation.
+**wyReferee** is a cross-platform referee client for osu! tournaments, designed to help you manage your matches with ease and automation.
 
 <p align="center">
 	<img src="./src/assets/screenshots/irc.png" alt="IRC" width="48%" />
@@ -12,35 +12,38 @@
 </p>
 
 ## Features
-- IRC: 
-	- All your usual IRC functionality
-	- Keeping track of match progression:
-		- Match score being tracked
-		- Which maps have been picked or banned
-		- Which player or team picks next
-	- A list of beatmaps (with buttons to pick them) for the current match stage
-	- Clickable links in chat when a player types `NM1`, `DT3`, `FM4`, etc. 
-	- List with all players for the current match with buttons to invite them
-- Tournament management:
-	- Manage your tournament, add referees, participants and mappools to essentially automate everything referee related
-	- Configure webhooks to be sent to a specific channel when a certain event happens during the match, ie. match creation, beatmap picked, beatmap banned, match finished
-	- Configure conditional messages that will be sent to the multiplayer lobby when a certain event is triggered during the match, ie. when sending the beatmap result or when a beatmap has been picked
-		- These mssages are also fully customizeable with variables, example: 
-			- `Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference : {{ scoreDifference }}` will get transformed to `Score: 989 323 - 222 541 | score difference : 766 782`
-	- Configure mappools per stage: 
-		- Every stage has their own mappool with mod brackets and beatmaps
-		- Each mod bracket can have their own separate mods, which will be selected alongside the beatmap
-- Custom score system support:
-	- Ability to change up how score is calculated in realtime
-	- Change mod score modifiers to something different (ie. Hardrock to 1.78x, Hidden to 2.23x, etc.)
-	- Change how score is calculated alltogether, see ["calculations" header](https://osu.ppy.sh/community/forums/topics/1874028?n=1) for this tournament
-	- _Disclaimer: custom score systems requires some development (usually isn't too much effort for most things), if you want to request a custom one make sure to do so ahead of time to see if it is feasible. Are you a developer yourself (or do you know someone who is willing to help), feel free to ask for help in the Discord server!_
-- Full wyBin integration:
-	- Import staff, participants, stages and mappools straight from your wyBin tournament, so you only have to enter it manually once
-	- Submit match results (score, bans and stats) straight from wyReferee to wyBin
+
+### IRC
+- Full IRC functionality.
+- Match progression tracking:
+	- Live score updates.
+	- Tracks picked/banned maps.
+	- Indicates which player/team picks next.
+- Clickable beatmap list for the current match stage.
+- Recognizes and hyperlinks messages like `NM1`, `DT3`, `FM4`, etc.
+- Player invite buttons for current match participants.
+
+### Tournament Management
+- Manage your tournament by adding referees, participants, and mappools to automate referee tasks.
+- Configure webhooks to notify specific Discord channels of match events (e.g., match creation, beatmap picks/bans, match completion).
+- Send conditional messages to the multiplayer lobby triggered by match events.
+	- Fully customizable using variables. Example: `Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference: {{ scoreDifference }}` becomes `Score: 989 323 - 222 541 | score difference: 766 782`
+- Mappool configuration per stage:
+	- Each stage has its own mappool.
+	- Mod brackets can specify their own mods, applied alongside the selected beatmap.
+
+### Custom Score System Support
+- Modify how scores are calculated in real time.
+- Adjust score modifiers (e.g., HardRock: `1.78x`, Hidden: `2.23x`).
+- Fully customizable score calculation systems. See [this example](https://osu.ppy.sh/community/forums/topics/1874028?n=1) (under the calculations header).
+- _Note: Custom score systems may require development. If you need something specific, please ask in advance. If you're a developer (or know someone who is), feel free to ask for help in the [Discord server](https://discord.gg/wEaXFJ58kE)._
+
+### wyBin Integration
+- Import staff, participants, stages, and mappools directly from your wyBin tournament.
+- Submit match results (scores, bans, stats) from wyReferee to wyBin with one click.
 
 ## Download
-Head over to the [Releases](https://github.com/wesley-221/wyReferee/releases) page to download the install wizard.
+Visit the [Releases](https://github.com/wesley-221/wyReferee/releases) page to download the installer.
 
 ## Contribute
-You can find instructions on how to contribute code and bug reports [here](./CONTRIBUTING.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for instructions on contributing code or reporting bugs.
