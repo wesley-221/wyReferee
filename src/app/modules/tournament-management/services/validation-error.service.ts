@@ -40,7 +40,8 @@ export class ValidationErrorService {
 			new ValidationError('mappool-(\\d+)-type', 'You have to set the type for the {0} mappool.'),
 			new ValidationError('mappool-(\\d+)-mod-bracket-(\\d+)-name', 'You have to set the name for the {1} mod bracket from the {0} mappool.'),
 			new ValidationError('mappool-(\\d+)-mod-bracket-(\\d+)-acronym', 'You have to set the acronym for the {1} mod bracket from the {0} mappool.'),
-			new ValidationError('mappool-(\\d+)-mod-bracket-(\\d+)-mod-(\\d+)-value', 'You have to select a mod for the {3} mod dropdown of the {2} mod bracket from the {1} mappool.'),
+			new ValidationError('mappool-(\\d+)-mod-bracket-(\\d+)-mod-(\\d+)-value-not-unique', 'The {2} mod is a duplicate for the {1} mod bracket from the {0} mappool.'),
+			new ValidationError('mappool-(\\d+)-mod-bracket-(\\d+)-mod-(\\d+)-value', 'You have to select a mod for the {2} mod dropdown of the {1} mod bracket from the {0} mappool.'),
 		];
 	}
 
@@ -51,7 +52,7 @@ export class ValidationErrorService {
 	 */
 	getErrorMessage(validatorKey: string): string {
 		for (const validator of this.validators) {
-			if (validator.match(validatorKey)) {
+			if (validator.match(`^${validatorKey}$`)) {
 				return validator.parseErrorMessage(validatorKey);
 			}
 		}
