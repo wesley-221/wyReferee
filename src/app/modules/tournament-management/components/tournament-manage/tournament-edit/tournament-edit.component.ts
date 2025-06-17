@@ -7,6 +7,7 @@ import { CTMCalculation } from 'app/models/score-calculation/calculation-types/c
 import { ToastType } from 'app/models/toast';
 import { MappoolType } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { modBracketUniqueModsValidator } from 'app/modules/tournament-management/models/mod-bracket-unique-mods-validator';
 import { ValidationErrorService } from 'app/modules/tournament-management/services/validation-error.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
@@ -148,6 +149,9 @@ export class TournamentEditComponent implements OnInit {
 					}
 				}
 
+				this.validationForm.setValidators(modBracketUniqueModsValidator());
+				this.validationForm.updateValueAndValidity();
+
 				this.tournament = tournament;
 			}
 		});
@@ -192,6 +196,17 @@ export class TournamentEditComponent implements OnInit {
 				if (control.errors != null) {
 					const errorMessage = this.validationErrorService.getErrorMessage(validatorKey);
 					this.errors.push(errorMessage);
+				}
+			}
+
+			for (const errorKey in this.validationForm.errors) {
+				if (errorKey == 'nonUniqueModBracketValues') {
+					const modBracketErrors = this.validationForm.errors[errorKey];
+
+					for (const modBracketError of modBracketErrors) {
+						const errorMessage = this.validationErrorService.getErrorMessage(modBracketError);
+						this.errors.push(errorMessage);
+					}
 				}
 			}
 

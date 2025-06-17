@@ -7,6 +7,7 @@ import { WyModCategory } from 'app/models/wytournament/mappool/wy-mod-category';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Gamemodes, Mods } from 'app/models/osu-models/osu';
 import { WyMod } from 'app/models/wytournament/mappool/wy-mod';
+import { modBracketUniqueModsValidator } from 'app/modules/tournament-management/models/mod-bracket-unique-mods-validator';
 
 @Component({
 	selector: 'app-mappool',
@@ -150,6 +151,9 @@ export class MappoolComponent implements OnInit {
 		}
 
 		this.createDefaultBracket('Tiebreaker', 'TB', [{ name: 'Freemod', value: 'freemod' }]);
+
+		this.validationForm.setValidators(modBracketUniqueModsValidator());
+		this.validationForm.updateValueAndValidity();
 	}
 
 	/**
