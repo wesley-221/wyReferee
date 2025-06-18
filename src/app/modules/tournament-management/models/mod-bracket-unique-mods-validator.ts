@@ -1,11 +1,13 @@
-import { ValidatorFn, AbstractControl, ValidationErrors } from "@angular/forms";
+import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 
 export function modBracketUniqueModsValidator(): ValidatorFn {
 	return (form: AbstractControl): ValidationErrors | null => {
-		if (!form || typeof form !== 'object' || !('controls' in form)) return null;
+		if (!form || typeof form !== 'object' || !('controls' in form)) {
+			return null;
+		}
 
 		const controls = (form as any).controls;
-		const bracketMap = new Map<string, { key: string, value: string }[]>();
+		const bracketMap = new Map<string, { key: string; value: string }[]>();
 		const duplicateKeys: string[] = [];
 
 		for (const key of Object.keys(controls)) {
@@ -16,17 +18,19 @@ export function modBracketUniqueModsValidator(): ValidatorFn {
 				const rawValue = controls[key].value;
 				const value = rawValue !== null && rawValue !== undefined ? String(rawValue).trim() : '';
 
-				if (!value) continue;
+				if (!value) {
+					continue;
+				}
 
 				if (!bracketMap.has(bracketKey)) {
 					bracketMap.set(bracketKey, []);
 				}
 
-				bracketMap.get(bracketKey)!.push({ key, value });
+				bracketMap.get(bracketKey).push({ key, value });
 			}
 		}
 
-		for (const [bracketKey, entries] of bracketMap.entries()) {
+		for (const [, entries] of bracketMap.entries()) {
 			const valueMap = new Map<string, string[]>();
 
 			for (const { key, value } of entries) {
@@ -34,7 +38,7 @@ export function modBracketUniqueModsValidator(): ValidatorFn {
 					valueMap.set(value, []);
 				}
 
-				valueMap.get(value)!.push(key);
+				valueMap.get(value).push(key);
 			}
 
 			for (const keys of valueMap.values()) {
