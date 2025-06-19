@@ -12,6 +12,7 @@ import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { WyModCategory } from 'app/models/wytournament/mappool/wy-mod-category';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { modBracketUniqueModsValidator } from 'app/modules/tournament-management/models/mod-bracket-unique-mods-validator';
 import { ElectronService } from 'app/services/electron.service';
 import { GetBeatmap } from 'app/services/osu-api/get-beatmap.service';
 import { ToastService } from 'app/services/toast.service';
@@ -122,6 +123,9 @@ export class ModBracketComponent implements OnInit {
 					}
 				}
 
+				this.validationForm.setValidators(modBracketUniqueModsValidator());
+				this.validationForm.updateValueAndValidity();
+
 				this.toastService.addToast(`Successfully removed "${modBracket.name}" from the mappool.`);
 			}
 		});
@@ -140,6 +144,9 @@ export class ModBracketComponent implements OnInit {
 			this.modBracket.mods.push(newMod);
 
 			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-mod-${newMod.index}-value`, new FormControl('', Validators.required));
+
+			this.validationForm.setValidators(modBracketUniqueModsValidator());
+			this.validationForm.updateValueAndValidity();
 		}
 		else {
 			this.toastService.addToast('Maximum amount of mods reached.', ToastType.Warning);
@@ -157,6 +164,9 @@ export class ModBracketComponent implements OnInit {
 				this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-mod-${this.modBracket.mods[mod].index}-value`);
 
 				this.modBracket.mods.splice(Number(mod), 1);
+
+				this.validationForm.setValidators(modBracketUniqueModsValidator());
+				this.validationForm.updateValueAndValidity();
 				return;
 			}
 		}
@@ -278,6 +288,9 @@ export class ModBracketComponent implements OnInit {
 		if (this.mappool.type == MappoolType.CTMTournament) {
 			this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${beatmap.index}-damage-amount`);
 		}
+
+		this.validationForm.setValidators(modBracketUniqueModsValidator());
+		this.validationForm.updateValueAndValidity();
 	}
 
 	/**

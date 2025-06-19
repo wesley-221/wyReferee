@@ -90,6 +90,17 @@ export class TournamentCreateComponent implements OnInit {
 				}
 			}
 
+			for (const errorKey in this.validationForm.errors) {
+				if (errorKey == 'nonUniqueModBracketValues') {
+					const modBracketErrors = this.validationForm.errors[errorKey];
+
+					for (const modBracketError of modBracketErrors) {
+						const errorMessage = this.validationErrorService.getErrorMessage(modBracketError);
+						this.errors.push(errorMessage);
+					}
+				}
+			}
+
 			this.container.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
 			return;
