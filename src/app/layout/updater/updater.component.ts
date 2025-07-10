@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ToastService } from 'app/services/toast.service';
 import { AppConfig } from 'environments/environment';
+import ElectronLog from 'electron-log';
 
 @Component({
 	selector: 'app-updater',
@@ -15,7 +16,7 @@ export class UpdaterComponent implements OnInit {
 	downloadPercentage = 0;
 
 	constructor(private ref: ChangeDetectorRef, private toastService: ToastService) {
-		const log = require('electron-log');
+		const log = ElectronLog;
 
 		this.remote = window.require('electron').remote;
 		this.autoUpdater = this.remote.require('electron-updater').autoUpdater;

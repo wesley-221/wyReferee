@@ -109,7 +109,7 @@ export abstract class ScoreInterface {
 	 * @param teamSize the size of a single team
 	 * @param initialize whether to initialize the user slots
 	 */
-	public setTeamSize(teamSize: number, initialize: boolean = true): void {
+	public setTeamSize(teamSize: number, initialize = true): void {
 		this.teamSize = teamSize;
 
 		if (initialize == true) {

@@ -7,6 +7,7 @@ import { gte, gt } from 'semver';
 import { Router } from '@angular/router';
 import { ToastService } from './services/toast.service';
 import { ToastType } from './models/toast';
+import PackageJson from '../../package.json';
 
 @Component({
 	selector: 'app-root',
@@ -17,7 +18,7 @@ export class AppComponent {
 	clearDataBeforeVersion: string;
 
 	constructor(private ircService: IrcService, private authService: AuthenticateService, private cacheService: CacheService, private genericService: GenericService, private router: Router, private toastService: ToastService) {
-		const currentVersion = require('../../package.json').version;
+		const currentVersion = PackageJson.version;
 
 		this.clearDataBeforeVersion = '6.6.0';
 

@@ -37,7 +37,6 @@
 		"electron:windows": "yarn run build:prod && electron-builder build --windows --publish never",
 		"electron:mac": "yarn run build:prod && electron-builder build --mac --publish never",
 		"test": "yarn run postinstall:web && ng test",
-		"e2e": "yarn run build:prod && playwright test -c e2e/playwright.config.ts e2e/",
 		"lint": "ng lint"
 	},
 	"devDependencies": {
@@ -78,7 +77,6 @@
 		"karma-jasmine": "^4.0.2",
 		"karma-jasmine-html-reporter": "^1.7.0",
 		"npm-run-all": "4.1.5",
-		"playwright": "^1.20.2",
 		"rxjs": "7.5.5",
 		"ts-node": "10.7.0",
 		"tslib": "^2.1.0",
