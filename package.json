@@ -99,7 +99,6 @@
 		"express": "^4.21.1",
 		"ngx-clipboard": "^12.3.1",
 		"ngx-markdown": "^13.1.0",
-		"ngx-virtual-scroller": "^3.0.3",
 		"semver": "^7.3.6",
 		"weak-value-map": "^1.0.1"
 	}
