@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, HostListen
 import { IrcService } from '../../../../services/irc.service';
 import { ElectronService } from '../../../../services/electron.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../services/toast.service';
 import { StoreService } from '../../../../services/store.service';
@@ -42,6 +41,7 @@ import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dial
 import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
 	selector: 'app-irc',
@@ -56,18 +56,15 @@ export class IrcComponent implements OnInit {
 	@ViewChild('winCondition') winCondition: MatSelect;
 	@ViewChild('players') players: MatSelect;
 
-	@ViewChild('normalVirtualScroller') private normalVirtualScroller: VirtualScrollerComponent;
-	@ViewChild('banchoBotVirtualScroller') private banchoBotVirtualScroller: VirtualScrollerComponent;
+	@ViewChild('normalChatVirtualScroller') normalChatVirtualScroller: CdkVirtualScrollViewport;
+	@ViewChild('banchoBotChatVirtualScroller') banchoBotChatVirtualScroller: CdkVirtualScrollViewport;
 
 	selectedChannel: IrcChannel;
 	selectedLobby: Lobby;
 	channels: IrcChannel[];
 
 	normalChats: IrcMessage[] = [];
-	normalViewPortItems: IrcMessage[];
-
 	banchoBotChats: IrcMessage[] = [];
-	banchoBotViewPortItems: IrcMessage[];
 
 	splitBanchoMessages: boolean;
 
@@ -164,24 +161,17 @@ export class IrcComponent implements OnInit {
 
 		// Initialize the scroll
 		this.ircService.hasMessageBeenSend().subscribe(() => {
-			if (this.normalViewPortItems) {
-				if (this.normalViewPortItems[this.normalViewPortItems.length - 1] === this.normalChats[this.normalChats.length - 2]) {
-					this.scrollToTop();
-				}
-
-				if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
-					ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
-				}
+			// Mark current channel as read
+			if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
+				ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
 			}
 
-			if (this.banchoBotViewPortItems) {
-				if (this.banchoBotViewPortItems[this.banchoBotViewPortItems.length - 1] === this.banchoBotChats[this.banchoBotChats.length - 2]) {
-					this.scrollToTop();
-				}
+			// Detect changes to update the view, scroll to bottom after this
+			this.ref.detectChanges();
 
-				if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
-					ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
-				}
+			// Scroll the chats to the bottom
+			if (this.normalChats || this.banchoBotChats) {
+				this.scrollToBottom();
 			}
 		});
 
@@ -363,12 +353,12 @@ export class IrcComponent implements OnInit {
 		// Scroll to the bottom - delay it by 500 ms or do it instantly
 		if (delayScroll) {
 			setTimeout(() => {
-				this.scrollToTop();
+				this.scrollToBottom();
 				this.chatMessage.nativeElement.focus();
 			}, 500);
 		}
 		else {
-			this.scrollToTop();
+			this.scrollToBottom();
 			this.chatMessage.nativeElement.focus();
 		}
 
@@ -977,13 +967,13 @@ export class IrcComponent implements OnInit {
 	/**
 	 * Scroll irc chat to top
 	 */
-	scrollToTop() {
-		if (this.normalVirtualScroller != undefined) {
-			this.normalVirtualScroller.scrollToIndex(this.normalChats.length - 1, true, 0, 0);
+	scrollToBottom() {
+		if (this.normalChatVirtualScroller != undefined) {
+			this.normalChatVirtualScroller.scrollToIndex(this.normalChats.length - 1);
 		}
 
-		if (this.banchoBotVirtualScroller != undefined) {
-			this.banchoBotVirtualScroller.scrollToIndex(this.banchoBotChats.length - 1, true, 0, 0);
+		if (this.banchoBotChatVirtualScroller != undefined) {
+			this.banchoBotChatVirtualScroller.scrollToIndex(this.banchoBotChats.length - 1);
 		}
 	}
 

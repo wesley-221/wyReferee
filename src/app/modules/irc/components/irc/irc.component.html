@@ -155,11 +155,11 @@
 			</div>
 
 			<!-- Banchobot messages -->
-			<virtual-scroller #banchoBotVirtualScroller *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_') && splitBanchoMessages == true" [ngStyle]="{'height': dividerHeightPercentage + '%'}" class="messages banchobot" [items]="banchoBotChats" [stripedTable]="true" (vsUpdate)="banchoBotViewPortItems = $event">
+			<cdk-virtual-scroll-viewport #banchoBotChatVirtualScroller *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_') && splitBanchoMessages == true" [ngStyle]="{'height': dividerHeightPercentage + '%'}" class="messages banchobot">
 				<app-alert alertType="warn" *ngIf="banchoBotChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
 				<app-alert alertType="warn" *ngIf="banchoBotChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
 
-				<div class="chat" *ngFor="let chat of banchoBotViewPortItems">
+				<div class="chat" *ngFor="let chat of banchoBotChats">
 					<div class="chat-content">
 						<div class="time" [title]="chat.date">
 							{{ chat.time }}
@@ -188,7 +188,7 @@
 						</div>
 					</div>
 				</div>
-			</virtual-scroller>
+			</cdk-virtual-scroll-viewport>
 
 			<div class="messages-divider" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_') && splitBanchoMessages == true">
 				<div class="divider-buttons">
@@ -207,11 +207,10 @@
 			</div>
 
 			<!-- Normal messages -->
-			<virtual-scroller #normalVirtualScroller class="messages normal" [items]="normalChats" [stripedTable]="true" (vsUpdate)="normalViewPortItems = $event">
+			<cdk-virtual-scroll-viewport #normalChatVirtualScroller class="messages normal" itemSize="50">
 				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
 				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
-
-				<div class="chat" *ngFor="let chat of normalViewPortItems">
+				<div class="chat" *ngFor="let chat of normalChats">
 					<div class="chat-content divider" *ngIf="!chat.isADivider">
 						<div class="time" [title]="chat.date">
 							{{ chat.time }}
@@ -244,7 +243,7 @@
 						<div class="divider"><span>{{ chat.author }}</span></div>
 					</div>
 				</div>
-			</virtual-scroller>
+			</cdk-virtual-scroll-viewport>
 
 			<div class="match-results" *ngIf="matchDialogHeaderName && (matchDialogMultiplayerData || matchDialogSendFinalResult)">
 				<div class="header">
