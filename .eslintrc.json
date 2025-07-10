@@ -23,12 +23,10 @@
 				"plugin:@typescript-eslint/eslint-recommended",
 				"plugin:@typescript-eslint/recommended",
 				"plugin:@typescript-eslint/recommended-requiring-type-checking",
-				"plugin:@angular-eslint/ng-cli-compat",
-				"plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+				"plugin:@angular-eslint/recommended",
 				"plugin:@angular-eslint/template/process-inline-templates"
 			],
 			"rules": {
-				"prefer-arrow/prefer-arrow-functions": 0,
 				"@angular-eslint/directive-selector": 0,
 				"@angular-eslint/component-selector": [
 					"error",
@@ -50,13 +48,15 @@
 				"@typescript-eslint/no-floating-promises": 0,
 				"@typescript-eslint/unbound-method": 0,
 				"@typescript-eslint/restrict-plus-operands": 0,
+				"@typescript-eslint/no-explicit-any": 0,
+				"@typescript-eslint/no-empty-function": 0,
+				"@angular-eslint/no-empty-lifecycle-method": 0,
 				"eqeqeq": 0,
 				"max-len": 0,
 				"object-shorthand": 0,
 				"guard-for-in": 0,
 				"no-bitwise": 0,
-				"radix": 0,
-				"jsdoc/newline-after-description": 0
+				"radix": 0
 			}
 		},
 		{
