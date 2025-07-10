@@ -27,6 +27,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const modules: any[] = [
 	LayoutModule,
@@ -53,7 +54,8 @@ const modules: any[] = [
 	MatButtonToggleModule,
 	MatProgressBarModule,
 	MatAutocompleteModule,
-	MatPaginatorModule
+	MatPaginatorModule,
+	ScrollingModule
 ];
 
 @NgModule({

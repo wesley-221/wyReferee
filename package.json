@@ -37,7 +37,6 @@
 		"electron:windows": "yarn run build:prod && electron-builder build --windows --publish never",
 		"electron:mac": "yarn run build:prod && electron-builder build --mac --publish never",
 		"test": "yarn run postinstall:web && ng test",
-		"e2e": "yarn run build:prod && playwright test -c e2e/playwright.config.ts e2e/",
 		"lint": "ng lint"
 	},
 	"devDependencies": {
@@ -62,35 +61,27 @@
 		"@playwright/test": "^1.20.2",
 		"@types/howler": "^2.1.2",
 		"@types/jasmine": "3.3.16",
-		"@types/jasminewd2": "2.0.6",
 		"@types/node": "^15.12.5",
 		"@typescript-eslint/eslint-plugin": "5.17.0",
 		"@typescript-eslint/parser": "5.17.0",
-		"codelyzer": "^6.0.0",
-		"core-js": "3.6.5",
 		"electron": "^13.1.4",
 		"electron-builder": "23.0.3",
 		"electron-reload": "1.5.0",
 		"eslint": "^7.8.1",
 		"eslint-plugin-import": "^2.22.0",
-		"eslint-plugin-jsdoc": "^43.1.1",
-		"eslint-plugin-prefer-arrow": "1.2.3",
 		"howler": "^2.1.3",
 		"jasmine-core": "^4.0.1",
 		"jasmine-spec-reporter": "^7.0.0",
 		"karma": "^6.3.17",
 		"karma-chrome-launcher": "^3.1.1",
-		"karma-coverage-istanbul-reporter": "^3.0.3",
 		"karma-jasmine": "^4.0.2",
 		"karma-jasmine-html-reporter": "^1.7.0",
 		"npm-run-all": "4.1.5",
-		"playwright": "^1.20.2",
 		"rxjs": "7.5.5",
 		"ts-node": "10.7.0",
 		"tslib": "^2.1.0",
 		"typescript": "~4.6.3",
 		"wait-on": "6.0.1",
-		"webdriver-manager": "12.1.8",
 		"zone.js": "~0.11.4"
 	},
 	"engines": {
@@ -106,7 +97,7 @@
 		"express": "^4.21.1",
 		"ngx-clipboard": "^12.3.1",
 		"ngx-markdown": "^13.1.0",
-		"ngx-virtual-scroller": "^3.0.3",
-		"semver": "^7.3.6"
+		"semver": "^7.3.6",
+		"weak-value-map": "^1.0.1"
 	}
 }
