@@ -95,7 +95,6 @@
 		"electron-store": "^5.0.0",
 		"electron-updater": "^4.1.2",
 		"express": "^4.21.1",
-		"ngx-clipboard": "^12.3.1",
 		"ngx-markdown": "^13.1.0",
 		"semver": "^7.3.6",
 		"weak-value-map": "^1.0.1"
