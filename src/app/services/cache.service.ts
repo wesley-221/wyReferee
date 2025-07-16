@@ -176,31 +176,6 @@ export class CacheService {
 	}
 
 	/**
-	 * Set the version of the cache
-	 *
-	 * @param version the new version
-	 */
-	public setCacheVersion(version: string): void {
-		this.storeService.set('cache-version', version);
-	}
-
-	/**
-	 * Set the version of wyReferee
-	 *
-	 * @param version the version to set
-	 */
-	public setVersion(version: string): void {
-		this.storeService.set('version', version);
-	}
-
-	/**
-	 * Get the version of wyReferee
-	 */
-	public getVersion(): string {
-		return this.storeService.get('version');
-	}
-
-	/**
 	 * Get the cover image
 	 *
 	 * @param beatmapId the beatmapid

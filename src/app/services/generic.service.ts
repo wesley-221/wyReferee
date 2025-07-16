@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ApiKeyValidation } from './osu-api/api-key-validation.service';
 import { StoreService } from './store.service';
 import { ToastService } from './toast.service';
+import { SettingsStoreService } from './storage/settings-store.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,13 +14,17 @@ export class GenericService {
 	private cacheCheck$: BehaviorSubject<boolean>;
 	private splitBanchoMessages$: BehaviorSubject<boolean>;
 
-	constructor(private storeService: StoreService, private apiKeyValidation: ApiKeyValidation, private toastService: ToastService) {
-		const showAxSMenu = this.storeService.get('show-axs');
-		const splitBanchoMessages = this.storeService.get('split-bancho-messages');
+	constructor(private settingsStore: SettingsStoreService, private storeService: StoreService, private apiKeyValidation: ApiKeyValidation, private toastService: ToastService) {
+		settingsStore.watchSettings().subscribe(settings => {
+			if (settings) {
+				this.showAxSMenu$.next(settings.showAxs);
+				this.splitBanchoMessages$.next(settings.splitBanchoMessages);
+			}
+		});
 
-		this.showAxSMenu$ = new BehaviorSubject(showAxSMenu == undefined ? false : showAxSMenu);
+		this.showAxSMenu$ = new BehaviorSubject(false);
 		this.cacheCheck$ = new BehaviorSubject(false);
-		this.splitBanchoMessages$ = new BehaviorSubject(splitBanchoMessages == undefined ? false : splitBanchoMessages);
+		this.splitBanchoMessages$ = new BehaviorSubject(false);
 
 		const apiKey = this.storeService.get('api-key');
 
@@ -44,7 +49,7 @@ export class GenericService {
 	 */
 	setAxSMenu(active: boolean): void {
 		this.showAxSMenu$.next(active);
-		this.storeService.set('show-axs', active);
+		this.settingsStore.set('showAxs', active);
 	}
 
 	/**
@@ -77,7 +82,7 @@ export class GenericService {
 	 */
 	setSplitBanchoMessages(active: boolean): void {
 		this.splitBanchoMessages$.next(active);
-		this.storeService.set('split-bancho-messages', active);
+		this.settingsStore.set('splitBanchoMessages', active);
 	}
 
 	/**

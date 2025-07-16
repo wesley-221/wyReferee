@@ -42,6 +42,7 @@ import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { SettingsStoreService } from 'app/services/storage/settings-store.service';
 
 @Component({
 	selector: 'app-irc',
@@ -117,6 +118,7 @@ export class IrcComponent implements OnInit {
 		public electronService: ElectronService,
 		public ircService: IrcService,
 		private storeService: StoreService,
+		private settingsStore: SettingsStoreService,
 		private multiplayerLobbies: WyMultiplayerLobbiesService,
 		private router: Router,
 		private toastService: ToastService,
@@ -132,19 +134,16 @@ export class IrcComponent implements OnInit {
 		public cacheService: CacheService) {
 		this.channels = ircService.allChannels;
 
-		const dividerHeightStore = this.storeService.get('dividerHeight');
+		settingsStore.watchSettings().subscribe(settings => {
+			if (settings) {
+				this.dividerHeightPercentage = settings.dividerHeight;
+			}
+		});
+
 		this.currentMessageHistoryIndex = -1;
 		this.slashCommandIndex = -1;
 
 		this.matchDialogSendFinalResult = false;
-
-		if (dividerHeightStore == undefined) {
-			this.storeService.set('dividerHeight', 30);
-			this.dividerHeightPercentage = 30;
-		}
-		else {
-			this.dividerHeightPercentage = dividerHeightStore;
-		}
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
 			// Check if the user was authenticated
@@ -290,7 +289,7 @@ export class IrcComponent implements OnInit {
 	 */
 	expandDivider(): void {
 		this.dividerHeightPercentage += 5;
-		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+		this.settingsStore.set('dividerHeight', this.dividerHeightPercentage);
 	}
 
 	/**
@@ -298,7 +297,7 @@ export class IrcComponent implements OnInit {
 	 */
 	resetDivider(): void {
 		this.dividerHeightPercentage = 30;
-		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+		this.settingsStore.set('dividerHeight', this.dividerHeightPercentage);
 	}
 
 	/**
@@ -306,7 +305,7 @@ export class IrcComponent implements OnInit {
 	 */
 	shrinkDivider(): void {
 		this.dividerHeightPercentage -= 5;
-		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+		this.settingsStore.set('dividerHeight', this.dividerHeightPercentage);
 	}
 
 	/**
