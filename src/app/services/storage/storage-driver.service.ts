@@ -13,7 +13,6 @@ export class StorageDriverService {
 	lobbyPath: string;
 	tournamentPath: string;
 	cachePath: string;
-	authPath: string;
 
 	settingsFilePath: string;
 
@@ -23,7 +22,6 @@ export class StorageDriverService {
 		this.lobbyPath = this.joinPath(this.mainDataPath, 'lobbies');
 		this.tournamentPath = this.joinPath(this.mainDataPath, 'tournaments');
 		this.cachePath = this.joinPath(this.mainDataPath, 'cache');
-		this.authPath = this.joinPath(this.mainDataPath, 'auth');
 
 		this.settingsFilePath = this.joinPath(this.mainDataPath, 'settings.json');
 
@@ -74,7 +72,6 @@ export class StorageDriverService {
 		await this.ensureDirectoryExists(this.lobbyPath);
 		await this.ensureDirectoryExists(this.tournamentPath);
 		await this.ensureDirectoryExists(this.cachePath);
-		await this.ensureDirectoryExists(this.authPath);
 	}
 
 	/**

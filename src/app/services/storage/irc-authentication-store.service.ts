@@ -12,7 +12,7 @@ interface IrcAuthenticationStore {
 	providedIn: 'root'
 })
 export class IrcAuthenticationStoreService {
-	private ircAuthenticationStorePath = this.storage.joinPath(this.storage.authPath, 'irc-authentication-store.json');
+	private ircAuthenticationStorePath = this.storage.joinPath(this.storage.mainDataPath, 'irc-authentication-store.json');
 	private ircAuthenticationStore$ = new BehaviorSubject<IrcAuthenticationStore | null>(null);
 
 	constructor(private storage: StorageDriverService) {
