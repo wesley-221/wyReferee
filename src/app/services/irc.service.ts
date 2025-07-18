@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BanchoClient, PrivateMessage, ChannelMessage, BanchoChannel, BanchoMultiplayerChannel, BanchoLobbyPlayer } from 'bancho.js';
 import { ToastService } from './toast.service';
 import { StoreService } from './store.service';
-import { BehaviorSubject, Observable, from } from 'rxjs';
+import { BehaviorSubject, Observable, from, take } from 'rxjs';
 import { Regex } from '../models/irc/regex';
 import { MessageBuilder, MessageType } from '../models/irc/message-builder';
 import { Howl } from 'howler';
@@ -14,6 +14,7 @@ import { Lobby } from 'app/models/lobby';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 import { ElectronService } from './electron.service';
 import { GenericService } from './generic.service';
+import { IrcAuthenticationStoreService } from './storage/irc-authentication-store.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -56,7 +57,8 @@ export class IrcService {
 		private multiplayerLobbiesService: WyMultiplayerLobbiesService,
 		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
 		private electronService: ElectronService,
-		private genericService: GenericService) {
+		private genericService: GenericService,
+		private ircAuthenticationStore: IrcAuthenticationStoreService) {
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
@@ -65,12 +67,17 @@ export class IrcService {
 		this.isAuthenticated$ = new BehaviorSubject<boolean>(false);
 		this.setChannelUnreadMessages$ = new BehaviorSubject<IrcChannel>(null);
 
-		// Connect to irc if the credentials are saved
-		const ircCredentials = storeService.get('irc');
+		const initialConnect = ircAuthenticationStore
+			.watchIrcStore()
+			.subscribe(store => {
+				if (store) {
+					if (store.ircUsername && store.ircPassword) {
+						this.connect(store.ircUsername, store.ircPassword, store.apiKey);
+					}
 
-		if (ircCredentials != undefined) {
-			this.connect(ircCredentials.username, ircCredentials.password);
-		}
+					initialConnect.unsubscribe();
+				}
+			});
 
 		const connectedChannels = storeService.get('irc.channels');
 
@@ -138,9 +145,8 @@ export class IrcService {
 	 * @param username the username to connect with
 	 * @param password the password to connect with
 	 */
-	connect(username: string, password: string) {
+	connect(username: string, password: string, apiKey: string) {
 		const allJoinedChannels: IrcChannel[] = this.storeService.get('irc.channels');
-		const apiKey = this.storeService.get('api-key');
 
 		this.client = new BanchoClient({ username: username, password: password, apiKey: apiKey });
 
@@ -214,33 +220,36 @@ export class IrcService {
 			}
 		});
 
-		from(this.client.connect()).subscribe(() => {
-			this.isAuthenticated = true;
-			this.authenticatedUser = username;
+		from(this.client.connect()).subscribe({
+			next: () => {
+				this.isAuthenticated = true;
+				this.authenticatedUser = username;
 
-			// Save the credentials
-			this.storeService.set('irc.username', username);
-			this.storeService.set('irc.password', password);
+				// Save the credentials
+				this.ircAuthenticationStore.set('ircUsername', username);
+				this.ircAuthenticationStore.set('ircPassword', password);
 
-			this.isConnecting$.next(false);
-			this.ircConnectionError = null;
+				this.isConnecting$.next(false);
+				this.ircConnectionError = null;
 
-			this.isAuthenticated$.next(true);
+				this.isAuthenticated$.next(true);
 
-			// Initialize multiplayer channels after restart
-			for (const ircChannel in allJoinedChannels) {
-				if (allJoinedChannels[ircChannel].isPrivateChannel == false && allJoinedChannels[ircChannel].isPublicChannel == false) {
-					const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
+				// Initialize multiplayer channels after restart
+				for (const ircChannel in allJoinedChannels) {
+					if (allJoinedChannels[ircChannel].isPrivateChannel == false && allJoinedChannels[ircChannel].isPublicChannel == false) {
+						const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
 
-					from(channel.join()).subscribe(() => {
-						this.initializeChannelListeners(channel);
-					});
+						from(channel.join()).subscribe(() => {
+							this.initializeChannelListeners(channel);
+						});
+					}
 				}
+			},
+			error: (error) => {
+				this.isConnecting$.next(false);
+				this.ircConnectionError = error;
 			}
-		}, (error => {
-			this.isConnecting$.next(false);
-			this.ircConnectionError = error;
-		}));
+		});
 	}
 
 	/**
@@ -304,7 +313,7 @@ export class IrcService {
 			this.authenticatedUser = 'none';
 
 			// Delete the credentials
-			this.storeService.delete('irc');
+			this.ircAuthenticationStore.remove(['ircUsername', 'ircPassword']);
 
 			this.isDisconnecting$.next(false);
 

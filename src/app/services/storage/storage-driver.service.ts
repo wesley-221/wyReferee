@@ -13,17 +13,19 @@ export class StorageDriverService {
 	lobbyPath: string;
 	tournamentPath: string;
 	cachePath: string;
+	authPath: string;
 
 	settingsFilePath: string;
 
 	constructor() {
-		this.mainDataPath = this.path.join(this.appDataPath, 'data');
-		this.chatLogPath = this.path.join(this.mainDataPath, 'chatlogs');
-		this.lobbyPath = this.path.join(this.mainDataPath, 'lobbies');
-		this.tournamentPath = this.path.join(this.mainDataPath, 'tournaments');
-		this.cachePath = this.path.join(this.mainDataPath, 'cache');
+		this.mainDataPath = this.joinPath(this.appDataPath, 'data');
+		this.chatLogPath = this.joinPath(this.mainDataPath, 'chatlogs');
+		this.lobbyPath = this.joinPath(this.mainDataPath, 'lobbies');
+		this.tournamentPath = this.joinPath(this.mainDataPath, 'tournaments');
+		this.cachePath = this.joinPath(this.mainDataPath, 'cache');
+		this.authPath = this.joinPath(this.mainDataPath, 'auth');
 
-		this.settingsFilePath = this.path.join(this.mainDataPath, 'settings.json');
+		this.settingsFilePath = this.joinPath(this.mainDataPath, 'settings.json');
 
 		this.ensureDirectories();
 	}
@@ -56,6 +58,15 @@ export class StorageDriverService {
 	}
 
 	/**
+	 * Joins all given paths together
+	 *
+	 * @param paths the paths to join
+	 */
+	public joinPath(...paths: string[]): string {
+		return this.path.join(...paths);
+	}
+
+	/**
 	 * Ensures that the necessary directories exist
 	 */
 	private async ensureDirectories() {
@@ -63,6 +74,7 @@ export class StorageDriverService {
 		await this.ensureDirectoryExists(this.lobbyPath);
 		await this.ensureDirectoryExists(this.tournamentPath);
 		await this.ensureDirectoryExists(this.cachePath);
+		await this.ensureDirectoryExists(this.authPath);
 	}
 
 	/**
