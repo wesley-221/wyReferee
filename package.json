@@ -13,7 +13,7 @@
 		"bancho.js",
 		"referee client"
 	],
-	"main": "main.js",
+	"main": "main/main.js",
 	"private": true,
 	"scripts": {
 		"gh-publish-windows": "yarn run build:prod && electron-builder -p always",
@@ -30,7 +30,7 @@
 		"build:prod": "yarn run build -- -c production",
 		"ng:serve": "ng serve",
 		"ng:serve:web": "yarn run postinstall:web && ng serve -o",
-		"electron:serve-tsc": "tsc -p tsconfig.serve.json",
+		"electron:serve-tsc": "tsc -p tsconfig.electron.json",
 		"electron:serve": "wait-on http-get://localhost:4200/ && yarn run electron:serve-tsc && electron . --serve",
 		"electron:local": "yarn run build:prod && electron .",
 		"electron:linux": "yarn run build:prod && electron-builder build --linux --publish never",

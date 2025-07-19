@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, screen } from 'electron';
+import { pathToFileURL } from 'url';
 import * as path from 'path';
-import * as url from 'url';
+
 import { OauthServer } from './oauth-server';
 
 let win: BrowserWindow | null;
@@ -13,6 +14,7 @@ let osuOauthServer: OauthServer;
 
 function createWindow() {
 	const size = screen.getPrimaryDisplay().workAreaSize;
+	const baseDirectory = path.join(__dirname, '..');
 
 	// Create the browser window.
 	win = new BrowserWindow({
@@ -24,9 +26,9 @@ function createWindow() {
 			nodeIntegration: true,
 			contextIsolation: false,
 			enableRemoteModule: true,
-			// preload: path.join(__dirname, 'preload.js')
+			// preload: path.join(baseDirectory, 'preload.js')
 		},
-		icon: `${__dirname}/src/assets/images/icon.png`,
+		icon: path.join(baseDirectory, 'src/assets/images/icon.png'),
 		// frame: false,
 		// titleBarStyle: 'hidden'
 	});
@@ -35,16 +37,16 @@ function createWindow() {
 
 	if (serve) {
 		require('electron-reload')(__dirname, {
-			electron: require(`${__dirname}/node_modules/electron`)
+			electron: require(path.join(baseDirectory, 'node_modules/electron'))
 		});
 
 		win.loadURL('http://localhost:4200');
-	} else {
-		win.loadURL(url.format({
-			pathname: path.join(__dirname, 'dist/index.html'),
-			protocol: 'file:',
-			slashes: true
-		}));
+	}
+	else {
+		const fullPath = path.join(baseDirectory, 'dist/index.html');
+		const url = pathToFileURL(fullPath).toString();
+
+		win.loadURL(url);
 	}
 
 	if (serve) {
