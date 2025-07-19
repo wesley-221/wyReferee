@@ -3,7 +3,7 @@ import { AppConfig } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject, take } from 'rxjs';
+import { BehaviorSubject, filter, take } from 'rxjs';
 import { GenericService } from './generic.service';
 import { ToastService } from './toast.service';
 import { ToastType } from 'app/models/toast';
@@ -38,7 +38,10 @@ export class TournamentService {
 	loadTournaments(initialLoad: boolean): void {
 		this.tournamentStoreService
 			.watchTournaments()
-			.pipe(take(1))
+			.pipe(
+				filter(tournamentStore => tournamentStore !== null),
+				take(1)
+			)
 			.subscribe(tournamentStore => {
 				if (tournamentStore) {
 					// Only load in tournaments for the initial load
