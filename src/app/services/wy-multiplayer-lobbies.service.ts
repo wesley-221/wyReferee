@@ -15,19 +15,19 @@ import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyMysteryMappoolHelper } from 'app/models/wytournament/mappool/wy-mystery-mappool-helper';
 import { AppConfig } from 'environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, filter, Observable, take } from 'rxjs';
 import { CacheService } from './cache.service';
-import { GenericService } from './generic.service';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 import { GetBeatmap } from './osu-api/get-beatmap.service';
 import { GetMultiplayerService } from './osu-api/get-multiplayer.service';
 import { GetUser } from './osu-api/get-user.service';
-import { StoreService } from './store.service';
 import { ToastService } from './toast.service';
 import { TournamentService } from './tournament.service';
 import { WebhookService } from './webhook.service';
 import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
+import { LobbyStoreService } from './storage/lobby-store.service';
+import { IrcAuthenticationStoreService } from './storage/irc-authentication-store.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -38,7 +38,6 @@ export class WyMultiplayerLobbiesService {
 	synchronizeDone$: BehaviorSubject<Lobby>;
 
 	constructor(
-		private storeService: StoreService,
 		private multiplayerService: GetMultiplayerService,
 		private beatmapService: GetBeatmap,
 		private osuUserService: GetUser,
@@ -47,33 +46,40 @@ export class WyMultiplayerLobbiesService {
 		private toastService: ToastService,
 		private webhookService: WebhookService,
 		private http: HttpClient,
-		private genericService: GenericService,
-		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService) {
+		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
+		private lobbyStoreService: LobbyStoreService,
+		private ircAuthenticationStoreService: IrcAuthenticationStoreService) {
 		this.allLobbies = [];
 		this.availableLobbyId = 0;
 
 		this.synchronizeDone$ = new BehaviorSubject(null);
 
-		this.genericService.getCacheHasBeenChecked().subscribe(checked => {
-			if (checked == true) {
-				const allLobbies = storeService.get('lobby');
+		this.lobbyStoreService
+			.watchLobbies()
+			.pipe(
+				filter(lobbies => lobbies !== null),
+				take(1)
+			)
+			.subscribe(lobbies => {
+				if (lobbies) {
+					const allLobbies = Object.values(lobbies);
 
-				for (const lobby in allLobbies) {
-					const newLobby = Lobby.makeTrueCopy(allLobbies[lobby]);
+					for (const lobby of allLobbies) {
+						const newLobby = Lobby.makeTrueCopy(lobby);
 
-					this.tournamentService.tournamentsHaveBeenInitialized().subscribe(initialized => {
-						if (initialized == true) {
-							newLobby.tournament = this.tournamentService.getTournamentById(newLobby.tournamentId);
-						}
-					});
+						tournamentService.tournamentsHaveBeenInitialized().subscribe(initialized => {
+							if (initialized) {
+								newLobby.tournament = this.tournamentService.getTournamentById(newLobby.tournamentId);
+							}
+						});
 
-					this.multiplayerLobbyPlayersService.createNewMultiplayerLobbyObject(newLobby.lobbyId);
+						this.multiplayerLobbyPlayersService.createNewMultiplayerLobbyObject(newLobby.lobbyId);
 
-					this.allLobbies.push(newLobby);
-					this.availableLobbyId = newLobby.lobbyId + 1;
+						this.allLobbies.push(newLobby);
+						this.availableLobbyId = newLobby.lobbyId + 1;
+					}
 				}
-			}
-		});
+			});
 	}
 
 	/**
@@ -92,7 +98,7 @@ export class WyMultiplayerLobbiesService {
 		this.allLobbies.push(multiplayerLobby);
 		this.availableLobbyId++;
 
-		this.storeService.set(`lobby.${multiplayerLobby.lobbyId}`, multiplayerLobby);
+		this.lobbyStoreService.saveLobby(multiplayerLobby);
 	}
 
 	/**
@@ -133,7 +139,7 @@ export class WyMultiplayerLobbiesService {
 			if (this.allLobbies[lobby].lobbyId == multiplayerLobby.lobbyId) {
 				this.allLobbies[lobby] = Lobby.makeTrueCopy(multiplayerLobby);
 
-				this.storeService.set(`lobby.${multiplayerLobby.lobbyId}`, multiplayerLobby);
+				this.lobbyStoreService.saveLobby(multiplayerLobby);
 				return;
 			}
 		}
@@ -147,7 +153,7 @@ export class WyMultiplayerLobbiesService {
 	deleteMultiplayerLobby(multiplayerLobby: Lobby): void {
 		this.allLobbies.splice(this.allLobbies.indexOf(multiplayerLobby), 1);
 
-		this.storeService.delete(`lobby.${multiplayerLobby.lobbyId}`);
+		this.lobbyStoreService.deleteLobby(multiplayerLobby);
 	}
 
 	/**
@@ -340,8 +346,17 @@ export class WyMultiplayerLobbiesService {
 			}
 
 			if (sendWebhook != null && sendWebhook == true) {
-				const ircCredentials = this.storeService.get('irc');
-				this.webhookService.sendMatchFinishedResult(multiplayerLobby, ircCredentials.username);
+				this.ircAuthenticationStoreService
+					.watchIrcStore()
+					.pipe(
+						filter(ircStore => ircStore != null),
+						take(1)
+					)
+					.subscribe(ircStore => {
+						if (ircStore) {
+							this.webhookService.sendMatchFinishedResult(multiplayerLobby, ircStore.ircUsername);
+						}
+					});
 			}
 		});
 	}
