@@ -4,10 +4,6 @@ import { Injectable } from '@angular/core';
 	providedIn: 'root'
 })
 export class StorageDriverService {
-	fs = window.require('fs').promises;
-	path = window.require('path');
-	appDataPath = window.require('electron').remote.app.getPath('userData');
-
 	mainDataPath: string;
 	chatLogPath: string;
 	lobbyPath: string;
@@ -15,6 +11,10 @@ export class StorageDriverService {
 	cachePath: string;
 
 	settingsFilePath: string;
+
+	private fs = window.require('fs').promises;
+	private path = window.require('path');
+	private appDataPath = window.require('electron').remote.app.getPath('userData');
 
 	constructor() {
 		this.mainDataPath = this.joinPath(this.appDataPath, 'data');
@@ -35,7 +35,7 @@ export class StorageDriverService {
 	 * @param data the data to write to the file
 	 */
 	async writeJSON(filePath: string, data: any): Promise<void> {
-		await this.fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
+		await this.fs.writeFile(filePath, JSON.stringify(data), 'utf8');
 	}
 
 	/**
