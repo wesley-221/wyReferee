@@ -56,6 +56,35 @@ export class StorageDriverService {
 	}
 
 	/**
+	 * Deletes a file
+	 *
+	 * @param filePath the path to the file to delete
+	 */
+	async deleteFile(filePath: string) {
+		try {
+			await this.fs.unlink(filePath);
+		}
+		catch (error) {
+			console.error(`Failed to delete file at ${filePath}:`, error);
+		}
+	}
+
+	/**
+	 * Lists all files in a directory
+	 *
+	 * @param filePath the path to directory to list files from
+	 */
+	async listFiles(filePath: string) {
+		try {
+			const files = await this.fs.readdir(filePath);
+			return files;
+		}
+		catch (error) {
+			return [];
+		}
+	}
+
+	/**
 	 * Joins all given paths together
 	 *
 	 * @param paths the paths to join

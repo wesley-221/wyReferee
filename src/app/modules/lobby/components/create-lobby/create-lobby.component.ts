@@ -70,7 +70,7 @@ export class CreateLobbyComponent implements OnInit {
 			'custom-match': new FormControl(false)
 		});
 
-		this.tournamentService.updateFromPublishedTournaments(false);
+		this.tournamentService.loadTournaments(false);
 	}
 
 	ngOnInit() { }
