@@ -3,6 +3,7 @@ import { pathToFileURL } from 'url';
 import * as path from 'path';
 
 import { OauthServer } from './oauth-server';
+import { IPC_CHANNELS } from '../src/shared/ipc-channels';
 
 let win: BrowserWindow | null;
 let serve: boolean;
@@ -26,7 +27,7 @@ function createWindow() {
 			nodeIntegration: true,
 			contextIsolation: false,
 			enableRemoteModule: true,
-			// preload: path.join(baseDirectory, 'preload.js')
+			preload: path.join(__dirname, 'preload.js')
 		},
 		icon: path.join(baseDirectory, 'src/assets/images/icon.png'),
 		// frame: false,
@@ -65,6 +66,11 @@ function createWindow() {
 
 	ipcMain.on('start-express-server', () => {
 		osuOauthServer.startServer();
+	});
+
+	// Handle IPC calls
+	ipcMain.handle(IPC_CHANNELS.GET_APP_DATA_PATH, async () => {
+		return app.getPath('userData');
 	});
 }
 

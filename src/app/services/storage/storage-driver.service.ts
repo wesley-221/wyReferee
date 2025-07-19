@@ -14,19 +14,11 @@ export class StorageDriverService {
 
 	private fs = window.require('fs').promises;
 	private path = window.require('path');
-	private appDataPath = window.require('electron').remote.app.getPath('userData');
+	private appDataPath: string;
 
-	constructor() {
-		this.mainDataPath = this.joinPath(this.appDataPath, 'data');
-		this.chatLogPath = this.joinPath(this.mainDataPath, 'chatlogs');
-		this.lobbyPath = this.joinPath(this.mainDataPath, 'lobbies');
-		this.tournamentPath = this.joinPath(this.mainDataPath, 'tournaments');
-		this.cachePath = this.joinPath(this.mainDataPath, 'cache');
+	private initialized = false;
 
-		this.settingsFilePath = this.joinPath(this.mainDataPath, 'settings.json');
-
-		this.ensureDirectories();
-	}
+	constructor() { }
 
 	/**
 	 * Writes data to a file
@@ -91,6 +83,28 @@ export class StorageDriverService {
 	 */
 	public joinPath(...paths: string[]): string {
 		return this.path.join(...paths);
+	}
+
+	/**
+	 * Initializes the storage driver service, setting up paths and ensuring directories exist
+	 * Used in the app module to ensure storage is ready before the app starts
+	 */
+	public async init(): Promise<void> {
+		if (this.initialized) return;
+
+		this.appDataPath = await window.electronApi.getAppDataPath();
+
+		this.mainDataPath = this.joinPath(this.appDataPath, 'data');
+		this.chatLogPath = this.joinPath(this.mainDataPath, 'chatlogs');
+		this.lobbyPath = this.joinPath(this.mainDataPath, 'lobbies');
+		this.tournamentPath = this.joinPath(this.mainDataPath, 'tournaments');
+		this.cachePath = this.joinPath(this.mainDataPath, 'cache');
+
+		this.settingsFilePath = this.joinPath(this.mainDataPath, 'settings.json');
+
+		await this.ensureDirectories();
+
+		this.initialized = true;
 	}
 
 	/**
