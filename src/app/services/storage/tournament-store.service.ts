@@ -22,7 +22,7 @@ export class TournamentStoreService {
 	 *
 	 * @param tournament the tournament to save
 	 */
-	saveTournament(tournament: WyTournament) {
+	async saveTournament(tournament: WyTournament) {
 		const current = this.tournaments$.value;
 
 		if (!current) throw new Error('Tournaments not loaded yet');
@@ -30,7 +30,8 @@ export class TournamentStoreService {
 		const newTournaments = { ...current, [tournament.id]: tournament };
 		this.tournaments$.next(newTournaments);
 
-		this.storage.writeJSON(this.storage.joinPath(this.storage.tournamentPath, `${tournament.id}.json`), tournament);
+		const filePath = await this.storage.joinPath(this.storage.tournamentPath, `${tournament.id}.json`);
+		this.storage.writeJSON(filePath, tournament);
 	}
 
 	/**
@@ -38,7 +39,7 @@ export class TournamentStoreService {
 	 *
 	 * @param tournament the tournament to delete
 	 */
-	deleteTournament(tournament: WyTournament) {
+	async deleteTournament(tournament: WyTournament) {
 		const current = this.tournaments$.value;
 
 		if (!current) throw new Error('Tournaments not loaded yet');
@@ -46,7 +47,8 @@ export class TournamentStoreService {
 		const { [tournament.id]: _, ...newTournaments } = current;
 		this.tournaments$.next(newTournaments);
 
-		this.storage.deleteFile(this.storage.joinPath(this.storage.tournamentPath, `${tournament.id}.json`));
+		const filePath = await this.storage.joinPath(this.storage.tournamentPath, `${tournament.id}.json`);
+		this.storage.deleteFile(filePath);
 	}
 
 	/**
@@ -67,7 +69,8 @@ export class TournamentStoreService {
 		for (const file of tournamentFiles) {
 			if (file.endsWith('.json')) {
 				const tournamentId = parseInt(file.replace('.json', ''), 10);
-				const tournament = await this.storage.readJSON<WyTournament>(this.storage.joinPath(this.storage.tournamentPath, file));
+				const filePath = await this.storage.joinPath(this.storage.tournamentPath, file);
+				const tournament = await this.storage.readJSON<WyTournament>(filePath);
 
 				if (tournament) {
 					tournaments[tournamentId] = tournament;

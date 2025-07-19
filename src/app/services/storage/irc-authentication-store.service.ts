@@ -12,7 +12,6 @@ interface IrcAuthenticationStore {
 	providedIn: 'root'
 })
 export class IrcAuthenticationStoreService {
-	private ircAuthenticationStorePath = this.storage.joinPath(this.storage.mainDataPath, 'irc-authentication-store.json');
 	private ircAuthenticationStore$ = new BehaviorSubject<IrcAuthenticationStore | null>(null);
 
 	constructor(private storage: StorageDriverService) {
@@ -38,14 +37,16 @@ export class IrcAuthenticationStoreService {
 	 * @param key key of the setting to update
 	 * @param value new value for the setting
 	 */
-	set(key: keyof IrcAuthenticationStore, value: string): void {
+	async set(key: keyof IrcAuthenticationStore, value: string): Promise<void> {
 		const current = this.ircAuthenticationStore$.value;
 
 		if (!current) throw new Error('Irc authentication store not loaded yet');
 
 		const newStore: IrcAuthenticationStore = { ...current, [key]: value };
 		this.ircAuthenticationStore$.next(newStore);
-		this.storage.writeJSON(this.ircAuthenticationStorePath, newStore);
+
+		const filePath = await this.storage.joinPath(this.storage.mainDataPath, 'irc-authentication-store.json');
+		this.storage.writeJSON(filePath, newStore);
 	}
 
 	/**
@@ -53,7 +54,7 @@ export class IrcAuthenticationStoreService {
 	 *
 	 * @param keys key or array of keys to remove from the irc authentication store
 	 */
-	remove(keys: keyof IrcAuthenticationStore | Array<keyof IrcAuthenticationStore>): void {
+	async remove(keys: keyof IrcAuthenticationStore | Array<keyof IrcAuthenticationStore>): Promise<void> {
 		const current = this.ircAuthenticationStore$.value;
 
 		if (!current) throw new Error('Irc authentication store not loaded yet');
@@ -66,7 +67,9 @@ export class IrcAuthenticationStoreService {
 		}
 
 		this.ircAuthenticationStore$.next(newStore);
-		this.storage.writeJSON(this.ircAuthenticationStorePath, newStore);
+
+		const filePath = await this.storage.joinPath(this.storage.mainDataPath, 'irc-authentication-store.json');
+		this.storage.writeJSON(filePath, newStore);
 	}
 
 	/**
@@ -80,7 +83,8 @@ export class IrcAuthenticationStoreService {
 	 * Loads the irc authentication store from storage and initializes the BehaviorSubject
 	 */
 	private async loadOsuIrcStore() {
-		const osuIrcStore = await this.storage.readJSON<IrcAuthenticationStore>(this.ircAuthenticationStorePath, {});
+		const filePath = await this.storage.joinPath(this.storage.mainDataPath, 'irc-authentication-store.json');
+		const osuIrcStore = await this.storage.readJSON<IrcAuthenticationStore>(filePath, {});
 
 		this.ircAuthenticationStore$.next(osuIrcStore);
 	}

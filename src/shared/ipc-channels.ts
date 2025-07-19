@@ -1,5 +1,6 @@
 export const IPC_CHANNELS = {
-	GET_APP_DATA_PATH: 'getAppDataPath'
+	GET_APP_DATA_PATH: 'getAppDataPath',
+	JOIN_PATH: 'joinPath',
 } as const;
 
 export type IpcChannel = typeof IPC_CHANNELS[keyof typeof IPC_CHANNELS];

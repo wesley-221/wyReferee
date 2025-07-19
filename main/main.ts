@@ -69,8 +69,12 @@ function createWindow() {
 	});
 
 	// Handle IPC calls
-	ipcMain.handle(IPC_CHANNELS.GET_APP_DATA_PATH, async () => {
+	ipcMain.handle(IPC_CHANNELS.GET_APP_DATA_PATH, () => {
 		return app.getPath('userData');
+	});
+
+	ipcMain.handle(IPC_CHANNELS.JOIN_PATH, (event, options) => {
+		return path.join(...options);
 	});
 }
 

@@ -22,7 +22,7 @@ export class LobbyStoreService {
 	 *
 	 * @param lobby the lobby to save
 	 */
-	saveLobby(lobby: Lobby) {
+	async saveLobby(lobby: Lobby) {
 		const current = this.lobbies$.value;
 
 		if (!current) throw new Error('Lobby store not initialized');
@@ -30,14 +30,15 @@ export class LobbyStoreService {
 		const newLobbies = { ...current, [lobby.lobbyId]: lobby };
 		this.lobbies$.next(newLobbies);
 
-		this.storage.writeJSON(this.storage.joinPath(this.storage.lobbyPath, `${lobby.lobbyId}.json`), lobby);
+		const filePath = await this.storage.joinPath(this.storage.lobbyPath, `${lobby.lobbyId}.json`);
+		this.storage.writeJSON(filePath, lobby);
 	}
 
 	/**
 	 * Deletes a lobby
 	 * @param lobby the lobby to delete
 	 */
-	deleteLobby(lobby: Lobby) {
+	async deleteLobby(lobby: Lobby) {
 		const current = this.lobbies$.value;
 
 		if (!current) throw new Error('Lobby store not initialized');
@@ -45,7 +46,8 @@ export class LobbyStoreService {
 		const { [lobby.lobbyId]: _, ...newLobbies } = current;
 		this.lobbies$.next(newLobbies);
 
-		this.storage.deleteFile(this.storage.joinPath(this.storage.lobbyPath, `${lobby.lobbyId}.json`));
+		const filePath = await this.storage.joinPath(this.storage.lobbyPath, `${lobby.lobbyId}.json`);
+		this.storage.deleteFile(filePath);
 	}
 
 	/**
@@ -66,7 +68,8 @@ export class LobbyStoreService {
 		for (const file of lobbyFiles) {
 			if (file.endsWith('.json')) {
 				const lobbyId = parseInt(file.replace('.json', ''), 10);
-				const lobby = await this.storage.readJSON<Lobby>(this.storage.joinPath(this.storage.lobbyPath, file));
+				const filePath = await this.storage.joinPath(this.storage.lobbyPath, file);
+				const lobby = await this.storage.readJSON<Lobby>(filePath);
 
 				if (lobby) {
 					lobbies[lobbyId] = lobby;

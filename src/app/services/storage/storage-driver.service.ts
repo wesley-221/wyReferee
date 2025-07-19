@@ -13,7 +13,6 @@ export class StorageDriverService {
 	settingsFilePath: string;
 
 	private fs = window.require('fs').promises;
-	private path = window.require('path');
 	private appDataPath: string;
 
 	private initialized = false;
@@ -81,8 +80,8 @@ export class StorageDriverService {
 	 *
 	 * @param paths the paths to join
 	 */
-	public joinPath(...paths: string[]): string {
-		return this.path.join(...paths);
+	public async joinPath(...paths: string[]): Promise<string> {
+		return await window.electronApi.joinPath([...paths]);
 	}
 
 	/**
@@ -94,13 +93,13 @@ export class StorageDriverService {
 
 		this.appDataPath = await window.electronApi.getAppDataPath();
 
-		this.mainDataPath = this.joinPath(this.appDataPath, 'data');
-		this.chatLogPath = this.joinPath(this.mainDataPath, 'chatlogs');
-		this.lobbyPath = this.joinPath(this.mainDataPath, 'lobbies');
-		this.tournamentPath = this.joinPath(this.mainDataPath, 'tournaments');
-		this.cachePath = this.joinPath(this.mainDataPath, 'cache');
+		this.mainDataPath = await this.joinPath(this.appDataPath, 'data');
+		this.chatLogPath = await this.joinPath(this.mainDataPath, 'chatlogs');
+		this.lobbyPath = await this.joinPath(this.mainDataPath, 'lobbies');
+		this.tournamentPath = await this.joinPath(this.mainDataPath, 'tournaments');
+		this.cachePath = await this.joinPath(this.mainDataPath, 'cache');
 
-		this.settingsFilePath = this.joinPath(this.mainDataPath, 'settings.json');
+		this.settingsFilePath = await this.joinPath(this.mainDataPath, 'settings.json');
 
 		await this.ensureDirectories();
 
