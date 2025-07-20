@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StorageDriverService } from './storage-driver.service';
 import { BehaviorSubject } from 'rxjs';
+import PackageJson from '../../../../package.json';
 
 interface AppSettings {
 	cacheVersion: string;
@@ -12,8 +13,8 @@ interface AppSettings {
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
-	cacheVersion: undefined,
-	version: undefined,
+	cacheVersion: PackageJson.version,
+	version: PackageJson.version,
 	dividerHeight: 30,
 	showAxs: false,
 	splitBanchoMessages: false
