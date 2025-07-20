@@ -11,7 +11,6 @@ import { MultiplayerDataUser } from 'app/models/store-multiplayer/multiplayer-da
 import { CacheService } from 'app/services/cache.service';
 import { ElectronService } from 'app/services/electron.service';
 import { IrcService } from 'app/services/irc.service';
-import { StoreService } from 'app/services/store.service';
 import { ToastService } from 'app/services/toast.service';
 import { WebhookService } from 'app/services/webhook.service';
 import { ClipboardService } from 'ngx-clipboard';
@@ -20,6 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastType } from 'app/models/toast';
 import { ChallongeService } from 'app/services/challonge.service';
 import { Misc } from 'app/shared/misc';
+import { LobbyStoreService } from 'app/services/storage/lobby-store.service';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -45,7 +45,7 @@ export class LobbyViewComponent implements OnInit {
 		private toastService: ToastService,
 		public cacheService: CacheService,
 		public electronService: ElectronService,
-		private storeService: StoreService,
+		private lobbyStoreService: LobbyStoreService,
 		public ircService: IrcService,
 		private clipboardService: ClipboardService,
 		private router: Router,
@@ -170,7 +170,7 @@ export class LobbyViewComponent implements OnInit {
 	 */
 	markAsInvalid(match: MultiplayerData) {
 		this.selectedLobby.gamesCountTowardsScore[match.game_id] = !this.selectedLobby.gamesCountTowardsScore[match.game_id];
-		this.storeService.set(`lobby.${this.selectedLobby.lobbyId}.countForScore.${match.game_id}`, this.selectedLobby.gamesCountTowardsScore[match.game_id]);
+		this.lobbyStoreService.saveLobby(this.selectedLobby);
 
 		if (this.selectedLobby.gamesCountTowardsScore[match.game_id]) {
 			this.toastService.addToast(`"${this.cacheService.getBeatmapname(match.beatmap_id)}" will now count towards the score.`);

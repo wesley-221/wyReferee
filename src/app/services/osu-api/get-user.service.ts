@@ -5,13 +5,14 @@ import { HttpClient } from '@angular/common/http';
 import { OsuUser } from '../../models/osu-models/osu-user';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IrcAuthenticationStoreService } from '../storage/irc-authentication-store.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 
 export class GetUser extends OsuApi {
-	constructor(private httpClient: HttpClient, private storeService: StoreService) {
+	constructor(private httpClient: HttpClient, private ircAuthenticationStore: IrcAuthenticationStoreService) {
 		super(OsuApiEndpoints.GetUser);
 	}
 
@@ -22,7 +23,9 @@ export class GetUser extends OsuApi {
 	 * @param gamemode the gamemode
 	 */
 	public getByUsername(username: string, gamemode = 0): Observable<OsuUser> {
-		return this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key') as string}&u=${username}&type=string&m=${gamemode}`)
+		const apiKey = this.ircAuthenticationStore.get('apiKey');
+
+		return this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${apiKey}&u=${username}&type=string&m=${gamemode}`)
 			.pipe(
 				map((data: any) => this.serializeFromJson(data))
 			);
@@ -35,7 +38,9 @@ export class GetUser extends OsuApi {
 	 * @param gamemode the gamemode
 	 */
 	public getByUserId(userid: number, gamemode = 0): Observable<OsuUser> {
-		return this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key') as string}&u=${userid}&type=id&m=${gamemode}`)
+		const apiKey = this.ircAuthenticationStore.get('apiKey');
+
+		return this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${apiKey}&u=${userid}&type=id&m=${gamemode}`)
 			.pipe(
 				map((data: any) => this.serializeFromJson(data))
 			);

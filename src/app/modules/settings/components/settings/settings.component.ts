@@ -9,6 +9,7 @@ import { AuthenticateService } from 'app/services/authenticate.service';
 import { IrcService } from 'app/services/irc.service';
 import { GenericService } from 'app/services/generic.service';
 import { OptionsMenu } from '../../models/options-menu';
+import { IrcAuthenticationStoreService } from 'app/services/storage/irc-authentication-store.service';
 
 @Component({
 	selector: 'app-settings',
@@ -35,6 +36,7 @@ export class SettingsComponent implements OnInit {
 	constructor(
 		public electronService: ElectronService,
 		private storeService: StoreService,
+		private ircAuthenticationStore: IrcAuthenticationStoreService,
 		private toastService: ToastService,
 		private dialog: MatDialog,
 		public authService: AuthenticateService,
@@ -60,7 +62,7 @@ export class SettingsComponent implements OnInit {
 	 * Remove the pai key
 	 */
 	removeApiKey() {
-		this.storeService.delete('api-key');
+		this.ircAuthenticationStore.remove('apiKey');
 		this.toastService.addToast('Successfully removed your api key.');
 	}
 

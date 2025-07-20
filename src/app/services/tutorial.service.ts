@@ -5,7 +5,7 @@ import { TournamentService } from './tournament.service';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
 import TUTORIAL_TOURNAMENT from 'assets/tutorial-tournament-template.json';
-import { StoreService } from './store.service';
+import { IrcAuthenticationStoreService } from './storage/irc-authentication-store.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -20,7 +20,7 @@ export class TutorialService {
 
 	tutorialTournament: WyTournament;
 
-	constructor(private tournamentService: TournamentService, private storeService: StoreService) {
+	constructor(private tournamentService: TournamentService, private ircAuthenticationStore: IrcAuthenticationStoreService) {
 		this.currentTutorial = null;
 		this.currentStep = null;
 		this.currentStepIndex = 0;
@@ -131,7 +131,7 @@ export class TutorialService {
 			'Now that you have an api key, you are gonna have to copy this key and paste it in the highlighted field and click on Save.\n\r' +
 			'If your api key was correct, the highlighted area should dissapear and you can continue to the next step.';
 
-		if (this.storeService.get('api-key') != undefined) {
+		if (this.ircAuthenticationStore.get('apiKey') != undefined) {
 			apiKeyStepContent = '**You have already setup the api key. You can continue to the next step.**\n\n---\n\r' + apiKeyStepContent;
 		}
 
