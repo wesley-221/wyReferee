@@ -70,9 +70,9 @@ export class SettingsComponent implements OnInit {
 	 * Export the config file
 	 */
 	exportConfigFile() {
-		this.electronService.dialog.showSaveDialog({
-			title: 'Export the config file',
-			defaultPath: 'export.json'
+		window.electronApi.showSaveDialog({
+			title: 'Export wyReferee settings',
+			defaultPath: 'wyReferee-settings.json'
 		}).then(file => {
 			// Remove the api key and auth properties
 			let configFile = this.storeService.storage.store;
@@ -85,13 +85,10 @@ export class SettingsComponent implements OnInit {
 
 			configFile = JSON.stringify(configFile, null, '\t');
 
-			this.electronService.fs.writeFile(file.filePath, configFile, err => {
-				if (err) {
-					this.toastService.addToast(`Something went wrong while trying to export the config file: ${err.message}.`, ToastType.Error);
-				}
-				else {
-					this.toastService.addToast(`Successfully saved the config file to "${file.filePath}".`);
-				}
+			window.electronApi.writeFile(file.filePath, configFile).then(() => {
+				this.toastService.addToast(`Successfully saved the config file to "${file.filePath}".`);
+			}).catch(err => {
+				this.toastService.addToast(`Something went wrong while trying to export the config file: ${err.message}.`, ToastType.Error);
 			});
 		});
 	}

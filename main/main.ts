@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, screen } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, screen } from 'electron';
 import { pathToFileURL } from 'url';
 import * as path from 'path';
 import * as fs from 'fs/promises';
@@ -92,7 +92,7 @@ function createWindow() {
 	});
 
 	ipcMain.handle(IPC_CHANNELS.WRITE_FILE, async (event, filePath, data) => {
-		await fs.writeFile(filePath, JSON.stringify(data), 'utf8');
+		return fs.writeFile(filePath, JSON.stringify(data), 'utf8');
 	});
 
 	ipcMain.handle(IPC_CHANNELS.DELETE_FILE, async (event, filePath) => {
@@ -122,6 +122,12 @@ function createWindow() {
 			await fs.mkdir(directoryPath, {
 				recursive: true
 			});
+		}
+	});
+
+	ipcMain.handle(IPC_CHANNELS.SHOW_SAVE_DIALOG, async (event, options) => {
+		if (win) {
+			return dialog.showSaveDialog(win, options);
 		}
 	});
 }

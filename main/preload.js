@@ -8,5 +8,6 @@ window.electronApi = {
 	writeFile: (filePath, data) => ipcRenderer.invoke(IPC_CHANNELS.WRITE_FILE, filePath, data),
 	deleteFile: (filePath) => ipcRenderer.invoke(IPC_CHANNELS.DELETE_FILE, filePath),
 	listFiles: (filePath) => ipcRenderer.invoke(IPC_CHANNELS.LIST_FILES, filePath),
-	createDirectoryIfNotExists: (directoryPath) => ipcRenderer.invoke(IPC_CHANNELS.CREATE_DIRECTORY_IF_NOT_EXISTS, directoryPath)
+	createDirectoryIfNotExists: (directoryPath) => ipcRenderer.invoke(IPC_CHANNELS.CREATE_DIRECTORY_IF_NOT_EXISTS, directoryPath),
+	showSaveDialog: (options) => ipcRenderer.invoke(IPC_CHANNELS.SHOW_SAVE_DIALOG, options)
 };
