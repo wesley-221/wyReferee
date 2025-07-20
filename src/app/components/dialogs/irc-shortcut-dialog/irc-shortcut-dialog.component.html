@@ -32,7 +32,7 @@
 	</div>
 
 	<div class="shortcut-commands" cdkDropList (cdkDropListDropped)="dropChannel($event)">
-		<div class="command" *ngFor="let ircShortcutCommand of ircShortCutCommandsService.ircShortCutCommands" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="shortcut-commands">
+		<div class="command" *ngFor="let ircShortcutCommand of ircShortCutCommandsService.ircShortcutCommands" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="shortcut-commands">
 			<div class="actions">
 				<button mat-mini-fab color="warn" (click)="deleteIrcShortcutCommand(ircShortcutCommand)"><mat-icon>delete</mat-icon></button>
 				<button mat-mini-fab color="primary" cdkDragHandle><mat-icon>open_with</mat-icon></button>
