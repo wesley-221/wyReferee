@@ -26,7 +26,7 @@ export class StorageDriverService {
 	 * @param data the data to write to the file
 	 */
 	async writeJSON(filePath: string, data: any): Promise<void> {
-		await this.fs.writeFile(filePath, JSON.stringify(data), 'utf8');
+		await window.electronApi.writeFile(filePath, data);
 	}
 
 	/**
@@ -36,14 +36,8 @@ export class StorageDriverService {
 	 * @param defaultValue the default value to return if the file does not exist or cannot be read
 	 */
 	async readJSON<T>(filePath: string, defaultValue?: any): Promise<T> {
-		try {
-			const content = await this.fs.readFile(filePath, 'utf8');
-			return JSON.parse(content) as T;
-		}
-		catch (error) {
-			await this.writeJSON(filePath, defaultValue);
-			return defaultValue as T;
-		}
+		const content = await window.electronApi.readFile(filePath, defaultValue);
+		return content as T;
 	}
 
 	/**

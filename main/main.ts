@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, screen } from 'electron';
 import { pathToFileURL } from 'url';
 import * as path from 'path';
+import * as fs from 'fs/promises';
 
 import { OauthServer } from './oauth-server';
 import { IPC_CHANNELS } from '../src/shared/ipc-channels';
@@ -75,6 +76,23 @@ function createWindow() {
 
 	ipcMain.handle(IPC_CHANNELS.JOIN_PATH, (event, options) => {
 		return path.join(...options);
+	});
+
+	ipcMain.handle(IPC_CHANNELS.READ_FILE, async (event, filePath, defaultValue) => {
+		try {
+			const content = await fs.readFile(filePath, 'utf8');
+			return JSON.parse(content);
+		}
+		catch (error) {
+			if (defaultValue !== undefined) {
+				await fs.writeFile(filePath, JSON.stringify(defaultValue), 'utf8');
+				return defaultValue;
+			}
+		}
+	});
+
+	ipcMain.handle(IPC_CHANNELS.WRITE_FILE, async (event, filePath, data) => {
+		await fs.writeFile(filePath, JSON.stringify(data), 'utf8');
 	});
 }
 
