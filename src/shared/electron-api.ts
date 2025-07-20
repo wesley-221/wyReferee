@@ -10,4 +10,5 @@ export interface ElectronApi {
 	flashWindow(): void;
 	startExpressServer(oauthUrl: string): Promise<void>;
 	onOsuOauthCode(callback: (code: string) => void): void;
+	openLink(url: string): void;
 }

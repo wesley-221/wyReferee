@@ -12,5 +12,6 @@ window.electronApi = {
 	showSaveDialog: (options) => ipcRenderer.invoke(IPC_CHANNELS.SHOW_SAVE_DIALOG, options),
 	flashWindow: () => ipcRenderer.invoke(IPC_CHANNELS.FLASH_WINDOW),
 	startExpressServer: (oauthUrl) => ipcRenderer.invoke(IPC_CHANNELS.START_EXPRESS_SERVER, oauthUrl),
-	onOsuOauthCode: (callback) => ipcRenderer.once(IPC_CHANNELS.ON_OSU_OAUTH_CODE, (event, code) => callback(code))
+	onOsuOauthCode: (callback) => ipcRenderer.once(IPC_CHANNELS.ON_OSU_OAUTH_CODE, (event, code) => callback(code)),
+	openLink: (url) => ipcRenderer.invoke(IPC_CHANNELS.OPEN_LINK, url)
 };

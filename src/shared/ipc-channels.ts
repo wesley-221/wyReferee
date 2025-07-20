@@ -10,6 +10,7 @@ export const IPC_CHANNELS = {
 	FLASH_WINDOW: 'flashWindow',
 	START_EXPRESS_SERVER: 'startExpressServer',
 	ON_OSU_OAUTH_CODE: 'onOsuOauthCode',
+	OPEN_LINK: 'openLink'
 } as const;
 
 export type IpcChannel = typeof IPC_CHANNELS[keyof typeof IPC_CHANNELS];

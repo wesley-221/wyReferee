@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-
-// If you import a module but never use any of the imported values other than as TypeScript types,
-// the resulting javascript file will look as if you never imported the module at all.
-import { remote, shell } from 'electron';
+import { remote } from 'electron';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,7 +9,6 @@ export class ElectronService {
 	remote: typeof remote;
 
 	constructor() {
-		// Conditional imports
 		if (this.isElectron) {
 			this.remote = window.require('electron').remote;
 		}
@@ -25,9 +21,9 @@ export class ElectronService {
 	/**
 	 * Open a link in the default browser
 	 *
-	 * @param link the url to open in the default browser
+	 * @param url the url to open in the default browser
 	 */
-	openLink(link: string): void {
-		shell.openExternal(link);
+	openLink(url: string): void {
+		window.electronApi.openLink(url);
 	}
 }

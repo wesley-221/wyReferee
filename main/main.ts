@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, screen } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, screen, shell } from 'electron';
 import { pathToFileURL } from 'url';
 import * as path from 'path';
 import * as fs from 'fs/promises';
@@ -135,6 +135,10 @@ function createWindow() {
 		if (win) {
 			win.flashFrame(true);
 		}
+	});
+
+	ipcMain.handle(IPC_CHANNELS.OPEN_LINK, (event, url) => {
+		shell.openExternal(url);
 	});
 }
 
