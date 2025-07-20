@@ -94,6 +94,15 @@ function createWindow() {
 	ipcMain.handle(IPC_CHANNELS.WRITE_FILE, async (event, filePath, data) => {
 		await fs.writeFile(filePath, JSON.stringify(data), 'utf8');
 	});
+
+	ipcMain.handle(IPC_CHANNELS.DELETE_FILE, async (event, filePath) => {
+		try {
+			await fs.unlink(filePath);
+		}
+		catch (error) {
+			console.error(`Failed to delete file at ${filePath}:`, error);
+		}
+	});
 }
 
 try {

@@ -46,12 +46,7 @@ export class StorageDriverService {
 	 * @param filePath the path to the file to delete
 	 */
 	async deleteFile(filePath: string) {
-		try {
-			await this.fs.unlink(filePath);
-		}
-		catch (error) {
-			console.error(`Failed to delete file at ${filePath}:`, error);
-		}
+		window.electronApi.deleteFile(filePath);
 	}
 
 	/**
