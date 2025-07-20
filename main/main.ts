@@ -103,6 +103,16 @@ function createWindow() {
 			console.error(`Failed to delete file at ${filePath}:`, error);
 		}
 	});
+
+	ipcMain.handle(IPC_CHANNELS.LIST_FILES, async (event, filePath) => {
+		try {
+			const files = await fs.readdir(filePath);
+			return files;
+		}
+		catch (error) {
+			return [];
+		}
+	});
 }
 
 try {

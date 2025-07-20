@@ -55,13 +55,7 @@ export class StorageDriverService {
 	 * @param filePath the path to directory to list files from
 	 */
 	async listFiles(filePath: string) {
-		try {
-			const files = await this.fs.readdir(filePath);
-			return files;
-		}
-		catch (error) {
-			return [];
-		}
+		return await window.electronApi.listFiles(filePath);
 	}
 
 	/**

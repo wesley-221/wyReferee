@@ -4,4 +4,5 @@ export interface ElectronApi {
 	readFile(filePath: string, defaultValue?: any): Promise<any>;
 	writeFile(filePath: string, data: any): Promise<void>;
 	deleteFile(filePath: string): Promise<void>;
+	listFiles(filePath: string): Promise<string[]>;
 }

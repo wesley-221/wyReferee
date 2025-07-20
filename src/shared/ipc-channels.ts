@@ -3,7 +3,8 @@ export const IPC_CHANNELS = {
 	JOIN_PATH: 'joinPath',
 	READ_FILE: 'readfile',
 	WRITE_FILE: 'writefile',
-	DELETE_FILE: 'deletefile'
+	DELETE_FILE: 'deletefile',
+	LIST_FILES: 'listFiles'
 } as const;
 
 export type IpcChannel = typeof IPC_CHANNELS[keyof typeof IPC_CHANNELS];
