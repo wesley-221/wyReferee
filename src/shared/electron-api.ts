@@ -7,4 +7,5 @@ export interface ElectronApi {
 	listFiles(filePath: string): Promise<string[]>;
 	createDirectoryIfNotExists(directoryPath: string): Promise<void>;
 	showSaveDialog(options: Electron.SaveDialogOptions): Promise<Electron.SaveDialogReturnValue>;
+	flashWindow(): void;
 }

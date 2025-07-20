@@ -467,9 +467,7 @@ export class IrcService {
 			}
 
 			// Flash window when a message has been sent and window is not focused
-			if (!this.electronService.remote.getCurrentWindow().isFocused()) {
-				this.electronService.remote.getCurrentWindow().flashFrame(true);
-			}
+			window.electronApi.flashWindow();
 		}
 
 		this.messageHasBeenSend$.next(true);

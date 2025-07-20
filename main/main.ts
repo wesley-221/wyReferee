@@ -130,6 +130,12 @@ function createWindow() {
 			return dialog.showSaveDialog(win, options);
 		}
 	});
+
+	ipcMain.handle(IPC_CHANNELS.FLASH_WINDOW, () => {
+		if (win) {
+			win.flashFrame(true);
+		}
+	});
 }
 
 try {

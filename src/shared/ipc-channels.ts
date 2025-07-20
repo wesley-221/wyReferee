@@ -6,7 +6,8 @@ export const IPC_CHANNELS = {
 	DELETE_FILE: 'deletefile',
 	LIST_FILES: 'listFiles',
 	CREATE_DIRECTORY_IF_NOT_EXISTS: 'createDirectoryIfNotExists',
-	SHOW_SAVE_DIALOG: 'showSaveDialog'
+	SHOW_SAVE_DIALOG: 'showSaveDialog',
+	FLASH_WINDOW: 'flashWindow'
 } as const;
 
 export type IpcChannel = typeof IPC_CHANNELS[keyof typeof IPC_CHANNELS];
