@@ -5,7 +5,8 @@ import { MultiplayerDataUser } from '../models/store-multiplayer/multiplayer-dat
 import { Lobby } from 'app/models/lobby';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { ToastService } from './toast.service';
-import { StoreService } from './store.service';
+import { WebhookStoreService } from './storage/webhook-store.service';
+import { filter, take } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,63 +18,38 @@ export class WebhookService {
 	footerIconUrl: string;
 	footerText: string;
 
-	constructor(private http: HttpClient, private cacheService: CacheService, private toastService: ToastService, private storeService: StoreService) {
-		const webhookStore = this.storeService.get('webhook');
-
-		if (webhookStore !== undefined) {
-			this.authorImage = webhookStore.authorImage;
-			this.authorName = webhookStore.authorName;
-			this.bottomImage = webhookStore.bottomImage;
-			this.footerIconUrl = webhookStore.footerIconUrl;
-			this.footerText = webhookStore.footerText;
-		}
+	constructor(private http: HttpClient, private cacheService: CacheService, private toastService: ToastService, private webhookStore: WebhookStoreService) {
+		webhookStore
+			.watchWebhookSettings()
+			.pipe(
+				filter(webhookStore => webhookStore != null),
+				take(1)
+			)
+			.subscribe(webhookStore => {
+				this.authorImage = webhookStore.authorImage;
+				this.authorName = webhookStore.authorName;
+				this.bottomImage = webhookStore.bottomImage;
+				this.footerIconUrl = webhookStore.footerIconUrl;
+				this.footerText = webhookStore.footerText;
+			});
 	}
 
 	/**
 	 * Update the webhook customizations
 	 */
 	updateWebhookCustomization(authorImage: string, authorName: string, bottomImage: string, footerIconUrl: string, footerText: string): void {
-		const isUndefined = ['', null, undefined];
+		const fields = [
+			{ key: 'authorImage', value: authorImage, property: 'authorImage' },
+			{ key: 'authorName', value: authorName, property: 'authorName' },
+			{ key: 'bottomImage', value: bottomImage, property: 'bottomImage' },
+			{ key: 'footerIconUrl', value: footerIconUrl, property: 'footerIconUrl' },
+			{ key: 'footerText', value: footerText, property: 'footerText' }
+		];
 
-		if (!isUndefined.includes(authorImage)) {
-			this.storeService.set('webhook.authorImage', authorImage);
-			this.authorImage = authorImage;
-		}
-		else {
-			this.authorImage = null;
-		}
-
-		if (!isUndefined.includes(authorName)) {
-			this.storeService.set('webhook.authorName', authorName);
-			this.authorName = authorName;
-		}
-		else {
-			this.authorName = null;
-		}
-
-		if (!isUndefined.includes(bottomImage)) {
-			this.storeService.set('webhook.bottomImage', bottomImage);
-			this.bottomImage = bottomImage;
-		}
-		else {
-			this.bottomImage = null;
-		}
-
-		if (!isUndefined.includes(footerIconUrl)) {
-			this.storeService.set('webhook.footerIconUrl', footerIconUrl);
-			this.footerIconUrl = footerIconUrl;
-		}
-		else {
-			this.footerIconUrl = null;
-		}
-
-		if (!isUndefined.includes(footerText)) {
-			this.storeService.set('webhook.footerText', footerText);
-			this.footerText = footerText;
-		}
-		else {
-			this.footerText = null;
-		}
+		fields.forEach(field => {
+			this.webhookStore.set(field.key, field.value);
+			this[field.property] = field.value;
+		});
 	}
 
 	/**

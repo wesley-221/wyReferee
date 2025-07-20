@@ -9,7 +9,9 @@ export class StorageDriverService {
 	lobbyPath: string;
 	tournamentPath: string;
 	cachePath: string;
+
 	settingsFilePath: string;
+	webhookSettingsFilePath: string;
 
 	private appDataPath: string;
 	private initialized = false;
@@ -80,6 +82,7 @@ export class StorageDriverService {
 		this.cachePath = await this.joinPath(this.mainDataPath, 'cache');
 
 		this.settingsFilePath = await this.joinPath(this.mainDataPath, 'settings.json');
+		this.webhookSettingsFilePath = await this.joinPath(this.mainDataPath, 'webhook-settings.json');
 
 		await this.createRequiredDirectories();
 
