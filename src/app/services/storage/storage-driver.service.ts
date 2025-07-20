@@ -9,12 +9,9 @@ export class StorageDriverService {
 	lobbyPath: string;
 	tournamentPath: string;
 	cachePath: string;
-
 	settingsFilePath: string;
 
-	private fs = window.require('fs').promises;
 	private appDataPath: string;
-
 	private initialized = false;
 
 	constructor() { }
@@ -84,34 +81,27 @@ export class StorageDriverService {
 
 		this.settingsFilePath = await this.joinPath(this.mainDataPath, 'settings.json');
 
-		await this.ensureDirectories();
+		await this.createRequiredDirectories();
 
 		this.initialized = true;
 	}
 
 	/**
-	 * Ensures that the necessary directories exist
+	 * Creates all required directories for the application
 	 */
-	private async ensureDirectories() {
-		await this.ensureDirectoryExists(this.chatLogPath);
-		await this.ensureDirectoryExists(this.lobbyPath);
-		await this.ensureDirectoryExists(this.tournamentPath);
-		await this.ensureDirectoryExists(this.cachePath);
+	private async createRequiredDirectories() {
+		await this.createDirectoryIfNotExists(this.chatLogPath);
+		await this.createDirectoryIfNotExists(this.lobbyPath);
+		await this.createDirectoryIfNotExists(this.tournamentPath);
+		await this.createDirectoryIfNotExists(this.cachePath);
 	}
 
 	/**
-	 * Ensures that a directory exists, creating it if it does not.
+	 * Creates a directory if it does not exist
 	 *
-	 * @param dir the directory to ensure exists
+	 * @param dir the directory to create if it doesn't exist
 	 */
-	private async ensureDirectoryExists(dir: string) {
-		try {
-			await this.fs.access(dir);
-		}
-		catch (error) {
-			await this.fs.mkdir(dir, {
-				recursive: true
-			});
-		}
+	private async createDirectoryIfNotExists(directoryPath: string) {
+		window.electronApi.createDirectoryIfNotExists(directoryPath);
 	}
 }

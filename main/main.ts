@@ -113,6 +113,17 @@ function createWindow() {
 			return [];
 		}
 	});
+
+	ipcMain.handle(IPC_CHANNELS.CREATE_DIRECTORY_IF_NOT_EXISTS, async (event, directoryPath) => {
+		try {
+			await fs.access(directoryPath);
+		}
+		catch (error) {
+			await fs.mkdir(directoryPath, {
+				recursive: true
+			});
+		}
+	});
 }
 
 try {
