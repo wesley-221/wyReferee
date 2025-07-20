@@ -65,8 +65,8 @@ function createWindow() {
 
 	osuOauthServer = new OauthServer(win);
 
-	ipcMain.on('start-express-server', () => {
-		osuOauthServer.startServer();
+	ipcMain.handle(IPC_CHANNELS.START_EXPRESS_SERVER, (event, oauthUrl) => {
+		osuOauthServer.startServer(oauthUrl);
 	});
 
 	// Handle IPC calls

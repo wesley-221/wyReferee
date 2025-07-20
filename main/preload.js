@@ -10,5 +10,7 @@ window.electronApi = {
 	listFiles: (filePath) => ipcRenderer.invoke(IPC_CHANNELS.LIST_FILES, filePath),
 	createDirectoryIfNotExists: (directoryPath) => ipcRenderer.invoke(IPC_CHANNELS.CREATE_DIRECTORY_IF_NOT_EXISTS, directoryPath),
 	showSaveDialog: (options) => ipcRenderer.invoke(IPC_CHANNELS.SHOW_SAVE_DIALOG, options),
-	flashWindow: () => ipcRenderer.invoke(IPC_CHANNELS.FLASH_WINDOW)
+	flashWindow: () => ipcRenderer.invoke(IPC_CHANNELS.FLASH_WINDOW),
+	startExpressServer: (oauthUrl) => ipcRenderer.invoke(IPC_CHANNELS.START_EXPRESS_SERVER, oauthUrl),
+	onOsuOauthCode: (callback) => ipcRenderer.once(IPC_CHANNELS.ON_OSU_OAUTH_CODE, (event, code) => callback(code))
 };

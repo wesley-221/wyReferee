@@ -8,4 +8,6 @@ export interface ElectronApi {
 	createDirectoryIfNotExists(directoryPath: string): Promise<void>;
 	showSaveDialog(options: Electron.SaveDialogOptions): Promise<Electron.SaveDialogReturnValue>;
 	flashWindow(): void;
+	startExpressServer(oauthUrl: string): Promise<void>;
+	onOsuOauthCode(callback: (code: string) => void): void;
 }

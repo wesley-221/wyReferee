@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from 'app/models/authentication/user';
-import { ElectronService } from './electron.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,7 +17,7 @@ export class AuthenticateService {
 
 	private userLoggedIn$: BehaviorSubject<boolean>;
 
-	constructor(private httpClient: HttpClient, private electronService: ElectronService) {
+	constructor(private httpClient: HttpClient) {
 		this.oauthResponse$ = new BehaviorSubject(null);
 		this.userLoggedIn$ = new BehaviorSubject(null);
 	}
@@ -87,13 +86,9 @@ export class AuthenticateService {
 	 * Start the express server and listen for events from the main process
 	 */
 	private startExpressServer(): void {
-		this.electronService.ipcRenderer.send('start-express-server', true);
+		window.electronApi.startExpressServer(this.getOsuOauthUrl());
 
-		this.electronService.ipcRenderer.on('express-server-started', () => {
-			this.electronService.openLink(this.getOsuOauthUrl());
-		});
-
-		this.electronService.ipcRenderer.on('osu-oauth-code', (_, code) => {
+		window.electronApi.onOsuOauthCode((code: string) => {
 			this.oauthResponse$.next(code);
 		});
 	}
