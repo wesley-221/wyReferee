@@ -1,10 +1,12 @@
 import { app, BrowserWindow, dialog, ipcMain, screen, shell } from 'electron';
 import { pathToFileURL } from 'url';
+import { autoUpdater } from 'electron-updater';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 
 import { OauthServer } from './oauth-server';
 import { IPC_CHANNELS } from '../src/shared/ipc-channels';
+import { log } from 'electron-log';
 
 let win: BrowserWindow | null;
 let serve: boolean;
@@ -27,12 +29,11 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false,
+			webSecurity: false,
 			enableRemoteModule: true,
 			preload: path.join(__dirname, 'preload.js')
 		},
-		icon: path.join(baseDirectory, 'src/assets/images/icon.png'),
-		// frame: false,
-		// titleBarStyle: 'hidden'
+		icon: path.join(baseDirectory, 'src/assets/images/icon.png')
 	});
 
 	win.setMenuBarVisibility(false);
@@ -63,6 +64,42 @@ function createWindow() {
 		win = null;
 	});
 
+	// Handle auto-updates
+	ipcMain.handle(IPC_CHANNELS.CHECK_FOR_UPDATES_AND_NOTIFY, () => {
+		autoUpdater.checkForUpdatesAndNotify();
+	});
+
+	autoUpdater.on(IPC_CHANNELS.UPDATE_AVAILABLE, () => {
+		if (win) {
+			win.webContents.send(IPC_CHANNELS.UPDATE_AVAILABLE);
+		}
+	});
+
+	autoUpdater.on(IPC_CHANNELS.UPDATE_DOWNLOADED, () => {
+		if (win) {
+			win.webContents.send(IPC_CHANNELS.UPDATE_DOWNLOADED);
+		}
+	});
+
+	autoUpdater.on(IPC_CHANNELS.UPDATE_DOWNLOAD_PROGRESS, (progress) => {
+		if (win) {
+			win.webContents.send(IPC_CHANNELS.UPDATE_DOWNLOAD_PROGRESS, progress);
+		}
+	});
+
+	autoUpdater.on(IPC_CHANNELS.UPDATE_ERROR, (error) => {
+		log("Electron auto updater error: " + error);
+
+		if (win) {
+			win.webContents.send(IPC_CHANNELS.UPDATE_ERROR, error);
+		}
+	});
+
+	ipcMain.handle(IPC_CHANNELS.RESTART_APP_AFTER_UPDATE_DOWNLOAD, () => {
+		autoUpdater.quitAndInstall();
+	});
+
+	// Handle IPC calls for OAuth server
 	osuOauthServer = new OauthServer(win);
 
 	ipcMain.handle(IPC_CHANNELS.START_EXPRESS_SERVER, (event, oauthUrl) => {

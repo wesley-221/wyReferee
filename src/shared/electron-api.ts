@@ -1,3 +1,5 @@
+import { ProgressInfo } from "electron-updater";
+
 export interface ElectronApi {
 	getAppDataPath(): Promise<string>;
 	joinPath(paths: string[]): Promise<string>;
@@ -11,4 +13,10 @@ export interface ElectronApi {
 	startExpressServer(oauthUrl: string): Promise<void>;
 	onOsuOauthCode(callback: (code: string) => void): void;
 	openLink(url: string): void;
+	checkForUpdatesAndNotify(): void;
+	updateAvailable(callback: () => void): void;
+	updateDownloaded(callback: () => void): void;
+	onUpdateError(callback: (error: string) => void): void;
+	updateDownloadProgress(callback: (progress: ProgressInfo) => void): void;
+	restartAppAfterUpdateDownload(): void;
 }

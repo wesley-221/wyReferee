@@ -1,7 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ToastService } from 'app/services/toast.service';
-import { AppConfig } from 'environments/environment';
-import ElectronLog from 'electron-log';
+import { ProgressInfo } from 'electron-updater';
 
 @Component({
 	selector: 'app-updater',
@@ -9,54 +7,37 @@ import ElectronLog from 'electron-log';
 	styleUrls: ['./updater.component.scss']
 })
 export class UpdaterComponent implements OnInit {
-	remote: any;
-	autoUpdater: any;
-
 	updateWasFound = false;
 	downloadPercentage = 0;
 
-	constructor(private ref: ChangeDetectorRef, private toastService: ToastService) {
-		const log = ElectronLog;
+	constructor(private ref: ChangeDetectorRef) {
+		window.electronApi.checkForUpdatesAndNotify();
 
-		this.remote = window.require('electron').remote;
-		this.autoUpdater = this.remote.require('electron-updater').autoUpdater;
+		window.electronApi.updateAvailable(() => {
+			this.updateWasFound = true;
+			this.downloadPercentage = 0;
 
-		// TODO: Enable this once useAppSupportCache has been fixed
-		// See https://github.com/imjsElectron/electron-differential-updater/issues/18
-		// this.autoUpdater = this.remote.require('@imjs/electron-differential-updater').autoUpdater;
+			this.ref.detectChanges();
+		});
 
-		log.transports.file.level = 'debug';
-		this.autoUpdater.logger = log;
+		window.electronApi.updateDownloaded(() => {
+			this.ref.detectChanges();
 
-		this.autoUpdater.autoDownload = true;
+			setTimeout(() => {
+				window.electronApi.restartAppAfterUpdateDownload();
+			}, 10000);
+		});
 
-		if (AppConfig.production) {
-			this.autoUpdater.checkForUpdates();
+		window.electronApi.updateDownloadProgress((progress: ProgressInfo) => {
+			console.log(progress);
 
-			this.autoUpdater.on('error', (err: string) => {
-				toastService.addToast(`Something went wrong while trying to update: ${err}`);
-			});
+			this.downloadPercentage = progress.percent;
+			this.ref.detectChanges();
+		});
 
-			this.autoUpdater.on('update-available', () => {
-				toastService.addToast('An update was found, the download will now start!');
-				this.updateWasFound = true;
-			});
-
-			// TODO: See TODO above
-			// this.autoUpdater.on('download-progress', (progress: ElectronDownloadProgression) => {
-			// 	this.downloadPercentage = Math.round(progress.percent);
-			// 	ref.detectChanges();
-			// });
-
-			this.autoUpdater.on('update-downloaded', () => {
-				// TODO: Remove this, see TODO above
-				toastService.addToast('The update has been downloaded and will be installed in 10 seconds. If you close the client, it will install the update right away.');
-
-				setTimeout(() => {
-					this.autoUpdater.quitAndInstall();
-				}, 10000);
-			});
-		}
+		window.electronApi.onUpdateError((error: string) => {
+			console.error(`Update error: ${error}`);
+		});
 	}
 
 	ngOnInit(): void { }
