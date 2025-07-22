@@ -6,6 +6,7 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
 import TUTORIAL_TOURNAMENT from 'assets/tutorial-tournament-template.json';
 import { IrcAuthenticationStoreService } from './storage/irc-authentication-store.service';
+import { filter, take } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -26,12 +27,22 @@ export class TutorialService {
 		this.currentStepIndex = 0;
 		this.isMinimized = false;
 
-		this.allTutorials = [
-			this.loginTutorial(),
-			this.importTournamentTutorial(),
-			this.createLobbyTutorial(),
-			// this.ircTutorial()
-		];
+		this.allTutorials = [];
+
+		this.ircAuthenticationStore.watchIrcStore()
+			.pipe(
+				filter((store) => store != null),
+				take(1)
+			)
+			.subscribe(() => {
+				this.allTutorials = [
+					...[
+						this.loginTutorial(),
+						this.importTournamentTutorial(),
+						this.createLobbyTutorial(),
+						//this.ircTutorial()
+					]];
+			});
 
 		this.tutorialTournament = WyTournament.makeTrueCopy(TUTORIAL_TOURNAMENT as any);
 	}
