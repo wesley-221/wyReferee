@@ -1,46 +1,43 @@
 import { Injectable } from '@angular/core';
 import { CacheBeatmap } from '../models/cache/cache-beatmap';
 import { CacheUser } from '../models/cache/cache-user';
-import { CacheModifier } from '../models/cache/cache-modifier';
-import { StoreService } from './store.service';
+import { CacheStoreService } from './storage/cache-store.service';
+import { filter, take } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
 })
 
 export class CacheService {
-	cacheVersion: string;
-
 	private cachedBeatmaps: CacheBeatmap[] = [];
 	private cachedUsers: CacheUser[] = [];
-	private cachedModifiers: CacheModifier[] = [];
 
-	constructor(private storeService: StoreService) {
-		const beatmapCache = storeService.get('cache.beatmaps');
-		const userCache = storeService.get('cache.users');
-		const modifierCache = storeService.get('cache.modifiers');
+	constructor(private cacheStore: CacheStoreService) {
+		this.cacheStore
+			.watchCache()
+			.pipe(
+				filter(cache => cache !== null),
+				take(1)
+			)
+			.subscribe(cache => {
+				if (cache) {
+					for (const beatmap in cache.beatmaps) {
+						this.cachedBeatmaps.push(new CacheBeatmap({
+							name: cache.beatmaps[beatmap].name,
+							beatmapId: parseInt(beatmap),
+							beatmapSetId: Number(cache.beatmaps[beatmap].beatmapSetId),
+							beatmapUrl: `https://osu.ppy.sh/beatmaps/${cache.beatmaps[beatmap].beatmapSetId}`
+						}));
+					}
 
-		this.cacheVersion = storeService.get('cache-version');
-
-		for (const beatmap in beatmapCache) {
-			this.cachedBeatmaps.push(new CacheBeatmap({
-				name: beatmapCache[beatmap].name,
-				beatmapId: parseInt(beatmap),
-				beatmapSetId: parseInt(beatmapCache[beatmap].beatmapset_id),
-				beatmapUrl: `https://osu.ppy.sh/beatmaps/${beatmapCache[beatmap].beatmapset_id as string}`
-			}));
-		}
-
-		for (const user in userCache) {
-			this.cachedUsers.push(new CacheUser({
-				user_id: parseInt(user),
-				username: userCache[user]
-			}));
-		}
-
-		for (const modifier in modifierCache) {
-			this.cachedModifiers.push(new CacheModifier(modifierCache[modifier].beatmap_name, parseInt(modifier), modifierCache[modifier].modifier));
-		}
+					for (const user in cache.users) {
+						this.cachedUsers.push(new CacheUser({
+							user_id: parseInt(user),
+							username: cache.users[user].username
+						}));
+					}
+				}
+			});
 	}
 
 	/**
@@ -63,37 +60,13 @@ export class CacheService {
 	}
 
 	/**
-	 * Check if the given beatmapId is cached in a mappool
-	 *
-	 * @param beatmapId the beatmapId to look for
-	 */
-	public getCachedBeatmapFromMappools(beatmapId: number): CacheBeatmap {
-		const mappools = this.storeService.get('cache.mappool');
-
-		for (const mappool in mappools) {
-			for (const modBracket in mappools[mappool].modBrackets) {
-				for (const beatmap in mappools[mappool].modBrackets[modBracket].beatmaps) {
-					if (mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId == beatmapId) {
-						return new CacheBeatmap({
-							name: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapName,
-							beatmapId: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapId,
-							beatmapSetId: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapsetId,
-							beatmapUrl: mappools[mappool].modBrackets[modBracket].beatmaps[beatmap].beatmapUrl
-						});
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * Create or update the cache for the given beatmap
 	 *
 	 * @param cachedBeatmap the CacheBeatmap to create/update
 	 */
 	public cacheBeatmap(cachedBeatmap: CacheBeatmap): void {
+		if (cachedBeatmap.beatmapId == undefined) return;
+
 		let cachedBeatmapIndex: number = null;
 
 		// Find the index of the cached user
@@ -113,10 +86,10 @@ export class CacheService {
 		}
 
 		// Save it in the store
-		this.storeService.set(`cache.beatmaps.${cachedBeatmap.beatmapId}`, {
+		this.cacheStore.set('beatmaps', cachedBeatmap.beatmapId, new CacheBeatmap({
 			name: cachedBeatmap.name,
-			beatmapset_id: cachedBeatmap.beatmapSetId
-		});
+			beatmapSetId: cachedBeatmap.beatmapSetId
+		}));
 	}
 
 	/**
@@ -163,16 +136,21 @@ export class CacheService {
 		}
 
 		// Save it in the store
-		this.storeService.set(`cache.users.${cachedUser.user_id}`, cachedUser.username);
+		this.cacheStore.set('users', cachedUser.user_id, new CacheUser({
+			user_id: cachedUser.user_id,
+			username: cachedUser.username
+		}));
 	}
 
 	/**
 	 * Clear all cache
 	 */
 	public clearAllData(): void {
-		this.storeService.delete('irc.channels');
-		this.storeService.delete('lobby');
-		this.storeService.delete('cache');
+		// TODO: Update this with the new storage services
+
+		// this.storeService.delete('irc.channels');
+		// this.storeService.delete('lobby');
+		// this.storeService.delete('cache');
 	}
 
 	/**
