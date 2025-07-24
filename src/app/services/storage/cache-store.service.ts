@@ -24,6 +24,12 @@ export class CacheStoreService {
 		this.loadCache();
 	}
 
+	/**
+	 * Retrieves the value of a specific item in the cache store
+	 *
+	 * @param key key of the cache (beatmaps or users)
+	 * @param mapKey key of the specific item in the cache
+	 */
 	async get(key: keyof CacheStore, mapKey: string | number) {
 		const current = this.cacheStore$.value;
 
@@ -32,6 +38,13 @@ export class CacheStoreService {
 		return current[key][mapKey];
 	}
 
+	/**
+	 * Sets a value in the cache store
+	 *
+	 * @param key key of the cache (beatmaps or users)
+	 * @param mapKey key of the specific item in the cache
+	 * @param value value to set in the cache
+	 */
 	async set(key: keyof CacheStore, mapKey: string | number, value: CacheBeatmap | CacheUser) {
 		const current = this.cacheStore$.value;
 
@@ -49,10 +62,16 @@ export class CacheStoreService {
 		await this.storage.writeJSON(filePath, newStore[key]);
 	}
 
+	/**
+	 * Returns an observable that emits the cache
+	 */
 	watchCache() {
 		return this.cacheStore$.asObservable();
 	}
 
+	/**
+	 * Loads all cache data from storage and initializes the BehaviorSubject
+	 */
 	private async loadCache() {
 		const usersFilePath = await this.storage.joinPath(this.storage.cachePath, 'cache-users.json');
 		const beatmapsFilePath = await this.storage.joinPath(this.storage.cachePath, 'cache-beatmaps.json');
