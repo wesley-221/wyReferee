@@ -4,10 +4,9 @@
 		"output": "release/"
 	},
 	"files": [
-		"**/*",
-		"!**/*.ts",
-		"!package.json",
-		"!package-lock.json"
+		"dist/**/*",
+		"node_modules/**/*",
+		"package.json"
 	],
 	"win": {
 		"icon": "src/assets/images/icon.png",

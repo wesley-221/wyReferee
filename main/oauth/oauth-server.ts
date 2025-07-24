@@ -1,7 +1,7 @@
 import { BrowserWindow, shell } from 'electron';
 import * as express from 'express';
 import * as http from 'http';
-import { IPC_CHANNELS } from '../src/shared/ipc-channels';
+import { IPC_CHANNELS } from '../ipc-channels';
 
 const DEFAULT_PORT = 3000;
 

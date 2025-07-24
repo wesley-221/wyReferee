@@ -1,5 +1,7 @@
 {
 	"compilerOptions": {
+		"outDir": "dist/electron",
+		"rootDir": "main",
 		"sourceMap": true,
 		"declaration": false,
 		"moduleResolution": "node",
@@ -20,7 +22,7 @@
 		]
 	},
 	"include": [
-		"main/main.ts"
+		"main/**/*.ts"
 	],
 	"exclude": [
 		"node_modules",
