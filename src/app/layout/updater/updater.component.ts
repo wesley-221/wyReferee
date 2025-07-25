@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProgressInfo } from 'electron-updater';
+import { AppConfig } from 'environments/environment';
 
 @Component({
 	selector: 'app-updater',
@@ -7,10 +8,16 @@ import { ProgressInfo } from 'electron-updater';
 	styleUrls: ['./updater.component.scss']
 })
 export class UpdaterComponent implements OnInit {
+	isProduction = AppConfig.production;
+
 	updateWasFound = false;
 	downloadPercentage = 0;
 
 	constructor(private ref: ChangeDetectorRef) {
+		if (!this.isProduction) {
+			return;
+		}
+
 		window.electronApi.checkForUpdatesAndNotify();
 
 		window.electronApi.updateAvailable(() => {
