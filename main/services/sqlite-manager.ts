@@ -1,12 +1,13 @@
 import { Database } from 'better-sqlite3';
-import { IrcChannel } from '../types/irc-channel';
+import { IrcChannel } from '../models/irc-channel';
 import { app } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
-import { IrcMessage } from '../types/irc-message';
+import { MessageBuilder } from '../models/message-builder';
+import { WyMod } from '../models/wy-mod';
+import { IrcMessage } from '../models/irc-message';
 
-
-export class SqliteHandler {
+export class SqliteManager {
 	private database: Database;
 
 	constructor() {
@@ -128,6 +129,101 @@ export class SqliteHandler {
 		});
 
 		return transaction(message);
+	}
+
+	/**
+	 * Gets an IRC channel by the id
+	 *
+	 * @param ircChannelId the id of the IRC channel to retrieve
+	 */
+	getIrcChannel(ircChannelId: number): IrcChannel | null {
+		const selectChannel = this.database.prepare('SELECT * FROM IrcChannel WHERE id = ?');
+		const selectMessageIds = this.database.prepare('SELECT ircMessageId FROM IrcChannel_Messages WHERE ircChannelId = ?');
+		const selectBanchoMessageIds = this.database.prepare('SELECT ircMessageId FROM IrcChannel_BanchoMessages WHERE ircChannelId = ?');
+		const selectPlainMessages = this.database.prepare('SELECT value FROM IrcChannel_PlainMessageHistory WHERE ircChannelId = ?');
+		const selectMessage = this.database.prepare('SELECT * FROM IrcMessage WHERE id = ?');
+		const selectBuilders = this.database.prepare('SELECT * FROM MessageBuilder WHERE ircMessageId = ?');
+		const selectMods = this.database.prepare('SELECT wm.* FROM WyMod wm JOIN MessageBuilder_WyMod mbwm ON wm.id = mbwm.wyModId WHERE mbwm.messageBuilderId = ?');
+
+		const channelRow: any = selectChannel.get(ircChannelId);
+
+		if (!channelRow) return null;
+
+		const loadMessagesByIds = (ids: number[]) => {
+			const results = ids.map(id => {
+				const msgRow: any = selectMessage.get(id);
+				if (!msgRow) return null;
+
+				const builders = selectBuilders.all(msgRow.id).map((builder: any) => {
+					const mods = selectMods.all(builder.id).map((mod: any) => {
+						const newMod = new WyMod();
+
+						newMod.id = mod.id;
+						newMod.name = mod.name;
+						newMod.value = mod.value;
+
+						return newMod;
+					});
+
+					const newBuilder = new MessageBuilder();
+
+					newBuilder.messageType = builder.messageType;
+					newBuilder.message = builder.message;
+					newBuilder.linkName = builder.linkName || '';
+					newBuilder.modAcronymBeatmapId = builder.modAcronymBeatmapId;
+					newBuilder.modAcronymGameMode = builder.modAcronymGameMode;
+					newBuilder.modAcronymMappoolId = builder.modAcronymMappoolId;
+					newBuilder.modAcronymModBracketId = builder.modAcronymModBracketId;
+					newBuilder.modAcronymMods = mods;
+
+					return newBuilder;
+				});
+
+				const newMessage = new IrcMessage();
+
+				newMessage.messageId = msgRow.id;
+				newMessage.date = msgRow.date;
+				newMessage.time = msgRow.time;
+				newMessage.author = msgRow.author;
+				newMessage.isADivider = !!msgRow.isADivider;
+				newMessage.messageBuilder = builders;
+
+				return newMessage;
+			});
+
+			return results.filter((m) => m !== null);
+		};
+
+		const messages = loadMessagesByIds(
+			selectMessageIds.all(ircChannelId).map((row: any) => row.ircMessageId)
+		);
+
+		const banchoMessages = loadMessagesByIds(
+			selectBanchoMessageIds.all(ircChannelId).map((row: any) => row.ircMessageId)
+		);
+
+		const plainMessages = selectPlainMessages.all(ircChannelId).map((row: any) => row.value);
+
+		const ircChannel: IrcChannel = {
+			name: channelRow.name,
+			label: channelRow.label,
+			active: !!channelRow.active,
+			lastActiveChannel: !!channelRow.lastActiveChannel,
+			isPrivateChannel: !!channelRow.isPrivateChannel,
+			isPublicChannel: !!channelRow.isPublicChannel,
+			hasUnreadMessages: !!channelRow.hasUnreadMessages,
+			playSoundOnMessage: !!channelRow.playSoundOnMessage,
+			teamMode: channelRow.teamMode,
+			winCondition: channelRow.winCondition,
+			players: channelRow.players,
+			editingLabel: !!channelRow.editingLabel,
+			oldLabel: channelRow.oldLabel,
+			messages,
+			banchoBotMessages: banchoMessages,
+			plainMessageHistory: plainMessages
+		};
+
+		return ircChannel;
 	}
 
 	/**

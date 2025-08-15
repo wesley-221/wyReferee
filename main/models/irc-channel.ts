@@ -14,7 +14,7 @@ export enum WinCondition {
 	ScoreV2 = 3
 }
 
-export declare class IrcChannel {
+export class IrcChannel {
 	name: string;
 	label: string;
 	active: boolean;
@@ -28,8 +28,8 @@ export declare class IrcChannel {
 	hasUnreadMessages: boolean;
 	playSoundOnMessage: boolean;
 
-	teamMode: TeamMode;
-	winCondition: WinCondition;
+	teamMode: TeamMode | number;
+	winCondition: WinCondition | number;
 	players: number;
 
 	editingLabel: boolean;
