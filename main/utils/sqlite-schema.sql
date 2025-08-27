@@ -3,16 +3,16 @@ CREATE TABLE IF NOT EXISTS IrcChannel (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT NOT NULL,
 	label TEXT NOT NULL,
-	active INTEGER NOT NULL,
-	lastActiveChannel INTEGER NOT NULL,
-	isPrivateChannel INTEGER NOT NULL,
-	isPublicChannel INTEGER NOT NULL,
-	hasUnreadMessages INTEGER NOT NULL,
-	playSoundOnMessage INTEGER NOT NULL,
-	teamMode INTEGER NOT NULL,          -- enum: TeamMode
-	winCondition INTEGER NOT NULL,      -- enum: WinCondition
-	players INTEGER NOT NULL,
-	editingLabel INTEGER NOT NULL,
+	active INTEGER,
+	lastActiveChannel INTEGER,
+	isPrivateChannel INTEGER,
+	isPublicChannel INTEGER,
+	hasUnreadMessages INTEGER,
+	playSoundOnMessage INTEGER,
+	teamMode INTEGER,          -- enum: TeamMode
+	winCondition INTEGER,      -- enum: WinCondition
+	players INTEGER,
+	editingLabel INTEGER,
 	oldLabel TEXT
 );
 
