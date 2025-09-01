@@ -59,7 +59,6 @@
 		"@angular/platform-browser-dynamic": "13.3.2",
 		"@angular/router": "13.3.2",
 		"@playwright/test": "^1.20.2",
-		"@types/better-sqlite3": "^7.6.13",
 		"@types/howler": "^2.1.2",
 		"@types/jasmine": "3.3.16",
 		"@types/node": "^15.12.5",
@@ -92,14 +91,12 @@
 		"@angular/animations": "13.3.2",
 		"@angular/material": "13.3.2",
 		"bancho.js": "^0.12.0",
-		"better-sqlite3": "^12.2.0",
 		"electron-log": "^3.0.8",
 		"electron-store": "^5.0.0",
 		"electron-updater": "6.6.2",
 		"express": "^4.21.1",
 		"ngx-clipboard": "^12.3.1",
 		"ngx-markdown": "^13.1.0",
-		"semver": "^7.3.6",
-		"weak-value-map": "^1.0.1"
+		"semver": "^7.3.6"
 	}
 }
