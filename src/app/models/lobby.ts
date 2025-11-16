@@ -723,4 +723,8 @@ export class Lobby {
 
 		return this.tournament.wyBinTournamentId != null && this.tournament.wyBinTournamentId != undefined;
 	}
+
+	getFileName(): string {
+		return `${this.lobbyId}-${this.getLobbyNameSlug()}`;
+	}
 }

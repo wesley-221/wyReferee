@@ -4,7 +4,7 @@ import { Lobby } from 'app/models/lobby';
 import { BehaviorSubject } from 'rxjs';
 
 interface LobbyStore {
-	[lobbyId: number]: Lobby;
+	[lobbyName: string]: Lobby;
 }
 
 @Injectable({
@@ -27,10 +27,10 @@ export class LobbyStoreService {
 
 		if (!current) throw new Error('Lobby store not initialized');
 
-		const newLobbies = { ...current, [lobby.lobbyId]: lobby };
+		const newLobbies = { ...current, [lobby.getFileName()]: lobby };
 		this.lobbies$.next(newLobbies);
 
-		const filePath = await this.storage.joinPath(this.storage.lobbyPath, `${lobby.lobbyId}.json`);
+		const filePath = await this.storage.joinPath(this.storage.lobbyPath, `${lobby.getFileName()}.json`);
 		this.storage.writeJSON(filePath, lobby);
 	}
 
@@ -43,10 +43,10 @@ export class LobbyStoreService {
 
 		if (!current) throw new Error('Lobby store not initialized');
 
-		const { [lobby.lobbyId]: _, ...newLobbies } = current;
+		const { [lobby.getFileName()]: _, ...newLobbies } = current;
 		this.lobbies$.next(newLobbies);
 
-		const filePath = await this.storage.joinPath(this.storage.lobbyPath, `${lobby.lobbyId}.json`);
+		const filePath = await this.storage.joinPath(this.storage.lobbyPath, `${lobby.getFileName()}.json`);
 		this.storage.deleteFile(filePath);
 	}
 
@@ -67,12 +67,12 @@ export class LobbyStoreService {
 
 		for (const file of lobbyFiles) {
 			if (file.endsWith('.json')) {
-				const lobbyId = parseInt(file.replace('.json', ''), 10);
 				const filePath = await this.storage.joinPath(this.storage.lobbyPath, file);
 				const lobby = await this.storage.readJSON<Lobby>(filePath);
 
 				if (lobby) {
-					lobbies[lobbyId] = lobby;
+					const lobbyObject = Lobby.makeTrueCopy(lobby);
+					lobbies[lobbyObject.getFileName()] = lobbyObject;
 				}
 			}
 		}
