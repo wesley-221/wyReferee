@@ -72,23 +72,12 @@ export class SettingsComponent implements OnInit {
 	exportConfigFile() {
 		window.electronApi.showSaveDialog({
 			title: 'Export wyReferee settings',
-			defaultPath: 'wyReferee-settings.json'
+			defaultPath: 'wyReferee-settings.zip'
 		}).then(file => {
-			// Remove the api key and auth properties
-			let configFile = this.storeService.storage.store;
-			configFile['api-key'] = 'redacted';
-			configFile.auth = 'redacted'; // Authentication details from older versions
-			configFile.oauth = 'redacted';
-			configFile['osu-oauth'] = 'redacted';
-			configFile.irc.username = 'redacted';
-			configFile.irc.password = 'redacted';
-
-			configFile = JSON.stringify(configFile, null, '\t');
-
-			window.electronApi.writeFile(file.filePath, configFile).then(() => {
-				this.toastService.addToast(`Successfully saved the config file to "${file.filePath}".`);
+			window.electronApi.saveSettingsZip(file.filePath).then(() => {
+				this.toastService.addToast(`Successfully saved the config files to "${file.filePath}".`);
 			}).catch(err => {
-				this.toastService.addToast(`Something went wrong while trying to export the config file: ${err.message}.`, ToastType.Error);
+				this.toastService.addToast(`Something went wrong while trying to export the config files: ${err.message}.`, ToastType.Error);
 			});
 		});
 	}

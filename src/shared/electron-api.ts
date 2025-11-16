@@ -9,6 +9,7 @@ export interface ElectronApi {
 	listFiles(filePath: string): Promise<string[]>;
 	createDirectoryIfNotExists(directoryPath: string): Promise<void>;
 	showSaveDialog(options: Electron.SaveDialogOptions): Promise<Electron.SaveDialogReturnValue>;
+	saveSettingsZip(filePath: string): Promise<void>;
 	flashWindow(): void;
 	startExpressServer(oauthUrl: string): Promise<void>;
 	onOsuOauthCode(callback: (code: string) => void): void;
