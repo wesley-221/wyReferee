@@ -308,4 +308,8 @@ export class WyTournament {
 	isSoloTournament() {
 		return this.format == TournamentFormat.Solo;
 	}
+
+	getSlug(): string {
+		return `${this.id}-${this.acronym.toLowerCase()}`;
+	}
 }

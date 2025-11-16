@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
 interface TournamentStore {
-	[tournamentId: number]: WyTournament;
+	[tournamentSlug: string]: WyTournament;
 }
 
 @Injectable({
@@ -27,10 +27,10 @@ export class TournamentStoreService {
 
 		if (!current) throw new Error('Tournaments not loaded yet');
 
-		const newTournaments = { ...current, [tournament.id]: tournament };
+		const newTournaments = { ...current, [tournament.getSlug()]: tournament };
 		this.tournaments$.next(newTournaments);
 
-		const filePath = await this.storage.joinPath(this.storage.tournamentPath, `${tournament.id}.json`);
+		const filePath = await this.storage.joinPath(this.storage.tournamentPath, `${tournament.getSlug()}.json`);
 		this.storage.writeJSON(filePath, tournament);
 	}
 
@@ -44,10 +44,10 @@ export class TournamentStoreService {
 
 		if (!current) throw new Error('Tournaments not loaded yet');
 
-		const { [tournament.id]: _, ...newTournaments } = current;
+		const { [tournament.getSlug()]: _, ...newTournaments } = current;
 		this.tournaments$.next(newTournaments);
 
-		const filePath = await this.storage.joinPath(this.storage.tournamentPath, `${tournament.id}.json`);
+		const filePath = await this.storage.joinPath(this.storage.tournamentPath, `${tournament.getSlug()}.json`);
 		this.storage.deleteFile(filePath);
 	}
 
@@ -68,12 +68,12 @@ export class TournamentStoreService {
 
 		for (const file of tournamentFiles) {
 			if (file.endsWith('.json')) {
-				const tournamentId = parseInt(file.replace('.json', ''), 10);
 				const filePath = await this.storage.joinPath(this.storage.tournamentPath, file);
 				const tournament = await this.storage.readJSON<WyTournament>(filePath);
 
 				if (tournament) {
-					tournaments[tournamentId] = tournament;
+					const tournamentObject = WyTournament.makeTrueCopy(tournament);
+					tournaments[tournamentObject.getSlug()] = tournamentObject;
 				}
 			}
 		}

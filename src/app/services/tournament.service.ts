@@ -48,6 +48,8 @@ export class TournamentService {
 					if (initialLoad == true) {
 						const tournaments = Object.values(tournamentStore);
 						this.allTournaments = tournaments.map(tournament => WyTournament.makeTrueCopy(tournament));
+
+						this.availableTournamentId = this.allTournaments[this.allTournaments.length - 1].id + 1;
 					}
 
 					// Update tournaments if they have been updated
@@ -85,8 +87,6 @@ export class TournamentService {
 	 * @param tournament the tournament to save
 	 */
 	saveTournament(tournament: WyTournament): void {
-		tournament.id = this.availableTournamentId++;
-
 		this.allTournaments.push(tournament);
 		this.tournamentStoreService.saveTournament(tournament);
 	}

@@ -16,7 +16,14 @@ export class TournamentOverviewComponent implements OnInit {
 		this.allTournaments = this.tournamentService.allTournaments;
 		this.active = 'local';
 	}
-	ngOnInit(): void { }
+
+	ngOnInit(): void {
+		this.tournamentService.tournamentsHaveBeenInitialized().subscribe(initialized => {
+			if (initialized == true) {
+				this.allTournaments = this.tournamentService.allTournaments;
+			}
+		});
+	}
 
 	click(type: string) {
 		if (type == 'local') {
