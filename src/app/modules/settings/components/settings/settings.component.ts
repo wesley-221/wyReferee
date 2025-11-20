@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../../../../services/electron.service';
-import { StoreService } from '../../../../services/store.service';
 import { ToastService } from '../../../../services/toast.service';
 import { ToastType } from '../../../../models/toast';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,6 +9,7 @@ import { IrcService } from 'app/services/irc.service';
 import { GenericService } from 'app/services/generic.service';
 import { OptionsMenu } from '../../models/options-menu';
 import { IrcAuthenticationStoreService } from 'app/services/storage/irc-authentication-store.service';
+import { CacheStoreService } from 'app/services/storage/cache-store.service';
 
 @Component({
 	selector: 'app-settings',
@@ -35,13 +35,13 @@ export class SettingsComponent implements OnInit {
 
 	constructor(
 		public electronService: ElectronService,
-		private storeService: StoreService,
 		private ircAuthenticationStore: IrcAuthenticationStoreService,
 		private toastService: ToastService,
 		private dialog: MatDialog,
 		public authService: AuthenticateService,
 		public ircService: IrcService,
-		private genericService: GenericService
+		private genericService: GenericService,
+		private cacheStoreService: CacheStoreService
 	) {
 		this.genericService.getAxSMenuStatus().subscribe(status => {
 			this.axsMenuStatus = status;
@@ -54,7 +54,9 @@ export class SettingsComponent implements OnInit {
 	 * Clear the cache
 	 */
 	clearCache() {
-		this.storeService.delete('cache');
+		this.cacheStoreService.resetCache('beatmaps');
+		this.cacheStoreService.resetCache('users');
+
 		this.toastService.addToast('Successfully cleared the cache.');
 	}
 

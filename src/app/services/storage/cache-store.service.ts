@@ -63,6 +63,20 @@ export class CacheStoreService {
 	}
 
 	/**
+	 * Resets the cache for a specific key
+	 *
+	 * @param key key of the cache (beatmap or users)
+	 */
+	async resetCache(key: keyof CacheStore) {
+		const current = this.cacheStore$.value;
+
+		if (!current) throw new Error('Cache store not loaded yet');
+
+		const filePath = await this.storage.joinPath(this.storage.cachePath, `cache-${key}.json`);
+		await this.storage.writeJSON(filePath, {});
+	}
+
+	/**
 	 * Returns an observable that emits the cache
 	 */
 	watchCache() {
