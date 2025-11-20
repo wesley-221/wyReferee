@@ -4,7 +4,6 @@ import { ElectronService } from '../../../../services/electron.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../services/toast.service';
-import { StoreService } from '../../../../services/store.service';
 import { ToastType } from '../../../../models/toast';
 import { WebhookService } from '../../../../services/webhook.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -117,7 +116,6 @@ export class IrcComponent implements OnInit {
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
-		private storeService: StoreService,
 		private settingsStore: SettingsStoreService,
 		private multiplayerLobbies: WyMultiplayerLobbiesService,
 		private router: Router,
@@ -775,7 +773,8 @@ export class IrcComponent implements OnInit {
 	 */
 	playSound(channel: IrcChannel, status: boolean) {
 		channel.playSoundOnMessage = status;
-		this.storeService.set(`irc.channels.${channel.name}.playSoundOnMessage`, status);
+		window.electronApi.setIrcPlaySoundOnMessage(channel.name, status);
+
 		this.toastService.addToast(`${channel.name} will ${status == false ? 'no longer beep on message' : 'now beep on message'}.`);
 	}
 
@@ -789,8 +788,9 @@ export class IrcComponent implements OnInit {
 
 		// Stopped editing the label
 		if (channel.editingLabel == false) {
-			this.storeService.set(`irc.channels.${channel.name}.label`, channel.label);
-		} else {
+			window.electronApi.setIrcChannelLabel(channel.name, channel.label);
+		}
+		else {
 			// Store old label when starting to edit so we can revert if canceled
 			channel.oldLabel = channel.label;
 		}
@@ -807,7 +807,8 @@ export class IrcComponent implements OnInit {
 		// When creating label for the first time channel.oldLabel will get set to undefined since channel.label will be undefined
 		if (channel.oldLabel !== undefined && channel.oldLabel !== null) {
 			channel.label = channel.oldLabel;
-			this.storeService.set(`irc.channels.${channel.name}.label`, channel.label);
+
+			window.electronApi.setIrcChannelLabel(channel.name, channel.label);
 		}
 	}
 
