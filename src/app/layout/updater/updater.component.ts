@@ -36,8 +36,6 @@ export class UpdaterComponent implements OnInit {
 		});
 
 		window.electronApi.updateDownloadProgress((progress: ProgressInfo) => {
-			console.log(progress);
-
 			this.downloadPercentage = progress.percent;
 			this.ref.detectChanges();
 		});
