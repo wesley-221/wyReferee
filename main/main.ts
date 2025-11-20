@@ -4,7 +4,7 @@ import { OauthServer } from './oauth/oauth-server';
 import { WindowManager } from './services/window-manager';
 import { setupIpcHandlers } from './services/ipc-handler';
 
-let windowManager: WindowManager;
+let allWindows: WindowManager[] = [];
 const gotTheLock = app.requestSingleInstanceLock();
 
 // Check if Electron is already running, if so close the newly opened Electron process
@@ -25,19 +25,27 @@ app.whenReady().then(async () => {
 
 async function createWindow() {
 	const serve = process.argv.includes('--serve');
-	windowManager = new WindowManager(serve);
+	const windowManager = new WindowManager(serve);
 
-	const win = windowManager.createWindow();
+	windowManager.win = windowManager.createWindow();
+
+	allWindows.push(windowManager);
 
 	if (!serve) {
 		const { UpdateManager } = await import('./services/update-manager');
 
-		new UpdateManager(win);
+		new UpdateManager(windowManager.win);
 	}
 
-	const osuOauthServer = new OauthServer(win);
+	const osuOauthServer = new OauthServer(windowManager.win);
 
-	setupIpcHandlers(win, osuOauthServer);
+	setupIpcHandlers(windowManager.win, osuOauthServer, allWindows);
+
+	windowManager.win.on('closed', () => {
+		windowManager.win = null;
+
+		allWindows.splice(allWindows.indexOf(windowManager), 1);
+	});
 }
 
 app.on('window-all-closed', () => {
@@ -47,7 +55,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-	if (!windowManager.win) {
-		windowManager.createWindow();
+	if (allWindows.length == 0) {
+		createWindow();
 	}
 });

@@ -45,10 +45,6 @@ export class WindowManager {
 			this.win.webContents.openDevTools();
 		}
 
-		this.win.on('closed', () => {
-			this.win = null;
-		});
-
 		return this.win;
 	}
 }

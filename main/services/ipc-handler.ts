@@ -4,8 +4,9 @@ import * as path from "path";
 import { OauthServer } from "../oauth/oauth-server";
 import { registerFileHandlers } from "../handlers/file-handlers";
 import { registerUiHandlers } from "../handlers/ui-handlers";
+import { WindowManager } from "./window-manager";
 
-export function setupIpcHandlers(win: BrowserWindow, osuOauthServer: OauthServer) {
+export function setupIpcHandlers(win: BrowserWindow, osuOauthServer: OauthServer, allWindows: WindowManager[]) {
 	ipcMain.handle(IPC_CHANNELS.GET_APP_DATA_PATH, () => app.getPath('userData'));
 	ipcMain.handle(IPC_CHANNELS.JOIN_PATH, (event, options) => path.join(...options));
 
