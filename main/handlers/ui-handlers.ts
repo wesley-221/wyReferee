@@ -1,9 +1,9 @@
 import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
 import { IPC_CHANNELS } from "../ipc-channels";
 
-import fs from "fs";
-import path from "path";
-import archiver from "archiver";
+import * as fs from "fs";
+import * as path from "path";
+import * as archiver from "archiver";
 
 export function registerUiHandlers(win: BrowserWindow) {
 	ipcMain.handle(IPC_CHANNELS.SHOW_SAVE_DIALOG, async (event, options) => dialog.showSaveDialog(win, options));
