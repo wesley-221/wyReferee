@@ -30,7 +30,7 @@ export class LobbyStoreService {
 		const newLobbies = { ...current, [lobby.getFileName()]: lobby };
 		this.lobbies$.next(newLobbies);
 
-		const filePath = await this.storage.joinPath(this.storage.lobbyPath, `${lobby.getFileName()}.json`);
+		const filePath = await this.storage.joinPath(this.storage.lobbyPath, lobby.getRawFileName());
 		this.storage.writeJSON(filePath, lobby);
 	}
 
@@ -46,7 +46,7 @@ export class LobbyStoreService {
 		const { [lobby.getFileName()]: _, ...newLobbies } = current;
 		this.lobbies$.next(newLobbies);
 
-		const filePath = await this.storage.joinPath(this.storage.lobbyPath, `${lobby.getFileName()}.json`);
+		const filePath = await this.storage.joinPath(this.storage.lobbyPath, lobby.getRawFileName());
 		this.storage.deleteFile(filePath);
 	}
 
@@ -72,6 +72,8 @@ export class LobbyStoreService {
 
 				if (lobby) {
 					const lobbyObject = Lobby.makeTrueCopy(lobby);
+					lobbyObject.rawFileName = file;
+
 					lobbies[lobbyObject.getFileName()] = lobbyObject;
 				}
 			}
