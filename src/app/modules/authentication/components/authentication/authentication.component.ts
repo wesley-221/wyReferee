@@ -136,6 +136,8 @@ export class AuthenticationComponent implements OnInit {
 	 * Save the api key with the entered value
 	 */
 	saveApiKey() {
+		this.apiKey = this.apiKey.trim();
+
 		this.apiKeyValidation.validate(this.apiKey).subscribe({
 			next: () => {
 				this.ircAuthenticationStore.set('apiKey', this.apiKey);
