@@ -30,7 +30,7 @@ export class LobbyStoreService {
 		const newLobbies = { ...current, [lobby.getFileName()]: lobby };
 		this.lobbies$.next(newLobbies);
 
-		const filePath = await this.storage.joinPath(this.storage.lobbyPath, lobby.getRawFileName());
+		const filePath = await this.storage.joinPath(this.storage.lobbyPath, lobby.getRawFileName() ?? lobby.getFileName() + '.json');
 		this.storage.writeJSON(filePath, lobby);
 	}
 
