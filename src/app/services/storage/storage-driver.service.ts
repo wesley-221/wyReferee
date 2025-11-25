@@ -26,7 +26,7 @@ export class StorageDriverService {
 	 * @param data the data to write to the file
 	 */
 	async writeJSON(filePath: string, data: any): Promise<void> {
-		await window.electronApi.writeFile(filePath, data);
+		await window.electronApi.fs.writeFile(filePath, data);
 	}
 
 	/**
@@ -36,7 +36,7 @@ export class StorageDriverService {
 	 * @param defaultValue the default value to return if the file does not exist or cannot be read
 	 */
 	async readJSON<T>(filePath: string, defaultValue?: any): Promise<T> {
-		const content = await window.electronApi.readFile(filePath, defaultValue);
+		const content = await window.electronApi.fs.readFile(filePath, defaultValue);
 		return content as T;
 	}
 
@@ -46,7 +46,7 @@ export class StorageDriverService {
 	 * @param filePath the path to the file to delete
 	 */
 	async deleteFile(filePath: string) {
-		window.electronApi.deleteFile(filePath);
+		window.electronApi.fs.deleteFile(filePath);
 	}
 
 	/**
@@ -55,7 +55,7 @@ export class StorageDriverService {
 	 * @param filePath the path to directory to list files from
 	 */
 	async listFiles(filePath: string) {
-		return await window.electronApi.listFiles(filePath);
+		return await window.electronApi.fs.listFiles(filePath);
 	}
 
 	/**
@@ -64,7 +64,7 @@ export class StorageDriverService {
 	 * @param paths the paths to join
 	 */
 	public async joinPath(...paths: string[]): Promise<string> {
-		return await window.electronApi.joinPath([...paths]);
+		return await window.electronApi.fs.joinPath([...paths]);
 	}
 
 	/**
@@ -74,7 +74,7 @@ export class StorageDriverService {
 	public async init(): Promise<void> {
 		if (this.initialized) return;
 
-		this.appDataPath = await window.electronApi.getAppDataPath();
+		this.appDataPath = await window.electronApi.fs.getAppDataPath();
 
 		this.mainDataPath = await this.joinPath(this.appDataPath, 'data');
 		this.lobbyPath = await this.joinPath(this.mainDataPath, 'lobbies');
@@ -105,6 +105,6 @@ export class StorageDriverService {
 	 * @param dir the directory to create if it doesn't exist
 	 */
 	private async createDirectoryIfNotExists(directoryPath: string) {
-		window.electronApi.createDirectoryIfNotExists(directoryPath);
+		window.electronApi.fs.createDirectoryIfNotExists(directoryPath);
 	}
 }
