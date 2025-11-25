@@ -16,14 +16,19 @@ export interface ElectronApi {
 	startExpressServer(oauthUrl: string): Promise<void>;
 	onOsuOauthCode(callback: (code: string) => void): void;
 	openLink(url: string): void;
+
+	autoUpdater: ElectronApiAutoUpdater;
+	irc: ElectronApiIrc;
+}
+
+export interface ElectronApiAutoUpdater {
 	checkForUpdatesAndNotify(): void;
 	updateAvailable(callback: () => void): void;
 	updateDownloaded(callback: () => void): void;
 	onUpdateError(callback: (error: string) => void): void;
 	updateDownloadProgress(callback: (progress: ProgressInfo) => void): void;
 	restartAppAfterUpdateDownload(): void;
-	irc: ElectronApiIrc;
-}
+};
 
 export interface ElectronApiIrc {
 	createIrcChannel(channelName: string, ircChannel: IrcChannel): Promise<void>;

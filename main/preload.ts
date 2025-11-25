@@ -17,6 +17,9 @@ import { IPC_CHANNELS } from './ipc-channels';
 	startExpressServer: (oauthUrl: string) => ipcRenderer.invoke(IPC_CHANNELS.START_EXPRESS_SERVER, oauthUrl),
 	onOsuOauthCode: (callback: (code: string) => void) => ipcRenderer.once(IPC_CHANNELS.ON_OSU_OAUTH_CODE, (event: any, code: string) => callback(code)),
 	openLink: (url: string) => ipcRenderer.invoke(IPC_CHANNELS.OPEN_LINK, url),
+};
+
+(window as any).electronApi.autoUpdater = {
 	checkForUpdatesAndNotify: () => ipcRenderer.invoke(IPC_CHANNELS.CHECK_FOR_UPDATES_AND_NOTIFY),
 	updateAvailable: (callback: () => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_AVAILABLE, () => callback()),
 	updateDownloaded: (callback: () => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_DOWNLOADED, () => callback()),

@@ -18,29 +18,29 @@ export class UpdaterComponent implements OnInit {
 			return;
 		}
 
-		window.electronApi.checkForUpdatesAndNotify();
+		window.electronApi.autoUpdater.checkForUpdatesAndNotify();
 
-		window.electronApi.updateAvailable(() => {
+		window.electronApi.autoUpdater.updateAvailable(() => {
 			this.updateWasFound = true;
 			this.downloadPercentage = 0;
 
 			this.ref.detectChanges();
 		});
 
-		window.electronApi.updateDownloaded(() => {
+		window.electronApi.autoUpdater.updateDownloaded(() => {
 			this.ref.detectChanges();
 
 			setTimeout(() => {
-				window.electronApi.restartAppAfterUpdateDownload();
+				window.electronApi.autoUpdater.restartAppAfterUpdateDownload();
 			}, 10000);
 		});
 
-		window.electronApi.updateDownloadProgress((progress: ProgressInfo) => {
+		window.electronApi.autoUpdater.updateDownloadProgress((progress: ProgressInfo) => {
 			this.downloadPercentage = progress.percent;
 			this.ref.detectChanges();
 		});
 
-		window.electronApi.onUpdateError((error: string) => {
+		window.electronApi.autoUpdater.onUpdateError((error: string) => {
 			console.error(`Update error: ${error}`);
 		});
 	}
