@@ -19,7 +19,6 @@ export class WindowManager {
 				nodeIntegration: true,
 				contextIsolation: false,
 				webSecurity: false,
-				enableRemoteModule: true,
 				preload: path.join(__dirname, '../preload.js')
 			},
 			icon: path.join(__dirname, '../../angular/assets/images/icon.png')
