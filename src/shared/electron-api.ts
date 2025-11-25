@@ -22,6 +22,10 @@ export interface ElectronApi {
 	onUpdateError(callback: (error: string) => void): void;
 	updateDownloadProgress(callback: (progress: ProgressInfo) => void): void;
 	restartAppAfterUpdateDownload(): void;
+	irc: ElectronApiIrc;
+}
+
+export interface ElectronApiIrc {
 	createIrcChannel(channelName: string, ircChannel: IrcChannel): Promise<void>;
 	deleteIrcChannel(channelName: string): Promise<void>;
 	getAllIrcChannels(): Promise<any>;
@@ -32,4 +36,4 @@ export interface ElectronApi {
 	changeLastActiveChannel(channelName: string, active: boolean): Promise<void>;
 	addIrcMessage(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoMessages: boolean): Promise<void>;
 	addOutgoingIrcMessage(channelName: string, message: IrcMessage, plainMessage: string): Promise<void>;
-}
+};

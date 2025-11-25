@@ -773,7 +773,7 @@ export class IrcComponent implements OnInit {
 	 */
 	playSound(channel: IrcChannel, status: boolean) {
 		channel.playSoundOnMessage = status;
-		window.electronApi.setIrcPlaySoundOnMessage(channel.name, status);
+		window.electronApi.irc.setIrcPlaySoundOnMessage(channel.name, status);
 
 		this.toastService.addToast(`${channel.name} will ${status == false ? 'no longer beep on message' : 'now beep on message'}.`);
 	}
@@ -788,7 +788,7 @@ export class IrcComponent implements OnInit {
 
 		// Stopped editing the label
 		if (channel.editingLabel == false) {
-			window.electronApi.setIrcChannelLabel(channel.name, channel.label);
+			window.electronApi.irc.setIrcChannelLabel(channel.name, channel.label);
 		}
 		else {
 			// Store old label when starting to edit so we can revert if canceled
@@ -808,7 +808,7 @@ export class IrcComponent implements OnInit {
 		if (channel.oldLabel !== undefined && channel.oldLabel !== null) {
 			channel.label = channel.oldLabel;
 
-			window.electronApi.setIrcChannelLabel(channel.name, channel.label);
+			window.electronApi.irc.setIrcChannelLabel(channel.name, channel.label);
 		}
 	}
 

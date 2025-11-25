@@ -77,7 +77,7 @@ export class IrcService {
 				}
 			});
 
-		window.electronApi.getAllIrcChannels().then(connectedChannels => {
+		window.electronApi.irc.getAllIrcChannels().then(connectedChannels => {
 			// Loop through all the channels
 			for (const channel in connectedChannels) {
 				const nChannel = IrcChannel.makeTrueCopy(connectedChannels[channel]);
@@ -229,7 +229,7 @@ export class IrcService {
 				this.isAuthenticated$.next(true);
 
 				// Initialize multiplayer channels after restart
-				window.electronApi.getAllIrcChannels().then((allJoinedChannels) => {
+				window.electronApi.irc.getAllIrcChannels().then((allJoinedChannels) => {
 					for (const ircChannel in allJoinedChannels) {
 						if (allJoinedChannels[ircChannel].isPrivateChannel == false && allJoinedChannels[ircChannel].isPublicChannel == false) {
 							const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
@@ -499,7 +499,7 @@ export class IrcService {
 				playSoundOnMessage: false
 			});
 
-			window.electronApi.createIrcChannel(channelName, newChannel);
+			window.electronApi.irc.createIrcChannel(channelName, newChannel);
 			this.allChannels.push(newChannel);
 
 			this.toastService.addToast(`Joined channel "${channelName}".`);
@@ -521,7 +521,7 @@ export class IrcService {
 				playSoundOnMessage: false
 			});
 
-			window.electronApi.createIrcChannel(channelName, newChannel);
+			window.electronApi.irc.createIrcChannel(channelName, newChannel);
 			this.allChannels.push(newChannel);
 
 			const channel = this.client.getChannel(channelName) as BanchoMultiplayerChannel;
@@ -546,7 +546,7 @@ export class IrcService {
 					playSoundOnMessage: false
 				});
 
-				window.electronApi.createIrcChannel(channelName, newChannel);
+				window.electronApi.irc.createIrcChannel(channelName, newChannel);
 				this.allChannels.push(newChannel);
 
 				this.toastService.addToast(`Opened private message channel with "${channelName}".`);
@@ -582,7 +582,7 @@ export class IrcService {
 					this.client.getChannel(channelName).leave();
 				}
 
-				window.electronApi.deleteIrcChannel(channelName);
+				window.electronApi.irc.deleteIrcChannel(channelName);
 				this.toastService.addToast(`Successfully parted "${channelName}".`);
 
 				break;
@@ -635,7 +635,7 @@ export class IrcService {
 	 * @param active the status
 	 */
 	changeLastActiveChannel(channel: IrcChannel, active: boolean) {
-		window.electronApi.changeLastActiveChannel(channel.name, active);
+		window.electronApi.irc.changeLastActiveChannel(channel.name, active);
 	}
 
 	/**
@@ -645,7 +645,7 @@ export class IrcService {
 	 * @param active the status
 	 */
 	changeActiveChannel(channel: IrcChannel, active: boolean) {
-		window.electronApi.changeActiveChannel(channel.name, active);
+		window.electronApi.irc.changeActiveChannel(channel.name, active);
 	}
 
 	/**
@@ -660,7 +660,7 @@ export class IrcService {
 			return;
 		}
 
-		window.electronApi.addOutgoingIrcMessage(channelName, message, plainMessage);
+		window.electronApi.irc.addOutgoingIrcMessage(channelName, message, plainMessage);
 	}
 
 	/**
@@ -676,7 +676,7 @@ export class IrcService {
 			return;
 		}
 
-		window.electronApi.addIrcMessage(channelName, message, plainMessage, saveInBanchoMessages);
+		window.electronApi.irc.addIrcMessage(channelName, message, plainMessage, saveInBanchoMessages);
 	}
 
 	/**

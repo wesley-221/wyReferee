@@ -22,7 +22,10 @@ import { IPC_CHANNELS } from './ipc-channels';
 	updateDownloaded: (callback: () => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_DOWNLOADED, () => callback()),
 	onUpdateError: (callback: (error: any) => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_ERROR, (error: any) => callback(error)),
 	updateDownloadProgress: (callback: (progress: any) => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_DOWNLOAD_PROGRESS, (event: any, progress: ProgressInfo) => callback(progress)),
-	restartAppAfterUpdateDownload: () => ipcRenderer.invoke(IPC_CHANNELS.RESTART_APP_AFTER_UPDATE_DOWNLOAD),
+	restartAppAfterUpdateDownload: () => ipcRenderer.invoke(IPC_CHANNELS.RESTART_APP_AFTER_UPDATE_DOWNLOAD)
+};
+
+(window as any).electronApi.irc = {
 	createIrcChannel: (channelName: string, ircChannel: any) => ipcRenderer.invoke(IPC_CHANNELS.CREATE_IRC_CHANNEL, channelName, ircChannel),
 	deleteIrcChannel: (channelName: string) => ipcRenderer.invoke(IPC_CHANNELS.DELETE_IRC_CHANNEL, channelName),
 	getAllIrcChannels: () => ipcRenderer.invoke(IPC_CHANNELS.GET_ALL_IRC_CHANNELS),
