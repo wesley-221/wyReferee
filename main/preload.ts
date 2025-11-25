@@ -44,5 +44,14 @@ import { IPC_CHANNELS } from './ipc-channels';
 		changeLastActiveChannel: (channelName: string, active: boolean) => ipcRenderer.invoke(IPC_CHANNELS.CHANGE_LAST_ACTIVE_CHANNEL, channelName, active),
 		addIrcMessage: (channelName: string, message: any, plainMessage: any, saveInBanchoMessages: boolean) => ipcRenderer.invoke(IPC_CHANNELS.ADD_IRC_MESSAGE, channelName, message, plainMessage, saveInBanchoMessages),
 		addOutgoingIrcMessage: (channelName: string, message: any, plainMessage: any) => ipcRenderer.invoke(IPC_CHANNELS.ADD_OUTGOING_IRC_MESSAGE, channelName, message, plainMessage)
+	},
+	osuAuthentication: {
+		getIrcCredentials: () => ipcRenderer.invoke(IPC_CHANNELS.GET_IRC_CREDENTIALS),
+		getIrcUsername: () => ipcRenderer.invoke(IPC_CHANNELS.GET_IRC_USERNAME),
+		getApiKey: () => ipcRenderer.invoke(IPC_CHANNELS.GET_API_KEY),
+		setApiKey: (apiKey: string) => ipcRenderer.invoke(IPC_CHANNELS.SET_API_KEY, apiKey),
+		setIrcLogin: (username: string, password: string) => ipcRenderer.invoke(IPC_CHANNELS.SET_IRC_LOGIN, username, password),
+		clearIrcLogin: () => ipcRenderer.invoke(IPC_CHANNELS.CLEAR_IRC_LOGIN),
+		clearApiKey: () => ipcRenderer.invoke(IPC_CHANNELS.CLEAR_API_KEY)
 	}
 };

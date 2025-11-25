@@ -5,8 +5,6 @@ import { TournamentService } from './tournament.service';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 
 import TUTORIAL_TOURNAMENT from 'assets/tutorial-tournament-template.json';
-import { IrcAuthenticationStoreService } from './storage/irc-authentication-store.service';
-import { filter, take } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,7 +19,7 @@ export class TutorialService {
 
 	tutorialTournament: WyTournament;
 
-	constructor(private tournamentService: TournamentService, private ircAuthenticationStore: IrcAuthenticationStoreService) {
+	constructor(private tournamentService: TournamentService) {
 		this.currentTutorial = null;
 		this.currentStep = null;
 		this.currentStepIndex = 0;
@@ -29,20 +27,15 @@ export class TutorialService {
 
 		this.allTutorials = [];
 
-		this.ircAuthenticationStore.watchIrcStore()
-			.pipe(
-				filter((store) => store != null),
-				take(1)
-			)
-			.subscribe(() => {
-				this.allTutorials = [
-					...[
-						this.loginTutorial(),
-						this.importTournamentTutorial(),
-						this.createLobbyTutorial(),
-						//this.ircTutorial()
-					]];
-			});
+		window.electronApi.osuAuthentication.getApiKey().then(apiKey => {
+			this.allTutorials = [
+				...[
+					this.loginTutorial(apiKey),
+					this.importTournamentTutorial(),
+					this.createLobbyTutorial(),
+					//this.ircTutorial()
+				]];
+		});
 
 		this.tutorialTournament = WyTournament.makeTrueCopy(TUTORIAL_TOURNAMENT as any);
 	}
@@ -131,7 +124,7 @@ export class TutorialService {
 	/**
 	 * The tutorial for login in
 	 */
-	private loginTutorial(): TutorialCategory {
+	private loginTutorial(apiKey: string): TutorialCategory {
 		const loginTutorial = new TutorialCategory({
 			name: 'Login',
 			description: 'This tutorial will help you login to the client.'
@@ -142,7 +135,7 @@ export class TutorialService {
 			'Now that you have an api key, you are gonna have to copy this key and paste it in the highlighted field and click on Save.\n\r' +
 			'If your api key was correct, the highlighted area should dissapear and you can continue to the next step.';
 
-		if (this.ircAuthenticationStore.get('apiKey') != undefined) {
+		if (apiKey != undefined && apiKey != null) {
 			apiKeyStepContent = '**You have already setup the api key. You can continue to the next step.**\n\n---\n\r' + apiKeyStepContent;
 		}
 

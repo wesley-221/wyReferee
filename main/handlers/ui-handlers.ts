@@ -12,7 +12,7 @@ export function registerUiHandlers(win: BrowserWindow) {
 
 	ipcMain.handle(IPC_CHANNELS.SAVE_SETTINGS_ZIP, async (event, filePath) => {
 		const settingsDir = path.join(app.getPath('userData'), 'data');
-		const credentialsFilePath = "irc-authentication-store.json";
+		const credentialsFilePath = "osu-credentials.bin";
 
 		return new Promise<void>((resolve, reject) => {
 			const output = fs.createWriteStream(filePath);

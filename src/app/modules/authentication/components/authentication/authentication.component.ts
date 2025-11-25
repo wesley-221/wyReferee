@@ -5,7 +5,6 @@ import { AuthenticateService } from 'app/services/authenticate.service';
 import { ElectronService } from 'app/services/electron.service';
 import { IrcService } from 'app/services/irc.service';
 import { ApiKeyValidation } from 'app/services/osu-api/api-key-validation.service';
-import { IrcAuthenticationStoreService } from 'app/services/storage/irc-authentication-store.service';
 import { ToastService } from 'app/services/toast.service';
 
 @Component({
@@ -32,8 +31,7 @@ export class AuthenticationComponent implements OnInit {
 		public authService: AuthenticateService,
 		public ircService: IrcService,
 		public electronService: ElectronService,
-		private ref: ChangeDetectorRef,
-		private ircAuthenticationStore: IrcAuthenticationStoreService
+		private ref: ChangeDetectorRef
 	) {
 		this.apiKeyIsValid = false;
 		this.isAuthenticating = false;
@@ -50,13 +48,11 @@ export class AuthenticationComponent implements OnInit {
 			])
 		});
 
-		ircAuthenticationStore.watchIrcStore().subscribe(store => {
-			if (store) {
-				this.apiKey = store.apiKey;
+		window.electronApi.osuAuthentication.getIrcCredentials().then(credentials => {
+			this.apiKey = credentials.apiKey;
 
-				if (this.apiKey && this.apiKey.length > 0) {
-					this.apiKeyIsValid = true;
-				}
+			if (this.apiKey && this.apiKey.length > 0) {
+				this.apiKeyIsValid = true;
 			}
 		});
 
@@ -140,7 +136,7 @@ export class AuthenticationComponent implements OnInit {
 
 		this.apiKeyValidation.validate(this.apiKey).subscribe({
 			next: () => {
-				this.ircAuthenticationStore.set('apiKey', this.apiKey);
+				window.electronApi.osuAuthentication.setApiKey(this.apiKey);
 
 				this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
 

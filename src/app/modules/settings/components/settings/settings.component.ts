@@ -8,7 +8,6 @@ import { AuthenticateService } from 'app/services/authenticate.service';
 import { IrcService } from 'app/services/irc.service';
 import { GenericService } from 'app/services/generic.service';
 import { OptionsMenu } from '../../models/options-menu';
-import { IrcAuthenticationStoreService } from 'app/services/storage/irc-authentication-store.service';
 import { CacheStoreService } from 'app/services/storage/cache-store.service';
 
 @Component({
@@ -35,7 +34,6 @@ export class SettingsComponent implements OnInit {
 
 	constructor(
 		public electronService: ElectronService,
-		private ircAuthenticationStore: IrcAuthenticationStoreService,
 		private toastService: ToastService,
 		private dialog: MatDialog,
 		public authService: AuthenticateService,
@@ -64,7 +62,7 @@ export class SettingsComponent implements OnInit {
 	 * Remove the pai key
 	 */
 	removeApiKey() {
-		this.ircAuthenticationStore.remove('apiKey');
+		window.electronApi.osuAuthentication.clearApiKey();
 		this.toastService.addToast('Successfully removed your api key.');
 	}
 

@@ -27,7 +27,14 @@ export const IPC_CHANNELS = {
 	CHANGE_ACTIVE_CHANNEL: 'changeActiveChannel',
 	CHANGE_LAST_ACTIVE_CHANNEL: 'changeLastActiveChannel',
 	ADD_IRC_MESSAGE: 'addIrcMessage',
-	ADD_OUTGOING_IRC_MESSAGE: 'addOutgoingIrcMessage'
+	ADD_OUTGOING_IRC_MESSAGE: 'addOutgoingIrcMessage',
+	GET_IRC_CREDENTIALS: 'getIrcCredentials',
+	GET_IRC_USERNAME: 'getIrcUsername',
+	GET_API_KEY: 'getApiKey',
+	SET_API_KEY: 'setApiKey',
+	SET_IRC_LOGIN: 'setIrcLogin',
+	CLEAR_IRC_LOGIN: 'clearIrcLogin',
+	CLEAR_API_KEY: 'clearApiKey'
 } as const;
 
 export type IpcChannel = typeof IPC_CHANNELS[keyof typeof IPC_CHANNELS];

@@ -1,17 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { Beatmap } from '../../models/osu-models/beatmap';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { OsuApi, OsuApiEndpoints } from '../../models/osu-models/osu';
-import { IrcAuthenticationStoreService } from '../storage/irc-authentication-store.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 
 export class GetBeatmap extends OsuApi {
-	constructor(private httpClient: HttpClient, private ircAuthenticationStore: IrcAuthenticationStoreService) {
+	constructor(private httpClient: HttpClient) {
 		super(OsuApiEndpoints.GetBeatmaps);
 	}
 
@@ -21,12 +20,13 @@ export class GetBeatmap extends OsuApi {
 	 * @param beatmapsetId the beatmapsetId to grab the data from
 	 */
 	public getByBeatmapId(beatmapsetId: number): Observable<Beatmap> {
-		const apiKey = this.ircAuthenticationStore.get('apiKey');
-
-		return this.httpClient.get<Beatmap>(`${this.url}${this.endpoint}?k=${apiKey}&b=${beatmapsetId}`)
-			.pipe(
-				map((data: any) => this.serializeFromJson(data))
-			);
+		return from(window.electronApi.osuAuthentication.getApiKey()).pipe(
+			switchMap(apiKey =>
+				this.httpClient
+					.get<Beatmap>(`${this.url}${this.endpoint}?k=${apiKey}&b=${beatmapsetId}`)
+					.pipe(map(data => this.serializeFromJson(data)))
+			)
+		);
 	}
 
 	private serializeFromJson(json: any): Beatmap {

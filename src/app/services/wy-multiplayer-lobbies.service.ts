@@ -27,7 +27,6 @@ import { WebhookService } from './webhook.service';
 import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { LobbyStoreService } from './storage/lobby-store.service';
-import { IrcAuthenticationStoreService } from './storage/irc-authentication-store.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -47,8 +46,7 @@ export class WyMultiplayerLobbiesService {
 		private webhookService: WebhookService,
 		private http: HttpClient,
 		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
-		private lobbyStoreService: LobbyStoreService,
-		private ircAuthenticationStoreService: IrcAuthenticationStoreService) {
+		private lobbyStoreService: LobbyStoreService) {
 		this.allLobbies = [];
 		this.availableLobbyId = 0;
 
@@ -346,17 +344,9 @@ export class WyMultiplayerLobbiesService {
 			}
 
 			if (sendWebhook != null && sendWebhook == true) {
-				this.ircAuthenticationStoreService
-					.watchIrcStore()
-					.pipe(
-						filter(ircStore => ircStore != null),
-						take(1)
-					)
-					.subscribe(ircStore => {
-						if (ircStore) {
-							this.webhookService.sendMatchFinishedResult(multiplayerLobby, ircStore.ircUsername);
-						}
-					});
+				window.electronApi.osuAuthentication.getIrcUsername().then(ircUsername => {
+					this.webhookService.sendMatchFinishedResult(multiplayerLobby, ircUsername);
+				});
 			}
 		});
 	}

@@ -13,7 +13,6 @@ import { Lobby } from 'app/models/lobby';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 import { ElectronService } from './electron.service';
 import { GenericService } from './generic.service';
-import { IrcAuthenticationStoreService } from './storage/irc-authentication-store.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -55,8 +54,7 @@ export class IrcService {
 		private multiplayerLobbiesService: WyMultiplayerLobbiesService,
 		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
 		private electronService: ElectronService,
-		private genericService: GenericService,
-		private ircAuthenticationStore: IrcAuthenticationStoreService) {
+		private genericService: GenericService) {
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
@@ -65,17 +63,11 @@ export class IrcService {
 		this.isAuthenticated$ = new BehaviorSubject<boolean>(false);
 		this.setChannelUnreadMessages$ = new BehaviorSubject<IrcChannel>(null);
 
-		const initialConnect = ircAuthenticationStore
-			.watchIrcStore()
-			.subscribe(store => {
-				if (store) {
-					if (store.ircUsername && store.ircPassword) {
-						this.connect(store.ircUsername, store.ircPassword, store.apiKey);
-					}
-
-					initialConnect.unsubscribe();
-				}
-			});
+		window.electronApi.osuAuthentication.getIrcCredentials().then(credentials => {
+			if (credentials.username && credentials.password) {
+				this.connect(credentials.username, credentials.password, credentials.apiKey);
+			}
+		});
 
 		window.electronApi.irc.getAllIrcChannels().then(connectedChannels => {
 			// Loop through all the channels
@@ -220,8 +212,7 @@ export class IrcService {
 				this.authenticatedUser = username;
 
 				// Save the credentials
-				this.ircAuthenticationStore.set('ircUsername', username);
-				this.ircAuthenticationStore.set('ircPassword', password);
+				window.electronApi.osuAuthentication.setIrcLogin(username, password);
 
 				this.isConnecting$.next(false);
 				this.ircConnectionError = null;
@@ -309,7 +300,7 @@ export class IrcService {
 			this.authenticatedUser = 'none';
 
 			// Delete the credentials
-			this.ircAuthenticationStore.remove(['ircUsername', 'ircPassword']);
+			window.electronApi.osuAuthentication.clearIrcLogin();
 
 			this.isDisconnecting$.next(false);
 

@@ -9,6 +9,7 @@ export interface ElectronApi {
 	server: ElectronApiServer;
 	autoUpdater: ElectronApiAutoUpdater;
 	irc: ElectronApiIrc;
+	osuAuthentication: ElectronApiOsuAuthentication;
 }
 
 interface ElectronApiFs {
@@ -57,3 +58,13 @@ interface ElectronApiIrc {
 	addIrcMessage(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoMessages: boolean): Promise<void>;
 	addOutgoingIrcMessage(channelName: string, message: IrcMessage, plainMessage: string): Promise<void>;
 };
+
+interface ElectronApiOsuAuthentication {
+	getIrcCredentials(): Promise<{ username: string, password: string, apiKey: string }>;
+	getIrcUsername(): Promise<string>;
+	getApiKey(): Promise<string>;
+	setApiKey(apiKey: string): Promise<void>;
+	setIrcLogin(username: string, password: string): Promise<void>;
+	clearIrcLogin(): Promise<void>;
+	clearApiKey(): Promise<void>;
+}
