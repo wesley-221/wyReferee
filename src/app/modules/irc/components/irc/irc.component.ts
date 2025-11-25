@@ -476,7 +476,7 @@ export class IrcComponent implements OnInit {
 	dropChannel(event: CdkDragDrop<IrcChannel[]>) {
 		moveItemInArray(this.channels, event.previousIndex, event.currentIndex);
 
-		this.ircService.rearrangeChannels(this.channels);
+		console.warn('Rearring IRC channels is currently not persisted. Will be added in a future update.');
 	}
 
 	/**

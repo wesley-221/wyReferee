@@ -1,3 +1,4 @@
+import { IrcChannel } from "app/models/irc/irc-channel";
 import { IrcMessage } from "app/models/irc/irc-message";
 import { ProgressInfo } from "electron-updater";
 
@@ -21,15 +22,14 @@ export interface ElectronApi {
 	onUpdateError(callback: (error: string) => void): void;
 	updateDownloadProgress(callback: (progress: ProgressInfo) => void): void;
 	restartAppAfterUpdateDownload(): void;
+	createIrcChannel(channelName: string, ircChannel: IrcChannel): Promise<void>;
+	deleteIrcChannel(channelName: string): Promise<void>;
 	getAllIrcChannels(): Promise<any>;
 	getIrcChannel(channelName: string): Promise<any>;
-	setAllIrcChannels(channels: any): Promise<void>;
-	setIrcChannel(channelName: string, channel: any): Promise<void>;
-	deleteIrcChannel(channelName: string): Promise<void>;
+	setIrcChannelLabel(channelName: string, label: string): Promise<void>;
+	setIrcPlaySoundOnMessage(channelName: string, playSound: boolean): Promise<void>;
+	changeActiveChannel(channelName: string, active: boolean): Promise<void>;
+	changeLastActiveChannel(channelName: string, active: boolean): Promise<void>;
 	addIrcMessage(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoMessages: boolean): Promise<void>;
 	addOutgoingIrcMessage(channelName: string, message: IrcMessage, plainMessage: string): Promise<void>;
-	changeLastActiveChannel(channelName: string, active: boolean): Promise<void>;
-	changeActiveChannel(channelName: string, active: boolean): Promise<void>;
-	setIrcPlaySoundOnMessage(channelName: string, playSound: boolean): Promise<void>;
-	setIrcChannelLabel(channelName: string, label: string): Promise<void>;
 }

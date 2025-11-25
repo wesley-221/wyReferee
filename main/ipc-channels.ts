@@ -18,17 +18,16 @@ export const IPC_CHANNELS = {
 	UPDATE_ERROR: 'error',
 	RESTART_APP_AFTER_UPDATE_DOWNLOAD: 'restartAppAfterUpdateDownload',
 	UPDATE_DOWNLOAD_PROGRESS: 'download-progress',
+	CREATE_IRC_CHANNEL: 'createIrcChannel',
+	DELETE_IRC_CHANNEL: 'deleteIrcChannel',
 	GET_ALL_IRC_CHANNELS: 'getAllIrcChannels',
 	GET_IRC_CHANNEL: 'getIrcChannel',
-	SET_ALL_IRC_CHANNELS: 'setAllIrcChannels',
-	SET_IRC_CHANNEL: 'setIrcChannel',
-	DELETE_IRC_CHANNEL: 'deleteIrcChannel',
-	ADD_OUTGOING_IRC_MESSAGE: 'addOutgoingIrcMessage',
-	ADD_IRC_MESSAGE: 'addIrcMessage',
-	CHANGE_LAST_ACTIVE_CHANNEL: 'changeLastActiveChannel',
-	CHANGE_ACTIVE_CHANNEL: 'changeActiveChannel',
+	SET_IRC_CHANNEL_LABEL: 'setIrcChannelLabel',
 	SET_IRC_PLAY_SOUND_ON_MESSAGE: 'setIrcPlaySoundOnMessage',
-	SET_IRC_CHANNEL_LABEL: 'setIrcChannelLabel'
+	CHANGE_ACTIVE_CHANNEL: 'changeActiveChannel',
+	CHANGE_LAST_ACTIVE_CHANNEL: 'changeLastActiveChannel',
+	ADD_IRC_MESSAGE: 'addIrcMessage',
+	ADD_OUTGOING_IRC_MESSAGE: 'addOutgoingIrcMessage'
 } as const;
 
 export type IpcChannel = typeof IPC_CHANNELS[keyof typeof IPC_CHANNELS];

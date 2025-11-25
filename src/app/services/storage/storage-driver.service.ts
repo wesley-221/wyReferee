@@ -77,7 +77,6 @@ export class StorageDriverService {
 		this.appDataPath = await window.electronApi.getAppDataPath();
 
 		this.mainDataPath = await this.joinPath(this.appDataPath, 'data');
-		this.chatLogPath = await this.joinPath(this.mainDataPath, 'chatlogs');
 		this.lobbyPath = await this.joinPath(this.mainDataPath, 'lobbies');
 		this.tournamentPath = await this.joinPath(this.mainDataPath, 'tournaments');
 		this.cachePath = await this.joinPath(this.mainDataPath, 'cache');
@@ -95,7 +94,6 @@ export class StorageDriverService {
 	 * Creates all required directories for the application
 	 */
 	private async createRequiredDirectories() {
-		await this.createDirectoryIfNotExists(this.chatLogPath);
 		await this.createDirectoryIfNotExists(this.lobbyPath);
 		await this.createDirectoryIfNotExists(this.tournamentPath);
 		await this.createDirectoryIfNotExists(this.cachePath);

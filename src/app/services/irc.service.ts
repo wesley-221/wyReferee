@@ -499,7 +499,7 @@ export class IrcService {
 				playSoundOnMessage: false
 			});
 
-			window.electronApi.setIrcChannel(channelName, newChannel);
+			window.electronApi.createIrcChannel(channelName, newChannel);
 			this.allChannels.push(newChannel);
 
 			this.toastService.addToast(`Joined channel "${channelName}".`);
@@ -521,7 +521,7 @@ export class IrcService {
 				playSoundOnMessage: false
 			});
 
-			window.electronApi.setIrcChannel(channelName, newChannel);
+			window.electronApi.createIrcChannel(channelName, newChannel);
 			this.allChannels.push(newChannel);
 
 			const channel = this.client.getChannel(channelName) as BanchoMultiplayerChannel;
@@ -546,7 +546,7 @@ export class IrcService {
 					playSoundOnMessage: false
 				});
 
-				window.electronApi.setIrcChannel(channelName, newChannel);
+				window.electronApi.createIrcChannel(channelName, newChannel);
 				this.allChannels.push(newChannel);
 
 				this.toastService.addToast(`Opened private message channel with "${channelName}".`);
@@ -625,7 +625,7 @@ export class IrcService {
 			});
 		}
 
-		window.electronApi.setAllIrcChannels(rearrangedChannels);
+		// window.electronApi.setAllIrcChannels(rearrangedChannels);
 	}
 
 	/**
