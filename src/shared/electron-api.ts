@@ -1,14 +1,12 @@
-import { IrcChannel } from "app/models/irc/irc-channel";
-import { IrcMessage } from "app/models/irc/irc-message";
 import { ProgressInfo } from "electron-updater";
+import { IrcChannel } from "../app/models/irc/irc-channel";
+import { IrcMessage } from "../app/models/irc/irc-message";
 
 export interface ElectronApi {
-	startExpressServer(oauthUrl: string): Promise<void>;
-	onOsuOauthCode(callback: (code: string) => void): void;
-
 	fs: ElectronApiFs;
 	dialog: ElectronApiDialog;
 	window: ElectronApiWindow;
+	server: ElectronApiServer;
 	autoUpdater: ElectronApiAutoUpdater;
 	irc: ElectronApiIrc;
 }
@@ -32,6 +30,11 @@ interface ElectronApiWindow {
 	flashWindow(): Promise<void>;
 	openLink(url: string): Promise<void>;
 }
+
+interface ElectronApiServer {
+	startExpressServer(oauthUrl: string): Promise<void>;
+	onOsuOauthCode(callback: (code: string) => void): void;
+};
 
 interface ElectronApiAutoUpdater {
 	checkForUpdatesAndNotify(): void;

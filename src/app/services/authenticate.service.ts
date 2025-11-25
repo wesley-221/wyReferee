@@ -86,9 +86,9 @@ export class AuthenticateService {
 	 * Start the express server and listen for events from the main process
 	 */
 	private startExpressServer(): void {
-		window.electronApi.startExpressServer(this.getOsuOauthUrl());
+		window.electronApi.server.startExpressServer(this.getOsuOauthUrl());
 
-		window.electronApi.onOsuOauthCode((code: string) => {
+		window.electronApi.server.onOsuOauthCode((code: string) => {
 			this.oauthResponse$.next(code);
 		});
 	}
