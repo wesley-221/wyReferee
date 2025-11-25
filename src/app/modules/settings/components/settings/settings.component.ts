@@ -72,11 +72,11 @@ export class SettingsComponent implements OnInit {
 	 * Export the config file
 	 */
 	exportConfigFile() {
-		window.electronApi.showSaveDialog({
+		window.electronApi.dialog.showSaveDialog({
 			title: 'Export wyReferee settings',
 			defaultPath: 'wyReferee-settings.zip'
 		}).then(file => {
-			window.electronApi.saveSettingsZip(file.filePath).then(() => {
+			window.electronApi.dialog.saveSettingsZip(file.filePath).then(() => {
 				this.toastService.addToast(`Successfully saved the config files to "${file.filePath}".`);
 			}).catch(err => {
 				this.toastService.addToast(`Something went wrong while trying to export the config files: ${err.message}.`, ToastType.Error);

@@ -73,7 +73,7 @@ export class SlashCommandService {
 			}
 		}
 
-		window.electronApi.showSaveDialog({
+		window.electronApi.dialog.showSaveDialog({
 			title: `Save the log of ${ircChannel.name}`,
 			defaultPath: `${ircChannel.name}.txt`
 		}).then(file => {
@@ -97,7 +97,7 @@ export class SlashCommandService {
 			irc: ircChannel
 		};
 
-		window.electronApi.showSaveDialog({
+		window.electronApi.dialog.showSaveDialog({
 			title: `Save the debug file`,
 			defaultPath: `debug_${multiplayerLobby.getLobbyNameSlug()}.json`
 		}).then(file => {

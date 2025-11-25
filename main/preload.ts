@@ -4,8 +4,6 @@ import { ipcRenderer } from 'electron';
 import { IPC_CHANNELS } from './ipc-channels';
 
 (window as any).electronApi = {
-	showSaveDialog: (options: Electron.SaveDialogOptions) => ipcRenderer.invoke(IPC_CHANNELS.SHOW_SAVE_DIALOG, options),
-	saveSettingsZip: (filePath: string) => ipcRenderer.invoke(IPC_CHANNELS.SAVE_SETTINGS_ZIP, filePath),
 	flashWindow: () => ipcRenderer.invoke(IPC_CHANNELS.FLASH_WINDOW),
 	startExpressServer: (oauthUrl: string) => ipcRenderer.invoke(IPC_CHANNELS.START_EXPRESS_SERVER, oauthUrl),
 	onOsuOauthCode: (callback: (code: string) => void) => ipcRenderer.once(IPC_CHANNELS.ON_OSU_OAUTH_CODE, (event: any, code: string) => callback(code)),
@@ -20,6 +18,11 @@ import { IPC_CHANNELS } from './ipc-channels';
 	deleteFile: (filePath: string) => ipcRenderer.invoke(IPC_CHANNELS.DELETE_FILE, filePath),
 	listFiles: (filePath: string) => ipcRenderer.invoke(IPC_CHANNELS.LIST_FILES, filePath),
 	createDirectoryIfNotExists: (directoryPath: string) => ipcRenderer.invoke(IPC_CHANNELS.CREATE_DIRECTORY_IF_NOT_EXISTS, directoryPath)
+};
+
+(window as any).electronApi.dialog = {
+	showSaveDialog: (options: Electron.SaveDialogOptions) => ipcRenderer.invoke(IPC_CHANNELS.SHOW_SAVE_DIALOG, options),
+	saveSettingsZip: (filePath: string) => ipcRenderer.invoke(IPC_CHANNELS.SAVE_SETTINGS_ZIP, filePath)
 };
 
 (window as any).electronApi.autoUpdater = {

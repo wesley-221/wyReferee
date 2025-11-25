@@ -3,19 +3,18 @@ import { IrcMessage } from "app/models/irc/irc-message";
 import { ProgressInfo } from "electron-updater";
 
 export interface ElectronApi {
-	showSaveDialog(options: Electron.SaveDialogOptions): Promise<Electron.SaveDialogReturnValue>;
-	saveSettingsZip(filePath: string): Promise<void>;
 	flashWindow(): void;
 	startExpressServer(oauthUrl: string): Promise<void>;
 	onOsuOauthCode(callback: (code: string) => void): void;
 	openLink(url: string): void;
 
 	fs: ElectronApiFs;
+	dialog: ElectronApiDialog;
 	autoUpdater: ElectronApiAutoUpdater;
 	irc: ElectronApiIrc;
 }
 
-export interface ElectronApiFs {
+interface ElectronApiFs {
 	getAppDataPath(): Promise<string>;
 	joinPath(paths: string[]): Promise<string>;
 	readFile(filePath: string, defaultValue?: any): Promise<any>;
@@ -25,7 +24,12 @@ export interface ElectronApiFs {
 	createDirectoryIfNotExists(directoryPath: string): Promise<void>;
 };
 
-export interface ElectronApiAutoUpdater {
+interface ElectronApiDialog {
+	showSaveDialog(options: Electron.SaveDialogOptions): Promise<Electron.SaveDialogReturnValue>;
+	saveSettingsZip(filePath: string): Promise<void>;
+}
+
+interface ElectronApiAutoUpdater {
 	checkForUpdatesAndNotify(): void;
 	updateAvailable(callback: () => void): void;
 	updateDownloaded(callback: () => void): void;
@@ -34,7 +38,7 @@ export interface ElectronApiAutoUpdater {
 	restartAppAfterUpdateDownload(): void;
 };
 
-export interface ElectronApiIrc {
+interface ElectronApiIrc {
 	createIrcChannel(channelName: string, ircChannel: IrcChannel): Promise<void>;
 	deleteIrcChannel(channelName: string): Promise<void>;
 	getAllIrcChannels(): Promise<any>;
