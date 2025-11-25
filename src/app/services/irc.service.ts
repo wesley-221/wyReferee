@@ -463,7 +463,7 @@ export class IrcService {
 			}
 
 			// Flash window when a message has been sent and window is not focused
-			window.electronApi.flashWindow();
+			window.electronApi.window.flashWindow();
 		}
 
 		this.messageHasBeenSend$.next(true);

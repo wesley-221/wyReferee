@@ -16,6 +16,6 @@ export class ElectronService {
 	 * @param url the url to open in the default browser
 	 */
 	openLink(url: string): void {
-		window.electronApi.openLink(url);
+		window.electronApi.window.openLink(url);
 	}
 }

@@ -4,10 +4,8 @@ import { ipcRenderer } from 'electron';
 import { IPC_CHANNELS } from './ipc-channels';
 
 (window as any).electronApi = {
-	flashWindow: () => ipcRenderer.invoke(IPC_CHANNELS.FLASH_WINDOW),
 	startExpressServer: (oauthUrl: string) => ipcRenderer.invoke(IPC_CHANNELS.START_EXPRESS_SERVER, oauthUrl),
-	onOsuOauthCode: (callback: (code: string) => void) => ipcRenderer.once(IPC_CHANNELS.ON_OSU_OAUTH_CODE, (event: any, code: string) => callback(code)),
-	openLink: (url: string) => ipcRenderer.invoke(IPC_CHANNELS.OPEN_LINK, url),
+	onOsuOauthCode: (callback: (code: string) => void) => ipcRenderer.once(IPC_CHANNELS.ON_OSU_OAUTH_CODE, (event: any, code: string) => callback(code))
 };
 
 (window as any).electronApi.fs = {
@@ -23,6 +21,11 @@ import { IPC_CHANNELS } from './ipc-channels';
 (window as any).electronApi.dialog = {
 	showSaveDialog: (options: Electron.SaveDialogOptions) => ipcRenderer.invoke(IPC_CHANNELS.SHOW_SAVE_DIALOG, options),
 	saveSettingsZip: (filePath: string) => ipcRenderer.invoke(IPC_CHANNELS.SAVE_SETTINGS_ZIP, filePath)
+};
+
+(window as any).electronApi.window = {
+	flashWindow: () => ipcRenderer.invoke(IPC_CHANNELS.FLASH_WINDOW),
+	openLink: (url: string) => ipcRenderer.invoke(IPC_CHANNELS.OPEN_LINK, url)
 };
 
 (window as any).electronApi.autoUpdater = {

@@ -3,13 +3,12 @@ import { IrcMessage } from "app/models/irc/irc-message";
 import { ProgressInfo } from "electron-updater";
 
 export interface ElectronApi {
-	flashWindow(): void;
 	startExpressServer(oauthUrl: string): Promise<void>;
 	onOsuOauthCode(callback: (code: string) => void): void;
-	openLink(url: string): void;
 
 	fs: ElectronApiFs;
 	dialog: ElectronApiDialog;
+	window: ElectronApiWindow;
 	autoUpdater: ElectronApiAutoUpdater;
 	irc: ElectronApiIrc;
 }
@@ -27,6 +26,11 @@ interface ElectronApiFs {
 interface ElectronApiDialog {
 	showSaveDialog(options: Electron.SaveDialogOptions): Promise<Electron.SaveDialogReturnValue>;
 	saveSettingsZip(filePath: string): Promise<void>;
+}
+
+interface ElectronApiWindow {
+	flashWindow(): Promise<void>;
+	openLink(url: string): Promise<void>;
 }
 
 interface ElectronApiAutoUpdater {
