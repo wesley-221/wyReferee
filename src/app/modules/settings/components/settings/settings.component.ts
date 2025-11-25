@@ -72,10 +72,21 @@ export class SettingsComponent implements OnInit {
 	 * Export the config file
 	 */
 	exportConfigFile() {
+		let fileName = 'wyReferee-settings.zip';
+
+		if (this.authService.loggedIn) {
+			const username = this.authService.loggedInUser.username.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+			fileName = `wyReferee-settings-${username}.zip`;
+		}
+
 		window.electronApi.dialog.showSaveDialog({
 			title: 'Export wyReferee settings',
-			defaultPath: 'wyReferee-settings.zip'
+			defaultPath: fileName
 		}).then(file => {
+			if (file.canceled) {
+				return;
+			}
+
 			window.electronApi.dialog.saveSettingsZip(file.filePath).then(() => {
 				this.toastService.addToast(`Successfully saved the config files to "${file.filePath}".`);
 			}).catch(err => {
