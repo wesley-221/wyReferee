@@ -20,7 +20,7 @@ interface ElectronApiFs {
 	deleteFile(filePath: string): Promise<void>;
 	listFiles(filePath: string): Promise<string[]>;
 	createDirectoryIfNotExists(directoryPath: string): Promise<void>;
-};
+}
 
 interface ElectronApiDialog {
 	showSaveDialog(options: Electron.SaveDialogOptions): Promise<Electron.SaveDialogReturnValue>;
@@ -35,7 +35,7 @@ interface ElectronApiWindow {
 interface ElectronApiServer {
 	startExpressServer(oauthUrl: string): Promise<void>;
 	onOsuOauthCode(callback: (code: string) => void): void;
-};
+}
 
 interface ElectronApiAutoUpdater {
 	checkForUpdatesAndNotify(): void;
@@ -44,7 +44,7 @@ interface ElectronApiAutoUpdater {
 	onUpdateError(callback: (error: string) => void): void;
 	updateDownloadProgress(callback: (progress: ProgressInfo) => void): void;
 	restartAppAfterUpdateDownload(): void;
-};
+}
 
 interface ElectronApiIrc {
 	createIrcChannel(channelName: string, ircChannel: IrcChannel): Promise<void>;
@@ -57,7 +57,7 @@ interface ElectronApiIrc {
 	changeLastActiveChannel(channelName: string, active: boolean): Promise<void>;
 	addIrcMessage(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoMessages: boolean): Promise<void>;
 	addOutgoingIrcMessage(channelName: string, message: IrcMessage, plainMessage: string): Promise<void>;
-};
+}
 
 interface ElectronApiOsuAuthentication {
 	getIrcCredentials(): Promise<{ username: string, password: string, apiKey: string }>;

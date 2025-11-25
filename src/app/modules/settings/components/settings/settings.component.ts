@@ -87,7 +87,7 @@ export class SettingsComponent implements OnInit {
 
 			window.electronApi.dialog.saveSettingsZip(file.filePath).then(() => {
 				this.toastService.addToast(`Successfully saved the config files to "${file.filePath}".`);
-			}).catch(err => {
+			}).catch((err: Error) => {
 				this.toastService.addToast(`Something went wrong while trying to export the config files: ${err.message}.`, ToastType.Error);
 			});
 		});

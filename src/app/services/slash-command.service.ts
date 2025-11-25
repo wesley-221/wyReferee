@@ -79,7 +79,7 @@ export class SlashCommandService {
 		}).then(file => {
 			window.electronApi.fs.writeFile(file.filePath, allMessages.join('\n')).then(() => {
 				this.toastService.addToast(`Successfully saved the log file to "${file.filePath}".`);
-			}).catch(err => {
+			}).catch((err: Error) => {
 				this.toastService.addToast(`Could not save the log file: ${err.message}.`, ToastType.Error);
 			});
 		});
@@ -103,7 +103,7 @@ export class SlashCommandService {
 		}).then(file => {
 			window.electronApi.fs.writeFile(file.filePath, JSON.stringify(data, null, '\t')).then(() => {
 				this.toastService.addToast(`Successfully saved the debug file to "${file.filePath}".`);
-			}).catch(err => {
+			}).catch((err: Error) => {
 				this.toastService.addToast(`Could not save the debug file: ${err.message}.`, ToastType.Error);
 			});
 		});
