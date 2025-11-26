@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"outDir": "dist/electron",
 		"rootDir": "main",
-		"sourceMap": true,
+		"sourceMap": false,
 		"declaration": false,
 		"moduleResolution": "node",
 		"emitDecoratorMetadata": true,
