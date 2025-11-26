@@ -225,8 +225,13 @@ export class IrcService {
 						if (allJoinedChannels[ircChannel].isPrivateChannel == false && allJoinedChannels[ircChannel].isPublicChannel == false) {
 							const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
 
-							from(channel.join()).subscribe(() => {
-								this.initializeChannelListeners(channel);
+							from(channel.join()).subscribe({
+								next: () => {
+									this.initializeChannelListeners(channel);
+								},
+								error: (error) => {
+									console.warn(`Failed to join ${allJoinedChannels[ircChannel].name}. The channel is closed or no longer available. ${error}`);
+								}
 							});
 						}
 					}
