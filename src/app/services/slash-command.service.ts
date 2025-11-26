@@ -39,7 +39,6 @@ export class SlashCommandService {
 	 */
 	registerCommand(command: SlashCommand): void {
 		if (this.slashCommands.has(command.name)) {
-			console.warn(`The slash command ${command.name} already exists.`);
 			return;
 		}
 
