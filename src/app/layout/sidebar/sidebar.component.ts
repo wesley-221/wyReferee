@@ -44,13 +44,13 @@ export class SidebarComponent implements OnInit {
 				this.ircConnectionStatus = ircService.isAuthenticated ? 2 : 0;
 			}
 		});
+	}
 
+	ngOnInit() {
 		this.authenticateService.userLoggedIn().subscribe(loggedIn => {
 			if (loggedIn == true) {
 				this.ref.detectChanges();
 			}
 		});
 	}
-
-	ngOnInit() { }
 }

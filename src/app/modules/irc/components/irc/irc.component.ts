@@ -143,69 +143,6 @@ export class IrcComponent implements OnInit {
 
 		this.matchDialogSendFinalResult = false;
 
-		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
-			// Check if the user was authenticated
-			if (isAuthenticated) {
-				for (const channel in this.channels) {
-					// Change the channel if it was the last active channel
-					if (this.channels[channel].lastActiveChannel) {
-						this.changeChannel(this.channels[channel].name, true);
-						break;
-					}
-				}
-			}
-		});
-
-		// Initialize the scroll
-		this.ircService.hasMessageBeenSend().subscribe(() => {
-			// Mark current channel as read
-			if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
-				ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
-			}
-
-			// Detect changes to update the view, scroll to bottom after this
-			this.ref.detectChanges();
-
-			// Scroll the chats to the bottom
-			if (this.normalChats || this.banchoBotChats) {
-				this.scrollToBottom();
-			}
-		});
-
-		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
-			if (this.selectedLobby == undefined) {
-				return;
-			}
-
-			if (data.lobbyId == this.selectedLobby.lobbyId) {
-				this.selectedLobby = data;
-				this.refreshIrcHeader(this.selectedLobby);
-
-				if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
-					if (this.selectedLobby.isQualifierLobby == false) {
-						this.matchDialogHeaderName = 'Last played beatmap';
-						this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
-						this.matchDialogSendFinalResult = false;
-
-						this.ref.detectChanges();
-					}
-				}
-			}
-		});
-
-		// Trigger hasUnReadMessages for channels
-		this.ircService.getChannelMessageUnread().subscribe(channel => {
-			if ((channel != null && this.selectedChannel != null) && this.selectedChannel.name != channel.name) {
-				for (const findChannel in this.channels) {
-					if (this.channels[findChannel].name == channel.name) {
-						this.channels[findChannel].hasUnreadMessages = true;
-						this.ref.detectChanges();
-						break;
-					}
-				}
-			}
-		});
-
 		this.slashCommandService.registerCommand(new SlashCommand({
 			name: 'savelog',
 			description: 'Saves the chatlog of the current irc channel to a file',
@@ -263,6 +200,72 @@ export class IrcComponent implements OnInit {
 	ngOnInit() {
 		this.ircService.getIsJoiningChannel().subscribe(value => {
 			this.isAttemptingToJoin = value;
+		});
+
+		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
+			// Check if the user was authenticated
+			if (isAuthenticated) {
+				for (const channel in this.channels) {
+					// Change the channel if it was the last active channel
+					if (this.channels[channel].lastActiveChannel) {
+						this.changeChannel(this.channels[channel].name, true);
+						break;
+					}
+				}
+			}
+		});
+
+		// Initialize the scroll
+		this.ircService.hasMessageBeenSend().subscribe(sent => {
+			// Mark current channel as read
+			if (this.selectedChannel && this.ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
+				this.ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
+			}
+
+			if (sent == true) {
+				// Detect changes to update the view, scroll to bottom after this
+				this.ref.detectChanges();
+			}
+
+			// Scroll the chats to the bottom
+			if (this.normalChats || this.banchoBotChats) {
+				this.scrollToBottom();
+			}
+		});
+
+		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
+			if (this.selectedLobby == undefined) {
+				return;
+			}
+
+			if (data.lobbyId == this.selectedLobby.lobbyId) {
+				this.selectedLobby = data;
+				this.refreshIrcHeader(this.selectedLobby);
+
+				if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
+					if (this.selectedLobby.isQualifierLobby == false) {
+						this.matchDialogHeaderName = 'Last played beatmap';
+						this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
+						this.matchDialogSendFinalResult = false;
+
+						this.ref.detectChanges();
+					}
+				}
+			}
+		});
+
+		// Trigger hasUnReadMessages for channels
+		this.ircService.getChannelMessageUnread().subscribe(channel => {
+			if ((channel != null && this.selectedChannel != null) && this.selectedChannel.name != channel.name) {
+				for (const findChannel in this.channels) {
+					if (this.channels[findChannel].name == channel.name) {
+						this.channels[findChannel].hasUnreadMessages = true;
+
+						this.ref.detectChanges();
+						break;
+					}
+				}
+			}
 		});
 	}
 

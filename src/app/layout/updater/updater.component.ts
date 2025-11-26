@@ -19,7 +19,9 @@ export class UpdaterComponent implements OnInit {
 		}
 
 		window.electronApi.autoUpdater.checkForUpdatesAndNotify();
+	}
 
+	ngOnInit(): void {
 		window.electronApi.autoUpdater.updateAvailable(() => {
 			this.updateWasFound = true;
 			this.downloadPercentage = 0;
@@ -44,6 +46,4 @@ export class UpdaterComponent implements OnInit {
 			console.error(`Update error: ${error}`);
 		});
 	}
-
-	ngOnInit(): void { }
 }
