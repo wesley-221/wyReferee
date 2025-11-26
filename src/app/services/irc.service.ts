@@ -220,7 +220,7 @@ export class IrcService {
 				this.isAuthenticated$.next(true);
 
 				// Initialize multiplayer channels after restart
-				window.electronApi.irc.getAllIrcChannels().then((allJoinedChannels) => {
+				window.electronApi.irc.getAllIrcChannels().then((allJoinedChannels: IrcChannel[]) => {
 					for (const ircChannel in allJoinedChannels) {
 						if (allJoinedChannels[ircChannel].isPrivateChannel == false && allJoinedChannels[ircChannel].isPublicChannel == false) {
 							const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
@@ -229,7 +229,7 @@ export class IrcService {
 								next: () => {
 									this.initializeChannelListeners(channel);
 								},
-								error: (error) => {
+								error: (error: string) => {
 									console.warn(`Failed to join ${allJoinedChannels[ircChannel].name}. The channel is closed or no longer available. ${error}`);
 								}
 							});
