@@ -1,4 +1,7 @@
 export const IPC_CHANNELS = {
+	CHECK_FOR_MIGRATIONS_AND_NOTIFY: 'checkForMigrationsAndNotify',
+	MIGRATION_NEEDED: 'migrationNeeded',
+	START_DATA_MIGRATION: 'startDataMigration',
 	GET_APP_DATA_PATH: 'getAppDataPath',
 	JOIN_PATH: 'joinPath',
 	READ_FILE: 'readfile',

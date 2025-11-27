@@ -3,6 +3,7 @@ import { IrcChannel } from "../app/models/irc/irc-channel";
 import { IrcMessage } from "../app/models/irc/irc-message";
 
 export interface ElectronApi {
+	dataMigration: ElectronDataMigration;
 	fs: ElectronApiFs;
 	dialog: ElectronApiDialog;
 	window: ElectronApiWindow;
@@ -10,6 +11,19 @@ export interface ElectronApi {
 	autoUpdater: ElectronApiAutoUpdater;
 	irc: ElectronApiIrc;
 	osuAuthentication: ElectronApiOsuAuthentication;
+}
+
+interface ElectronDataMigration {
+	checkForMigrationsAndNotify(): void;
+	migrationNeeded(callback: (migrationNeeded: boolean) => void): void;
+	startDataMigration(migrationOptions: {
+		webhookCustomization: boolean;
+		tournaments: boolean;
+		lobbies: boolean;
+		ircChannels: boolean;
+		ircShortcutCommands: boolean;
+		keepDataBackup: boolean;
+	}): Promise<{ status: string; message: string }[]>;
 }
 
 interface ElectronApiFs {

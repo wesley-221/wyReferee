@@ -31,6 +31,7 @@ import { CredentialsInterceptor } from './core/interceptors/credentials.intercep
 import { ProtectBeatmapDialogComponent } from './components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
 import { AddBulkTeamsDialogComponent } from './components/dialogs/add-bulk-teams-dialog/add-bulk-teams-dialog.component';
 import { StorageDriverService } from './services/storage/storage-driver.service';
+import { DataMigrationDialogComponent } from './components/dialogs/data-migration-dialog/data-migration-dialog.component';
 
 export function initStorage(storageDriver: StorageDriverService) {
 	return () => storageDriver.init();
@@ -62,6 +63,7 @@ export function initStorage(storageDriver: StorageDriverService) {
 		IrcShortcutWarningDialogComponent,
 		ProtectBeatmapDialogComponent,
 		AddBulkTeamsDialogComponent,
+		DataMigrationDialogComponent,
 	],
 	imports: [
 		BrowserModule,

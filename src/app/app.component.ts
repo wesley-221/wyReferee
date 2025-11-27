@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { IrcService } from './services/irc.service';
 import { AuthenticateService } from './services/authenticate.service';
 import { CacheService } from './services/cache.service';
@@ -10,17 +10,19 @@ import { ToastType } from './models/toast';
 import { SettingsStoreService } from './services/storage/settings-store.service';
 import { filter, take } from 'rxjs';
 import PackageJson from '../../package.json';
+import { MatDialog } from '@angular/material/dialog';
+import { DataMigrationDialogComponent } from './components/dialogs/data-migration-dialog/data-migration-dialog.component';
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 	clearDataBeforeVersion: string;
 	private versionCheckComplete = false;
 
-	constructor(private ircService: IrcService, private authService: AuthenticateService, private settingsStore: SettingsStoreService, private cacheService: CacheService, private genericService: GenericService, private router: Router, private toastService: ToastService) {
+	constructor(private ircService: IrcService, private authService: AuthenticateService, private settingsStore: SettingsStoreService, private cacheService: CacheService, private dialog: MatDialog, private ngZone: NgZone, private genericService: GenericService, private router: Router, private toastService: ToastService) {
 		const currentVersion = PackageJson.version;
 
 		this.clearDataBeforeVersion = '6.6.0';
@@ -66,6 +68,16 @@ export class AppComponent {
 
 		authService.getMeData().subscribe(user => {
 			this.authService.loginUser(user);
+		});
+	}
+
+	ngOnInit(): void {
+		window.electronApi.dataMigration.checkForMigrationsAndNotify();
+
+		window.electronApi.dataMigration.migrationNeeded(() => {
+			this.ngZone.run(() => {
+				this.dialog.open(DataMigrationDialogComponent);
+			});
 		});
 	}
 }

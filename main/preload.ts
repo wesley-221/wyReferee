@@ -4,6 +4,11 @@ import { ipcRenderer } from 'electron';
 import { IPC_CHANNELS } from './ipc-channels';
 
 (window as any).electronApi = {
+	dataMigration: {
+		checkForMigrationsAndNotify: () => ipcRenderer.invoke(IPC_CHANNELS.CHECK_FOR_MIGRATIONS_AND_NOTIFY),
+		migrationNeeded: (callback: (migrationNeeded: boolean) => void) => ipcRenderer.on(IPC_CHANNELS.MIGRATION_NEEDED, (event: any, migrationNeeded: boolean) => callback(migrationNeeded)),
+		startDataMigration: (migrationOptions: any) => ipcRenderer.invoke(IPC_CHANNELS.START_DATA_MIGRATION, migrationOptions)
+	},
 	fs: {
 		getAppDataPath: () => ipcRenderer.invoke(IPC_CHANNELS.GET_APP_DATA_PATH),
 		joinPath: (paths: string[]) => ipcRenderer.invoke(IPC_CHANNELS.JOIN_PATH, paths),
