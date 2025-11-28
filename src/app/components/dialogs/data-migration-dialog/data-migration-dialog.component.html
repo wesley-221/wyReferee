@@ -37,6 +37,10 @@
 	<div class="content" *ngIf="migrationSuccessful == true">
 		<h2>Migration completed successfully!</h2>
 
+		<app-alert alertType="info">
+			In order for the changes to take effect, the client has to be restarted. Click on the close button below to restart the application.
+		</app-alert>
+
 		<p>The following changes were made during the migration process:</p>
 
 		<div class="data-migration-log">
@@ -69,7 +73,7 @@
 		</div>
 	</button>
 
-	<button mat-button mat-dialog-close color="primary" *ngIf="migrationSuccessful == true">
+	<button mat-button (click)="restartClient()" color="primary" *ngIf="migrationSuccessful == true">
 		close
 	</button>
 </mat-dialog-actions>

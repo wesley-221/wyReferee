@@ -15,6 +15,7 @@ export interface ElectronApi {
 
 interface ElectronDataMigration {
 	checkForMigrationsAndNotify(): void;
+	restartAppAfterMigration(): void;
 	migrationNeeded(callback: (migrationNeeded: boolean) => void): void;
 	startDataMigration(migrationOptions: {
 		webhookCustomization: boolean;

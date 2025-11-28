@@ -6,6 +6,7 @@ import { IPC_CHANNELS } from './ipc-channels';
 (window as any).electronApi = {
 	dataMigration: {
 		checkForMigrationsAndNotify: () => ipcRenderer.invoke(IPC_CHANNELS.CHECK_FOR_MIGRATIONS_AND_NOTIFY),
+		restartAppAfterMigration: () => ipcRenderer.invoke(IPC_CHANNELS.RESTART_APP_AFTER_MIGRATION),
 		migrationNeeded: (callback: (migrationNeeded: boolean) => void) => ipcRenderer.on(IPC_CHANNELS.MIGRATION_NEEDED, (event: any, migrationNeeded: boolean) => callback(migrationNeeded)),
 		startDataMigration: (migrationOptions: any) => ipcRenderer.invoke(IPC_CHANNELS.START_DATA_MIGRATION, migrationOptions)
 	},

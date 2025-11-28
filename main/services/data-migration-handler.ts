@@ -16,12 +16,26 @@ interface MigrationOptions {
 export function registerDataMigrationHandler(window: BrowserWindow) {
 	const configFile = path.join(app.getPath('userData'), 'config.json');
 
+	/**
+	 * Check for migrations and notify renderer process
+	 */
 	ipcMain.handle(IPC_CHANNELS.CHECK_FOR_MIGRATIONS_AND_NOTIFY, async () => {
 		if (fs.existsSync(configFile)) {
 			window.webContents.send(IPC_CHANNELS.MIGRATION_NEEDED, true);
 		}
 	});
 
+	/**
+	 * Restart app after migration
+	 */
+	ipcMain.handle(IPC_CHANNELS.RESTART_APP_AFTER_MIGRATION, () => {
+		app.relaunch();
+		app.exit(0);
+	});
+
+	/**
+	 * Start data migration process
+	 */
 	ipcMain.handle(IPC_CHANNELS.START_DATA_MIGRATION, async (event, migrationOptions: MigrationOptions) => {
 		const updatedMigrations: { status: string; message: string }[] = [];
 

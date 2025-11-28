@@ -59,4 +59,8 @@ export class DataMigrationDialogComponent implements OnInit {
 			this.migrationLog = updatedMigrations;
 		});
 	}
+
+	restartClient() {
+		window.electronApi.dataMigration.restartAppAfterMigration();
+	}
 }
