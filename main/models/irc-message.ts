@@ -1,6 +1,6 @@
 import { MessageBuilder } from './message-builder';
 
-export class IrcMessage {
+export interface IrcMessage {
 	messageId: number;
 	date: string;
 	time: string;

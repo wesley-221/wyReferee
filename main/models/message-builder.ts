@@ -6,7 +6,7 @@ export enum MessageType {
 	ModAcronymPick = 'ModAcronymPick'
 }
 
-export class MessageBuilder {
+export interface MessageBuilder {
 	messageType: MessageType | string;
 	message: string;
 	linkName: string;

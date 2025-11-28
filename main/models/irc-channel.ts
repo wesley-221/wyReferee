@@ -14,7 +14,7 @@ export enum WinCondition {
 	ScoreV2 = 3
 }
 
-export class IrcChannel {
+export interface IrcChannel {
 	name: string;
 	label: string;
 	active: boolean;
