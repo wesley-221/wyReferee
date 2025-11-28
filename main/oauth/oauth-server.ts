@@ -10,6 +10,7 @@ export class OauthServer {
 	win: BrowserWindow | null;
 
 	constructor(win: BrowserWindow | null) {
+		this.server = null;
 		this.win = win;
 	}
 
