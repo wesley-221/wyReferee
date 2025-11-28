@@ -124,10 +124,12 @@ export function registerDataMigrationHandler(window: BrowserWindow) {
 							channelMessages.push({ type: 'plain', content: message });
 						}
 
-						channel.messages = [];
-						channel.plainMessageHistory = [];
+						const newChannel = JSON.parse(JSON.stringify(channel));
 
-						fs.writeFileSync(channelFilePath, JSON.stringify(channel), 'utf-8');
+						newChannel.messages = [];
+						newChannel.plainMessageHistory = [];
+
+						fs.writeFileSync(channelFilePath, JSON.stringify(newChannel), 'utf-8');
 						fs.writeFileSync(channelMessagesFilePath, channelMessages.map(m => JSON.stringify(m)).join('\n'), 'utf-8');
 
 						updatedMigrations.push({ 'status': 'success', message: `Migrated IRC channel ${channelName}` });
