@@ -109,6 +109,7 @@ export function registerDataMigrationHandler(window: BrowserWindow) {
 
 				for (const channelName in ircChannels) {
 					const channel = ircChannels[channelName];
+					const finalChannelName = channel.label ?? channelName;
 
 					try {
 						const channelFilePath = path.join(ircChannelsFolderPath, `${channelName.toLowerCase()}.json`);
@@ -132,10 +133,10 @@ export function registerDataMigrationHandler(window: BrowserWindow) {
 						fs.writeFileSync(channelFilePath, JSON.stringify(newChannel), 'utf-8');
 						fs.writeFileSync(channelMessagesFilePath, channelMessages.map(m => JSON.stringify(m)).join('\n'), 'utf-8');
 
-						updatedMigrations.push({ 'status': 'success', message: `Migrated IRC channel ${channelName}` });
+						updatedMigrations.push({ 'status': 'success', message: `Migrated IRC channel ${finalChannelName}` });
 					}
 					catch (error) {
-						updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate IRC channel ${channelName}: ${error}` });
+						updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate IRC channel ${finalChannelName}: ${error}` });
 					}
 				}
 			}
