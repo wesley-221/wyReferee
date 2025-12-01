@@ -51,19 +51,14 @@ export class LobbyViewComponent implements OnInit {
 		private router: Router,
 		private webhookService: WebhookService,
 		private dialog: MatDialog,
-		private challongeService: ChallongeService) {
+		private challongeService: ChallongeService) { }
+
+	ngOnInit() {
 		this.route.params.subscribe(params => {
-			this.selectedLobby = multiplayerLobbies.getMultiplayerLobby(params.id);
-
+			this.selectedLobby = this.multiplayerLobbies.getMultiplayerLobby(params.id);
 			this.selectedLobby.ircChannel = this.ircService.getChannelByName(`#mp_${this.getMultiplayerIdFromLink(this.selectedLobby.multiplayerLink)}`);
-
-			if (ircService.getChannelByName(this.selectedLobby.ircChannel.name) != null && ircService.getChannelByName(this.selectedLobby.ircChannel.name).active) {
-				this.selectedLobby.ircConnected = true;
-			}
 		});
 	}
-
-	ngOnInit() { }
 
 	/**
 	 * Synchronizes the multiplayer lobby and calculates all the scores
