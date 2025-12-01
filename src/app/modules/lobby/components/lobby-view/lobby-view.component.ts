@@ -13,7 +13,6 @@ import { ElectronService } from 'app/services/electron.service';
 import { IrcService } from 'app/services/irc.service';
 import { ToastService } from 'app/services/toast.service';
 import { WebhookService } from 'app/services/webhook.service';
-import { ClipboardService } from 'ngx-clipboard';
 import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-multiplayer-lobby-send-final-message-dialog-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastType } from 'app/models/toast';
@@ -47,7 +46,6 @@ export class LobbyViewComponent implements OnInit {
 		public electronService: ElectronService,
 		private lobbyStoreService: LobbyStoreService,
 		public ircService: IrcService,
-		private clipboardService: ClipboardService,
 		private router: Router,
 		private webhookService: WebhookService,
 		private dialog: MatDialog,
@@ -117,9 +115,9 @@ export class LobbyViewComponent implements OnInit {
 			beatmapResult = `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_two_score - match.team_one_score}`;
 		}
 
-		this.clipboardService.copyFromContent(beatmapResult);
-
-		this.toastService.addToast(`Copied the result for "${this.cacheService.getBeatmapname(match.beatmap_id)}"`);
+		navigator.clipboard.writeText(beatmapResult).then(() => {
+			this.toastService.addToast(`Copied the result for "${this.cacheService.getBeatmapname(match.beatmap_id)}"`);
+		});
 	}
 
 	/**
@@ -130,13 +128,6 @@ export class LobbyViewComponent implements OnInit {
 		if (this.selectedLobby.ircChannel != null) {
 			this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}`);
 		}
-	}
-
-	/**
-	 * Copy the result of the match to the clipboard
-	 */
-	copyMatchResult() {
-		this.clipboardService.copyFromContent(`${this.selectedLobby.teamOneName} | ${this.selectedLobby.teamOneScore} : ${this.selectedLobby.teamTwoScore} | ${this.selectedLobby.teamTwoName}`);
 	}
 
 	/**

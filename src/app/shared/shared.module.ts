@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularMaterialModule } from 'app/shared/angular-material.module';
 import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { ClipboardModule } from 'ngx-clipboard';
 import { FilterTournamentPipe } from './pipes/filter-tournament.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { SearchModBracketPipe } from './pipes/search-mod-bracket.pipe';
@@ -40,7 +39,6 @@ const modules = [
 	AngularMaterialModule,
 	RouterModule,
 	DragDropModule,
-	ClipboardModule,
 	MarkdownModule
 ];
 
