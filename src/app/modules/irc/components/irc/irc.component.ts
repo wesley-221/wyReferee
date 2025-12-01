@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, HostListener, OnDestroy } from '@angular/core';
 import { IrcService } from '../../../../services/irc.service';
 import { ElectronService } from '../../../../services/electron.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -42,13 +42,14 @@ import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { SettingsStoreService } from 'app/services/storage/settings-store.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
 	selector: 'app-irc',
 	templateUrl: './irc.component.html',
 	styleUrls: ['./irc.component.scss']
 })
-export class IrcComponent implements OnInit {
+export class IrcComponent implements OnInit, OnDestroy {
 	@ViewChild('channelName') channelName: ElementRef;
 	@ViewChild('chatMessage') chatMessage: ElementRef;
 
@@ -58,6 +59,8 @@ export class IrcComponent implements OnInit {
 
 	@ViewChild('normalChatVirtualScroller') normalChatVirtualScroller: CdkVirtualScrollViewport;
 	@ViewChild('banchoBotChatVirtualScroller') banchoBotChatVirtualScroller: CdkVirtualScrollViewport;
+
+	unsubscribeOnDestroy$ = new Subject<void>();
 
 	selectedChannel: IrcChannel;
 	selectedLobby: Lobby;
@@ -130,8 +133,6 @@ export class IrcComponent implements OnInit {
 		public slashCommandService: SlashCommandService,
 		private genericService: GenericService,
 		public cacheService: CacheService) {
-		this.channels = ircService.allChannels;
-
 		settingsStore.watchSettings().subscribe(settings => {
 			if (settings) {
 				this.dividerHeightPercentage = settings.dividerHeight;
@@ -198,75 +199,98 @@ export class IrcComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.ircService.getIsJoiningChannel().subscribe(value => {
-			this.isAttemptingToJoin = value;
-		});
+		this.channels = this.ircService.allChannels;
 
-		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
-			// Check if the user was authenticated
-			if (isAuthenticated) {
-				for (const channel in this.channels) {
-					// Change the channel if it was the last active channel
-					if (this.channels[channel].lastActiveChannel) {
-						this.changeChannel(this.channels[channel].name, true);
-						break;
+		this.ircService.getIsJoiningChannel()
+			.pipe(takeUntil(this.unsubscribeOnDestroy$))
+			.subscribe(value => {
+				this.isAttemptingToJoin = value;
+			});
+
+		this.ircService.getIsAuthenticated()
+			.pipe(takeUntil(this.unsubscribeOnDestroy$))
+			.subscribe(isAuthenticated => {
+				// Check if the user was authenticated
+				if (isAuthenticated) {
+					for (const channel in this.channels) {
+						// Change the channel if it was the last active channel
+						if (this.channels[channel].lastActiveChannel) {
+							this.changeChannel(this.channels[channel].name, true);
+							break;
+						}
 					}
 				}
-			}
-		});
+			});
 
 		// Initialize the scroll
-		this.ircService.hasMessageBeenSend().subscribe(sent => {
-			// Mark current channel as read
-			if (this.selectedChannel && this.ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
-				this.ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
-			}
+		this.ircService.hasMessageBeenSend()
+			.pipe(takeUntil(this.unsubscribeOnDestroy$))
+			.subscribe(sent => {
+				const channel = this.selectedChannel ? this.ircService.getChannelByName(this.selectedChannel.name) : null;
 
-			if (sent == true) {
-				// Detect changes to update the view, scroll to bottom after this
-				this.ref.detectChanges();
-			}
+				// Mark current channel as read
+				if (channel && channel.hasUnreadMessages) {
+					channel.hasUnreadMessages = false;
+				}
 
-			// Scroll the chats to the bottom
-			if (this.normalChats || this.banchoBotChats) {
-				this.scrollToBottom();
-			}
-		});
+				if (sent == true) {
+					// Detect changes to update the view, scroll to bottom after this
+					this.ref.detectChanges();
+				}
 
-		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
-			if (this.selectedLobby == undefined) {
-				return;
-			}
+				// Scroll the chats to the bottom
+				if (this.normalChats || this.banchoBotChats) {
+					this.scrollToBottom();
+				}
+			});
 
-			if (data.lobbyId == this.selectedLobby.lobbyId) {
-				this.selectedLobby = data;
-				this.refreshIrcHeader(this.selectedLobby);
+		this.multiplayerLobbies.synchronizeIsCompleted()
+			.pipe(takeUntil(this.unsubscribeOnDestroy$))
+			.subscribe((data: Lobby) => {
+				if (data == null || data == undefined) {
+					return;
+				}
 
-				if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
-					if (this.selectedLobby.isQualifierLobby == false) {
-						this.matchDialogHeaderName = 'Last played beatmap';
-						this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
-						this.matchDialogSendFinalResult = false;
+				if (this.selectedLobby == undefined || this.selectedLobby == null) {
+					return;
+				}
 
-						this.ref.detectChanges();
+				if (data.lobbyId == this.selectedLobby.lobbyId) {
+					this.selectedLobby = data;
+					this.refreshIrcHeader(this.selectedLobby);
+
+					if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
+						if (this.selectedLobby.isQualifierLobby == false) {
+							this.matchDialogHeaderName = 'Last played beatmap';
+							this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
+							this.matchDialogSendFinalResult = false;
+
+							this.ref.detectChanges();
+						}
 					}
 				}
-			}
-		});
+			});
 
 		// Trigger hasUnReadMessages for channels
-		this.ircService.getChannelMessageUnread().subscribe(channel => {
-			if ((channel != null && this.selectedChannel != null) && this.selectedChannel.name != channel.name) {
-				for (const findChannel in this.channels) {
-					if (this.channels[findChannel].name == channel.name) {
-						this.channels[findChannel].hasUnreadMessages = true;
+		this.ircService.getChannelMessageUnread()
+			.pipe(takeUntil(this.unsubscribeOnDestroy$))
+			.subscribe(channel => {
+				if ((channel != null && this.selectedChannel != null) && this.selectedChannel.name != channel.name) {
+					for (const findChannel in this.channels) {
+						if (this.channels[findChannel].name == channel.name) {
+							this.channels[findChannel].hasUnreadMessages = true;
 
-						this.ref.detectChanges();
-						break;
+							this.ref.detectChanges();
+							break;
+						}
 					}
 				}
-			}
-		});
+			});
+	}
+
+	ngOnDestroy(): void {
+		this.unsubscribeOnDestroy$.next();
+		this.unsubscribeOnDestroy$.complete();
 	}
 
 	/**
