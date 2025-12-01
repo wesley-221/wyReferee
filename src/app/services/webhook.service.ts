@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CacheService } from './cache.service';
 import { MultiplayerDataUser } from '../models/store-multiplayer/multiplayer-data-user';
 import { Lobby } from 'app/models/lobby';
@@ -18,7 +17,7 @@ export class WebhookService {
 	footerIconUrl: string;
 	footerText: string;
 
-	constructor(private http: HttpClient, private cacheService: CacheService, private toastService: ToastService, private webhookStore: WebhookStoreService) {
+	constructor(private cacheService: CacheService, private toastService: ToastService, private webhookStore: WebhookStoreService) {
 		webhookStore
 			.watchWebhookSettings()
 			.pipe(
@@ -136,7 +135,7 @@ export class WebhookService {
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.finalResult == true) {
-				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(() => {
+				window.electronApi.webhook.sendWebhook(webhook.url, body).then(() => {
 					this.toastService.addToast('Successfully send the message to Discord.');
 				});
 			}
@@ -190,7 +189,7 @@ export class WebhookService {
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.finalResult == true) {
-				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(() => {
+				window.electronApi.webhook.sendWebhook(webhook.url, body).then(() => {
 					this.toastService.addToast('Successfully send the message to Discord.');
 				});
 			}
@@ -237,7 +236,7 @@ export class WebhookService {
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.finalResult == true) {
-				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe(() => {
+				window.electronApi.webhook.sendWebhook(webhook.url, body).then(() => {
 					this.toastService.addToast('Successfully send the message to Discord.');
 				});
 			}
@@ -281,7 +280,7 @@ export class WebhookService {
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.bans == true) {
-				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+				window.electronApi.webhook.sendWebhook(webhook.url, body);
 			}
 		}
 	}
@@ -323,7 +322,7 @@ export class WebhookService {
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.bans == true) {
-				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+				window.electronApi.webhook.sendWebhook(webhook.url, body);
 			}
 		}
 	}
@@ -414,7 +413,7 @@ export class WebhookService {
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.matchSummary == true) {
-				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+				window.electronApi.webhook.sendWebhook(webhook.url, body);
 			}
 		}
 	}
@@ -593,7 +592,7 @@ export class WebhookService {
 
 		for (const webhook of multiplayerLobby.tournament.webhooks) {
 			if (webhook.matchResult == true) {
-				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+				window.electronApi.webhook.sendWebhookMainOnly(webhook.url, body);
 			}
 		}
 	}
@@ -689,7 +688,7 @@ export class WebhookService {
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.matchCreation == true) {
-				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+				window.electronApi.webhook.sendWebhook(webhook.url, body);
 			}
 		}
 	}
@@ -736,7 +735,7 @@ export class WebhookService {
 
 		for (const webhook of selectedLobby.tournament.webhooks) {
 			if (webhook.picks == true) {
-				this.http.post(webhook.url, body, { headers: new HttpHeaders({ 'Content-type': 'application/json' }) }).subscribe();
+				window.electronApi.webhook.sendWebhook(webhook.url, body);
 			}
 		}
 	}
