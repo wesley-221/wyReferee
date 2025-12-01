@@ -178,7 +178,9 @@ export class IrcService {
 				if (playerInSlot) {
 					const multiplayerLobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(message.channel.name);
 
-					this.multiplayerLobbyPlayersService.lobbyChange(multiplayerLobby.lobbyId, 'playerInSlot', playerInSlot);
+					if (multiplayerLobby) {
+						this.multiplayerLobbyPlayersService.lobbyChange(multiplayerLobby.lobbyId, 'playerInSlot', playerInSlot);
+					}
 
 					// Check if the player is in the correct slot
 					// TODO: Fix the isInCorrectSlot check, doesn't always work

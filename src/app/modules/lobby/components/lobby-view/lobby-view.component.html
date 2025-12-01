@@ -264,8 +264,8 @@
 					<button mat-mini-fab color="accent" matTooltip="Mark as invalid" (click)="markAsInvalid(match)" *ngIf="selectedLobby.gamesCountTowardsScore[match.game_id] == true"><mat-icon>thumb_up</mat-icon></button>
 					<button mat-mini-fab color="warn" matTooltip="Mark as valid" (click)="markAsInvalid(match)" *ngIf="selectedLobby.gamesCountTowardsScore[match.game_id] == false"><mat-icon>thumb_down</mat-icon></button>
 
-					<button mat-mini-fab color="primary" matTooltip="Send beatmap result to multiplayer lobby" (click)="sendBeatmapResult(match)" *ngIf="selectedLobby.ircConnected" [disabled]="!ircService.isAuthenticated"><mat-icon>send</mat-icon></button>
-					<button mat-mini-fab color="primary" matTooltip="Copy beatmap result" (click)="copyBeatmapResult(match)" *ngIf="!selectedLobby.ircConnected"><mat-icon>content_copy</mat-icon></button>
+					<button mat-mini-fab color="primary" matTooltip="Send beatmap result to multiplayer lobby" (click)="sendBeatmapResult(match)" [disabled]="!ircService.isAuthenticated"><mat-icon>send</mat-icon></button>
+					<button mat-mini-fab color="primary" matTooltip="Copy beatmap result" (click)="copyBeatmapResult(match)"><mat-icon>content_copy</mat-icon></button>
 				</div>
 			</div>
 		</div>
