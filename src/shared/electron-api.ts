@@ -11,6 +11,7 @@ export interface ElectronApi {
 	autoUpdater: ElectronApiAutoUpdater;
 	irc: ElectronApiIrc;
 	osuAuthentication: ElectronApiOsuAuthentication;
+	webhook: ElectronApiWebhook;
 }
 
 interface ElectronDataMigration {
@@ -82,4 +83,9 @@ interface ElectronApiOsuAuthentication {
 	setIrcLogin(username: string, password: string): Promise<void>;
 	clearIrcLogin(): Promise<void>;
 	clearApiKey(): Promise<void>;
+}
+
+interface ElectronApiWebhook {
+	sendWebhook(webhookUrl: string, payload: any): Promise<void>;
+	sendWebhookMainOnly(webhookUrl: string, payload: any): Promise<void>;
 }

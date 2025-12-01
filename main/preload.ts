@@ -59,5 +59,9 @@ import { IPC_CHANNELS } from './ipc-channels';
 		setIrcLogin: (username: string, password: string) => ipcRenderer.invoke(IPC_CHANNELS.SET_IRC_LOGIN, username, password),
 		clearIrcLogin: () => ipcRenderer.invoke(IPC_CHANNELS.CLEAR_IRC_LOGIN),
 		clearApiKey: () => ipcRenderer.invoke(IPC_CHANNELS.CLEAR_API_KEY)
+	},
+	webhook: {
+		sendWebhook: (webhookUrl: string, payload: any) => ipcRenderer.invoke(IPC_CHANNELS.SEND_WEBHOOK, webhookUrl, payload),
+		sendWebhookMainOnly: (webhookUrl: string, payload: any) => ipcRenderer.invoke(IPC_CHANNELS.SEND_WEBHOOK_MAIN_ONLY, webhookUrl, payload)
 	}
 };
