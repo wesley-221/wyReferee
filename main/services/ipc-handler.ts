@@ -8,6 +8,7 @@ import { WindowManager } from "./window-manager";
 import { registerIrcHandlers } from "../handlers/irc-handlers";
 import { registerIrcAuthenticationHandlers } from "../handlers/irc-authentication-handlers";
 import { registerDataMigrationHandler } from "./data-migration-handler";
+import { registerWebhookHandlers } from "../handlers/webhook-handlers";
 
 export function setupIpcHandlers(win: BrowserWindow, osuOauthServer: OauthServer, allWindows: WindowManager[]) {
 	ipcMain.handle(IPC_CHANNELS.GET_APP_DATA_PATH, () => app.getPath('userData'));
@@ -21,5 +22,6 @@ export function setupIpcHandlers(win: BrowserWindow, osuOauthServer: OauthServer
 	registerFileHandlers();
 	registerUiHandlers(win);
 	registerIrcHandlers(allWindows);
+	registerWebhookHandlers(allWindows);
 	registerIrcAuthenticationHandlers();
 }

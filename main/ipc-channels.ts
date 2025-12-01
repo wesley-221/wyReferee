@@ -38,7 +38,9 @@ export const IPC_CHANNELS = {
 	SET_API_KEY: 'setApiKey',
 	SET_IRC_LOGIN: 'setIrcLogin',
 	CLEAR_IRC_LOGIN: 'clearIrcLogin',
-	CLEAR_API_KEY: 'clearApiKey'
+	CLEAR_API_KEY: 'clearApiKey',
+	SEND_WEBHOOK: 'sendWebhook',
+	SEND_WEBHOOK_MAIN_ONLY: 'sendWebhookMainOnly'
 } as const;
 
 export type IpcChannel = typeof IPC_CHANNELS[keyof typeof IPC_CHANNELS];
