@@ -154,58 +154,6 @@
 				</div>
 			</div>
 
-			<!-- Banchobot messages -->
-			<cdk-virtual-scroll-viewport #banchoBotChatVirtualScroller *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_') && splitBanchoMessages == true" [ngStyle]="{'height': dividerHeightPercentage + '%'}" class="messages banchobot">
-				<app-alert alertType="warn" *ngIf="banchoBotChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
-				<app-alert alertType="warn" *ngIf="banchoBotChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
-
-				<div class="chat" *ngFor="let chat of banchoBotChats">
-					<div class="chat-content">
-						<div class="time" [title]="chat.date">
-							{{ chat.time }}
-						</div>
-
-						<div class="author" [matTooltip]="chat.author" *ngVar="(selectedLobby != null ? selectedLobby.getPlayerByUsername(chat.author, multiplayerLobbyPlayersService) : null) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
-							'bancho': chat.author == 'BanchoBot',
-							'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
-							'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false}" (click)="openUserpage(chat.author)">
-							{{ chat.author }}
-						</div>
-
-						<div class="message">
-							<div class="message-piece" *ngFor="let chatPiece of chat.messageBuilder">
-								<span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
-
-								<div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
-									<span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
-									<span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
-								</div>
-
-								<div class="pick-beatmap" *ngIf="chatPiece.messageType == 'ModAcronymPick'" (click)="pickBeatmapFromAcronym(chatPiece)" matTooltip="Click to pick beatmap" matTooltipPosition="above">
-									<span class="url">{{ chatPiece.message }}</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</cdk-virtual-scroll-viewport>
-
-			<div class="messages-divider" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_') && splitBanchoMessages == true">
-				<div class="divider-buttons">
-					<div class="divider-bigger" (click)="expandDivider()">
-						<mat-icon>expand_more</mat-icon>
-					</div>
-
-					<div class="divider-reset" (click)="resetDivider()">
-						<mat-icon>restart_alt</mat-icon>
-					</div>
-
-					<div class="divider-smaller" (click)="shrinkDivider()">
-						<mat-icon>expand_less</mat-icon>
-					</div>
-				</div>
-			</div>
-
 			<!-- Normal messages -->
 			<cdk-virtual-scroll-viewport #normalChatVirtualScroller class="messages normal" itemSize="50">
 				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>

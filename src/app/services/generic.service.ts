@@ -8,19 +8,16 @@ import { SettingsStoreService } from './storage/settings-store.service';
 export class GenericService {
 	private showAxSMenu$: BehaviorSubject<boolean>;
 	private cacheCheck$: BehaviorSubject<boolean>;
-	private splitBanchoMessages$: BehaviorSubject<boolean>;
 
 	constructor(private settingsStore: SettingsStoreService) {
 		settingsStore.watchSettings().subscribe(settings => {
 			if (settings) {
 				this.showAxSMenu$.next(settings.showAxs);
-				this.splitBanchoMessages$.next(settings.splitBanchoMessages);
 			}
 		});
 
 		this.showAxSMenu$ = new BehaviorSubject(false);
 		this.cacheCheck$ = new BehaviorSubject(false);
-		this.splitBanchoMessages$ = new BehaviorSubject(false);
 	}
 
 	/**
@@ -54,22 +51,5 @@ export class GenericService {
 	 */
 	getCacheHasBeenChecked(): BehaviorSubject<boolean> {
 		return this.cacheCheck$;
-	}
-
-	/**
-	 * Split the Bancho messages or not
-	 *
-	 * @param active the status of the AxS menu
-	 */
-	setSplitBanchoMessages(active: boolean): void {
-		this.splitBanchoMessages$.next(active);
-		this.settingsStore.set('splitBanchoMessages', active);
-	}
-
-	/**
-	 * Get the status of whether to split Bancho messages or not
-	 */
-	getSplitBanchoMessages(): BehaviorSubject<boolean> {
-		return this.splitBanchoMessages$;
 	}
 }

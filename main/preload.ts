@@ -48,7 +48,7 @@ import { IPC_CHANNELS } from './ipc-channels';
 		setIrcPlaySoundOnMessage: (channelName: string, playSound: boolean) => ipcRenderer.invoke(IPC_CHANNELS.SET_IRC_PLAY_SOUND_ON_MESSAGE, channelName, playSound),
 		changeActiveChannel: (channelName: string, active: boolean) => ipcRenderer.invoke(IPC_CHANNELS.CHANGE_ACTIVE_CHANNEL, channelName, active),
 		changeLastActiveChannel: (channelName: string, active: boolean) => ipcRenderer.invoke(IPC_CHANNELS.CHANGE_LAST_ACTIVE_CHANNEL, channelName, active),
-		addIrcMessage: (channelName: string, message: any, plainMessage: any, saveInBanchoMessages: boolean) => ipcRenderer.invoke(IPC_CHANNELS.ADD_IRC_MESSAGE, channelName, message, plainMessage, saveInBanchoMessages),
+		addIrcMessage: (channelName: string, message: any, plainMessage: any) => ipcRenderer.invoke(IPC_CHANNELS.ADD_IRC_MESSAGE, channelName, message, plainMessage),
 		addOutgoingIrcMessage: (channelName: string, message: any, plainMessage: any) => ipcRenderer.invoke(IPC_CHANNELS.ADD_OUTGOING_IRC_MESSAGE, channelName, message, plainMessage)
 	},
 	osuAuthentication: {
