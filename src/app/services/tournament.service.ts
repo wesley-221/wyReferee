@@ -4,11 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject, filter, take } from 'rxjs';
-import { GenericService } from './generic.service';
 import { ToastService } from './toast.service';
 import { ToastType } from 'app/models/toast';
 import { WyBinStage } from 'app/models/wybintournament/wybin-stage';
 import { TournamentStoreService } from './storage/tournament-store.service';
+import { CacheService } from './cache.service';
+import { CacheUser } from 'app/models/cache/cache-user';
+import { CacheBeatmap } from 'app/models/cache/cache-beatmap';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,7 +23,7 @@ export class TournamentService {
 	private readonly apiUrl = AppConfig.apiUrl;
 	private tournamentsInitialized$: BehaviorSubject<boolean>;
 
-	constructor(private tournamentStoreService: TournamentStoreService, private httpClient: HttpClient, private genericService: GenericService, private toastService: ToastService) {
+	constructor(private tournamentStoreService: TournamentStoreService, private httpClient: HttpClient, private toastService: ToastService, private cacheService: CacheService) {
 		this.availableTournamentId = 0;
 		this.allTournaments = [];
 
@@ -94,6 +96,8 @@ export class TournamentService {
 	saveTournament(tournament: WyTournament): void {
 		this.allTournaments.push(tournament);
 		this.tournamentStoreService.saveTournament(tournament);
+
+		this.cacheTournamentUsersAndBeatmaps(tournament);
 	}
 
 	/**
@@ -120,6 +124,8 @@ export class TournamentService {
 		}
 
 		this.tournamentStoreService.saveTournament(tournament);
+
+		this.cacheTournamentUsersAndBeatmaps(tournament);
 	}
 
 	/**
@@ -251,6 +257,46 @@ export class TournamentService {
 	 */
 	getWyBinStages(tournamentId: number) {
 		return this.httpClient.get<WyBinStage[]>(`${this.apiUrl}tournament-stages/${tournamentId}`);
+	}
+
+	/**
+	 * Cache tournament users and beatmaps
+	 *
+	 * @param tournament the tournament to cache users and beatmaps from
+	 */
+	private cacheTournamentUsersAndBeatmaps(tournament: WyTournament): void {
+		// Cache all users from the tournament
+		for (const team of tournament.teams) {
+			if (tournament.isSoloTournament()) {
+				this.cacheService.cacheUser(new CacheUser({
+					user_id: team.userId,
+					username: team.name
+				}));
+			}
+			else {
+				for (const player of team.players) {
+					this.cacheService.cacheUser(new CacheUser({
+						user_id: player.userId,
+						username: player.name
+					}));
+				}
+			}
+		}
+
+		// Cache all beatmaps from the tournament
+		for (const mappool of tournament.mappools) {
+			for (const modBrackets of mappool.modBrackets) {
+				for (const beatmap of modBrackets.beatmaps) {
+					console.log(beatmap);
+
+					this.cacheService.cacheBeatmap(new CacheBeatmap({
+						beatmapId: beatmap.beatmapId,
+						name: beatmap.beatmapName,
+						beatmapSetId: beatmap.beatmapsetId
+					}));
+				}
+			}
+		}
 	}
 }
 
