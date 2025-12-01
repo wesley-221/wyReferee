@@ -34,7 +34,7 @@ export class TournamentCardComponent implements OnInit {
 	 */
 	editTournament(tournament: WyTournament, event: any): void {
 		// Check if click wasn't on a button
-		if (event.toElement.localName == 'div') {
+		if (event.target.localName == 'div') {
 			if (this.publishedTournament == undefined || this.publishedTournament == false) {
 				this.router.navigate(['/tournament-management/tournament-overview/tournament-edit', tournament.id, 0]);
 			}

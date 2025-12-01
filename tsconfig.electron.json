@@ -1,12 +1,15 @@
 {
 	"compilerOptions": {
-		"sourceMap": true,
+		"outDir": "dist/electron",
+		"rootDir": "main",
+		"sourceMap": false,
 		"declaration": false,
 		"moduleResolution": "node",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"resolveJsonModule": true,
 		"allowSyntheticDefaultImports": true,
+		"module": "commonjs",
 		"target": "es5",
 		"types": [
 			"node"
@@ -19,10 +22,12 @@
 		]
 	},
 	"include": [
-		"main.ts"
+		"main/**/*.ts",
+		"main/**/*.d.ts"
 	],
 	"exclude": [
 		"node_modules",
-		"**/*.spec.ts"
+		"**/*.spec.ts",
+		"src/**"
 	]
 }

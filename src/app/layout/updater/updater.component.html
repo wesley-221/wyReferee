@@ -1,19 +1,18 @@
-<!-- Uncomment this once issue has been fixed. See .ts file TODO -->
-
-<!-- <div class="update" *ngIf="updateWasFound == true">
-	<div class="header" *ngIf="downloadPercentage < 100">An update was found!</div>
+<div class="update" *ngIf="updateWasFound == true">
+	<div class="header" *ngIf="downloadPercentage < 100">An update is available</div>
 
 	<div class="progression" *ngIf="downloadPercentage < 100">
-		Downloaded {{ downloadPercentage }}%
+		Download progress: {{ downloadPercentage }}%
 
 		<mat-progress-bar mode="determinate" [value]="downloadPercentage"></mat-progress-bar>
 	</div>
 
 	<div *ngIf="downloadPercentage >= 100">
 		<div class="header">
-			The update has been downloaded!
+			Update ready to install!
 		</div>
 
-		The update will be installed in 10 seconds. If you close the client, it will install the update right away.
+		The update will automatically install in 10 seconds.
+		If you close wyReferee now, the update will install immediately.
 	</div>
-</div> -->
+</div>

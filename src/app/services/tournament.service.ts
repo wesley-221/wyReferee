@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../environments/environment';
-import { StoreService } from './store.service';
 import { HttpClient } from '@angular/common/http';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, filter, take } from 'rxjs';
 import { GenericService } from './generic.service';
 import { ToastService } from './toast.service';
 import { ToastType } from 'app/models/toast';
 import { WyBinStage } from 'app/models/wybintournament/wybin-stage';
+import { TournamentStoreService } from './storage/tournament-store.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,56 +21,62 @@ export class TournamentService {
 	private readonly apiUrl = AppConfig.apiUrl;
 	private tournamentsInitialized$: BehaviorSubject<boolean>;
 
-	constructor(private storeService: StoreService, private httpClient: HttpClient, private genericService: GenericService, private toastService: ToastService) {
+	constructor(private tournamentStoreService: TournamentStoreService, private httpClient: HttpClient, private genericService: GenericService, private toastService: ToastService) {
 		this.availableTournamentId = 0;
 		this.allTournaments = [];
 
 		this.tournamentsInitialized$ = new BehaviorSubject(false);
 
-		this.updateFromPublishedTournaments(true);
+		this.loadTournaments(true);
 	}
 
 	/**
-	 * Update all local tournaments with the published tournaments if they are updated
+	 * Load all tournaments from the store and update them if they have been updated
+	 *
+	 * @param initialLoad if this is the initial load of tournaments
 	 */
-	updateFromPublishedTournaments(initialLoad: boolean): void {
-		this.tournamentsInitialized$.next(false);
+	loadTournaments(initialLoad: boolean): void {
+		this.tournamentStoreService
+			.watchTournaments()
+			.pipe(
+				filter(tournamentStore => tournamentStore !== null),
+				take(1)
+			)
+			.subscribe(tournamentStore => {
+				if (tournamentStore) {
+					// Only load in tournaments for the initial load
+					if (initialLoad == true) {
+						const tournaments = Object.values(tournamentStore);
+						this.allTournaments = tournaments.map(tournament => WyTournament.makeTrueCopy(tournament));
 
-		this.genericService.getCacheHasBeenChecked().subscribe(checked => {
-			if (checked == true) {
-				if (initialLoad == true) {
-					const storeAllTournaments = this.storeService.get('cache.tournaments');
-
-					for (const tournament in storeAllTournaments) {
-						const newTournament = WyTournament.makeTrueCopy(storeAllTournaments[tournament]);
-						this.availableTournamentId = newTournament.id + 1;
-
-						this.allTournaments.push(newTournament);
+						if (this.allTournaments.length == 0) {
+							this.availableTournamentId = 1;
+						}
+						else {
+							this.availableTournamentId = this.allTournaments[this.allTournaments.length - 1].id + 1;
+						}
 					}
-				}
 
-				// TODO: make a better solution for this
-				setTimeout(() => {
-					for (const tournament in this.allTournaments) {
-						if (this.allTournaments[tournament].publishId != undefined) {
-							this.getPublishedTournament(this.allTournaments[tournament].publishId).subscribe((data) => {
+					// Update tournaments if they have been updated
+					for (const tournament of this.allTournaments) {
+						if (tournament.publishId != undefined) {
+							this.getPublishedTournament(tournament.publishId).subscribe((data) => {
 								const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
 
-								if (publishedTournament.updateDate.getTime() != this.allTournaments[tournament].updateDate.getTime()) {
+								if (publishedTournament.updateDate.getTime() != tournament.updateDate.getTime()) {
 									publishedTournament.publishId = publishedTournament.id;
 
-									this.toastService.addToast(`The tournament "${this.allTournaments[tournament].name}" has been updated.`, ToastType.Information, 10);
+									this.toastService.addToast(`The tournament "${tournament.name}" has been updated.`, ToastType.Information, 10);
 
-									this.updateTournament(publishedTournament, this.allTournaments[tournament].publishId, true);
+									this.updateTournament(publishedTournament, tournament.publishId, true);
 								}
 							});
 						}
 					}
 
 					this.tournamentsInitialized$.next(true);
-				}, 1);
-			}
-		});
+				}
+			});
 	}
 
 	/**
@@ -86,10 +92,8 @@ export class TournamentService {
 	 * @param tournament the tournament to save
 	 */
 	saveTournament(tournament: WyTournament): void {
-		tournament.id = this.availableTournamentId++;
-
 		this.allTournaments.push(tournament);
-		this.storeService.set(`cache.tournaments.${tournament.id}`, tournament);
+		this.tournamentStoreService.saveTournament(tournament);
 	}
 
 	/**
@@ -115,7 +119,7 @@ export class TournamentService {
 			}
 		}
 
-		this.storeService.set(`cache.tournaments.${tournament.id}`, tournament);
+		this.tournamentStoreService.saveTournament(tournament);
 	}
 
 	/**
@@ -134,7 +138,7 @@ export class TournamentService {
 	 */
 	deleteTournament(tournament: WyTournament): void {
 		this.allTournaments.splice(this.allTournaments.indexOf(tournament), 1);
-		this.storeService.delete(`cache.tournaments.${tournament.id}`);
+		this.tournamentStoreService.deleteTournament(tournament);
 	}
 
 	/**

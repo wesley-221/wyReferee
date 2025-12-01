@@ -1,0 +1,79 @@
+<h2 mat-dialog-title>Data migration</h2>
+
+<mat-dialog-content>
+	<div class="content" *ngIf="migrationSuccessful == false">
+		<p>wyReferee has been updated to a new version. This version requires you to migrate your existing data to a new format for it to work correctly.</p>
+
+		<hr />
+
+		<h2>Migration options</h2>
+		<p>Select from the table below what data you want to migrate. If left empty, no data will be migrated.</p>
+
+		<form class="checks" [formGroup]="migrationOptionsFormGroup">
+			<mat-checkbox formControlName="webhook-customization">Webhook customization</mat-checkbox>
+			<mat-checkbox formControlName="tournaments">Tournaments</mat-checkbox>
+			<mat-checkbox formControlName="lobbies">Lobbies</mat-checkbox>
+			<mat-checkbox formControlName="irc-channels">IRC lobbies</mat-checkbox>
+			<mat-checkbox formControlName="irc-shortcut-commands">IRC shortcut commands</mat-checkbox>
+		</form>
+
+		<hr />
+
+		<h2>Data options</h2>
+		<p>Select what happens to your existing data.</p>
+
+		<form [formGroup]="dataOptionsFormGroup">
+			<mat-radio-group formControlName="keep-data-backup" class="checks radio">
+				<mat-radio-button [value]="true">Keep a backup of my old data</mat-radio-button>
+				<mat-radio-button [value]="false">Delete my old data after migration</mat-radio-button>
+
+				<mat-error *ngIf="dataOptionsFormGroup.controls['keep-data-backup'].errors && (dataOptionsFormGroup.controls['keep-data-backup'].touched || dataOptionsFormGroup.controls['keep-data-backup'].dirty)">
+					You have to select an option.
+				</mat-error>
+			</mat-radio-group>
+		</form>
+	</div>
+
+	<div class="content" *ngIf="migrationSuccessful == true">
+		<h2>Migration completed successfully!</h2>
+
+		<app-alert alertType="info">
+			In order for the changes to take effect, the client has to be restarted. Click on the close button below to restart the application.
+		</app-alert>
+
+		<p>The following changes were made during the migration process:</p>
+
+		<div class="data-migration-log">
+			<h3 *ngIf="migrationLog.length == 0">No changes were made.</h3>
+			<h3 *ngIf="migrationLog.length > 0">Migration log:</h3>
+
+			<div class="log-entries">
+				<div class="log" *ngFor="let log of migrationLog">
+					<div class="status-icon success" *ngIf="log.status == 'success'">
+						<mat-icon>check_circle</mat-icon>
+					</div>
+
+					<div class="status-icon error" *ngIf="log.status == 'error'">
+						<mat-icon>error</mat-icon>
+					</div>
+
+					<span class="message">{{ log.message }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button (click)="migrateData()" color="accent" *ngIf="migrationSuccessful == false">
+		<div class="loading">
+			<mat-spinner *ngIf="isMigrating == true" [diameter]="26" class="spinner"></mat-spinner>
+
+			migrate data
+		</div>
+	</button>
+
+	<button mat-button (click)="restartClient()" color="primary" *ngIf="migrationSuccessful == true">
+		close
+	</button>
+</mat-dialog-actions>

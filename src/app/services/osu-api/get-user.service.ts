@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { OsuApi, OsuApiEndpoints } from '../../models/osu-models/osu';
-import { StoreService } from '../store.service';
 import { HttpClient } from '@angular/common/http';
 import { OsuUser } from '../../models/osu-models/osu-user';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
 })
 
 export class GetUser extends OsuApi {
-	constructor(private httpClient: HttpClient, private storeService: StoreService) {
+	constructor(private httpClient: HttpClient) {
 		super(OsuApiEndpoints.GetUser);
 	}
 
@@ -22,10 +21,14 @@ export class GetUser extends OsuApi {
 	 * @param gamemode the gamemode
 	 */
 	public getByUsername(username: string, gamemode = 0): Observable<OsuUser> {
-		return this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key') as string}&u=${username}&type=string&m=${gamemode}`)
-			.pipe(
-				map((data: any) => this.serializeFromJson(data))
-			);
+		return from(window.electronApi.osuAuthentication.getApiKey()).pipe(
+			switchMap(apiKey =>
+				this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${apiKey}&u=${username}&type=string&m=${gamemode}`)
+					.pipe(
+						map((data: any) => this.serializeFromJson(data))
+					)
+			)
+		);
 	}
 
 	/**
@@ -35,10 +38,14 @@ export class GetUser extends OsuApi {
 	 * @param gamemode the gamemode
 	 */
 	public getByUserId(userid: number, gamemode = 0): Observable<OsuUser> {
-		return this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key') as string}&u=${userid}&type=id&m=${gamemode}`)
-			.pipe(
-				map((data: any) => this.serializeFromJson(data))
-			);
+		return from(window.electronApi.osuAuthentication.getApiKey()).pipe(
+			switchMap(apiKey =>
+				this.httpClient.get<OsuUser>(`${this.url}${this.endpoint}?k=${apiKey}&u=${userid}&type=id&m=${gamemode}`)
+					.pipe(
+						map((data: any) => this.serializeFromJson(data))
+					)
+			)
+		);
 	}
 
 	private serializeFromJson(json: any): OsuUser {

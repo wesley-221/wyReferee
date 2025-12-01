@@ -4,7 +4,6 @@ import { ElectronService } from '../../../../services/electron.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../services/toast.service';
-import { StoreService } from '../../../../services/store.service';
 import { ToastType } from '../../../../models/toast';
 import { WebhookService } from '../../../../services/webhook.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,6 +41,7 @@ import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { SettingsStoreService } from 'app/services/storage/settings-store.service';
 
 @Component({
 	selector: 'app-irc',
@@ -116,7 +116,7 @@ export class IrcComponent implements OnInit {
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
-		private storeService: StoreService,
+		private settingsStore: SettingsStoreService,
 		private multiplayerLobbies: WyMultiplayerLobbiesService,
 		private router: Router,
 		private toastService: ToastService,
@@ -132,82 +132,16 @@ export class IrcComponent implements OnInit {
 		public cacheService: CacheService) {
 		this.channels = ircService.allChannels;
 
-		const dividerHeightStore = this.storeService.get('dividerHeight');
+		settingsStore.watchSettings().subscribe(settings => {
+			if (settings) {
+				this.dividerHeightPercentage = settings.dividerHeight;
+			}
+		});
+
 		this.currentMessageHistoryIndex = -1;
 		this.slashCommandIndex = -1;
 
 		this.matchDialogSendFinalResult = false;
-
-		if (dividerHeightStore == undefined) {
-			this.storeService.set('dividerHeight', 30);
-			this.dividerHeightPercentage = 30;
-		}
-		else {
-			this.dividerHeightPercentage = dividerHeightStore;
-		}
-
-		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
-			// Check if the user was authenticated
-			if (isAuthenticated) {
-				for (const channel in this.channels) {
-					// Change the channel if it was the last active channel
-					if (this.channels[channel].lastActiveChannel) {
-						this.changeChannel(this.channels[channel].name, true);
-						break;
-					}
-				}
-			}
-		});
-
-		// Initialize the scroll
-		this.ircService.hasMessageBeenSend().subscribe(() => {
-			// Mark current channel as read
-			if (this.selectedChannel && ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
-				ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
-			}
-
-			// Detect changes to update the view, scroll to bottom after this
-			this.ref.detectChanges();
-
-			// Scroll the chats to the bottom
-			if (this.normalChats || this.banchoBotChats) {
-				this.scrollToBottom();
-			}
-		});
-
-		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
-			if (this.selectedLobby == undefined) {
-				return;
-			}
-
-			if (data.lobbyId == this.selectedLobby.lobbyId) {
-				this.selectedLobby = data;
-				this.refreshIrcHeader(this.selectedLobby);
-
-				if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
-					if (this.selectedLobby.isQualifierLobby == false) {
-						this.matchDialogHeaderName = 'Last played beatmap';
-						this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
-						this.matchDialogSendFinalResult = false;
-
-						this.ref.detectChanges();
-					}
-				}
-			}
-		});
-
-		// Trigger hasUnReadMessages for channels
-		this.ircService.getChannelMessageUnread().subscribe(channel => {
-			if ((channel != null && this.selectedChannel != null) && this.selectedChannel.name != channel.name) {
-				for (const findChannel in this.channels) {
-					if (this.channels[findChannel].name == channel.name) {
-						this.channels[findChannel].hasUnreadMessages = true;
-						this.ref.detectChanges();
-						break;
-					}
-				}
-			}
-		});
 
 		this.slashCommandService.registerCommand(new SlashCommand({
 			name: 'savelog',
@@ -267,6 +201,72 @@ export class IrcComponent implements OnInit {
 		this.ircService.getIsJoiningChannel().subscribe(value => {
 			this.isAttemptingToJoin = value;
 		});
+
+		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
+			// Check if the user was authenticated
+			if (isAuthenticated) {
+				for (const channel in this.channels) {
+					// Change the channel if it was the last active channel
+					if (this.channels[channel].lastActiveChannel) {
+						this.changeChannel(this.channels[channel].name, true);
+						break;
+					}
+				}
+			}
+		});
+
+		// Initialize the scroll
+		this.ircService.hasMessageBeenSend().subscribe(sent => {
+			// Mark current channel as read
+			if (this.selectedChannel && this.ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages) {
+				this.ircService.getChannelByName(this.selectedChannel.name).hasUnreadMessages = false;
+			}
+
+			if (sent == true) {
+				// Detect changes to update the view, scroll to bottom after this
+				this.ref.detectChanges();
+			}
+
+			// Scroll the chats to the bottom
+			if (this.normalChats || this.banchoBotChats) {
+				this.scrollToBottom();
+			}
+		});
+
+		this.multiplayerLobbies.synchronizeIsCompleted().subscribe(data => {
+			if (this.selectedLobby == undefined) {
+				return;
+			}
+
+			if (data.lobbyId == this.selectedLobby.lobbyId) {
+				this.selectedLobby = data;
+				this.refreshIrcHeader(this.selectedLobby);
+
+				if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
+					if (this.selectedLobby.isQualifierLobby == false) {
+						this.matchDialogHeaderName = 'Last played beatmap';
+						this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
+						this.matchDialogSendFinalResult = false;
+
+						this.ref.detectChanges();
+					}
+				}
+			}
+		});
+
+		// Trigger hasUnReadMessages for channels
+		this.ircService.getChannelMessageUnread().subscribe(channel => {
+			if ((channel != null && this.selectedChannel != null) && this.selectedChannel.name != channel.name) {
+				for (const findChannel in this.channels) {
+					if (this.channels[findChannel].name == channel.name) {
+						this.channels[findChannel].hasUnreadMessages = true;
+
+						this.ref.detectChanges();
+						break;
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -290,7 +290,7 @@ export class IrcComponent implements OnInit {
 	 */
 	expandDivider(): void {
 		this.dividerHeightPercentage += 5;
-		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+		this.settingsStore.set('dividerHeight', this.dividerHeightPercentage);
 	}
 
 	/**
@@ -298,7 +298,7 @@ export class IrcComponent implements OnInit {
 	 */
 	resetDivider(): void {
 		this.dividerHeightPercentage = 30;
-		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+		this.settingsStore.set('dividerHeight', this.dividerHeightPercentage);
 	}
 
 	/**
@@ -306,7 +306,7 @@ export class IrcComponent implements OnInit {
 	 */
 	shrinkDivider(): void {
 		this.dividerHeightPercentage -= 5;
-		this.storeService.set('dividerHeight', this.dividerHeightPercentage);
+		this.settingsStore.set('dividerHeight', this.dividerHeightPercentage);
 	}
 
 	/**
@@ -479,7 +479,7 @@ export class IrcComponent implements OnInit {
 	dropChannel(event: CdkDragDrop<IrcChannel[]>) {
 		moveItemInArray(this.channels, event.previousIndex, event.currentIndex);
 
-		this.ircService.rearrangeChannels(this.channels);
+		console.warn('Rearring IRC channels is currently not persisted. Will be added in a future update.');
 	}
 
 	/**
@@ -776,7 +776,8 @@ export class IrcComponent implements OnInit {
 	 */
 	playSound(channel: IrcChannel, status: boolean) {
 		channel.playSoundOnMessage = status;
-		this.storeService.set(`irc.channels.${channel.name}.playSoundOnMessage`, status);
+		window.electronApi.irc.setIrcPlaySoundOnMessage(channel.name, status);
+
 		this.toastService.addToast(`${channel.name} will ${status == false ? 'no longer beep on message' : 'now beep on message'}.`);
 	}
 
@@ -790,8 +791,9 @@ export class IrcComponent implements OnInit {
 
 		// Stopped editing the label
 		if (channel.editingLabel == false) {
-			this.storeService.set(`irc.channels.${channel.name}.label`, channel.label);
-		} else {
+			window.electronApi.irc.setIrcChannelLabel(channel.name, channel.label);
+		}
+		else {
 			// Store old label when starting to edit so we can revert if canceled
 			channel.oldLabel = channel.label;
 		}
@@ -808,7 +810,8 @@ export class IrcComponent implements OnInit {
 		// When creating label for the first time channel.oldLabel will get set to undefined since channel.label will be undefined
 		if (channel.oldLabel !== undefined && channel.oldLabel !== null) {
 			channel.label = channel.oldLabel;
-			this.storeService.set(`irc.channels.${channel.name}.label`, channel.label);
+
+			window.electronApi.irc.setIrcChannelLabel(channel.name, channel.label);
 		}
 	}
 

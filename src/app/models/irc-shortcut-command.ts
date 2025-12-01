@@ -1,6 +1,7 @@
 import { Lobby } from './lobby';
 
 export class IrcShortcutCommand {
+	id: number;
 	label: string;
 	command: string;
 	warning: boolean;
@@ -16,6 +17,7 @@ export class IrcShortcutCommand {
 	 */
 	public static makeTrueCopy(ircShortcutCommand: IrcShortcutCommand): IrcShortcutCommand {
 		return new IrcShortcutCommand({
+			id: ircShortcutCommand.id,
 			label: ircShortcutCommand.label,
 			command: ircShortcutCommand.command,
 			warning: ircShortcutCommand.warning

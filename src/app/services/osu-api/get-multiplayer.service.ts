@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { StoreService } from '../store.service';
 import { OsuApiEndpoints, OsuApi } from '../../models/osu-models/osu';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { MultiplayerMatch } from '../../models/osu-models/multiplayer-match';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { MultiplayerGame } from '../../models/osu-models/multiplayer-game';
 import { MultiplayerGameScore } from '../../models/osu-models/multiplayer-game-score';
 
@@ -13,7 +12,7 @@ import { MultiplayerGameScore } from '../../models/osu-models/multiplayer-game-s
 })
 
 export class GetMultiplayerService extends OsuApi {
-	constructor(private httpClient: HttpClient, private storeService: StoreService) {
+	constructor(private httpClient: HttpClient) {
 		super(OsuApiEndpoints.GetMultiplayer);
 	}
 
@@ -25,10 +24,14 @@ export class GetMultiplayerService extends OsuApi {
 	public get(multiplayerLink: string): Observable<MultiplayerMatch> {
 		const multiplayerId = this.getMultiplayerIdFromUrl(multiplayerLink);
 
-		return this.httpClient.get<MultiplayerMatch>(`${this.url}${this.endpoint}?k=${this.storeService.get('api-key') as string}&mp=${multiplayerId}`)
-			.pipe(
-				map((data: any) => this.serializeFromJson(data))
-			);
+		return from(window.electronApi.osuAuthentication.getApiKey()).pipe(
+			switchMap(apiKey =>
+				this.httpClient.get<MultiplayerMatch>(`${this.url}${this.endpoint}?k=${apiKey}&mp=${multiplayerId}`)
+					.pipe(
+						map((data: any) => this.serializeFromJson(data))
+					)
+			)
+		);
 	}
 
 	/**

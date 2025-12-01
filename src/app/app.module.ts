@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -30,6 +30,12 @@ import { MarkdownModule } from 'ngx-markdown';
 import { CredentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { ProtectBeatmapDialogComponent } from './components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
 import { AddBulkTeamsDialogComponent } from './components/dialogs/add-bulk-teams-dialog/add-bulk-teams-dialog.component';
+import { StorageDriverService } from './services/storage/storage-driver.service';
+import { DataMigrationDialogComponent } from './components/dialogs/data-migration-dialog/data-migration-dialog.component';
+
+export function initStorage(storageDriver: StorageDriverService) {
+	return () => storageDriver.init();
+}
 
 @NgModule({
 	declarations: [
@@ -57,6 +63,7 @@ import { AddBulkTeamsDialogComponent } from './components/dialogs/add-bulk-teams
 		IrcShortcutWarningDialogComponent,
 		ProtectBeatmapDialogComponent,
 		AddBulkTeamsDialogComponent,
+		DataMigrationDialogComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -67,7 +74,8 @@ import { AddBulkTeamsDialogComponent } from './components/dialogs/add-bulk-teams
 		SharedModule
 	],
 	providers: [
-		{ provide: HTTP_INTERCEPTORS, useClass: CredentialsInterceptor, multi: true }
+		{ provide: HTTP_INTERCEPTORS, useClass: CredentialsInterceptor, multi: true },
+		{ provide: APP_INITIALIZER, useFactory: initStorage, deps: [StorageDriverService], multi: true }
 	],
 	bootstrap: [AppComponent]
 })

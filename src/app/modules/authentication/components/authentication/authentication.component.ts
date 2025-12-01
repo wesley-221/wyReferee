@@ -5,7 +5,6 @@ import { AuthenticateService } from 'app/services/authenticate.service';
 import { ElectronService } from 'app/services/electron.service';
 import { IrcService } from 'app/services/irc.service';
 import { ApiKeyValidation } from 'app/services/osu-api/api-key-validation.service';
-import { StoreService } from 'app/services/store.service';
 import { ToastService } from 'app/services/toast.service';
 
 @Component({
@@ -28,7 +27,6 @@ export class AuthenticationComponent implements OnInit {
 
 	constructor(
 		private apiKeyValidation: ApiKeyValidation,
-		private storeService: StoreService,
 		private toastService: ToastService,
 		public authService: AuthenticateService,
 		public ircService: IrcService,
@@ -50,12 +48,15 @@ export class AuthenticationComponent implements OnInit {
 			])
 		});
 
-		this.apiKey = this.storeService.get('api-key');
-		this.isAuthenticating = false;
+		window.electronApi.osuAuthentication.getIrcCredentials().then(credentials => {
+			this.apiKey = credentials.apiKey;
 
-		if (this.apiKey && this.apiKey.length > 0) {
-			this.apiKeyIsValid = true;
-		}
+			if (this.apiKey && this.apiKey.length > 0) {
+				this.apiKeyIsValid = true;
+			}
+		});
+
+		this.isAuthenticating = false;
 	}
 
 	ngOnInit(): void {
@@ -116,7 +117,7 @@ export class AuthenticationComponent implements OnInit {
 		const username = this.ircLoginForm.get('irc-username').value.replace(/ /g, '_');
 		const password = this.ircLoginForm.get('irc-password').value;
 
-		this.ircService.connect(username, password);
+		this.ircService.connect(username, password, this.apiKey);
 
 		this.ircLoginTimeout = setTimeout(() => {
 			this.showIrcLoginTimeout = true;
@@ -128,26 +129,22 @@ export class AuthenticationComponent implements OnInit {
 	}
 
 	/**
-	 * Get the api key
-	 */
-	getApiKey() {
-		return this.storeService.get('api-key');
-	}
-
-	/**
 	 * Save the api key with the entered value
 	 */
 	saveApiKey() {
-		// Key is valid
-		this.apiKeyValidation.validate(this.apiKey).subscribe(() => {
-			this.storeService.set('api-key', this.apiKey);
-			this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
+		this.apiKey = this.apiKey.trim();
 
-			this.apiKeyIsValid = true;
-		},
-			// Key is invalid
-			() => {
+		this.apiKeyValidation.validate(this.apiKey).subscribe({
+			next: () => {
+				window.electronApi.osuAuthentication.setApiKey(this.apiKey);
+
+				this.toastService.addToast('You have entered a valid api-key.', ToastType.Information);
+
+				this.apiKeyIsValid = true;
+			},
+			error: () => {
 				this.toastService.addToast('The entered api-key was invalid.', ToastType.Error);
-			});
+			}
+		});
 	}
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { AuthenticateService } from 'app/services/authenticate.service';
-import { StoreService } from 'app/services/store.service';
 import { TournamentService } from 'app/services/tournament.service';
 
 @Component({
@@ -13,11 +12,18 @@ export class TournamentOverviewComponent implements OnInit {
 	allTournaments: WyTournament[];
 	active: string;
 
-	constructor(public authenticateService: AuthenticateService, private tournamentService: TournamentService, private storeService: StoreService) {
+	constructor(public authenticateService: AuthenticateService, private tournamentService: TournamentService) {
 		this.allTournaments = this.tournamentService.allTournaments;
 		this.active = 'local';
 	}
-	ngOnInit(): void { }
+
+	ngOnInit(): void {
+		this.tournamentService.tournamentsHaveBeenInitialized().subscribe(initialized => {
+			if (initialized == true) {
+				this.allTournaments = this.tournamentService.allTournaments;
+			}
+		});
+	}
 
 	click(type: string) {
 		if (type == 'local') {
@@ -37,8 +43,6 @@ export class TournamentOverviewComponent implements OnInit {
 		if (data != null) {
 			data.tournament.publishId = data.tournament.id;
 			this.tournamentService.updateTournament(data.tournament, data.id, false);
-
-			this.storeService.delete(`cache.tournaments.${data.id}`);
 		}
 	}
 }

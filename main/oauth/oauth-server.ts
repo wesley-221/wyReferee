@@ -1,6 +1,7 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, shell } from 'electron';
 import * as express from 'express';
 import * as http from 'http';
+import { IPC_CHANNELS } from '../ipc-channels';
 
 const DEFAULT_PORT = 3000;
 
@@ -9,20 +10,21 @@ export class OauthServer {
 	win: BrowserWindow | null;
 
 	constructor(win: BrowserWindow | null) {
+		this.server = null;
 		this.win = win;
 	}
 
 	/**
 	 * Starts a local Express server to handle the `/osu-oauth-callback` route for OAuth.
 	 */
-	async startServer() {
+	async startServer(oauthUrl: string) {
 		this.stopServer();
 
 		const expressServer = express();
 
 		expressServer.get('/osu-oauth-callback', (req, res) => {
 			if (this.win) {
-				this.win.webContents.send('osu-oauth-code', req.query.code);
+				this.win.webContents.send(IPC_CHANNELS.ON_OSU_OAUTH_CODE, req.query.code);
 			}
 
 			res.send('Authentication successful! You can now close this window.');
@@ -34,7 +36,7 @@ export class OauthServer {
 			console.log(`Started local server on http://localhost:${DEFAULT_PORT}`);
 
 			if (this.win) {
-				this.win.webContents.send('express-server-started', true);
+				shell.openExternal(oauthUrl);
 			}
 		});
 	}

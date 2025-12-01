@@ -39,7 +39,6 @@ export class SlashCommandService {
 	 */
 	registerCommand(command: SlashCommand): void {
 		if (this.slashCommands.has(command.name)) {
-			console.warn(`The slash command ${command.name} already exists.`);
 			return;
 		}
 
@@ -73,17 +72,14 @@ export class SlashCommandService {
 			}
 		}
 
-		this.electronService.dialog.showSaveDialog({
+		window.electronApi.dialog.showSaveDialog({
 			title: `Save the log of ${ircChannel.name}`,
 			defaultPath: `${ircChannel.name}.txt`
 		}).then(file => {
-			this.electronService.fs.writeFile(file.filePath, allMessages.join('\n'), err => {
-				if (err) {
-					this.toastService.addToast(`Could not save the log file: ${err.message}.`, ToastType.Error);
-				}
-				else {
-					this.toastService.addToast(`Successfully saved the log file to "${file.filePath}".`);
-				}
+			window.electronApi.fs.writeFile(file.filePath, allMessages.join('\n')).then(() => {
+				this.toastService.addToast(`Successfully saved the log file to "${file.filePath}".`);
+			}).catch((err: Error) => {
+				this.toastService.addToast(`Could not save the log file: ${err.message}.`, ToastType.Error);
 			});
 		});
 	}
@@ -100,17 +96,14 @@ export class SlashCommandService {
 			irc: ircChannel
 		};
 
-		this.electronService.dialog.showSaveDialog({
+		window.electronApi.dialog.showSaveDialog({
 			title: `Save the debug file`,
 			defaultPath: `debug_${multiplayerLobby.getLobbyNameSlug()}.json`
 		}).then(file => {
-			this.electronService.fs.writeFile(file.filePath, JSON.stringify(data, null, '\t'), err => {
-				if (err) {
-					this.toastService.addToast(`Could not save the log file: ${err.message}.`, ToastType.Error);
-				}
-				else {
-					this.toastService.addToast(`Successfully saved the log file to "${file.filePath}".`);
-				}
+			window.electronApi.fs.writeFile(file.filePath, JSON.stringify(data, null, '\t')).then(() => {
+				this.toastService.addToast(`Successfully saved the debug file to "${file.filePath}".`);
+			}).catch((err: Error) => {
+				this.toastService.addToast(`Could not save the debug file: ${err.message}.`, ToastType.Error);
 			});
 		});
 	}

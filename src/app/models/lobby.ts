@@ -21,6 +21,8 @@ import { WyTeamPlayer } from './wytournament/wy-team-player';
 import { WyTournament } from './wytournament/wy-tournament';
 
 export class Lobby {
+	rawFileName: string;
+
 	lobbyId: number;
 	description: string;
 	multiplayerLink: string;
@@ -129,6 +131,7 @@ export class Lobby {
 	 */
 	public static makeTrueCopy(lobby: Lobby): Lobby {
 		const newLobby = new Lobby({
+			rawFileName: lobby.rawFileName,
 			lobbyId: lobby.lobbyId,
 			description: lobby.description,
 			multiplayerLink: lobby.multiplayerLink,
@@ -722,5 +725,13 @@ export class Lobby {
 		}
 
 		return this.tournament.wyBinTournamentId != null && this.tournament.wyBinTournamentId != undefined;
+	}
+
+	getFileName(): string {
+		return `${this.lobbyId}-${this.getLobbyNameSlug()}`;
+	}
+
+	getRawFileName(): string {
+		return this.rawFileName;
 	}
 }

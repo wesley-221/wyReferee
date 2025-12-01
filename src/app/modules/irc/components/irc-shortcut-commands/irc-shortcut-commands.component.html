@@ -1,6 +1,6 @@
 <div class="action-bar">
 	<div class="actions">
-		<div class="action" *ngFor="let ircShortcutCommand of ircShortcutCommandsService.ircShortCutCommands" [ngClass]="{'disabled': !ircService.isAuthenticated}" (click)="executeIrcShortcutCommand(ircShortcutCommand)">
+		<div class="action" *ngFor="let ircShortcutCommand of ircShortcutCommandsService.ircShortcutCommands" [ngClass]="{'disabled': !ircService.isAuthenticated}" (click)="executeIrcShortcutCommand(ircShortcutCommand)">
 			{{ ircShortcutCommand.label }}
 		</div>
 	</div>

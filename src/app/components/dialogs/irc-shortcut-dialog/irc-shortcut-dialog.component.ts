@@ -14,11 +14,11 @@ export class IrcShortcutDialogComponent implements OnInit {
 	ngOnInit(): void { }
 
 	createNewShortcutCommand(): void {
-		this.ircShortCutCommandsService.ircShortCutCommands.push(new IrcShortcutCommand());
+		this.ircShortCutCommandsService.ircShortcutCommands.push(new IrcShortcutCommand());
 	}
 
 	deleteIrcShortcutCommand(ircShortcutCommand: IrcShortcutCommand): void {
-		this.ircShortCutCommandsService.removeIrcShortcutCommand(ircShortcutCommand.label);
+		this.ircShortCutCommandsService.removeIrcShortcutCommand(ircShortcutCommand);
 	}
 
 	createGenericShortcutCommands(): void {
@@ -31,11 +31,9 @@ export class IrcShortcutDialogComponent implements OnInit {
 		this.ircShortCutCommandsService.addIrcShortcutCommand('team 1 win roll', '{{ team1 }}: first ban AND second pick, or ban second AND pick first');
 		this.ircShortCutCommandsService.addIrcShortcutCommand('team 2 win roll', '{{ team2 }}: first ban AND second pick, or ban second AND pick first');
 		this.ircShortCutCommandsService.addIrcShortcutCommand('close', '!mp close', true);
-
-		this.ircShortCutCommandsService.saveIrcShortcutCommands();
 	}
 
 	dropChannel(event: CdkDragDrop<IrcShortcutCommand[]>) {
-		moveItemInArray(this.ircShortCutCommandsService.ircShortCutCommands, event.previousIndex, event.currentIndex);
+		moveItemInArray(this.ircShortCutCommandsService.ircShortcutCommands, event.previousIndex, event.currentIndex);
 	}
 }

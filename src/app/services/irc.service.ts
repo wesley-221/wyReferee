@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BanchoClient, PrivateMessage, ChannelMessage, BanchoChannel, BanchoMultiplayerChannel, BanchoLobbyPlayer } from 'bancho.js';
 import { ToastService } from './toast.service';
-import { StoreService } from './store.service';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { Regex } from '../models/irc/regex';
 import { MessageBuilder, MessageType } from '../models/irc/message-builder';
@@ -52,7 +51,6 @@ export class IrcService {
 	private soundIsPlaying = false;
 
 	constructor(private toastService: ToastService,
-		private storeService: StoreService,
 		private multiplayerLobbiesService: WyMultiplayerLobbiesService,
 		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
 		private electronService: ElectronService,
@@ -65,16 +63,13 @@ export class IrcService {
 		this.isAuthenticated$ = new BehaviorSubject<boolean>(false);
 		this.setChannelUnreadMessages$ = new BehaviorSubject<IrcChannel>(null);
 
-		// Connect to irc if the credentials are saved
-		const ircCredentials = storeService.get('irc');
+		window.electronApi.osuAuthentication.getIrcCredentials().then(credentials => {
+			if (credentials.username && credentials.password) {
+				this.connect(credentials.username, credentials.password, credentials.apiKey);
+			}
+		});
 
-		if (ircCredentials != undefined) {
-			this.connect(ircCredentials.username, ircCredentials.password);
-		}
-
-		const connectedChannels = storeService.get('irc.channels');
-
-		if (connectedChannels != undefined && Object.keys(connectedChannels).length > 0) {
+		window.electronApi.irc.getAllIrcChannels().then(connectedChannels => {
 			// Loop through all the channels
 			for (const channel in connectedChannels) {
 				const nChannel = IrcChannel.makeTrueCopy(connectedChannels[channel]);
@@ -94,7 +89,7 @@ export class IrcService {
 
 				this.allChannels.push(nChannel);
 			}
-		}
+		});
 	}
 
 	/**
@@ -138,10 +133,7 @@ export class IrcService {
 	 * @param username the username to connect with
 	 * @param password the password to connect with
 	 */
-	connect(username: string, password: string) {
-		const allJoinedChannels: IrcChannel[] = this.storeService.get('irc.channels');
-		const apiKey = this.storeService.get('api-key');
-
+	connect(username: string, password: string, apiKey: string) {
 		this.client = new BanchoClient({ username: username, password: password, apiKey: apiKey });
 
 		this.isConnecting$.next(true);
@@ -214,33 +206,42 @@ export class IrcService {
 			}
 		});
 
-		from(this.client.connect()).subscribe(() => {
-			this.isAuthenticated = true;
-			this.authenticatedUser = username;
+		from(this.client.connect()).subscribe({
+			next: () => {
+				this.isAuthenticated = true;
+				this.authenticatedUser = username;
 
-			// Save the credentials
-			this.storeService.set('irc.username', username);
-			this.storeService.set('irc.password', password);
+				// Save the credentials
+				window.electronApi.osuAuthentication.setIrcLogin(username, password);
 
-			this.isConnecting$.next(false);
-			this.ircConnectionError = null;
+				this.isConnecting$.next(false);
+				this.ircConnectionError = null;
 
-			this.isAuthenticated$.next(true);
+				this.isAuthenticated$.next(true);
 
-			// Initialize multiplayer channels after restart
-			for (const ircChannel in allJoinedChannels) {
-				if (allJoinedChannels[ircChannel].isPrivateChannel == false && allJoinedChannels[ircChannel].isPublicChannel == false) {
-					const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
+				// Initialize multiplayer channels after restart
+				window.electronApi.irc.getAllIrcChannels().then((allJoinedChannels: IrcChannel[]) => {
+					for (const ircChannel in allJoinedChannels) {
+						if (allJoinedChannels[ircChannel].isPrivateChannel == false && allJoinedChannels[ircChannel].isPublicChannel == false) {
+							const channel = this.client.getChannel(allJoinedChannels[ircChannel].name) as BanchoMultiplayerChannel;
 
-					from(channel.join()).subscribe(() => {
-						this.initializeChannelListeners(channel);
-					});
-				}
+							from(channel.join()).subscribe({
+								next: () => {
+									this.initializeChannelListeners(channel);
+								},
+								error: (error: string) => {
+									console.warn(`Failed to join ${allJoinedChannels[ircChannel].name}. The channel is closed or no longer available. ${error}`);
+								}
+							});
+						}
+					}
+				});
+			},
+			error: (error) => {
+				this.isConnecting$.next(false);
+				this.ircConnectionError = error;
 			}
-		}, (error => {
-			this.isConnecting$.next(false);
-			this.ircConnectionError = error;
-		}));
+		});
 	}
 
 	/**
@@ -304,7 +305,7 @@ export class IrcService {
 			this.authenticatedUser = 'none';
 
 			// Delete the credentials
-			this.storeService.delete('irc');
+			window.electronApi.osuAuthentication.clearIrcLogin();
 
 			this.isDisconnecting$.next(false);
 
@@ -369,7 +370,7 @@ export class IrcService {
 			channel.plainMessageHistory.push(message);
 			this.setChannelUnreadMessages$.next(channel);
 
-			this.saveMessageToHistory(recipient, newMessage, message);
+			this.saveOutgoingMessageToHistory(recipient, newMessage, message);
 		}
 		// =============================
 		// The message is being received
@@ -458,9 +459,7 @@ export class IrcService {
 			}
 
 			// Flash window when a message has been sent and window is not focused
-			if (!this.electronService.remote.getCurrentWindow().isFocused()) {
-				this.electronService.remote.getCurrentWindow().flashFrame(true);
-			}
+			window.electronApi.window.flashWindow();
 		}
 
 		this.messageHasBeenSend$.next(true);
@@ -472,20 +471,21 @@ export class IrcService {
 	 * @param channelName
 	 */
 	joinChannel(channelName: string, customLabel: string = null) {
-		const allJoinedChannels = this.storeService.get('irc.channels');
 		this.isJoiningChannel$.next(true);
 
 		// Check if you have already joined the channel
-		if (allJoinedChannels != undefined && allJoinedChannels.hasOwnProperty(channelName)) {
-			this.toastService.addToast(`You have already joined the channel "${channelName}".`);
-			this.isJoiningChannel$.next(false);
-			return;
+		for (const channel of this.allChannels) {
+			if (channel.name == channelName) {
+				this.toastService.addToast(`You have already joined the channel "${channelName}".`);
+				this.isJoiningChannel$.next(false);
+				return;
+			}
 		}
 
 		// ===================================
 		// Joining a multiplayer match channel
 		if (channelName.startsWith('#mp_')) {
-			this.storeService.set(`irc.channels.${channelName}`, new IrcChannel({
+			const newChannel = new IrcChannel({
 				name: channelName,
 				label: customLabel == null ? null : customLabel,
 				active: true,
@@ -493,17 +493,11 @@ export class IrcService {
 				isPrivateChannel: false,
 				isPublicChannel: false,
 				playSoundOnMessage: false
-			}));
+			});
 
-			this.allChannels.push(new IrcChannel({
-				name: channelName,
-				label: customLabel == null ? null : customLabel,
-				active: true,
-				lastActiveChannel: false,
-				isPrivateChannel: false,
-				isPublicChannel: false,
-				playSoundOnMessage: false
-			}));
+			window.electronApi.irc.createIrcChannel(channelName, newChannel);
+			this.allChannels.push(newChannel);
+
 			this.toastService.addToast(`Joined channel "${channelName}".`);
 
 			const channel = this.client.getChannel(channelName) as BanchoMultiplayerChannel;
@@ -514,23 +508,17 @@ export class IrcService {
 		// =========================================================
 		// Joining a "default" channel, such as #osu/#ctb/#dutch/etc
 		else if (channelName.startsWith('#')) {
-			this.storeService.set(`irc.channels.${channelName}`, new IrcChannel({
+			const newChannel = new IrcChannel({
 				name: channelName,
 				active: true,
 				lastActiveChannel: false,
 				isPrivateChannel: false,
 				isPublicChannel: true,
 				playSoundOnMessage: false
-			}));
+			});
 
-			this.allChannels.push(new IrcChannel({
-				name: channelName,
-				active: true,
-				lastActiveChannel: false,
-				isPrivateChannel: false,
-				isPublicChannel: true,
-				playSoundOnMessage: false
-			}));
+			window.electronApi.irc.createIrcChannel(channelName, newChannel);
+			this.allChannels.push(newChannel);
 
 			const channel = this.client.getChannel(channelName) as BanchoMultiplayerChannel;
 			channel.join();
@@ -545,23 +533,18 @@ export class IrcService {
 			const getChannel = this.getChannelByName(channelName);
 
 			if (getChannel == null) {
-				this.storeService.set(`irc.channels.${channelName}`, new IrcChannel({
+				const newChannel = new IrcChannel({
 					name: channelName,
 					active: true,
 					lastActiveChannel: false,
 					isPrivateChannel: true,
 					isPublicChannel: false,
 					playSoundOnMessage: false
-				}));
+				});
 
-				this.allChannels.push(new IrcChannel({
-					name: channelName,
-					active: true,
-					lastActiveChannel: false,
-					isPrivateChannel: true,
-					isPublicChannel: false,
-					playSoundOnMessage: false
-				}));
+				window.electronApi.irc.createIrcChannel(channelName, newChannel);
+				this.allChannels.push(newChannel);
+
 				this.toastService.addToast(`Opened private message channel with "${channelName}".`);
 			}
 
@@ -587,24 +570,19 @@ export class IrcService {
 	 * @param channelName the channel to part
 	 */
 	partChannel(channelName: string) {
-		const allJoinedChannels = this.storeService.get('irc.channels');
+		for (const channel of this.allChannels) {
+			if (channel.name == channelName) {
+				this.allChannels.splice(this.allChannels.indexOf(channel), 1);
 
-		if (allJoinedChannels.hasOwnProperty(channelName)) {
-			for (const i in this.allChannels) {
-				if (this.allChannels[i].name == channelName) {
-					this.allChannels.splice(parseInt(i), 1);
-					break;
+				if (channel.name.startsWith('#')) {
+					this.client.getChannel(channelName).leave();
 				}
+
+				window.electronApi.irc.deleteIrcChannel(channelName);
+				this.toastService.addToast(`Successfully parted "${channelName}".`);
+
+				break;
 			}
-
-			if (channelName.startsWith('#')) {
-				this.client.getChannel(channelName).leave();
-			}
-
-			delete allJoinedChannels[channelName];
-
-			this.storeService.set('irc.channels', allJoinedChannels);
-			this.toastService.addToast(`Successfully parted "${channelName}".`);
 		}
 	}
 
@@ -643,7 +621,7 @@ export class IrcService {
 			});
 		}
 
-		this.storeService.set('irc.channels', rearrangedChannels);
+		// window.electronApi.setAllIrcChannels(rearrangedChannels);
 	}
 
 	/**
@@ -653,11 +631,7 @@ export class IrcService {
 	 * @param active the status
 	 */
 	changeLastActiveChannel(channel: IrcChannel, active: boolean) {
-		const storeChannel = this.storeService.get(`irc.channels.${channel.name}`);
-
-		storeChannel.lastActiveChannel = active;
-
-		this.storeService.set(`irc.channels.${channel.name}`, storeChannel);
+		window.electronApi.irc.changeLastActiveChannel(channel.name, active);
 	}
 
 	/**
@@ -667,11 +641,22 @@ export class IrcService {
 	 * @param active the status
 	 */
 	changeActiveChannel(channel: IrcChannel, active: boolean) {
-		const storeChannel = this.storeService.get(`irc.channels.${channel.name}`);
+		window.electronApi.irc.changeActiveChannel(channel.name, active);
+	}
 
-		storeChannel.active = active;
+	/**
+	 * Save the outgoing message in the channel history
+	 *
+	 * @param channelName the channel to save the message in
+	 * @param message the message object to save
+	 * @param plainMessage the plain message that was sent
+	 */
+	saveOutgoingMessageToHistory(channelName: string, message: IrcMessage, plainMessage: string) {
+		if (message.isADivider) {
+			return;
+		}
 
-		this.storeService.set(`irc.channels.${channel.name}`, storeChannel);
+		window.electronApi.irc.addOutgoingIrcMessage(channelName, message, plainMessage);
 	}
 
 	/**
@@ -687,26 +672,7 @@ export class IrcService {
 			return;
 		}
 
-		const storeChannel: IrcChannel = this.storeService.get(`irc.channels.${channelName}`);
-
-		if (saveInBanchoMessages == true) {
-			storeChannel.banchoBotMessages.push(message);
-		}
-		else {
-			storeChannel.messages.push(message);
-
-			if (storeChannel.plainMessageHistory == undefined || storeChannel.plainMessageHistory == null) {
-				storeChannel.plainMessageHistory = [];
-			}
-
-			storeChannel.plainMessageHistory.push(plainMessage);
-
-			if (storeChannel.plainMessageHistory.length > 20) {
-				storeChannel.plainMessageHistory.shift();
-			}
-		}
-
-		this.storeService.set(`irc.channels.${channelName}`, storeChannel);
+		window.electronApi.irc.addIrcMessage(channelName, message, plainMessage, saveInBanchoMessages);
 	}
 
 	/**

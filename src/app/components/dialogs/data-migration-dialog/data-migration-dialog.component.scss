@@ -1,0 +1,50 @@
+.loading {
+	display: flex;
+	align-items: center;
+
+	.spinner {
+		margin-right: 8px;
+	}
+}
+
+.content {
+	padding: 8px;
+
+	.checks {
+		display: flex;
+		flex-direction: column;
+
+		&.radio {
+			.mat-radio-button {
+				margin-bottom: 8px;
+			}
+		}
+	}
+
+	.data-migration-log {
+		.log-entries {
+			display: flex;
+			flex-direction: column;
+
+			.log {
+				display: flex;
+				align-items: center;
+
+				margin-bottom: 8px;
+
+				.status-icon {
+					display: flex;
+					margin-right: 8px;
+
+					&.success {
+						color: #00cd2a;
+					}
+
+					&.error {
+						color: #ff3f32;
+					}
+				}
+			}
+		}
+	}
+}

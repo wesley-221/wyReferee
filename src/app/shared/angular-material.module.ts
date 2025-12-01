@@ -28,6 +28,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 
 const modules: any[] = [
 	LayoutModule,
@@ -55,7 +57,9 @@ const modules: any[] = [
 	MatProgressBarModule,
 	MatAutocompleteModule,
 	MatPaginatorModule,
-	ScrollingModule
+	ScrollingModule,
+	MatCheckboxModule,
+	MatRadioModule
 ];
 
 @NgModule({

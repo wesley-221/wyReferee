@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../../../../services/electron.service';
-import { StoreService } from '../../../../services/store.service';
 import { ToastService } from '../../../../services/toast.service';
 import { ToastType } from '../../../../models/toast';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +8,7 @@ import { AuthenticateService } from 'app/services/authenticate.service';
 import { IrcService } from 'app/services/irc.service';
 import { GenericService } from 'app/services/generic.service';
 import { OptionsMenu } from '../../models/options-menu';
+import { CacheStoreService } from 'app/services/storage/cache-store.service';
 
 @Component({
 	selector: 'app-settings',
@@ -34,12 +34,12 @@ export class SettingsComponent implements OnInit {
 
 	constructor(
 		public electronService: ElectronService,
-		private storeService: StoreService,
 		private toastService: ToastService,
 		private dialog: MatDialog,
 		public authService: AuthenticateService,
 		public ircService: IrcService,
-		private genericService: GenericService
+		private genericService: GenericService,
+		private cacheStoreService: CacheStoreService
 	) {
 		this.genericService.getAxSMenuStatus().subscribe(status => {
 			this.axsMenuStatus = status;
@@ -52,7 +52,9 @@ export class SettingsComponent implements OnInit {
 	 * Clear the cache
 	 */
 	clearCache() {
-		this.storeService.delete('cache');
+		this.cacheStoreService.resetCache('beatmaps');
+		this.cacheStoreService.resetCache('users');
+
 		this.toastService.addToast('Successfully cleared the cache.');
 	}
 
@@ -60,7 +62,7 @@ export class SettingsComponent implements OnInit {
 	 * Remove the pai key
 	 */
 	removeApiKey() {
-		this.storeService.delete('api-key');
+		window.electronApi.osuAuthentication.clearApiKey();
 		this.toastService.addToast('Successfully removed your api key.');
 	}
 
@@ -68,28 +70,25 @@ export class SettingsComponent implements OnInit {
 	 * Export the config file
 	 */
 	exportConfigFile() {
-		this.electronService.dialog.showSaveDialog({
-			title: 'Export the config file',
-			defaultPath: 'export.json'
+		let fileName = 'wyReferee-settings.zip';
+
+		if (this.authService.loggedIn) {
+			const username = this.authService.loggedInUser.username.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+			fileName = `wyReferee-settings-${username}.zip`;
+		}
+
+		window.electronApi.dialog.showSaveDialog({
+			title: 'Export wyReferee settings',
+			defaultPath: fileName
 		}).then(file => {
-			// Remove the api key and auth properties
-			let configFile = this.storeService.storage.store;
-			configFile['api-key'] = 'redacted';
-			configFile.auth = 'redacted'; // Authentication details from older versions
-			configFile.oauth = 'redacted';
-			configFile['osu-oauth'] = 'redacted';
-			configFile.irc.username = 'redacted';
-			configFile.irc.password = 'redacted';
+			if (file.canceled) {
+				return;
+			}
 
-			configFile = JSON.stringify(configFile, null, '\t');
-
-			this.electronService.fs.writeFile(file.filePath, configFile, err => {
-				if (err) {
-					this.toastService.addToast(`Something went wrong while trying to export the config file: ${err.message}.`, ToastType.Error);
-				}
-				else {
-					this.toastService.addToast(`Successfully saved the config file to "${file.filePath}".`);
-				}
+			window.electronApi.dialog.saveSettingsZip(file.filePath).then(() => {
+				this.toastService.addToast(`Successfully saved the config files to "${file.filePath}".`);
+			}).catch((err: Error) => {
+				this.toastService.addToast(`Something went wrong while trying to export the config files: ${err.message}.`, ToastType.Error);
 			});
 		});
 	}

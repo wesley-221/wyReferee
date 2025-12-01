@@ -79,8 +79,7 @@ export class TournamentAllPublishedAdministratorComponent implements OnInit {
 		this.tournamentService.getPublishedTournament(tournament.id).subscribe((data) => {
 			const newTournament: WyTournament = WyTournament.makeTrueCopy(data);
 			newTournament.publishId = newTournament.id;
-			newTournament.id = this.tournamentService.availableTournamentId;
-			this.tournamentService.availableTournamentId++;
+			newTournament.id = this.tournamentService.availableTournamentId++;
 
 			this.tournamentService.saveTournament(newTournament);
 			this.toastService.addToast(`Imported the tournament "${newTournament.name}".`);

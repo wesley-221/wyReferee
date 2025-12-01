@@ -13,7 +13,7 @@
 		"bancho.js",
 		"referee client"
 	],
-	"main": "main.js",
+	"main": "dist/electron/main.js",
 	"private": true,
 	"scripts": {
 		"gh-publish-windows": "yarn run build:prod && electron-builder -p always",
@@ -30,7 +30,7 @@
 		"build:prod": "yarn run build -- -c production",
 		"ng:serve": "ng serve",
 		"ng:serve:web": "yarn run postinstall:web && ng serve -o",
-		"electron:serve-tsc": "tsc -p tsconfig.serve.json",
+		"electron:serve-tsc": "tsc -p tsconfig.electron.json",
 		"electron:serve": "wait-on http-get://localhost:4200/ && yarn run electron:serve-tsc && electron . --serve",
 		"electron:local": "yarn run build:prod && electron .",
 		"electron:linux": "yarn run build:prod && electron-builder build --linux --publish never",
@@ -59,12 +59,13 @@
 		"@angular/platform-browser-dynamic": "13.3.2",
 		"@angular/router": "13.3.2",
 		"@playwright/test": "^1.20.2",
+		"@types/archiver": "^7.0.0",
 		"@types/howler": "^2.1.2",
 		"@types/jasmine": "3.3.16",
 		"@types/node": "^15.12.5",
 		"@typescript-eslint/eslint-plugin": "5.17.0",
 		"@typescript-eslint/parser": "5.17.0",
-		"electron": "^13.1.4",
+		"electron": "15.5.7",
 		"electron-builder": "23.0.3",
 		"electron-reload": "1.5.0",
 		"eslint": "^7.8.1",
@@ -90,14 +91,13 @@
 	"dependencies": {
 		"@angular/animations": "13.3.2",
 		"@angular/material": "13.3.2",
+		"archiver": "5.3.2",
 		"bancho.js": "^0.12.0",
 		"electron-log": "^3.0.8",
-		"electron-store": "^5.0.0",
-		"electron-updater": "^4.1.2",
+		"electron-updater": "6.6.2",
 		"express": "^4.21.1",
 		"ngx-clipboard": "^12.3.1",
 		"ngx-markdown": "^13.1.0",
-		"semver": "^7.3.6",
-		"weak-value-map": "^1.0.1"
+		"semver": "^7.3.6"
 	}
 }
