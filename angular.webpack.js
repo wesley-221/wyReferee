@@ -1,10 +1,14 @@
 /**
  * Custom angular webpack configuration
  */
-
 module.exports = (config, options) => {
 	config.target = 'electron-renderer';
 
+	config.resolve = config.resolve || {};
+	config.resolve.fallback = {
+		...(config.resolve.fallback || {}),
+		"weak-value-map": false
+	};
 
 	if (options.fileReplacements) {
 		for (let fileReplacement of options.fileReplacements) {
