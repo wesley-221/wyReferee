@@ -1124,10 +1124,11 @@ $hyperlink-background-color: #2b4576;
 									display: flex;
 
 									align-items: center;
-									justify-content: center;
+									align-content: center;
 
-									width: 35px;
 									height: 35px;
+
+									padding: 0 4px 0 4px;
 
 									&.warn {
 										color: black;

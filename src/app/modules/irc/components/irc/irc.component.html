@@ -616,18 +616,18 @@
 
 							<div class="beatmap-actions">
 								<div class="beatmap-button warn" matTooltip="Ban this beatmap" *ngIf="!selectedLobby.beatmapIsBanned(beatmap.beatmapId) && !selectedLobby.beatmapIsProtected(beatmap.beatmapId) && selectedLobby.isQualifierLobby == false" (click)="banBeatmap(beatmap, bracket, selectedLobby)">
-									<mat-icon svgIcon="hammer"></mat-icon>
+									<mat-icon svgIcon="hammer"></mat-icon>&nbsp;ban
 								</div>
 								<div class="beatmap-button accent" matTooltip="Unban this beatmap" *ngIf="selectedLobby.beatmapIsBanned(beatmap.beatmapId) && selectedLobby.isQualifierLobby == false" (click)="unbanBeatmap(beatmap)">
-									<mat-icon>thumb_up</mat-icon>
+									<mat-icon>thumb_up</mat-icon>&nbsp;unban
 								</div>
 
 								<div class="beatmap-button accent" matTooltip="Protect this beatmap" *ngIf="!selectedLobby.beatmapIsProtected(beatmap.beatmapId) && !selectedLobby.beatmapIsBanned(beatmap.beatmapId)  && selectedLobby.tournament.protects == true && selectedLobby.isQualifierLobby == false" (click)="protectBeatmap(beatmap, bracket, selectedLobby)">
-									<mat-icon>shield</mat-icon>
+									<mat-icon>shield</mat-icon>&nbsp;protect
 								</div>
 
 								<div class="beatmap-button danger" matTooltip="Unprotect this beatmap" *ngIf="selectedLobby.beatmapIsProtected(beatmap.beatmapId) && selectedLobby.tournament.protects == true && selectedLobby.isQualifierLobby == false" (click)="unprotectBeatmap(beatmap)">
-									<mat-icon>remove_moderator</mat-icon>
+									<mat-icon>remove_moderator</mat-icon>&nbsp;unprotect
 								</div>
 
 								<div class="beatmap-button accent" matTooltip="Change which team has picked this beatmap" *ngIf="selectedLobby.beatmapIsPicked(beatmap.beatmapId) && selectedLobby.isQualifierLobby == false" (click)="changePickedBy(beatmap)">
@@ -635,10 +635,10 @@
 								</div>
 
 								<div class="beatmap-button primary" matTooltip="Pick this beatmap" *ngIf="!selectedLobby.beatmapIsPicked(beatmap.beatmapId)" (click)="pickBeatmap(beatmap, bracket, selectedLobby.tournament.gamemodeId)" [ngClass]="{'disabled': selectedLobby.beatmapIsBanned(beatmap.beatmapId) }">
-									<mat-icon>push_pin</mat-icon>
+									<mat-icon>push_pin</mat-icon>&nbsp;pick
 								</div>
 								<div class="beatmap-button warn" matTooltip="Unpick this beatmap" *ngIf="selectedLobby.beatmapIsPicked(beatmap.beatmapId)" (click)="unpickBeatmap(beatmap)" [ngClass]="{'disabled': selectedLobby.beatmapIsBanned(beatmap.beatmapId) }">
-									<mat-icon>push_pin</mat-icon>
+									<mat-icon>push_pin</mat-icon>&nbsp;unpick
 								</div>
 							</div>
 						</div>
