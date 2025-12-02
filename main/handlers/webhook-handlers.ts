@@ -34,10 +34,6 @@ function sendWebhookRequest(webhookUrl: string, payload: any): Promise<void> {
 
 	return new Promise<void>((resolve, reject) => {
 		const request = https.request(options, (res) => {
-			res.on('data', (d) => {
-				console.log(d.toString());
-			});
-
 			res.on('end', () => resolve());
 		});
 

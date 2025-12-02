@@ -304,8 +304,6 @@ export class TournamentService {
 		for (const mappool of tournament.mappools) {
 			for (const modBrackets of mappool.modBrackets) {
 				for (const beatmap of modBrackets.beatmaps) {
-					console.log(beatmap);
-
 					this.cacheService.cacheBeatmap(new CacheBeatmap({
 						beatmapId: beatmap.beatmapId,
 						name: beatmap.beatmapName,
