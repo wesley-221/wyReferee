@@ -143,17 +143,6 @@ export class CacheService {
 	}
 
 	/**
-	 * Clear all cache
-	 */
-	public clearAllData(): void {
-		// TODO: Update this with the new storage services
-
-		// this.storeService.delete('irc.channels');
-		// this.storeService.delete('lobby');
-		// this.storeService.delete('cache');
-	}
-
-	/**
 	 * Get the cover image
 	 *
 	 * @param beatmapId the beatmapid

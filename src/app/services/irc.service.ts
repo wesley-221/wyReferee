@@ -194,10 +194,6 @@ export class IrcService {
 				}
 			}
 
-			if (message.channel.name.startsWith('#mp_') && message.user.ircUsername != 'BanchoBot' && message.message.startsWith('!')) {
-				this.handleIrcCommand(message);
-			}
-
 			this.sendChannelMessage(message);
 		});
 
@@ -842,81 +838,6 @@ export class IrcService {
 		}
 
 		return messageBuilder;
-	}
-
-	/**
-	 * Handle irc commands
-	 *
-	 * @param message the message to process
-	 */
-	handleIrcCommand(message: ChannelMessage) {
-		const commandSplit = message.message.substr(1, message.message.length).split(' ');
-		const command = commandSplit.shift().toLowerCase();
-		const commandMessage = commandSplit.join(' ');
-
-		// !pick was run by someone
-		if (command == 'pick') {
-			const multiplayerLobby = this.multiplayerLobbiesService.getMultiplayerLobbyByIrc(message.channel.name);
-			let captainFound = false;
-
-			// Check if the command was ran by one of the captains
-			if (multiplayerLobby.getNextPick() == multiplayerLobby.teamOneName) {
-				for (const user of multiplayerLobby.getTeamPlayersFromTournament(multiplayerLobby.teamOneName)) {
-					if (user.name == multiplayerLobby.teamOneCaptain.name) {
-						captainFound = true;
-						break;
-					}
-				}
-			}
-			else {
-				for (const user of multiplayerLobby.getTeamPlayersFromTournament(multiplayerLobby.teamTwoName)) {
-					if (user.name == multiplayerLobby.teamTwoCaptain.name) {
-						captainFound = true;
-						break;
-					}
-				}
-			}
-
-			// Command was not ran by the captain that is supposed to pick
-			if (captainFound == false) {
-				return;
-			}
-
-			// Look for the mod bracket
-			let foundModBracket: WyModBracket = null;
-			const modBracketString: string[] = [];
-
-			for (const modBracket of multiplayerLobby.mappool.modBrackets) {
-				// Ignore tiebreaker from being randomly picked
-				if (modBracket.name.toLowerCase() == 'tiebreaker') {
-					continue;
-				}
-
-				if (modBracket.name == commandMessage || modBracket.acronym == commandMessage) {
-					foundModBracket = modBracket;
-				}
-
-				modBracketString.push(`${modBracket.name} (${modBracket.acronym})`);
-			}
-
-			// Mod bracket was not found
-			if (foundModBracket == null) {
-				this.sendMessage(message.channel.name, `Could not find modbracket "${commandMessage}". Available modbrackets are: ${modBracketString.join(', ')}.`);
-				return;
-			}
-
-			// Pick the random map
-			const randomMap = foundModBracket.pickRandomMap(multiplayerLobby);
-
-			if (randomMap == null) {
-				this.sendMessage(message.channel.name, `${foundModBracket.name} has ran out of maps to pick from.`);
-				return;
-			}
-			else {
-				// TODO: pick the map
-				// pick the map
-			}
-		}
 	}
 
 	/**

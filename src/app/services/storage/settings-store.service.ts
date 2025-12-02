@@ -4,14 +4,12 @@ import { BehaviorSubject } from 'rxjs';
 import PackageJson from '../../../../package.json';
 
 interface AppSettings {
-	cacheVersion: string;
 	version: string;
 	showAxs: boolean;
 	[key: string]: any;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
-	cacheVersion: PackageJson.version,
 	version: PackageJson.version,
 	showAxs: false
 };
