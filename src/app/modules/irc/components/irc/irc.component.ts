@@ -34,14 +34,12 @@ import { ChallongeService } from 'app/services/challonge.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SlashCommandService } from 'app/services/slash-command.service';
 import { SlashCommand } from 'app/models/slash-command';
-import { GenericService } from 'app/services/generic.service';
 import { ProtectBeatmapDialogComponent } from 'app/components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
 import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dialog-data';
 import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { SettingsStoreService } from 'app/services/storage/settings-store.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -67,9 +65,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	channels: IrcChannel[];
 
 	normalChats: IrcMessage[] = [];
-	banchoBotChats: IrcMessage[] = [];
-
-	splitBanchoMessages: boolean;
 
 	chatLength = 0;
 	keyPressed = false;
@@ -98,8 +93,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	popupBannedMap: WyModBracketMap = null;
 	popupBannedBracket: WyModBracket = null;
 
-	dividerHeightPercentage: number;
-
 	qualifierPrefix = 'Qualifier lobby:';
 	qualifierTeams: WyTeam[] = [];
 
@@ -119,7 +112,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
-		private settingsStore: SettingsStoreService,
 		private multiplayerLobbies: WyMultiplayerLobbiesService,
 		private router: Router,
 		private toastService: ToastService,
@@ -131,14 +123,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 		private tournamentService: TournamentService,
 		private challongeService: ChallongeService,
 		public slashCommandService: SlashCommandService,
-		private genericService: GenericService,
 		public cacheService: CacheService) {
-		settingsStore.watchSettings().subscribe(settings => {
-			if (settings) {
-				this.dividerHeightPercentage = settings.dividerHeight;
-			}
-		});
-
 		this.currentMessageHistoryIndex = -1;
 		this.slashCommandIndex = -1;
 
@@ -158,10 +143,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 		this.allSlashCommands = this.slashCommandService.getSlashCommands();
 		this.allSlashCommandsFiltered = this.slashCommandService.getSlashCommands();
-
-		this.genericService.getSplitBanchoMessages().subscribe(status => {
-			this.splitBanchoMessages = status;
-		});
 	}
 
 	/**
@@ -238,10 +219,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 					this.ref.detectChanges();
 				}
 
-				// Scroll the chats to the bottom
-				if (this.normalChats || this.banchoBotChats) {
-					this.scrollToBottom();
-				}
+				this.scrollToBottom();
 			});
 
 		this.multiplayerLobbies.synchronizeIsCompleted()
@@ -310,30 +288,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Expand the divider by 5%
-	 */
-	expandDivider(): void {
-		this.dividerHeightPercentage += 5;
-		this.settingsStore.set('dividerHeight', this.dividerHeightPercentage);
-	}
-
-	/**
-	 * Reset the divider to 30%
-	 */
-	resetDivider(): void {
-		this.dividerHeightPercentage = 30;
-		this.settingsStore.set('dividerHeight', this.dividerHeightPercentage);
-	}
-
-	/**
-	 * Shrink the divider by 5%
-	 */
-	shrinkDivider(): void {
-		this.dividerHeightPercentage -= 5;
-		this.settingsStore.set('dividerHeight', this.dividerHeightPercentage);
-	}
-
-	/**
 	 * Change the channel
 	 *
 	 * @param channel the channel to change to
@@ -353,7 +307,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 		this.selectedChannel.hasUnreadMessages = false;
 
 		this.normalChats = this.selectedChannel.messages;
-		this.banchoBotChats = this.selectedChannel.banchoBotMessages;
 
 		this.refreshIrcHeader(this.selectedLobby);
 
@@ -416,7 +369,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 			this.selectedChannel = undefined;
 
 			this.normalChats = [];
-			this.banchoBotChats = [];
 		}
 	}
 
@@ -997,10 +949,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	scrollToBottom() {
 		if (this.normalChatVirtualScroller != undefined) {
 			this.normalChatVirtualScroller.scrollToIndex(this.normalChats.length - 1);
-		}
-
-		if (this.banchoBotChatVirtualScroller != undefined) {
-			this.banchoBotChatVirtualScroller.scrollToIndex(this.banchoBotChats.length - 1);
 		}
 	}
 
