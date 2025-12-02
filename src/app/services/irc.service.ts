@@ -8,7 +8,6 @@ import { Howl } from 'howler';
 import { IrcChannel, TeamMode, WinCondition } from 'app/models/irc/irc-channel';
 import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyMultiplayerLobbiesService } from './wy-multiplayer-lobbies.service';
-import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { Lobby } from 'app/models/lobby';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 import { ElectronService } from './electron.service';
