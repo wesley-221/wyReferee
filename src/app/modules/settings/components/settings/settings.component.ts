@@ -125,9 +125,4 @@ export class SettingsComponent implements OnInit {
 		this.axsMenuStatus = !this.axsMenuStatus;
 		this.genericService.setAxSMenu(this.axsMenuStatus);
 	}
-
-	toggleSplitIrcMessages(): void {
-		this.splitIrcMessages = !this.splitIrcMessages;
-		this.genericService.setSplitBanchoMessages(this.splitIrcMessages);
-	}
 }

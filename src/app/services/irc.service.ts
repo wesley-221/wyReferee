@@ -8,7 +8,6 @@ import { Howl } from 'howler';
 import { IrcChannel, TeamMode, WinCondition } from 'app/models/irc/irc-channel';
 import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyMultiplayerLobbiesService } from './wy-multiplayer-lobbies.service';
-import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { Lobby } from 'app/models/lobby';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 import { ElectronService } from './electron.service';
@@ -419,20 +418,8 @@ export class IrcService {
 			}
 
 			if (user.startsWith('#mp_')) {
-				if (this.genericService.getSplitBanchoMessages().value == true) {
-					if (recipient == 'BanchoBot') {
-						channel.banchoBotMessages.push(newMessage);
-						this.saveMessageToHistory(user, newMessage, message, true);
-					}
-					else {
-						channel.messages.push(newMessage);
-						this.saveMessageToHistory(user, newMessage, message);
-					}
-				}
-				else {
-					channel.messages.push(newMessage);
-					this.saveMessageToHistory(user, newMessage, message);
-				}
+				channel.messages.push(newMessage);
+				this.saveMessageToHistory(user, newMessage, message);
 			}
 			else {
 				channel.messages.push(newMessage);
@@ -663,14 +650,13 @@ export class IrcService {
 	 * @param channelName the channel to save it in
 	 * @param message the message object to save
 	 * @param plainMessage the plain message that was sent
-	 * @param saveInBanchoMessages whether to save the message as a BanchoBot message
 	 */
-	saveMessageToHistory(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoMessages?: boolean) {
+	saveMessageToHistory(channelName: string, message: IrcMessage, plainMessage: string) {
 		if (message.isADivider) {
 			return;
 		}
 
-		window.electronApi.irc.addIrcMessage(channelName, message, plainMessage, saveInBanchoMessages);
+		window.electronApi.irc.addIrcMessage(channelName, message, plainMessage);
 	}
 
 	/**

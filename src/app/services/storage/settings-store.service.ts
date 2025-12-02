@@ -5,17 +5,13 @@ import PackageJson from '../../../../package.json';
 
 interface AppSettings {
 	version: string;
-	dividerHeight: number;
 	showAxs: boolean;
-	splitBanchoMessages: boolean;
 	[key: string]: any;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
 	version: PackageJson.version,
-	dividerHeight: 30,
-	showAxs: false,
-	splitBanchoMessages: false
+	showAxs: false
 };
 
 @Injectable({

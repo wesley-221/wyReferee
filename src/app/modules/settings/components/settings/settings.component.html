@@ -5,22 +5,6 @@
 		<ng-container *ngFor="let option of generalOptions">
 			<ng-template *ngTemplateOutlet="optionTemplate; context: {$implicit: option}"></ng-template>
 		</ng-container>
-
-		<div class="option">
-			<div class="content">
-				<div class="icon">
-					<mat-icon>chat</mat-icon>
-				</div>
-
-				<div class="text">
-					<span>Split up the messages from Bancho and regular players in a multiplayer lobby.</span>
-				</div>
-			</div>
-
-			<div class="button">
-				<button mat-raised-button color="primary" (click)="toggleSplitIrcMessages()">{{ splitIrcMessages == true ? 'On' : 'Off' }}</button>
-			</div>
-		</div>
 	</div>
 
 	<h1>Configuration</h1>

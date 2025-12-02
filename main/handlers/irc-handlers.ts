@@ -250,7 +250,7 @@ export function registerIrcHandlers(allWindows: WindowManager[]) {
 	 *
 	 * Messages will only be added from the main-window to avoid duplicate messages
 	 */
-	ipcMain.handle(IPC_CHANNELS.ADD_IRC_MESSAGE, async (event, channelName, message, plainMessage, saveInBanchoMessages) => {
+	ipcMain.handle(IPC_CHANNELS.ADD_IRC_MESSAGE, async (event, channelName, message, plainMessage) => {
 		if (event.sender.id !== allWindows[0].win?.webContents.id)
 			return;
 
