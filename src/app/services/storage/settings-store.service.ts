@@ -4,7 +4,6 @@ import { BehaviorSubject } from 'rxjs';
 import PackageJson from '../../../../package.json';
 
 interface AppSettings {
-	cacheVersion: string;
 	version: string;
 	dividerHeight: number;
 	showAxs: boolean;
@@ -13,7 +12,6 @@ interface AppSettings {
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
-	cacheVersion: PackageJson.version,
 	version: PackageJson.version,
 	dividerHeight: 30,
 	showAxs: false,

@@ -7,7 +7,6 @@ import { SettingsStoreService } from './storage/settings-store.service';
 })
 export class GenericService {
 	private showAxSMenu$: BehaviorSubject<boolean>;
-	private cacheCheck$: BehaviorSubject<boolean>;
 	private splitBanchoMessages$: BehaviorSubject<boolean>;
 
 	constructor(private settingsStore: SettingsStoreService) {
@@ -19,7 +18,6 @@ export class GenericService {
 		});
 
 		this.showAxSMenu$ = new BehaviorSubject(false);
-		this.cacheCheck$ = new BehaviorSubject(false);
 		this.splitBanchoMessages$ = new BehaviorSubject(false);
 	}
 
@@ -38,22 +36,6 @@ export class GenericService {
 	 */
 	getAxSMenuStatus(): BehaviorSubject<boolean> {
 		return this.showAxSMenu$;
-	}
-
-	/**
-	 * Set the status of the cache check
-	 *
-	 * @param active the status of the cache check
-	 */
-	setCacheHasBeenChecked(active: boolean): void {
-		this.cacheCheck$.next(active);
-	}
-
-	/**
-	 * Get the status of the cache check
-	 */
-	getCacheHasBeenChecked(): BehaviorSubject<boolean> {
-		return this.cacheCheck$;
 	}
 
 	/**
