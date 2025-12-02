@@ -94,7 +94,19 @@ export class TournamentService {
 	}
 
 	/**
-	 * Save a tournament and increment the available tournament id
+	 * Create a new tournament
+	 * @param tournament the tournament to create
+	 */
+	createTournament(tournament: WyTournament): void {
+		tournament.id = this.availableTournamentId;
+		this.availableTournamentId++;
+		this.saveTournament(tournament);
+
+		this.cacheTournamentUsersAndBeatmaps(tournament);
+	}
+
+	/**
+	 * Save a tournament
 	 *
 	 * @param tournament the tournament to save
 	 */

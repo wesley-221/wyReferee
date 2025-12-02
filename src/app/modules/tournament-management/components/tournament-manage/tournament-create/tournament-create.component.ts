@@ -147,7 +147,7 @@ export class TournamentCreateComponent implements OnInit {
 			webhook.finalResult = this.validationForm.get(`webhook-${webhook.index}-final-result`).value;
 		}
 
-		this.tournamentService.saveTournament(this.tournament);
+		this.tournamentService.createTournament(this.tournament);
 
 		this.toastService.addToast('Successfully created the tournament.');
 	}
