@@ -49,22 +49,27 @@ export function registerDataMigrationHandler(window: BrowserWindow) {
 			if (migrationOptions.webhookCustomization) {
 				const webhookCustomizationData = config.webhook;
 
-				try {
-					const newData = {
-						authorImage: webhookCustomizationData.authorImage,
-						authorName: webhookCustomizationData.authorName,
-						bottomImage: webhookCustomizationData.bottomImage,
-						footerIconUrl: webhookCustomizationData.footerIconUrl,
-						footerText: webhookCustomizationData.footerText
-					}
-
-					const webhookSettingsPath = path.join(app.getPath('userData'), 'data', 'webhook-settings.json');
-					fs.writeFileSync(webhookSettingsPath, JSON.stringify(newData), 'utf-8');
-
-					updatedMigrations.push({ 'status': 'success', message: 'Migrated webhook customization settings' });
+				if (!webhookCustomizationData) {
+					updatedMigrations.push({ 'status': 'error', message: 'No webhook customization data found to migrate' });
 				}
-				catch (error) {
-					updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate webhook customization settings: ${error}` });
+				else {
+					try {
+						const newData = {
+							authorImage: webhookCustomizationData.authorImage,
+							authorName: webhookCustomizationData.authorName,
+							bottomImage: webhookCustomizationData.bottomImage,
+							footerIconUrl: webhookCustomizationData.footerIconUrl,
+							footerText: webhookCustomizationData.footerText
+						}
+
+						const webhookSettingsPath = path.join(app.getPath('userData'), 'data', 'webhook-settings.json');
+						fs.writeFileSync(webhookSettingsPath, JSON.stringify(newData), 'utf-8');
+
+						updatedMigrations.push({ 'status': 'success', message: 'Migrated webhook customization settings' });
+					}
+					catch (error) {
+						updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate webhook customization settings: ${error}` });
+					}
 				}
 			}
 
@@ -72,20 +77,33 @@ export function registerDataMigrationHandler(window: BrowserWindow) {
 			 * Migrate tournaments
 			 */
 			if (migrationOptions.tournaments) {
-				const tournaments = config.cache.tournaments;
-				const tournamentsFolderPath = path.join(app.getPath('userData'), 'data', 'tournaments');
+				const cache = config.cache;
 
-				for (const tournamentId in tournaments) {
-					const tournament = tournaments[tournamentId];
+				if (!cache) {
+					updatedMigrations.push({ 'status': 'error', message: 'No tournaments data found to migrate' });
+				}
+				else {
+					const tournaments = cache.tournaments;
 
-					try {
-						const tournamentFilePath = path.join(tournamentsFolderPath, `${tournament.id}-${tournament.acronym.toLowerCase()}.json`);
-						fs.writeFileSync(tournamentFilePath, JSON.stringify(tournament), 'utf-8');
-
-						updatedMigrations.push({ 'status': 'success', message: `Migrated tournament ${tournament.name}` });
+					if (!tournaments) {
+						updatedMigrations.push({ 'status': 'error', message: 'No tournaments data found to migrate' });
 					}
-					catch (error) {
-						updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate tournament ${tournamentId}: ${error}` });
+					else {
+						const tournamentsFolderPath = path.join(app.getPath('userData'), 'data', 'tournaments');
+
+						for (const tournamentId in tournaments) {
+							const tournament = tournaments[tournamentId];
+
+							try {
+								const tournamentFilePath = path.join(tournamentsFolderPath, `${tournament.id}-${tournament.acronym.toLowerCase()}.json`);
+								fs.writeFileSync(tournamentFilePath, JSON.stringify(tournament), 'utf-8');
+
+								updatedMigrations.push({ 'status': 'success', message: `Migrated tournament ${tournament.name}` });
+							}
+							catch (error) {
+								updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate tournament ${tournamentId}: ${error}` });
+							}
+						}
 					}
 				}
 			}
@@ -95,21 +113,27 @@ export function registerDataMigrationHandler(window: BrowserWindow) {
 			 */
 			if (migrationOptions.lobbies) {
 				const lobbies = config.lobby;
-				const lobbiesFolderPath = path.join(app.getPath('userData'), 'data', 'lobbies');
 
-				for (const lobbyId in lobbies) {
-					try {
-						const lobby = lobbies[lobbyId];
-						const lobbyPrefix = lobby.tournament ? `${lobby.lobbyId}-${lobby.tournament.acronym.toLowerCase()}` : lobby.lobbyId;
-						const lobbyDescription = lobby.description.replace(/\s/g, '-').replace(/[^\w\-]+/g, '').toLowerCase();
-						const lobbyFilePath = path.join(lobbiesFolderPath, `${lobbyPrefix}-${lobbyDescription}.json`);
+				if (!lobbies) {
+					updatedMigrations.push({ 'status': 'error', message: 'No lobbies data found to migrate' });
+				}
+				else {
+					const lobbiesFolderPath = path.join(app.getPath('userData'), 'data', 'lobbies');
 
-						fs.writeFileSync(lobbyFilePath, JSON.stringify(lobby), 'utf-8');
+					for (const lobbyId in lobbies) {
+						try {
+							const lobby = lobbies[lobbyId];
+							const lobbyPrefix = lobby.tournament ? `${lobby.lobbyId}-${lobby.tournament.acronym.toLowerCase()}` : lobby.lobbyId;
+							const lobbyDescription = lobby.description.replace(/\s/g, '-').replace(/[^\w\-]+/g, '').toLowerCase();
+							const lobbyFilePath = path.join(lobbiesFolderPath, `${lobbyPrefix}-${lobbyDescription}.json`);
 
-						updatedMigrations.push({ 'status': 'success', message: `Migrated lobby ${lobby.description}` });
-					}
-					catch (error) {
-						updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate lobby ${lobbyId}: ${error}` });
+							fs.writeFileSync(lobbyFilePath, JSON.stringify(lobby), 'utf-8');
+
+							updatedMigrations.push({ 'status': 'success', message: `Migrated lobby ${lobby.description}` });
+						}
+						catch (error) {
+							updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate lobby ${lobbyId}: ${error}` });
+						}
 					}
 				}
 			}
@@ -118,39 +142,52 @@ export function registerDataMigrationHandler(window: BrowserWindow) {
 			 * Migrate IRC channels
 			 */
 			if (migrationOptions.ircChannels) {
-				const ircChannels = config.irc.channels;
-				const ircChannelsFolderPath = path.join(app.getPath('userData'), 'data', 'irc');
+				const ircConfig = config.irc;
 
-				for (const channelName in ircChannels) {
-					const channel = ircChannels[channelName];
-					const finalChannelName = channel.label ?? channelName;
+				if (!ircConfig) {
+					updatedMigrations.push({ 'status': 'error', message: 'No IRC channels data found to migrate' });
+				}
+				else {
+					const ircChannels = ircConfig.channels;
 
-					try {
-						const channelFilePath = path.join(ircChannelsFolderPath, `${channelName.toLowerCase()}.json`);
-						const channelMessagesFilePath = path.join(ircChannelsFolderPath, `${channelName.toLowerCase()}.messages.ndjson`);
-
-						const channelMessages = [];
-
-						for (const message of channel.messages) {
-							channelMessages.push({ type: 'message', content: message });
-						}
-
-						for (const message of channel.plainMessageHistory) {
-							channelMessages.push({ type: 'plain', content: message });
-						}
-
-						const newChannel = JSON.parse(JSON.stringify(channel));
-
-						newChannel.messages = [];
-						newChannel.plainMessageHistory = [];
-
-						fs.writeFileSync(channelFilePath, JSON.stringify(newChannel), 'utf-8');
-						fs.writeFileSync(channelMessagesFilePath, channelMessages.map(m => JSON.stringify(m)).join('\n'), 'utf-8');
-
-						updatedMigrations.push({ 'status': 'success', message: `Migrated IRC channel ${finalChannelName}` });
+					if (!ircChannels) {
+						updatedMigrations.push({ 'status': 'error', message: 'No IRC channels data found to migrate' });
 					}
-					catch (error) {
-						updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate IRC channel ${finalChannelName}: ${error}` });
+					else {
+						const ircChannelsFolderPath = path.join(app.getPath('userData'), 'data', 'irc');
+
+						for (const channelName in ircChannels) {
+							const channel = ircChannels[channelName];
+							const finalChannelName = channel.label ?? channelName;
+
+							try {
+								const channelFilePath = path.join(ircChannelsFolderPath, `${channelName.toLowerCase()}.json`);
+								const channelMessagesFilePath = path.join(ircChannelsFolderPath, `${channelName.toLowerCase()}.messages.ndjson`);
+
+								const channelMessages = [];
+
+								for (const message of channel.messages) {
+									channelMessages.push({ type: 'message', content: message });
+								}
+
+								for (const message of channel.plainMessageHistory) {
+									channelMessages.push({ type: 'plain', content: message });
+								}
+
+								const newChannel = JSON.parse(JSON.stringify(channel));
+
+								newChannel.messages = [];
+								newChannel.plainMessageHistory = [];
+
+								fs.writeFileSync(channelFilePath, JSON.stringify(newChannel), 'utf-8');
+								fs.writeFileSync(channelMessagesFilePath, channelMessages.map(m => JSON.stringify(m)).join('\n'), 'utf-8');
+
+								updatedMigrations.push({ 'status': 'success', message: `Migrated IRC channel ${finalChannelName}` });
+							}
+							catch (error) {
+								updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate IRC channel ${finalChannelName}: ${error}` });
+							}
+						}
 					}
 				}
 			}
@@ -159,31 +196,37 @@ export function registerDataMigrationHandler(window: BrowserWindow) {
 			 * Migrate IRC shortcut commands
 			 */
 			if (migrationOptions.ircShortcutCommands) {
-				try {
-					const ircShortcutCommands = config['irc-shortcut-commands'];
-					let id = 0;
-					let newIrcShortcutCommands: any = {};
+				const ircShortcutCommands = config['irc-shortcut-commands'];
 
-					for (const ircCommand in ircShortcutCommands) {
-						const commandData = ircShortcutCommands[ircCommand];
-
-						const newCommandData = {
-							id: id++,
-							label: commandData.label,
-							command: commandData.command,
-							warning: commandData.warning || false
-						};
-
-						newIrcShortcutCommands[newCommandData.id] = newCommandData;
-					}
-
-					const ircShortcutCommandsPath = path.join(app.getPath('userData'), 'data', 'irc-shortcut-commands.json');
-					fs.writeFileSync(ircShortcutCommandsPath, JSON.stringify(newIrcShortcutCommands), 'utf-8');
-
-					updatedMigrations.push({ 'status': 'success', message: 'Migrated IRC shortcut commands' });
+				if (!ircShortcutCommands) {
+					updatedMigrations.push({ 'status': 'error', message: 'No IRC shortcut commands data found to migrate' });
 				}
-				catch (error) {
-					updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate IRC shortcut commands: ${error}` });
+				else {
+					try {
+						let id = 0;
+						let newIrcShortcutCommands: any = {};
+
+						for (const ircCommand in ircShortcutCommands) {
+							const commandData = ircShortcutCommands[ircCommand];
+
+							const newCommandData = {
+								id: id++,
+								label: commandData.label,
+								command: commandData.command,
+								warning: commandData.warning || false
+							};
+
+							newIrcShortcutCommands[newCommandData.id] = newCommandData;
+						}
+
+						const ircShortcutCommandsPath = path.join(app.getPath('userData'), 'data', 'irc-shortcut-commands.json');
+						fs.writeFileSync(ircShortcutCommandsPath, JSON.stringify(newIrcShortcutCommands), 'utf-8');
+
+						updatedMigrations.push({ 'status': 'success', message: 'Migrated IRC shortcut commands' });
+					}
+					catch (error) {
+						updatedMigrations.push({ 'status': 'error', message: `Couldnt migrate IRC shortcut commands: ${error}` });
+					}
 				}
 			}
 
