@@ -1191,28 +1191,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Invite a player to the current multiplayer lobby
-	 *
-	 * @param player the player to invite
-	 */
-	assignPlayerAsCaptain(player: WyTeamPlayer, teamIndex: number): void {
-		if (teamIndex == 1) {
-			if (this.selectedLobby.teamOneCaptain != player) {
-				this.selectedLobby.teamOneCaptain = player;
-
-				this.toastService.addToast(`${player.name} has been assigned as captain for ${this.selectedLobby.teamOneName}.`);
-			}
-		}
-		else {
-			if (this.selectedLobby.teamTwoCaptain != player) {
-				this.selectedLobby.teamTwoCaptain = player;
-
-				this.toastService.addToast(`${player.name} has been assigned as captain for ${this.selectedLobby.teamTwoName}.`);
-			}
-		}
-	}
-
-	/**
 	 * Change the sidebar menu
 	 *
 	 * @param option the button that was pressed
