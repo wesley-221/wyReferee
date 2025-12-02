@@ -61,6 +61,7 @@ export class WyMultiplayerLobbiesService {
 			.subscribe(lobbies => {
 				if (lobbies) {
 					const allLobbies = Object.values(lobbies);
+					let highestLobbyId = 0;
 
 					for (const lobby of allLobbies) {
 						const newLobby = Lobby.makeTrueCopy(lobby);
@@ -74,8 +75,13 @@ export class WyMultiplayerLobbiesService {
 						this.multiplayerLobbyPlayersService.createNewMultiplayerLobbyObject(newLobby.lobbyId);
 
 						this.allLobbies.push(newLobby);
-						this.availableLobbyId = newLobby.lobbyId + 1;
+
+						if (newLobby.lobbyId >= highestLobbyId) {
+							highestLobbyId = newLobby.lobbyId;
+						}
 					}
+
+					this.availableLobbyId = highestLobbyId + 1;
 				}
 			});
 	}

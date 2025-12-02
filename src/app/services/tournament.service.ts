@@ -46,17 +46,22 @@ export class TournamentService {
 			)
 			.subscribe(tournamentStore => {
 				if (tournamentStore) {
+					let highestTournamentId = 0;
+
 					// Only load in tournaments for the initial load
 					if (initialLoad == true) {
 						const tournaments = Object.values(tournamentStore);
-						this.allTournaments = tournaments.map(tournament => WyTournament.makeTrueCopy(tournament));
 
-						if (this.allTournaments.length == 0) {
-							this.availableTournamentId = 1;
+						for (const tournament of tournaments) {
+							const newTournament = WyTournament.makeTrueCopy(tournament);
+							this.allTournaments.push(newTournament);
+
+							if (newTournament.id >= highestTournamentId) {
+								highestTournamentId = newTournament.id;
+							}
 						}
-						else {
-							this.availableTournamentId = this.allTournaments[this.allTournaments.length - 1].id + 1;
-						}
+
+						this.availableTournamentId = highestTournamentId + 1;
 					}
 
 					// Update tournaments if they have been updated
