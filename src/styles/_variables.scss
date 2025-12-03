@@ -201,17 +201,17 @@ $md-warning: (
 $font-family: "Montserrat", "Open Sans", Arial, Helvetica, sans-serif;
 
 /* Setup the theme palettes */
-$theme-primary: mat.define-palette($md-primary);
-$theme-accent: mat.define-palette($md-accent, A200, A100, A400);
-$theme-danger: mat.define-palette($md-danger);
-$theme-success: mat.define-palette($md-success);
+$theme-primary: mat.m2-define-palette($md-primary);
+$theme-accent: mat.m2-define-palette($md-accent, A200, A100, A400);
+$theme-danger: mat.m2-define-palette($md-danger);
+$theme-success: mat.m2-define-palette($md-success);
 
 /* Extract usable colors */
-$primary: mat.get-color-from-palette($theme-primary, 500);
-$success: mat.get-color-from-palette($theme-success, 700);
-$warning: mat.get-color-from-palette(mat.$yellow-palette, 600);
-$info: mat.get-color-from-palette(mat.$blue-palette, 500);
-$danger: mat.get-color-from-palette($theme-danger, 500);
+$primary: mat.m2-get-color-from-palette($theme-primary, 500);
+$success: mat.m2-get-color-from-palette($theme-success, 700);
+$warning: mat.m2-get-color-from-palette(mat.$m2-yellow-palette, 600);
+$info: mat.m2-get-color-from-palette(mat.$m2-blue-palette, 500);
+$danger: mat.m2-get-color-from-palette($theme-danger, 500);
 
 $background-color: #121212;
 $tile-background-color: #1d1d1d;
