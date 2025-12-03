@@ -1,7 +1,7 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErrorComponent } from './layout/error/error.component';
@@ -68,12 +68,12 @@ export function initStorage(storageDriver: StorageDriverService) {
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
-		HttpClientModule,
 		AppRoutingModule,
 		MarkdownModule.forRoot(),
 		SharedModule
 	],
 	providers: [
+		provideHttpClient(),
 		{ provide: HTTP_INTERCEPTORS, useClass: CredentialsInterceptor, multi: true },
 		{ provide: APP_INITIALIZER, useFactory: initStorage, deps: [StorageDriverService], multi: true }
 	],
