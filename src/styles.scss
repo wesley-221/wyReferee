@@ -26,10 +26,16 @@ body {
 		background: darken($sidebar-color-hover, 5%);
 	}
 }
+
 body {
 	min-height: 100%;
 	margin: 0;
 	padding: 0;
+}
+
+.mat-mdc-form-field {
+	margin-top: 4px;
+	margin-bottom: 4px;
 }
 
 .full-width {
