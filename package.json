@@ -5,6 +5,10 @@
 	"author": {
 		"name": "Wesley"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wesley-221/wyReferee.git"
+	},
 	"keywords": [
 		"osu",
 		"irc",
