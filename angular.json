@@ -83,14 +83,14 @@
 				"serve": {
 					"builder": "@angular-builders/custom-webpack:dev-server",
 					"options": {
-						"browserTarget": "wy-referee:build"
+						"buildTarget": "wy-referee:build"
 					},
 					"configurations": {
 						"dev": {
-							"browserTarget": "wy-referee:build:dev"
+							"buildTarget": "wy-referee:build:dev"
 						},
 						"production": {
-							"browserTarget": "wy-referee:build:production"
+							"buildTarget": "wy-referee:build:production"
 						}
 					}
 				},
