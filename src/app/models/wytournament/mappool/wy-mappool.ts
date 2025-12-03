@@ -102,8 +102,8 @@ export class WyMappool {
 			});
 
 			// osu!catch handles mods different from other modes
-			if (gamemodeId == Gamemodes.Catch) {
-				if (Mods.HardRock == OsuHelper.getBitFromMods([modBracket.mods]) || ['mixed mod', 'mixedmod'].includes(modBracket.name.toLowerCase())) {
+			if (gamemodeId == Gamemodes.Catch as number) {
+				if (Mods.HardRock as number == OsuHelper.getBitFromMods([modBracket.mods]) || ['mixed mod', 'mixedmod'].includes(modBracket.name.toLowerCase())) {
 					const newMod = new WyMod({
 						index: newModBracket.modIndex,
 						name: modBracket.name,
@@ -115,7 +115,7 @@ export class WyMappool {
 					newModBracket.modIndex++;
 					newMappool.modBracketIndex++;
 				}
-				else if (Mods.DoubleTime == OsuHelper.getBitFromMods([modBracket.mods])) {
+				else if (Mods.DoubleTime as number == OsuHelper.getBitFromMods([modBracket.mods])) {
 					const doubletimeMod = new WyMod({
 						index: newModBracket.modIndex,
 						name: modBracket.name,

@@ -36,10 +36,10 @@ export class MultiplayerData {
 			if (multiplayerData.players[player] != null) {
 				newMultiplayerData.players.push(MultiplayerDataUser.makeTrueCopy(multiplayerData.players[player]));
 
-				if (multiplayerData.players[player].team == Team.Red) {
+				if (multiplayerData.players[player].team == Team.Red as number) {
 					newMultiplayerData.teamRedPlayers.push(multiplayerData.players[player]);
 				}
-				else if (multiplayerData.players[player].team == Team.Blue) {
+				else if (multiplayerData.players[player].team == Team.Blue as number) {
 					newMultiplayerData.teamBluePlayers.push(multiplayerData.players[player]);
 				}
 			}
