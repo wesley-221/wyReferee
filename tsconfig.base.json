@@ -1,7 +1,7 @@
 {
 	"compileOnSave": false,
 	"compilerOptions": {
-		"module": "es2020",
+		"module": "es2022",
 		"outDir": "./dist/out-tsc",
 		"sourceMap": true,
 		"declaration": false,
@@ -10,7 +10,8 @@
 		"experimentalDecorators": true,
 		"resolveJsonModule": true,
 		"allowSyntheticDefaultImports": true,
-		"target": "es2015",
+		"target": "es2022",
+		"useDefineForClassFields": false,
 		"typeRoots": [
 			"node_modules/@types"
 		],
