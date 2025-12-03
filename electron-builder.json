@@ -1,5 +1,12 @@
 {
 	"productName": "wyReferee",
+	"publish": [
+		{
+			"provider": "github",
+			"owner": "wesley221",
+			"repo": "wyReferee"
+		}
+	],
 	"directories": {
 		"output": "release/"
 	},
