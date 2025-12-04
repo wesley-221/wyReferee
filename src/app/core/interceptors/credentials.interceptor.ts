@@ -1,21 +1,29 @@
-import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { from, switchMap } from 'rxjs';
 import { AppConfig } from 'environments/environment';
 
-@Injectable()
-export class CredentialsInterceptor implements HttpInterceptor {
-	constructor() { }
-
-	intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-		if (!request.url.startsWith(AppConfig.apiUrl)) {
-			return next.handle(request);
-		}
-
-		request = request.clone({
-			withCredentials: true
-		});
-
-		return next.handle(request);
+export const credentialsInterceptor: HttpInterceptorFn = (request, next) => {
+	if (!request.url.startsWith(AppConfig.apiUrl)) {
+		return next(request);
 	}
+
+	return from(window.electronApi.authentication.getSession()).pipe(
+		switchMap(sessionId => {
+			request = request.clone({
+				withCredentials: false
+			});
+
+			if (sessionId == null) {
+				return next(request);
+			}
+
+			request = request.clone({
+				setHeaders: {
+					'Authorization': `Bearer ${sessionId}`
+				}
+			});
+
+			return next(request);
+		})
+	);
 }

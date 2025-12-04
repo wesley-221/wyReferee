@@ -39,6 +39,9 @@ export const IPC_CHANNELS = {
 	SET_IRC_LOGIN: 'setIrcLogin',
 	CLEAR_IRC_LOGIN: 'clearIrcLogin',
 	CLEAR_API_KEY: 'clearApiKey',
+	GET_SESSION: 'getSession',
+	SET_SESSION: 'setSession',
+	CLEAR_SESSION: 'clearSession',
 	SEND_WEBHOOK: 'sendWebhook',
 	SEND_WEBHOOK_MAIN_ONLY: 'sendWebhookMainOnly'
 } as const;

@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from 'app/models/authentication/user';
+import { AuthenticationResponse } from 'app/models/authentication/authentication-response';
 
 @Injectable({
 	providedIn: 'root'
 })
-
 export class AuthenticateService {
 	public loggedInUser: User;
 	public loggedIn = false;
@@ -33,8 +33,8 @@ export class AuthenticateService {
 	 * Get the osu oauth from the given token
 	 * @param token the oauth code from the user
 	 */
-	public handleOauth(token: string): Observable<User> {
-		return this.httpClient.post<User>(`${this.apiUrl}user/authenticate`, {
+	public handleOauth(token: string): Observable<AuthenticationResponse> {
+		return this.httpClient.post<AuthenticationResponse>(`${this.apiUrl}user/authenticate`, {
 			token: token,
 			issuer: 'wyreferee'
 		});
@@ -44,7 +44,9 @@ export class AuthenticateService {
 	 * Logout the current loggedin user
 	 */
 	public logout(): void {
-		this.httpClient.get(`${this.apiUrl}user/logout`).subscribe(() => {
+		window.electronApi.authentication.clearSession();
+
+		this.httpClient.get(`${this.apiUrl}user/logout/wyreferee`).subscribe(() => {
 			this.loggedIn = false;
 			this.loggedInUser = null;
 		});
