@@ -17,7 +17,6 @@ export class TournamentAllPublishedComponent implements OnInit {
 	allUsers: User[];
 
 	searchValue: string;
-	filterByUser: string;
 
 	filterByUserFormControl = new FormControl();
 	filteredUsers: Observable<User[]>;
@@ -31,7 +30,6 @@ export class TournamentAllPublishedComponent implements OnInit {
 		this.allUsers = [];
 
 		this.searchValue = '';
-		this.filterByUser = '';
 
 		this.tournamentService.getAllPublishedTournaments().subscribe(tournaments => {
 			for (const tournament of tournaments) {

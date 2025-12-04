@@ -9,7 +9,7 @@
 	<div class="filter">
 		<mat-form-field class="full-width">
 			<mat-label>Filter by username</mat-label>
-			<input type="text" matInput [matAutocomplete]="auto" [(ngModel)]="filterByUser" [formControl]="filterByUserFormControl">
+			<input type="text" matInput [matAutocomplete]="auto" [formControl]="filterByUserFormControl">
 
 			<mat-autocomplete #auto="matAutocomplete">
 				<mat-option *ngFor="let user of filteredUsers | async" [value]="user.username">
@@ -22,7 +22,7 @@
 
 <div id="tutorial-all-tournaments" class="all-tournaments">
 	<ng-container *ngIf="allTournaments.length > 0">
-		<div class="tournament" *ngFor="let tournament of (allTournaments | filterTournament : searchValue : filterByUser)">
+		<div class="tournament" *ngFor="let tournament of (allTournaments | filterTournament : searchValue : filterByUserFormControl.value)">
 			<div class="left">
 				<div class="column">
 					<div class="id" matTooltip="Tournament import id">
