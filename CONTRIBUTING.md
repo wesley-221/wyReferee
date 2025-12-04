@@ -33,7 +33,7 @@ cd wyReferee
 ```
 3. Install all dependencies
 ```bash
-yarn install
+npm install
 ```
 4. Start wyReferee from the repository by using this command:
 ```bash
@@ -41,6 +41,6 @@ npm start
 ```
 
 To build an executeable for any of the operating systems, you can use one of the following commands to build one:
-- For Windows: `yarn run electron:windows`
-- For Mac: `yarn run electron:mac`
-- For Linux: `yarn run electron:linux`
+- For Windows: `npm run electron:windows`
+- For Mac: `npm run electron:mac`
+- For Linux: `npm run electron:linux`

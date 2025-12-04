@@ -18,4 +18,4 @@ Please delete options that are not relevant.
 - [ ] I have performed a self-review of my own code
 - [ ] I have made corresponding changes to the documentation
 - [ ] My changes generate no new warnings
-- [ ] I have run lints (yarn run lint)
+- [ ] I have run lints (npm run lint)
