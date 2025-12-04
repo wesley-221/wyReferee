@@ -136,16 +136,18 @@ export class LobbyViewComponent implements OnInit {
 	 * @param selectedLobby
 	 */
 	openSettings(selectedLobby: Lobby) {
-		const dialogRef = this.dialog.open(MultiplayerLobbySettingsComponent, {
-			data: {
-				multiplayerLobby: selectedLobby
-			}
-		});
+		setTimeout(() => {
+			const dialogRef = this.dialog.open(MultiplayerLobbySettingsComponent, {
+				data: {
+					multiplayerLobby: selectedLobby
+				}
+			});
 
-		dialogRef.afterClosed().subscribe((result: Lobby) => {
-			if (result != null) {
-				this.multiplayerLobbies.updateMultiplayerLobby(result);
-			}
+			dialogRef.afterClosed().subscribe((result: Lobby) => {
+				if (result != null) {
+					this.multiplayerLobbies.updateMultiplayerLobby(result);
+				}
+			});
 		});
 	}
 
