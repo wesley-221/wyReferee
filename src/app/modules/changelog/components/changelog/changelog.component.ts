@@ -26,12 +26,10 @@ export class ChangelogComponent implements OnInit {
 				newRelease.version = release.name;
 
 				let body: string = release.body;
-				let allUsernameMatches = body.match(/@([a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38})/gi);
-				allUsernameMatches = [...new Set(allUsernameMatches)];
 
-				for (const username of allUsernameMatches) {
-					body = body.replace(new RegExp(username, 'g'), `[${username}](https://github.com/${username.substring(1, username.length)})`);
-				}
+				body = body.replace(/@([a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38})/gi, match => {
+					return `[${match}](https://github.com/${match.substring(1)})`;
+				});
 
 				newRelease.body = body;
 

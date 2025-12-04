@@ -60,6 +60,11 @@ import { IPC_CHANNELS } from './ipc-channels';
 		clearIrcLogin: () => ipcRenderer.invoke(IPC_CHANNELS.CLEAR_IRC_LOGIN),
 		clearApiKey: () => ipcRenderer.invoke(IPC_CHANNELS.CLEAR_API_KEY)
 	},
+	authentication: {
+		getSession: () => ipcRenderer.invoke(IPC_CHANNELS.GET_SESSION),
+		setSession: (session: string) => ipcRenderer.invoke(IPC_CHANNELS.SET_SESSION, session),
+		clearSession: () => ipcRenderer.invoke(IPC_CHANNELS.CLEAR_SESSION)
+	},
 	webhook: {
 		sendWebhook: (webhookUrl: string, payload: any) => ipcRenderer.invoke(IPC_CHANNELS.SEND_WEBHOOK, webhookUrl, payload),
 		sendWebhookMainOnly: (webhookUrl: string, payload: any) => ipcRenderer.invoke(IPC_CHANNELS.SEND_WEBHOOK_MAIN_ONLY, webhookUrl, payload)

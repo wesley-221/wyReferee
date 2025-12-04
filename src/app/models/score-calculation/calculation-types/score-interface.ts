@@ -181,10 +181,10 @@ export abstract class ScoreInterface {
 	 */
 	private populateTeamArrays(): void {
 		for (const player of this.allUsers) {
-			if (player.team == Team.Red) {
+			if (player.team == Team.Red as number) {
 				this.teamRedUsers.push(player);
 			}
-			else if (player.team == Team.Blue) {
+			else if (player.team == Team.Blue as number) {
 				this.teamBlueUsers.push(player);
 			}
 		}

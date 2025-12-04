@@ -87,8 +87,10 @@ export class AuthenticationComponent implements OnInit {
 
 		this.authService.startOsuOauthProcess().subscribe(token => {
 			if (token != null) {
-				this.authService.handleOauth(token).subscribe(user => {
-					this.authService.loginUser(user);
+				this.authService.handleOauth(token).subscribe(authenticationResponse => {
+					window.electronApi.authentication.setSession(authenticationResponse.sessionId);
+
+					this.authService.loginUser(authenticationResponse.user);
 
 					this.ref.detectChanges();
 				});

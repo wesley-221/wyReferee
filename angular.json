@@ -1,7 +1,10 @@
 {
 	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
 	"cli": {
-		"defaultCollection": "@angular-eslint/schematics"
+		"schematicCollections": [
+			"@angular-eslint/schematics"
+		],
+		"analytics": false
 	},
 	"version": 1,
 	"newProjectRoot": "projects",
@@ -80,14 +83,14 @@
 				"serve": {
 					"builder": "@angular-builders/custom-webpack:dev-server",
 					"options": {
-						"browserTarget": "wy-referee:build"
+						"buildTarget": "wy-referee:build"
 					},
 					"configurations": {
 						"dev": {
-							"browserTarget": "wy-referee:build:dev"
+							"buildTarget": "wy-referee:build:dev"
 						},
 						"production": {
-							"browserTarget": "wy-referee:build:production"
+							"buildTarget": "wy-referee:build:production"
 						}
 					}
 				},
@@ -129,7 +132,6 @@
 			}
 		}
 	},
-	"defaultProject": "wy-referee",
 	"schematics": {
 		"@schematics/angular:component": {
 			"prefix": "app",

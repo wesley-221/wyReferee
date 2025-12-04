@@ -32,16 +32,16 @@ export class WindowManager {
 			});
 
 			this.win.loadURL('http://localhost:4200');
+
+			this.win.webContents.on('did-finish-load', () => {
+				this.win?.webContents.openDevTools();
+			});
 		}
 		else {
 			const fullPath = path.join(__dirname, '../../angular/index.html');
 			const url = pathToFileURL(fullPath).toString();
 
 			this.win.loadURL(url);
-		}
-
-		if (this.serve) {
-			this.win.webContents.openDevTools();
 		}
 
 		return this.win;

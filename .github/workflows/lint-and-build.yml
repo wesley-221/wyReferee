@@ -25,13 +25,13 @@ jobs:
         with:
           node-version: ${{ matrix.node_version }}
           architecture: ${{ matrix.architecture }}
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Installing dependencies
-        run: yarn install
+        run: npm install
 
       - name: Checking linter
-        run: yarn run lint
+        run: npm run lint
 
       - name: Building app for Linux
-        run: yarn run electron:linux
+        run: npm run electron:linux

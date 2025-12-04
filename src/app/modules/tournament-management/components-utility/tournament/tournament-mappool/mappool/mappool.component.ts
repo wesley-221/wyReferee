@@ -118,7 +118,7 @@ export class MappoolComponent implements OnInit {
 	 * @param nofail whether or not to add NoFail to the brackets
 	 */
 	createDefaultBrackets(nofail: boolean): void {
-		if (this.tournament.gamemodeId == Gamemodes.Mania) {
+		if (this.tournament.gamemodeId == Gamemodes.Mania as number) {
 			this.createDefaultBracket('Rice', 'RC', [{ name: 'Freemod', value: 'freemod' }]);
 			this.createDefaultBracket('Long Note', 'LN', [{ name: 'Freemod', value: 'freemod' }]);
 			this.createDefaultBracket('Hybrid', 'HB', [{ name: 'Freemod', value: 'freemod' }]);
@@ -129,7 +129,7 @@ export class MappoolComponent implements OnInit {
 				this.createDefaultBracket('Nomod', 'NM', [{ name: 'Nofail', value: Mods.NoFail }]);
 				this.createDefaultBracket('Hidden', 'HD', [{ name: 'Hidden', value: Mods.Hidden }, { name: 'Nofail', value: Mods.NoFail }]);
 
-				if (this.tournament.gamemodeId != Gamemodes.Catch) {
+				if (this.tournament.gamemodeId != Gamemodes.Catch as number) {
 					this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Hardrock', value: Mods.HardRock }, { name: 'Nofail', value: Mods.NoFail }]);
 					this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }, { name: 'Nofail', value: Mods.NoFail }]);
 				}
@@ -138,13 +138,13 @@ export class MappoolComponent implements OnInit {
 				this.createDefaultBracket('Nomod', 'NM', [{ name: 'Nomod', value: Mods.None }]);
 				this.createDefaultBracket('Hidden', 'HD', [{ name: 'Hidden', value: Mods.Hidden }]);
 
-				if (this.tournament.gamemodeId != Gamemodes.Catch) {
+				if (this.tournament.gamemodeId != Gamemodes.Catch as number) {
 					this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Hardrock', value: Mods.HardRock }]);
 					this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }]);
 				}
 			}
 
-			if (this.tournament.gamemodeId == Gamemodes.Catch) {
+			if (this.tournament.gamemodeId == Gamemodes.Catch as number) {
 				this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Freemod', value: 'freemod' }]);
 				this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }, { name: 'Freemod', value: 'freemod' }]);
 			}

@@ -1,7 +1,7 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErrorComponent } from './layout/error/error.component';
@@ -27,7 +27,7 @@ import { MainComponent } from './layout/main/main.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { UpdaterComponent } from './layout/updater/updater.component';
 import { MarkdownModule } from 'ngx-markdown';
-import { CredentialsInterceptor } from './core/interceptors/credentials.interceptor';
+import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { ProtectBeatmapDialogComponent } from './components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
 import { AddBulkTeamsDialogComponent } from './components/dialogs/add-bulk-teams-dialog/add-bulk-teams-dialog.component';
 import { StorageDriverService } from './services/storage/storage-driver.service';
@@ -68,13 +68,16 @@ export function initStorage(storageDriver: StorageDriverService) {
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
-		HttpClientModule,
 		AppRoutingModule,
 		MarkdownModule.forRoot(),
 		SharedModule
 	],
 	providers: [
-		{ provide: HTTP_INTERCEPTORS, useClass: CredentialsInterceptor, multi: true },
+		provideHttpClient(
+			withInterceptors([
+				credentialsInterceptor
+			])
+		),
 		{ provide: APP_INITIALIZER, useFactory: initStorage, deps: [StorageDriverService], multi: true }
 	],
 	bootstrap: [AppComponent]

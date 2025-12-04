@@ -550,7 +550,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		if (this.selectedLobby.tournament.gamemodeId == Gamemodes.AllModes) {
+		if (this.selectedLobby.tournament.gamemodeId == Gamemodes.AllModes as number) {
 			const gamemodeId = beatmap.gamemodeId != null && beatmap.gamemodeId != undefined ? beatmap.gamemodeId : 0;
 			this.ircService.sendMessage(this.selectedChannel.name, `!mp map ${beatmap.beatmapId} ${gamemodeId}`);
 		}
