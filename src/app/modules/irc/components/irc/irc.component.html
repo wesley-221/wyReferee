@@ -306,7 +306,7 @@
 				<div class="active-header-setting" [ngClass]="{'active': sidebarHeaderButtonActive == 2}">
 					<div class="header-row double-column">
 						<div class="header-col">
-							<mat-form-field class="full-width">
+							<mat-form-field class="smaller-width">
 								<mat-label>Team mode</mat-label>
 								<mat-select #teamMode (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
 									<mat-option></mat-option>
@@ -319,7 +319,7 @@
 						</div>
 
 						<div class="header-col">
-							<mat-form-field class="full-width">
+							<mat-form-field class="smaller-width">
 								<mat-label>Win condition</mat-label>
 								<mat-select #winCondition (selectionChange)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
 									<mat-option [value]="0">Score</mat-option>

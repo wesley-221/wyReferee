@@ -840,6 +840,15 @@ $hyperlink-background-color: #2b4576;
 						grid-template-columns: 1fr;
 						gap: 4px;
 
+						.header-col {
+							min-width: 0;
+						}
+
+						.smaller-width {
+							min-width: 0;
+							width: 100%;
+						}
+
 						&.double-column {
 							grid-template-columns: 1fr 1fr;
 
