@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject, filter, take } from 'rxjs';
@@ -67,15 +67,20 @@ export class TournamentService {
 					// Update tournaments if they have been updated
 					for (const tournament of this.allTournaments) {
 						if (tournament.publishId != undefined) {
-							this.getPublishedTournament(tournament.publishId).subscribe((data) => {
-								const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
+							this.getPublishedTournament(tournament.publishId).subscribe({
+								next: (data) => {
+									const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
 
-								if (publishedTournament.updateDate.getTime() != tournament.updateDate.getTime()) {
-									publishedTournament.publishId = publishedTournament.id;
+									if (publishedTournament.updateDate.getTime() != tournament.updateDate.getTime()) {
+										publishedTournament.publishId = publishedTournament.id;
 
-									this.toastService.addToast(`The tournament "${tournament.name}" has been updated.`, ToastType.Information, 10);
+										this.toastService.addToast(`The tournament "${tournament.name}" has been updated.`, ToastType.Information, 10);
 
-									this.updateTournament(publishedTournament, tournament.publishId, true);
+										this.updateTournament(publishedTournament, tournament.publishId, true);
+									}
+								},
+								error: (error: HttpErrorResponse) => {
+									console.warn(`Failed to update tournament "${tournament.name}": ${error.error.message}`);
 								}
 							});
 						}
