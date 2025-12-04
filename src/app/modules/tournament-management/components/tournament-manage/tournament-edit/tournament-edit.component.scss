@@ -9,6 +9,9 @@ $public-mappool-color: $success;
 
 .scroll {
 	padding-right: 8px;
+
+	height: 100%;
+	overflow-y: auto;
 }
 
 .tournament-edit-header {
