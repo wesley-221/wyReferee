@@ -9,6 +9,7 @@ import { filter, take } from 'rxjs';
 import PackageJson from '../../package.json';
 import { MatDialog } from '@angular/material/dialog';
 import { DataMigrationDialogComponent } from './components/dialogs/data-migration-dialog/data-migration-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	selector: 'app-root',
@@ -40,8 +41,13 @@ export class AppComponent implements OnInit {
 			}
 		});
 
-		this.authService.getMeData().subscribe(user => {
-			this.authService.loginUser(user);
+		this.authService.getMeData().subscribe({
+			next: user => {
+				this.authService.loginUser(user);
+			},
+			error: (error: HttpErrorResponse) => {
+				console.warn(error.error.message);
+			}
 		});
 	}
 

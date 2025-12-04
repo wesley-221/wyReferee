@@ -15,7 +15,6 @@ export class TournamentMyPublishedComponent implements OnInit {
 	allUsers: User[];
 
 	searchValue: string;
-	filterByUser: string;
 
 	filterByUserFormControl = new FormControl();
 	filteredUsers: Observable<User[]>;
@@ -30,7 +29,6 @@ export class TournamentMyPublishedComponent implements OnInit {
 		this.allUsers = [];
 
 		this.searchValue = '';
-		this.filterByUser = '';
 	}
 
 	ngOnInit(): void {
