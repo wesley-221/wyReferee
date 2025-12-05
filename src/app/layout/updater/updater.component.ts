@@ -38,7 +38,7 @@ export class UpdaterComponent implements OnInit {
 		});
 
 		window.electronApi.autoUpdater.updateDownloadProgress((progress: ProgressInfo) => {
-			this.downloadPercentage = progress.percent;
+			this.downloadPercentage = Number(progress.percent.toFixed(2));
 			this.ref.detectChanges();
 		});
 
