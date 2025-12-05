@@ -3,7 +3,7 @@
 	"publish": [
 		{
 			"provider": "github",
-			"owner": "wesley221",
+			"owner": "wesley-221",
 			"repo": "wyReferee"
 		}
 	],
