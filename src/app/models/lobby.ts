@@ -235,7 +235,7 @@ export class Lobby {
 			}
 		}
 
-		return null;
+		return [];
 	}
 
 	/**
