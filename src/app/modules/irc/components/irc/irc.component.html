@@ -234,7 +234,7 @@
 
 				<div class="message">
 					<button *ngIf="matchDialogMultiplayerData" mat-raised-button color="primary" (click)="sendBeatmapResult(matchDialogMultiplayerData)"><mat-icon>send</mat-icon> send beatmap result</button>
-					<button *ngIf="matchDialogSendFinalResult" mat-raised-button color="primary" (click)="sendFinalResult()"><mat-icon>send</mat-icon> send final result to Discord</button>
+					<button *ngIf="matchDialogSendFinalResult" mat-raised-button color="primary" (click)="updateMatchResults()"><mat-icon>send</mat-icon> update match results</button>
 				</div>
 			</div>
 
@@ -289,17 +289,25 @@
 							<mat-icon>list</mat-icon>&nbsp;lobby overview
 						</div>
 
-						<div class="home-button" (click)="sendMatchSummary()" [ngClass]="{'disabled': selectedLobby.sendWebhooks != true}" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-							<mat-icon>send</mat-icon>&nbsp;send match summary
-						</div>
+						<ng-container *ngIf="selectedLobby && selectedLobby.isQualifierLobby == true">
+							<div class="home-button" (click)="updateMatchResults()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+								<mat-icon>update</mat-icon>&nbsp;update match results
+							</div>
+						</ng-container>
 
-						<div class="home-button" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-							<mat-icon>send</mat-icon>&nbsp;send result to irc
-						</div>
+						<ng-container *ngIf="selectedLobby && selectedLobby.isQualifierLobby != true">
+							<div class="home-button" (click)="sendMatchSummary()" [ngClass]="{'disabled': selectedLobby.sendWebhooks != true}" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+								<mat-icon>send</mat-icon>&nbsp;send match summary
+							</div>
 
-						<div class="home-button" (click)="sendFinalResult()" [ngClass]="{'disabled': selectedLobby.sendWebhooks != true}" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-							<mat-icon>send</mat-icon>&nbsp;send final result
-						</div>
+							<div class="home-button" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+								<mat-icon>send</mat-icon>&nbsp;send result to irc
+							</div>
+
+							<div class="home-button" (click)="updateMatchResults()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+								<mat-icon>update</mat-icon>&nbsp;update match results
+							</div>
+						</ng-container>
 					</div>
 				</div>
 

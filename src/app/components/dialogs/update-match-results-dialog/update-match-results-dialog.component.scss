@@ -1,3 +1,13 @@
+@import "variables";
+
+.title {
+	color: $primary;
+}
+
+.body {
+	color: white;
+}
+
 .loading {
 	display: flex;
 	align-items: center;

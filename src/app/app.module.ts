@@ -8,7 +8,6 @@ import { ErrorComponent } from './layout/error/error.component';
 import { RemoveSettingsComponent } from './components/dialogs/remove-settings/remove-settings.component';
 import { DeleteLobbyComponent } from './components/dialogs/delete-lobby/delete-lobby.component';
 import { MultiplayerLobbySettingsComponent } from './components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
-import { SendFinalResultComponent } from './components/dialogs/send-final-result/send-final-result.component';
 import { JoinIrcChannelComponent } from './components/dialogs/join-irc-channel/join-irc-channel.component';
 import { BanBeatmapComponent } from './components/dialogs/ban-beatmap/ban-beatmap.component';
 import { MultiplayerLobbyMovePlayerComponent } from './components/dialogs/multiplayer-lobby-move-player/multiplayer-lobby-move-player.component';
@@ -32,6 +31,7 @@ import { ProtectBeatmapDialogComponent } from './components/dialogs/protect-beat
 import { AddBulkTeamsDialogComponent } from './components/dialogs/add-bulk-teams-dialog/add-bulk-teams-dialog.component';
 import { StorageDriverService } from './services/storage/storage-driver.service';
 import { DataMigrationDialogComponent } from './components/dialogs/data-migration-dialog/data-migration-dialog.component';
+import { UpdateMatchResultsDialogComponent } from './components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 
 export function initStorage(storageDriver: StorageDriverService) {
 	return () => storageDriver.init();
@@ -46,7 +46,6 @@ export function initStorage(storageDriver: StorageDriverService) {
 		RemoveSettingsComponent,
 		DeleteLobbyComponent,
 		MultiplayerLobbySettingsComponent,
-		SendFinalResultComponent,
 		JoinIrcChannelComponent,
 		BanBeatmapComponent,
 		MultiplayerLobbyMovePlayerComponent,
@@ -64,6 +63,7 @@ export function initStorage(storageDriver: StorageDriverService) {
 		ProtectBeatmapDialogComponent,
 		AddBulkTeamsDialogComponent,
 		DataMigrationDialogComponent,
+		UpdateMatchResultsDialogComponent
 	],
 	imports: [
 		BrowserModule,
