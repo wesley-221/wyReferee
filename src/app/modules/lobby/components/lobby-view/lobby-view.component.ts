@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MultiplayerLobbySettingsComponent } from 'app/components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
-import { SendFinalResultComponent } from 'app/components/dialogs/send-final-result/send-final-result.component';
 import { OsuHelper } from 'app/models/osu-models/osu';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { Lobby } from 'app/models/lobby';
@@ -19,6 +18,7 @@ import { ToastType } from 'app/models/toast';
 import { ChallongeService } from 'app/services/challonge.service';
 import { Misc } from 'app/shared/misc';
 import { LobbyStoreService } from 'app/services/storage/lobby-store.service';
+import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -361,10 +361,10 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Send the final result to discord
+	 * Update the match results in the lobby
 	 */
-	sendFinalResult(multiplayerLobby: Lobby) {
-		const dialogRef = this.dialog.open(SendFinalResultComponent, {
+	updateMatchResults(multiplayerLobby: Lobby) {
+		const dialogRef = this.dialog.open(UpdateMatchResultsDialogComponent, {
 			data: {
 				multiplayerLobby: multiplayerLobby
 			}
@@ -372,23 +372,27 @@ export class LobbyViewComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result: IMultiplayerLobbySendFinalMessageDialogData) => {
 			if (result != undefined) {
-				if (result.qualifierLobby) {
-					this.webhookService.sendQualifierResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+				if (result.winByDefault) {
+					this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser);
 				}
 				else {
-					if (result.winByDefault) {
-						this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser);
-					}
-					else {
-						this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
-					}
+					this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+				}
 
-					if (this.selectedLobby.hasWyBinConnected()) {
-						this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.wybinStageId, this.selectedLobby.wybinMatchId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe(() => {
-						}, (error: HttpErrorResponse) => {
+				if (this.selectedLobby.hasWyBinConnected()) {
+					this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.wybinStageId, this.selectedLobby.wybinMatchId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe({
+						next: () => {
+							if (result.qualifierLobby == true) {
+								this.toastService.addToast(`Successfully updated the match results for ${result.multiplayerLobby.getQualifierName()}`);
+							}
+							else {
+								this.toastService.addToast(`Successfully updated the match results for ${result.multiplayerLobby.getLobbyName()}`);
+							}
+						},
+						error: (error: HttpErrorResponse) => {
 							this.toastService.addToast('Unable to update the match score to Challonge: ' + error.error.message, ToastType.Error);
-						});
-					}
+						}
+					});
 				}
 			}
 		});

@@ -25,7 +25,6 @@ import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { MessageBuilder } from 'app/models/irc/message-builder';
 import { IBanBeatmapDialogData } from 'app/interfaces/i-ban-beatmap-dialog-data';
 import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
-import { SendFinalResultComponent } from 'app/components/dialogs/send-final-result/send-final-result.component';
 import { IMultiplayerLobbySendFinalMessageDialogData } from 'app/interfaces/i-multiplayer-lobby-send-final-message-dialog-data';
 import { Gamemodes } from 'app/models/osu-models/osu';
 import { TournamentService } from 'app/services/tournament.service';
@@ -41,6 +40,7 @@ import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Subject, takeUntil } from 'rxjs';
+import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 
 @Component({
 	selector: 'app-irc',
@@ -967,6 +967,43 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Update the match results in the lobby
+	 */
+	updateMatchResults() {
+		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
+
+		const dialogRef = this.dialog.open(UpdateMatchResultsDialogComponent, {
+			data: {
+				multiplayerLobby: selectedMultiplayerLobby
+			}
+		});
+
+		dialogRef.afterClosed().subscribe((result: IMultiplayerLobbySendFinalMessageDialogData) => {
+			if (result != undefined) {
+				if (result.winByDefault) {
+					this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser);
+				}
+				else {
+					this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
+				}
+
+				if (this.selectedLobby.hasWyBinConnected()) {
+					this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.wybinStageId, this.selectedLobby.wybinMatchId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe({
+						next: () => {
+							this.toastService.addToast(`Successfully updated the match results for ${result.multiplayerLobby.getQualifierName()}`);
+						},
+						error: (error: HttpErrorResponse) => {
+							this.toastService.addToast('Unable to update the match score to Challonge: ' + error.error.message, ToastType.Error);
+						}
+					});
+				}
+			}
+		});
+
+		this.closeMatchDialog();
+	}
+
+	/**
 	 * Send the match summary to the given Discord webhooks
 	 */
 	sendMatchSummary() {
@@ -977,48 +1014,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 		}
 
 		this.webhookService.sendMatchSummary(selectedMultiplayerLobby, this.ircService.authenticatedUser);
-	}
-
-	/**
-	 * Send the final result to discord
-	 */
-	sendFinalResult() {
-		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
-
-		if (selectedMultiplayerLobby.sendWebhooks != true) {
-			return;
-		}
-
-		const dialogRef = this.dialog.open(SendFinalResultComponent, {
-			data: {
-				multiplayerLobby: selectedMultiplayerLobby
-			}
-		});
-
-		dialogRef.afterClosed().subscribe((result: IMultiplayerLobbySendFinalMessageDialogData) => {
-			if (result != undefined) {
-				if (result.qualifierLobby) {
-					this.webhookService.sendQualifierResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
-				}
-				else {
-					if (result.winByDefault) {
-						this.webhookService.sendWinByDefaultResult(result.multiplayerLobby, result.extraMessage, result.winningTeam, result.losingTeam, this.ircService.authenticatedUser);
-					}
-					else {
-						this.webhookService.sendFinalResult(result.multiplayerLobby, result.extraMessage, this.ircService.authenticatedUser);
-					}
-
-					if (this.selectedLobby.hasWyBinConnected()) {
-						this.challongeService.updateMatchScore(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.wybinStageId, this.selectedLobby.wybinMatchId, this.selectedLobby.selectedStage.name, this.selectedLobby.teamOneName, this.selectedLobby.teamTwoName, this.selectedLobby.getTeamOneScore(), this.selectedLobby.getTeamTwoScore(), this.selectedLobby.teamHasWon()).subscribe(() => {
-						}, (error: HttpErrorResponse) => {
-							this.toastService.addToast('Unable to update the match score to Challonge: ' + error.error.message, ToastType.Error);
-						});
-					}
-				}
-			}
-		});
-
-		this.closeMatchDialog();
 	}
 
 	/**

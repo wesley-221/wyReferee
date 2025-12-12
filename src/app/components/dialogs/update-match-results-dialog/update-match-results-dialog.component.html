@@ -1,0 +1,80 @@
+<h2 mat-dialog-title class="title">Update match results</h2>
+
+<mat-dialog-content class="body">
+	<ng-container *ngIf="isQualifierLobby == true">
+		<p>Do you want to update the match results for <b>{{ data.multiplayerLobby.getQualifierName() }}</b>? This will do the following: </p>
+
+		<ul>
+			<li>Updates the multiplayer link to <b>{{ data.multiplayerLobby.getQualifierName() }}</b></li>
+			<li>Updates the stats only for beatmaps played up to this moment</li>
+		</ul>
+	</ng-container>
+
+	<ng-container *ngIf="isQualifierLobby != true">
+		<p>Do you want to update the match results for <b>{{ data.multiplayerLobby.getLobbyName() }}</b>? This will do the following: </p>
+
+		<ul>
+			<li>Updates the multiplayer link for <b>{{ data.multiplayerLobby.getLobbyName() }}</b></li>
+			<li>Updates the stats only for matches played up to this moment</li>
+			<li>Updates which maps were banned</li>
+			<li>Updates the conditional matches if applicable</li>
+			<li *ngIf="data.multiplayerLobby.sendWebhooks == true">Sends a webhook with the final result</li>
+			<li *ngIf="data.multiplayerLobby.sendWebhooks != true"><u>No webhook will be sent. This can be changed in Lobby Settings</u></li>
+		</ul>
+
+		<hr />
+
+		<form [formGroup]="validationForm">
+			<h3>Match outcome</h3>
+			<p>Select the outcome of the match.</p>
+
+			<ul>
+				<li>"Win by default" is for when one of both participants didn't show up.</li>
+				<li>"Normal result" is for when the match finished as it's supposed to be.</li>
+			</ul>
+
+			<mat-button-toggle-group color="primary" formControlName="match-outcome" (change)="changeMatchOutcome($event)">
+				<mat-button-toggle value="win-by-default">Win by default</mat-button-toggle>
+				<mat-button-toggle value="normal-result">Normal result</mat-button-toggle>
+			</mat-button-toggle-group>
+
+			<hr />
+
+			<h3>Match winner</h3>
+			<p>Select which participant won the match.</p>
+
+			<ul *ngIf="isWinByDefault == true">
+				<li>Select <b>No-one</b> if neither participant show up</li>
+				<li>Select one of the participants if only they showed up, to indicate a win by default</li>
+			</ul>
+
+			<mat-button-toggle-group color="primary" formControlName="winning-team">
+				<mat-button-toggle [value]="'no-one'" *ngIf="isWinByDefault == true">No-one</mat-button-toggle>
+				<mat-button-toggle [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-button-toggle>
+				<mat-button-toggle [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-button-toggle>
+			</mat-button-toggle-group>
+
+			<hr />
+
+			<ng-container *ngIf="data.multiplayerLobby.sendWebhooks == true">
+				<h3>Webhook</h3>
+				<p>Add an extra message to the final result webhook. This message is optional.</p>
+
+				<mat-form-field class="full-width">
+					<mat-label>Extra message</mat-label>
+					<input matInput formControlName="extra-message" />
+				</mat-form-field>
+			</ng-container>
+
+			<div class="loading" *ngIf="loading">
+				<mat-spinner [diameter]="35" class="spinner"></mat-spinner> updating the score to the wyBin tournament...
+			</div>
+		</form>
+	</ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">cancel</button>
+	<button mat-button color="primary" (click)="updateResults()" *ngIf="isQualifierLobby == true">update results</button>
+	<button mat-button color="primary" (click)="updateResults()" [disabled]="validationForm.invalid" *ngIf="isQualifierLobby != true">update match results</button>
+</mat-dialog-actions>
