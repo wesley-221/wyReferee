@@ -23,14 +23,16 @@ export class UpdateMatchResultsDialogComponent {
 	loading: boolean;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySendFinalMessageDialogData, private dialogRef: MatDialogRef<LobbyViewComponent>, private wybinService: WybinService, private toastService: ToastService) {
-		this.validationForm = new FormGroup({
-			'match-outcome': new FormControl('', Validators.required),
-			'winning-team': new FormControl('', Validators.required),
-			'extra-message': new FormControl()
-		})
+		const matchStanding = this.getMatchStanding();
 
 		this.isQualifierLobby = data.multiplayerLobby && data.multiplayerLobby.isQualifierLobby;
 		this.loading = false;
+
+		this.validationForm = new FormGroup({
+			'match-outcome': new FormControl('normal-result', Validators.required),
+			'winning-team': new FormControl(matchStanding.winningTeam, Validators.required),
+			'extra-message': new FormControl()
+		})
 	}
 
 	/**
@@ -135,7 +137,8 @@ export class UpdateMatchResultsDialogComponent {
 			this.validationForm.get('winning-team').setValue('no-one');
 		}
 		else {
-			this.validationForm.get('winning-team').setValue(null);
+			const matchStanding = this.getMatchStanding();
+			this.validationForm.get('winning-team').setValue(matchStanding.winningTeam);
 		}
 	}
 
@@ -150,10 +153,21 @@ export class UpdateMatchResultsDialogComponent {
 			};
 		}
 		else {
-			return {
-				winningTeam: this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamOneName : this.data.multiplayerLobby.teamTwoName,
-				losingTeam: this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamTwoName : this.data.multiplayerLobby.teamOneName
-			};
+			const opponentOneScore = this.data.multiplayerLobby.getTeamOneScore();
+			const opponentTwoScore = this.data.multiplayerLobby.getTeamTwoScore();
+
+			if (opponentOneScore == this.data.multiplayerLobby.getWinningConditionScore() || opponentTwoScore == this.data.multiplayerLobby.getWinningConditionScore()) {
+				return {
+					winningTeam: this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamOneName : this.data.multiplayerLobby.teamTwoName,
+					losingTeam: this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamTwoName : this.data.multiplayerLobby.teamOneName
+				};
+			}
+			else {
+				return {
+					winningTeam: null,
+					losingTeam: null
+				};
+			}
 		}
 	}
 }
