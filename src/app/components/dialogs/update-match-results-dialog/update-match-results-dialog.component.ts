@@ -23,14 +23,16 @@ export class UpdateMatchResultsDialogComponent {
 	loading: boolean;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySendFinalMessageDialogData, private dialogRef: MatDialogRef<LobbyViewComponent>, private wybinService: WybinService, private toastService: ToastService) {
-		this.validationForm = new FormGroup({
-			'match-outcome': new FormControl('', Validators.required),
-			'winning-team': new FormControl('', Validators.required),
-			'extra-message': new FormControl()
-		})
+		const matchStanding = this.getMatchStanding();
 
 		this.isQualifierLobby = data.multiplayerLobby && data.multiplayerLobby.isQualifierLobby;
 		this.loading = false;
+
+		this.validationForm = new FormGroup({
+			'match-outcome': new FormControl('normal-result', Validators.required),
+			'winning-team': new FormControl(matchStanding.winningTeam, Validators.required),
+			'extra-message': new FormControl()
+		})
 	}
 
 	/**
@@ -70,8 +72,22 @@ export class UpdateMatchResultsDialogComponent {
 			// Match is a regular match and should be updated to wyBin
 			else {
 				const matchStanding = this.getMatchStanding();
+				const wbdWinner = this.isWinByDefault ? this.validationForm.get('winning-team').value : null;
+				let opponentOneScore: number;
+				let opponentTwoScore: number;
 
 				this.loading = true;
+
+				if (this.isWinByDefault) {
+					const wbdScore = this.data.multiplayerLobby.getWinningConditionScore();
+
+					opponentOneScore = this.data.multiplayerLobby.teamOneName === wbdWinner ? wbdScore : 0;
+					opponentTwoScore = this.data.multiplayerLobby.teamTwoName === wbdWinner ? wbdScore : 0;
+				}
+				else {
+					opponentOneScore = this.data.multiplayerLobby.getTeamOneScore();
+					opponentTwoScore = this.data.multiplayerLobby.getTeamTwoScore();
+				}
 
 				this.wybinService.updateMatchScore(wyBinTournamentId,
 					this.data.multiplayerLobby.wybinStageId,
@@ -80,9 +96,9 @@ export class UpdateMatchResultsDialogComponent {
 					this.data.multiplayerLobby.multiplayerLink,
 					this.data.multiplayerLobby.teamOneName,
 					this.data.multiplayerLobby.teamTwoName,
-					this.data.multiplayerLobby.getTeamOneScore(),
-					this.data.multiplayerLobby.getTeamTwoScore(),
-					this.validationForm.get('winning-team').value,
+					opponentOneScore,
+					opponentTwoScore,
+					wbdWinner,
 					this.data.multiplayerLobby.teamOneBans,
 					this.data.multiplayerLobby.teamTwoBans,
 					null).subscribe({
@@ -135,7 +151,8 @@ export class UpdateMatchResultsDialogComponent {
 			this.validationForm.get('winning-team').setValue('no-one');
 		}
 		else {
-			this.validationForm.get('winning-team').setValue(null);
+			const matchStanding = this.getMatchStanding();
+			this.validationForm.get('winning-team').setValue(matchStanding.winningTeam);
 		}
 	}
 
@@ -150,10 +167,21 @@ export class UpdateMatchResultsDialogComponent {
 			};
 		}
 		else {
-			return {
-				winningTeam: this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamOneName : this.data.multiplayerLobby.teamTwoName,
-				losingTeam: this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamTwoName : this.data.multiplayerLobby.teamOneName
-			};
+			const opponentOneScore = this.data.multiplayerLobby.getTeamOneScore();
+			const opponentTwoScore = this.data.multiplayerLobby.getTeamTwoScore();
+
+			if (opponentOneScore == this.data.multiplayerLobby.getWinningConditionScore() || opponentTwoScore == this.data.multiplayerLobby.getWinningConditionScore()) {
+				return {
+					winningTeam: this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamOneName : this.data.multiplayerLobby.teamTwoName,
+					losingTeam: this.data.multiplayerLobby.getTeamOneScore() > this.data.multiplayerLobby.getTeamTwoScore() ? this.data.multiplayerLobby.teamTwoName : this.data.multiplayerLobby.teamOneName
+				};
+			}
+			else {
+				return {
+					winningTeam: null,
+					losingTeam: null
+				};
+			}
 		}
 	}
 }

@@ -2,7 +2,8 @@
 
 <mat-dialog-content class="body">
 	<ng-container *ngIf="isQualifierLobby == true">
-		<p>Do you want to update the match results for <b>{{ data.multiplayerLobby.getQualifierName() }}</b>? This will do the following: </p>
+		<p>Do you want to update the match results for <b>{{ data.multiplayerLobby.getQualifierName() }}</b>?</p>
+		<p>The following changes will be made:</p>
 
 		<ul>
 			<li>Updates the multiplayer link to <b>{{ data.multiplayerLobby.getQualifierName() }}</b></li>
@@ -12,7 +13,8 @@
 	</ng-container>
 
 	<ng-container *ngIf="isQualifierLobby != true">
-		<p>Do you want to update the match results for <b>{{ data.multiplayerLobby.getLobbyName() }}</b>? This will do the following: </p>
+		<p>Do you want to update the match results for <b>{{ data.multiplayerLobby.getLobbyName() }}</b>?</p>
+		<p>The following changes will be made:</p>
 
 		<ul>
 			<li>Updates the multiplayer link for <b>{{ data.multiplayerLobby.getLobbyName() }}</b></li>
