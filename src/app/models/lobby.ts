@@ -314,10 +314,10 @@ export class Lobby {
 	 * Check if a team is on a matchpoint
 	 */
 	getMatchPoint(): string {
-		if (this.getTeamOneScore() == Math.floor(this.bestOf / 2)) {
+		if (this.getTeamOneScore() == this.getMatchPointScore()) {
 			return this.teamOneName;
 		}
-		else if (this.getTeamTwoScore() == Math.floor(this.bestOf / 2)) {
+		else if (this.getTeamTwoScore() == this.getMatchPointScore()) {
 			return this.teamTwoName;
 		}
 
@@ -328,24 +328,24 @@ export class Lobby {
 	 * Check if a tiebreaker is supposed to be played
 	 */
 	getTiebreaker(): boolean {
-		return this.getTeamOneScore() == Math.floor(this.bestOf / 2) && this.getTeamTwoScore() == Math.floor(this.bestOf / 2);
+		return this.getTeamOneScore() == this.getMatchPointScore() && this.getTeamTwoScore() == this.getMatchPointScore();
 	}
 
 	/**
 	 * Get an array of numbers to display the score circles with
 	 */
 	getMaxMatchPointsForIrcHeader(): number[] {
-		return Array(Math.floor(this.bestOf / 2) + 1).fill(0).map((x, i) => i + 1);
+		return Array(this.getWinningConditionScore()).fill(0).map((x, i) => i + 1);
 	}
 
 	/**
 	 * Check if a team has won the match
 	 */
 	teamHasWon(): string {
-		if (this.getTeamOneScore() == Math.ceil(this.bestOf / 2)) {
+		if (this.getTeamOneScore() == this.getWinningConditionScore()) {
 			return this.teamOneName;
 		}
-		else if (this.getTeamTwoScore() == Math.ceil(this.bestOf / 2)) {
+		else if (this.getTeamTwoScore() == this.getWinningConditionScore()) {
 			return this.teamTwoName;
 		}
 
@@ -733,5 +733,23 @@ export class Lobby {
 
 	getRawFileName(): string {
 		return this.rawFileName;
+	}
+
+	/**
+	 * Get the score a team needs to win the match
+	 *
+	 * @returns the score a team needs to win the match
+	 */
+	getWinningConditionScore(): number {
+		return Math.ceil(this.bestOf / 2);
+	}
+
+	/**
+	 * Get the score a team needs to be on matchpoint
+	 *
+	 * @returns the score a team needs to be on matchpoint
+	 */
+	getMatchPointScore(): number {
+		return this.getWinningConditionScore() - 1;
 	}
 }
