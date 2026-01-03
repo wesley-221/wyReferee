@@ -72,8 +72,22 @@ export class UpdateMatchResultsDialogComponent {
 			// Match is a regular match and should be updated to wyBin
 			else {
 				const matchStanding = this.getMatchStanding();
+				const wbdWinner = this.isWinByDefault ? this.validationForm.get('winning-team').value : null;
+				let opponentOneScore: number;
+				let opponentTwoScore: number;
 
 				this.loading = true;
+
+				if (this.isWinByDefault) {
+					const wbdScore = this.data.multiplayerLobby.getWinningConditionScore();
+
+					opponentOneScore = this.data.multiplayerLobby.teamOneName === wbdWinner ? wbdScore : 0;
+					opponentTwoScore = this.data.multiplayerLobby.teamTwoName === wbdWinner ? wbdScore : 0;
+				}
+				else {
+					opponentOneScore = this.data.multiplayerLobby.getTeamOneScore();
+					opponentTwoScore = this.data.multiplayerLobby.getTeamTwoScore();
+				}
 
 				this.wybinService.updateMatchScore(wyBinTournamentId,
 					this.data.multiplayerLobby.wybinStageId,
@@ -82,9 +96,9 @@ export class UpdateMatchResultsDialogComponent {
 					this.data.multiplayerLobby.multiplayerLink,
 					this.data.multiplayerLobby.teamOneName,
 					this.data.multiplayerLobby.teamTwoName,
-					this.data.multiplayerLobby.getTeamOneScore(),
-					this.data.multiplayerLobby.getTeamTwoScore(),
-					this.validationForm.get('winning-team').value,
+					opponentOneScore,
+					opponentTwoScore,
+					wbdWinner,
 					this.data.multiplayerLobby.teamOneBans,
 					this.data.multiplayerLobby.teamTwoBans,
 					null).subscribe({
