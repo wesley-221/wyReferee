@@ -103,7 +103,7 @@ export class TournamentGeneralComponent implements OnInit {
 	 */
 	importStreamers(): void {
 		this.importingFromWyBin = true;
-		let streamers: string[] = [];
+		const streamers: string[] = [];
 
 		this.wybinService.importStaff(this.tournament.wyBinTournamentId).subscribe({
 			next: (allStaff: any[]) => {
