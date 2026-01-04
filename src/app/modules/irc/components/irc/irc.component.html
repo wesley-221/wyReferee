@@ -289,6 +289,10 @@
 							<mat-icon>list</mat-icon>&nbsp;lobby overview
 						</div>
 
+						<div class="home-button" (click)="sendAddRefCommand()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+							<mat-icon>send</mat-icon>&nbsp;!mp addref
+						</div>
+
 						<ng-container *ngIf="selectedLobby && selectedLobby.isQualifierLobby == true">
 							<div class="home-button" (click)="updateMatchResults()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
 								<mat-icon>update</mat-icon>&nbsp;update match results
@@ -297,7 +301,7 @@
 
 						<ng-container *ngIf="selectedLobby && selectedLobby.isQualifierLobby != true">
 							<div class="home-button" (click)="sendMatchSummary()" [ngClass]="{'disabled': selectedLobby.sendWebhooks != true}" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-								<mat-icon>send</mat-icon>&nbsp;send match summary
+								<mat-icon>send</mat-icon>&nbsp;match summary
 							</div>
 
 							<div class="home-button" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
