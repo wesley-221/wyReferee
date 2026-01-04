@@ -289,7 +289,7 @@
 							<mat-icon>list</mat-icon><span>lobby overview</span>
 						</div>
 
-						<div class="home-button" (click)="sendAddRefCommand()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+						<div class="home-button" (click)="sendAddRefCommand()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined) && selectedLobby.tournament.addrefUsernames?.length > 0">
 							<mat-icon>send</mat-icon><span>!mp addref</span>
 						</div>
 
