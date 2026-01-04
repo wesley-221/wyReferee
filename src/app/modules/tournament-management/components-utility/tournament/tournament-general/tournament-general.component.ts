@@ -122,7 +122,7 @@ export class TournamentGeneralComponent implements OnInit {
 					}
 				}
 
-				this.validationForm.get('tournament-addref-usernames').setValue(streamers.join(' '));
+				this.validationForm.get('tournament-addref-usernames').setValue(streamers.join(', '));
 
 				this.importingFromWyBin = false;
 			},
