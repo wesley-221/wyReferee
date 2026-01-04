@@ -868,12 +868,15 @@ $hyperlink-background-color: #2b4576;
 						.home-button {
 							display: flex;
 							align-items: center;
-							justify-content: center;
 
 							padding: 4px;
 
 							background-color: $primary;
 							color: black;
+
+							mat-icon {
+								width: 30px;
+							}
 
 							&:hover {
 								background-color: darken($primary, 15%);
