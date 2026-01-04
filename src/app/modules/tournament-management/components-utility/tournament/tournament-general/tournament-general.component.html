@@ -206,6 +206,27 @@
 
 	<hr />
 
+	<div class="row r1">
+		<div class="col">
+			<h2>!mp addref configuration</h2>
+			<p>Enter one or more usernames to include in the <code>!mp addref</code> command. Each username will be added as a referee to the created lobby. When at least one username is provided, referees will have a button available to them that sends the command automatically.</p>
+			<p>Usernames should be separated by space, example: Wesley - N a g i - Sartan</p>
+
+			<button mat-raised-button color="primary" class="import-streamers" (click)="importStreamers()" *ngIf="tournament.hasWyBinConnected()">
+				<mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import streamers from wyBin
+			</button>
+
+			<mat-form-field class="full-width">
+				<mat-label>Usernames</mat-label>
+				<input matInput formControlName="tournament-addref-usernames" />
+			</mat-form-field>
+
+			<p>Command preview: <code>!mp addref {{ validationForm.get('tournament-addref-usernames').value }}</code></p>
+		</div>
+	</div>
+
+	<hr />
+
 	<div class="row r-2">
 		<div class="col">
 			<h2>Invalidate beatmaps</h2>
