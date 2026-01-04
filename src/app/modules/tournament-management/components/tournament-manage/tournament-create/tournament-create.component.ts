@@ -51,6 +51,7 @@ export class TournamentCreateComponent implements OnInit {
 			'default-team-mode': new FormControl(0, Validators.required),
 			'default-win-condition': new FormControl(0, Validators.required),
 			'default-players': new FormControl(8, Validators.required),
+			'tournament-addref-usernames': new FormControl(),
 			'allow-double-pick': new FormControl(true),
 			'invalidate-beatmaps': new FormControl(true),
 			'lobby-team-name-with-brackets': new FormControl(false)

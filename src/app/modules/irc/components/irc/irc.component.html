@@ -278,34 +278,38 @@
 				<div class="active-header-setting no-padding" [ngClass]="{'active': sidebarHeaderButtonActive == 1}">
 					<div class="home-buttons">
 						<div class="home-button" (click)="openLobbyDialog()">
-							<mat-icon>settings</mat-icon>&nbsp;lobby settings
+							<mat-icon>settings</mat-icon><span>lobby settings</span>
 						</div>
 
 						<div class="home-button" (click)="synchronizeMp()">
-							<mat-icon>sync</mat-icon>&nbsp;synchronize lobby
+							<mat-icon>sync</mat-icon><span>synchronize lobby</span>
 						</div>
 
 						<div class="home-button" (click)="navigateLobbyOverview()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-							<mat-icon>list</mat-icon>&nbsp;lobby overview
+							<mat-icon>list</mat-icon><span>lobby overview</span>
+						</div>
+
+						<div class="home-button" (click)="sendAddRefCommand()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined) && selectedLobby.tournament.addrefUsernames?.length > 0">
+							<mat-icon>send</mat-icon><span>!mp addref</span>
 						</div>
 
 						<ng-container *ngIf="selectedLobby && selectedLobby.isQualifierLobby == true">
 							<div class="home-button" (click)="updateMatchResults()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-								<mat-icon>update</mat-icon>&nbsp;update match results
+								<mat-icon>update</mat-icon><span>update match results</span>
 							</div>
 						</ng-container>
 
 						<ng-container *ngIf="selectedLobby && selectedLobby.isQualifierLobby != true">
 							<div class="home-button" (click)="sendMatchSummary()" [ngClass]="{'disabled': selectedLobby.sendWebhooks != true}" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-								<mat-icon>send</mat-icon>&nbsp;send match summary
+								<mat-icon>send</mat-icon><span>match summary</span>
 							</div>
 
 							<div class="home-button" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-								<mat-icon>send</mat-icon>&nbsp;send result to irc
+								<mat-icon>send</mat-icon><span>send result to irc</span>
 							</div>
 
 							<div class="home-button" (click)="updateMatchResults()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
-								<mat-icon>update</mat-icon>&nbsp;update match results
+								<mat-icon>update</mat-icon><span>update match results</span>
 							</div>
 						</ng-container>
 					</div>

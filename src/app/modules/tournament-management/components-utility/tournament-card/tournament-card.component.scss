@@ -66,13 +66,15 @@
 		.all-administrators {
 			display: flex;
 			flex-direction: row;
+			flex-wrap: wrap;
+
+			gap: 8px;
 
 			.administrator {
 				display: flex;
 				flex-direction: row;
 
 				padding: 8px;
-				margin: 4px;
 
 				border: 1px solid darken(#3c4452, 15%);
 				-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
@@ -94,12 +96,13 @@
 				flex-direction: row;
 				flex-wrap: wrap;
 
+				gap: 8px;
+
 				.mappool {
 					display: flex;
 					flex-direction: row;
 
 					padding: 8px;
-					margin: 4px;
 
 					border: 1px solid darken(#3c4452, 15%);
 					-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);

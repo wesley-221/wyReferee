@@ -4,6 +4,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { Calculate } from 'app/models/score-calculation/calculate';
 import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { TournamentFormat, WyTournament } from 'app/models/wytournament/wy-tournament';
+import { WybinService } from 'app/services/wybin.service';
 
 @Component({
 	selector: 'app-tournament-general',
@@ -16,9 +17,13 @@ export class TournamentGeneralComponent implements OnInit {
 
 	calculateScoreInterfaces: Calculate;
 
-	constructor() {
+	importingFromWyBin: boolean;
+
+	constructor(private wybinService: WybinService) {
 		this.calculateScoreInterfaces = new Calculate();
+		this.importingFromWyBin = false;
 	}
+
 	ngOnInit(): void {
 		this.tournament.allowDoublePick = this.validationForm.get('allow-double-pick').value;
 		this.tournament.invalidateBeatmaps = this.validationForm.get('invalidate-beatmaps').value;
@@ -91,5 +96,39 @@ export class TournamentGeneralComponent implements OnInit {
 	changeLobbyTeamNameWithBrackets(event: { source: any; checked: boolean }) {
 		this.validationForm.get('lobby-team-name-with-brackets').setValue(event.checked);
 		this.tournament.lobbyTeamNameWithBrackets = event.checked;
+	}
+
+	/**
+	 * Import streamers from wyBin
+	 */
+	importStreamers(): void {
+		this.importingFromWyBin = true;
+		const streamers: string[] = [];
+
+		this.wybinService.importStaff(this.tournament.wyBinTournamentId).subscribe({
+			next: (allStaff: any[]) => {
+				for (const staff of allStaff) {
+					let isStreamer = false;
+
+					for (const role of staff.roles) {
+						if (role.streamerPermission == true) {
+							isStreamer = true;
+							break;
+						}
+					}
+
+					if (isStreamer == true) {
+						streamers.push(staff.user.username);
+					}
+				}
+
+				this.validationForm.get('tournament-addref-usernames').setValue(streamers.join(' '));
+
+				this.importingFromWyBin = false;
+			},
+			error: () => {
+				this.importingFromWyBin = false;
+			}
+		});
 	}
 }

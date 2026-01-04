@@ -44,6 +44,8 @@ export class WyTournament {
 	defaultWinCondition: number;
 	defaultPlayers: number;
 
+	addrefUsernames: string;
+
 	invalidateBeatmaps: boolean;
 	allowDoublePick: boolean;
 	lobbyTeamNameWithBrackets: boolean;
@@ -106,7 +108,8 @@ export class WyTournament {
 			wyBinTournamentId: tournament.wyBinTournamentId,
 			defaultTeamMode: Number(tournament.defaultTeamMode),
 			defaultWinCondition: Number(tournament.defaultWinCondition),
-			defaultPlayers: Number(tournament.defaultPlayers)
+			defaultPlayers: Number(tournament.defaultPlayers),
+			addrefUsernames: tournament.addrefUsernames
 		});
 
 		for (const team in tournament.teams) {

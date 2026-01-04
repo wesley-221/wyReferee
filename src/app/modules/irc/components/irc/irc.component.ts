@@ -719,6 +719,13 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Send the addref command to the channel
+	 */
+	sendAddRefCommand() {
+		this.ircService.sendMessage(this.selectedChannel.name, `!mp addref ${this.selectedLobby.tournament.addrefUsernames}`);
+	}
+
+	/**
 	 * Refresh the stats for a multiplayer lobby.
 	 *
 	 * @param multiplayerLobby the multiplayerlobby
