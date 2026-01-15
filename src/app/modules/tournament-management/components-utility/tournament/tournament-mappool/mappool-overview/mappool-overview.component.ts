@@ -57,6 +57,10 @@ export class MappoolOverviewComponent implements OnInit {
 			tournament.stages.sort((a, b) => a.startDate - b.startDate);
 
 			for (const stage of tournament.stages) {
+				for (const modBracket of stage.modBrackets) {
+					modBracket.beatmaps.sort((a: any, b: any) => a.beatmapOrder - b.beatmapOrder);
+				}
+
 				const newMappool = WyMappool.parseFromWyBin(stage, this.addNoFail, this.tournament.gamemodeId);
 
 				if (tournament.axsTournament == true) {
