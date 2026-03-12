@@ -11,7 +11,7 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
-          - windows-2019
+          - windows-latest
         node_version: [20.x]
     name: Node ${{ matrix.node_version }} - ${{ matrix.os }}
     steps:
