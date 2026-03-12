@@ -15,6 +15,7 @@ import { IPC_CHANNELS } from './ipc-channels';
 		joinPath: (paths: string[]) => ipcRenderer.invoke(IPC_CHANNELS.JOIN_PATH, paths),
 		readFile: (filePath: string, defaultValue: any) => ipcRenderer.invoke(IPC_CHANNELS.READ_FILE, filePath, defaultValue),
 		writeFile: (filePath: string, data: any) => ipcRenderer.invoke(IPC_CHANNELS.WRITE_FILE, filePath, data),
+		saveLog: (filePath: string, data: string) => ipcRenderer.invoke(IPC_CHANNELS.SAVE_LOG, filePath, data),
 		deleteFile: (filePath: string) => ipcRenderer.invoke(IPC_CHANNELS.DELETE_FILE, filePath),
 		listFiles: (filePath: string) => ipcRenderer.invoke(IPC_CHANNELS.LIST_FILES, filePath),
 		createDirectoryIfNotExists: (directoryPath: string) => ipcRenderer.invoke(IPC_CHANNELS.CREATE_DIRECTORY_IF_NOT_EXISTS, directoryPath)

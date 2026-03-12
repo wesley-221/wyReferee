@@ -7,6 +7,7 @@ export const IPC_CHANNELS = {
 	JOIN_PATH: 'joinPath',
 	READ_FILE: 'readfile',
 	WRITE_FILE: 'writefile',
+	SAVE_LOG: 'saveLog',
 	DELETE_FILE: 'deletefile',
 	LIST_FILES: 'listFiles',
 	CREATE_DIRECTORY_IF_NOT_EXISTS: 'createDirectoryIfNotExists',

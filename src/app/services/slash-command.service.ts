@@ -76,7 +76,7 @@ export class SlashCommandService {
 			title: `Save the log of ${ircChannel.name}`,
 			defaultPath: `${ircChannel.name}.txt`
 		}).then(file => {
-			window.electronApi.fs.writeFile(file.filePath, allMessages.join('\n')).then(() => {
+			window.electronApi.fs.saveLog(file.filePath, allMessages.join('\n')).then(() => {
 				this.toastService.addToast(`Successfully saved the log file to "${file.filePath}".`);
 			}).catch((err: Error) => {
 				this.toastService.addToast(`Could not save the log file: ${err.message}.`, ToastType.Error);
