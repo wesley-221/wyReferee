@@ -87,6 +87,8 @@ export class Lobby {
 	isQualifierLobby: boolean;
 	sendWebhooks: boolean;
 
+	checkboxDelete: boolean;
+
 	constructor(init?: Partial<Lobby>) {
 		this.teamOneBans = [];
 		this.teamTwoBans = [];
@@ -120,6 +122,8 @@ export class Lobby {
 
 		this.isQualifierLobby = false;
 		this.sendWebhooks = true;
+
+		this.checkboxDelete = false;
 
 		Object.assign(this, init);
 	}

@@ -11,14 +11,40 @@
 		<hr />
 	</div>
 
+	<div>
+		<div class="delete-lobbies">
+			<div class="information">
+				<div>
+					<mat-checkbox (change)="toggleAllLobbies($event)" [checked]="allSelected" [indeterminate]="someSelected && !allSelected">
+						{{ allSelected ? 'Deselect all lobbies' : 'Select all lobbies' }}
+					</mat-checkbox>
+				</div>
+				&dash;
+				<div>
+					{{ selectedCount }} {{ selectedCount == 1 ? 'lobby selected' : 'lobbies selected' }}
+				</div>
+			</div>
+
+			<div class="actions">
+				<button mat-raised-button color="warn" (click)="deleteSelectedLobbies()" [disabled]="selectedCount == 0"><mat-icon>delete</mat-icon> delete selected lobbies</button>
+			</div>
+		</div>
+
+		<hr />
+	</div>
+
 	<div class="all-lobbies">
 		<app-alert alertType="info" *ngIf="allLobbies.length == 0">
 			There are currently no lobbies available.
 		</app-alert>
 
-		<div *ngFor="let lobby of allLobbies.slice().reverse()" (click)="navigateLobby(lobby, $event)" class="lobby">
+		<div *ngFor="let lobby of allLobbies.slice().reverse()" class="lobby">
 			<div class="body">
-				<div class="information" *ngIf="lobby.isQualifierLobby == false || lobby.isQualifierLobby == undefined">
+				<div class="delete-select">
+					<mat-checkbox [(ngModel)]="lobby.checkboxDelete" (change)="toggleIndividualLobby()"></mat-checkbox>
+				</div>
+
+				<div class="information" *ngIf="lobby.isQualifierLobby == false || lobby.isQualifierLobby == undefined" (click)="navigateLobby(lobby)">
 					<div class="multiplayerId">
 						<h1>{{ lobby.getLobbyName() }}</h1>
 					</div>
@@ -28,7 +54,7 @@
 					</div>
 				</div>
 
-				<div class="information" *ngIf="lobby.isQualifierLobby == true">
+				<div class="information" *ngIf="lobby.isQualifierLobby == true" (click)="navigateLobby(lobby)">
 					<div class="multiplayerId">
 						<h1>{{ lobby.getQualifierName() }}</h1>
 					</div>

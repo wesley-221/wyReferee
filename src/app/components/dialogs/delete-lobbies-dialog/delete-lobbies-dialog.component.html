@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Remove lobbies</h2>
+
+<mat-dialog-content class="mat-typography">
+	Are you sure you want to delete the following lobbies:
+
+	<ul>
+		<li *ngFor="let lobby of data.multiplayerLobbies">
+			{{ lobby.getLobbyName() }}
+		</li>
+	</ul>
+
+	<app-alert alertType="danger">
+		<b>NOTE:</b> This action is permanent. Once the lobbies have been deleted, they can not be retrieved anymore.
+	</app-alert>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="true" color="warn">Delete</button>
+</mat-dialog-actions>

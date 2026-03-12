@@ -32,6 +32,7 @@ import { AddBulkTeamsDialogComponent } from './components/dialogs/add-bulk-teams
 import { StorageDriverService } from './services/storage/storage-driver.service';
 import { DataMigrationDialogComponent } from './components/dialogs/data-migration-dialog/data-migration-dialog.component';
 import { UpdateMatchResultsDialogComponent } from './components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
+import { DeleteLobbiesDialogComponent } from './components/dialogs/delete-lobbies-dialog/delete-lobbies-dialog.component';
 
 export function initStorage(storageDriver: StorageDriverService) {
 	return () => storageDriver.init();
@@ -45,6 +46,7 @@ export function initStorage(storageDriver: StorageDriverService) {
 		ErrorComponent,
 		RemoveSettingsComponent,
 		DeleteLobbyComponent,
+		DeleteLobbiesDialogComponent,
 		MultiplayerLobbySettingsComponent,
 		JoinIrcChannelComponent,
 		BanBeatmapComponent,
