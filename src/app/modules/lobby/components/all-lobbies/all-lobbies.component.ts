@@ -5,6 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeleteLobbyComponent } from 'app/components/dialogs/delete-lobby/delete-lobby.component';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { Lobby } from 'app/models/lobby';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { DeleteLobbiesDialogComponent } from 'app/components/dialogs/delete-lobbies-dialog/delete-lobbies-dialog.component';
 
 @Component({
 	selector: 'app-all-lobbies',
@@ -18,11 +20,85 @@ export class AllLobbiesComponent implements OnInit {
 	dialogMessage: string;
 	deleteMultiplayerLobby: Lobby;
 
+	allSelected: boolean;
+	someSelected: boolean;
+
+	selectedCount: number;
+
 	constructor(private dialog: MatDialog, private multiplayerLobbies: WyMultiplayerLobbiesService, private toastService: ToastService, private router: Router) {
 		this.allLobbies = multiplayerLobbies.getAllLobbies();
+
+		this.allSelected = false;
+		this.someSelected = false;
+		this.selectedCount = 0;
 	}
 
 	ngOnInit() { }
+
+	/**
+	 * Toggle the selection of all lobbies for deletion
+	 *
+	 * @param toggle
+	 */
+	toggleAllLobbies(toggle: MatCheckboxChange) {
+		if (toggle.checked == true) {
+			for (const lobby of this.allLobbies) {
+				lobby.checkboxDelete = true;
+			}
+		}
+		else {
+			for (const lobby of this.allLobbies) {
+				lobby.checkboxDelete = false;
+			}
+		}
+
+		this.someSelected = false;
+		this.allSelected = toggle.checked;
+		this.selectedCount = toggle.checked ? this.allLobbies.length : 0;
+	}
+
+	/**
+	 * Triggered when an individual lobby's checkbox is toggled. Updates the state of the "Select all" checkbox and the count of selected lobbies
+	 */
+	toggleIndividualLobby() {
+		this.selectedCount = 0;
+
+		for (const lobby of this.allLobbies) {
+			if (lobby.checkboxDelete) {
+				this.selectedCount++;
+			}
+		}
+
+		this.allSelected = this.selectedCount === this.allLobbies.length;
+		this.someSelected = this.selectedCount > 0 && !this.allSelected;
+	}
+
+	/**
+	 * Delete all selected multiplayer lobbies
+	 */
+	deleteSelectedLobbies() {
+		const dialogRef = this.dialog.open(DeleteLobbiesDialogComponent, {
+			data: {
+				multiplayerLobbies: this.allLobbies.filter(lobby => lobby.checkboxDelete)
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(result => {
+			if (result == true) {
+				const lobbiesToDelete = this.allLobbies.filter(lobby => lobby.checkboxDelete);
+
+				for (const lobby of lobbiesToDelete) {
+					this.multiplayerLobbies.deleteMultiplayerLobby(lobby);
+				}
+
+				this.toastService.addToast(`Successfully deleted ${lobbiesToDelete.length} multiplayer lobb${lobbiesToDelete.length > 1 ? 'ies' : 'y'}.`);
+
+				this.allSelected = false;
+				this.someSelected = false;
+				this.selectedCount = 0;
+			}
+		});
+	}
 
 	/**
 	 * Delete a multiplayer lobby
@@ -48,11 +124,8 @@ export class AllLobbiesComponent implements OnInit {
 	 * Navigate to the selected multiplayer lobby
 	 *
 	 * @param multiplayerLobby
-	 * @param event
 	 */
-	navigateLobby(multiplayerLobby: Lobby, event: any) {
-		if (event.srcElement.className.search(/mat-icon|mat-mini-fab|mat-button-wrapper/) == -1) {
-			this.router.navigate(['lobby-overview/lobby-view', multiplayerLobby.lobbyId]);
-		}
+	navigateLobby(multiplayerLobby: Lobby) {
+		this.router.navigate(['lobby-overview/lobby-view', multiplayerLobby.lobbyId]);
 	}
 }
