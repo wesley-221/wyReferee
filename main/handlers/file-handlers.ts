@@ -4,6 +4,7 @@ import * as fs from "fs/promises";
 
 export function registerFileHandlers() {
 	ipcMain.handle(IPC_CHANNELS.WRITE_FILE, async (event, filePath, data) => fs.writeFile(filePath, JSON.stringify(data), 'utf8'));
+	ipcMain.handle(IPC_CHANNELS.SAVE_LOG, async (event, filePath, data) => fs.writeFile(filePath, data, 'utf8'));
 	ipcMain.handle(IPC_CHANNELS.READ_FILE, async (event, filePath, defaultValue) => {
 		try {
 			const content = await fs.readFile(filePath, 'utf8');

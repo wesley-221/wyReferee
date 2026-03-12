@@ -76,7 +76,7 @@ export class SlashCommandService {
 			title: `Save the log of ${ircChannel.name}`,
 			defaultPath: `${ircChannel.name}.txt`
 		}).then(file => {
-			window.electronApi.fs.writeFile(file.filePath, allMessages.join('\n')).then(() => {
+			window.electronApi.fs.saveLog(file.filePath, allMessages.join('\n')).then(() => {
 				this.toastService.addToast(`Successfully saved the log file to "${file.filePath}".`);
 			}).catch((err: Error) => {
 				this.toastService.addToast(`Could not save the log file: ${err.message}.`, ToastType.Error);
@@ -100,7 +100,7 @@ export class SlashCommandService {
 			title: `Save the debug file`,
 			defaultPath: `debug_${multiplayerLobby.getLobbyNameSlug()}.json`
 		}).then(file => {
-			window.electronApi.fs.writeFile(file.filePath, JSON.stringify(data, null, '\t')).then(() => {
+			window.electronApi.fs.writeFile(file.filePath, data).then(() => {
 				this.toastService.addToast(`Successfully saved the debug file to "${file.filePath}".`);
 			}).catch((err: Error) => {
 				this.toastService.addToast(`Could not save the debug file: ${err.message}.`, ToastType.Error);
