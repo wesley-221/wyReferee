@@ -44,6 +44,7 @@ export class ModBracketComponent implements OnInit {
 			new WyMod({ name: 'Nightcore', value: Mods.Nightcore }),
 			new WyMod({ name: 'Nofail', value: Mods.NoFail }),
 			new WyMod({ name: 'Halftime', value: Mods.HalfTime }),
+			new WyMod({ name: 'Relax', value: Mods.Relax }),
 			new WyMod({ name: 'Freemod', value: 'freemod' })
 		];
 
