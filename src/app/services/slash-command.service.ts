@@ -100,7 +100,7 @@ export class SlashCommandService {
 			title: `Save the debug file`,
 			defaultPath: `debug_${multiplayerLobby.getLobbyNameSlug()}.json`
 		}).then(file => {
-			window.electronApi.fs.writeFile(file.filePath, JSON.stringify(data, null, '\t')).then(() => {
+			window.electronApi.fs.writeFile(file.filePath, data).then(() => {
 				this.toastService.addToast(`Successfully saved the debug file to "${file.filePath}".`);
 			}).catch((err: Error) => {
 				this.toastService.addToast(`Could not save the debug file: ${err.message}.`, ToastType.Error);
