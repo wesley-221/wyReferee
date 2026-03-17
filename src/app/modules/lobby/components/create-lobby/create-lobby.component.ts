@@ -185,10 +185,20 @@ export class CreateLobbyComponent implements OnInit {
 				if (lobby.tournament == undefined || lobby.tournament == null) {
 					const acronym: string = this.validationForm.get('tournament-acronym').value;
 
-					lobbyName = lobbyForm.qualifier == true ? `${acronym}: Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}` : lobbyForm.lobbyWithBrackets == true ? `${acronym}: (${lobby.getEscapedTeamOneName()}) vs. (${lobby.getEscapedTeamTwoName()})` : `${acronym}: ${lobby.getEscapedTeamOneName()} vs. ${lobby.getEscapedTeamTwoName()}`;
+					if (lobbyForm.qualifier == true) {
+						lobby.description = this.getLobbyDescription(acronym, "Qualifier", lobbyForm.qualifierLobbyIdentifier, lobbyForm.lobbyWithBrackets);
+					}
+					else {
+						lobby.description = this.getLobbyDescription(acronym, lobby.getEscapedTeamOneName(), lobby.getEscapedTeamTwoName(), lobbyForm.lobbyWithBrackets);
+					}
 				}
 				else {
-					lobbyName = lobbyForm.qualifier == true ? `${lobby.tournament.acronym}: Qualifier lobby: ${lobbyForm.qualifierLobbyIdentifier}` : lobbyForm.lobbyWithBrackets == true ? `${lobby.tournament.acronym}: (${lobby.getEscapedTeamOneName()}) vs. (${lobby.getEscapedTeamTwoName()})` : `${lobby.tournament.acronym}: ${lobby.getEscapedTeamOneName()} vs. ${lobby.getEscapedTeamTwoName()}`;
+					if (lobbyForm.qualifier == true) {
+						lobby.description = this.getLobbyDescription(lobby.tournament.acronym, "Qualifier", lobbyForm.qualifierLobbyIdentifier, lobbyForm.lobbyWithBrackets);
+					}
+					else {
+						lobby.description = this.getLobbyDescription(lobby.tournament.acronym, lobby.getEscapedTeamOneName(), lobby.getEscapedTeamTwoName(), lobbyForm.lobbyWithBrackets);
+					}
 				}
 
 				this.creatingMultiplayerLobby = true;
@@ -295,5 +305,14 @@ export class CreateLobbyComponent implements OnInit {
 		setTimeout(() => {
 			this.lobbyHasBeenCreated = false;
 		}, 3000);
+	}
+
+	getLobbyDescription(acronym: string, teamOneName: string, teamTwoName: string, lobbyWithBrackets: boolean): string {
+		if (lobbyWithBrackets == true) {
+			return `${acronym}: (${teamOneName}) vs (${teamTwoName})`;
+		}
+		else {
+			return `${acronym}: ${teamOneName} vs ${teamTwoName}`;
+		}
 	}
 }
