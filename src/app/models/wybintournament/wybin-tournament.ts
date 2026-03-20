@@ -1,7 +1,7 @@
 import { WyBinStage } from "./wybin-stage";
 
 export class WyBinTournament {
-	idd: number;
+	id: number;
 	name: string;
 	stages: WyBinStage[];
 
@@ -11,7 +11,7 @@ export class WyBinTournament {
 
 	static makeTrueCopy(copyTournament: WyBinTournament) {
 		const newTournament = new WyBinTournament({
-			idd: copyTournament.idd,
+			id: copyTournament.id,
 			name: copyTournament.name,
 			stages: []
 		});
