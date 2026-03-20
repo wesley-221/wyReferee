@@ -7,6 +7,15 @@
 	padding-right: 8px;
 }
 
+.loading {
+	display: flex;
+	align-items: center;
+
+	.spinner {
+		margin-right: 4px;
+	}
+}
+
 .tournaments {
 	display: flex;
 	flex-direction: column;

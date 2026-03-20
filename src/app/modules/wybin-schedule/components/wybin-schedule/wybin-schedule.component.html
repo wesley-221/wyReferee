@@ -5,7 +5,9 @@
 	<div class="tournaments">
 		<div class="tournament" *ngIf="loading == true">
 			<div class="header">
-				Loading wyBin schedule...
+				<div class="loading">
+					<mat-spinner class="spinner" [diameter]="32"></mat-spinner>&nbsp;Loading wyBin schedule...
+				</div>
 			</div>
 		</div>
 
