@@ -28,47 +28,53 @@
 
 			.match {
 				display: flex;
-				gap: 8px;
+				align-items: center;
+				justify-content: space-between;
 
 				border: 1px solid $primary;
 				padding: 8px;
 
-				.date-time {
-					display: grid;
-					grid-template-columns: 100px 70px 50px;
-
-					justify-content: center;
-					justify-items: center;
-
-					.date {
-						display: flex;
-						flex-direction: column;
-						align-items: center;
-						justify-content: center;
-
-						.date-text {
-							font-size: 15px;
-						}
-
-						.date-number {
-							font-size: 20px;
-							font-weight: bold;
-						}
-					}
-
-					.time {
-						font-size: 18px;
-					}
-
-					.time,
-					.match-id {
-						align-self: center;
-					}
-				}
-
-				.match-name {
+				.match-information {
 					display: flex;
-					align-items: center;
+					gap: 8px;
+
+					.date-time {
+						display: grid;
+						grid-template-columns: 100px 70px 50px;
+
+						justify-content: center;
+						justify-items: center;
+
+						.date {
+							display: flex;
+							flex-direction: column;
+							align-items: center;
+							justify-content: center;
+
+							.date-text {
+								font-size: 15px;
+							}
+
+							.date-number {
+								font-size: 20px;
+								font-weight: bold;
+							}
+						}
+
+						.time {
+							font-size: 18px;
+						}
+
+						.time,
+						.match-id {
+							align-self: center;
+						}
+					}
+
+					.match-name {
+						display: flex;
+						align-items: center;
+					}
 				}
 			}
 		}

@@ -10,9 +10,15 @@ export class PersonalSchedule {
 	}
 
 	static makeTrueCopy(personalSchedule: PersonalSchedule): PersonalSchedule {
-		return new PersonalSchedule({
+		const newSchedule = new PersonalSchedule({
 			tournament: WyBinTournament.makeTrueCopy(personalSchedule.tournament),
-			matches: personalSchedule.matches.map(match => WyBinMatch.makeTrueCopy(match))
+			matches: []
 		});
+
+		for (const match of personalSchedule.matches) {
+			newSchedule.matches.push(WyBinMatch.makeTrueCopy(match));
+		}
+
+		return newSchedule;
 	}
 }

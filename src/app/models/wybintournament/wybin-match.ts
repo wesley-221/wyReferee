@@ -8,6 +8,7 @@ export class WyBinMatch {
 	time: string;
 	opponentOne: WyBinOpponent;
 	opponentTwo: WyBinOpponent;
+	wyBinStageId: number;
 
 	constructor(init?: Partial<WyBinMatch>) {
 		Object.assign(this, init);
@@ -32,7 +33,8 @@ export class WyBinMatch {
 			qualifierIdentifier: copyMatch.qualifierIdentifier,
 			label: copyMatch.label,
 			date: new Date(copyMatch.date),
-			time: copyMatch.time
+			time: copyMatch.time,
+			wyBinStageId: copyMatch.wyBinStageId
 		});
 
 		if (copyMatch.opponentOne != null) {

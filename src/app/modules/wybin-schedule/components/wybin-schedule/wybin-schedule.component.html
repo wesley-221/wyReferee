@@ -21,28 +21,36 @@
 
 		<div class="matches">
 			<div class="match" *ngFor="let match of personalSchedule.matches">
-				<div class="date-time">
-					<div class="date">
-						<div class="date-text">
-							{{ match.date | date: 'E' : 'UTC' | uppercase }}
+				<div class="match-information">
+					<div class="date-time">
+						<div class="date">
+							<div class="date-text">
+								{{ match.date | date: 'E' : 'UTC' | uppercase }}
+							</div>
+
+							<div class="date-number">
+								{{ match.date | date: 'MMM' : 'UTC' }}&nbsp;{{ match.date | date: 'dd' : 'UTC' }}
+							</div>
 						</div>
 
-						<div class="date-number">
-							{{ match.date | date: 'MMM' : 'UTC' }}&nbsp;{{ match.date | date: 'dd' : 'UTC' }}
+						<div class="time">
+							{{ match.time }}
+						</div>
+
+						<div class="match-id">
+							#{{ match.label }}
 						</div>
 					</div>
 
-					<div class="time">
-						{{ match.time }}
-					</div>
-
-					<div class="match-id">
-						#{{ match.label }}
+					<div class="match-name">
+						{{ match.getMatchName(true) }} ({{ match.wyBinStageId }})
 					</div>
 				</div>
 
-				<div class="match-name">
-					{{ match.getMatchName(true) }}
+				<div class="match-actions">
+					<button mat-raised-button color="primary" (click)="createMatch(personalSchedule.tournament, match)">
+						<mat-icon>add</mat-icon> create match
+					</button>
 				</div>
 			</div>
 		</div>

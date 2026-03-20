@@ -13,6 +13,7 @@ import { WybinService } from 'app/services/wybin.service';
 import { BanchoMultiplayerChannel } from 'bancho.js';
 import { from } from 'rxjs';
 import { LobbyFormComponent } from '../lobby-form/lobby-form.component';
+import { LobbyCreationContextService } from 'app/services/lobby-creation-context.service';
 
 @Component({
 	selector: 'app-create-lobby',
@@ -37,7 +38,8 @@ export class CreateLobbyComponent implements OnInit {
 		private router: Router,
 		private webhookService: WebhookService,
 		private multiplayerLobbiesPlayersService: MultiplayerLobbyPlayersService,
-		private wybinService: WybinService) {
+		private wybinService: WybinService,
+		private lobbyCreationContextService: LobbyCreationContextService) {
 
 		this.ircService.getIsAuthenticated().subscribe(isAuthenticated => {
 			this.ircAuthenticated = isAuthenticated;
@@ -73,7 +75,44 @@ export class CreateLobbyComponent implements OnInit {
 		this.tournamentService.loadTournaments(false);
 	}
 
-	ngOnInit() { }
+	ngOnInit() {
+		const { tournament, match } = this.lobbyCreationContextService.getContext();
+
+		if (tournament && match) {
+			for (const findTournament of this.tournamentService.allTournaments) {
+				if (findTournament.wyBinTournamentId == tournament.id) {
+					// Delay setting the value to make sure the form has been loaded properly
+					// Otherwise it will not trigger the valueChanges observable
+					setTimeout(() => {
+						this.validationForm.get('selected-tournament').setValue(findTournament.id);
+
+						this.lobbyCreationContextService.getStagesLoadedObservable().subscribe(stagesLoaded => {
+							if (stagesLoaded == true) {
+								// Delay setting the value to make sure the form has been loaded properly
+								// Otherwise the matches will not be populated
+								setTimeout(() => {
+									this.validationForm.get('stage-id').setValue(match.wyBinStageId);
+
+									this.validationForm.get('selected-match-id').setValue(match.id);
+									this.validationForm.get('selected-match-name').setValue(match.getMatchName());
+
+									if (match.qualifierIdentifier == null) {
+										this.validationForm.get('team-one-name').setValue(match.opponentOne.name);
+										this.validationForm.get('team-two-name').setValue(match.opponentTwo.name);
+									}
+									else {
+										this.validationForm.get('qualifier-lobby-identifier').setValue(match.qualifierIdentifier);
+									}
+
+									this.lobbyCreationContextService.clear();
+								}, 1);
+							}
+						});
+					}, 1);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Create a new multiplayer lobby
