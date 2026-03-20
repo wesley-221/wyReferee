@@ -592,14 +592,14 @@ export class Lobby {
 	 * Get the escaped name from team one
 	 */
 	getEscapedTeamOneName(): string {
-		return this.teamOneName.replace(/[\p{Emoji_Presentation}\p{Emoji}\uFE0F]/gu, '');
+		return this.teamOneName.replace(/[\p{Extended_Pictographic}\uFE0F\u20E3]/gu, '');
 	}
 
 	/**
 	 * Get the escaped name from team two
 	 */
 	getEscapedTeamTwoName(): string {
-		return this.teamTwoName.replace(/[\p{Emoji_Presentation}\p{Emoji}\uFE0F]/gu, '');
+		return this.teamTwoName.replace(/[\p{Extended_Pictographic}\uFE0F\u20E3]/gu, '');
 	}
 
 	/**
