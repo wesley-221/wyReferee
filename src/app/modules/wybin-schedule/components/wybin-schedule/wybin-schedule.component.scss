@@ -1,5 +1,12 @@
 @import "variables";
 
+.content {
+	max-height: 100%;
+	overflow: auto;
+
+	padding-right: 8px;
+}
+
 .tournaments {
 	display: flex;
 	flex-direction: column;

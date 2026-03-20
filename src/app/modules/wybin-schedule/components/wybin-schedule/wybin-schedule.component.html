@@ -1,56 +1,58 @@
-<h1>wyBin schedule</h1>
-<p>Below is a list with all the matches that you are a staff member for between now and 7 days.</p>
+<div class="content">
+	<h1>wyBin schedule</h1>
+	<p>Below is a list with all the matches that you are a staff member for between now and 7 days.</p>
 
-<div class="tournaments">
-	<div class="tournament" *ngIf="loading == true">
-		<div class="header">
-			Loading wyBin schedule...
-		</div>
-	</div>
-
-	<div class="tournament" *ngIf="loading == false && (!personalScheduleData || personalScheduleData.length == 0)">
-		<div class="header">
-			No matches found
-		</div>
-	</div>
-
-	<div class="tournament" *ngFor="let personalSchedule of personalScheduleData">
-		<div class="header">
-			{{ personalSchedule.tournament.name }}
+	<div class="tournaments">
+		<div class="tournament" *ngIf="loading == true">
+			<div class="header">
+				Loading wyBin schedule...
+			</div>
 		</div>
 
-		<div class="matches">
-			<div class="match" *ngFor="let match of personalSchedule.matches">
-				<div class="match-information">
-					<div class="date-time">
-						<div class="date">
-							<div class="date-text">
-								{{ match.date | date: 'E' : 'UTC' | uppercase }}
+		<div class="tournament" *ngIf="loading == false && (!personalScheduleData || personalScheduleData.length == 0)">
+			<div class="header">
+				No matches found
+			</div>
+		</div>
+
+		<div class="tournament" *ngFor="let personalSchedule of personalScheduleData">
+			<div class="header">
+				{{ personalSchedule.tournament.name }}
+			</div>
+
+			<div class="matches">
+				<div class="match" *ngFor="let match of personalSchedule.matches">
+					<div class="match-information">
+						<div class="date-time">
+							<div class="date">
+								<div class="date-text">
+									{{ match.date | date: 'E' : 'UTC' | uppercase }}
+								</div>
+
+								<div class="date-number">
+									{{ match.date | date: 'MMM' : 'UTC' }}&nbsp;{{ match.date | date: 'dd' : 'UTC' }}
+								</div>
 							</div>
 
-							<div class="date-number">
-								{{ match.date | date: 'MMM' : 'UTC' }}&nbsp;{{ match.date | date: 'dd' : 'UTC' }}
+							<div class="time">
+								{{ match.time }}
+							</div>
+
+							<div class="match-id">
+								#{{ match.label }}
 							</div>
 						</div>
 
-						<div class="time">
-							{{ match.time }}
-						</div>
-
-						<div class="match-id">
-							#{{ match.label }}
+						<div class="match-name">
+							{{ match.getMatchName(true) }} ({{ match.wyBinStageId }})
 						</div>
 					</div>
 
-					<div class="match-name">
-						{{ match.getMatchName(true) }} ({{ match.wyBinStageId }})
+					<div class="match-actions">
+						<button mat-raised-button color="primary" (click)="createMatch(personalSchedule.tournament, match)">
+							<mat-icon>add</mat-icon> create match
+						</button>
 					</div>
-				</div>
-
-				<div class="match-actions">
-					<button mat-raised-button color="primary" (click)="createMatch(personalSchedule.tournament, match)">
-						<mat-icon>add</mat-icon> create match
-					</button>
 				</div>
 			</div>
 		</div>
