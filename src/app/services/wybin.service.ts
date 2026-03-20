@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PersonalSchedule } from 'app/models/wybintournament/personal-schedule';
 import { AppConfig } from 'environments/environment';
 
 @Injectable({
@@ -45,5 +46,9 @@ export class WybinService {
 			opponentTwoBans: opponentTwoBans,
 			qualifierIdentifier: qualifierIdentifier
 		});
+	}
+
+	getPersonalSchedule() {
+		return this.http.get<PersonalSchedule[]>(`${this.API_URL}personal-schedule?type=referee`);
 	}
 }

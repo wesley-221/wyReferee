@@ -11,9 +11,10 @@ import { WyBinStage } from 'app/models/wybintournament/wybin-stage';
 import { WyTeam } from 'app/models/wytournament/wy-team';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { IrcService } from 'app/services/irc.service';
+import { LobbyCreationContextService } from 'app/services/lobby-creation-context.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
-import { map, Observable, startWith } from 'rxjs';
+import { map, Observable, startWith, Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-lobby-form',
@@ -54,7 +55,9 @@ export class LobbyFormComponent implements OnInit {
 
 	customMatch: boolean;
 
-	constructor(public tournamentService: TournamentService, private ircService: IrcService, private toastService: ToastService) {
+	stageIdSubscription: Subscription;
+
+	constructor(public tournamentService: TournamentService, private ircService: IrcService, private toastService: ToastService, private lobbyCreationContextService: LobbyCreationContextService) {
 		this.isJoinLobbyForm = false;
 
 		this.teamOneArray = [];
@@ -79,7 +82,11 @@ export class LobbyFormComponent implements OnInit {
 		this.loadingWyBinStages = false;
 	}
 
-	ngOnInit(): void { }
+	ngOnInit(): void {
+		this.validationForm.get('selected-tournament').valueChanges.subscribe(() => {
+			this.changeTournament();
+		});
+	}
 
 	getValidation(key: string): any {
 		return this.validationForm.get(key);
@@ -129,6 +136,17 @@ export class LobbyFormComponent implements OnInit {
 				}
 
 				this.loadingWyBinStages = false;
+				this.lobbyCreationContextService.setStagesLoadedObservable(true);
+
+				// Unsubscribe from previous subscription if it exists to avoid multiple subscriptions
+				if (this.stageIdSubscription) {
+					this.stageIdSubscription.unsubscribe();
+				}
+
+				// Subscribe to stage changes to update matches when a stage is selected
+				this.stageIdSubscription = this.validationForm.get('stage-id').valueChanges.subscribe(() => {
+					this.changeStage();
+				});
 			}, (error: HttpErrorResponse) => {
 				this.loadingWyBinStages = false;
 

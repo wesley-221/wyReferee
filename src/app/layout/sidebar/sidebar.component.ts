@@ -24,6 +24,7 @@ export class SidebarComponent implements OnInit {
 		{ icon: 'settings', header: 'settings', link: 'settings' },
 		{ icon: 'webhook', header: 'webhook', link: 'webhook' },
 		{ icon: 'dashboard', header: 'management', link: 'tournament-management/tournament-overview' },
+		{ icon: 'schedule', header: 'wyBin schedule', link: 'wybin-schedule' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
 		{ icon: 'chat', header: 'irc', link: 'irc' },
 		{ icon: 'hdr_auto', header: 'AxS', link: 'axs', showIf: false }
