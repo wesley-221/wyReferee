@@ -219,8 +219,6 @@ export class CreateLobbyComponent implements OnInit {
 
 			// Multiplayer link was not found, create new lobby
 			if (lobby.multiplayerLink == '') {
-				let lobbyName: string;
-
 				if (lobby.tournament == undefined || lobby.tournament == null) {
 					const acronym: string = this.validationForm.get('tournament-acronym').value;
 
@@ -242,7 +240,7 @@ export class CreateLobbyComponent implements OnInit {
 
 				this.creatingMultiplayerLobby = true;
 
-				from(this.ircService.client.createLobby(lobbyName)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
+				from(this.ircService.client.createLobby(lobby.description)).subscribe((multiplayerChannel: BanchoMultiplayerChannel) => {
 					if (lobby.isQualifierLobby) {
 						this.ircService.joinChannel(multiplayerChannel.name, lobby.description);
 					}
