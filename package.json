@@ -27,7 +27,7 @@
 		"postinstall": "npm run postinstall:electron && electron-builder install-app-deps",
 		"postinstall:web": "node postinstall-web",
 		"postinstall:electron": "node postinstall",
-		"ng": "ng",
+		"wait": "node wait-for-url.js",
 		"start": "npm run postinstall:electron && npm-run-all -p ng:serve electron:serve",
 		"build": "npm run postinstall:electron && npm run electron:serve-tsc && ng build",
 		"build:dev": "npm run build -- -c dev",
@@ -35,7 +35,7 @@
 		"ng:serve": "ng serve",
 		"ng:serve:web": "npm run postinstall:web && ng serve -o",
 		"electron:serve-tsc": "tsc -p tsconfig.electron.json",
-		"electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:serve-tsc && electron . --serve",
+		"electron:serve": "npm run wait http://localhost:4200/ && npm run electron:serve-tsc && electron . --serve",
 		"electron:local": "npm run build:prod && electron .",
 		"electron:linux": "npm run build:prod && electron-builder build --linux --publish never",
 		"electron:windows": "npm run build:prod && electron-builder build --windows --publish never",
@@ -86,7 +86,6 @@
 		"ts-node": "10.7.0",
 		"tslib": "^2.1.0",
 		"typescript": "~5.4.5",
-		"wait-on": "6.0.1",
 		"zone.js": "~0.14.10"
 	},
 	"engines": {
