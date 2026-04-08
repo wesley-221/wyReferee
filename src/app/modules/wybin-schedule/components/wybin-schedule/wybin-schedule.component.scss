@@ -1,5 +1,9 @@
 @import "variables";
 
+$header-color: rgba(38, 38, 36, 1);
+$background-color: rgba(48, 48, 46, 1);
+$border-color: rgba(255, 255, 255, 0.078);
+
 .content {
 	max-height: 100%;
 	overflow: auto;
@@ -22,33 +26,47 @@
 	gap: 8px;
 
 	.tournament {
-		padding: 8px;
-		border: 1px solid $primary;
+		background-color: $background-color;
+		border: 1px solid $border-color;
 
 		.header {
-			padding: 8px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 
-			font-size: 28px;
-			font-weight: bold;
-			text-align: center;
+			padding: 16px;
 
-			color: $primary;
+			background-color: $header-color;
+
+			.tournament-name {
+				font-size: 28px;
+				font-weight: bold;
+				text-align: center;
+
+				color: $primary;
+			}
+
+			.matches-count {
+				background-color: $primary;
+				color: black;
+				padding: 4px 8px;
+
+				border-radius: 4px;
+			}
 		}
 
 		.matches {
 			display: flex;
 			flex-direction: column;
-			gap: 8px;
-
-			padding: 8px;
 
 			.match {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 
-				border: 1px solid $primary;
-				padding: 8px;
+				border-bottom: 1px solid $border-color;
+
+				padding: 14px 16px;
 
 				.match-information {
 					display: flex;
@@ -67,18 +85,14 @@
 							align-items: center;
 							justify-content: center;
 
-							.date-text {
-								font-size: 15px;
-							}
-
-							.date-number {
-								font-size: 20px;
+							.date-day-number {
+								font-size: 1.5rem;
 								font-weight: bold;
 							}
 						}
 
 						.time {
-							font-size: 18px;
+							font-size: 1.25rem;
 						}
 
 						.time,
@@ -91,6 +105,10 @@
 						display: flex;
 						align-items: center;
 					}
+				}
+
+				&:last-child {
+					border-bottom: none;
 				}
 			}
 		}
