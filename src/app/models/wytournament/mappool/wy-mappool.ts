@@ -165,16 +165,20 @@ export class WyMappool {
 			}
 
 			if (addNofail == true) {
-				const nofail = new WyMod({
-					index: newModBracket.modIndex,
-					name: modBracket.name,
-					value: Mods.NoFail
-				});
+				let hasNoFail = newModBracket.mods.some(mod => mod.value == Mods.NoFail);
 
-				newModBracket.mods.push(nofail);
+				if (!hasNoFail) {
+					const nofail = new WyMod({
+						index: newModBracket.modIndex,
+						name: modBracket.name,
+						value: Mods.NoFail
+					});
 
-				newModBracket.modIndex++;
-				newMappool.modBracketIndex++;
+					newModBracket.mods.push(nofail);
+
+					newModBracket.modIndex++;
+					newMappool.modBracketIndex++;
+				}
 			}
 
 			for (const beatmap of modBracket.beatmaps) {
