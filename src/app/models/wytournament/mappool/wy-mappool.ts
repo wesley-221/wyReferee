@@ -165,7 +165,7 @@ export class WyMappool {
 			}
 
 			if (addNofail == true) {
-				let hasNoFail = newModBracket.mods.some(mod => mod.value == Mods.NoFail);
+				const hasNoFail = newModBracket.mods.some(mod => mod.value == Mods.NoFail);
 
 				if (!hasNoFail) {
 					const nofail = new WyMod({
