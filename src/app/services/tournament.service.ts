@@ -266,10 +266,10 @@ export class TournamentService {
 	 * Get the participants from the given wyBin tournament and qualifier lobby
 	 *
 	 * @param tournamentId the id of the tournament
-	 * @param wyBinMatchId the id of the wyBin qualifier match
+	 * @param qualifierIdentifier the identifier of the qualifier lobby
 	 */
-	getWyBinQualifierLobbyTeams(tournamentId: number, wyBinMatchId: number) {
-		return this.httpClient.get(`${this.apiUrl}tournament-qualifier-lobby-participants/${tournamentId}/${wyBinMatchId}`);
+	getWyBinQualifierLobbyTeams(tournamentId: number, qualifierIdentifier: string) {
+		return this.httpClient.get(`${this.apiUrl}tournament-qualifier-lobby-participants/${tournamentId}/${qualifierIdentifier}`);
 	}
 
 	/**

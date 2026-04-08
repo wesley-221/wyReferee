@@ -1292,49 +1292,46 @@ export class IrcComponent implements OnInit, OnDestroy {
 	initializeQualifierTeams(): void {
 		this.qualifierTeams = [];
 
-		this.tournamentService.getWyBinQualifierLobbyTeams(this.selectedLobby.tournament.wyBinTournamentId, this.selectedLobby.wybinMatchId).subscribe({
-			next: (qualifierHelper: any) => {
-				if (qualifierHelper.teamMembers != null) {
-					for (const player in qualifierHelper.teamMembers) {
-						const iPlayer = qualifierHelper.teamMembers[player];
+		const qualifierIdentifier = this.selectedLobby.description.substring(this.qualifierPrefix.length).trim();
 
-						const newTeam = new WyTeam({
-							name: iPlayer.user.username
-						});
+		this.tournamentService.getWyBinQualifierLobbyTeams(this.selectedLobby.tournament.wyBinTournamentId, qualifierIdentifier).subscribe((qualifierHelper: any) => {
+			if (qualifierHelper.teamMembers != null) {
+				for (const player in qualifierHelper.teamMembers) {
+					const iPlayer = qualifierHelper.teamMembers[player];
 
-						newTeam.players.push(new WyTeamPlayer({
-							name: iPlayer.user.username,
+					const newTeam = new WyTeam({
+						name: iPlayer.user.username
+					});
+
+					newTeam.players.push(new WyTeamPlayer({
+						name: iPlayer.user.username,
+						userId: iPlayer.user.userOsu.id
+					}));
+
+					this.qualifierTeams.push(newTeam);
+				}
+			}
+			else if (qualifierHelper.teams != null) {
+				for (const team in qualifierHelper.teams) {
+					const iTeam = qualifierHelper.teams[team];
+
+					const newTeam = new WyTeam({
+						name: iTeam.name
+					});
+
+					for (const player in iTeam.teamMembers) {
+						const iPlayer = iTeam.teamMembers[player];
+
+						const newPlayer = new WyTeamPlayer({
+							name: iPlayer.user.userOsu.username,
 							userId: iPlayer.user.userOsu.id
-						}));
-
-						this.qualifierTeams.push(newTeam);
-					}
-				}
-				else if (qualifierHelper.teams != null) {
-					for (const team in qualifierHelper.teams) {
-						const iTeam = qualifierHelper.teams[team];
-
-						const newTeam = new WyTeam({
-							name: iTeam.name
 						});
 
-						for (const player in iTeam.teamMembers) {
-							const iPlayer = iTeam.teamMembers[player];
-
-							const newPlayer = new WyTeamPlayer({
-								name: iPlayer.user.userOsu.username,
-								userId: iPlayer.user.userOsu.id
-							});
-
-							newTeam.players.push(newPlayer);
-						}
-
-						this.qualifierTeams.push(newTeam);
+						newTeam.players.push(newPlayer);
 					}
+
+					this.qualifierTeams.push(newTeam);
 				}
-			},
-			error: (error: HttpErrorResponse) => {
-				this.toastService.addToast(error.error.message);
 			}
 		});
 	}
