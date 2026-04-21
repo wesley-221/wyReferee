@@ -771,10 +771,9 @@ export class IrcService {
 				// Multiplayer lobby regex -> HD1/DT3/etc.
 				if (lobby != undefined && lobby != null && lobby.mappool != null && lobby.mappool != undefined) {
 					let regexp = lobby.mappool.getModbracketRegex(true);
-					const currentRegexTest = Regex.multiplayerLobbyMod.test(regexp, message);
 
 					// A mod acronym was mentioned
-					if (currentRegexTest) {
+					if (regexp && Regex.multiplayerLobbyMod.test(regexp, message)) {
 						const splittedString = message.split(regexp).filter(s => s != undefined && s != '' && s.trim());
 
 						if (splittedString.length == 1) {
@@ -801,11 +800,11 @@ export class IrcService {
 									messageBuilder.push(new MessageBuilder({
 										messageType: MessageType.ModAcronymPick,
 										message: splittedString[split],
-										modAcronymBeatmapId: mapInformation.beatmapId,
+										modAcronymBeatmapId: mapInformation ? mapInformation.beatmapId : null,
 										modAcronymGameMode: lobby.tournament.gamemodeId,
 										modAcronymMappoolId: lobby.mappool.id,
-										modAcronymModBracketId: mapInformation.modBracket.id,
-										modAcronymMods: mapInformation.modBracket.mods
+										modAcronymModBracketId: mapInformation ? mapInformation.modBracket.id : null,
+										modAcronymMods: mapInformation ? mapInformation.modBracket.mods : null
 									}));
 								}
 								// The split is a message

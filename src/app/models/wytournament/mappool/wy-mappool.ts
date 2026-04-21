@@ -238,6 +238,10 @@ export class WyMappool {
 			}
 		}
 
+		if (regexOptions.length == 0) {
+			return null;
+		}
+
 		return RegExp(`(?:${regexOptions.join('|')})+`, 'gi');
 	}
 
