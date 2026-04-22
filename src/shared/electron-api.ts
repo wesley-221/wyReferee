@@ -56,8 +56,9 @@ interface ElectronApiServer {
 }
 
 interface ElectronApiAutoUpdater {
-	checkForUpdatesAndNotify(): void;
-	updateAvailable(callback: () => void): void;
+	checkForUpdates(): void;
+	updateAvailable(callback: (info: UpdateAvailableInfo) => void): void;
+	downloadUpdate(): void;
 	updateDownloaded(callback: () => void): void;
 	onUpdateError(callback: (error: string) => void): void;
 	updateDownloadProgress(callback: (progress: ProgressInfo) => void): void;
@@ -96,4 +97,18 @@ interface ElectronApiAuthentication {
 interface ElectronApiWebhook {
 	sendWebhook(webhookUrl: string, payload: any): Promise<void>;
 	sendWebhookMainOnly(webhookUrl: string, payload: any): Promise<void>;
+}
+
+interface UpdateAvailableInfo {
+	version: string;
+	sha512: string;
+	releaseDate: Date;
+	path: string;
+	files: UpdateFile[];
+}
+
+interface UpdateFile {
+	sha512: string;
+	size: number;
+	url: string;
 }

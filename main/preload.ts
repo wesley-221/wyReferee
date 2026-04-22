@@ -33,8 +33,9 @@ import { IPC_CHANNELS } from './ipc-channels';
 		onOsuOauthCode: (callback: (code: string) => void) => ipcRenderer.once(IPC_CHANNELS.ON_OSU_OAUTH_CODE, (event: any, code: string) => callback(code))
 	},
 	autoUpdater: {
-		checkForUpdatesAndNotify: () => ipcRenderer.invoke(IPC_CHANNELS.CHECK_FOR_UPDATES_AND_NOTIFY),
-		updateAvailable: (callback: () => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_AVAILABLE, () => callback()),
+		checkForUpdates: () => ipcRenderer.invoke(IPC_CHANNELS.CHECK_FOR_UPDATES),
+		updateAvailable: (callback: (info: any) => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_AVAILABLE, (event: any, info: any) => callback(info)),
+		downloadUpdate: () => ipcRenderer.invoke(IPC_CHANNELS.DOWNLOAD_UPDATE),
 		updateDownloaded: (callback: () => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_DOWNLOADED, () => callback()),
 		onUpdateError: (callback: (error: any) => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_ERROR, (error: any) => callback(error)),
 		updateDownloadProgress: (callback: (progress: any) => void) => ipcRenderer.on(IPC_CHANNELS.UPDATE_DOWNLOAD_PROGRESS, (event: any, progress: ProgressInfo) => callback(progress)),
