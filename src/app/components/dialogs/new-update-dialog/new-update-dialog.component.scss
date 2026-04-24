@@ -1,0 +1,136 @@
+@import "variables";
+
+.dialog-accent {
+	background: #16161c;
+	border: 1px solid #1e1e26;
+	border-radius: 12px;
+	padding: 14px 16px;
+}
+
+.dialog {
+	display: flex;
+	flex-direction: column;
+
+	padding: 16px;
+	gap: 16px;
+
+	overflow: hidden;
+	position: relative;
+
+	.header {
+		display: flex;
+		align-items: center;
+
+		gap: 8px;
+
+		.download-icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+
+			width: 44px;
+			height: 44px;
+			border-radius: 12px;
+
+			background-color: $primary;
+		}
+
+		.header-content {
+			.header-text {
+				font-size: 22px;
+				font-weight: 600;
+			}
+
+			.header-version {
+				font-weight: 500;
+				text-transform: uppercase;
+
+				color: $primary;
+
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	.body {
+		.changelog {
+			margin-bottom: 20px;
+
+			&.loading {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+		}
+
+		.meta {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 16px;
+
+			.meta-tag {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+			}
+		}
+
+		.progress-section {
+			margin-bottom: 8px;
+
+			.progress-track {
+				height: 8px;
+				background: #1a1a24;
+				overflow: hidden;
+				position: relative;
+				margin-bottom: 8px;
+
+				.progress-fill {
+					height: 100%;
+					background: $primary;
+					background-size: auto;
+					background-size: 200% auto;
+					transition: width 0.3s ease;
+					position: relative;
+
+					&::after {
+						content: "";
+						position: absolute;
+						right: 0;
+						top: 50%;
+						transform: translateY(-50%);
+						width: 10px;
+						height: 10px;
+						background: white;
+					}
+				}
+			}
+
+			.progress-meta {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				.progress-percentage {
+					color: $primary;
+					font-weight: 600;
+				}
+			}
+		}
+	}
+
+	.footer {
+		display: flex;
+		flex: 1;
+		gap: 8px;
+
+		button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			flex: 1;
+		}
+	}
+}

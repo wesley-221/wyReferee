@@ -99,7 +99,7 @@ interface ElectronApiWebhook {
 	sendWebhookMainOnly(webhookUrl: string, payload: any): Promise<void>;
 }
 
-interface UpdateAvailableInfo {
+export interface UpdateAvailableInfo {
 	version: string;
 	sha512: string;
 	releaseDate: Date;
