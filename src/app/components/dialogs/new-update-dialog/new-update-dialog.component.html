@@ -18,10 +18,12 @@
 			<markdown [data]="changelog" clickableLinks></markdown>
 		</div>
 
-		<ng-template class="changelog dialog-accent loading" #loading>
-			<mat-spinner [diameter]="26"></mat-spinner>
+		<ng-template #loading>
+			<div class="changelog dialog-accent loading">
+				<mat-spinner [diameter]="26"></mat-spinner>
 
-			loading changelog...
+				loading changelog...
+			</div>
 		</ng-template>
 
 		<div class="meta">
