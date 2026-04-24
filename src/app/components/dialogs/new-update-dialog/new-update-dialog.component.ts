@@ -3,9 +3,9 @@ import { INewUpdateDialogData } from '../../../interfaces/i-new-update-dialog-da
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../../../environments/environment';
-import { Observable, map } from 'rxjs';
-import { UpdaterComponent } from '../../../layout/updater/updater.component';
+import { Observable, catchError, map, of } from 'rxjs';
 import { ProgressInfo } from 'electron-updater';
+import { AppComponent } from '../../../app.component';
 
 @Component({
 	selector: 'app-new-update-dialog',
@@ -22,7 +22,7 @@ export class NewUpdateDialogComponent {
 	changelog$: Observable<string>;
 	downloadProgressInfo$: Observable<ProgressInfo>;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public data: INewUpdateDialogData, private http: HttpClient, private dialog: MatDialogRef<UpdaterComponent>, private ref: ChangeDetectorRef) {
+	constructor(@Inject(MAT_DIALOG_DATA) public data: INewUpdateDialogData, private http: HttpClient, private dialog: MatDialogRef<AppComponent>, private ref: ChangeDetectorRef) {
 		const fileSizeMB = data.info.files.reduce((total, file) => total + file.size, 0) / (1024 * 1024);
 		this.fileSizeInMB = fileSizeMB;
 		this.downloadStatus = 'idle';
@@ -38,6 +38,13 @@ export class NewUpdateDialogComponent {
 				return body.replace(/@([a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38})/gi,
 					(match: string) => `[${match}](https://github.com/${match.substring(1)})`
 				);
+			}),
+			catchError((error) => {
+				if (error.status == 404) {
+					return of('No changelog available for this version.');
+				}
+
+				return of(error.error.message || 'An error occurred while fetching the changelog.');
 			})
 		);
 
