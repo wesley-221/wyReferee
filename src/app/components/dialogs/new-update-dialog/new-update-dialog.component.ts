@@ -33,9 +33,7 @@ export class NewUpdateDialogComponent {
 			}
 		}).pipe(
 			map((release: any) => {
-				let body = release.body;
-
-				return body.replace(/@([a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38})/gi,
+				return release.body.replace(/@([a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38})/gi,
 					(match: string) => `[${match}](https://github.com/${match.substring(1)})`
 				);
 			}),
