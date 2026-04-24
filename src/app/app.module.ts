@@ -24,7 +24,6 @@ import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shor
 import { SharedModule } from './shared/shared.module';
 import { MainComponent } from './layout/main/main.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
-import { UpdaterComponent } from './layout/updater/updater.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { ProtectBeatmapDialogComponent } from './components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
@@ -52,7 +51,6 @@ export function initStorage(storageDriver: StorageDriverService) {
 		JoinIrcChannelComponent,
 		BanBeatmapComponent,
 		MultiplayerLobbyMovePlayerComponent,
-		UpdaterComponent,
 		SendBeatmapResultComponent,
 		TournamentAddUserDialogComponent,
 		DeleteModBracketDialogComponent,
