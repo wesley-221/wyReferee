@@ -1,4 +1,4 @@
-<div #container class="scroll">
+<div #container class="tournament-create">
 	<h1>Creating a new tournament</h1>
 
 	<app-alert alertType="danger" *ngIf="errors.length > 0">
@@ -11,5 +11,5 @@
 
 	<app-tournament [tournament]="tournament" [validationForm]="validationForm"></app-tournament>
 
-	<button mat-raised-button class="extra-padding" color="primary" (click)="createTournament()">Create</button>
+	<button mat-raised-button color="primary" (click)="createTournament()">Create</button>
 </div>

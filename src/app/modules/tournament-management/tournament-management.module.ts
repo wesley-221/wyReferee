@@ -16,7 +16,7 @@ import { TournamentWebhookComponent } from './components-utility/tournament/tour
 import { TournamentAllPublishedComponent } from './components/tournament-view/tournament-all-published/tournament-all-published.component';
 import { TournamentAllPublishedAdministratorComponent } from './components/tournament-view/tournament-all-published-administrator/tournament-all-published-administrator.component';
 import { TournamentCardComponent } from './components-utility/tournament-card/tournament-card.component';
-import { TournamentCreateComponent } from './components/tournament-manage/tournament-create/tournament-create.component';
+import { TournamentCreateComponent } from './pages/tournament-create/tournament-create.component';
 import { TournamentMyPublishedComponent } from './components/tournament-view/tournament-my-published/tournament-my-published.component';
 import { TournamentOverviewComponent } from './components/tournament-view/tournament-overview/tournament-overview.component';
 import { TournamentWybinComponent } from './components-utility/tournament/tournament-wybin/tournament-wybin.component';
