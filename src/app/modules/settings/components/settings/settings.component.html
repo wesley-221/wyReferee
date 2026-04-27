@@ -12,6 +12,79 @@
 
 <div class="settings">
 	<div class="settings-header">
+		Webhook customization
+	</div>
+
+	<div class="webhook-preview">
+		<app-webhook-preview
+			[webhookAuthorImage]="webhookAuthorImage"
+			[webhookAuthorName]="webhookAuthorName"
+			[webhookBottomImage]="webhookBottomImage"
+			[webhookFooterIconUrl]="webhookFooterIconUrl"
+			[webhookFooterText]="webhookFooterText">
+		</app-webhook-preview>
+	</div>
+
+	<div class="webhook-settings">
+		<div class="webhook-settings-header">
+			Author
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<mat-form-field class="full-width">
+					<mat-label>Author image (link)</mat-label>
+					<input matInput [(ngModel)]="webhookAuthorImage" />
+				</mat-form-field>
+			</div>
+
+			<div class="col">
+				<mat-form-field class="full-width">
+					<mat-label>Author name</mat-label>
+					<input matInput [(ngModel)]="webhookAuthorName" />
+				</mat-form-field>
+			</div>
+		</div>
+
+		<div class="webhook-settings-header">
+			Image
+		</div>
+
+		<mat-form-field class="full-width">
+			<mat-label>Bottom image (link)</mat-label>
+			<input matInput [(ngModel)]="webhookBottomImage" />
+		</mat-form-field>
+
+		<div class="webhook-settings-header">
+			Footer
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<mat-form-field class="full-width">
+					<mat-label>Footer image (link)</mat-label>
+					<input matInput [(ngModel)]="webhookFooterIconUrl" />
+				</mat-form-field>
+			</div>
+
+			<div class="col">
+				<mat-form-field class="full-width">
+					<mat-label>Footer text</mat-label>
+					<input matInput [(ngModel)]="webhookFooterText" />
+				</mat-form-field>
+			</div>
+		</div>
+
+		<div class="save-button">
+			<button mat-stroked-button color="primary" (click)="updateWebhookCustomization()">
+				<mat-icon>save</mat-icon> save webhook settings
+			</button>
+		</div>
+	</div>
+</div>
+
+<div class="settings">
+	<div class="settings-header">
 		Configuration
 	</div>
 

@@ -9,6 +9,7 @@ import { IrcService } from 'app/services/irc.service';
 import { GenericService } from 'app/services/generic.service';
 import { OptionsMenu } from '../../models/options-menu';
 import { CacheStoreService } from 'app/services/storage/cache-store.service';
+import { WebhookService } from '../../../../services/webhook.service';
 
 @Component({
 	selector: 'app-settings',
@@ -32,6 +33,12 @@ export class SettingsComponent implements OnInit {
 		{ header: 'Remove API key', description: 'Removes your API key from the application.', buttonText: 'Remove', action: () => this.openDialog(1) }
 	];
 
+	webhookAuthorImage: string;
+	webhookAuthorName: string;
+	webhookBottomImage: string;
+	webhookFooterIconUrl: string;
+	webhookFooterText: string;
+
 	constructor(
 		public electronService: ElectronService,
 		private toastService: ToastService,
@@ -39,14 +46,21 @@ export class SettingsComponent implements OnInit {
 		public authService: AuthenticateService,
 		public ircService: IrcService,
 		private genericService: GenericService,
-		private cacheStoreService: CacheStoreService
-	) {
+		private cacheStoreService: CacheStoreService,
+		private webhookService: WebhookService
+	) { }
+
+	ngOnInit() {
 		this.genericService.getAxSMenuStatus().subscribe(status => {
 			this.axsMenuStatus = status;
 		});
-	}
 
-	ngOnInit() { }
+		this.webhookAuthorImage = this.webhookService.authorImage;
+		this.webhookAuthorName = this.webhookService.authorName;
+		this.webhookBottomImage = this.webhookService.bottomImage;
+		this.webhookFooterIconUrl = this.webhookService.footerIconUrl;
+		this.webhookFooterText = this.webhookService.footerText;
+	}
 
 	/**
 	 * Clear the cache
@@ -124,5 +138,10 @@ export class SettingsComponent implements OnInit {
 	toggleAxSMenu(): void {
 		this.axsMenuStatus = !this.axsMenuStatus;
 		this.genericService.setAxSMenu(this.axsMenuStatus);
+	}
+
+	updateWebhookCustomization() {
+		this.webhookService.updateWebhookCustomization(this.webhookAuthorImage, this.webhookAuthorName, this.webhookBottomImage, this.webhookFooterIconUrl, this.webhookFooterText);
+		this.toastService.addToast(`Successfully updated your personal webhook customizations.`);
 	}
 }

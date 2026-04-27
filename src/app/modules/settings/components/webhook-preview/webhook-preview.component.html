@@ -1,0 +1,54 @@
+<div class="webhook-message">
+	<div class="avatar">
+		<img [src]="webhookAuthorImage" *ngIf="webhookAuthorImage" />
+	</div>
+
+	<div class="webhook-content">
+		<div class="author">
+			<span *ngIf="webhookAuthorName">{{ webhookAuthorName }}&nbsp;</span>
+			<span *ngIf="!webhookAuthorName">(will use default username)&nbsp;</span>
+
+			<span class="icon">Bot</span> <span class="timestamp">Today at 01:53 AM</span>
+		</div>
+
+		<div class="webhook">
+			<div class="webhook-title">
+				<markdown [data]="webhookTitle" clickableLinks></markdown>
+			</div>
+
+			<div class="webhook-description">
+				<markdown [data]="webhookDescription" clickableLinks></markdown>
+			</div>
+
+			<div class="fields">
+				<div class="field">
+					<div class="header">
+						{{ webhookTeamOneBans.name }}
+					</div>
+
+					<div class="body">
+						<markdown [data]="webhookTeamOneBans.value" clickableLinks></markdown>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="header">
+						{{ webhookTeamTwoBans.name }}
+					</div>
+
+					<div class="body">
+						<markdown [data]="webhookTeamTwoBans.value" clickableLinks></markdown>
+					</div>
+				</div>
+			</div>
+
+			<img class="image" [src]="webhookBottomImage" />
+
+			<div class="footer">
+				<img class="footer-image" [src]="webhookFooterIconUrl" *ngIf="webhookFooterIconUrl" />
+				<span class="footer-content" *ngIf="webhookFooterText">{{ webhookFooterText }}</span>
+				<div class="footer-content" *ngIf="!webhookFooterText">Match referee was {{ ircService.authenticatedUser }}</div>
+			</div>
+		</div>
+	</div>
+</div>
