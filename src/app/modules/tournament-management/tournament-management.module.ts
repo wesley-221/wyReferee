@@ -17,8 +17,6 @@ import { ImportTournamentComponent } from './pages/import-tournament/import-tour
 import { AdministratorTournamentsComponent } from './pages/administrator-tournaments/administrator-tournaments.component';
 import { TournamentCardComponent } from './components-utility/tournament-card/tournament-card.component';
 import { TournamentCreateComponent } from './pages/tournament-create/tournament-create.component';
-import { TournamentMyPublishedComponent } from './components/tournament-view/tournament-my-published/tournament-my-published.component';
-import { TournamentOverviewComponent } from './components/tournament-view/tournament-overview/tournament-overview.component';
 import { TournamentWybinComponent } from './components-utility/tournament/tournament-wybin/tournament-wybin.component';
 import { TournamentConditionalMessageComponent } from './components-utility/tournament/tournament-beatmap-result/tournament-conditional-message.component';
 import { TournamentEditComponent } from './components/tournament-manage/tournament-edit/tournament-edit.component';
@@ -41,8 +39,6 @@ import { PublishedTournamentsComponent } from './pages/published-tournaments/pub
 		AdministratorTournamentsComponent,
 		TournamentCardComponent,
 		TournamentCreateComponent,
-		TournamentMyPublishedComponent,
-		TournamentOverviewComponent,
 		TournamentWybinComponent,
 		TournamentConditionalMessageComponent,
 		TournamentEditComponent,
