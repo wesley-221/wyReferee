@@ -1,31 +1,35 @@
 @import "variables";
 
-.all-tutorials {
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+.tutorial {
+	padding: 8px;
 
-	gap: 8px;
+	.all-tutorials {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
 
-	.tutorial {
-		padding: 20px;
-		border: 1px solid $primary;
-		border-radius: 10px;
-		box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-		text-align: center;
+		gap: 8px;
 
-		.tutorial-name {
-			font-size: 24px;
-			margin-bottom: 10px;
-		}
+		.tutorial {
+			padding: 20px;
+			border: 1px solid $primary;
+			border-radius: 10px;
+			box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+			text-align: center;
 
-		.tutorial-description {
-			font-size: 16px;
-			line-height: 1.5;
-		}
+			.tutorial-name {
+				font-size: 24px;
+				margin-bottom: 10px;
+			}
 
-		&:hover {
-			cursor: pointer;
-			border: 1px solid darken($primary, 15%);
+			.tutorial-description {
+				font-size: 16px;
+				line-height: 1.5;
+			}
+
+			&:hover {
+				cursor: pointer;
+				border: 1px solid darken($primary, 15%);
+			}
 		}
 	}
 }
