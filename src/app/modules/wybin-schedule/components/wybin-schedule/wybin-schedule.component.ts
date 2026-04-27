@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { PersonalSchedule } from 'app/models/wybintournament/personal-schedule';
-import { WyBinMatch } from 'app/models/wybintournament/wybin-match';
-import { WyBinTournament } from 'app/models/wybintournament/wybin-tournament';
 import { AuthenticateService } from 'app/services/authenticate.service';
-import { LobbyCreationContextService } from 'app/services/lobby-creation-context.service';
 import { WybinService } from 'app/services/wybin.service';
 
 @Component({
@@ -16,7 +12,9 @@ export class WybinScheduleComponent implements OnInit {
 	loading: boolean;
 	personalScheduleData: PersonalSchedule[];
 
-	constructor(private authService: AuthenticateService, private wyBinService: WybinService, private lobbyCreationContextService: LobbyCreationContextService, private router: Router) {
+	constructor(
+		private authService: AuthenticateService,
+		private wyBinService: WybinService) {
 		this.loading = true;
 	}
 
@@ -48,7 +46,7 @@ export class WybinScheduleComponent implements OnInit {
 							firstDate.setHours(firstTime.hours, firstTime.minutes);
 							secondDate.setHours(secondTime.hours, secondTime.minutes);
 
-							return secondDate.getTime() - firstDate.getTime();
+							return firstDate.getTime() - secondDate.getTime();
 						});
 
 						return newSchedule;
@@ -58,16 +56,5 @@ export class WybinScheduleComponent implements OnInit {
 				});
 			}
 		});
-	}
-
-	/**
-	 * Creates the selected lobby and navigates to the lobby creation page
-	 *
-	 * @param tournament the tournament the match belongs to
-	 * @param match the match to create a lobby for
-	 */
-	createMatch(tournament: WyBinTournament, match: WyBinMatch) {
-		this.lobbyCreationContextService.setContext(tournament, match);
-		this.router.navigate(['lobby-overview', 'create-lobby']);
 	}
 }

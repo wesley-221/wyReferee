@@ -1,8 +1,5 @@
 @import "variables";
 
-$tile-background-color: #262624;
-$text-header-text-color: #9c9a92;
-
 .information {
 	padding: 8px;
 
@@ -20,7 +17,7 @@ $text-header-text-color: #9c9a92;
 				display: flex;
 
 				font-size: 1.25rem;
-				color: $text-header-text-color;
+				color: $information-header-text-color;
 				margin-bottom: 8px;
 
 				.header-end {
@@ -35,7 +32,7 @@ $text-header-text-color: #9c9a92;
 				gap: 8px;
 
 				.getting-started-item {
-					background: $tile-background-color;
+					background: $information-tile-background-color;
 
 					border-radius: 8px;
 					padding: 8px;
@@ -79,7 +76,7 @@ $text-header-text-color: #9c9a92;
 					padding: 8px 16px;
 					gap: 16px;
 
-					background: $tile-background-color;
+					background: $information-tile-background-color;
 					border-radius: 8px;
 
 					cursor: pointer;
@@ -101,13 +98,37 @@ $text-header-text-color: #9c9a92;
 					}
 
 					&:hover {
-						background: lighten($tile-background-color, 5%);
+						background: lighten($information-tile-background-color, 5%);
 						transition: background 0.3s;
 
 						.header {
 							color: $primary;
 						}
 					}
+				}
+			}
+
+			.loading {
+				display: flex;
+				align-items: center;
+
+				.spinner {
+					margin-right: 4px;
+				}
+			}
+
+			.tournaments {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+
+				max-height: 700px;
+				overflow-y: auto;
+
+				.tournament {
+					background-color: $wybin-schedule-background-color;
+					border: 1px solid $wybin-schedule-border-color;
+					padding: 16px;
 				}
 			}
 		}

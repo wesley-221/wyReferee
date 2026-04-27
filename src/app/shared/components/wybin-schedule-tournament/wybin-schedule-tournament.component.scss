@@ -1,0 +1,103 @@
+@import "variables";
+
+.tournament {
+	background-color: $wybin-schedule-background-color;
+	border: 1px solid $wybin-schedule-border-color;
+
+	.header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		padding: 16px;
+
+		background-color: $wybin-schedule-header-color;
+
+		.tournament-name {
+			font-size: 16px;
+			font-weight: bold;
+			text-align: center;
+
+			color: $primary;
+		}
+
+		.matches-count {
+			background-color: $primary;
+			color: black;
+			padding: 4px 8px;
+
+			border-radius: 4px;
+		}
+	}
+
+	.matches {
+		display: flex;
+		flex-direction: column;
+
+		.match {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			border-bottom: 1px solid $wybin-schedule-border-color;
+
+			padding: 14px 16px;
+
+			.match-information {
+				display: flex;
+				gap: 8px;
+
+				.date-time {
+					display: flex;
+
+					.date {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						justify-content: center;
+
+						.date-day-number {
+							font-size: 1.5rem;
+							font-weight: bold;
+						}
+					}
+				}
+
+				.match-details {
+					.time {
+						font-weight: bold;
+					}
+
+					.match-name {
+						display: flex;
+						align-items: center;
+					}
+
+					.time,
+					.match-id {
+						align-self: center;
+					}
+				}
+			}
+
+			.match-actions {
+				display: flex;
+				align-items: center;
+
+				gap: 8px;
+
+				.time-until-match {
+					font-size: 14px;
+					color: $information-header-text-color;
+					font-style: italic;
+					white-space: nowrap;
+					align-self: center;
+				}
+			}
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+	}
+}

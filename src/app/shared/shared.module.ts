@@ -16,6 +16,7 @@ import { ClickableLinksDirective } from 'app/core/directive/clickable-links.dire
 import { ToastComponent } from './components/toast/toast.component';
 import { TutorialComponent } from './components/tutorial/tutorial.component';
 import { MarkdownModule } from 'ngx-markdown';
+import { WybinScheduleTournamentComponent } from './components/wybin-schedule-tournament/wybin-schedule-tournament.component';
 
 const declerations = [
 	FilterTournamentPipe,
@@ -29,7 +30,8 @@ const declerations = [
 	FilterTeamPipe,
 	ClickableLinksDirective,
 	ToastComponent,
-	TutorialComponent
+	TutorialComponent,
+	WybinScheduleTournamentComponent
 ];
 
 const modules = [

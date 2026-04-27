@@ -17,7 +17,24 @@
 					</div>
 				</div>
 
+				<div class="tournaments">
+					<div class="tournament" *ngIf="loading == true">
+						<div class="header">
+							<div class="loading">
+								<mat-spinner class="spinner" [diameter]="32"></mat-spinner>&nbsp;Loading wyBin
+								schedule...
+							</div>
+						</div>
+					</div>
 
+					<div class="tournament" *ngIf="loading == false && (!personalScheduleData || personalScheduleData.length == 0)">
+						<div class="header">
+							No matches found
+						</div>
+					</div>
+
+					<app-wybin-schedule-tournament [personalSchedule]="personalSchedule" *ngFor="let personalSchedule of personalScheduleData"></app-wybin-schedule-tournament>
+				</div>
 			</div>
 
 			<div class="column">
@@ -54,7 +71,8 @@
 				</div>
 
 				<div class="resources">
-					<div class="resource" *ngFor="let resource of resources" (click)="electronService.openLink(resource.link)">
+					<div class="resource" *ngFor="let resource of resources"
+						(click)="electronService.openLink(resource.link)">
 						<div class="resource-dot"></div>
 
 						<div>
