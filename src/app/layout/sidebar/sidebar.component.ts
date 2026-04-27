@@ -29,7 +29,7 @@ export class SidebarComponent implements OnInit {
 	];
 
 	allNavigationsFooter: INavigationItem[] = [
-		{ icon: 'login', header: 'account', link: 'authentication' },
+		{ icon: 'login', header: 'account', link: 'account' },
 		{ icon: 'settings', header: 'settings', link: 'settings' }
 	];
 

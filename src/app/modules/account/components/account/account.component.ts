@@ -8,11 +8,11 @@ import { ApiKeyValidation } from 'app/services/osu-api/api-key-validation.servic
 import { ToastService } from 'app/services/toast.service';
 
 @Component({
-	selector: 'app-authentication',
-	templateUrl: './authentication.component.html',
-	styleUrls: ['./authentication.component.scss']
+	selector: 'app-account',
+	templateUrl: './account.component.html',
+	styleUrls: ['./account.component.scss']
 })
-export class AuthenticationComponent implements OnInit {
+export class AccountComponent implements OnInit {
 	apiKey: string;
 	apiKeyIsValid: boolean;
 
