@@ -3,10 +3,10 @@
 $tiles-height: 110px;
 
 .main {
-	height: calc(100% - 8px);
-
 	display: flex;
 	flex: 1 0 auto;
+
+	height: 100vh;
 
 	.sidebar {
 		display: flex;
