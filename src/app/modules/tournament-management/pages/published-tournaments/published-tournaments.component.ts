@@ -45,8 +45,10 @@ export class PublishedTournamentsComponent {
 		});
 	}
 
-	onTournamentClick(tournament: WyTournament) {
-		this.router.navigate(['/tournament-management/published-tournaments/', tournament.id, '1']);
+	onTournamentClick(tournament: WyTournament, event: any) {
+		if (event.target.localName == 'div') {
+			this.router.navigate(['/tournament-management/published-tournaments/', tournament.id, '1']);
+		}
 	}
 
 	/**

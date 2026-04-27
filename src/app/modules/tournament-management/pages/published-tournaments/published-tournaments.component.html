@@ -23,7 +23,7 @@
 
 	<div class="all-tournaments" *ngIf="allTournaments.length > 0">
 		<div class="tournament" *ngFor="let tournament of (allTournaments | filterTournament : searchValue : filterByUserFormControl.value)">
-			<app-tournament-card [tournament]="tournament" [publishedTournament]="true" (deletedTournamentEmitter)="onTournamentDeleted($event)" (click)="onTournamentClick(tournament)"></app-tournament-card>
+			<app-tournament-card [tournament]="tournament" [publishedTournament]="true" (deletedTournamentEmitter)="onTournamentDeleted($event)" (click)="onTournamentClick(tournament, $event)"></app-tournament-card>
 		</div>
 	</div>
 </div>

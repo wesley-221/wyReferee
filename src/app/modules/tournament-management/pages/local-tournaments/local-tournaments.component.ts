@@ -36,7 +36,9 @@ export class LocalTournamentsComponent {
 		}
 	}
 
-	onTournamentClick(tournament: WyTournament) {
-		this.router.navigate(['/tournament-management/local-tournaments/', tournament.id, '0']);
+	onTournamentClick(tournament: WyTournament, event: any) {
+		if (event.target.localName == 'div') {
+			this.router.navigate(['/tournament-management/local-tournaments/', tournament.id, '0']);
+		}
 	}
 }

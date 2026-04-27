@@ -21,28 +21,19 @@ export class TournamentCardComponent implements OnInit {
 	@Output() deletedTournamentEmitter: EventEmitter<boolean>;
 	@Output() tournamentPublishedEmitter: EventEmitter<{ tournament: WyTournament; id: number }>;
 
-	constructor(public authenticateService: AuthenticateService, private tournamentService: TournamentService, private dialog: MatDialog, private router: Router, private toastService: ToastService, public electronService: ElectronService) {
+	constructor(
+		public authenticateService: AuthenticateService,
+		private tournamentService: TournamentService,
+		private dialog: MatDialog,
+		private router: Router,
+		private toastService: ToastService,
+		public electronService: ElectronService
+	) {
 		this.deletedTournamentEmitter = new EventEmitter(false);
 		this.tournamentPublishedEmitter = new EventEmitter(null);
 	}
-	ngOnInit(): void { }
 
-	/**
-	 * Edit a tournament
-	 *
-	 * @param tournament the tournament to edit
-	 */
-	editTournament(tournament: WyTournament, event: any): void {
-		// Check if click wasn't on a button
-		if (event.target.localName == 'div') {
-			if (this.publishedTournament == undefined || this.publishedTournament == false) {
-				this.router.navigate(['/tournament-management/tournament-overview/tournament-edit', tournament.id, 0]);
-			}
-			else {
-				this.router.navigate(['/tournament-management/tournament-overview/tournament-edit', tournament.id, 1]);
-			}
-		}
-	}
+	ngOnInit(): void { }
 
 	/**
 	 * Delete a mappool from the bottom of the earth
