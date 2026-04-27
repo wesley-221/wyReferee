@@ -15,7 +15,7 @@ export class SidebarComponent implements OnInit {
 	ircConnectionStatus: number;
 
 	allNavigations: INavigationItem[] = [
-		{ icon: 'info', header: 'information', link: 'information' },
+		{ icon: 'home', header: 'dashboard', link: 'dashboard' },
 		{ icon: 'school', header: 'tutorial', link: 'tutorial' },
 		{ icon: 'update', header: 'changelog', link: 'changelog' },
 		{ type: 'divider' },

@@ -13,12 +13,11 @@ const routes: Routes = [
 		component: MainComponent,
 		children: [
 			{
-				path: '', loadChildren: () =>
-					import('./modules/information/information.module').then(m => m.InformationModule)
+				path: '', redirectTo: 'dashboard', pathMatch: 'full'
 			},
 			{
-				path: 'information', loadChildren: () =>
-					import('./modules/information/information.module').then(m => m.InformationModule)
+				path: 'dashboard', loadChildren: () =>
+					import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
 			},
 			{
 				path: 'account', loadChildren: () =>

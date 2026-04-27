@@ -6,11 +6,11 @@ import { AuthenticateService } from '../../../../services/authenticate.service';
 import { WybinService } from '../../../../services/wybin.service';
 
 @Component({
-	selector: 'app-information',
-	templateUrl: './information.component.html',
-	styleUrls: ['./information.component.scss']
+	selector: 'app-dashboard',
+	templateUrl: './dashboard.component.html',
+	styleUrls: ['./dashboard.component.scss']
 })
-export class InformationComponent implements OnInit {
+export class DashboardComponent implements OnInit {
 	discordServerLink = AppConfig.links.discordServer;
 	githubIssuesLink = AppConfig.links.githubIssues;
 	githubWikiLink = AppConfig.links.githubWiki;
