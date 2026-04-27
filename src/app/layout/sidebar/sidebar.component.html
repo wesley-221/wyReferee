@@ -1,48 +1,59 @@
-<div class="full">
-	<div class="login" [ngClass]="{'not-logged-in': authenticateService.loggedIn == false }">
+<div class="sidebar">
+	<div class="sidebar-user">
 		<div class="user" *ngIf="authenticateService.loggedIn">
-			<img [src]="authenticateService.loggedInUser.getAvatarUrl()" />
+			<div class="user-avatar">
+				<img [src]="authenticateService.loggedInUser.getAvatarUrl()" />
+			</div>
 
-			<div class="details">
+			<div class="user-details">
 				{{ authenticateService.loggedInUser.username }}
 
-				<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
-					<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
+				<div class="irc-status" [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
+					<div class="dot" [ngClass]="{ 'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2 }"></div> irc
 				</div>
 			</div>
 		</div>
 
 		<div class="user" *ngIf="!authenticateService.loggedIn">
-			<img [src]="'assets/images/osulogo.png'" />
+			<div class="user-avatar">
+				<img [src]="'assets/images/osulogo.png'" />
+			</div>
 
-			<div class="details">
-				You are not logged in.
+			<div class="user-details">
+				Guest
 
-				<div [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
-					<div class="dot" [ngClass]="{'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2}"></div> irc
+				<div class="irc-status" [matTooltip]="ircConnectionStatus == 0 ? 'Disconnected' : ircConnectionStatus == 1 ? 'Connecting' : ircConnectionStatus == 2 ? 'Connected' : 'Disconnected'">
+					<div class="dot" [ngClass]="{ 'connecting': ircConnectionStatus == 1, 'connected': ircConnectionStatus == 2 }"></div> irc
 				</div>
 			</div>
 		</div>
 	</div>
 
-<div class="sidebar">
-	<div class="sidebar-item" *ngFor="let navigationItem of allNavigations" [ngClass]="{'hidden': navigationItem.showIf == false }">
-		<div class="sidebar-link" [routerLink]="[navigationItem.link]" routerLinkActive="active">
-			<mat-icon>{{ navigationItem.icon }}</mat-icon>
+	<ng-container *ngFor="let navigationItem of allNavigations">
+		<div class="sidebar-divider" *ngIf="navigationItem.type == 'divider'"></div>
 
-			<p class="details">
-				<span>{{ navigationItem.header }}</span>
-			</p>
-		</div>
+		<div class="sidebar-item" [routerLink]="[navigationItem.link]" routerLinkActive="active" *ngIf="navigationItem.type != 'divider' && navigationItem.showIf != false">
+			<div class="sidebar-item-icon">
+				<mat-icon>{{ navigationItem.icon }}</mat-icon>
+			</div>
 
-		<div class="sidebar-submenu" *ngIf="router.url.indexOf(navigationItem.link) > -1">
-			<div class="sidebar-submenu-link" [routerLink]="[subMenuNavigationItem.link, navigationItem.link]" routerLinkActive="active" *ngFor="let subMenuNavigationItem of navigationItem.subMenu">
-				<mat-icon>{{ subMenuNavigationItem.icon }}</mat-icon>
-
-				<p class="details">
-					<span>{{ subMenuNavigationItem.header }}</span>
-				</p>
+			<div class="sidebar-item-header">
+				{{ navigationItem.header }}
 			</div>
 		</div>
+	</ng-container>
+
+	<div class="sidebar-footer">
+		<ng-container *ngFor="let navigationItem of allNavigationsFooter">
+			<div class="sidebar-item" [routerLink]="[navigationItem.link]" routerLinkActive="active" *ngIf="navigationItem.type != 'divider' && navigationItem.showIf != false">
+				<div class="sidebar-item-icon">
+					<mat-icon>{{ navigationItem.icon }}</mat-icon>
+				</div>
+
+				<div class="sidebar-item-header">
+					{{ navigationItem.header }}
+				</div>
+			</div>
+		</ng-container>
 	</div>
 </div>
