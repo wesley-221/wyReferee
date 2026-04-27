@@ -25,8 +25,8 @@ export class ManagementRouterComponent implements OnInit {
 		);
 
 	sidebarMenu: INavigationItem[] = [
-		{ icon: 'computer', header: 'local', link: '/tournament-management/tournament-overview' },
-		{ icon: 'language', header: 'published', link: '/tournament-management/tournament-overview', showIfObservable: this.isLoggedIn$ },
+		{ icon: 'computer', header: 'local', link: 'local-tournaments' },
+		{ icon: 'language', header: 'published', link: 'published-tournaments', showIfObservable: this.isLoggedIn$ },
 		{ type: 'divider' },
 		{ icon: 'add', header: 'create', link: '/tournament-management/tournament-overview' },
 		{ icon: 'list', header: 'all tournaments', link: '/tournament-management/tournament-overview', showIfObservable: this.isLoggedIn$ },
