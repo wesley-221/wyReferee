@@ -1,19 +1,115 @@
 @import "variables";
 
+$tile-background-color: #262624;
+$text-header-text-color: #9c9a92;
+
 .information {
 	padding: 8px;
-}
 
-.row {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
 
-	gap: 8px;
-	padding: 8px;
+		.column {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
 
-	border-bottom: 1px solid $primary;
+			.column-header {
+				display: flex;
 
-	&.single-row {
-		grid-template-columns: 1fr;
+				font-size: 1.25rem;
+				color: $text-header-text-color;
+				margin-bottom: 8px;
+
+				.header-end {
+					margin-left: auto;
+				}
+			}
+
+			.getting-started-items {
+				display: flex;
+				flex-direction: column;
+
+				gap: 8px;
+
+				.getting-started-item {
+					background: $tile-background-color;
+
+					border-radius: 8px;
+					padding: 8px;
+
+					.header {
+						color: $primary;
+
+						font-size: 16px;
+						font-weight: 500;
+						margin: 0 0 8px;
+					}
+
+					.body {
+						margin: 0;
+						line-height: 1.5;
+					}
+
+					.link {
+						display: flex;
+						align-items: center;
+
+						margin-top: 8px;
+
+						font-size: 14px;
+						color: $primary;
+					}
+				}
+			}
+
+			.resources {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+
+				.resource {
+					display: flex;
+					align-items: center;
+
+					flex: 1;
+
+					padding: 8px 16px;
+					gap: 16px;
+
+					background: $tile-background-color;
+					border-radius: 8px;
+
+					cursor: pointer;
+
+					.resource-dot {
+						width: 8px;
+						height: 8px;
+						border-radius: 50%;
+						background: $primary;
+					}
+
+					.header {
+						font-size: 16px;
+						font-weight: bold;
+					}
+
+					.body {
+						font-size: 13px;
+					}
+
+					&:hover {
+						background: lighten($tile-background-color, 5%);
+						transition: background 0.3s;
+
+						.header {
+							color: $primary;
+						}
+					}
+				}
+			}
+		}
 	}
 }
