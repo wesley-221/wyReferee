@@ -1,4 +1,4 @@
-<div #container class="scroll" *ngIf="tournament">
+<div #container class="tournament-edit" *ngIf="tournament">
 	<app-debug [data]="{ tournament }"></app-debug>
 
 	<div class="tournament-edit-header" [ngClass]="{ 'public': isPublishedTournament == true }">
@@ -52,5 +52,5 @@
 		meaning anyone that has this tournament imported will get their tournament updated once their client has been restarted.
 	</app-alert>
 
-	<button mat-raised-button class="extra-padding" color="primary" (click)="updateTournament()">Update</button>
+	<button mat-raised-button color="primary" (click)="updateTournament()">Update</button>
 </div>

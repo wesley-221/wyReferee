@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { WyTournament } from '../../../../models/wytournament/wy-tournament';
 import { TournamentService } from '../../../../services/tournament.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-local-tournaments',
@@ -11,7 +12,8 @@ export class LocalTournamentsComponent {
 	allTournaments: WyTournament[];
 
 	constructor(
-		private tournamentService: TournamentService
+		private tournamentService: TournamentService,
+		private router: Router
 	) { }
 
 	ngOnInit(): void {
@@ -32,5 +34,9 @@ export class LocalTournamentsComponent {
 			data.tournament.publishId = data.tournament.id;
 			this.tournamentService.updateTournament(data.tournament, data.id, false);
 		}
+	}
+
+	onTournamentClick(tournament: WyTournament) {
+		this.router.navigate(['/tournament-management/local-tournaments/', tournament.id, '0']);
 	}
 }

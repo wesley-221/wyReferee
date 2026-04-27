@@ -1,7 +1,7 @@
 <div class="local-tournaments">
 	<div id="tutorial-all-tournaments" class="all-tournaments">
 		<div *ngFor="let tournament of allTournaments">
-			<app-tournament-card [tournament]="tournament" (tournamentPublishedEmitter)="onTournamentPublished($event)"></app-tournament-card>
+			<app-tournament-card [tournament]="tournament" (tournamentPublishedEmitter)="onTournamentPublished($event)" (click)="onTournamentClick(tournament)"></app-tournament-card>
 		</div>
 	</div>
 </div>

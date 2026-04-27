@@ -4,6 +4,7 @@ import { WyTournament } from '../../../../models/wytournament/wy-tournament';
 import { FormControl } from '@angular/forms';
 import { Observable, BehaviorSubject, startWith, map } from 'rxjs';
 import { User } from '../../../../models/authentication/user';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-published-tournaments',
@@ -23,7 +24,8 @@ export class PublishedTournamentsComponent {
 	usersImported$: BehaviorSubject<boolean>;
 
 	constructor(
-		private tournamentService: TournamentService
+		private tournamentService: TournamentService,
+		private router: Router
 	) { }
 
 	ngOnInit(): void {
@@ -41,6 +43,10 @@ export class PublishedTournamentsComponent {
 				);
 			}
 		});
+	}
+
+	onTournamentClick(tournament: WyTournament) {
+		this.router.navigate(['/tournament-management/published-tournaments/', tournament.id, '1']);
 	}
 
 	/**

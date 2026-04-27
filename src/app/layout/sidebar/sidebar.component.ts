@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
 		{ type: 'divider' },
 		{ icon: 'webhook', header: 'webhook', link: 'webhook' },
 		{ type: 'divider' },
-		{ icon: 'dashboard', header: 'management', link: 'tournament-management/tournament-overview' },
+		{ icon: 'dashboard', header: 'management', link: 'tournament-management' },
 		{ icon: 'schedule', header: 'wyBin schedule', link: 'wybin-schedule' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
 		{ icon: 'chat', header: 'irc', link: 'irc' },
