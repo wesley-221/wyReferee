@@ -34,12 +34,5 @@
 		overflow-y: auto;
 
 		background-color: $background-color;
-
-		padding: 8px;
-
-		&.no-padding {
-			padding-left: 0;
-			padding-top: 0;
-		}
 	}
 }
