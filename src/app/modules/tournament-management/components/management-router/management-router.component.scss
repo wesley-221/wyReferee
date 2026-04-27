@@ -4,91 +4,76 @@ $tiles-height: 110px;
 
 .main {
 	display: flex;
-	flex: 1 0 auto;
-
 	height: 100vh;
 
 	.sidebar {
 		display: flex;
 		flex-direction: column;
+		position: sticky;
 
-		margin-right: 8px;
+		min-width: 175px;
+		height: 100vh;
+		top: 0;
 
-		background-color: rgba(lighten($sidebar-background-color, 8%), 0.2);
+		gap: 8px;
 
-		.item {
-			display: flex;
+		border-right: 0.5px solid $sidebar-border-color;
+		background: $sub-sidebar-background-color;
 
-			align-items: center;
-			justify-content: left;
-
-			padding: 16px;
-			margin-right: 8px;
-
-			.logo {
-				display: flex;
-				align-items: center;
-			}
-
-			.title {
-				display: flex;
-				align-items: center;
-
-				padding: 0 0 0 16px;
-			}
-
-			&.active,
-			&:hover {
-				color: $primary;
-				background-color: rgba(lighten($sidebar-background-color, 15%), 0.2);
-				border-radius: 6px;
-
-				cursor: pointer;
-				outline: none;
-			}
+		.sidebar-divider {
+			height: 0.5px;
+			background: $sidebar-border-color;
+			margin: 8px 0;
 		}
 
-		.sub-item {
+		.sidebar-item {
 			display: flex;
-
 			align-items: center;
-			justify-content: left;
+			justify-content: space-between;
 
-			padding: 8px;
-			margin-right: 6px;
-			margin-left: 16px;
+			padding: 8px 16px;
+			gap: 8px;
 
-			.logo {
+			font-size: 13px;
+			color: $sidebar-text-color;
+
+			transition:
+				background 0.1s,
+				color 0.1s;
+
+			white-space: nowrap;
+
+			border-left: 2px solid transparent;
+			border-left-color: transparent;
+
+			cursor: pointer;
+
+			.sidebar-item-content {
 				display: flex;
 				align-items: center;
+				gap: 8px;
 			}
 
-			.title {
-				display: flex;
-				align-items: center;
-
-				padding: 0 0 0 16px;
-			}
-
-			&.active,
 			&:hover {
-				color: $primary;
-				background-color: rgba(lighten($sidebar-background-color, 15%), 0.2);
-				border-radius: 6px;
+				background: rgba(255, 255, 255, 0.05);
+				color: $sidebar-text-color-hover;
+			}
 
-				cursor: pointer;
-				outline: none;
+			&.active {
+				background: color-mix(in srgb, $primary 13%, transparent);
+				color: $primary;
+				border-left-color: $primary;
+				font-weight: 500;
 			}
 		}
 	}
 
 	.content {
 		flex: 1;
-		overflow: hidden;
-
+		min-height: 0;
 		height: 100%;
-		width: 100%;
+		overflow-y: auto;
 
-		padding-top: 8px;
+		background-color: $background-color;
 	}
 }

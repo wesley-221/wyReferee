@@ -1,20 +1,16 @@
 <div class="main">
 	<div class="sidebar">
-		<div *ngFor="let sidebarItem of sidebarMenu">
-			<div [id]="sidebarItem.htmlElementId" *ngIf="sidebarItem.onlyShowWhenLoggedIn == true ? authenticateService.loggedIn == true : sidebarItem.onlyShowAsAdministrator == true ? authenticateService.loggedInUser && authenticateService.loggedInUser.isAdmin == true : sidebarItem.onlyShowAsTournamentHost == true ? authenticateService.loggedInUser && (authenticateService.loggedInUser.isAdmin == true || authenticateService.loggedInUser.isTournamentManager == true) : true"
-				[ngClass]="{ 'item': sidebarItem.subMenuItem == null || sidebarItem.subMenuItem != true,
-			'sub-item': sidebarItem.subMenuItem != null && sidebarItem.subMenuItem == true }" [routerLink]="sidebarItem.link"
-				routerLinkActive="active">
-				<div class="logo">
-					<mat-icon class="icon-2x" *ngIf="sidebarItem.logo">{{ sidebarItem.logo }}</mat-icon>
-					<mat-icon class="icon-2x" *ngIf="sidebarItem.svgIcon" [svgIcon]="sidebarItem.svgIcon"></mat-icon>
-				</div>
+		<ng-container *ngFor="let sidebarItem of sidebarMenu">
+			<div class="sidebar-divider" *ngIf="sidebarItem.type == 'divider'"></div>
 
-				<div class="title">
-					{{ sidebarItem.name }}
+			<div class="sidebar-item" [routerLink]="[sidebarItem.link]" routerLinkActive="active" *ngIf="sidebarItem.type != 'divider' && (sidebarItem.showIf != false && (sidebarItem.showIfObservable | async) != false)">
+				<div class="sidebar-item-content">
+					<mat-icon>{{ sidebarItem.icon }}</mat-icon>
+
+					{{ sidebarItem.header }}
 				</div>
 			</div>
-		</div>
+		</ng-container>
 	</div>
 
 	<div class="content fluid-container">
