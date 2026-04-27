@@ -1,17 +1,23 @@
-<div class="scroll container-fluid">
-	<h1>General settings</h1>
+<div class="settings">
+	<div class="settings-header">
+		General
+	</div>
 
 	<div class="options">
 		<ng-container *ngFor="let option of generalOptions">
-			<ng-template *ngTemplateOutlet="optionTemplate; context: {$implicit: option}"></ng-template>
+			<ng-template *ngTemplateOutlet="optionTemplate; context: { $implicit: option }"></ng-template>
 		</ng-container>
 	</div>
+</div>
 
-	<h1>Configuration</h1>
+<div class="settings">
+	<div class="settings-header">
+		Configuration
+	</div>
 
 	<div class="options">
-		<ng-container *ngFor="let option of allConfigurationOptions">
-			<ng-template *ngTemplateOutlet="optionTemplate; context: {$implicit: option}"></ng-template>
+		<ng-container *ngFor="let option of configurationOptions">
+			<ng-template *ngTemplateOutlet="optionTemplate; context: { $implicit: option }"></ng-template>
 		</ng-container>
 	</div>
 </div>
@@ -19,17 +25,18 @@
 <ng-template #optionTemplate let-option>
 	<div class="option">
 		<div class="content">
-			<div class="icon">
-				<mat-icon>{{ option.icon }}</mat-icon>
-			</div>
-
 			<div class="text">
-				<span [innerHTML]="option.message"></span>
+				<div class="header" [innerHTML]="option.header"></div>
+				<div class="description" [innerHTML]="option.description"></div>
 			</div>
 		</div>
 
-		<div class="button">
-			<button mat-raised-button color="primary" (click)="option.action()">{{ option.buttonText }}</button>
+		<div class="button" *ngIf="!option.slideToggle">
+			<button mat-stroked-button color="primary" (click)="option.action()">{{ option.buttonText }}</button>
+		</div>
+
+		<div class="slide-toggle" *ngIf="option.slideToggle">
+			<mat-slide-toggle [checked]="option.slideToggleValue | async" (change)="option.action()"></mat-slide-toggle>
 		</div>
 	</div>
 </ng-template>
