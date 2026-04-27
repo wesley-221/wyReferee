@@ -1,14 +1,7 @@
 @import "variables";
 
-.hover {
-	&:hover {
-		cursor: pointer;
-	}
-}
-
-.scroll {
-	height: 100%;
-	overflow-y: auto;
+.information {
+	padding: 8px;
 }
 
 .row {
