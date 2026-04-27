@@ -12,11 +12,11 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
-	selector: 'app-tournament-all-published-administrator',
-	templateUrl: './tournament-all-published-administrator.component.html',
-	styleUrls: ['./tournament-all-published-administrator.component.scss']
+	selector: 'app-administrator-tournaments',
+	templateUrl: './administrator-tournaments.component.html',
+	styleUrls: ['./administrator-tournaments.component.scss']
 })
-export class TournamentAllPublishedAdministratorComponent implements OnInit {
+export class AdministratorTournamentsComponent implements OnInit {
 	allTournaments: WyTournament[];
 	allUsers: User[];
 
