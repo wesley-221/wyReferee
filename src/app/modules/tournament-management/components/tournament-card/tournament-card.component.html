@@ -1,4 +1,4 @@
-<div class="tournament">
+<div class="tournament" [ngClass]="{ 'published-tournament': publishedTournament == true }">
 	<div class="header">
 		<div class="information">
 			<div class="id" matTooltip="Tournament import id" *ngIf="tournament.publishId != null">
@@ -15,18 +15,25 @@
 				</div>
 
 				<div class="created-by" *ngIf="tournament.createdBy">
-					<i>Created by <a [href]="" (click)="electronService.openLink(tournament.createdBy.getOsuProfileUrl())">{{ tournament.createdBy.username }}</a></i>
+					<i>by <a [href]="" (click)="electronService.openLink(tournament.createdBy.getOsuProfileUrl())">{{ tournament.createdBy.username }}</a></i>
 				</div>
 			</div>
 		</div>
 
 		<div class="buttons">
 			<ng-container *ngIf="publishedTournament != true">
-				<button mat-mini-fab color="primary" matTooltip="Go to published tournament" [matTooltipPosition]="'above'" (click)="goToPublishedTournament(tournament)" *ngIf="authenticateService.loggedIn == true && tournament.publishId != null"><mat-icon>link</mat-icon></button>
-				<button mat-mini-fab color="primary" matTooltip="Publish this tournament" [matTooltipPosition]="'above'" (click)="publishTournament(tournament)" *ngIf="tournament.publishId == null"><mat-icon>cloud_upload</mat-icon></button>
+				<button mat-stroked-button color="primary" matTooltip="Go to published tournament" [matTooltipPosition]="'above'" (click)="goToPublishedTournament(tournament)" *ngIf="authenticateService.loggedIn == true && tournament.publishId != null">
+					<mat-icon>link</mat-icon>
+				</button>
+
+				<button mat-stroked-button color="primary" matTooltip="Publish this tournament" [matTooltipPosition]="'above'" (click)="publishTournament(tournament)" *ngIf="tournament.publishId == null">
+					<mat-icon>cloud_upload</mat-icon>
+				</button>
 			</ng-container>
 
-			<button mat-mini-fab color="warn" matTooltip="Delete this tournament" [matTooltipPosition]="'above'" (click)="deleteTournament(tournament)"><mat-icon>delete</mat-icon></button>
+			<button mat-stroked-button color="warn" matTooltip="Delete this tournament" [matTooltipPosition]="'above'" (click)="deleteTournament(tournament)">
+				<mat-icon>delete</mat-icon>
+			</button>
 		</div>
 	</div>
 
@@ -48,12 +55,6 @@
 		</div>
 
 		<div class="body-blocks mappool-area">
-			<h3 *ngIf="!tournament.isSoloTournament()">Team count</h3>
-			<h3 *ngIf="tournament.isSoloTournament()">Player count</h3>
-			{{ tournament.teams.length }}
-
-			<mat-divider class="divider"></mat-divider>
-
 			<h3>Mappools</h3>
 
 			<div class="mappools">
@@ -61,6 +62,12 @@
 					{{ mappool.name }}
 				</div>
 			</div>
+		</div>
+
+		<div class="body-blocks">
+			<h3 *ngIf="!tournament.isSoloTournament()">Team count</h3>
+			<h3 *ngIf="tournament.isSoloTournament()">Player count</h3>
+			{{ tournament.teams.length }}
 		</div>
 	</div>
 </div>

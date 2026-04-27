@@ -13,4 +13,11 @@
 			flex: 1;
 		}
 	}
+
+	.all-tournaments {
+		display: flex;
+		flex-direction: column;
+
+		gap: 8px;
+	}
 }
