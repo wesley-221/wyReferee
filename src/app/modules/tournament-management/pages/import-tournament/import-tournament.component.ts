@@ -8,11 +8,11 @@ import { TournamentService } from 'app/services/tournament.service';
 import { Observable, BehaviorSubject, startWith, map } from 'rxjs';
 
 @Component({
-	selector: 'app-tournament-all-published',
-	templateUrl: './tournament-all-published.component.html',
-	styleUrls: ['./tournament-all-published.component.scss']
+	selector: 'app-import-tournament',
+	templateUrl: './import-tournament.component.html',
+	styleUrls: ['./import-tournament.component.scss']
 })
-export class TournamentAllPublishedComponent implements OnInit {
+export class ImportTournamentComponent implements OnInit {
 	allTournaments: WyTournament[];
 	allUsers: User[];
 

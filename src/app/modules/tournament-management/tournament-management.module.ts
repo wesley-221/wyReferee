@@ -13,7 +13,7 @@ import { TournamentGeneralComponent } from './components-utility/tournament/tour
 import { TournamentParticipantsComponent } from './components-utility/tournament/tournament-participants/tournament-participants.component';
 import { TournamentStagesComponent } from './components-utility/tournament/tournament-stages/tournament-stages.component';
 import { TournamentWebhookComponent } from './components-utility/tournament/tournament-webhook/tournament-webhook.component';
-import { TournamentAllPublishedComponent } from './components/tournament-view/tournament-all-published/tournament-all-published.component';
+import { ImportTournamentComponent } from './pages/import-tournament/import-tournament.component';
 import { TournamentAllPublishedAdministratorComponent } from './components/tournament-view/tournament-all-published-administrator/tournament-all-published-administrator.component';
 import { TournamentCardComponent } from './components-utility/tournament-card/tournament-card.component';
 import { TournamentCreateComponent } from './pages/tournament-create/tournament-create.component';
@@ -37,7 +37,7 @@ import { PublishedTournamentsComponent } from './pages/published-tournaments/pub
 		TournamentParticipantsComponent,
 		TournamentStagesComponent,
 		TournamentWebhookComponent,
-		TournamentAllPublishedComponent,
+		ImportTournamentComponent,
 		TournamentAllPublishedAdministratorComponent,
 		TournamentCardComponent,
 		TournamentCreateComponent,

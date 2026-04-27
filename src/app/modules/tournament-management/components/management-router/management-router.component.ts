@@ -29,7 +29,7 @@ export class ManagementRouterComponent implements OnInit {
 		{ icon: 'language', header: 'published', link: 'published-tournaments', showIfObservable: this.isLoggedIn$ },
 		{ type: 'divider' },
 		{ icon: 'add', header: 'create', link: 'create' },
-		{ icon: 'list', header: 'all tournaments', link: '/tournament-management/tournament-overview', showIfObservable: this.isLoggedIn$ },
+		{ icon: 'cloud_download', header: 'import tournament', link: 'import-tournament', showIfObservable: this.isLoggedIn$ },
 		{ icon: 'admin_panel_settings', header: 'administrator', link: '/tournament-management/tournament-overview', showIfObservable: this.isTournamentManager$ },
 	];
 
