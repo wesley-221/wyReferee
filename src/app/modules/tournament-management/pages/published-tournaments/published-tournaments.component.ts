@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TournamentService } from '../../../../services/tournament.service';
 import { WyTournament } from '../../../../models/wytournament/wy-tournament';
 import { BehaviorSubject, map } from 'rxjs';
@@ -11,7 +11,7 @@ import { TournamentFilter } from '../../models/tournament-filter';
 	templateUrl: './published-tournaments.component.html',
 	styleUrl: './published-tournaments.component.scss'
 })
-export class PublishedTournamentsComponent {
+export class PublishedTournamentsComponent implements OnInit {
 	allTournaments: WyTournament[];
 	filteredTournaments: WyTournament[];
 	allUsers$: BehaviorSubject<User[]>;

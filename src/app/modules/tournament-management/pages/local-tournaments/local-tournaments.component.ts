@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WyTournament } from '../../../../models/wytournament/wy-tournament';
 import { TournamentService } from '../../../../services/tournament.service';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { TournamentFilter } from '../../models/tournament-filter';
 	templateUrl: './local-tournaments.component.html',
 	styleUrl: './local-tournaments.component.scss'
 })
-export class LocalTournamentsComponent {
+export class LocalTournamentsComponent implements OnInit {
 	allTournaments: WyTournament[];
 	filteredTournaments: WyTournament[];
 	allUsers$: BehaviorSubject<User[]>;

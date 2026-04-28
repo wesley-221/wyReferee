@@ -5,6 +5,6 @@ export interface INavigationItem {
 	header?: string;
 	link?: string;
 	showIf?: boolean;
-	showIfObservable?: Observable<Boolean>;
+	showIfObservable?: Observable<boolean>;
 	type?: 'item' | 'divider';
 }
