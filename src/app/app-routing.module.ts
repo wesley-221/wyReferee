@@ -36,10 +36,6 @@ const routes: Routes = [
 					import('./modules/settings/settings.module').then(m => m.SettingsModule)
 			},
 			{
-				path: 'webhook', loadChildren: () =>
-					import('./modules/webhook/webhook-routing.module').then(m => m.WebhookRoutingModule)
-			},
-			{
 				path: 'wybin-schedule', loadChildren: () =>
 					import('./modules/wybin-schedule/wybin-schedule.module').then(m => m.WybinScheduleModule)
 			},
