@@ -17,56 +17,6 @@
 			</div>
 		</div>
 
-		<div class="tournament" *ngFor="let personalSchedule of personalScheduleData">
-			<div class="header">
-				<div class="tournament-name">
-					{{ personalSchedule.tournament.name }}
-				</div>
-
-				<div class="matches-count">
-					{{ personalSchedule.matches.length }} match{{ personalSchedule.matches.length != 1 ? 'es' : '' }}
-				</div>
-			</div>
-
-			<div class="matches">
-				<div class="match" *ngFor="let match of personalSchedule.matches">
-					<div class="match-information">
-						<div class="date-time">
-							<div class="date">
-								<div class="date-day">
-									{{ match.date | date: 'E' : 'UTC' | uppercase }}
-								</div>
-
-								<div class="date-day-number">
-									{{ match.date | date: 'dd' : 'UTC' }}
-								</div>
-
-								<div class="date-month">
-									{{ match.date | date: 'MMMM' : 'UTC' }}
-								</div>
-							</div>
-
-							<div class="time">
-								{{ match.time }}
-							</div>
-
-							<div class="match-id">
-								#{{ match.label }}
-							</div>
-						</div>
-
-						<div class="match-name">
-							{{ match.getMatchName(true) }}
-						</div>
-					</div>
-
-					<div class="match-actions">
-						<button mat-raised-button color="primary" (click)="createMatch(personalSchedule.tournament, match)">
-							<mat-icon>add</mat-icon> create match
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<app-wybin-schedule-tournament [personalSchedule]="personalSchedule" *ngFor="let personalSchedule of personalScheduleData"></app-wybin-schedule-tournament>
 	</div>
 </div>

@@ -8,6 +8,7 @@ export const AppConfig = {
 	},
 	links: {
 		githubApiReleases: 'https://api.github.com/repos/wesley-221/wyReferee/releases',
+		githubWiki: 'https://github.com/wesley-221/wyReferee/wiki',
 		githubIssues: 'https://github.com/wesley-221/wyReferee/issues',
 		discordServer: 'https://discord.gg/wEaXFJ58kE'
 	}

@@ -1,0 +1,58 @@
+<div class="tournament">
+	<div class="header">
+		<div class="tournament-name">
+			{{ personalSchedule.tournament.name }}
+		</div>
+
+		<div class="matches-count">
+			{{ personalSchedule.matches.length }} match{{ personalSchedule.matches.length != 1 ? 'es' : '' }}
+		</div>
+	</div>
+
+	<div class="matches">
+		<div class="match" *ngFor="let match of personalSchedule.matches">
+			<div class="match-information">
+				<div class="date-time">
+					<div class="date">
+						<div class="date-day">
+							{{ match.date | date: 'E' : 'UTC' | uppercase }}
+						</div>
+
+						<div class="date-day-number">
+							{{ match.date | date: 'dd' : 'UTC' }}
+						</div>
+
+						<div class="date-month">
+							{{ match.date | date: 'MMMM' : 'UTC' }}
+						</div>
+					</div>
+				</div>
+
+				<div class="match-details">
+					<div class="time">
+						{{ match.time }} UTC
+					</div>
+
+					<div class="match-name">
+						{{ match.getMatchName(true) }}
+					</div>
+
+					<div class="match-id">
+						#{{ match.label }}
+					</div>
+				</div>
+			</div>
+
+			<div class="match-actions">
+				<div class="time-until-match">
+					{{ getDayAndHoursUntilMatch(match) }}
+				</div>
+
+				<button mat-raised-button color="primary"
+					(click)="createMatch(personalSchedule.tournament, match)">
+					<mat-icon>add</mat-icon> create
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

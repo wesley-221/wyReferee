@@ -1,0 +1,92 @@
+<div class="information">
+	<div class="general-information">
+		<h1>wyReferee</h1>
+		<p>Your all-in-one osu! referee client, designed to help you manage your matches with ease and automation.</p>
+	</div>
+
+	<hr />
+
+	<div class="information-columns">
+		<div class="row">
+			<div class="column">
+				<div class="column-header">
+					wyBin schedule
+
+					<div class="header-end">
+						Next 7 days
+					</div>
+				</div>
+
+				<div class="tournaments">
+					<div class="tournament" *ngIf="loading == true">
+						<div class="header">
+							<div class="loading">
+								<mat-spinner class="spinner" [diameter]="32"></mat-spinner>&nbsp;Loading wyBin
+								schedule...
+							</div>
+						</div>
+					</div>
+
+					<div class="tournament" *ngIf="loading == false && (!personalScheduleData || personalScheduleData.length == 0)">
+						<div class="header">
+							No matches found
+						</div>
+					</div>
+
+					<app-wybin-schedule-tournament [personalSchedule]="personalSchedule" *ngFor="let personalSchedule of personalScheduleData"></app-wybin-schedule-tournament>
+				</div>
+			</div>
+
+			<div class="column">
+				<div class="column-header">
+					Getting started
+				</div>
+
+				<div class="getting-started-items">
+					<div *ngFor="let item of gettingStartedItems" class="getting-started-item">
+						<div class="header">
+							{{ item.title }}
+						</div>
+
+						<div class="body">
+							{{ item.description }}
+						</div>
+
+						<a [routerLink]="item.link" class="link">
+							{{ item['link-label'] }} →
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr />
+
+	<div>
+		<div class="row">
+			<div class="column">
+				<div class="column-header">
+					Resources
+				</div>
+
+				<div class="resources">
+					<div class="resource" *ngFor="let resource of resources"
+						(click)="electronService.openLink(resource.link)">
+						<div class="resource-dot"></div>
+
+						<div>
+							<div class="header">
+								{{ resource.title }}
+							</div>
+
+							<div class="body">
+								{{ resource.description }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
