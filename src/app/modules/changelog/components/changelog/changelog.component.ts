@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { AppConfig } from '../../../../../environments/environment';
 
 @Component({
 	selector: 'app-changelog',
@@ -9,9 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class ChangelogComponent implements OnInit {
 	changelogReleases: { version: string; body: string }[];
 
-	private readonly GIT_OWNER = 'wesley-221';
-	private readonly GIT_REPOSITORY = 'wyReferee';
-	private readonly GIT_RELEASE_URL = `https://api.github.com/repos/${this.GIT_OWNER}/${this.GIT_REPOSITORY}/releases`;
+	private readonly GIT_RELEASE_URL = AppConfig.links.githubApiReleases;
 
 	constructor(private http: HttpClient) {
 		this.changelogReleases = [];

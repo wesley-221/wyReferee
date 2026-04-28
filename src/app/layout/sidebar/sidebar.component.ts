@@ -15,13 +15,11 @@ export class SidebarComponent implements OnInit {
 	ircConnectionStatus: number;
 
 	allNavigations: INavigationItem[] = [
-		{ icon: 'info', header: 'information', link: 'information' },
+		{ icon: 'home', header: 'dashboard', link: 'dashboard' },
 		{ icon: 'school', header: 'tutorial', link: 'tutorial' },
 		{ icon: 'update', header: 'changelog', link: 'changelog' },
 		{ type: 'divider' },
-		{ icon: 'webhook', header: 'webhook', link: 'webhook' },
-		{ type: 'divider' },
-		{ icon: 'dashboard', header: 'management', link: 'tournament-management' },
+		{ icon: 'dashboard', header: 'management', link: 'tournament-management/tournament-overview' },
 		{ icon: 'schedule', header: 'wyBin schedule', link: 'wybin-schedule' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
 		{ icon: 'chat', header: 'irc', link: 'irc' },

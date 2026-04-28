@@ -1,0 +1,70 @@
+<div class="dialog">
+	<div class="header">
+		<div class="download-icon">
+			<mat-icon>download</mat-icon>
+		</div>
+
+		<div class="header-content">
+			<div class="header-text">
+				Update available
+			</div>
+
+			<p class="header-version">{{ data.currentVersion }} -> {{ data.info.version }}</p>
+		</div>
+	</div>
+
+	<div class="body" *ngIf="downloadStatus == 'idle'">
+		<div class="changelog dialog-accent" *ngIf="changelog$ | async as changelog; else loading">
+			<markdown [data]="changelog" clickableLinks></markdown>
+		</div>
+
+		<ng-template #loading>
+			<div class="changelog dialog-accent loading">
+				<mat-spinner [diameter]="26"></mat-spinner>
+
+				loading changelog...
+			</div>
+		</ng-template>
+
+		<div class="meta">
+			<div class="meta-tag">
+				<mat-icon>insert_drive_file</mat-icon>
+
+				{{ fileSizeInMB | number:'1.0-2' }} MB
+			</div>
+		</div>
+	</div>
+
+	<div class="body" *ngIf="downloadStatus == 'downloading' || downloadStatus == 'completed'">
+		<div class="progress-section" *ngIf="downloadProgressInfo$ | async as progressInfo">
+			<div class="progress-track">
+				<div class="progress-fill" [style.width.%]="progressInfo.percent"></div>
+			</div>
+
+			<div class="progress-meta">
+				<span>
+					{{ (progressInfo.transferred / (1024 * 1024)) | number:'1.1-1' }} of {{ (progressInfo.total / (1024 * 1024)) | number:'1.1-1' }} MB
+				</span>
+
+				<span class="progress-percentage">
+					{{ progressInfo.percent | number:'1.0-2' }}%
+				</span>
+
+				<span>
+					{{ (progressInfo.bytesPerSecond / (1024 * 1024)) | number:'1.1-1' }} MB/s
+				</span>
+			</div>
+		</div>
+
+		<div class="dialog-accent" *ngIf="downloadStatus == 'completed'">
+			The update has been downloaded. wyReferee will automatically restart in 10 seconds to install the update. You can also click "Restart & Install" to apply the update immediately.
+		</div>
+	</div>
+
+	<div class="footer">
+		<button mat-stroked-button (click)="onLaterClick()" *ngIf="downloadStatus == 'idle'">Later</button>
+		<button mat-flat-button color="primary" (click)="onDownloadClick()" *ngIf="downloadStatus == 'idle'">Download</button>
+		<button mat-flat-button color="primary" (click)="onRestartAndInstallClick()" [disabled]="downloadStatus != 'completed'" *ngIf="downloadStatus == 'downloading' || downloadStatus == 'completed'">Restart & Install</button>
+	</div>
+</div>
+

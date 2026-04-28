@@ -9,6 +9,7 @@ import { IrcService } from 'app/services/irc.service';
 import { GenericService } from 'app/services/generic.service';
 import { OptionsMenu } from '../../models/options-menu';
 import { CacheStoreService } from 'app/services/storage/cache-store.service';
+import { WebhookService } from '../../../../services/webhook.service';
 
 @Component({
 	selector: 'app-settings',
@@ -22,15 +23,21 @@ export class SettingsComponent implements OnInit {
 	axsMenuStatus: boolean;
 	splitIrcMessages: boolean;
 
-	allConfigurationOptions: OptionsMenu[] = [
-		{ icon: 'settings', message: 'This will export the config file and save it as a file in case you need to share it with someone. <br /><br /><b>Disclaimer:</b> This will export everything wyReferee has saved, however, to keep you safe anything authentication related (API keys, irc credentials, etc.) will <b>NOT</b> be exported.<br />', buttonText: 'Export config file', action: () => this.exportConfigFile() },
-		{ icon: 'cached', message: 'This will clear all the cache.', buttonText: 'Clear cache', action: () => this.openDialog(0) },
-		{ icon: 'api', message: 'This will remove the API key.', buttonText: 'Remove API key', action: () => this.openDialog(1) }
+	generalOptions: OptionsMenu[] = [
+		{ header: 'Show AxS menu item', description: 'Toggle visibility of the AxS menu item in the sidebar', buttonText: 'Toggle', action: () => this.toggleAxSMenu(), slideToggle: true, slideToggleValue: this.genericService.getAxSMenuStatus() }
 	];
 
-	generalOptions: OptionsMenu[] = [
-		{ icon: 'settings', message: 'Show or hide the AxS menu item.', buttonText: 'Toggle', action: () => this.toggleAxSMenu() }
+	configurationOptions: OptionsMenu[] = [
+		{ header: 'Export data', description: 'Download all your data as a single ZIP file. Sensitive information, such as API keys and other credentials, are not included.', buttonText: 'Export', action: () => this.exportConfigFile() },
+		{ header: 'Clear cache', description: 'Wipes all locally cached data.', buttonText: 'Clear cache', action: () => this.openDialog(0) },
+		{ header: 'Remove API key', description: 'Removes your API key from the application.', buttonText: 'Remove', action: () => this.openDialog(1) }
 	];
+
+	webhookAuthorImage: string;
+	webhookAuthorName: string;
+	webhookBottomImage: string;
+	webhookFooterIconUrl: string;
+	webhookFooterText: string;
 
 	constructor(
 		public electronService: ElectronService,
@@ -39,14 +46,21 @@ export class SettingsComponent implements OnInit {
 		public authService: AuthenticateService,
 		public ircService: IrcService,
 		private genericService: GenericService,
-		private cacheStoreService: CacheStoreService
-	) {
+		private cacheStoreService: CacheStoreService,
+		private webhookService: WebhookService
+	) { }
+
+	ngOnInit() {
 		this.genericService.getAxSMenuStatus().subscribe(status => {
 			this.axsMenuStatus = status;
 		});
-	}
 
-	ngOnInit() { }
+		this.webhookAuthorImage = this.webhookService.authorImage;
+		this.webhookAuthorName = this.webhookService.authorName;
+		this.webhookBottomImage = this.webhookService.bottomImage;
+		this.webhookFooterIconUrl = this.webhookService.footerIconUrl;
+		this.webhookFooterText = this.webhookService.footerText;
+	}
 
 	/**
 	 * Clear the cache
@@ -124,5 +138,10 @@ export class SettingsComponent implements OnInit {
 	toggleAxSMenu(): void {
 		this.axsMenuStatus = !this.axsMenuStatus;
 		this.genericService.setAxSMenu(this.axsMenuStatus);
+	}
+
+	updateWebhookCustomization() {
+		this.webhookService.updateWebhookCustomization(this.webhookAuthorImage, this.webhookAuthorName, this.webhookBottomImage, this.webhookFooterIconUrl, this.webhookFooterText);
+		this.toastService.addToast(`Successfully updated your personal webhook customizations.`);
 	}
 }

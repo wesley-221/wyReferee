@@ -1,6 +1,8 @@
 export class OptionsMenu {
-	icon: string;
-	message: string;
+	header: string;
+	description: string;
 	buttonText: string;
+	slideToggle?: boolean;
+	slideToggleValue?: any;
 	action: () => void;
 }

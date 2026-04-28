@@ -1,57 +1,111 @@
 @import "variables";
 
-.scroll {
-	height: 100%;
-	overflow-y: auto;
-}
+$border-color: rgba(255, 255, 255, 0.05);
 
-h1 {
-	background-color: $primary;
-	color: black;
+$header-text-color: rgba(255, 255, 255, 0.8);
+$header-description-color: rgba(255, 255, 255, 0.5);
 
-	padding: 8px;
-}
+.settings {
+	margin-bottom: 16px;
 
-.options {
-	display: flex;
-	flex-direction: column;
+	.settings-header {
+		padding: 8px 16px;
 
-	border-top: 1px solid lighten($background-color, 15%);
+		background: color-mix(in srgb, $primary 13%, transparent);
+		color: $primary;
+		font-weight: 500;
+	}
 
-	margin-top: 16px;
-
-	.option {
+	.options {
 		display: flex;
-		justify-content: space-between;
+		flex-direction: column;
 
-		padding: 8px;
+		gap: 8px;
 
-		border-bottom: 1px solid lighten($background-color, 15%);
-
-		.content {
+		.option {
 			display: flex;
+			justify-content: space-between;
 
-			.icon {
+			padding: 8px 16px;
+			border-bottom: 0.5px solid $border-color;
+
+			.content {
 				display: flex;
 				align-items: center;
 
-				padding: 8px;
-				padding-right: 16px;
+				gap: 8px;
+
+				.icon {
+					display: flex;
+				}
+
+				.text {
+					display: flex;
+					flex-direction: column;
+					gap: 4px;
+
+					.header {
+						color: $header-text-color;
+
+						font-size: 16px;
+						font-weight: 500;
+					}
+
+					.description {
+						color: $header-description-color;
+
+						font-size: 13px;
+					}
+				}
 			}
 
-			.text {
+			.button,
+			.slide-toggle {
 				display: flex;
 				align-items: center;
 			}
 		}
+	}
 
-		.button {
+	.webhook-preview {
+		padding: 8px 16px;
+
+		border-bottom: 0.5px solid $border-color;
+	}
+
+	.webhook-settings {
+		padding: 8px 16px;
+
+		.webhook-settings-header {
+			color: $header-text-color;
+
+			font-size: 16px;
+			font-weight: 500;
+		}
+
+		.row {
 			display: flex;
-			align-items: flex-end;
 
-			button {
-				width: 100%;
+			margin-bottom: 8px;
+			gap: 8px;
+
+			.col {
+				display: flex;
+				flex: 1;
+			}
+
+			&:last-child {
+				margin-bottom: 0;
 			}
 		}
+
+		.save-button {
+			display: flex;
+			justify-content: flex-end;
+		}
+	}
+
+	&:last-child {
+		margin-bottom: 0;
 	}
 }

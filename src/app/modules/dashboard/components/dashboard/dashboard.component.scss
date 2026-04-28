@@ -1,0 +1,136 @@
+@import "variables";
+
+.information {
+	padding: 8px;
+
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+
+		.column {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+
+			.column-header {
+				display: flex;
+
+				font-size: 1.25rem;
+				color: $information-header-text-color;
+				margin-bottom: 8px;
+
+				.header-end {
+					margin-left: auto;
+				}
+			}
+
+			.getting-started-items {
+				display: flex;
+				flex-direction: column;
+
+				gap: 8px;
+
+				.getting-started-item {
+					background: $information-tile-background-color;
+
+					border-radius: 8px;
+					padding: 8px;
+
+					.header {
+						color: $primary;
+
+						font-size: 16px;
+						font-weight: 500;
+						margin: 0 0 8px;
+					}
+
+					.body {
+						margin: 0;
+						line-height: 1.5;
+					}
+
+					.link {
+						display: flex;
+						align-items: center;
+
+						margin-top: 8px;
+
+						font-size: 14px;
+						color: $primary;
+					}
+				}
+			}
+
+			.resources {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+
+				.resource {
+					display: flex;
+					align-items: center;
+
+					flex: 1;
+
+					padding: 8px 16px;
+					gap: 16px;
+
+					background: $information-tile-background-color;
+					border-radius: 8px;
+
+					cursor: pointer;
+
+					.resource-dot {
+						width: 8px;
+						height: 8px;
+						border-radius: 50%;
+						background: $primary;
+					}
+
+					.header {
+						font-size: 16px;
+						font-weight: bold;
+					}
+
+					.body {
+						font-size: 13px;
+					}
+
+					&:hover {
+						background: lighten($information-tile-background-color, 5%);
+						transition: background 0.3s;
+
+						.header {
+							color: $primary;
+						}
+					}
+				}
+			}
+
+			.loading {
+				display: flex;
+				align-items: center;
+
+				.spinner {
+					margin-right: 4px;
+				}
+			}
+
+			.tournaments {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+
+				max-height: 700px;
+				overflow-y: auto;
+
+				.tournament {
+					background-color: $wybin-schedule-background-color;
+					border: 1px solid $wybin-schedule-border-color;
+					padding: 16px;
+				}
+			}
+		}
+	}
+}

@@ -41,7 +41,8 @@
 		"electron:windows": "npm run build:prod && electron-builder build --windows --publish never",
 		"electron:mac": "npm run build:prod && electron-builder build --mac --publish never",
 		"test": "npm run postinstall:web && ng test",
-		"lint": "ng lint"
+		"lint": "ng lint",
+		"local-update-server": "node setup-local-update-server.js"
 	},
 	"devDependencies": {
 		"@angular-builders/custom-webpack": "18.0.0",
