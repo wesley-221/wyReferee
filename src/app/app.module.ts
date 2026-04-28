@@ -24,7 +24,6 @@ import { IrcShortcutWarningDialogComponent } from './components/dialogs/irc-shor
 import { SharedModule } from './shared/shared.module';
 import { MainComponent } from './layout/main/main.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
-import { UpdaterComponent } from './layout/updater/updater.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { ProtectBeatmapDialogComponent } from './components/dialogs/protect-beatmap-dialog/protect-beatmap-dialog.component';
@@ -33,6 +32,7 @@ import { StorageDriverService } from './services/storage/storage-driver.service'
 import { DataMigrationDialogComponent } from './components/dialogs/data-migration-dialog/data-migration-dialog.component';
 import { UpdateMatchResultsDialogComponent } from './components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 import { DeleteLobbiesDialogComponent } from './components/dialogs/delete-lobbies-dialog/delete-lobbies-dialog.component';
+import { NewUpdateDialogComponent } from './components/dialogs/new-update-dialog/new-update-dialog.component';
 
 export function initStorage(storageDriver: StorageDriverService) {
 	return () => storageDriver.init();
@@ -51,7 +51,6 @@ export function initStorage(storageDriver: StorageDriverService) {
 		JoinIrcChannelComponent,
 		BanBeatmapComponent,
 		MultiplayerLobbyMovePlayerComponent,
-		UpdaterComponent,
 		SendBeatmapResultComponent,
 		TournamentAddUserDialogComponent,
 		DeleteModBracketDialogComponent,
@@ -65,7 +64,8 @@ export function initStorage(storageDriver: StorageDriverService) {
 		ProtectBeatmapDialogComponent,
 		AddBulkTeamsDialogComponent,
 		DataMigrationDialogComponent,
-		UpdateMatchResultsDialogComponent
+		UpdateMatchResultsDialogComponent,
+		NewUpdateDialogComponent
 	],
 	imports: [
 		BrowserModule,
