@@ -11,6 +11,8 @@ oauth-server.js
 !src/karma.conf.js
 *.js.map
 src/shared/*.js
+local-update-server
+dev-app-update.yml
 
 # dependencies
 /node_modules
