@@ -1,8 +1,10 @@
 <div class="administrator-tournaments">
-	<app-tournament-filters
-		[users$]="allUsers$"
-		(filtersChanged)="onFiltersChanged($event)">
-	</app-tournament-filters>
+	<div class="filters">
+		<app-tournament-filters
+			[users$]="allUsers$"
+			(filtersChanged)="onFiltersChanged($event)">
+		</app-tournament-filters>
+	</div>
 
 	<div class="all-tournaments">
 		<ng-container *ngIf="allTournaments.length > 0">
