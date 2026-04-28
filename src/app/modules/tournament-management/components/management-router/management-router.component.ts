@@ -1,39 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthenticateService } from 'app/services/authenticate.service';
-import { INavigationItem } from '../../../../interfaces/i-navigation-item';
-import { map } from 'rxjs';
+import { Component } from '@angular/core';
 
 @Component({
 	selector: 'app-management-router',
 	templateUrl: './management-router.component.html',
 	styleUrls: ['./management-router.component.scss']
 })
-export class ManagementRouterComponent implements OnInit {
-	isLoggedIn$ = this.authenticateService.userLoggedIn()
-		.pipe(
-			map(loggedIn => {
-				return loggedIn ?? false;
-			})
-		);
+export class ManagementRouterComponent {
 
-	isTournamentManager$ = this.authenticateService.userLoggedIn()
-		.pipe(
-			map(() => {
-				const user = this.authenticateService.loggedInUser;
-				return user && (user.isAdmin || user.isTournamentManager) ? true : false;
-			})
-		);
-
-	sidebarMenu: INavigationItem[] = [
-		{ icon: 'computer', header: 'local', link: 'local-tournaments' },
-		{ icon: 'language', header: 'published', link: 'published-tournaments', showIfObservable: this.isLoggedIn$ },
-		{ type: 'divider' },
-		{ icon: 'add', header: 'create', link: 'create' },
-		{ icon: 'cloud_download', header: 'import tournament', link: 'import-tournament', showIfObservable: this.isLoggedIn$ },
-		{ icon: 'admin_panel_settings', header: 'administrator', link: 'administrator-tournaments', showIfObservable: this.isTournamentManager$ },
-	];
-
-	constructor(public authenticateService: AuthenticateService) { }
-
-	ngOnInit(): void { }
 }

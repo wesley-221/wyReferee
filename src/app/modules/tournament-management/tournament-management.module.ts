@@ -23,6 +23,7 @@ import { TournamentEditComponent } from './pages/tournament-edit/tournament-edit
 import { LocalTournamentsComponent } from './pages/local-tournaments/local-tournaments.component';
 import { PublishedTournamentsComponent } from './pages/published-tournaments/published-tournaments.component';
 import { TournamentFiltersComponent } from './components/tournament-filters/tournament-filters.component';
+import { ManagementSidebarComponent } from './components/management-sidebar/management-sidebar.component';
 
 @NgModule({
 	declarations: [
@@ -45,7 +46,8 @@ import { TournamentFiltersComponent } from './components/tournament-filters/tour
 		TournamentEditComponent,
 		LocalTournamentsComponent,
 		PublishedTournamentsComponent,
-		TournamentFiltersComponent
+		TournamentFiltersComponent,
+		ManagementSidebarComponent
 	],
 	imports: [
 		CommonModule,

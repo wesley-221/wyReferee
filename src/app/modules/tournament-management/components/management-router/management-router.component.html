@@ -1,16 +1,6 @@
 <div class="main">
 	<div class="sidebar">
-		<ng-container *ngFor="let sidebarItem of sidebarMenu">
-			<div class="sidebar-divider" *ngIf="sidebarItem.type == 'divider'"></div>
-
-			<div class="sidebar-item" [routerLink]="[sidebarItem.link]" routerLinkActive="active" *ngIf="sidebarItem.type != 'divider' && (sidebarItem.showIf != false && (sidebarItem.showIfObservable | async) != false)">
-				<div class="sidebar-item-content">
-					<mat-icon>{{ sidebarItem.icon }}</mat-icon>
-
-					{{ sidebarItem.header }}
-				</div>
-			</div>
-		</ng-container>
+		<app-management-sidebar></app-management-sidebar>
 	</div>
 
 	<div class="content fluid-container">
