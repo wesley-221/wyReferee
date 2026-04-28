@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DeleteTournamentDialogComponent } from 'app/components/dialogs/delete-tournament-dialog/delete-tournament-dialog.component';
@@ -8,8 +7,8 @@ import { ToastType } from 'app/models/toast';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { BehaviorSubject, map } from 'rxjs';
+import { TournamentFilter } from '../../models/tournament-filter';
 
 @Component({
 	selector: 'app-administrator-tournaments',
@@ -18,49 +17,31 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class AdministratorTournamentsComponent implements OnInit {
 	allTournaments: WyTournament[];
-	allUsers: User[];
+	filteredTournaments: WyTournament[];
+	allUsers$: BehaviorSubject<User[]>;
 
-	searchValue: string;
-
-	filterByUserFormControl = new FormControl();
-	filteredUsers: Observable<User[]>;
-
-	usersImported$: BehaviorSubject<boolean>;
-
-	constructor(private tournamentService: TournamentService, private toastService: ToastService, private router: Router, private dialog: MatDialog) {
-		this.usersImported$ = new BehaviorSubject(false);
+	constructor(
+		private tournamentService: TournamentService,
+		private toastService: ToastService,
+		private router: Router,
+		private dialog: MatDialog
+	) {
+		this.allUsers$ = new BehaviorSubject([]);
 
 		this.allTournaments = [];
-		this.allUsers = [];
-
-		this.searchValue = '';
-
-		this.tournamentService.getAllPublishedTournamentsWithGlobalAdminPermissions().subscribe(tournaments => {
-			for (const tournament of tournaments) {
-				const newTournament = WyTournament.makeTrueCopy(tournament);
-
-				this.allTournaments.push(WyTournament.makeTrueCopy(tournament));
-
-				if (!this.allUsers.find(user => user.id == newTournament.createdBy.id)) {
-					this.allUsers.push(newTournament.createdBy);
-				}
-			}
-
-			this.allTournaments.reverse();
-			this.allUsers.sort((a: User, b: User) => a.username.localeCompare(b.username));
-			this.usersImported$.next(true);
-		});
+		this.filteredTournaments = [];
 	}
 
 	ngOnInit(): void {
-		this.usersImported$.subscribe(res => {
-			if (res == true) {
-				this.filteredUsers = this.filterByUserFormControl.valueChanges.pipe(
-					startWith(''),
-					map(value => this.filter(value))
-				);
-			}
-		});
+		this.tournamentService.getAllPublishedTournamentsWithGlobalAdminPermissions()
+			.pipe(
+				map(this.tournamentService.processTournamentsForFilters)
+			)
+			.subscribe(({ tournaments, users }) => {
+				this.allTournaments = tournaments;
+				this.filteredTournaments = tournaments;
+				this.allUsers$.next(users);
+			});
 	}
 
 	/**
@@ -111,7 +92,17 @@ export class AdministratorTournamentsComponent implements OnInit {
 		});
 	}
 
-	private filter(filterUser: string): User[] {
-		return this.allUsers.filter(user => user.username.toLowerCase().includes(filterUser));
+	/**
+	 * Filter the tournaments based on the provided filters
+	 *
+	 * @param filters the filters to apply to the tournaments
+	 */
+	onFiltersChanged(filters: TournamentFilter) {
+		this.filteredTournaments = this.allTournaments.filter(tournament => {
+			const matchesSearch = !filters.search || tournament.name.toLowerCase().includes(filters.search.toLowerCase());
+			const matchesUser = !filters.username || tournament.createdBy.username.toLowerCase().includes(filters.username.toLowerCase());
+
+			return matchesSearch && matchesUser;
+		});
 	}
 }

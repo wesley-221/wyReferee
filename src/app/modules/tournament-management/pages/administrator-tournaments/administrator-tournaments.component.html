@@ -1,28 +1,11 @@
 <div class="administrator-tournaments">
-	<div class="filters">
-		<div class="filter">
-			<mat-form-field class="full-width">
-				<mat-label>Filter by text</mat-label>
-				<input matInput [(ngModel)]="searchValue" />
-			</mat-form-field>
-		</div>
-
-		<div class="filter">
-			<mat-form-field class="full-width">
-				<mat-label>Filter by username</mat-label>
-				<input type="text" matInput [matAutocomplete]="auto" [formControl]="filterByUserFormControl">
-
-				<mat-autocomplete #auto="matAutocomplete">
-					<mat-option *ngFor="let user of filteredUsers | async" [value]="user.username">
-						{{ user.username }}
-					</mat-option>
-				</mat-autocomplete>
-			</mat-form-field>
-		</div>
-	</div>
+	<app-tournament-filters
+		[users$]="allUsers$"
+		(filtersChanged)="onFiltersChanged($event)">
+	</app-tournament-filters>
 
 	<div class="all-tournaments" *ngIf="allTournaments.length > 0">
-		<div class="tournament" *ngFor="let tournament of (allTournaments | filterTournament : searchValue : filterByUserFormControl.value)">
+		<div class="tournament" *ngFor="let tournament of filteredTournaments">
 			<div class="left">
 				<div class="column">
 					<div class="id" matTooltip="Tournament import id">

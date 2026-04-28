@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { TournamentService } from '../../../../services/tournament.service';
 import { WyTournament } from '../../../../models/wytournament/wy-tournament';
-import { FormControl } from '@angular/forms';
-import { Observable, BehaviorSubject, startWith, map } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { User } from '../../../../models/authentication/user';
 import { Router } from '@angular/router';
+import { TournamentFilter } from '../../models/tournament-filter';
 
 @Component({
 	selector: 'app-published-tournaments',
@@ -13,36 +13,21 @@ import { Router } from '@angular/router';
 })
 export class PublishedTournamentsComponent {
 	allTournaments: WyTournament[];
-
-	allUsers: User[];
-
-	searchValue: string;
-
-	filterByUserFormControl = new FormControl();
-	filteredUsers: Observable<User[]>;
-
-	usersImported$: BehaviorSubject<boolean>;
+	filteredTournaments: WyTournament[];
+	allUsers$: BehaviorSubject<User[]>;
 
 	constructor(
 		private tournamentService: TournamentService,
 		private router: Router
-	) { }
+	) {
+		this.allUsers$ = new BehaviorSubject([]);
+
+		this.allTournaments = [];
+		this.filteredTournaments = [];
+	}
 
 	ngOnInit(): void {
 		this.populateTournamentArray();
-
-		this.usersImported$ = new BehaviorSubject(false);
-		this.allUsers = [];
-		this.searchValue = '';
-
-		this.usersImported$.subscribe(res => {
-			if (res == true) {
-				this.filteredUsers = this.filterByUserFormControl.valueChanges.pipe(
-					startWith(''),
-					map(value => this.filter(value))
-				);
-			}
-		});
 	}
 
 	onTournamentClick(tournament: WyTournament, event: any) {
@@ -56,22 +41,17 @@ export class PublishedTournamentsComponent {
 	 */
 	private populateTournamentArray(): void {
 		this.allTournaments = [];
+		this.filteredTournaments = [];
 
-		this.tournamentService.getAllPublishedTournamentsWithAdminPermissions().subscribe(tournaments => {
-			for (const tournament of tournaments) {
-				const newTournament = WyTournament.makeTrueCopy(tournament);
-
-				this.allTournaments.push(newTournament);
-
-				if (!this.allUsers.find(user => user.id == newTournament.createdBy.id)) {
-					this.allUsers.push(newTournament.createdBy);
-				}
-			}
-
-			this.allTournaments.reverse();
-			this.allUsers.sort((a: User, b: User) => a.username.localeCompare(b.username));
-			this.usersImported$.next(true);
-		});
+		this.tournamentService.getAllPublishedTournamentsWithAdminPermissions()
+			.pipe(
+				map(this.tournamentService.processTournamentsForFilters)
+			)
+			.subscribe(({ tournaments, users }) => {
+				this.allTournaments = tournaments;
+				this.filteredTournaments = tournaments;
+				this.allUsers$.next(users);
+			});
 	}
 
 	/**
@@ -85,7 +65,17 @@ export class PublishedTournamentsComponent {
 		}
 	}
 
-	private filter(filterUser: string): User[] {
-		return this.allUsers.filter(user => user.username.toLowerCase().includes(filterUser));
+	/**
+	 * Filter the tournaments based on the provided filters
+	 *
+	 * @param filters the filters to apply to the tournaments
+	 */
+	onFiltersChanged(filters: TournamentFilter) {
+		this.filteredTournaments = this.allTournaments.filter(tournament => {
+			const matchesSearch = !filters.search || tournament.name.toLowerCase().includes(filters.search.toLowerCase());
+			const matchesUser = !filters.username || tournament.createdBy.username.toLowerCase().includes(filters.username.toLowerCase());
+
+			return matchesSearch && matchesUser;
+		});
 	}
 }

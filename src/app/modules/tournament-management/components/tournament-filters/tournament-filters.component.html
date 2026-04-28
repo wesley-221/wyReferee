@@ -1,0 +1,21 @@
+<div class="filters">
+	<div class="filter">
+		<mat-form-field class="full-width">
+			<mat-label>Filter by text</mat-label>
+			<input matInput [formControl]="searchControl" />
+		</mat-form-field>
+	</div>
+
+	<div class="filter">
+		<mat-form-field class="full-width">
+			<mat-label>Filter by username</mat-label>
+			<input type="text" matInput [matAutocomplete]="auto" [formControl]="userControl" />
+
+			<mat-autocomplete #auto="matAutocomplete">
+				<mat-option *ngFor="let user of filteredUsers$ | async" [value]="user.username">
+					{{ user.username }}
+				</mat-option>
+			</mat-autocomplete>
+		</mat-form-field>
+	</div>
+</div>

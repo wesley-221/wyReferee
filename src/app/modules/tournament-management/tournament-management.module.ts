@@ -22,6 +22,7 @@ import { TournamentConditionalMessageComponent } from './components/tournament/t
 import { TournamentEditComponent } from './pages/tournament-edit/tournament-edit.component';
 import { LocalTournamentsComponent } from './pages/local-tournaments/local-tournaments.component';
 import { PublishedTournamentsComponent } from './pages/published-tournaments/published-tournaments.component';
+import { TournamentFiltersComponent } from './components/tournament-filters/tournament-filters.component';
 
 @NgModule({
 	declarations: [
@@ -43,7 +44,8 @@ import { PublishedTournamentsComponent } from './pages/published-tournaments/pub
 		TournamentConditionalMessageComponent,
 		TournamentEditComponent,
 		LocalTournamentsComponent,
-		PublishedTournamentsComponent
+		PublishedTournamentsComponent,
+		TournamentFiltersComponent
 	],
 	imports: [
 		CommonModule,
