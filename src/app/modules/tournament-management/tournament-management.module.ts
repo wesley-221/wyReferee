@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'app/shared/shared.module';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { TournamentManagementRoutingModule } from './tournament-management-routing.module';
 import { ManagementRouterComponent } from './components/management-router/management-router.component';
@@ -52,7 +53,8 @@ import { ManagementSidebarComponent } from './components/management-sidebar/mana
 	imports: [
 		CommonModule,
 		SharedModule,
-		TournamentManagementRoutingModule
+		TournamentManagementRoutingModule,
+		ScrollingModule
 	]
 })
 export class TournamentManagementModule { }

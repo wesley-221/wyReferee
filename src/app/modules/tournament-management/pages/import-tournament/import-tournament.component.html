@@ -7,8 +7,10 @@
 	</div>
 
 	<div id="tutorial-all-tournaments" class="all-tournaments">
-		<ng-container *ngIf="allTournaments.length > 0">
-			<app-tournament-card [tournament]="tournament" cardType="import" *ngFor="let tournament of filteredTournaments"></app-tournament-card>
-		</ng-container>
+		<cdk-virtual-scroll-viewport itemSize="74" class="viewport">
+			<div class="tournament-card" *cdkVirtualFor="let tournament of filteredTournaments">
+				<app-tournament-card [tournament]="tournament" cardType="administrator"></app-tournament-card>
+			</div>
+		</cdk-virtual-scroll-viewport>
 	</div>
 </div>

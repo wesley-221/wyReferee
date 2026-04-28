@@ -14,13 +14,16 @@
 	}
 
 	.all-tournaments {
-		display: flex;
-		flex-direction: column;
 		flex: 1 1 auto;
 
-		overflow-y: auto;
+		.viewport {
+			height: 100%;
 
-		padding: 8px;
-		gap: 8px;
+			.tournament-card {
+				margin-bottom: 8px;
+				margin-left: 8px;
+				margin-right: 8px;
+			}
+		}
 	}
 }
