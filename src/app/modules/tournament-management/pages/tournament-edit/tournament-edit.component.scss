@@ -1,84 +1,68 @@
 @import "variables";
 
-$local-mappool-color: $primary;
-$public-mappool-color: $success;
-
 .tournament-edit {
-	padding: 8px;
+	display: flex;
+	flex-direction: column;
+
+	height: 100vh;
+	overflow: hidden;
 
 	.tournament-edit-header {
 		display: flex;
-		flex-direction: row;
-		align-items: stretch;
+		align-items: center;
+		flex-shrink: 0;
 
-		background: linear-gradient(
-			45deg,
-			$local-mappool-color 25%,
-			lighten($local-mappool-color, 15%) 25%,
-			lighten($local-mappool-color, 15%) 50%,
-			$local-mappool-color 50%,
-			$local-mappool-color 75%,
-			lighten($local-mappool-color, 15%) 75%,
-			lighten($local-mappool-color, 15%)
-		);
+		padding: 8px 16px;
+		gap: 8px;
 
-		background-size: 32px 32px;
+		border-bottom: 0.5px solid $sidebar-border-color;
 
-		&.public {
-			background: linear-gradient(
-				45deg,
-				$public-mappool-color 25%,
-				lighten($public-mappool-color, 15%) 25%,
-				lighten($public-mappool-color, 15%) 50%,
-				$public-mappool-color 50%,
-				$public-mappool-color 75%,
-				lighten($public-mappool-color, 15%) 75%,
-				lighten($public-mappool-color, 15%)
-			);
+		.dot {
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			flex-shrink: 0;
 
-			background-size: 32px 32px;
+			&.local {
+				background: rgba(255, 255, 255, 0.7);
+			}
 
-			.icon {
-				background-color: darken($public-mappool-color, 15%);
+			&.published {
+				background: $primary;
 			}
 		}
 
-		.icon {
-			display: flex;
-			align-items: center;
-
-			padding: 16px;
-
-			background-color: darken($local-mappool-color, 15%);
-
-			.mat-icon {
-				font-size: 32px;
-
-				height: 32px;
-				width: 32px;
-			}
+		&.local {
+			background: $sub-sidebar-background-color;
+			color: rgba(255, 255, 255, 0.7);
 		}
 
-		.text {
-			flex: 1;
+		&.published {
+			background: color-mix(in srgb, $primary 13%, transparent);
+			color: $primary;
 
-			background-color: rgba(0, 0, 0, 0.342);
-			text-shadow: 1px 1px #000000;
-			color: white;
-
-			padding: 8px;
-
-			.upper-text {
-				font-size: 32px;
-				line-height: 32px;
-
-				margin-bottom: 4px;
-			}
-
-			.lower-text {
-				font-size: 18px;
-				line-height: 18px;
-			}
+			border-bottom-color: rgba(245, 158, 11, 0.12);
 		}
+	}
+
+	.tournament-body {
+		flex: 1;
+		overflow-y: auto;
+
+		padding: 8px;
+	}
+
+	.tournament-save-footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+
+		padding: 8px 16px;
+		gap: 8px;
+
+		border-top: 0.5px solid $sidebar-border-color;
+		background: $sub-sidebar-background-color;
+
+		flex-shrink: 0;
 	}
 }
