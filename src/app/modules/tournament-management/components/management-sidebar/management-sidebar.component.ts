@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { INavigationItem } from '../../../../interfaces/i-navigation-item';
 import { AuthenticateService } from '../../../../services/authenticate.service';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { ManagementSidebarService } from '../../services/management-sidebar.service';
 
 @Component({
 	selector: 'app-management-sidebar',
@@ -24,14 +25,12 @@ export class ManagementSidebarComponent {
 			})
 		);
 
-	sidebarMenu: INavigationItem[] = [
-		{ icon: 'computer', header: 'local', link: 'local-tournaments' },
-		{ icon: 'language', header: 'published', link: 'published-tournaments', showIfObservable: this.isLoggedIn$ },
-		{ type: 'divider' },
-		{ icon: 'add', header: 'create', link: 'create' },
-		{ icon: 'cloud_download', header: 'import tournament', link: 'import-tournament', showIfObservable: this.isLoggedIn$ },
-		{ icon: 'admin_panel_settings', header: 'administrator', link: 'administrator-tournaments', showIfObservable: this.isTournamentManager$ },
-	];
+	sidebarMenu$: Observable<INavigationItem[]>;
 
-	constructor(private authenticateService: AuthenticateService) { }
+	constructor(
+		private authenticateService: AuthenticateService,
+		private managementSidebarService: ManagementSidebarService
+	) {
+		this.sidebarMenu$ = this.managementSidebarService.getSidebarMenu();
+	}
 }

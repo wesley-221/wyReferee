@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Mods } from 'app/models/osu-models/osu';
 import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
@@ -6,13 +6,14 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ValidationErrorService } from 'app/modules/tournament-management/services/validation-error.service';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
+import { ManagementSidebarService } from '../../services/management-sidebar.service';
 
 @Component({
 	selector: 'app-tournament-create',
 	templateUrl: './tournament-create.component.html',
 	styleUrls: ['./tournament-create.component.scss']
 })
-export class TournamentCreateComponent implements OnInit {
+export class TournamentCreateComponent implements OnInit, OnDestroy {
 	@ViewChild('container') container: ElementRef;
 
 	tournament: WyTournament;
@@ -20,7 +21,12 @@ export class TournamentCreateComponent implements OnInit {
 
 	errors: string[];
 
-	constructor(private toastService: ToastService, private tournamentService: TournamentService, private validationErrorService: ValidationErrorService) {
+	constructor(
+		private toastService: ToastService,
+		private tournamentService: TournamentService,
+		private validationErrorService: ValidationErrorService,
+		private managementSidebarService: ManagementSidebarService
+	) {
 		this.tournament = new WyTournament();
 		this.errors = [];
 
@@ -75,7 +81,13 @@ export class TournamentCreateComponent implements OnInit {
 		}
 	}
 
-	ngOnInit(): void { }
+	ngOnInit(): void {
+		this.managementSidebarService.setTournamentManagementItems();
+	}
+
+	ngOnDestroy(): void {
+		this.managementSidebarService.setDefaultItems();
+	}
 
 	createTournament(): void {
 		if (this.validationForm.invalid) {

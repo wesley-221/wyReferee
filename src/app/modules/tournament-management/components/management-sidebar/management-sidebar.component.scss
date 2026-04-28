@@ -9,6 +9,7 @@
 	height: 100vh;
 	top: 0;
 
+	padding-top: 8px;
 	gap: 8px;
 
 	border-right: 0.5px solid $sidebar-border-color;
@@ -18,6 +19,30 @@
 		height: 0.5px;
 		background: $sidebar-border-color;
 		margin: 8px 0;
+	}
+
+	.sidebar-link {
+		display: flex;
+		align-items: center;
+
+		padding: 8px;
+		gap: 8px;
+
+		font-size: 13px;
+		color: $sidebar-text-color;
+
+		cursor: pointer;
+
+		.sidebar-item-content {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		&:hover {
+			background: rgba(255, 255, 255, 0.05);
+			color: $sidebar-text-color-hover;
+		}
 	}
 
 	.sidebar-item {

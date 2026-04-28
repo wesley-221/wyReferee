@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, EventEmitter, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Mods } from 'app/models/osu-models/osu';
@@ -12,13 +12,14 @@ import { ValidationErrorService } from 'app/modules/tournament-management/servic
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
+import { ManagementSidebarService } from '../../services/management-sidebar.service';
 
 @Component({
 	selector: 'app-tournament-edit',
 	templateUrl: './tournament-edit.component.html',
 	styleUrls: ['./tournament-edit.component.scss']
 })
-export class TournamentEditComponent implements OnInit {
+export class TournamentEditComponent implements OnInit, OnDestroy {
 	@ViewChild('container') container: ElementRef;
 	tournamentLoaded$: EventEmitter<{ loaded: boolean; tournament: WyTournament }>;
 
@@ -28,7 +29,14 @@ export class TournamentEditComponent implements OnInit {
 
 	errors: string[];
 
-	constructor(private route: ActivatedRoute, private tournamentService: TournamentService, private lobbyService: WyMultiplayerLobbiesService, private validationErrorService: ValidationErrorService, private toastService: ToastService) {
+	constructor(
+		private route: ActivatedRoute,
+		private tournamentService: TournamentService,
+		private lobbyService: WyMultiplayerLobbiesService,
+		private validationErrorService: ValidationErrorService,
+		private toastService: ToastService,
+		private managementSidebarService: ManagementSidebarService
+	) {
 		this.errors = [];
 		this.tournamentLoaded$ = new EventEmitter();
 
@@ -159,6 +167,8 @@ export class TournamentEditComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.managementSidebarService.setTournamentManagementItems();
+
 		this.route.params.subscribe(params => {
 			this.isPublishedTournament = parseInt(params.published) == 0 ? false : true;
 			const tournamentId = parseInt(params.id);
@@ -181,6 +191,10 @@ export class TournamentEditComponent implements OnInit {
 				});
 			}
 		});
+	}
+
+	ngOnDestroy(): void {
+		this.managementSidebarService.setDefaultItems();
 	}
 
 	/**
