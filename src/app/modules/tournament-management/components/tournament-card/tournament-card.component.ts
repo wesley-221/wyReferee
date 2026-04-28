@@ -74,7 +74,7 @@ export class TournamentCardComponent implements OnInit {
 	 * @param tournament the tournament to navigate to
 	 */
 	goToPublishedTournament(tournament: WyTournament): void {
-		this.router.navigate(['tournament-management/tournament-overview/tournament-my-published/tournament-published-edit', tournament.publishId]);
+		this.router.navigate(['/tournament-management/published-tournaments/', tournament.publishId, '1']);
 	}
 
 	/**
