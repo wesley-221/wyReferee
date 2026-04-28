@@ -213,8 +213,16 @@ $warning: mat.m2-get-color-from-palette(mat.$m2-yellow-palette, 600);
 $info: mat.m2-get-color-from-palette(mat.$m2-blue-palette, 500);
 $danger: mat.m2-get-color-from-palette($theme-danger, 500);
 
-$background-color: #121212;
+$background-color: #0e0e0e;
 $tile-background-color: #1d1d1d;
 
-$sidebar-color: #0a0a0a;
-$sidebar-color-hover: $primary;
+$sidebar-background-color: #141414;
+$sidebar-border-color: rgba(255, 255, 255, 0.07);
+
+$sidebar-text-color: rgba(255, 255, 255, 0.6);
+$sidebar-text-color-hover: rgba(255, 255, 255, 0.8);
+
+$sidebar-irc-status-color: rgba(255, 255, 255, 0.7);
+$sidebar-irc-disconnected: #ff0000;
+$sidebar-irc-connecting: #ffa500;
+$sidebar-irc-connected: #00ff00;

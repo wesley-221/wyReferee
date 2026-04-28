@@ -36,7 +36,7 @@
 			color: $primary;
 			cursor: pointer;
 
-			background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+			background-color: rgba(lighten($sidebar-background-color, 15%), 0.2);
 		}
 
 		&:first-child {

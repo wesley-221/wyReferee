@@ -1,217 +1,195 @@
 @import "variables";
 
-$not-logged-in-background-color: #dc3545;
+.sidebar {
+	display: flex;
+	flex-direction: column;
 
-:host {
-	width: 95%;
-}
-
-.full {
 	height: 100%;
+	width: 185px;
 
-	.login {
-		padding: 16px;
+	padding: 8px;
+	gap: 8px;
 
-		background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+	border-right: 0.5px solid $sidebar-border-color;
+	background: $sidebar-background-color;
+
+	z-index: 10;
+
+	transition: width 0.25s ease;
+
+	@media only screen and (max-width: 1024px) {
+		width: 66px;
+
+		.sidebar-user {
+			.user {
+				.user-details {
+					opacity: 0 !important;
+					transform: translateX(-10px) !important;
+					pointer-events: none !important;
+				}
+			}
+		}
+
+		.sidebar-item {
+			.sidebar-item-icon {
+				margin-left: 2px;
+			}
+
+			.sidebar-item-header {
+				opacity: 0;
+				transform: translateX(-8px);
+				pointer-events: none;
+			}
+		}
+
+		&:hover {
+			width: 185px;
+
+			.sidebar-user {
+				.user {
+					.user-details {
+						opacity: 1 !important;
+						transform: translateX(0) !important;
+						pointer-events: auto !important;
+					}
+				}
+			}
+
+			.sidebar-item {
+				.sidebar-item-header {
+					opacity: 1;
+					transform: translateX(0);
+					transition:
+						opacity 0.2s ease,
+						transform 0.2s ease;
+				}
+			}
+		}
+	}
+
+	.sidebar-divider {
+		height: 0.5px;
+		background: $sidebar-border-color;
+		margin: 8px 0;
+	}
+
+	.sidebar-user {
+		padding: 16px 0;
+
+		border-bottom: 0.5px solid $sidebar-border-color;
+		margin-bottom: 10px;
 
 		.user {
 			display: flex;
 			flex-direction: row;
 
-			@media only screen and (max-width: 1200px) {
-				justify-content: center;
+			.user-avatar {
+				img {
+					border-radius: 50%;
+					max-height: 50px;
+					max-width: 50px;
 
-				.details {
-					display: none;
+					-webkit-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+					-moz-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+					box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+
+					margin-right: 4px;
 				}
 			}
 
-			img {
-				border-radius: 50%;
-				max-height: 50px;
-				max-width: 50px;
-
-				-webkit-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
-				-moz-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
-				box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
-
-				margin-right: 4px;
-			}
-
-			div {
+			.user-details {
 				display: flex;
 				flex-direction: column;
-				justify-content: center;
 				align-items: flex-start;
 
 				font-size: 16px;
 
-				div {
+				opacity: 1;
+				transform: translateX(0);
+
+				transition:
+					opacity 0.2s ease,
+					transform 0.2s ease;
+
+				.irc-status {
 					display: flex;
 					flex-direction: row;
 					align-items: center;
 
-					font-size: 16px;
-
-					padding-left: 8px;
+					font-size: 14px;
+					color: $sidebar-irc-status-color;
+					margin-top: 3px;
 
 					.dot {
-						min-height: 8px;
-						max-width: 8px;
-						max-height: 8px;
+						width: 8px;
+						height: 8px;
 
 						border-radius: 50%;
-
-						background-color: red;
-
 						margin-right: 4px;
 
+						background-color: $sidebar-irc-disconnected;
+
 						&.connected {
-							background-color: #00ff00;
+							background-color: $sidebar-irc-connected;
 						}
 
 						&.connecting {
-							background-color: orange;
+							background-color: $sidebar-irc-connecting;
 						}
 					}
 				}
 			}
 		}
-
-		&.not-logged-in {
-			background-color: $not-logged-in-background-color;
-
-			.details {
-				padding: 4px;
-				background-color: lighten($not-logged-in-background-color, 15%);
-			}
-		}
 	}
 
-	.sidebar {
+	.sidebar-footer {
 		display: flex;
 		flex-direction: column;
 
-		margin-top: 8px;
+		border-top: 0.5px solid $sidebar-border-color;
 
-		.sidebar-item {
-			border-radius: 0px 6px 6px 0px;
-
-			user-select: none;
-			text-decoration: none;
-
-			.sidebar-link {
-				display: flex;
-				align-items: center;
-
-				color: white;
-				padding: 16px;
-
-				@media only screen and (max-width: 1200px) {
-					justify-content: center;
-				}
-
-				p {
-					margin: 0;
-					margin-left: 16px;
-
-					font-size: 16px;
-
-					white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;
-
-					@media only screen and (max-width: 1200px) {
-						display: none;
-
-						margin-left: 0;
-					}
-				}
-
-				&:hover,
-				&.active {
-					background-color: rgba(lighten($sidebar-color, 15%), 0.2);
-					color: $primary;
-					cursor: pointer;
-
-					p {
-						color: $primary;
-					}
-				}
-			}
-
-			&.hidden {
-				display: none;
-			}
-		}
-
-		.sidebar-submenu {
-			.sidebar-submenu-link {
-				display: flex;
-				align-items: center;
-
-				color: white;
-				padding: 16px;
-				margin-left: 16px;
-
-				@media only screen and (max-width: 1200px) {
-					justify-content: center;
-					margin-left: 0;
-				}
-
-				p {
-					margin: 0;
-					margin-left: 16px;
-
-					font-size: 16px;
-
-					white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;
-
-					@media only screen and (max-width: 1200px) {
-						display: none;
-
-						margin-left: 0;
-					}
-				}
-
-				&:hover,
-				&.active {
-					background-color: rgba(lighten($sidebar-color, 15%), 0.2);
-					color: $primary;
-					cursor: pointer;
-
-					p {
-						color: $primary;
-					}
-				}
-			}
-		}
+		padding-top: 8px;
+		margin-top: auto;
+		gap: 8px;
 	}
 
-	&:hover {
-		.login {
-			.user {
-				justify-content: left;
+	.sidebar-item {
+		display: flex;
+		align-items: center;
 
-				.details {
-					display: flex;
-				}
-			}
+		gap: 8px;
+		padding: 8px 10px;
+		border-radius: 8px;
+
+		font-size: 14px;
+		white-space: nowrap;
+
+		transition:
+			background 0.12s,
+			color 0.12s;
+
+		color: $sidebar-text-color;
+
+		cursor: pointer;
+
+		.sidebar-item-icon {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-shrink: 0;
+
+			width: 24px;
 		}
 
-		.sidebar {
-			.sidebar-item {
-				.sidebar-link {
-					justify-content: left;
+		&:hover {
+			background: rgba(255, 255, 255, 0.05);
+			color: $sidebar-text-color-hover;
+		}
 
-					p {
-						display: block;
-						margin-left: 16px;
-					}
-				}
-			}
+		&.active {
+			background: color-mix(in srgb, $primary 13%, transparent);
+			color: $primary;
+			font-weight: 500;
 		}
 	}
 }

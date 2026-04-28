@@ -14,7 +14,7 @@ $tiles-height: 110px;
 
 		margin-right: 8px;
 
-		background-color: rgba(lighten($sidebar-color, 8%), 0.2);
+		background-color: rgba(lighten($sidebar-background-color, 8%), 0.2);
 
 		.item {
 			display: flex;
@@ -40,7 +40,7 @@ $tiles-height: 110px;
 			&.active,
 			&:hover {
 				color: $primary;
-				background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+				background-color: rgba(lighten($sidebar-background-color, 15%), 0.2);
 				border-radius: 6px;
 
 				cursor: pointer;
@@ -73,7 +73,7 @@ $tiles-height: 110px;
 			&.active,
 			&:hover {
 				color: $primary;
-				background-color: rgba(lighten($sidebar-color, 15%), 0.2);
+				background-color: rgba(lighten($sidebar-background-color, 15%), 0.2);
 				border-radius: 6px;
 
 				cursor: pointer;

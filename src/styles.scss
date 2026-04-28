@@ -15,15 +15,15 @@ body {
 	}
 
 	::-webkit-scrollbar-track {
-		background: $sidebar-color;
+		background: lighten($sidebar-background-color, 8%);
 	}
 
 	::-webkit-scrollbar-thumb {
-		background: $sidebar-color-hover;
+		background: $primary;
 	}
 
 	::-webkit-scrollbar-thumb:hover {
-		background: darken($sidebar-color-hover, 5%);
+		background: darken($primary, 5%);
 	}
 }
 
@@ -31,6 +31,12 @@ body {
 	min-height: 100%;
 	margin: 0;
 	padding: 0;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
 }
 
 .mat-mdc-form-field {
@@ -126,9 +132,9 @@ code {
 
 	padding: 8px;
 
-	background-image: linear-gradient(90deg, $primary 50%, transparent 50%),
-		linear-gradient(90deg, $primary 50%, transparent 50%), linear-gradient(0deg, $primary 50%, transparent 50%),
-		linear-gradient(0deg, $primary 50%, transparent 50%);
+	background-image:
+		linear-gradient(90deg, $primary 50%, transparent 50%), linear-gradient(90deg, $primary 50%, transparent 50%),
+		linear-gradient(0deg, $primary 50%, transparent 50%), linear-gradient(0deg, $primary 50%, transparent 50%);
 
 	background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
 

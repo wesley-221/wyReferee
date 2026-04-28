@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthenticateService } from 'app/services/authenticate.service';
 import { GenericService } from 'app/services/generic.service';
 import { IrcService } from 'app/services/irc.service';
+import { INavigationItem } from '../../interfaces/i-navigation-item';
 
 @Component({
 	selector: 'app-sidebar',
@@ -13,16 +14,13 @@ import { IrcService } from 'app/services/irc.service';
 export class SidebarComponent implements OnInit {
 	ircConnectionStatus: number;
 
-	allNavigations: { icon: string; header: string; link: string; showIf?: boolean; subMenu?: { icon: string; header: string; link: string }[] }[] = [
-		{
-			icon: 'info', header: 'information', link: 'information', subMenu: [
-				{ icon: 'update', header: 'changelog', link: 'changelog' }
-			]
-		},
-		{ icon: 'login', header: 'authentication', link: 'authentication' },
+	allNavigations: INavigationItem[] = [
+		{ icon: 'info', header: 'information', link: 'information' },
 		{ icon: 'school', header: 'tutorial', link: 'tutorial' },
-		{ icon: 'settings', header: 'settings', link: 'settings' },
+		{ icon: 'update', header: 'changelog', link: 'changelog' },
+		{ type: 'divider' },
 		{ icon: 'webhook', header: 'webhook', link: 'webhook' },
+		{ type: 'divider' },
 		{ icon: 'dashboard', header: 'management', link: 'tournament-management/tournament-overview' },
 		{ icon: 'schedule', header: 'wyBin schedule', link: 'wybin-schedule' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
@@ -30,11 +28,20 @@ export class SidebarComponent implements OnInit {
 		{ icon: 'hdr_auto', header: 'AxS', link: 'axs', showIf: false }
 	];
 
+	allNavigationsFooter: INavigationItem[] = [
+		{ icon: 'login', header: 'account', link: 'account' },
+		{ icon: 'settings', header: 'settings', link: 'settings' }
+	];
+
 	constructor(private genericService: GenericService, public authenticateService: AuthenticateService, public ircService: IrcService, public router: Router, private ref: ChangeDetectorRef) {
 		this.ircConnectionStatus = 0;
 
 		this.genericService.getAxSMenuStatus().subscribe(active => {
-			this.allNavigations[this.allNavigations.length - 1].showIf = active;
+			for (const item of this.allNavigations) {
+				if (item.link == 'axs') {
+					item.showIf = active;
+				}
+			}
 		});
 
 		this.ircService.getIsConnecting().subscribe(status => {
