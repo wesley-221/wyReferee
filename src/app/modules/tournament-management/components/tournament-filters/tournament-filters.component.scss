@@ -1,0 +1,12 @@
+.filters {
+	display: flex;
+	flex-wrap: wrap;
+
+	margin-bottom: 8px;
+	gap: 8px;
+
+	.filter {
+		display: flex;
+		flex: 1;
+	}
+}

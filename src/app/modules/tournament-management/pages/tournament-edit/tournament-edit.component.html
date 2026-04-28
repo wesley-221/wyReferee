@@ -1,0 +1,39 @@
+<div #container class="tournament-edit" *ngIf="tournament">
+	<app-debug [data]="{ tournament }"></app-debug>
+
+	<div class="tournament-edit-header" [ngClass]="{ 'local': !isPublishedTournament, 'published': isPublishedTournament }">
+		<ng-container *ngIf="isPublishedTournament == false">
+			<div class="dot local"></div> Local tournament - changes only affect you
+		</ng-container>
+
+		<ng-container *ngIf="isPublishedTournament == true">
+			<div class="dot published"></div> Published tournament - saving pushes the update to all {{ tournament.availableTo.length || 0 }} users
+		</ng-container>
+	</div>
+
+	<div class="tournament-body">
+		<app-alert alertType="danger" *ngIf="errors.length > 0">
+			<b>One or more fields have not been filled in correctly.</b>
+
+			<ul>
+				<li *ngFor="let error of errors">{{ error }}</li>
+			</ul>
+		</app-alert>
+
+		<app-tournament [tournament]="tournament" [validationForm]="validationForm"></app-tournament>
+	</div>
+
+	<div class="tournament-save-footer">
+		<ng-container *ngIf="isPublishedTournament == false">
+			<mat-icon>computer</mat-icon> Saves locally only
+		</ng-container>
+
+		<ng-container *ngIf="isPublishedTournament == true">
+			<mat-icon>language</mat-icon> Saves and pushes the update to all {{ tournament.availableTo.length || 0 }} referees
+		</ng-container>
+
+		<button mat-stroked-button color="primary" (click)="updateTournament()">
+			{{ isPublishedTournament ? 'Save & push update' : 'Save locally' }}
+		</button>
+	</div>
+</div>

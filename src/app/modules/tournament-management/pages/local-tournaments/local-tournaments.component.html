@@ -1,0 +1,14 @@
+<div class="local-tournaments">
+	<div class="filters">
+		<app-tournament-filters
+			[users$]="allUsers$"
+			(filtersChanged)="onFiltersChanged($event)">
+		</app-tournament-filters>
+	</div>
+
+	<div id="tutorial-all-tournaments" class="all-tournaments">
+		<ng-container *ngIf="allTournaments.length > 0">
+			<app-tournament-card [tournament]="tournament" cardType="local" (tournamentPublishedEmitter)="onTournamentPublished($event)" (click)="onTournamentClick(tournament, $event)" *ngFor="let tournament of filteredTournaments"></app-tournament-card>
+		</ng-container>
+	</div>
+</div>

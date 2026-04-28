@@ -11,6 +11,7 @@ import { TournamentStoreService } from './storage/tournament-store.service';
 import { CacheService } from './cache.service';
 import { CacheUser } from 'app/models/cache/cache-user';
 import { CacheBeatmap } from 'app/models/cache/cache-beatmap';
+import { User } from '../models/authentication/user';
 
 @Injectable({
 	providedIn: 'root'
@@ -279,6 +280,33 @@ export class TournamentService {
 	 */
 	getWyBinStages(tournamentId: number) {
 		return this.httpClient.get<WyBinStage[]>(`${this.apiUrl}tournament-stages/${tournamentId}`);
+	}
+
+	/**
+	 * Process the tournaments for filters and get all users from the tournaments
+	 *
+	 * @param tournaments the tournaments to process for filters
+	 */
+	processTournamentsForFilters(tournaments: WyTournament[]): { tournaments: WyTournament[], users: User[] } {
+		const tournamentsCopy = tournaments.map(tournament => {
+			return WyTournament.makeTrueCopy(tournament);
+		});
+
+		const usersMap = new Map<number, User>();
+
+		for (const tournament of tournamentsCopy) {
+			if (tournament.createdBy) {
+				usersMap.set(tournament.createdBy.id, tournament.createdBy);
+			}
+		}
+
+		const users = Array.from(usersMap.values())
+			.sort((a: User, b: User) => a.username.localeCompare(b.username));
+
+		return {
+			tournaments: tournamentsCopy.reverse(),
+			users: users
+		};
 	}
 
 	/**

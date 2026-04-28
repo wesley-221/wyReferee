@@ -1,0 +1,29 @@
+@import "variables";
+
+.import-tournament {
+	display: flex;
+	flex-direction: column;
+
+	height: 100vh;
+	overflow: hidden;
+
+	.filters {
+		flex: 0 0 auto;
+
+		padding: 0 8px;
+	}
+
+	.all-tournaments {
+		flex: 1 1 auto;
+
+		.viewport {
+			height: 100%;
+
+			.tournament-card {
+				margin-bottom: 8px;
+				margin-left: 8px;
+				margin-right: 8px;
+			}
+		}
+	}
+}

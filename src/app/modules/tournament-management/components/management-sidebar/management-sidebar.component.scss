@@ -1,0 +1,63 @@
+@import "variables";
+
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	position: sticky;
+
+	min-width: 175px;
+	height: 100vh;
+	top: 0;
+
+	gap: 8px;
+
+	border-right: 0.5px solid $sidebar-border-color;
+	background: $sub-sidebar-background-color;
+
+	.sidebar-divider {
+		height: 0.5px;
+		background: $sidebar-border-color;
+		margin: 8px 0;
+	}
+
+	.sidebar-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		padding: 8px;
+		gap: 8px;
+
+		font-size: 13px;
+		color: $sidebar-text-color;
+
+		transition:
+			background 0.1s,
+			color 0.1s;
+
+		white-space: nowrap;
+
+		border-left: 2px solid transparent;
+		border-left-color: transparent;
+
+		cursor: pointer;
+
+		.sidebar-item-content {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		&:hover {
+			background: rgba(255, 255, 255, 0.05);
+			color: $sidebar-text-color-hover;
+		}
+
+		&.active {
+			background: color-mix(in srgb, $primary 13%, transparent);
+			color: $primary;
+			border-left-color: $primary;
+			font-weight: 500;
+		}
+	}
+}

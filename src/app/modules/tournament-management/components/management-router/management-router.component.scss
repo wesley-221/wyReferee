@@ -4,91 +4,18 @@ $tiles-height: 110px;
 
 .main {
 	display: flex;
-	flex: 1 0 auto;
-
 	height: 100vh;
 
 	.sidebar {
-		display: flex;
-		flex-direction: column;
-
-		margin-right: 8px;
-
-		background-color: rgba(lighten($sidebar-background-color, 8%), 0.2);
-
-		.item {
-			display: flex;
-
-			align-items: center;
-			justify-content: left;
-
-			padding: 16px;
-			margin-right: 8px;
-
-			.logo {
-				display: flex;
-				align-items: center;
-			}
-
-			.title {
-				display: flex;
-				align-items: center;
-
-				padding: 0 0 0 16px;
-			}
-
-			&.active,
-			&:hover {
-				color: $primary;
-				background-color: rgba(lighten($sidebar-background-color, 15%), 0.2);
-				border-radius: 6px;
-
-				cursor: pointer;
-				outline: none;
-			}
-		}
-
-		.sub-item {
-			display: flex;
-
-			align-items: center;
-			justify-content: left;
-
-			padding: 8px;
-			margin-right: 6px;
-			margin-left: 16px;
-
-			.logo {
-				display: flex;
-				align-items: center;
-			}
-
-			.title {
-				display: flex;
-				align-items: center;
-
-				padding: 0 0 0 16px;
-			}
-
-			&.active,
-			&:hover {
-				color: $primary;
-				background-color: rgba(lighten($sidebar-background-color, 15%), 0.2);
-				border-radius: 6px;
-
-				cursor: pointer;
-				outline: none;
-			}
-		}
+		height: 100vh;
 	}
 
 	.content {
 		flex: 1;
-		overflow: hidden;
-
+		min-height: 0;
 		height: 100%;
-		width: 100%;
+		overflow-y: auto;
 
-		padding-top: 8px;
+		background-color: $background-color;
 	}
 }

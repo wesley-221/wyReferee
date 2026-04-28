@@ -1,0 +1,16 @@
+<div class="administrator-tournaments">
+	<div class="filters">
+		<app-tournament-filters
+			[users$]="allUsers$"
+			(filtersChanged)="onFiltersChanged($event)">
+		</app-tournament-filters>
+	</div>
+
+	<div class="all-tournaments">
+		 <cdk-virtual-scroll-viewport itemSize="74" class="viewport">
+			<div class="tournament-card" *cdkVirtualFor="let tournament of filteredTournaments">
+				<app-tournament-card [tournament]="tournament" cardType="administrator"></app-tournament-card>
+			</div>
+		</cdk-virtual-scroll-viewport>
+	</div>
+</div>

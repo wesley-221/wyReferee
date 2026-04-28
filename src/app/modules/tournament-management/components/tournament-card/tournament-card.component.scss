@@ -1,0 +1,184 @@
+@import "variables";
+
+$background-color: #1a1a1a;
+$border-color: rgba(255, 255, 255, 0.07);
+
+$header-text-color: rgba(255, 255, 255, 0.6);
+$header-badge-background-color: rgba(255, 255, 255, 0.07);
+
+$badge-background-color: rgba(255, 255, 255, 0.05);
+
+.tournament {
+	overflow: hidden;
+	padding: 16px;
+
+	background: $background-color;
+	border: 0.5px solid $border-color;
+
+	border-radius: 8px;
+
+	transition: border-color 0.12s;
+	cursor: pointer;
+
+	.header {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+
+		.information {
+			display: flex;
+			align-items: center;
+
+			.id {
+				background: $header-badge-background-color;
+				color: $header-text-color;
+
+				border-radius: 9px;
+
+				padding: 2px 16px 2px 16px;
+				margin-right: 8px;
+			}
+
+			.tournament-name {
+				.name {
+					font-size: 18px;
+				}
+
+				.created-by {
+					font-size: 12px;
+				}
+			}
+		}
+
+		.buttons {
+			display: flex;
+			gap: 8px;
+
+			mat-icon {
+				margin-right: 0;
+			}
+		}
+	}
+
+	.body {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+
+		gap: 8px;
+
+		.body-blocks {
+			display: flex;
+			flex-direction: column;
+			flex: 0 1 calc((100% - 16px) / 3);
+
+			padding: 8px 16px;
+
+			h3 {
+				margin-bottom: 0;
+				color: $header-text-color;
+			}
+
+			@media (max-width: 1366px) {
+				flex: 0 1 calc((100% - 8px) / 2);
+			}
+
+			@media (max-width: 768px) {
+				flex: 0 1 100%;
+			}
+
+			&:last-child {
+				border-right: none;
+			}
+		}
+
+		.all-administrators {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+
+			gap: 8px;
+
+			.administrator {
+				display: flex;
+				flex-direction: row;
+
+				padding: 4px 8px;
+
+				background: $badge-background-color;
+				border: 0.5px solid $border-color;
+
+				color: $primary;
+
+				border-radius: 8px;
+
+				&.none {
+					color: $header-text-color;
+					font-style: italic;
+				}
+			}
+		}
+
+		.mappool-area {
+			display: flex;
+			flex-direction: column;
+
+			.mappools {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+
+				gap: 8px;
+
+				.mappool {
+					display: flex;
+					flex-direction: row;
+
+					padding: 4px 8px;
+
+					background: $badge-background-color;
+					border: 0.5px solid $border-color;
+
+					color: $primary;
+
+					border-radius: 8px;
+
+					&.none {
+						color: $header-text-color;
+						font-style: italic;
+					}
+				}
+			}
+		}
+	}
+
+	&.published-tournament {
+		border-color: $primary;
+
+		.header {
+			.information {
+				.id {
+					background: color-mix(in srgb, $primary 13%, transparent);
+					color: $primary;
+				}
+			}
+		}
+
+		&:hover {
+			border-color: darken($primary, 10%);
+		}
+	}
+
+	&.no-hover {
+		cursor: default;
+
+		a {
+			cursor: pointer;
+		}
+	}
+
+	&:hover {
+		border-color: rgba(255, 255, 255, 0.13);
+	}
+}
