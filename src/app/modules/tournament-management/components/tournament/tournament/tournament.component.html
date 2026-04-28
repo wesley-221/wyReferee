@@ -1,35 +1,51 @@
 <form [formGroup]="validationForm">
 	<mat-tab-group>
 		<mat-tab label="General">
-			<app-tournament-general [tournament]="tournament" [validationForm]="validationForm"></app-tournament-general>
+			<ng-template matTabContent>
+				<app-tournament-general [tournament]="tournament" [validationForm]="validationForm"></app-tournament-general>
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="wyBin">
-			<app-tournament-wybin [tournament]="tournament"></app-tournament-wybin>
+			<ng-template matTabContent>
+				<app-tournament-wybin [tournament]="tournament"></app-tournament-wybin>
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="Access">
-			<app-tournament-access [tournament]="tournament"></app-tournament-access>
+			<ng-template matTabContent>
+				<app-tournament-access [tournament]="tournament"></app-tournament-access>
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="Webhook">
-			<app-tournament-webhook [tournament]="tournament" [validationForm]="validationForm"></app-tournament-webhook>
+			<ng-template matTabContent>
+				<app-tournament-webhook [tournament]="tournament" [validationForm]="validationForm"></app-tournament-webhook>
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="Stages">
-			<app-tournament-stages [tournament]="tournament" [validationForm]="validationForm"></app-tournament-stages>
+			<ng-template matTabContent>
+				<app-tournament-stages [tournament]="tournament" [validationForm]="validationForm"></app-tournament-stages>
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="Conditional messages">
-			<app-tournament-conditional-message [tournament]="tournament" [validationForm]="validationForm"></app-tournament-conditional-message>
+			<ng-template matTabContent>
+				<app-tournament-conditional-message [tournament]="tournament" [validationForm]="validationForm"></app-tournament-conditional-message>
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="Participants">
-			<app-tournament-participants [tournament]="tournament" [validationForm]="validationForm"></app-tournament-participants>
+			<ng-template matTabContent>
+				<app-tournament-participants [tournament]="tournament" [validationForm]="validationForm"></app-tournament-participants>
+			</ng-template>
 		</mat-tab>
 
 		<mat-tab label="Mappool">
-			<app-mappool-overview [tournament]="tournament" [validationForm]="validationForm"></app-mappool-overview>
+			<ng-template matTabContent>
+				<app-mappool-overview [tournament]="tournament" [validationForm]="validationForm"></app-mappool-overview>
+			</ng-template>
 		</mat-tab>
 	</mat-tab-group>
 </form>
