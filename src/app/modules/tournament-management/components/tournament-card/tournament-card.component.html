@@ -70,8 +70,8 @@
 			<h3>Administrators</h3>
 
 			<div class="all-administrators">
-				<div class="administrator" *ngIf="tournament.administrators.length <= 0">
-					<app-alert alertType="info">There are no administrators.</app-alert>
+				<div class="administrator none" *ngIf="tournament.administrators.length <= 0">
+					None
 				</div>
 
 				<div class="administrator" *ngFor="let administrator of tournament.administrators">
@@ -84,6 +84,10 @@
 			<h3>Mappools</h3>
 
 			<div class="mappools">
+				<div class="mappool none" *ngIf="tournament.mappools.length <= 0">
+					None
+				</div>
+
 				<div class="mappool" *ngFor="let mappool of tournament.mappools">
 					{{ mappool.name }}
 				</div>
