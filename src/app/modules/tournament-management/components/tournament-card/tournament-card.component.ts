@@ -17,7 +17,9 @@ import { TournamentService } from 'app/services/tournament.service';
 })
 export class TournamentCardComponent implements OnInit {
 	@Input() tournament: WyTournament;
-	@Input() publishedTournament: boolean;
+	@Input() cardType: 'local' | 'published' | 'import' | 'administrator';
+
+
 	@Output() deletedTournamentEmitter: EventEmitter<boolean>;
 	@Output() tournamentPublishedEmitter: EventEmitter<{ tournament: WyTournament; id: number }>;
 
@@ -49,7 +51,7 @@ export class TournamentCardComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
-				if (this.publishedTournament == undefined || this.publishedTournament == false) {
+				if (this.cardType != 'published') {
 					this.tournamentService.deleteTournament(tournament);
 					this.toastService.addToast(`Successfully deleted the mappool "${tournament.name}".`);
 				}
@@ -102,5 +104,28 @@ export class TournamentCardComponent implements OnInit {
 				});
 			}
 		});
+	}
+
+	/**
+	 * Import a tournament from the entered tournament id
+	 */
+	importTournament(tournament: WyTournament) {
+		this.tournamentService.getPublishedTournament(tournament.id).subscribe((data) => {
+			const newTournament: WyTournament = WyTournament.makeTrueCopy(data);
+			newTournament.publishId = newTournament.id;
+			newTournament.id = this.tournamentService.availableTournamentId++;
+
+			this.tournamentService.saveTournament(newTournament);
+			this.toastService.addToast(`Imported the tournament "${newTournament.name}".`);
+		}, () => {
+			this.toastService.addToast(`Unable to import the tournament with the id "${tournament.id}".`, ToastType.Error);
+		});
+	}
+
+	/**
+	 * Edit a tournament from the entered tournament id
+	 */
+	editTournament(tournament: WyTournament) {
+		this.router.navigate(['/tournament-management/published-tournaments/', tournament.id, '1']);
 	}
 }

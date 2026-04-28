@@ -6,29 +6,7 @@
 
 	<div id="tutorial-all-tournaments" class="all-tournaments">
 		<ng-container *ngIf="allTournaments.length > 0">
-			<div class="tournament" *ngFor="let tournament of filteredTournaments">
-				<div class="left">
-					<div class="column">
-						<div class="id" matTooltip="Tournament import id">
-							{{ tournament.id }}
-						</div>
-
-						<div>
-							{{ tournament.name }}
-						</div>
-					</div>
-
-					<div class="column">
-						Submitted by {{ tournament.createdBy.username }}
-					</div>
-				</div>
-
-				<div class="right">
-					<div class="button">
-						<button mat-mini-fab color="primary" matTooltip="Import this tournament" [matTooltipPosition]="'above'" (click)="importTournament(tournament)"><mat-icon>cloud_download</mat-icon></button>
-					</div>
-				</div>
-			</div>
+			<app-tournament-card [tournament]="tournament" cardType="import" *ngFor="let tournament of filteredTournaments"></app-tournament-card>
 		</ng-container>
 	</div>
 </div>

@@ -4,9 +4,9 @@
 		(filtersChanged)="onFiltersChanged($event)">
 	</app-tournament-filters>
 
-	<div class="all-tournaments" *ngIf="allTournaments.length > 0">
-		<div class="tournament" *ngFor="let tournament of filteredTournaments">
-			<app-tournament-card [tournament]="tournament" [publishedTournament]="true" (deletedTournamentEmitter)="onTournamentDeleted($event)" (click)="onTournamentClick(tournament, $event)"></app-tournament-card>
-		</div>
+	<div id="tutorial-all-tournaments" class="all-tournaments">
+		<ng-container *ngIf="allTournaments.length > 0">
+			<app-tournament-card [tournament]="tournament" cardType="published" (deletedTournamentEmitter)="onTournamentDeleted($event)" (click)="onTournamentClick(tournament, $event)" *ngFor="let tournament of filteredTournaments"></app-tournament-card>
+		</ng-container>
 	</div>
 </div>

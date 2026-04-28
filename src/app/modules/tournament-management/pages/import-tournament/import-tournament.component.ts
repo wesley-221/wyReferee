@@ -37,22 +37,6 @@ export class ImportTournamentComponent implements OnInit {
 	}
 
 	/**
-	 * Import a tournament from the entered tournament id
-	 */
-	importTournament(tournament: WyTournament) {
-		this.tournamentService.getPublishedTournament(tournament.id).subscribe((data) => {
-			const newTournament: WyTournament = WyTournament.makeTrueCopy(data);
-			newTournament.publishId = newTournament.id;
-			newTournament.id = this.tournamentService.availableTournamentId++;
-
-			this.tournamentService.saveTournament(newTournament);
-			this.toastService.addToast(`Imported the tournament "${newTournament.name}".`);
-		}, () => {
-			this.toastService.addToast(`Unable to import the tournament with the id "${tournament.id}".`, ToastType.Error);
-		});
-	}
-
-	/**
 	 * Filter the tournaments based on the provided filters
 	 *
 	 * @param filters the filters to apply to the tournaments

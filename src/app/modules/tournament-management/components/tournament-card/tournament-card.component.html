@@ -1,11 +1,11 @@
-<div class="tournament" [ngClass]="{ 'published-tournament': publishedTournament == true }">
+<div class="tournament" [ngClass]="{ 'published-tournament': cardType == 'published', 'no-hover': cardType == 'import' || cardType == 'administrator' }">
 	<div class="header">
 		<div class="information">
 			<div class="id" matTooltip="Tournament import id" *ngIf="tournament.publishId != null">
 				{{ tournament.publishId }}
 			</div>
 
-			<div class="id" matTooltip="Tournament import id" *ngIf="publishedTournament == true && tournament.publishId == null">
+			<div class="id" matTooltip="Tournament import id" *ngIf="cardType == 'published' && tournament.publishId == null">
 				{{ tournament.id }}
 			</div>
 
@@ -21,7 +21,7 @@
 		</div>
 
 		<div class="buttons">
-			<ng-container *ngIf="publishedTournament != true">
+			<ng-container *ngIf="cardType == 'local'">
 				<button mat-stroked-button color="primary" matTooltip="Go to published tournament" [matTooltipPosition]="'above'" (click)="goToPublishedTournament(tournament)" *ngIf="authenticateService.loggedIn == true && tournament.publishId != null">
 					<mat-icon>link</mat-icon>
 				</button>
@@ -29,17 +29,43 @@
 				<button mat-stroked-button color="primary" matTooltip="Publish this tournament" [matTooltipPosition]="'above'" (click)="publishTournament(tournament)" *ngIf="tournament.publishId == null">
 					<mat-icon>cloud_upload</mat-icon>
 				</button>
+
+				<button mat-stroked-button color="warn" matTooltip="Delete this tournament" [matTooltipPosition]="'above'" (click)="deleteTournament(tournament)">
+					<mat-icon>delete</mat-icon>
+				</button>
 			</ng-container>
 
-			<button mat-stroked-button color="warn" matTooltip="Delete this tournament" [matTooltipPosition]="'above'" (click)="deleteTournament(tournament)">
-				<mat-icon>delete</mat-icon>
-			</button>
+			<ng-container *ngIf="cardType == 'published'">
+				<button mat-stroked-button color="warn" matTooltip="Delete this tournament" [matTooltipPosition]="'above'" (click)="deleteTournament(tournament)">
+					<mat-icon>delete</mat-icon>
+				</button>
+			</ng-container>
+
+			<ng-container *ngIf="cardType == 'import'">
+				<button mat-stroked-button color="primary" matTooltip="Import this tournament" [matTooltipPosition]="'above'" (click)="importTournament(tournament)">
+					<mat-icon>cloud_download</mat-icon>
+				</button>
+			</ng-container>
+
+			<ng-container *ngIf="cardType == 'administrator'">
+				<button mat-stroked-button color="accent" matTooltip="Edit this tournament" [matTooltipPosition]="'above'" (click)="editTournament(tournament)">
+					<mat-icon>edit</mat-icon>
+				</button>
+
+				<button mat-stroked-button color="primary" matTooltip="Import this tournament" [matTooltipPosition]="'above'" (click)="importTournament(tournament)">
+					<mat-icon>cloud_download</mat-icon>
+				</button>
+
+				<button mat-stroked-button color="warn" matTooltip="Delete this tournament" [matTooltipPosition]="'above'" (click)="deleteTournament(tournament)">
+					<mat-icon>delete</mat-icon>
+				</button>
+			</ng-container>
 		</div>
 	</div>
 
-	<hr />
+	<hr *ngIf="cardType != 'import' && cardType != 'administrator'" />
 
-	<div class="body">
+	<div class="body" *ngIf="cardType != 'import' && cardType != 'administrator'">
 		<div class="body-blocks">
 			<h3>Administrators</h3>
 

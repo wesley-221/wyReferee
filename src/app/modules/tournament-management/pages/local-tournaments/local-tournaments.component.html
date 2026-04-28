@@ -5,8 +5,8 @@
 	</app-tournament-filters>
 
 	<div id="tutorial-all-tournaments" class="all-tournaments">
-		<div *ngFor="let tournament of filteredTournaments">
-			<app-tournament-card [tournament]="tournament" (tournamentPublishedEmitter)="onTournamentPublished($event)" (click)="onTournamentClick(tournament, $event)"></app-tournament-card>
-		</div>
+		<ng-container *ngIf="allTournaments.length > 0">
+			<app-tournament-card [tournament]="tournament" cardType="local" (tournamentPublishedEmitter)="onTournamentPublished($event)" (click)="onTournamentClick(tournament, $event)" *ngFor="let tournament of filteredTournaments"></app-tournament-card>
+		</ng-container>
 	</div>
 </div>

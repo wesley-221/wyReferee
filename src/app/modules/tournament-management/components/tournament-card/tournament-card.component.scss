@@ -160,6 +160,10 @@ $badge-background-color: rgba(255, 255, 255, 0.05);
 		}
 	}
 
+	&.no-hover {
+		cursor: default;
+	}
+
 	&:hover {
 		border-color: rgba(255, 255, 255, 0.13);
 	}
