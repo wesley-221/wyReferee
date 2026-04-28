@@ -295,7 +295,9 @@ export class TournamentService {
 		const usersMap = new Map<number, User>();
 
 		for (const tournament of tournamentsCopy) {
-			usersMap.set(tournament.createdBy.id, tournament.createdBy);
+			if (tournament.createdBy) {
+				usersMap.set(tournament.createdBy.id, tournament.createdBy);
+			}
 		}
 
 		const users = Array.from(usersMap.values())
