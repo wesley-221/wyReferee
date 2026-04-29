@@ -13,6 +13,7 @@ import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { ManagementSidebarService } from '../../services/management-sidebar.service';
+import { TournamentEditStateService } from '../../services/tournament-edit-state.service';
 
 @Component({
 	selector: 'app-tournament-edit',
@@ -35,7 +36,8 @@ export class TournamentEditComponent implements OnInit, OnDestroy {
 		private lobbyService: WyMultiplayerLobbiesService,
 		private validationErrorService: ValidationErrorService,
 		private toastService: ToastService,
-		private managementSidebarService: ManagementSidebarService
+		private managementSidebarService: ManagementSidebarService,
+		private tournamentEditStateService: TournamentEditStateService
 	) {
 		this.errors = [];
 		this.tournamentLoaded$ = new EventEmitter();
@@ -176,6 +178,7 @@ export class TournamentEditComponent implements OnInit, OnDestroy {
 					if (initialized == true) {
 						const tournament = WyTournament.makeTrueCopy(this.tournamentService.getTournamentById(params.id));
 
+						this.tournamentEditStateService.setInitialTournament(tournament);
 						this.managementSidebarService.setTournament(tournament);
 						this.managementSidebarService.setTournamentManagementItems(this.isPublishedTournament == true ? 'published' : 'local');
 						this.tournamentLoaded$.emit({ loaded: true, tournament: tournament });
@@ -187,6 +190,7 @@ export class TournamentEditComponent implements OnInit, OnDestroy {
 					const tournament = WyTournament.makeTrueCopy(publishedTournament);
 					tournament.publishId = tournament.id;
 
+					this.tournamentEditStateService.setInitialTournament(tournament);
 					this.managementSidebarService.setTournament(tournament);
 					this.managementSidebarService.setTournamentManagementItems(this.isPublishedTournament == true ? 'published' : 'local');
 

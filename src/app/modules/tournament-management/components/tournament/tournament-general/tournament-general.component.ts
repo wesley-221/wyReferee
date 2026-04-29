@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Calculate } from 'app/models/score-calculation/calculate';
-import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { TournamentFormat, WyTournament } from 'app/models/wytournament/wy-tournament';
 import { WybinService } from 'app/services/wybin.service';
+import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
+import { debounceTime, filter } from 'rxjs';
 
 @Component({
 	selector: 'app-tournament-general',
@@ -12,21 +13,70 @@ import { WybinService } from 'app/services/wybin.service';
 	styleUrls: ['./tournament-general.component.scss']
 })
 export class TournamentGeneralComponent implements OnInit {
-	@Input() tournament: WyTournament;
-	@Input() validationForm: FormGroup;
+	tournament: WyTournament;
+	form: FormGroup;
 
 	calculateScoreInterfaces: Calculate;
-
 	importingFromWyBin: boolean;
 
-	constructor(private wybinService: WybinService) {
+	constructor(
+		private wybinService: WybinService,
+		private tournamentEditStateService: TournamentEditStateService
+	) {
 		this.calculateScoreInterfaces = new Calculate();
 		this.importingFromWyBin = false;
+
+		this.form = new FormGroup({
+			name: new FormControl('', Validators.required),
+			acronym: new FormControl('', Validators.required),
+			gamemode: new FormControl(null, Validators.required),
+			scoreSystem: new FormControl(null, Validators.required),
+			protects: new FormControl(null, Validators.required),
+			format: new FormControl(null, Validators.required),
+			teamSize: new FormControl(null, [
+				Validators.required,
+				Validators.min(1),
+				Validators.max(8)
+			]),
+			defaultTeamMode: new FormControl(null, Validators.required),
+			defaultWinCondition: new FormControl(null, Validators.required),
+			defaultPlayers: new FormControl(null, Validators.required),
+			addrefUsernames: new FormControl(''),
+			invalidateBeatmaps: new FormControl(false),
+			allowDoublePick: new FormControl(false),
+			lobbyTeamNameWithBrackets: new FormControl(false)
+		});
 	}
 
 	ngOnInit(): void {
-		this.tournament.allowDoublePick = this.validationForm.get('allow-double-pick').value;
-		this.tournament.invalidateBeatmaps = this.validationForm.get('invalidate-beatmaps').value;
+		this.tournamentEditStateService.getDraft$()
+			.pipe(filter(v => !!v))
+			.subscribe(tournament => {
+				this.tournament = tournament;
+
+				this.form.patchValue({
+					name: tournament.name,
+					acronym: tournament.acronym,
+					gamemode: tournament.gamemodeId,
+					scoreSystem: tournament.scoreInterfaceIdentifier,
+					protects: tournament.protects,
+					format: tournament.format,
+					teamSize: tournament.teamSize,
+					defaultTeamMode: tournament.defaultTeamMode,
+					defaultWinCondition: tournament.defaultWinCondition,
+					defaultPlayers: tournament.defaultPlayers,
+					addrefUsernames: tournament.addrefUsernames,
+					invalidateBeatmaps: tournament.invalidateBeatmaps,
+					allowDoublePick: tournament.allowDoublePick,
+					lobbyTeamNameWithBrackets: tournament.lobbyTeamNameWithBrackets
+				}, { emitEvent: false });
+			});
+
+		this.form.valueChanges
+			.pipe(debounceTime(200))
+			.subscribe(value => {
+				this.tournamentEditStateService.updateGeneral(value);
+			});
 	}
 
 	/**
@@ -35,67 +85,34 @@ export class TournamentGeneralComponent implements OnInit {
 	changeScoreInterface(event: MatSelectChange): void {
 		const selectedScoreInterface = this.calculateScoreInterfaces.getScoreInterface(event.value);
 
-		this.validationForm.get('tournament-team-size').setValue(selectedScoreInterface.getTeamSize());
-		this.validationForm.get('tournament-format').setValue((selectedScoreInterface.isSoloTournament() != null && selectedScoreInterface.isSoloTournament() == true ? TournamentFormat.Solo : TournamentFormat.Teams));
+		this.form.get('teamSize').setValue(selectedScoreInterface.getTeamSize());
+		this.form.get('format').setValue((selectedScoreInterface.isSoloTournament() != null && selectedScoreInterface.isSoloTournament() == true ? TournamentFormat.Solo : TournamentFormat.Teams));
 
-		if (this.tournament.scoreInterface instanceof CTMCalculation && !(selectedScoreInterface instanceof CTMCalculation)) {
-			for (const stage of this.tournament.stages) {
-				this.validationForm.removeControl(`tournament-stage-hitpoints-${stage.index}`);
-			}
-		}
-		else if (selectedScoreInterface instanceof CTMCalculation) {
-			for (const stage of this.tournament.stages) {
-				this.validationForm.addControl(`tournament-stage-hitpoints-${stage.index}`, new FormControl('', Validators.required));
-			}
-		}
+		// TODO: check if this is still required once i get to stages (maybe mappools?)
+		// if (this.tournament.scoreInterface instanceof CTMCalculation && !(selectedScoreInterface instanceof CTMCalculation)) {
+		// 	for (const stage of this.tournament.stages) {
+		// 		this.form.removeControl(`tournament-stage-hitpoints-${stage.index}`);
+		// 	}
+		// }
+		// else if (selectedScoreInterface instanceof CTMCalculation) {
+		// 	for (const stage of this.tournament.stages) {
+		// 		this.form.addControl(`tournament-stage-hitpoints-${stage.index}`, new FormControl('', Validators.required));
+		// 	}
+		// }
 
+		// TODO: check if score interface is saved, other
 		this.tournament.scoreInterface = selectedScoreInterface;
 		this.tournament.scoreInterfaceIdentifier = selectedScoreInterface.getIdentifier();
-	}
-
-	/**
-	 * Change whether the tournament uses protects
-	 */
-	changeProtects(event: MatSelectChange): void {
-		this.validationForm.get('tournament-protects').setValue(event.value);
-		this.tournament.protects = event.value;
 	}
 
 	/**
 	 * Change the tournament format (solo or teams)
 	 */
 	changeTeamFormat(event: MatSelectChange): void {
-		this.validationForm.get('tournament-format').setValue(event.value);
-		this.tournament.format = event.value;
-
 		if (event.value == 'solo') {
-			this.validationForm.get('tournament-team-size').setValue(1);
+			this.form.get('teamSize').setValue(1);
 			this.tournament.teamSize = 1;
 		}
-	}
-
-	/**
-	 * Change the allowed double pick
-	 */
-	changeAllowDoublePick(event: { source: any; checked: boolean }): void {
-		this.validationForm.get('allow-double-pick').setValue(event.checked);
-		this.tournament.allowDoublePick = event.checked;
-	}
-
-	/**
-	 * Change if beatmaps will be invalidated
-	 */
-	changeInvalidateBeatmaps(event: { source: any; checked: boolean }): void {
-		this.validationForm.get('invalidate-beatmaps').setValue(event.checked);
-		this.tournament.invalidateBeatmaps = event.checked;
-	}
-
-	/**
-	 * Change if lobbies will be created with brackets or without
-	 */
-	changeLobbyTeamNameWithBrackets(event: { source: any; checked: boolean }) {
-		this.validationForm.get('lobby-team-name-with-brackets').setValue(event.checked);
-		this.tournament.lobbyTeamNameWithBrackets = event.checked;
 	}
 
 	/**
@@ -122,7 +139,7 @@ export class TournamentGeneralComponent implements OnInit {
 					}
 				}
 
-				this.validationForm.get('tournament-addref-usernames').setValue(streamers.join(', '));
+				this.form.get('addrefUsernames').setValue(streamers.join(', '));
 
 				this.importingFromWyBin = false;
 			},
