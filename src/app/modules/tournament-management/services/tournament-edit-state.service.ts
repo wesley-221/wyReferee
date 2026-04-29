@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { WyTournament } from '../../../models/wytournament/wy-tournament';
 import { TournamentGeneralForm } from '../interfaces/tournament-general-form.interface';
 import { TournamentWybinForm } from '../interfaces/tournament-wybin-form.interface';
+import { TournamentAccessState } from '../interfaces/tournament-access-state.interface';
 
 @Injectable({
 	providedIn: 'root'
@@ -59,6 +60,21 @@ export class TournamentEditStateService {
 		const updatedDraft = this.getCurrent();
 
 		updatedDraft.wyBinTournamentId = wyBin.wyBinTournamentId;
+
+		this.draft$.next(updatedDraft);
+	}
+
+	updateAccessState(access: TournamentAccessState) {
+		const currentDraft = this.draft$.getValue();
+
+		if (!currentDraft) {
+			return;
+		}
+
+		const updatedDraft = this.getCurrent();
+
+		updatedDraft.administrators = access.administrators;
+		updatedDraft.availableTo = access.availableTo;
 
 		this.draft$.next(updatedDraft);
 	}

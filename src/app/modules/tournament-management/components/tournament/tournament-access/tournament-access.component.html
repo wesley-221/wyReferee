@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="tournament | async as tournament">
 	<ng-container *ngIf="tournament.hasWyBinConnected()">
 		<h3>Import staff from wyBin</h3>
 		<p>Importing staff from wyBin will put Tournament hosts into the Administrator category and Referees into Tournament access.</p>

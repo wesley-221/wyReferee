@@ -1,13 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TournamentAddUserDialogComponent } from 'app/components/dialogs/tournament-add-user-dialog/tournament-add-user-dialog.component';
 import { User } from 'app/models/authentication/user';
 import { ToastType } from 'app/models/toast';
-import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ElectronService } from 'app/services/electron.service';
 import { ToastService } from 'app/services/toast.service';
 import { WybinService } from 'app/services/wybin.service';
+import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
 
 @Component({
 	selector: 'app-tournament-access',
@@ -15,11 +15,17 @@ import { WybinService } from 'app/services/wybin.service';
 	styleUrls: ['./tournament-access.component.scss']
 })
 export class TournamentAccessComponent implements OnInit {
-	@Input() tournament: WyTournament;
+	tournament = this.tournamentEditStateService.getDraft$();
 
 	importingFromWyBin: boolean;
 
-	constructor(public electronService: ElectronService, private toastService: ToastService, private dialog: MatDialog, private wybinService: WybinService) {
+	constructor(
+		public electronService: ElectronService,
+		private toastService: ToastService,
+		private dialog: MatDialog,
+		private wybinService: WybinService,
+		private tournamentEditStateService: TournamentEditStateService
+	) {
 		this.importingFromWyBin = false;
 	}
 
@@ -31,39 +37,42 @@ export class TournamentAccessComponent implements OnInit {
 	importWyBinStaff() {
 		this.importingFromWyBin = true;
 
-		this.wybinService.importStaff(this.tournament.wyBinTournamentId).subscribe((allStaff: any[]) => {
-			for (const staff of allStaff) {
-				let isTournamentHost = false;
-				let isReferee = false;
+		const tournament = this.tournamentEditStateService.getCurrent();
 
-				for (const role of staff.roles) {
-					if (role.tournamentHostPermission == true) {
-						isTournamentHost = true;
-						break;
+		this.wybinService.importStaff(tournament.wyBinTournamentId).subscribe({
+			next: (allStaff: any[]) => {
+				const newAdmins = [...tournament.administrators];
+				const newAvailableTo = [...tournament.availableTo];
+
+				for (const staff of allStaff) {
+					const user = User.makeTrueCopy(staff.user);
+
+					const isHost = staff.roles.some(r => r.tournamentHostPermission === true);
+					const isReferee = staff.roles.some(r => r.refereePermission === true);
+
+					if (isHost && !newAdmins.find(u => u.id == user.id)) {
+						newAdmins.push(user);
 					}
 
-					if (role.refereePermission == true) {
-						isReferee = true;
-						break;
+					if (isReferee && !newAvailableTo.find(u => u.id == user.id)) {
+						newAvailableTo.push(user);
 					}
 				}
 
-				if (isTournamentHost == true) {
-					this.tournament.administrators.push(User.makeTrueCopy(staff.user));
-				}
+				this.tournamentEditStateService.updateAccessState({
+					administrators: newAdmins,
+					availableTo: newAvailableTo
+				});
 
-				if (isReferee == true) {
-					this.tournament.availableTo.push(User.makeTrueCopy(staff.user));
-				}
+				this.toastService.addToast('All staff members have been imported from wyBin.');
+
+				this.importingFromWyBin = false;
+			},
+			error: (error: HttpErrorResponse) => {
+				this.toastService.addToast(error.error.message, ToastType.Error);
+
+				this.importingFromWyBin = false;
 			}
-
-			this.toastService.addToast('All staff members have been imported from wyBin');
-
-			this.importingFromWyBin = false;
-		}, (error: HttpErrorResponse) => {
-			this.toastService.addToast(error.error.message, ToastType.Error);
-
-			this.importingFromWyBin = false;
 		});
 	}
 
@@ -80,21 +89,20 @@ export class TournamentAccessComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((user: User) => {
 			if (user !== undefined) {
-				let foundUser = false;
+				const currentDraft = this.tournamentEditStateService.getCurrent();
+				const userExists = currentDraft.administrators.some(administrator => administrator.id === user.id);
 
-				for (const administrator of this.tournament.administrators) {
-					if (administrator.id == user.id) {
-						foundUser = true;
-						break;
-					}
-				}
-
-				if (foundUser != true) {
-					this.tournament.administrators.push(User.makeTrueCopy(user));
-				}
-				else {
+				if (userExists) {
 					this.toastService.addToast(`${user.username} is already an administrator.`, ToastType.Warning);
+					return;
 				}
+
+				this.tournamentEditStateService.updateAccessState({
+					administrators: [...currentDraft.administrators, User.makeTrueCopy(user)],
+					availableTo: currentDraft.availableTo
+				});
+
+				this.toastService.addToast(`Successfully added ${user.username} as an administrator.`);
 			}
 		});
 	}
@@ -112,21 +120,20 @@ export class TournamentAccessComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((user: User) => {
 			if (user !== undefined) {
-				let foundUser = false;
+				const currentDraft = this.tournamentEditStateService.getCurrent();
+				const userExists = currentDraft.availableTo.some(u => u.id === user.id);
 
-				for (const findUser of this.tournament.availableTo) {
-					if (findUser.id == user.id) {
-						foundUser = true;
-						break;
-					}
-				}
-
-				if (foundUser != true) {
-					this.tournament.availableTo.push(User.makeTrueCopy(user));
-				}
-				else {
+				if (userExists) {
 					this.toastService.addToast(`${user.username} already has access.`, ToastType.Warning);
+					return;
 				}
+
+				this.tournamentEditStateService.updateAccessState({
+					administrators: currentDraft.administrators,
+					availableTo: [...currentDraft.availableTo, User.makeTrueCopy(user)]
+				});
+
+				this.toastService.addToast(`Successfully added ${user.username} to the tournament.`);
 			}
 		});
 	}
@@ -137,14 +144,14 @@ export class TournamentAccessComponent implements OnInit {
 	 * @param user the administrator to remove
 	 */
 	removeAdministrator(user: User): void {
-		for (const administrator in this.tournament.administrators) {
-			if (this.tournament.administrators[administrator].id == user.id) {
-				this.tournament.administrators.splice(Number(administrator), 1);
+		const currentDraft = this.tournamentEditStateService.getCurrent();
 
-				this.toastService.addToast(`Successfully removed ${user.username} from the administrators.`);
-				break;
-			}
-		}
+		this.tournamentEditStateService.updateAccessState({
+			administrators: currentDraft.administrators.filter(administrator => administrator.id !== user.id),
+			availableTo: currentDraft.availableTo
+		});
+
+		this.toastService.addToast(`Successfully removed ${user.username} from the administrators.`);
 	}
 
 	/**
@@ -153,13 +160,13 @@ export class TournamentAccessComponent implements OnInit {
 	 * @param user the user to remove
 	 */
 	removeUser(user: User): void {
-		for (const findUser in this.tournament.availableTo) {
-			if (this.tournament.availableTo[findUser].id == user.id) {
-				this.tournament.availableTo.splice(Number(findUser), 1);
+		const currentDraft = this.tournamentEditStateService.getCurrent();
 
-				this.toastService.addToast(`Successfully revoked the access from ${user.username}.`);
-				break;
-			}
-		}
+		this.tournamentEditStateService.updateAccessState({
+			administrators: currentDraft.administrators,
+			availableTo: currentDraft.availableTo.filter(u => u.id !== user.id)
+		});
+
+		this.toastService.addToast(`Successfully removed ${user.username} from the tournament.`);
 	}
 }
