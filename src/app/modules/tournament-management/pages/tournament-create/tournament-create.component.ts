@@ -82,7 +82,8 @@ export class TournamentCreateComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.managementSidebarService.setTournamentManagementItems();
+		this.managementSidebarService.setTournament(this.tournament);
+		this.managementSidebarService.setTournamentManagementItems('create');
 	}
 
 	ngOnDestroy(): void {

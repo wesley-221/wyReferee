@@ -167,8 +167,6 @@ export class TournamentEditComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.managementSidebarService.setTournamentManagementItems();
-
 		this.route.params.subscribe(params => {
 			this.isPublishedTournament = parseInt(params.published) == 0 ? false : true;
 			const tournamentId = parseInt(params.id);
@@ -178,6 +176,8 @@ export class TournamentEditComponent implements OnInit, OnDestroy {
 					if (initialized == true) {
 						const tournament = WyTournament.makeTrueCopy(this.tournamentService.getTournamentById(params.id));
 
+						this.managementSidebarService.setTournament(tournament);
+						this.managementSidebarService.setTournamentManagementItems(this.isPublishedTournament == true ? 'published' : 'local');
 						this.tournamentLoaded$.emit({ loaded: true, tournament: tournament });
 					}
 				});
@@ -186,6 +186,9 @@ export class TournamentEditComponent implements OnInit, OnDestroy {
 				this.tournamentService.getPublishedTournament(tournamentId).subscribe(publishedTournament => {
 					const tournament = WyTournament.makeTrueCopy(publishedTournament);
 					tournament.publishId = tournament.id;
+
+					this.managementSidebarService.setTournament(tournament);
+					this.managementSidebarService.setTournamentManagementItems(this.isPublishedTournament == true ? 'published' : 'local');
 
 					this.tournamentLoaded$.emit({ loaded: true, tournament: tournament });
 				});

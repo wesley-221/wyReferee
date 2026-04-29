@@ -53,7 +53,7 @@ export class LocalTournamentsComponent implements OnInit {
 
 	onTournamentClick(tournament: WyTournament, event: any) {
 		if (event.target.localName == 'div') {
-			this.router.navigate(['/tournament-management/local-tournaments/', tournament.id, '0']);
+			this.router.navigate(['/tournament-management/tournament-edit/', '0', tournament.id]);
 		}
 	}
 
