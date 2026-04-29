@@ -75,7 +75,7 @@ export class TournamentGeneralComponent implements OnInit {
 		this.form.valueChanges
 			.pipe(debounceTime(200))
 			.subscribe(value => {
-				this.tournamentEditStateService.updateGeneral(value);
+				this.tournamentEditStateService.updateGeneralForm(value);
 			});
 	}
 

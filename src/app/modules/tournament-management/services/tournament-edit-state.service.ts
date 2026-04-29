@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { WyTournament } from '../../../models/wytournament/wy-tournament';
 import { TournamentGeneralForm } from '../interfaces/tournament-general-form.interface';
+import { TournamentWybinForm } from '../interfaces/tournament-wybin-form.interface';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,7 +22,7 @@ export class TournamentEditStateService {
 		return this.draft$.getValue();
 	}
 
-	updateGeneral(general: TournamentGeneralForm) {
+	updateGeneralForm(general: TournamentGeneralForm) {
 		const currentDraft = this.draft$.getValue();
 
 		if (!currentDraft) {
@@ -44,6 +45,20 @@ export class TournamentEditStateService {
 		updatedDraft.invalidateBeatmaps = general.invalidateBeatmaps;
 		updatedDraft.lobbyTeamNameWithBrackets = general.lobbyTeamNameWithBrackets;
 		updatedDraft.addrefUsernames = general.addrefUsernames;
+
+		this.draft$.next(updatedDraft);
+	}
+
+	updateWyBinForm(wyBin: TournamentWybinForm) {
+		const currentDraft = this.draft$.getValue();
+
+		if (!currentDraft) {
+			return;
+		}
+
+		const updatedDraft = this.getCurrent();
+
+		updatedDraft.wyBinTournamentId = wyBin.wyBinTournamentId;
 
 		this.draft$.next(updatedDraft);
 	}
