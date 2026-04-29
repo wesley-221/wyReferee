@@ -4,7 +4,7 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { BehaviorSubject, map } from 'rxjs';
-import { TournamentFilter } from '../../models/tournament-filter';
+import { TournamentFilter } from '../../interfaces/tournament-filter';
 
 @Component({
 	selector: 'app-import-tournament',

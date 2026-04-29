@@ -4,7 +4,7 @@ import { WyTournament } from '../../../../models/wytournament/wy-tournament';
 import { BehaviorSubject, map } from 'rxjs';
 import { User } from '../../../../models/authentication/user';
 import { Router } from '@angular/router';
-import { TournamentFilter } from '../../models/tournament-filter';
+import { TournamentFilter } from '../../interfaces/tournament-filter';
 
 @Component({
 	selector: 'app-published-tournaments',

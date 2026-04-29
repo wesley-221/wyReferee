@@ -4,7 +4,7 @@ import { TournamentService } from '../../../../services/tournament.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../../../../models/authentication/user';
-import { TournamentFilter } from '../../models/tournament-filter';
+import { TournamentFilter } from '../../interfaces/tournament-filter';
 
 @Component({
 	selector: 'app-local-tournaments',

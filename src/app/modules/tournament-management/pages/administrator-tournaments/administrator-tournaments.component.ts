@@ -3,7 +3,7 @@ import { User } from 'app/models/authentication/user';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { TournamentService } from 'app/services/tournament.service';
 import { BehaviorSubject, map } from 'rxjs';
-import { TournamentFilter } from '../../models/tournament-filter';
+import { TournamentFilter } from '../../interfaces/tournament-filter';
 
 @Component({
 	selector: 'app-administrator-tournaments',
