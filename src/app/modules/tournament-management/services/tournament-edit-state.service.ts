@@ -6,6 +6,8 @@ import { TournamentWybinForm } from '../interfaces/tournament-wybin-form.interfa
 import { TournamentAccessState } from '../interfaces/tournament-access-state.interface';
 import { TournamentWebhookForm } from '../interfaces/tournament-webhook-form.interface';
 import { WyWebhook } from '../../../models/wytournament/wy-webhook';
+import { TournamentConditionalMessageForm } from '../interfaces/tournament-conditional-messages-form.interface';
+import { WyConditionalMessage } from '../../../models/wytournament/wy-conditional-message';
 
 @Injectable({
 	providedIn: 'root'
@@ -101,6 +103,29 @@ export class TournamentEditStateService {
 				matchSummary: webhook.matchSummary,
 				matchResult: webhook.matchResult,
 				finalResult: webhook.finalResult
+			})
+		);
+
+		this.draft$.next(updatedDraft);
+	}
+
+	updateConditionalMessagesForm(conditionalMessages: TournamentConditionalMessageForm[]) {
+		const currentDraft = this.draft$.getValue();
+
+		if (!currentDraft) {
+			return;
+		}
+
+		const updatedDraft = this.getCurrent();
+
+		updatedDraft.conditionalMessages = conditionalMessages.map(cm =>
+			new WyConditionalMessage({
+				message: cm.message,
+				beatmapResult: cm.beatmapResult,
+				beatmapPicked: cm.beatmapPicked,
+				nextPickMessage: cm.nextPickMessage,
+				nextPickTiebreakerMessage: cm.nextPickTiebreakerMessage,
+				matchWonMessage: cm.matchWonMessage
 			})
 		);
 

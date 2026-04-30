@@ -14,6 +14,7 @@ import { TournamentWebhookComponent } from './components/tournament/tournament-w
 import { TournamentStagesComponent } from './components/tournament/tournament-stages/tournament-stages.component';
 import { TournamentParticipantsComponent } from './components/tournament/tournament-participants/tournament-participants.component';
 import { MappoolOverviewComponent } from './components/tournament/tournament-mappool/mappool-overview/mappool-overview.component';
+import { TournamentConditionalMessageComponent } from './components/tournament/tournament-beatmap-result/tournament-conditional-message.component';
 
 const routes: Routes = [
 	{
@@ -30,7 +31,7 @@ const routes: Routes = [
 					{ path: 'wybin', component: TournamentWybinComponent },
 					{ path: 'access', component: TournamentAccessComponent },
 					{ path: 'webhook', component: TournamentWebhookComponent },
-					{ path: 'conditional-messages', component: TournamentWebhookComponent },
+					{ path: 'conditional-messages', component: TournamentConditionalMessageComponent },
 					{ path: 'stages', component: TournamentStagesComponent },
 					{ path: 'participants', component: TournamentParticipantsComponent },
 					{ path: 'mappool', component: MappoolOverviewComponent }
@@ -43,7 +44,7 @@ const routes: Routes = [
 					{ path: 'wybin', component: TournamentWybinComponent },
 					{ path: 'access', component: TournamentAccessComponent },
 					{ path: 'webhook', component: TournamentWebhookComponent },
-					{ path: 'conditional-messages', component: TournamentWebhookComponent },
+					{ path: 'conditional-messages', component: TournamentConditionalMessageComponent },
 					{ path: 'stages', component: TournamentStagesComponent },
 					{ path: 'participants', component: TournamentParticipantsComponent },
 					{ path: 'mappool', component: MappoolOverviewComponent }
