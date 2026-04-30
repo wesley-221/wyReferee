@@ -92,9 +92,8 @@ export class TournamentEditStateService {
 
 		const updatedDraft = this.getCurrent();
 
-		updatedDraft.webhooks = webhooks.map((webhook, index) =>
+		updatedDraft.webhooks = webhooks.map(webhook =>
 			new WyWebhook({
-				index,
 				name: webhook.name,
 				url: webhook.url,
 				matchCreation: webhook.matchCreation,

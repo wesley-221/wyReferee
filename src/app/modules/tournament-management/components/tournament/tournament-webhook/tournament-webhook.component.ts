@@ -24,11 +24,18 @@ export class TournamentWebhookComponent implements OnInit {
 		this.tournamentEditStateService.getDraft$()
 			.pipe(filter(v => !!v))
 			.subscribe(tournament => {
-				const formArray = new FormArray(
-					tournament.webhooks.map(w => this.createWebhookGroup(w))
-				);
+				if (this.webhooks.length === 0) {
+					const formArray = new FormArray(
+						tournament.webhooks.map(w => this.createWebhookGroup(w))
+					);
 
-				this.form.setControl('webhooks', formArray, { emitEvent: false });
+					this.form.setControl('webhooks', formArray, { emitEvent: false });
+				}
+				else {
+					tournament.webhooks.forEach((cm, i) => {
+						this.webhooks.at(i)?.patchValue(cm, { emitEvent: false });
+					});
+				}
 			});
 
 		this.form.valueChanges
