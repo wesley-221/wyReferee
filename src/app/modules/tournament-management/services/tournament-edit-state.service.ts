@@ -8,6 +8,8 @@ import { TournamentWebhookForm } from '../interfaces/tournament-webhook-form.int
 import { WyWebhook } from '../../../models/wytournament/wy-webhook';
 import { TournamentConditionalMessageForm } from '../interfaces/tournament-conditional-messages-form.interface';
 import { WyConditionalMessage } from '../../../models/wytournament/wy-conditional-message';
+import { TournamentStageForm } from '../interfaces/tournament-stage-form.interface';
+import { WyStage } from '../../../models/wytournament/wy-stage';
 
 @Injectable({
 	providedIn: 'root'
@@ -125,6 +127,27 @@ export class TournamentEditStateService {
 				nextPickMessage: cm.nextPickMessage,
 				nextPickTiebreakerMessage: cm.nextPickTiebreakerMessage,
 				matchWonMessage: cm.matchWonMessage
+			})
+		);
+
+		this.draft$.next(updatedDraft);
+	}
+
+	updateStagesForm(stages: TournamentStageForm[]) {
+		const currentDraft = this.draft$.getValue();
+
+		if (!currentDraft) {
+			return;
+		}
+
+		const updatedDraft = this.getCurrent();
+
+		updatedDraft.stages = stages.map(stage =>
+			new WyStage({
+				name: stage.name,
+				bestOf: stage.bestOf,
+				bans: stage.bans,
+				hitpoints: stage.hitpoints
 			})
 		);
 

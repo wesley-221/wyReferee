@@ -1,14 +1,19 @@
 <div class="container-fluid">
-	<form [formGroup]="validationForm">
+	<form [formGroup]="form">
 		<div class="row">
 			<div class="col">
 				<h2>Stages</h2>
 				<p>Add a stage to the tournament.</p>
 
-				<button mat-raised-button (click)="addStage()" color="primary"><mat-icon>add</mat-icon> add new stage</button>&nbsp;
-				<button mat-raised-button color="accent" (click)="importWyBinStages()" *ngIf="tournament.hasWyBinConnected()">
-					<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import stages from wyBin
-				</button>
+				<div class="stage-buttons">
+					<button mat-raised-button (click)="addStage()" color="primary">
+						<mat-icon>add</mat-icon> add new stage
+					</button>
+
+					<button mat-raised-button color="accent" (click)="importWyBinStages()" *ngIf="tournament.hasWyBinConnected()">
+						<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import stages from wyBin
+					</button>
+				</div>
 			</div>
 		</div>
 
@@ -20,15 +25,15 @@
 
 		<div class="row">
 			<div class="col">
-				<div class="all-stages">
-					<div class="stage" *ngFor="let stage of tournament.stages" [ngStyle]="{'grid-template-columns': tournament.scoreInterfaceIdentifier == CTM_SCORE_IDENTIFIER ? '2fr 1fr 1fr 1fr 50px' : '2fr 1fr 1fr 50px'}">
+				<div class="all-stages" formArrayName="stages">
+					<div class="stage" *ngFor="let stageGroup of stages.controls; let i = index" [formGroupName]="i" [ngStyle]="{'grid-template-columns': tournament.scoreInterfaceIdentifier == CTM_SCORE_IDENTIFIER ? '2fr 1fr 1fr 1fr 50px' : '2fr 1fr 1fr 50px'}">
 						<div class="name">
 							<mat-form-field class="full-width">
 								<mat-label>Stage name</mat-label>
 
-								<input matInput [formControlName]="'tournament-stage-name-' + stage.index" (change)="changeStageName(stage, $event)" />
+								<input matInput formControlName="name" />
 
-								<mat-error *ngIf="validationForm.get('tournament-stage-name-' + stage.index) != null && validationForm.get('tournament-stage-name-' + stage.index).errors && (validationForm.get('tournament-stage-name-' + stage.index).touched || validationForm.get('tournament-stage-name-' + stage.index).dirty)">
+								<mat-error *ngIf="stageGroup.get('name') != null && stageGroup.get('name').errors && (stageGroup.get('name').touched || stageGroup.get('name').dirty)">
 									This field is required
 								</mat-error>
 							</mat-form-field>
@@ -38,9 +43,9 @@
 							<mat-form-field class="full-width">
 								<mat-label>Hitpoints start amount</mat-label>
 
-								<input matInput [formControlName]="'tournament-stage-hitpoints-' + stage.index" (change)="changeStageHitpoints(stage, $event)" />
+								<input matInput formControlName="hitpoints" />
 
-								<mat-error *ngIf="validationForm.get('tournament-stage-hitpoints-' + stage.index) != null && validationForm.get('tournament-stage-hitpoints-' + stage.index).errors && (validationForm.get('tournament-stage-hitpoints-' + stage.index).touched || validationForm.get('tournament-stage-hitpoints-' + stage.index).dirty)">
+								<mat-error *ngIf="stageGroup.get('hitpoints') != null && stageGroup.get('hitpoints').errors && (stageGroup.get('hitpoints').touched || stageGroup.get('hitpoints').dirty)">
 									This field is required
 								</mat-error>
 							</mat-form-field>
@@ -50,9 +55,9 @@
 							<mat-form-field class="full-width">
 								<mat-label>Bans</mat-label>
 
-								<input matInput [formControlName]="'tournament-stage-bans-' + stage.index" (change)="changeBanCount(stage, $event)" />
+								<input matInput formControlName="bans" />
 
-								<mat-error *ngIf="validationForm.get('tournament-stage-bans-' + stage.index) != null && validationForm.get('tournament-stage-bans-' + stage.index).errors && (validationForm.get('tournament-stage-bans-' + stage.index).touched || validationForm.get('tournament-stage-bans-' + stage.index).dirty)">
+								<mat-error *ngIf="stageGroup.get('bans') != null && stageGroup.get('bans').errors && (stageGroup.get('bans').touched || stageGroup.get('bans').dirty)">
 									This field is required
 								</mat-error>
 							</mat-form-field>
@@ -61,7 +66,7 @@
 						<div class="bestof">
 							<mat-form-field class="full-width">
 								<mat-label>Best of</mat-label>
-								<mat-select [formControlName]="'tournament-stage-best-of-' + stage.index" (selectionChange)="changeStageBestOf(stage, $event)" [value]="stage.bestOf">
+								<mat-select formControlName="bestOf">
 									<mat-option [value]="0">N/A</mat-option>
 									<mat-option [value]="5">5</mat-option>
 									<mat-option [value]="7">7</mat-option>
@@ -73,14 +78,16 @@
 									<mat-option [value]="19">19</mat-option>
 								</mat-select>
 
-								<mat-error *ngIf="validationForm.get('tournament-stage-best-of-' + stage.index) != null && validationForm.get('tournament-stage-best-of-' + stage.index).errors && (validationForm.get('tournament-stage-best-of-' + stage.index).touched || validationForm.get('tournament-stage-best-of-' + stage.index).dirty)">
+								<mat-error *ngIf="stageGroup.get('bestOf') != null && stageGroup.get('bestOf').errors && (stageGroup.get('bestOf').touched || stageGroup.get('bestOf').dirty)">
 									This field is required
 								</mat-error>
 							</mat-form-field>
 						</div>
 
 						<div class="actions">
-							<button mat-mini-fab color="warn" (click)="removeStage(stage)"><mat-icon>delete</mat-icon></button>
+							<button mat-mini-fab color="warn" (click)="removeStage(i)">
+								<mat-icon>delete</mat-icon>
+							</button>
 						</div>
 					</div>
 				</div>

@@ -1,12 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Calculate } from 'app/models/score-calculation/calculate';
 import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { WyStage } from 'app/models/wytournament/wy-stage';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { WybinService } from 'app/services/wybin.service';
+import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
+import { debounceTime, filter } from 'rxjs';
 
 @Component({
 	selector: 'app-tournament-stages',
@@ -14,14 +16,18 @@ import { WybinService } from 'app/services/wybin.service';
 	styleUrls: ['./tournament-stages.component.scss']
 })
 export class TournamentStagesComponent implements OnInit {
-	@Input() tournament: WyTournament;
-	@Input() validationForm: FormGroup;
+	form: FormGroup;
+	tournament: WyTournament;
 
 	importingFromWyBin: boolean;
 
 	readonly CTM_SCORE_IDENTIFIER: string;
 
-	constructor(private wybinService: WybinService, private toastService: ToastService) {
+	constructor(
+		private wybinService: WybinService,
+		private toastService: ToastService,
+		private tournamentEditStateService: TournamentEditStateService
+	) {
 		const calculate = new Calculate();
 		this.importingFromWyBin = false;
 
@@ -31,117 +37,80 @@ export class TournamentStagesComponent implements OnInit {
 				break;
 			}
 		}
-	}
 
-	ngOnInit(): void { }
-
-	/**
-	 * Add a stage to the tournament
-	 */
-	addStage(addStage?: WyStage): void {
-		let newStage: WyStage;
-
-		if (addStage) {
-			newStage = addStage;
-		}
-		else {
-			newStage = new WyStage();
-
-			newStage.index = this.tournament.stageIndex;
-			this.tournament.stageIndex++;
-		}
-
-		this.tournament.stages.push(newStage);
-
-		this.validationForm.addControl(`tournament-stage-name-${newStage.index}`, new FormControl(newStage.name, Validators.required));
-		this.validationForm.addControl(`tournament-stage-best-of-${newStage.index}`, new FormControl(newStage.bestOf, Validators.required));
-		this.validationForm.addControl(`tournament-stage-bans-${newStage.index}`, new FormControl(newStage.bans));
-
-		if (this.tournament.scoreInterface instanceof CTMCalculation) {
-			this.validationForm.addControl(`tournament-stage-hitpoints-${newStage.index}`, new FormControl('', Validators.required));
-		}
-	}
-
-	/**
-	 * Import the stages from wyBin
-	 */
-	importWyBinStages() {
-		this.importingFromWyBin = true;
-
-		this.wybinService.importStages(this.tournament.wyBinTournamentId).subscribe((stages: any[]) => {
-			stages.sort((a, b) => a.startDate - b.startDate);
-
-			for (const stage of stages) {
-				const newStage = WyStage.parseFromWyBin(stage);
-
-				newStage.index = this.tournament.stageIndex;
-				this.tournament.stageIndex++;
-
-				this.addStage(newStage);
-			}
-
-			this.importingFromWyBin = false;
-		}, (error: HttpErrorResponse) => {
-			this.toastService.addToast(error.error.message);
-
-			this.importingFromWyBin = false;
+		this.form = new FormGroup({
+			stages: new FormArray([])
 		});
 	}
 
-	/**
-	 * Change the name of the stage
-	 *
-	 * @param stage the stage to change the name of
-	 * @param event the changed value
-	 */
-	changeStageName(stage: WyStage, event: any) {
-		stage.name = event.target.value;
+	ngOnInit(): void {
+		this.tournamentEditStateService.getDraft$()
+			.pipe(filter(v => !!v))
+			.subscribe(tournament => {
+				this.tournament = tournament;
+
+				if (this.stages.length === 0) {
+					const formArray = new FormArray(
+						tournament.stages.map(s => this.createStageGroup(s))
+					);
+
+					this.form.setControl('stages', formArray, { emitEvent: false });
+				}
+				else {
+					tournament.stages.forEach((cm, i) => {
+						this.stages.at(i)?.patchValue(cm, { emitEvent: false });
+					});
+				}
+			});
+
+		this.form.valueChanges
+			.pipe(debounceTime(200))
+			.subscribe(value => {
+				this.tournamentEditStateService.updateStagesForm(value.stages);
+			});
 	}
 
-	/**
-	 * Change the starting amount of hitpoints of the stage
-	 *
-	 * @param stage the stage to change the starting amount of hitpoints of
-	 * @param event the changed value
-	 */
-	changeStageHitpoints(stage: WyStage, event: any) {
-		stage.hitpoints = event.target.value;
+	get stages(): FormArray {
+		return this.form.get('stages') as FormArray;
 	}
 
-	/**
-	 * Change the best of for the stage
-	 *
-	 * @param stage the stage to change the best of
-	 * @param event the changed value
-	 */
-	changeStageBestOf(stage: WyStage, event: any) {
-		stage.bestOf = event.value;
+	addStage(addStage?: WyStage): void {
+		this.stages.push(this.createStageGroup(addStage));
 	}
 
-	/**
-	 * Change the bans for the stage
-	 *
-	 * @param stage the stage to change the bans of
-	 * @param event the changed value
-	 */
-	changeBanCount(stage: WyStage, event: any) {
-		stage.bans = event.value;
+	importWyBinStages() {
+		this.importingFromWyBin = true;
+
+		this.wybinService.importStages(this.tournament.wyBinTournamentId).subscribe({
+			next: (stages: any[]) => {
+				stages.sort((a, b) => a.startDate - b.startDate);
+
+				for (const stage of stages) {
+					const newStage = WyStage.parseFromWyBin(stage);
+
+					this.addStage(newStage);
+				}
+
+				this.importingFromWyBin = false;
+			},
+			error: (error: HttpErrorResponse) => {
+				this.toastService.addToast(error.error.message);
+
+				this.importingFromWyBin = false;
+			}
+		});
 	}
 
-	/**
-	 * Remove a stage from the tournament
-	 *
-	 * @param stage the stage to remove
-	 */
-	removeStage(stage: WyStage) {
-		this.validationForm.removeControl(`tournament-stage-name-${stage.index}`);
-		this.validationForm.removeControl(`tournament-stage-best-of-${stage.index}`);
-		this.validationForm.removeControl(`tournament-stage-bans-${stage.index}`);
+	removeStage(index: number): void {
+		this.stages.removeAt(index);
+	}
 
-		if (this.tournament.scoreInterface instanceof CTMCalculation) {
-			this.validationForm.removeControl(`tournament-stage-hitpoints-${stage.index}`);
-		}
-
-		this.tournament.stages.splice(this.tournament.stages.indexOf(stage), 1);
+	private createStageGroup(stage?: WyStage): FormGroup {
+		return new FormGroup({
+			name: new FormControl(stage?.name || '', Validators.required),
+			bestOf: new FormControl(stage?.bestOf || 0, Validators.required),
+			bans: new FormControl(stage?.bans || 0),
+			hitpoints: new FormControl(stage?.hitpoints || 0)
+		});
 	}
 }
