@@ -4,6 +4,8 @@ import { WyTournament } from '../../../models/wytournament/wy-tournament';
 import { TournamentGeneralForm } from '../interfaces/tournament-general-form.interface';
 import { TournamentWybinForm } from '../interfaces/tournament-wybin-form.interface';
 import { TournamentAccessState } from '../interfaces/tournament-access-state.interface';
+import { TournamentWebhookForm } from '../interfaces/tournament-webhook-form.interface';
+import { WyWebhook } from '../../../models/wytournament/wy-webhook';
 
 @Injectable({
 	providedIn: 'root'
@@ -75,6 +77,32 @@ export class TournamentEditStateService {
 
 		updatedDraft.administrators = access.administrators;
 		updatedDraft.availableTo = access.availableTo;
+
+		this.draft$.next(updatedDraft);
+	}
+
+	updateWebhooksForm(webhooks: TournamentWebhookForm[]) {
+		const currentDraft = this.draft$.getValue();
+
+		if (!currentDraft) {
+			return;
+		}
+
+		const updatedDraft = this.getCurrent();
+
+		updatedDraft.webhooks = webhooks.map((webhook, index) =>
+			new WyWebhook({
+				index,
+				name: webhook.name,
+				url: webhook.url,
+				matchCreation: webhook.matchCreation,
+				picks: webhook.picks,
+				bans: webhook.bans,
+				matchSummary: webhook.matchSummary,
+				matchResult: webhook.matchResult,
+				finalResult: webhook.finalResult
+			})
+		);
 
 		this.draft$.next(updatedDraft);
 	}

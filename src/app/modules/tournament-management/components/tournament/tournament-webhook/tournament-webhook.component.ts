@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { WyWebhook } from 'app/models/wytournament/wy-webhook';
-import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
+import { debounceTime, filter } from 'rxjs';
 
 @Component({
 	selector: 'app-tournament-webhook',
@@ -9,46 +10,56 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 	styleUrls: ['./tournament-webhook.component.scss']
 })
 export class TournamentWebhookComponent implements OnInit {
-	@Input() tournament: WyTournament;
-	@Input() validationForm: FormGroup;
+	form: FormGroup;
 
-	constructor() { }
+	constructor(
+		private tournamentEditStateService: TournamentEditStateService
+	) {
+		this.form = new FormGroup({
+			webhooks: new FormArray([])
+		});
+	}
 
-	ngOnInit(): void { }
+	ngOnInit(): void {
+		this.tournamentEditStateService.getDraft$()
+			.pipe(filter(v => !!v))
+			.subscribe(tournament => {
+				const formArray = new FormArray(
+					tournament.webhooks.map(w => this.createWebhookGroup(w))
+				);
+
+				this.form.setControl('webhooks', formArray, { emitEvent: false });
+			});
+
+		this.form.valueChanges
+			.pipe(debounceTime(200))
+			.subscribe(value => {
+				this.tournamentEditStateService.updateWebhooksForm(value.webhooks);
+			});
+	}
+
+	get webhooks(): FormArray {
+		return this.form.get('webhooks') as FormArray;
+	}
 
 	createWebhook(): void {
-		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-name`, new FormControl('', Validators.required));
-		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-url`, new FormControl('', Validators.required));
-
-		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-match-creation`, new FormControl(false, Validators.required));
-		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-picks`, new FormControl(false, Validators.required));
-		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-bans`, new FormControl(true, Validators.required));
-		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-match-summary`, new FormControl(false, Validators.required));
-		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-match-result`, new FormControl(true, Validators.required));
-		this.validationForm.addControl(`webhook-${this.tournament.webhookIndex}-final-result`, new FormControl(true, Validators.required));
-
-		this.tournament.webhooks.push(new WyWebhook({
-			index: this.tournament.webhookIndex
-		}));
-
-		this.tournament.webhookIndex++;
+		this.webhooks.push(this.createWebhookGroup());
 	}
 
-	removeWebhook(webhook: WyWebhook): void {
-		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-name`);
-		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-url`);
-
-		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-match-creation`);
-		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-picks`);
-		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-bans`);
-		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-match-summary`);
-		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-match-result`);
-		this.validationForm.removeControl(`webhook-${this.tournament.webhookIndex}-final-result`);
-
-		this.tournament.webhooks.splice(this.tournament.webhooks.indexOf(webhook), 1);
+	removeWebhook(index: number): void {
+		this.webhooks.removeAt(index);
 	}
 
-	onNameChange(webhook: WyWebhook): void {
-		webhook.name = this.validationForm.get(`webhook-${webhook.index}-name`).value;
+	private createWebhookGroup(webhook?: WyWebhook): FormGroup {
+		return new FormGroup({
+			name: new FormControl(webhook?.name || '', Validators.required),
+			url: new FormControl(webhook?.url || '', Validators.required),
+			matchCreation: new FormControl(webhook?.matchCreation ?? false),
+			picks: new FormControl(webhook?.picks ?? false),
+			bans: new FormControl(webhook?.bans ?? true),
+			matchSummary: new FormControl(webhook?.matchSummary ?? false),
+			matchResult: new FormControl(webhook?.matchResult ?? true),
+			finalResult: new FormControl(webhook?.finalResult ?? true)
+		});
 	}
 }

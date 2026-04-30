@@ -1,4 +1,4 @@
-<form [formGroup]="validationForm">
+<form [formGroup]="form">
 	<h3>What is a webhook?</h3>
 	<p>To put it simple, a webhook is a link to a channel where this client sends a message to. The messages being send currently to that channel are:</p>
 
@@ -73,28 +73,32 @@
 
 	<hr />
 
-	<button mat-raised-button color="primary" (click)="createWebhook()"><mat-icon>add</mat-icon> add new webhook</button>
+	<button mat-raised-button color="primary" (click)="createWebhook()">
+		<mat-icon>add</mat-icon> add new webhook
+	</button>
 
-	<app-alert alertType="info" *ngIf="tournament.webhooks.length <= 0">
+	<app-alert alertType="info" *ngIf="webhooks.length <= 0">
 		You have no webhooks setup.
 	</app-alert>
 
-	<div class="all-webhooks">
-		<div class="webhook" *ngFor="let webhook of tournament.webhooks">
+	<div class="all-webhooks" formArrayName="webhooks">
+		<div class="webhook" *ngFor="let webhookGroup of webhooks.controls; let i = index" [formGroupName]="i">
 			<div class="title">
-				<h3 *ngIf="webhook.name == null">Unnamed webhook</h3>
-				<h3 *ngIf="webhook.name != null">{{ webhook.name }}</h3>
+				<h3 *ngIf="webhookGroup.get('name').value == null">Unnamed webhook</h3>
+				<h3 *ngIf="webhookGroup.get('name').value != null">{{ webhookGroup.get('name').value }}</h3>
 
-				<button mat-mini-fab color="warn" (click)="removeWebhook(webhook)"><mat-icon>delete</mat-icon></button>
+				<button mat-mini-fab color="warn" (click)="removeWebhook(i)">
+					<mat-icon>delete</mat-icon>
+				</button>
 			</div>
 
 			<div class="row">
 				<div class="col">
 					<mat-form-field class="full-width">
 						<mat-label>Webhook name</mat-label>
-						<input matInput [formControlName]="'webhook-' + webhook.index + '-name'" (change)="onNameChange(webhook)" />
+						<input matInput formControlName="name" />
 
-						<mat-error *ngIf="validationForm.get('webhook-' + webhook.index + '-name').errors && (validationForm.get('webhook-' + webhook.index + '-name').touched || validationForm.get('webhook-' + webhook.index + '-name').dirty)">
+						<mat-error *ngIf="webhookGroup.get('name').errors && (webhookGroup.get('name').touched || webhookGroup.get('name').dirty)">
 							This field is required
 						</mat-error>
 					</mat-form-field>
@@ -105,9 +109,9 @@
 				<div class="col">
 					<mat-form-field class="full-width">
 						<mat-label>Webhook url</mat-label>
-						<input matInput [formControlName]="'webhook-' + webhook.index + '-url'" />
+						<input matInput formControlName="url" />
 
-						<mat-error *ngIf="validationForm.get('webhook-' + webhook.index + '-url').errors && (validationForm.get('webhook-' + webhook.index + '-url').touched || validationForm.get('webhook-' + webhook.index + '-url').dirty)">
+						<mat-error *ngIf="webhookGroup.get('url').errors && (webhookGroup.get('url').touched || webhookGroup.get('url').dirty)">
 							This field is required
 						</mat-error>
 					</mat-form-field>
@@ -124,14 +128,14 @@
 						Match creation
 					</div>
 
-					<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-match-creation'"></mat-slide-toggle>
+					<mat-slide-toggle formControlName="matchCreation"></mat-slide-toggle>
 				</div>
 
 				<div class="option">
 					<div class="description">
 						Picks
 					</div>
-					<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-picks'"></mat-slide-toggle>
+					<mat-slide-toggle formControlName="picks"></mat-slide-toggle>
 				</div>
 
 				<div class="option">
@@ -139,7 +143,7 @@
 						Bans
 					</div>
 
-					<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-bans'"></mat-slide-toggle>
+					<mat-slide-toggle formControlName="bans"></mat-slide-toggle>
 				</div>
 
 				<div class="option">
@@ -147,7 +151,7 @@
 						Match summary
 					</div>
 
-					<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-match-summary'"></mat-slide-toggle>
+					<mat-slide-toggle formControlName="matchSummary"></mat-slide-toggle>
 				</div>
 
 				<div class="option">
@@ -155,7 +159,7 @@
 						Match result
 					</div>
 
-					<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-match-result'"></mat-slide-toggle>
+					<mat-slide-toggle formControlName="matchResult"></mat-slide-toggle>
 				</div>
 
 				<div class="option">
@@ -163,7 +167,7 @@
 						Final result
 					</div>
 
-					<mat-slide-toggle [formControlName]="'webhook-' + webhook.index + '-final-result'"></mat-slide-toggle>
+					<mat-slide-toggle formControlName="finalResult"></mat-slide-toggle>
 				</div>
 			</div>
 		</div>
