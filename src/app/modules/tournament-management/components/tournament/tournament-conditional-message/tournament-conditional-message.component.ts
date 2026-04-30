@@ -73,6 +73,7 @@ export class TournamentConditionalMessageComponent implements OnInit {
 
 	private createConditionalMessageGroup(message?: TournamentConditionalMessageForm): FormGroup {
 		return new FormGroup({
+			id: new FormControl(message?.id || null),
 			message: new FormControl(message?.message || '', Validators.required),
 			beatmapResult: new FormControl(message?.beatmapResult ?? false),
 			beatmapPicked: new FormControl(message?.beatmapPicked ?? false),

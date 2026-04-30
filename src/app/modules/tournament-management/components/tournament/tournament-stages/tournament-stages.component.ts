@@ -107,6 +107,8 @@ export class TournamentStagesComponent implements OnInit {
 
 	private createStageGroup(stage?: WyStage): FormGroup {
 		return new FormGroup({
+			id: new FormControl(stage?.id || null),
+			wyBinStageId: new FormControl(stage?.wyBinStageId || null),
 			name: new FormControl(stage?.name || '', Validators.required),
 			bestOf: new FormControl(stage?.bestOf || 0, Validators.required),
 			bans: new FormControl(stage?.bans || 0),

@@ -1,4 +1,5 @@
 export interface TournamentStageForm {
+	id: number;
 	wyBinStageId: number;
 	name: string;
 	index: number;

@@ -1,4 +1,5 @@
 export interface TournamentWebhookForm {
+	id: number;
 	name: string;
 	url: string;
 	matchCreation: boolean;

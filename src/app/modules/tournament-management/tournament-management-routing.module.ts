@@ -14,7 +14,7 @@ import { TournamentWebhookComponent } from './components/tournament/tournament-w
 import { TournamentStagesComponent } from './components/tournament/tournament-stages/tournament-stages.component';
 import { TournamentParticipantsComponent } from './components/tournament/tournament-participants/tournament-participants.component';
 import { MappoolOverviewComponent } from './components/tournament/tournament-mappool/mappool-overview/mappool-overview.component';
-import { TournamentConditionalMessageComponent } from './components/tournament/tournament-beatmap-result/tournament-conditional-message.component';
+import { TournamentConditionalMessageComponent } from './components/tournament/tournament-conditional-message/tournament-conditional-message.component';
 
 const routes: Routes = [
 	{

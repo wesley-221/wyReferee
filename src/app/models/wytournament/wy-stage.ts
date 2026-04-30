@@ -1,5 +1,5 @@
 export class WyStage {
-	id: string;
+	id: number;
 	wyBinStageId: number;
 	name: string;
 	index: number;

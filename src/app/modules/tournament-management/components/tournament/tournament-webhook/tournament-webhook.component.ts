@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { WyWebhook } from 'app/models/wytournament/wy-webhook';
 import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
 import { debounceTime, filter } from 'rxjs';
+import { TournamentWebhookForm } from '../../../interfaces/tournament-webhook-form.interface';
 
 @Component({
 	selector: 'app-tournament-webhook',
@@ -57,8 +57,9 @@ export class TournamentWebhookComponent implements OnInit {
 		this.webhooks.removeAt(index);
 	}
 
-	private createWebhookGroup(webhook?: WyWebhook): FormGroup {
+	private createWebhookGroup(webhook?: TournamentWebhookForm): FormGroup {
 		return new FormGroup({
+			id: new FormControl(webhook?.id || null),
 			name: new FormControl(webhook?.name || '', Validators.required),
 			url: new FormControl(webhook?.url || '', Validators.required),
 			matchCreation: new FormControl(webhook?.matchCreation ?? false),

@@ -96,6 +96,7 @@ export class TournamentEditStateService {
 
 		updatedDraft.webhooks = webhooks.map(webhook =>
 			new WyWebhook({
+				id: webhook.id,
 				name: webhook.name,
 				url: webhook.url,
 				matchCreation: webhook.matchCreation,
@@ -121,6 +122,7 @@ export class TournamentEditStateService {
 
 		updatedDraft.conditionalMessages = conditionalMessages.map(cm =>
 			new WyConditionalMessage({
+				id: cm.id,
 				message: cm.message,
 				beatmapResult: cm.beatmapResult,
 				beatmapPicked: cm.beatmapPicked,
@@ -144,6 +146,8 @@ export class TournamentEditStateService {
 
 		updatedDraft.stages = stages.map(stage =>
 			new WyStage({
+				id: stage.id,
+				wyBinStageId: stage.wyBinStageId,
 				name: stage.name,
 				bestOf: stage.bestOf,
 				bans: stage.bans,
