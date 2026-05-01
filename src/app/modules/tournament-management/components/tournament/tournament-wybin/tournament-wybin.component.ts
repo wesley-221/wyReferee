@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { AppConfig } from 'environments/environment';
 import { debounceTime, filter, map, startWith } from 'rxjs';

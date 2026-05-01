@@ -143,6 +143,6 @@ export class MappoolOverviewComponent implements OnInit {
 	}
 
 	getMappoolFormArray(index: number): FormGroup {
-		return this.mappools.at(index) as FormGroup;
+		return this.mappools.at(index);
 	}
 }
