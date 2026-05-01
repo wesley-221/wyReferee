@@ -1,21 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { DeleteModBracketDialogComponent } from 'app/components/dialogs/delete-mod-bracket-dialog/delete-mod-bracket-dialog.component';
 import { Mods } from 'app/models/osu-models/osu';
 import { ToastType } from 'app/models/toast';
-import { MappoolType, WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
+import { MappoolType } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyMod } from 'app/models/wytournament/mappool/wy-mod';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
-import { WyModCategory } from 'app/models/wytournament/mappool/wy-mod-category';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
-import { modBracketUniqueModsValidator } from 'app/modules/tournament-management/models/mod-bracket-unique-mods-validator';
 import { ElectronService } from 'app/services/electron.service';
 import { GetBeatmap } from 'app/services/osu-api/get-beatmap.service';
 import { ToastService } from 'app/services/toast.service';
+import { FormGroupHelper } from '../../../../models/form-group-helper';
 
 @Component({
 	selector: 'app-mod-bracket',
@@ -24,9 +22,15 @@ import { ToastService } from 'app/services/toast.service';
 })
 export class ModBracketComponent implements OnInit {
 	@Input() tournament: WyTournament;
-	@Input() mappool: WyMappool;
-	@Input() modBracket: WyModBracket;
-	@Input() validationForm: FormGroup;
+
+	@Input() form: FormGroup;
+	@Input() modBracketForm: FormArray;
+	@Input() modBracketFormIndex: number;
+	@Input() mappoolForm: FormGroup;
+
+	@Input() mappoolType: MappoolType;
+
+	collapsed: boolean;
 
 	availableMods: WyMod[];
 	MAX_BRACKETS: number;
@@ -50,46 +54,36 @@ export class ModBracketComponent implements OnInit {
 
 		this.MAX_BRACKETS = 4;
 		this.synchAllDisabled = false;
+		this.collapsed = true;
 	}
+
 	ngOnInit(): void { }
 
-	/**
-	 * When the name of the modbracket gets changed
-	 *
-	 * @param evt
-	 */
-	onNameChange(evt: Event) {
-		this.modBracket.name = (evt.target as any).value;
+	get mods(): FormArray<FormGroup> {
+		return this.form.get('mods') as FormArray<FormGroup>;
 	}
 
-	/**
-	 * When the acronym of the modbracket gets changed
-	 *
-	 * @param evt
-	 */
-	onAcronymChange(evt: Event) {
-		this.modBracket.acronym = (evt.target as any).value;
+	get beatmaps(): FormArray<FormGroup> {
+		return this.form.get('beatmaps') as FormArray<FormGroup>;
 	}
 
-	/**
-	 * Collapse a bracket
-	 *
-	 * @param bracket the bracket to collapse
-	 */
-	collapseBracket(bracket: WyModBracket, event: MouseEvent): void {
-		if ((event.target as any).localName == 'button' || (event.target as any).localName == 'mat-icon') {
+	get modCategories(): FormArray<FormGroup> {
+		return this.mappoolForm.get('modCategories') as FormArray<FormGroup>;
+	}
+
+	collapseBracket(event: MouseEvent): void {
+		if ((event.target as HTMLElement).closest('button')) {
 			return;
 		}
 
-		bracket.collapsed = !bracket.collapsed;
+		this.collapsed = !this.collapsed;
 	}
 
-	/**
-	 * Remove the mod bracket from the mappool
-	 *
-	 * @param modBracket
-	 */
-	deleteModBracket(modBracket: WyModBracket): void {
+	deleteModBracket(): void {
+		const modBracket = new WyModBracket({
+			name: this.form.get('name').value
+		})
+
 		const dialogRef = this.dialog.open(DeleteModBracketDialogComponent, {
 			data: {
 				modBracket
@@ -98,173 +92,68 @@ export class ModBracketComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
-				for (const findModBracket in this.mappool.modBrackets) {
-					if (this.mappool.modBrackets[findModBracket].index == modBracket.index) {
-						this.mappool.modBrackets.splice(Number(findModBracket), 1);
-						break;
-					}
-				}
-
-				this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-name`);
-				this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-acronym`);
-
-				for (const mod in modBracket.mods) {
-					this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-mod-${modBracket.mods[mod].index}-value`);
-				}
-
-				if (this.mappool.type == MappoolType.AxS) {
-					for (const beatmap in modBracket.beatmaps) {
-						this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${modBracket.beatmaps[beatmap].index}-modifier`);
-					}
-				}
-
-				if (this.mappool.type == MappoolType.CTMTournament) {
-					for (const beatmap in modBracket.beatmaps) {
-						this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${modBracket.beatmaps[beatmap].index}-damage-amount`);
-					}
-				}
-
-				this.validationForm.setValidators(modBracketUniqueModsValidator());
-				this.validationForm.updateValueAndValidity();
+				this.modBracketForm.removeAt(this.modBracketFormIndex);
 
 				this.toastService.addToast(`Successfully removed "${modBracket.name}" from the mappool.`);
 			}
 		});
 	}
 
-	/**
-	 * Add a new mod bracket
-	 */
 	addNewMod(): void {
-		if (this.modBracket.mods.length + 1 <= this.MAX_BRACKETS) {
-			const newMod = new WyMod({
-				index: this.modBracket.modIndex
-			});
-
-			this.modBracket.modIndex++;
-			this.modBracket.mods.push(newMod);
-
-			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-mod-${newMod.index}-value`, new FormControl('', Validators.required));
-
-			this.validationForm.setValidators(modBracketUniqueModsValidator());
-			this.validationForm.updateValueAndValidity();
+		if (this.mods.length + 1 <= this.MAX_BRACKETS) {
+			this.mods.push(FormGroupHelper.createModFormGroup());
 		}
 		else {
 			this.toastService.addToast('Maximum amount of mods reached.', ToastType.Warning);
 		}
 	}
 
-	/**
-	 * Delete a mod
-	 *
-	 * @param modIndex the index of the mod to delete
-	 */
-	deleteMod(modIndex: number): void {
-		for (const mod in this.modBracket.mods) {
-			if (this.modBracket.mods[mod].index == modIndex) {
-				this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-mod-${this.modBracket.mods[mod].index}-value`);
-
-				this.modBracket.mods.splice(Number(mod), 1);
-
-				this.validationForm.setValidators(modBracketUniqueModsValidator());
-				this.validationForm.updateValueAndValidity();
-				return;
-			}
-		}
+	deleteMod(index: number): void {
+		this.mods.removeAt(index);
 	}
 
-	/**
-	 * Add a new beatmap to the given bracket
-	 *
-	 * @param bracket the bracket to add the beatmap to
-	 */
-	addBeatmap(bracket: WyModBracket): void {
-		const newModBracketMap = new WyModBracketMap();
-
-		newModBracketMap.index = this.modBracket.beatmapIndex;
-		this.modBracket.beatmapIndex++;
-
-		bracket.beatmaps.push(newModBracketMap);
-
-		if (this.mappool.type == MappoolType.AxS) {
-			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
-		}
-
-		if (this.mappool.type == MappoolType.CTMTournament) {
-			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${newModBracketMap.index}-damage-amount`, new FormControl('', Validators.required));
-		}
+	addBeatmap(): void {
+		this.beatmaps.push(FormGroupHelper.createBeatmapFormGroup());
 	}
 
-	/**
-	 * Add all beatmaps to the given bracket
-	 *
-	 * @param modBracket the bracket to add the beatmaps to
-	 */
-	addBulkBeatmaps(bracket: WyModBracket): void {
+	addBulkBeatmaps(): void {
 		const allBeatmaps = this.bulkBeatmaps.split('\n');
 
 		allBeatmaps.forEach(beatmapId => {
 			const newModBracketMap = new WyModBracketMap();
-
-			newModBracketMap.index = this.modBracket.beatmapIndex;
-			this.modBracket.beatmapIndex++;
-
 			newModBracketMap.beatmapId = parseInt(beatmapId.trim());
 
-			bracket.beatmaps.push(newModBracketMap);
-
-			if (this.mappool.type == MappoolType.AxS) {
-				this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${newModBracketMap.index}-modifier`, new FormControl('', Validators.required));
-			}
-
-			if (this.mappool.type == MappoolType.CTMTournament) {
-				this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${newModBracketMap.index}-damage-amount`, new FormControl('', Validators.required));
-			}
+			this.beatmaps.push(FormGroupHelper.createBeatmapFormGroup(newModBracketMap));
 		});
 	}
 
-	/**
-	 * Get the data from the given beatmap
-	 *
-	 * @param beatmap the beatmap to synchronize
-	 */
-	synchronizeBeatmap(beatmap: WyModBracketMap): void {
-		beatmap.isSynchronizing = true;
+	synchronizeBeatmap(beatmapGroup: FormGroup): void {
+		beatmapGroup.get('isSynchronizing').setValue(true);
 
-		this.getBeatmap.getByBeatmapId(beatmap.beatmapId).subscribe(data => {
+		this.getBeatmap.getByBeatmapId(beatmapGroup.get('beatmapId').value).subscribe(data => {
 			if (data.beatmap_id == null) {
-				beatmap.invalid = true;
+				beatmapGroup.get('invalid').setValue(true);
 			}
 			else {
-				beatmap.beatmapName = data.getBeatmapname();
-				beatmap.beatmapUrl = data.getBeatmapUrl();
-				beatmap.beatmapsetId = data.beatmapset_id;
-				beatmap.beatmapId = data.beatmap_id;
-				beatmap.invalid = false;
+				beatmapGroup.get('beatmapName').setValue(data.getBeatmapname());
+				beatmapGroup.get('beatmapUrl').setValue(data.getBeatmapUrl());
+				beatmapGroup.get('beatmapsetId').setValue(data.beatmapset_id);
+				beatmapGroup.get('beatmapId').setValue(data.beatmap_id);
+				beatmapGroup.get('invalid').setValue(false);
 			}
 
-			beatmap.isSynchronizing = false;
+			beatmapGroup.get('isSynchronizing').setValue(false);
 		});
 	}
 
-	/**
-	 * Reverses the score win condition for the given beatmap
-	 *
-	 * @param beatmap the beatmap to reverse the score for
-	 */
-	reverseScore(beatmap: WyModBracketMap): void {
-		beatmap.reverseScore = !beatmap.reverseScore;
+	reverseScore(beatmapGroup: FormGroup): void {
+		beatmapGroup.get('reverseScore').setValue(!beatmapGroup.get('reverseScore').value);
 	}
 
-	/**
-	 * Synchronize all beatmaps from the bracket
-	 *
-	 * @param modBracket
-	 */
-	synchronizeAll(modBracket: WyModBracket): void {
+	synchronizeAll(): void {
 		this.synchAllDisabled = true;
 
-		for (const beatmap of modBracket.beatmaps) {
+		for (const beatmap of this.beatmaps.controls) {
 			this.synchronizeBeatmap(beatmap);
 		}
 
@@ -273,52 +162,8 @@ export class ModBracketComponent implements OnInit {
 		}, 3000);
 	}
 
-	/**
-	 * Remove the given beatmap from the given bracket
-	 *
-	 * @param bracket the bracket to remove the beatmap from
-	 * @param beatmap the beatmap to remove
-	 */
-	removeBeatmap(bracket: WyModBracket, beatmap: WyModBracketMap): void {
-		bracket.beatmaps.splice(bracket.beatmaps.indexOf(beatmap), 1);
-
-		if (this.mappool.type == MappoolType.AxS) {
-			this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${beatmap.index}-modifier`);
-		}
-
-		if (this.mappool.type == MappoolType.CTMTournament) {
-			this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${this.modBracket.index}-beatmap-${beatmap.index}-damage-amount`);
-		}
-
-		this.validationForm.setValidators(modBracketUniqueModsValidator());
-		this.validationForm.updateValueAndValidity();
-	}
-
-	/**
-	 * Change the mod category for the given map
-	 *
-	 * @param beatmap
-	 * @param event
-	 */
-	changeModCategory(beatmap: WyModBracketMap, event: MatSelectChange): void {
-		const modCategory = this.mappool.getModCategoryByName(event.value);
-
-		if (modCategory == undefined) {
-			beatmap.modCategory = undefined;
-		}
-		else {
-			beatmap.modCategory = WyModCategory.makeTrueCopy(this.mappool.getModCategoryByName(event.value));
-		}
-	}
-
-	/**
-	 * Change the gamemode for the given map
-	 *
-	 * @param beatmap
-	 * @param event
-	 */
-	changeGamemode(beatmap: WyModBracketMap, event: MatSelectChange): void {
-		beatmap.gamemodeId = event.value;
+	removeBeatmap(index: number): void {
+		this.beatmaps.removeAt(index);
 	}
 
 	/**

@@ -1,23 +1,25 @@
-<form [formGroup]="validationForm">
+<form [formGroup]="form">
 	<div class="mod-bracket">
-		<div class="header" (click)="collapseBracket(modBracket, $event)">
+		<div class="header" (click)="collapseBracket($event)">
 			<div class="information">
-				<h3>{{ modBracket.name }}</h3>
+				<h3>{{ form.get('name').value }}</h3>
 			</div>
 
 			<div class="buttons">
-				<button mat-mini-fab color="warn" (click)="deleteModBracket(modBracket)"><mat-icon>delete</mat-icon></button>
+				<button mat-mini-fab color="warn" (click)="deleteModBracket()">
+					<mat-icon>delete</mat-icon>
+				</button>
 			</div>
 		</div>
 
-		<div class="body" [ngClass]="{'hide': modBracket.collapsed}">
+		<div class="body" *ngIf="!collapsed">
 			<div class="mod-details">
 				<div class="col">
 					<mat-form-field class="full-width">
 						<mat-label>Mod bracket name</mat-label>
-						<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name'" (change)="onNameChange($event)" />
+						<input matInput formControlName="name" />
 
-						<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-name').dirty)">
+						<mat-error *ngIf="form.get('name').errors && (form.get('name').touched || form.get('name').dirty)">
 							This field is required
 						</mat-error>
 					</mat-form-field>
@@ -28,9 +30,9 @@
 				<div class="col">
 					<mat-form-field class="full-width">
 						<mat-label>Mod bracket acronym</mat-label>
-						<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-acronym'" (change)="onAcronymChange($event)" />
+						<input matInput formControlName="acronym" />
 
-						<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-acronym').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-acronym').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-acronym').dirty)">
+						<mat-error *ngIf="form.get('acronym').errors && (form.get('acronym').touched || form.get('acronym').dirty)">
 							This field is required
 						</mat-error>
 					</mat-form-field>
@@ -47,26 +49,28 @@
 			</p>
 
 			<div class="spacing">
-				<button mat-raised-button (click)="addNewMod()" color="primary"><mat-icon>add</mat-icon> add new mod</button>
+				<button mat-raised-button (click)="addNewMod()" color="primary">
+					<mat-icon>add</mat-icon> add new mod
+				</button>
 			</div>
 
-			<div class="all-mods">
-				<div class="mod" *ngFor="let modSelect of modBracket.mods">
+			<div class="all-mods" formArrayName="mods">
+				<div class="mod" *ngFor="let mod of mods.controls; let i = index" [formGroupName]="i">
 					<div class="mod-select">
 						<mat-form-field class="full-width">
 							<mat-label>Mod</mat-label>
-							<mat-select class="full-width" [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-mod-' + modSelect.index + '-value'">
+							<mat-select class="full-width" formControlName="value">
 								<mat-option *ngFor="let mod of availableMods" [value]="mod.value">{{ mod.name }}</mat-option>
 							</mat-select>
 
-							<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-mod-' + modSelect.index + '-value').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-mod-' + modSelect.index + '-value').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-mod-' + modSelect.index + '-value').dirty)">
+							<mat-error *ngIf="mod.get('value').errors && (mod.get('value').touched || mod.get('value').dirty)">
 								This field is required
 							</mat-error>
 						</mat-form-field>
 					</div>
 
 					<div class="buttons">
-						<button mat-mini-fab (click)="deleteMod(modSelect.index)" color="warn"><mat-icon>delete</mat-icon></button>
+						<button mat-mini-fab (click)="deleteMod(i)" color="warn"><mat-icon>delete</mat-icon></button>
 					</div>
 				</div>
 			</div>
@@ -78,9 +82,17 @@
 				<p>Import beatmaps that will be used in the mod bracket. Make sure to synchronize the beatmaps so you you know you got the correct beatmap.</p>
 
 				<div class="modify-buttons">
-					<button mat-raised-button (click)="addBeatmap(modBracket)" color="primary"><mat-icon>add</mat-icon> add new beatmap</button>
-					<button mat-raised-button (click)="addBulkBeatmaps(modBracket)" color="primary" [disabled]="bulkBeatmaps == null || bulkBeatmaps.length <= 0"><mat-icon>add</mat-icon> add bulk beatmaps</button>
-					<button mat-raised-button (click)="synchronizeAll(modBracket)" color="primary" [disabled]="synchAllDisabled"><mat-icon>sync</mat-icon> synchronize all beatmaps</button>
+					<button mat-raised-button (click)="addBeatmap()" color="primary">
+						<mat-icon>add</mat-icon> add new beatmap
+					</button>
+
+					<button mat-raised-button (click)="addBulkBeatmaps()" color="primary" [disabled]="bulkBeatmaps == null || bulkBeatmaps.length <= 0">
+						<mat-icon>add</mat-icon> add bulk beatmaps
+					</button>
+
+					<button mat-raised-button (click)="synchronizeAll()" color="primary" [disabled]="synchAllDisabled">
+						<mat-icon>sync</mat-icon> synchronize all beatmaps
+					</button>
 				</div>
 
 				<mat-form-field class="full-width extra-spacing">
@@ -88,59 +100,58 @@
 					<textarea matInput [(ngModel)]="bulkBeatmaps" [ngModelOptions]="{standalone: true}"></textarea>
 				</mat-form-field>
 
-				<div class="all-beatmaps">
-					<div class="beatmap" *ngFor="let beatmap of modBracket.beatmaps">
+				<div class="all-beatmaps" formArrayName="beatmaps">
+					<div class="beatmap" *ngFor="let beatmapGroup of beatmaps.controls; let i = index" [formGroupName]="i">
 						<div class="data">
 							<div class="column">
 								<mat-form-field class="full-width">
 									<mat-label>Beatmap id</mat-label>
-									<input matInput [(ngModel)]="beatmap.beatmapId" [ngModelOptions]="{ standalone: true }" />
+									<input matInput formControlName="beatmapId" />
 								</mat-form-field>
 							</div>
 
-							<!-- AxS modifier -->
-							<div class="column" *ngIf="mappool.type == 1">
+							<div class="column" *ngIf="mappoolType == 1">
 								<mat-form-field class="full-width">
 									<mat-label>Modifier</mat-label>
-									<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier'" [(ngModel)]="beatmap.modifier" />
+									<input matInput formControlName="modifier" />
 
-									<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-modifier').dirty)">
+									<mat-error *ngIf="beatmapGroup.get('modifier').errors && (beatmapGroup.get('modifier').touched || beatmapGroup.get('modifier').dirty)">
 										This field is required
 									</mat-error>
 								</mat-form-field>
 							</div>
 
-							<!-- CTM damage amount -->
-							<div class="column" *ngIf="mappool.type == 4">
+							<div class="column" *ngIf="mappoolType == 4">
 								<mat-form-field class="full-width">
 									<mat-label>Damage amount</mat-label>
-									<input matInput [formControlName]="'mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-damage-amount'" [(ngModel)]="beatmap.damageAmount" />
+									<input matInput formControlName="damageAmount" />
 
-									<mat-error *ngIf="validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-damage-amount').errors && (validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-damage-amount').touched || validationForm.get('mappool-' + this.mappool.index + '-mod-bracket-' + modBracket.index + '-beatmap-' + beatmap.index + '-damage-amount').dirty)">
+									<mat-error *ngIf="beatmapGroup.get('damageAmount').errors && (beatmapGroup.get('damageAmount').touched || beatmapGroup.get('damageAmount').dirty)">
 										This field is required
 									</mat-error>
 								</mat-form-field>
 							</div>
 
-							<div class="column category" *ngIf="mappool.type == 2 && tournament.publishId != null">
+							<div class="column category" *ngIf="mappoolType == 2 && tournament.publishId != null">
 								<mat-form-field>
 									<mat-label>Mod category</mat-label>
-									<mat-select (selectionChange)="changeModCategory(beatmap, $event)" [value]="beatmap.modCategory != null ? beatmap.modCategory.name : null">
-										<mat-option [value]="modCategory.name" *ngFor="let modCategory of mappool.modCategories">{{ modCategory.name }}</mat-option>
+									<mat-select formControlName="modCategory">
+										<mat-option [value]="modCategory.get('name').value" *ngFor="let modCategory of modCategories.controls">
+											{{ modCategory.get('name').value }}
+										</mat-option>
 									</mat-select>
 								</mat-form-field>
 
-								<mat-slide-toggle [checked]="beatmap.picked" (change)="changePicked(beatmap, $event)">
-									<span *ngIf="beatmap.picked == true">Picked</span>
-									<span *ngIf="beatmap.picked == false || beatmap.picked == null">Not picked</span>
+								<mat-slide-toggle formControlName="picked">
+									<span *ngIf="beatmapGroup.get('picked').value == true">Picked</span>
+									<span *ngIf="beatmapGroup.get('picked').value == false || beatmapGroup.get('picked').value == null">Not picked</span>
 								</mat-slide-toggle>
 							</div>
 
-							<!-- All modes -->
 							<div class="column" *ngIf="tournament.gamemodeId == 4">
 								<mat-form-field>
 									<mat-label>Gamemode</mat-label>
-									<mat-select (selectionChange)="changeGamemode(beatmap, $event)" [value]="beatmap.gamemodeId">
+									<mat-select formControlName="gamemodeId">
 										<mat-option [value]="0">osu!</mat-option>
 										<mat-option [value]="1">osu!taiko</mat-option>
 										<mat-option [value]="2">osu!catch</mat-option>
@@ -151,22 +162,32 @@
 						</div>
 
 						<div class="information">
-							<span *ngIf="beatmap.beatmapName == null && beatmap.invalid == false" class="has-error">No beatmap found, have you tried synchronizing?</span>
-							<a [routerLink]="[]" *ngIf="beatmap.beatmapName && !beatmap.invalid" (click)="electronService.openLink(beatmap.beatmapUrl)">{{ beatmap.beatmapName }}</a>
-							<span *ngIf="beatmap.invalid" class="has-error">There was no beatmap found with the beatmap id "{{ beatmap.beatmapId }}".</span>
+							<span *ngIf="beatmapGroup.get('beatmapName').value == null && beatmapGroup.get('invalid').value == false" class="has-error">
+								No beatmap found, have you tried synchronizing?
+							</span>
+
+							<a [routerLink]="[]" *ngIf="beatmapGroup.get('beatmapName').value && !beatmapGroup.get('invalid').value" (click)="electronService.openLink(beatmapGroup.get('beatmapUrl').value)">
+								{{ beatmapGroup.get('beatmapName').value }}
+							</a>
+
+							<span *ngIf="beatmapGroup.get('invalid').value" class="has-error">
+								There was no beatmap found with the beatmap id "{{ beatmapGroup.get('beatmapId').value }}".
+							</span>
 						</div>
 
 						<div class="buttons">
-							<button mat-mini-fab color="accent" (click)="synchronizeBeatmap(beatmap)">
-								<mat-icon [ngClass]="{'rotate': beatmap.isSynchronizing}">sync</mat-icon>
+							<button mat-mini-fab color="accent" (click)="synchronizeBeatmap(beatmapGroup)">
+								<mat-icon [ngClass]="{ 'rotate': beatmapGroup.get('isSynchronizing').value }">sync</mat-icon>
 							</button>
 
-							<button mat-mini-fab color="accent" [matTooltip]="beatmap.reverseScore != true ? 'Beatmap will use normal score (Highest score wins)' : 'Beatmap will use reverse score (Lowest score wins)'" (click)="reverseScore(beatmap)">
-								<mat-icon *ngIf="beatmap.reverseScore != true">expand_less</mat-icon>
-								<mat-icon *ngIf="beatmap.reverseScore == true">expand_more</mat-icon>
+							<button mat-mini-fab color="accent" [matTooltip]="beatmapGroup.get('reverseScore').value != true ? 'Beatmap will use normal score (Highest score wins)' : 'Beatmap will use reverse score (Lowest score wins)'" (click)="reverseScore(beatmapGroup)">
+								<mat-icon *ngIf="beatmapGroup.get('reverseScore').value != true">expand_less</mat-icon>
+								<mat-icon *ngIf="beatmapGroup.get('reverseScore').value == true">expand_more</mat-icon>
 							</button>
 
-							<button mat-mini-fab color="warn" (click)="removeBeatmap(modBracket, beatmap)"><mat-icon>delete</mat-icon></button>
+							<button mat-mini-fab color="warn" (click)="removeBeatmap(i)">
+								<mat-icon>delete</mat-icon>
+							</button>
 						</div>
 					</div>
 				</div>

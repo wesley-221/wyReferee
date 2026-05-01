@@ -14,6 +14,12 @@ import { TournamentPlayerForm } from '../interfaces/tournament-player-form.inter
 import { TournamentTeamForm } from '../interfaces/tournament-team-form.interface';
 import { WyTeam } from '../../../models/wytournament/wy-team';
 import { WyTeamPlayer } from '../../../models/wytournament/wy-team-player';
+import { TournamentMappoolForm } from '../interfaces/tournament-mappool-form.interface';
+import { WyMappool } from '../../../models/wytournament/mappool/wy-mappool';
+import { WyModBracket } from '../../../models/wytournament/mappool/wy-mod-bracket';
+import { WyMod } from '../../../models/wytournament/mappool/wy-mod';
+import { WyModBracketMap } from '../../../models/wytournament/mappool/wy-mod-bracket-map';
+import { WyModCategory } from '../../../models/wytournament/mappool/wy-mod-category';
 
 @Injectable({
 	providedIn: 'root'
@@ -199,6 +205,58 @@ export class TournamentEditStateService {
 					id: player.id,
 					name: player.name,
 					userId: player.userId
+				}))
+			})
+		));
+
+		this.draft$.next(updatedDraft);
+	}
+
+	updateMappoolForm(mappools: TournamentMappoolForm[]) {
+		const currentDraft = this.draft$.getValue();
+
+		if (!currentDraft) {
+			return;
+		}
+
+		const updatedDraft = this.getCurrent();
+
+		updatedDraft.mappools = mappools.map(mappool => (
+			new WyMappool({
+				id: mappool.id,
+				name: mappool.name,
+				type: mappool.type,
+				gamemodeId: mappool.gamemodeId,
+				modBrackets: mappool.modBrackets.map(modBracket => (
+					new WyModBracket({
+						id: modBracket.id,
+						name: modBracket.name,
+						acronym: modBracket.acronym,
+						mods: modBracket.mods.map(mod => new WyMod({
+							id: mod.id,
+							name: mod.name,
+							value: mod.value
+						})),
+						beatmaps: modBracket.beatmaps.map(beatmap => new WyModBracketMap({
+							id: beatmap.id,
+							invalid: beatmap.invalid,
+							beatmapId: beatmap.beatmapId,
+							beatmapsetId: beatmap.beatmapsetId,
+							beatmapName: beatmap.beatmapName,
+							beatmapUrl: beatmap.beatmapUrl,
+							modifier: beatmap.modifier,
+							damageAmount: beatmap.damageAmount,
+							modCategory: beatmap.modCategory,
+							gamemodeId: beatmap.gamemodeId,
+							reverseScore: beatmap.reverseScore,
+							picked: beatmap.picked,
+							isSynchronizing: beatmap.isSynchronizing
+						}))
+					})
+				)),
+				modCategories: mappool.modCategories.map(modCategory => new WyModCategory({
+					id: modCategory.id,
+					name: modCategory.name,
 				}))
 			})
 		));

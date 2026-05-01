@@ -1,4 +1,4 @@
-<form [formGroup]="validationForm">
+<form [formGroup]="form">
 	<div class="row">
 		<div class="col">
 			<h3>Mappool name</h3>
@@ -6,7 +6,7 @@
 			<mat-form-field class="full-width">
 				<mat-label>Mappool name</mat-label>
 
-				<mat-select [formControlName]="'mappool-' + mappool.index + '-name'" (selectionChange)="onNameChange($event)">
+				<mat-select formControlName="name">
 					<mat-option *ngFor="let stage of tournament.stages" [value]="stage.name">
 						{{ stage.name }}
 					</mat-option>
@@ -23,7 +23,7 @@
 
 			<mat-form-field class="full-width">
 				<mat-label>Mappool type</mat-label>
-				<mat-select [formControlName]="'mappool-' + mappool.index + '-type'" (selectionChange)="changeMappoolType($event)">
+				<mat-select formControlName="type">
 					<mat-option [value]="0">Normal</mat-option>
 					<mat-option [value]="1">AxS</mat-option>
 					<mat-option [value]="2">Mystery tournament</mat-option>
@@ -31,7 +31,7 @@
 					<mat-option [value]="4">CTM tournament</mat-option>
 				</mat-select>
 
-				<mat-error *ngIf="validationForm.get('mappool-' + mappool.index + '-type').errors && (validationForm.get('mappool-' + mappool.index + '-type').touched || validationForm.get('mappool-' + mappool.index + '-type').dirty)">
+				<mat-error *ngIf="form.get('type').errors && (form.get('type').touched || form.get('type').dirty)">
 					This field is required
 				</mat-error>
 			</mat-form-field>
@@ -40,34 +40,38 @@
 		</div>
 	</div>
 
-	<div *ngIf="mappool.type == 2">
+	<div *ngIf="form.get('type').value == 2">
 		<h3>Mod categories</h3>
 		<p>
 			In order for maps to be picked at random, you have to assign a category to the map. A category can only be picked once per multiplayer match so picks can't be repeated.
 			Once you have created all the categories, you will be able to assign them once the mappool is published.
 		</p>
 
-		<button mat-raised-button (click)="addNewCategory()" color="primary"><mat-icon>add</mat-icon> add new category</button>
+		<button mat-raised-button (click)="addNewCategory()" color="primary">
+			<mat-icon>add</mat-icon> add new category
+		</button>
 
-		<div class="categories">
-			<app-alert alertType="danger" *ngIf="mappool.modCategories.length == 0">
+		<div class="categories" formArrayName="modCategories">
+			<app-alert alertType="danger" *ngIf="modCategories.length == 0">
 				You haven't added a category yet.
 			</app-alert>
 
-			<div class="category" *ngFor="let category of mappool.modCategories">
+			<div class="category" *ngFor="let category of modCategories.controls; let i = index" [formGroupName]="i">
 				<div class="category-name">
 					<mat-form-field class="full-width">
 						<mat-label>Category name</mat-label>
-						<input matInput class="full-width" [formControlName]="'mappool-' + mappool.index + '-category-' + category.index + '-name'" />
+						<input matInput class="full-width" formControlName="name" />
 
-						<mat-error *ngIf="validationForm.get('mappool-' + mappool.index + '-category-' + category.index + '-name').errors && (validationForm.get('mappool-' + mappool.index + '-category-' + category.index + '-name').touched || validationForm.get('mappool-' + mappool.index + '-category-' + category.index + '-name').dirty)">
+						<mat-error *ngIf="category.get('name').errors && (category.get('name').touched || category.get('name').dirty)">
 							This field is required
 						</mat-error>
 					</mat-form-field>
 				</div>
 
 				<div class="category-button">
-					<button mat-mini-fab (click)="deleteCategory(category)" color="warn"><mat-icon>delete</mat-icon></button>
+					<button mat-mini-fab (click)="deleteCategory(i)" color="warn">
+						<mat-icon>delete</mat-icon>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -79,12 +83,32 @@
 	<p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod bracket. Fill in the name of the bracket</p>
 
 	<div class="buttons">
-		<button mat-raised-button (click)="createNewBracket()" color="primary"><mat-icon>add</mat-icon> create new bracket</button>
-		<button mat-raised-button (click)="createDefaultBrackets(false)" color="primary"><mat-icon>add</mat-icon> create default brackets</button>
-		<button mat-raised-button (click)="createDefaultBrackets(true)" color="primary"><mat-icon>add</mat-icon> create default brackets with NF</button>
+		<button mat-raised-button (click)="createNewBracket()" color="primary">
+			<mat-icon>add</mat-icon> create new bracket
+		</button>
+
+		<button mat-raised-button (click)="createDefaultBrackets(false)" color="primary">
+			<mat-icon>add</mat-icon> create default brackets
+		</button>
+
+		<button mat-raised-button (click)="createDefaultBrackets(true)" color="primary">
+			<mat-icon>add</mat-icon> create default brackets with NF
+		</button>
 	</div>
 
 	<hr />
 
-	<app-mod-bracket [tournament]="tournament" [mappool]="mappool" [modBracket]="bracket" [validationForm]="validationForm" *ngFor="let bracket of mappool.modBrackets"></app-mod-bracket>
+	<ng-container formArrayName="modBrackets">
+		<app-mod-bracket
+			[form]="modBracketGroup"
+			[formGroupName]="i"
+			[modBracketForm]="modBrackets"
+			[modBracketFormIndex]="i"
+			[mappoolForm]="form"
+			[tournament]="tournament"
+			[mappoolType]="form.get('type').value"
+			*ngFor="let modBracketGroup of modBrackets.controls; let i = index"
+		>
+		</app-mod-bracket>
+	</ng-container>
 </form>

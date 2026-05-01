@@ -1,10 +1,15 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col">
-			<button mat-raised-button color="accent" (click)="createNewMappool()"><mat-icon>add</mat-icon> create new mappool</button>&nbsp;
-			<button mat-raised-button color="accent" (click)="importWyBinMappool()" *ngIf="tournament.hasWyBinConnected()">
-				<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import mappool from wyBin
-			</button>
+			<div class="buttons">
+				<button mat-raised-button color="accent" (click)="createNewMappool()">
+					<mat-icon>add</mat-icon> create new mappool
+				</button>
+
+				<button mat-raised-button color="accent" (click)="importWyBinMappool()" *ngIf="tournament.hasWyBinConnected()">
+					<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon> import mappool from wyBin
+				</button>
+			</div>
 
 			<div class="wybin-import-nofail" *ngIf="tournament.hasWyBinConnected()">
 				<mat-slide-toggle [(ngModel)]="addNoFail">Add NoFail to all mod brackets when importing</mat-slide-toggle>
@@ -18,29 +23,31 @@
 				</div>
 			</div>
 
-			<div class="mappool-spacing" *ngIf="tournament.mappools.length > 0"></div>
+			<form [formGroup]="form">
+				<div class="mappool-spacing" *ngIf="mappools.length > 0"></div>
 
-			<app-alert alertType="warn" *ngIf="tournament.mappools.length == 0">
-				There are no mappools yet.
-			</app-alert>
+				<app-alert alertType="warn" *ngIf="mappools.length == 0">
+					There are no mappools yet.
+				</app-alert>
 
-			<div class="mappools">
-				<div class="mappool" *ngFor="let mappool of tournament.mappools">
-					<div class="header" (click)="collapseMappool(mappool, $event)">
-						<div class="name">
-							<h3>{{ mappool.name }}</h3>
+				<div class="mappools" formArrayName="mappools">
+					<div class="mappool" *ngFor="let mappoolGroup of mappools.controls; let i = index" [formGroupName]="i">
+						<div class="header" (click)="collapseMappool(mappoolGroup, $event)">
+							<div class="name">
+								<h3>{{ mappoolGroup.get('name')?.value }}</h3>
+							</div>
+
+							<div class="actions">
+								<button mat-mini-fab color="warn" (click)="deleteMappool(i)"><mat-icon>delete</mat-icon></button>
+							</div>
 						</div>
 
-						<div class="actions">
-							<button mat-mini-fab color="warn" (click)="deleteMappool(mappool)"><mat-icon>delete</mat-icon></button>
+						<div class="body" *ngIf="collapsedState.get(mappoolGroup) == false">
+							<app-mappool [tournament]="tournament" [form]="mappoolGroup"></app-mappool>
 						</div>
-					</div>
-
-					<div class="body" [ngClass]="{ 'hide': mappool.collapsed }">
-						<app-mappool [tournament]="tournament" [mappool]="mappool" [validationForm]="validationForm"></app-mappool>
 					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </div>

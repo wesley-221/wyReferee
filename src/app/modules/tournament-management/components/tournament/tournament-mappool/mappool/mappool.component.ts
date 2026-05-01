@@ -1,13 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
-import { MappoolType, WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
+import { FormArray, FormGroup } from '@angular/forms';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
-import { WyModCategory } from 'app/models/wytournament/mappool/wy-mod-category';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Gamemodes, Mods } from 'app/models/osu-models/osu';
 import { WyMod } from 'app/models/wytournament/mappool/wy-mod';
-import { modBracketUniqueModsValidator } from 'app/modules/tournament-management/models/mod-bracket-unique-mods-validator';
+import { FormGroupHelper } from '../../../../models/form-group-helper';
 
 @Component({
 	selector: 'app-mappool',
@@ -16,107 +13,37 @@ import { modBracketUniqueModsValidator } from 'app/modules/tournament-management
 })
 export class MappoolComponent implements OnInit {
 	@Input() tournament: WyTournament;
-	@Input() mappool: WyMappool;
-	@Input() validationForm: FormGroup;
+	@Input() form: FormGroup;
 
 	constructor() { }
+
 	ngOnInit(): void { }
 
-	/**
-	 * When the name of the mappool gets changed
-	 *
-	 * @param evt
-	 */
-	onNameChange(evt: MatSelectChange) {
-		this.mappool.name = evt.value;
+	get modBrackets(): FormArray<FormGroup> {
+		return this.form.get('modBrackets') as FormArray<FormGroup>;
 	}
 
-	/**
-	 * Change the type of the mappool
-	 *
-	 * @param event
-	 */
-	changeMappoolType(event: MatSelectChange): void {
-		if (event.value == MappoolType.AxS) {
-			for (const modBracket of this.mappool.modBrackets) {
-				for (const beatmap of modBracket.beatmaps) {
-					this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`, new FormControl(beatmap.modifier, Validators.required));
-				}
-			}
-		}
-		else if (event.value == MappoolType.CTMTournament) {
-			for (const modBracket of this.mappool.modBrackets) {
-				for (const beatmap of modBracket.beatmaps) {
-					this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-damage-amount`, new FormControl(beatmap.modifier, Validators.required));
-				}
-			}
-		}
-		else {
-			for (const modBracket of this.mappool.modBrackets) {
-				for (const beatmap of modBracket.beatmaps) {
-					this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`);
-					this.validationForm.removeControl(`mappool-${this.mappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-damage-amount`);
-				}
-			}
-		}
-
-		this.mappool.type = event.value;
+	get modCategories(): FormArray<FormGroup> {
+		return this.form.get('modCategories') as FormArray<FormGroup>;
 	}
 
-	/**
-	 * Add a new mod category
-	 */
 	addNewCategory(): void {
-		const newCategory = new WyModCategory({
-			index: this.mappool.modCategoryIndex
-		});
-
-		this.mappool.modCategoryIndex++;
-		this.mappool.modCategories.push(newCategory);
-
-		this.validationForm.addControl(`mappool-${this.mappool.index}-category-${newCategory.index}-name`, new FormControl('', Validators.required));
+		this.modCategories.push(FormGroupHelper.createModCategoryFormGroup());
 	}
 
-	/**
-	 * Delete a mod category
-	 *
-	 * @param category the mod category to delete
-	 */
-	deleteCategory(category: WyModCategory): void {
-		for (const findCategory in this.mappool.modCategories) {
-			if (this.mappool.modCategories[findCategory].index == category.index) {
-				this.mappool.modCategories.splice(Number(findCategory), 1);
-				break;
-			}
-		}
-
-		this.validationForm.removeControl(`mappool-${this.mappool.index}-category-${category.index}-name`);
+	deleteCategory(index: number): void {
+		this.modCategories.removeAt(index);
 	}
 
-	/**
-	 * Create a new bracket
-	 */
 	createNewBracket(): void {
 		const newModBracket = new WyModBracket({
-			index: this.mappool.modBracketIndex,
 			name: 'Unnamed mod bracket',
-			collapsed: false,
-			modIndex: 0,
-			beatmapIndex: 0
+			collapsed: false
 		});
 
-		this.mappool.modBracketIndex++;
-		this.mappool.modBrackets.push(newModBracket);
-
-		this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-name`, new FormControl('', Validators.required));
-		this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-acronym`, new FormControl('', Validators.required));
+		this.modBrackets.push(FormGroupHelper.createModBracketFormGroup(newModBracket));
 	}
 
-	/**
-	 * Create default brackets
-	 *
-	 * @param nofail whether or not to add NoFail to the brackets
-	 */
 	createDefaultBrackets(nofail: boolean): void {
 		if (this.tournament.gamemodeId == Gamemodes.Mania as number) {
 			this.createDefaultBracket('Rice', 'RC', [{ name: 'Freemod', value: 'freemod' }]);
@@ -151,50 +78,24 @@ export class MappoolComponent implements OnInit {
 		}
 
 		this.createDefaultBracket('Tiebreaker', 'TB', [{ name: 'Freemod', value: 'freemod' }]);
-
-		this.validationForm.setValidators(modBracketUniqueModsValidator());
-		this.validationForm.updateValueAndValidity();
 	}
 
-	/**
-	 * Create a default bracket
-	 *
-	 * @param name the desired name for this bracket
-	 * @param acronym the desired acronym for this bracket
-	 * @param modsEnabled json array of desired mods for this bracket
-	 */
 	private createDefaultBracket(name: string, acronym: string, modsEnabled: any[]): void {
-		// Create bracket object with name and acronym provided
 		const newModBracket = new WyModBracket({
-			index: this.mappool.modBracketIndex,
 			name: name,
 			acronym: acronym,
-			collapsed: true,
-			modIndex: 0,
-			beatmapIndex: 0
+			collapsed: true
 		});
 
-		// Create FormGroupControl to watch the text fields for them (and sync changes?)
-		// Important: Pass in the same name and acronym as the initial values
-		this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-name`, new FormControl(name, Validators.required));
-		this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-acronym`, new FormControl(acronym, Validators.required));
-
 		modsEnabled.forEach(mod => {
-			// Create mod object with name and value = current mod
 			const newMod = new WyMod({
-				index: newModBracket.modIndex,
 				name: mod.name,
 				value: mod.value
 			});
 
-			newModBracket.modIndex++;
 			newModBracket.mods.push(newMod);
-
-			this.validationForm.addControl(`mappool-${this.mappool.index}-mod-bracket-${newModBracket.index}-mod-${newMod.index}-value`, new FormControl(mod.value, Validators.required));
 		});
 
-		// Increment bracket count and push bracket to list of brackets
-		this.mappool.modBracketIndex++;
-		this.mappool.modBrackets.push(newModBracket);
+		this.modBrackets.push(FormGroupHelper.createModBracketFormGroup(newModBracket));
 	}
 }

@@ -1,11 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteMappoolDialogComponent } from 'app/components/dialogs/delete-mappool-dialog/delete-mappool-dialog.component';
 import { MappoolType, WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
+import { TournamentEditStateService } from '../../../../services/tournament-edit-state.service';
+import { debounceTime, filter } from 'rxjs';
+import { FormGroupHelper } from '../../../../models/form-group-helper';
 
 @Component({
 	selector: 'app-mappool-overview',
@@ -16,38 +19,69 @@ export class MappoolOverviewComponent implements OnInit {
 	@Input() tournament: WyTournament;
 	@Input() validationForm: FormGroup;
 
+	form: FormGroup;
+	collapsedState: WeakMap<AbstractControl, boolean>;
+
 	wyBinMappools: WyMappool[];
 	importingFromWyBin: boolean;
 	addNoFail: boolean;
 
-	constructor(private dialog: MatDialog, private toastService: ToastService, private tournamentService: TournamentService) {
+	constructor(
+		private dialog: MatDialog,
+		private toastService: ToastService,
+		private tournamentService: TournamentService,
+		private tournamentEditStateService: TournamentEditStateService
+	) {
 		this.wyBinMappools = [];
 		this.importingFromWyBin = false;
 		this.addNoFail = true;
+		this.collapsedState = new WeakMap<AbstractControl, boolean>();
+
+		this.form = new FormGroup({
+			mappools: new FormArray([])
+		});
 	}
 
-	ngOnInit(): void { }
+	ngOnInit(): void {
+		this.tournamentEditStateService.getDraft$()
+			.pipe(filter(v => !!v))
+			.subscribe(tournament => {
+				this.tournament = tournament;
 
-	/**
-	 * Create a new mappool
-	 */
+				if (this.mappools.length === 0) {
+					const formArray = new FormArray(
+						tournament.mappools.map(m => FormGroupHelper.createMappoolFormGroup(m))
+					);
+
+					this.form.setControl('mappools', formArray, { emitEvent: false });
+				}
+				else {
+					tournament.mappools.forEach((m, i) => {
+						this.mappools.at(i)?.patchValue(m, { emitEvent: false });
+					});
+				}
+			});
+
+		this.form.valueChanges
+			.pipe(debounceTime(200))
+			.subscribe(value => {
+				this.tournamentEditStateService.updateMappoolForm(value.mappools);
+			});
+	}
+
+	get mappools(): FormArray<FormGroup> {
+		return this.form.get('mappools') as FormArray<FormGroup>;
+	}
+
 	createNewMappool(): void {
 		const newMappool = new WyMappool({
 			index: this.tournament.mappoolIndex,
 			name: 'Unnamed mappool'
 		});
 
-		this.tournament.mappoolIndex++;
-
-		this.tournament.mappools.push(newMappool);
-
-		this.validationForm.addControl(`mappool-${newMappool.index}-name`, new FormControl('', Validators.required));
-		this.validationForm.addControl(`mappool-${newMappool.index}-type`, new FormControl('', Validators.required));
+		this.mappools.push(FormGroupHelper.createMappoolFormGroup(newMappool));
 	}
 
-	/**
-	 * Import all mappools from wyBin
-	 */
 	importWyBinMappool(): void {
 		this.wyBinMappools = [];
 
@@ -74,52 +108,16 @@ export class MappoolOverviewComponent implements OnInit {
 		});
 	}
 
-	/**
-	 * Import the selected mappool
-	 *
-	 * @param mappool the mappool to import
-	 */
 	importMappool(mappool: WyMappool) {
 		const newMappool = WyMappool.makeTrueCopy(mappool);
 		newMappool.index = this.tournament.mappoolIndex;
-		this.tournament.mappoolIndex++;
 
-		newMappool.collapsed = true;
-
-		this.validationForm.addControl(`mappool-${newMappool.index}-name`, new FormControl(newMappool.name, Validators.required));
-		this.validationForm.addControl(`mappool-${newMappool.index}-type`, new FormControl(newMappool.type, Validators.required));
-
-		for (const modBracket of newMappool.modBrackets) {
-			modBracket.collapsed = true;
-
-			this.validationForm.addControl(`mappool-${newMappool.index}-mod-bracket-${modBracket.index}-name`, new FormControl(modBracket.name, Validators.required));
-			this.validationForm.addControl(`mappool-${newMappool.index}-mod-bracket-${modBracket.index}-acronym`, new FormControl(modBracket.acronym, Validators.required));
-
-			for (const mod of modBracket.mods) {
-				if (mod.value != 'freemod') {
-					this.validationForm.addControl(`mappool-${newMappool.index}-mod-bracket-${modBracket.index}-mod-${mod.index}-value`, new FormControl(Number(mod.value), Validators.required));
-				}
-				else {
-					this.validationForm.addControl(`mappool-${newMappool.index}-mod-bracket-${modBracket.index}-mod-${mod.index}-value`, new FormControl(mod.value, Validators.required));
-				}
-			}
-
-			if (mappool.type == MappoolType.AxS) {
-				for (const beatmap of modBracket.beatmaps) {
-					this.validationForm.addControl(`mappool-${newMappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`, new FormControl(beatmap.modifier, Validators.required));
-				}
-			}
-		}
-
-		this.tournament.mappools.push(newMappool);
+		this.mappools.push(FormGroupHelper.createMappoolFormGroup(newMappool));
 	}
 
-	/**
-	 * Delete a mappool
-	 *
-	 * @param mappool the mappool to delete
-	 */
-	deleteMappool(mappool: WyMappool): void {
+	deleteMappool(index: number): void {
+		const mappool = this.tournament.mappools[index];
+
 		const dialogRef = this.dialog.open(DeleteMappoolDialogComponent, {
 			data: {
 				mappool: mappool
@@ -128,45 +126,23 @@ export class MappoolOverviewComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
-				for (const iMappool in this.tournament.mappools) {
-					if (this.tournament.mappools[iMappool].index == mappool.index) {
-						const findMappool = this.tournament.mappools[iMappool];
-
-						this.tournament.mappools.splice(Number(iMappool), 1);
-
-						this.validationForm.removeControl(`mappool-${findMappool.index}-name`);
-						this.validationForm.removeControl(`mappool-${findMappool.index}-type`);
-
-						for (const modBracket of findMappool.modBrackets) {
-							this.validationForm.removeControl(`mappool-${findMappool.index}-mod-bracket-${modBracket.index}-name`);
-							this.validationForm.removeControl(`mappool-${findMappool.index}-mod-bracket-${modBracket.index}-acronym`);
-
-							for (const mod of modBracket.mods) {
-								this.validationForm.removeControl(`mappool-${findMappool.index}-mod-bracket-${modBracket.index}-mod-${mod.index}-value`);
-							}
-
-							if (mappool.type == MappoolType.AxS) {
-								for (const beatmap of modBracket.beatmaps) {
-									this.validationForm.removeControl(`mappool-${findMappool.index}-mod-bracket-${modBracket.index}-beatmap-${beatmap.index}-modifier`);
-								}
-							}
-						}
-					}
-				}
+				this.mappools.removeAt(index);
 
 				this.toastService.addToast(`Successfully deleted ${mappool.name}.`);
 			}
 		});
 	}
 
-	/**
-	 * Collapse the mappool
-	 */
-	collapseMappool(mappool: WyMappool, event: MouseEvent) {
-		if ((event.target as any).localName == 'button' || (event.target as any).localName == 'mat-icon') {
+	collapseMappool(mappool: AbstractControl, event: MouseEvent): void {
+		if ((event.target as HTMLElement).closest('button')) {
 			return;
 		}
 
-		mappool.collapsed = !mappool.collapsed;
+		const currentState = this.collapsedState.get(mappool) ?? true;
+		this.collapsedState.set(mappool, !currentState);
+	}
+
+	getMappoolFormArray(index: number): FormGroup {
+		return this.mappools.at(index) as FormGroup;
 	}
 }
