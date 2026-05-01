@@ -87,22 +87,6 @@ export class TournamentGeneralComponent implements OnInit {
 
 		this.form.get('teamSize').setValue(selectedScoreInterface.getTeamSize());
 		this.form.get('format').setValue((selectedScoreInterface.isSoloTournament() != null && selectedScoreInterface.isSoloTournament() == true ? TournamentFormat.Solo : TournamentFormat.Teams));
-
-		// TODO: check if this is still required once i get to stages (maybe mappools?)
-		// if (this.tournament.scoreInterface instanceof CTMCalculation && !(selectedScoreInterface instanceof CTMCalculation)) {
-		// 	for (const stage of this.tournament.stages) {
-		// 		this.form.removeControl(`tournament-stage-hitpoints-${stage.index}`);
-		// 	}
-		// }
-		// else if (selectedScoreInterface instanceof CTMCalculation) {
-		// 	for (const stage of this.tournament.stages) {
-		// 		this.form.addControl(`tournament-stage-hitpoints-${stage.index}`, new FormControl('', Validators.required));
-		// 	}
-		// }
-
-		// TODO: check if score interface is saved, other
-		this.tournament.scoreInterface = selectedScoreInterface;
-		this.tournament.scoreInterfaceIdentifier = selectedScoreInterface.getIdentifier();
 	}
 
 	/**
@@ -111,7 +95,6 @@ export class TournamentGeneralComponent implements OnInit {
 	changeTeamFormat(event: MatSelectChange): void {
 		if (event.value == 'solo') {
 			this.form.get('teamSize').setValue(1);
-			this.tournament.teamSize = 1;
 		}
 	}
 

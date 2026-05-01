@@ -20,12 +20,14 @@ import { WyModBracket } from '../../../models/wytournament/mappool/wy-mod-bracke
 import { WyMod } from '../../../models/wytournament/mappool/wy-mod';
 import { WyModBracketMap } from '../../../models/wytournament/mappool/wy-mod-bracket-map';
 import { WyModCategory } from '../../../models/wytournament/mappool/wy-mod-category';
+import { Calculate } from '../../../models/score-calculation/calculate';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class TournamentEditStateService {
 	private draft$ = new BehaviorSubject<WyTournament>(null);
+	private calculateScoreInterfaces = new Calculate();
 
 	setInitialTournament(tournament: WyTournament) {
 		this.draft$.next(tournament);
@@ -52,6 +54,7 @@ export class TournamentEditStateService {
 		updatedDraft.acronym = general.acronym;
 		updatedDraft.gamemodeId = general.gamemode;
 		updatedDraft.scoreInterfaceIdentifier = general.scoreSystem;
+		updatedDraft.scoreInterface = this.calculateScoreInterfaces.getScoreInterface(general.scoreSystem);
 		updatedDraft.protects = general.protects;
 		updatedDraft.format = general.format;
 		updatedDraft.teamSize = general.teamSize;
