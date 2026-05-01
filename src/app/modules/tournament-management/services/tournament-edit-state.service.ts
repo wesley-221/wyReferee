@@ -10,6 +10,10 @@ import { TournamentConditionalMessageForm } from '../interfaces/tournament-condi
 import { WyConditionalMessage } from '../../../models/wytournament/wy-conditional-message';
 import { TournamentStageForm } from '../interfaces/tournament-stage-form.interface';
 import { WyStage } from '../../../models/wytournament/wy-stage';
+import { TournamentPlayerForm } from '../interfaces/tournament-player-form.interface';
+import { TournamentTeamForm } from '../interfaces/tournament-team-form.interface';
+import { WyTeam } from '../../../models/wytournament/wy-team';
+import { WyTeamPlayer } from '../../../models/wytournament/wy-team-player';
 
 @Injectable({
 	providedIn: 'root'
@@ -154,6 +158,50 @@ export class TournamentEditStateService {
 				hitpoints: stage.hitpoints
 			})
 		);
+
+		this.draft$.next(updatedDraft);
+	}
+
+	updatePlayersForm(players: TournamentPlayerForm[]) {
+		const currentDraft = this.draft$.getValue();
+
+		if (!currentDraft) {
+			return;
+		}
+
+		const updatedDraft = this.getCurrent();
+
+		updatedDraft.teams = players.map(player => (
+			new WyTeam({
+				id: player.id,
+				name: player.name,
+				userId: player.userId
+			})
+		));
+
+		this.draft$.next(updatedDraft);
+	}
+
+	updateTeamsForm(teams: TournamentTeamForm[]) {
+		const currentDraft = this.draft$.getValue();
+
+		if (!currentDraft) {
+			return;
+		}
+
+		const updatedDraft = this.getCurrent();
+
+		updatedDraft.teams = teams.map(team => (
+			new WyTeam({
+				id: team.id,
+				name: team.name,
+				players: team.players.map(player => new WyTeamPlayer({
+					id: player.id,
+					name: player.name,
+					userId: player.userId
+				}))
+			})
+		));
 
 		this.draft$.next(updatedDraft);
 	}

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AddBulkTeamsDialogComponent } from 'app/components/dialogs/add-bulk-teams-dialog/add-bulk-teams-dialog.component';
 import { DeleteTeamDialogComponent } from 'app/components/dialogs/delete-team-dialog/delete-team-dialog.component';
@@ -8,6 +8,8 @@ import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
+import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
+import { debounceTime, filter } from 'rxjs';
 
 @Component({
 	selector: 'app-tournament-participants',
@@ -15,8 +17,10 @@ import { TournamentService } from 'app/services/tournament.service';
 	styleUrls: ['./tournament-participants.component.scss']
 })
 export class TournamentParticipantsComponent implements OnInit {
-	@Input() tournament: WyTournament;
-	@Input() validationForm: FormGroup;
+	tournament: WyTournament;
+	form: FormGroup;
+
+	collapsedState: WeakMap<AbstractControl, boolean>;
 
 	usersToAdd: string;
 	teamsToAdd: string;
@@ -25,105 +29,153 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	importingFromWyBin: boolean;
 
-	constructor(private dialog: MatDialog, private toastService: ToastService, private tournamentService: TournamentService) {
+	constructor(
+		private dialog: MatDialog,
+		private toastService: ToastService,
+		private tournamentService: TournamentService,
+		private tournamentEditStateService: TournamentEditStateService
+	) {
 		this.importingFromWyBin = false;
-	}
 
-	ngOnInit(): void { }
-
-	/**
-	 * Add a team to the tournament
-	 */
-	addTeam() {
-		const newTeam = new WyTeam();
-
-		newTeam.index = this.tournament.teamIndex;
-		this.tournament.teamIndex++;
-
-		this.tournament.teams.push(newTeam);
-
-		this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl('', Validators.required));
-
-		if (this.tournament.isSoloTournament()) {
-			this.validationForm.addControl(`tournament-player-user-id-${newTeam.index}`, new FormControl(''));
-		}
-	}
-
-	/**
-	 * Delete a team from the tournament
-	 *
-	 * @param team the team to remove
-	 */
-	deleteTeam(team: WyTeam) {
-		const dialogRef = this.dialog.open(DeleteTeamDialogComponent, {
-			data: {
-				team
-			}
+		this.form = new FormGroup({
+			players: new FormArray([]),
+			teams: new FormArray([])
 		});
 
-		dialogRef.afterClosed().subscribe(result => {
-			if (result != null) {
-				this.validationForm.removeControl(`tournament-team-name-${team.index}`);
+		this.collapsedState = new WeakMap();
+	}
 
-				if (this.tournament.isSoloTournament()) {
-					this.validationForm.removeControl(`tournament-player-user-id-${team.index}`);
+	ngOnInit(): void {
+		this.tournamentEditStateService.getDraft$()
+			.pipe(filter(v => !!v))
+			.subscribe(tournament => {
+				this.tournament = tournament;
+
+				if (tournament.isSoloTournament()) {
+					if (this.players.length === 0) {
+						const formArray = new FormArray(
+							tournament.teams.map(t => this.createPlayerGroup(t.id, t.name, t.userId))
+						);
+
+						this.form.setControl('players', formArray, { emitEvent: false });
+					}
+					else {
+						tournament.teams.forEach((t, i) => {
+							this.players.at(i)?.patchValue({
+								id: t.id,
+								name: t.name,
+								userId: t.userId
+							}, { emitEvent: false });
+						});
+					}
 				}
+				else {
+					if (this.teams.length === 0) {
+						const formArray = new FormArray(
+							tournament.teams.map(t => this.createTeamGroup(t))
+						);
 
-				this.tournament.teams.splice(this.tournament.teams.indexOf(team), 1);
+						this.form.setControl('teams', formArray, { emitEvent: false });
+					}
+					else {
+						tournament.teams.forEach((t, i) => {
+							const teamGroup = this.teams.at(i) as FormGroup;
 
-				this.toastService.addToast(`Successfully removed the team ${team.name} from the tournament.`);
-			}
-		});
+							if (!teamGroup) {
+								return;
+							}
+
+							teamGroup.patchValue({
+								id: t.id,
+								name: t.name
+							}, { emitEvent: false });
+
+							const playersArray = new FormArray(
+								t.players.map(p => this.createPlayerGroup(p.id, p.name, p.userId))
+							);
+
+							teamGroup.setControl('players', playersArray, { emitEvent: false });
+						});
+					}
+				}
+			});
+
+		this.form.valueChanges
+			.pipe(debounceTime(200))
+			.subscribe(value => {
+				if (this.tournament.isSoloTournament()) {
+					this.tournamentEditStateService.updatePlayersForm(value.players);
+				}
+				else {
+					this.tournamentEditStateService.updateTeamsForm(value.teams);
+				}
+			});
 	}
 
-	/**
-	 * Collapse a participant bracket
-	 *
-	 * @param team the participant bracket to collapse
-	 */
-	collapseParticipant(team: WyTeam, event: MouseEvent) {
-		if ((event.target as any).localName == 'button' || (event.target as any).localName == 'mat-icon') {
+	get teams(): FormArray {
+		return this.form.get('teams') as FormArray;
+	}
+
+	get players(): FormArray {
+		return this.form.get('players') as FormArray;
+	}
+
+	collapse(team: AbstractControl, event: MouseEvent) {
+		if ((event.target as HTMLElement).closest('button')) {
 			return;
 		}
 
-		team.collapsed = !team.collapsed;
+		const currentState = this.collapsedState.get(team) ?? true;
+		this.collapsedState.set(team, !currentState);
 	}
 
-	/**
-	 * Change the name of the team
-	 *
-	 * @param team the team to change the name of
-	 * @param event the changed value
-	 */
-	changeTeamName(team: WyTeam, event: any) {
-		team.name = event.target.value;
+	addTeam() {
+		if (this.tournament.isSoloTournament()) {
+			this.players.push(this.createPlayerGroup(null, '', null));
+		}
+		else {
+			this.teams.push(this.createTeamGroup());
+		}
 	}
 
-	/**
-	 * Change the id of the user
-	 *
-	 * @param team the team to change the user id of
-	 * @param event the changed value
-	 */
-	changePlayerUserId(team: WyTeam, event: any) {
-		team.userId = event.target.value;
+	addNewPlayer(team: AbstractControl) {
+		(team.get('players') as FormArray).push(this.createPlayerGroup(null, '', null));
 	}
 
-	/**
-	 * Add a player to the given team
-	 *
-	 * @param team the team to add the player to
-	 */
-	addNewPlayer(team: WyTeam) {
-		team.players.push(new WyTeamPlayer());
+	deletePlayer(i: number) {
+		this.players.removeAt(i);
 	}
 
-	/**
-	 * Bulk add players to the given team
-	 *
-	 * @param team the team to add the players to
-	 */
-	addBulkPlayers(team: WyTeam) {
+	deleteTeam(index: number) {
+		if (this.tournament.isSoloTournament()) {
+			this.players.removeAt(index);
+		}
+		else {
+			const team = this.teams.at(index);
+
+			const dialogRef = this.dialog.open(DeleteTeamDialogComponent, {
+				data: {
+					team: new WyTeam({
+						name: team.get('name').value
+					})
+				}
+			});
+
+			dialogRef.afterClosed().subscribe(result => {
+				if (result != null) {
+					this.teams.removeAt(index);
+
+					this.toastService.addToast(`Successfully removed the team ${team.get('name').value} from the tournament.`);
+				}
+			});
+		}
+	}
+
+	removePlayerFromTeam(teamGroup: AbstractControl, playerIndex: number) {
+		(teamGroup.get('players') as FormArray).removeAt(playerIndex);
+	}
+
+	addBulkPlayers(teamGroup: AbstractControl) {
 		const allUsers = this.usersToAdd.split('\n');
 
 		allUsers.forEach(user => {
@@ -133,15 +185,12 @@ export class TournamentParticipantsComponent implements OnInit {
 			teamPlayer.name = username.trim();
 			teamPlayer.userId = parseInt(userId.trim());
 
-			team.players.push(teamPlayer);
+			(teamGroup.get('players') as FormArray).push(this.createPlayerGroup(null, teamPlayer.name, teamPlayer.userId));
 		});
 
 		this.usersToAdd = null;
 	}
 
-	/**
-	 * Bulk add teams to the tournament
-	 */
 	addBulkTeams(): void {
 		const dialogRef = this.dialog.open(AddBulkTeamsDialogComponent);
 
@@ -170,19 +219,12 @@ export class TournamentParticipantsComponent implements OnInit {
 						newTeam.players.push(newPlayer);
 					}
 
-					this.tournament.teamIndex++;
-
-					this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
-
-					this.tournament.teams.push(newTeam);
+					this.teams.push(this.createTeamGroup(newTeam));
 				});
 			}
 		});
 	}
 
-	/**
-	 * Bulk add players to the tournament
-	 */
 	addBulkPlayersSoloTournament(): void {
 		const allTeams = this.teamsToAdd.split('\n');
 
@@ -193,66 +235,49 @@ export class TournamentParticipantsComponent implements OnInit {
 			newTeam.name = username.trim();
 			newTeam.userId = parseInt(userId.trim());
 
-			newTeam.index = this.tournament.teamIndex;
-			this.tournament.teamIndex++;
-
-			this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
-
-			if (this.tournament.isSoloTournament()) {
-				this.validationForm.addControl(`tournament-player-user-id-${newTeam.index}`, new FormControl(newTeam.userId));
-			}
-
-			this.tournament.teams.push(newTeam);
+			this.players.push(this.createPlayerGroup(null, newTeam.name, newTeam.userId));
 		});
 
 		this.teamsToAdd = null;
 	}
 
-	/**
-	 * Remove a player from the given team
-	 *
-	 * @param team the team to remove a player from
-	 * @param player the player to remove from the team
-	 */
-	removePlayer(team: WyTeam, player: WyTeamPlayer) {
-		team.players.splice(team.players.indexOf(player), 1);
-	}
-
-	/**
-	 * Import players from the given wyBin tournament
-	 */
 	importWyBinPlayers(): void {
 		this.importingFromWyBin = true;
 
 		this.tournamentService.getWyBinTournamentPlayers(this.tournament.wyBinTournamentId).subscribe((players: any) => {
+			const existingUserIds = new Set(
+				this.players.controls
+					.map(ctrl => ctrl.get('userId')?.value)
+					.filter(v => v != null)
+			);
+
 			for (const player of players) {
-				const newTeam = new WyTeam({
-					name: player.user.username,
-					userId: player.user.userOsu.id,
-					index: this.tournament.teamIndex,
-					collapsed: true
-				});
+				if (existingUserIds.has(player.user.userOsu.id)) {
+					continue;
+				}
 
-				this.tournament.teamIndex++;
-
-				this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
-				this.validationForm.addControl(`tournament-player-user-id-${newTeam.index}`, new FormControl(newTeam.userId));
-
-				this.tournament.teams.push(newTeam);
+				this.players.push(this.createPlayerGroup(null, player.user.username, player.user.userOsu.id));
 			}
 
 			this.importingFromWyBin = false;
 		});
 	}
 
-	/**
-	 * Import teams from the given wyBin tournament
-	 */
 	importWyBinTeams(): void {
 		this.importingFromWyBin = true;
 
 		this.tournamentService.getWyBinTournamentTeams(this.tournament.wyBinTournamentId).subscribe((teams: any) => {
+			const existingUserIds = new Set(
+				this.teams.controls
+					.map(ctrl => ctrl.get('name')?.value)
+					.filter(v => v != null)
+			);
+
 			for (const team of teams) {
+				if (existingUserIds.has(team.name)) {
+					continue;
+				}
+
 				const newTeam = new WyTeam({
 					name: team.name,
 					index: this.tournament.teamIndex,
@@ -270,12 +295,34 @@ export class TournamentParticipantsComponent implements OnInit {
 					newTeam.players.push(newPlayer);
 				}
 
-				this.validationForm.addControl(`tournament-team-name-${newTeam.index}`, new FormControl(newTeam.name, Validators.required));
-
-				this.tournament.teams.push(newTeam);
+				this.teams.push(this.createTeamGroup(newTeam));
 			}
 
 			this.importingFromWyBin = false;
+		});
+	}
+
+	getPlayersFormArray(index: number): FormArray {
+		return this.teams.at(index).get('players') as FormArray;
+	}
+
+	private createPlayerGroup(id: number, name: string, userId: number): FormGroup {
+		return new FormGroup({
+			id: new FormControl(id || null),
+			name: new FormControl(name || '', Validators.required),
+			userId: new FormControl(userId || null)
+		});
+	}
+
+	private createTeamGroup(team?: WyTeam): FormGroup {
+		const playersFormArray = new FormArray(
+			team?.players.map(p => this.createPlayerGroup(p.id, p.name, p.userId)) || []
+		);
+
+		return new FormGroup({
+			id: new FormControl(team?.id || null),
+			name: new FormControl(team?.name || '', Validators.required),
+			players: playersFormArray
 		});
 	}
 }

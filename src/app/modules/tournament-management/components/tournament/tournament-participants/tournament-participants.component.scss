@@ -1,13 +1,8 @@
 @import "variables";
 
 .buttons {
-	button {
-		margin-right: 8px;
-
-		&:last-child {
-			margin-right: 0;
-		}
-	}
+	display: flex;
+	gap: 8px;
 }
 
 .margin-top {
@@ -16,15 +11,10 @@
 
 .split {
 	display: flex;
+	gap: 8px;
 
 	.col {
 		flex: 1;
-
-		margin-right: 8px;
-
-		&:last-child {
-			margin-right: 0;
-		}
 	}
 }
 
