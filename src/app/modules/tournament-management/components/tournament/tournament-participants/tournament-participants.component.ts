@@ -120,6 +120,10 @@ export class TournamentParticipantsComponent implements OnInit {
 		return this.form.get('players') as FormArray;
 	}
 
+	trackByIndex(index: number) {
+		return index;
+	}
+
 	collapse(team: AbstractControl, event: MouseEvent) {
 		if ((event.target as HTMLElement).closest('button')) {
 			return;
