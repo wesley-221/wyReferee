@@ -14,10 +14,12 @@ export class FormGroupHelper {
 	}
 
 	static createModFormGroup(mod?: WyMod): FormGroup {
+		const value = mod?.name == 'Freemod' ? mod?.value : Number(mod?.value);
+
 		return new FormGroup({
 			id: new FormControl(mod?.id ?? null),
 			name: new FormControl(mod?.name ?? '', Validators.required),
-			value: new FormControl(mod?.value ?? null, Validators.required)
+			value: new FormControl(value ?? null, Validators.required)
 		});
 	}
 
