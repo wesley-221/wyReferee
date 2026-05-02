@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, filter, map, shareReplay } from 'rxjs';
 import { WyTournament } from '../../../models/wytournament/wy-tournament';
 import { TournamentGeneralForm } from '../interfaces/tournament-general-form.interface';
 import { TournamentWybinForm } from '../interfaces/tournament-wybin-form.interface';
@@ -21,6 +21,19 @@ import { WyMod } from '../../../models/wytournament/mappool/wy-mod';
 import { WyModBracketMap } from '../../../models/wytournament/mappool/wy-mod-bracket-map';
 import { WyModCategory } from '../../../models/wytournament/mappool/wy-mod-category';
 import { Calculate } from '../../../models/score-calculation/calculate';
+import { TournamentValidator, ValidationError, ValidationSection } from '../models/tournament-validator';
+
+type PageState = {
+	general: { valid: boolean };
+	wyBin: { valid: boolean };
+	access: { valid: boolean };
+	webhooks: { valid: boolean };
+	conditionalMessages: { valid: boolean };
+	stages: { valid: boolean };
+	participants: { valid: boolean };
+	mappools: { valid: boolean };
+	errors: ValidationError[];
+};
 
 @Injectable({
 	providedIn: 'root'
@@ -28,6 +41,12 @@ import { Calculate } from '../../../models/score-calculation/calculate';
 export class TournamentEditStateService {
 	private draft$ = new BehaviorSubject<WyTournament>(null);
 	private calculateScoreInterfaces = new Calculate();
+
+	pageState$ = this.draft$.pipe(
+		filter((draft): draft is WyTournament => !!draft),
+		map(draft => this.buildPageState(draft)),
+		shareReplay(1)
+	);
 
 	setInitialTournament(tournament: WyTournament) {
 		this.draft$.next(tournament);
@@ -265,5 +284,24 @@ export class TournamentEditStateService {
 		));
 
 		this.draft$.next(updatedDraft);
+	}
+
+	private buildPageState(draft: WyTournament): PageState {
+		const validation = TournamentValidator.validateTournament(draft);
+
+		const hasError = (section: ValidationSection) =>
+			validation.errors.some(e => e.section === section);
+
+		return {
+			general: { valid: !hasError('general') },
+			wyBin: { valid: !hasError('wyBin') },
+			access: { valid: !hasError('access') },
+			webhooks: { valid: !hasError('webhooks') },
+			conditionalMessages: { valid: !hasError('conditionalMessages') },
+			stages: { valid: !hasError('stages') },
+			participants: { valid: !hasError('participants') },
+			mappools: { valid: !hasError('mappools') },
+			errors: validation.errors
+		};
 	}
 }

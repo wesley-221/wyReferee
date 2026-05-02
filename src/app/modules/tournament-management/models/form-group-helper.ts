@@ -70,7 +70,7 @@ export class FormGroupHelper {
 			id: new FormControl(mappool?.id ?? null),
 			name: new FormControl(mappool?.name ?? '', Validators.required),
 			type: new FormControl(mappool?.type ?? MappoolType.Normal, Validators.required),
-			gamemodeId: new FormControl(mappool?.gamemodeId ?? null, Validators.required),
+			gamemodeId: new FormControl(mappool?.gamemodeId ?? null),
 			modBrackets: modBracketsFormArray,
 			modCategories: modCategoriesFormArray
 		});
