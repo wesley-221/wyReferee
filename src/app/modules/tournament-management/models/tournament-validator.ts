@@ -206,10 +206,10 @@ export class TournamentValidator {
 			}
 
 			team.players?.forEach((player, pi) => {
-				if (!player.userId) {
+				if (!player.name) {
 					errors.push({
 						section: 'participants',
-						path: `${base}.players[${pi}].userId`,
+						path: `${base}.players[${pi}].name`,
 						message: 'User is required',
 						code: 'REQUIRED'
 					});
@@ -231,6 +231,15 @@ export class TournamentValidator {
 					section: 'stages',
 					path: `${base}.name`,
 					message: 'Name is required',
+					code: 'REQUIRED'
+				});
+			}
+
+			if (stage.bestOf == null) {
+				errors.push({
+					section: 'stages',
+					path: `${base}.bestOf`,
+					message: 'BestOf is required',
 					code: 'REQUIRED'
 				});
 			}
