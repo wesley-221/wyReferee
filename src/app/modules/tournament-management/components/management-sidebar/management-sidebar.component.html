@@ -15,6 +15,14 @@
 				<mat-icon>{{ sidebarItem.icon }}</mat-icon>
 
 				{{ sidebarItem.header }}
+
+				<div class="validation-badge" *ngIf="sidebarItem.validationBadgeCount != null && sidebarItem.validationBadgeCount > 0">
+					<div class="error-dot"></div>
+
+					<div class="error-count">
+						{{ sidebarItem.validationBadgeCount }}
+					</div>
+				</div>
 			</div>
 		</div>
 	</ng-container>

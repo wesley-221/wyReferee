@@ -23,15 +23,20 @@ import { WyModCategory } from '../../../models/wytournament/mappool/wy-mod-categ
 import { Calculate } from '../../../models/score-calculation/calculate';
 import { TournamentValidator, ValidationError, ValidationSection } from '../models/tournament-validator';
 
-type PageState = {
-	general: { valid: boolean };
-	wyBin: { valid: boolean };
-	access: { valid: boolean };
-	webhooks: { valid: boolean };
-	conditionalMessages: { valid: boolean };
-	stages: { valid: boolean };
-	participants: { valid: boolean };
-	mappools: { valid: boolean };
+export type PageSectionState = {
+	valid: boolean;
+	errorCount: number;
+};
+
+export type PageState = {
+	general: PageSectionState;
+	wyBin: PageSectionState;
+	access: PageSectionState;
+	webhooks: PageSectionState;
+	conditionalMessages: PageSectionState;
+	stages: PageSectionState;
+	participants: PageSectionState;
+	mappools: PageSectionState;
 	errors: ValidationError[];
 };
 
@@ -289,18 +294,26 @@ export class TournamentEditStateService {
 	private buildPageState(draft: WyTournament): PageState {
 		const validation = TournamentValidator.validateTournament(draft);
 
-		const hasError = (section: ValidationSection) =>
-			validation.errors.some(e => e.section === section);
+		const countErrors = (section: ValidationSection) =>
+			validation.errors.filter(e => e.section === section).length;
+
+		const buildSection = (section: ValidationSection): PageSectionState => {
+			const errorCount = countErrors(section);
+			return {
+				valid: errorCount === 0,
+				errorCount
+			};
+		};
 
 		return {
-			general: { valid: !hasError('general') },
-			wyBin: { valid: !hasError('wyBin') },
-			access: { valid: !hasError('access') },
-			webhooks: { valid: !hasError('webhooks') },
-			conditionalMessages: { valid: !hasError('conditionalMessages') },
-			stages: { valid: !hasError('stages') },
-			participants: { valid: !hasError('participants') },
-			mappools: { valid: !hasError('mappools') },
+			general: buildSection('general'),
+			wyBin: buildSection('wyBin'),
+			access: buildSection('access'),
+			webhooks: buildSection('webhooks'),
+			conditionalMessages: buildSection('conditionalMessages'),
+			stages: buildSection('stages'),
+			participants: buildSection('participants'),
+			mappools: buildSection('mappools'),
 			errors: validation.errors
 		};
 	}

@@ -3,6 +3,7 @@ import { INavigationItem } from '../../../interfaces/i-navigation-item';
 import { AuthenticateService } from '../../../services/authenticate.service';
 import { BehaviorSubject, Observable, map, shareReplay } from 'rxjs';
 import { WyTournament } from '../../../models/wytournament/wy-tournament';
+import { PageState, TournamentEditStateService } from './tournament-edit-state.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -38,7 +39,8 @@ export class ManagementSidebarService {
 	private tournament$: BehaviorSubject<WyTournament>;
 
 	constructor(
-		private authenticateService: AuthenticateService
+		private authenticateService: AuthenticateService,
+		private tournamentEditStateService: TournamentEditStateService
 	) {
 		this.sidebarMenu$ = new BehaviorSubject<INavigationItem[]>(this.defaultRoutesItems);
 		this.tournament$ = new BehaviorSubject<WyTournament>(null);
@@ -55,7 +57,9 @@ export class ManagementSidebarService {
 			return;
 		}
 
-		this.sidebarMenu$.next(this.buildTournamentManagementItems(tournament.id, type));
+		this.tournamentEditStateService.pageState$.subscribe(pageState => {
+			this.sidebarMenu$.next(this.buildTournamentManagementItems(tournament.id, type, pageState));
+		});
 	}
 
 	setDefaultItems() {
@@ -66,27 +70,27 @@ export class ManagementSidebarService {
 		this.tournament$.next(tournament);
 	}
 
-	private buildTournamentManagementItems(tournamentId: number, type: 'local' | 'published' | 'create'): INavigationItem[] {
+	private buildTournamentManagementItems(tournamentId: number, type: 'local' | 'published' | 'create', pageState: PageState): INavigationItem[] {
 		const baseLink = `/tournament-management/${type == 'create' ? 'tournament-create' : 'tournament-edit'}/${type == 'published' ? 1 : 0}/${tournamentId ?? 0}`;
 
 		return [
 			{ type: 'link', icon: 'arrow_back', header: 'management', link: '/tournament-management' },
 			{ type: 'divider' },
 
-			{ icon: 'settings', header: 'general', link: `${baseLink}/general` },
-			{ icon: 'link', header: 'wyBin', link: `${baseLink}/wybin` },
-			{ icon: 'lock', header: 'access', link: `${baseLink}/access` },
+			{ icon: 'settings', header: 'general', link: `${baseLink}/general`, validationBadgeCount: pageState.general.errorCount },
+			{ icon: 'link', header: 'wyBin', link: `${baseLink}/wybin`, validationBadgeCount: pageState.wyBin.errorCount },
+			{ icon: 'lock', header: 'access', link: `${baseLink}/access`, validationBadgeCount: pageState.access.errorCount },
 
 			{ type: 'divider' },
 
-			{ icon: 'webhook', header: 'webhook', link: `${baseLink}/webhook` },
-			{ icon: 'message', header: 'conditional messages', link: `${baseLink}/conditional-messages` },
+			{ icon: 'webhook', header: 'webhook', link: `${baseLink}/webhook`, validationBadgeCount: pageState.webhooks.errorCount },
+			{ icon: 'message', header: 'conditional messages', link: `${baseLink}/conditional-messages`, validationBadgeCount: pageState.conditionalMessages.errorCount },
 
 			{ type: 'divider' },
 
-			{ icon: 'timeline', header: 'stages', link: `${baseLink}/stages` },
-			{ icon: 'people', header: 'participants', link: `${baseLink}/participants` },
-			{ icon: 'map', header: 'mappool', link: `${baseLink}/mappool` }
+			{ icon: 'timeline', header: 'stages', link: `${baseLink}/stages`, validationBadgeCount: pageState.stages.errorCount },
+			{ icon: 'people', header: 'participants', link: `${baseLink}/participants`, validationBadgeCount: pageState.participants.errorCount },
+			{ icon: 'map', header: 'mappool', link: `${baseLink}/mappool`, validationBadgeCount: pageState.mappools.errorCount }
 		];
 	}
 }
