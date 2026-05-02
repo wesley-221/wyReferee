@@ -6,6 +6,6 @@ export interface INavigationItem {
 	link?: string;
 	showIf?: boolean;
 	showIfObservable?: Observable<boolean>;
-	type?: 'item' | 'divider' | 'link';
+	type?: 'item' | 'divider' | 'link' | 'header';
 	validationBadgeCount?: number;
 }

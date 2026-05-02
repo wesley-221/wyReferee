@@ -17,6 +17,13 @@ $error-pulse-color: rgb(239, 68, 68);
 	border-right: 0.5px solid $sidebar-border-color;
 	background: $sub-sidebar-background-color;
 
+	.sidebar-header {
+		font-size: 10px;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.5);
+		padding: 8px 16px;
+	}
+
 	.sidebar-divider {
 		height: 0.5px;
 		background: $sidebar-border-color;

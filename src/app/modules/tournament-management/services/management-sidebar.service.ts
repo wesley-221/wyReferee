@@ -27,9 +27,10 @@ export class ManagementSidebarService {
 		);
 
 	private readonly defaultRoutesItems: INavigationItem[] = [
+		{ type: 'header', header: 'browse' },
 		{ icon: 'computer', header: 'local', link: 'local-tournaments' },
 		{ icon: 'language', header: 'published', link: 'published-tournaments', showIfObservable: this.isLoggedIn$ },
-		{ type: 'divider' },
+		{ type: 'header', header: 'actions' },
 		{ icon: 'add', header: 'create', link: 'tournament-create/0/0' },
 		{ icon: 'cloud_download', header: 'import tournament', link: 'import-tournament', showIfObservable: this.isLoggedIn$ },
 		{ icon: 'admin_panel_settings', header: 'administrator', link: 'administrator-tournaments', showIfObservable: this.isTournamentManager$ },
@@ -77,16 +78,15 @@ export class ManagementSidebarService {
 			{ type: 'link', icon: 'arrow_back', header: 'management', link: '/tournament-management' },
 			{ type: 'divider' },
 
+			{ type: 'header', header: 'settings' },
+
 			{ icon: 'settings', header: 'general', link: `${baseLink}/general`, validationBadgeCount: pageState.general.errorCount },
 			{ icon: 'link', header: 'wyBin', link: `${baseLink}/wybin`, validationBadgeCount: pageState.wyBin.errorCount },
 			{ icon: 'lock', header: 'access', link: `${baseLink}/access`, validationBadgeCount: pageState.access.errorCount },
-
-			{ type: 'divider' },
-
 			{ icon: 'webhook', header: 'webhook', link: `${baseLink}/webhook`, validationBadgeCount: pageState.webhooks.errorCount },
 			{ icon: 'message', header: 'conditional messages', link: `${baseLink}/conditional-messages`, validationBadgeCount: pageState.conditionalMessages.errorCount },
 
-			{ type: 'divider' },
+			{ type: 'header', header: 'structure' },
 
 			{ icon: 'timeline', header: 'stages', link: `${baseLink}/stages`, validationBadgeCount: pageState.stages.errorCount },
 			{ icon: 'people', header: 'participants', link: `${baseLink}/participants`, validationBadgeCount: pageState.participants.errorCount },

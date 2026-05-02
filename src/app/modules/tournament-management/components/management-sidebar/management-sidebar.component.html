@@ -1,5 +1,9 @@
 <div class="sidebar">
 	<ng-container *ngFor="let sidebarItem of sidebarMenu$ | async">
+		<div class="sidebar-header" *ngIf="sidebarItem.type == 'header'">
+			{{ sidebarItem.header }}
+		</div>
+
 		<div class="sidebar-divider" *ngIf="sidebarItem.type == 'divider'"></div>
 
 		<div class="sidebar-link" [routerLink]="[sidebarItem.link]" *ngIf="sidebarItem.type == 'link'">
@@ -10,7 +14,7 @@
 			</div>
 		</div>
 
-		<div class="sidebar-item" [routerLink]="[sidebarItem.link]" routerLinkActive="active" *ngIf="sidebarItem.type != 'divider' && sidebarItem.type != 'link' && (sidebarItem.showIf != false && (sidebarItem.showIfObservable | async) != false)">
+		<div class="sidebar-item" [routerLink]="[sidebarItem.link]" routerLinkActive="active" *ngIf="sidebarItem.type != 'divider' && sidebarItem.type != 'link' && sidebarItem.type != 'header' && (sidebarItem.showIf != false && (sidebarItem.showIfObservable | async) != false)">
 			<div class="sidebar-item-content">
 				<mat-icon>{{ sidebarItem.icon }}</mat-icon>
 
