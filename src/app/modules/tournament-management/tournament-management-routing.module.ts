@@ -34,7 +34,7 @@ const routes: Routes = [
 					{ path: 'trigger-messages', component: TournamentTriggerMessageComponent },
 					{ path: 'stages', component: TournamentStagesComponent },
 					{ path: 'participants', component: TournamentParticipantsComponent },
-					{ path: 'mappool', component: MappoolOverviewComponent }
+					{ path: 'mappools', component: MappoolOverviewComponent }
 				]
 			},
 			{
@@ -47,7 +47,7 @@ const routes: Routes = [
 					{ path: 'trigger-messages', component: TournamentTriggerMessageComponent },
 					{ path: 'stages', component: TournamentStagesComponent },
 					{ path: 'participants', component: TournamentParticipantsComponent },
-					{ path: 'mappool', component: MappoolOverviewComponent }
+					{ path: 'mappools', component: MappoolOverviewComponent }
 				]
 			}
 		]
