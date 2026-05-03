@@ -7,7 +7,7 @@
 	</div>
 
 	<div id="tutorial-all-tournaments" class="all-tournaments">
-		<ng-container *ngIf="allTournaments.length == 0">
+		<ng-container *ngIf="allTournaments.length == 0 && loading == false">
 			<app-alert alertType="info">
 				You do not have access to any tournaments that can be imported. Contact a tournament host to be added to the tournament.
 			</app-alert>

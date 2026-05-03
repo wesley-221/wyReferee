@@ -16,6 +16,8 @@ export class ImportTournamentComponent implements OnInit {
 	filteredTournaments: WyTournament[];
 	allUsers$: BehaviorSubject<User[]>;
 
+	loading = true;
+
 	constructor(private tournamentService: TournamentService, private toastService: ToastService) {
 		this.allUsers$ = new BehaviorSubject([]);
 
@@ -32,6 +34,8 @@ export class ImportTournamentComponent implements OnInit {
 				this.allTournaments = tournaments;
 				this.filteredTournaments = tournaments;
 				this.allUsers$.next(users);
+
+				this.loading = false;
 			});
 	}
 

@@ -16,6 +16,8 @@ export class PublishedTournamentsComponent implements OnInit {
 	filteredTournaments: WyTournament[];
 	allUsers$: BehaviorSubject<User[]>;
 
+	loading = true;
+
 	constructor(
 		private tournamentService: TournamentService,
 		private router: Router
@@ -51,6 +53,8 @@ export class PublishedTournamentsComponent implements OnInit {
 				this.allTournaments = tournaments;
 				this.filteredTournaments = tournaments;
 				this.allUsers$.next(users);
+
+				this.loading = false;
 			});
 	}
 
