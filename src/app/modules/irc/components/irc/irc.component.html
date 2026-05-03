@@ -1,7 +1,91 @@
 <app-toast></app-toast>
 <app-debug [data]="{ selectedChannel, selectedLobby }"></app-debug>
 
-<div class="irc">
+<div class="irc-new">
+	<div class="irc-match-header">
+		<div class="header-left">
+			<button mat-stroked-button color="primary">
+				<mat-icon>arrow_left</mat-icon> wyReferee
+			</button>
+		</div>
+
+		<div class="match-information" *ngIf="selectedLobby && selectedLobby.mappool">
+			<div class="team-one">
+				<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">
+					<div class="circle red" [ngClass]="{ 'active': score <= teamOneScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
+				</div>
+
+				<div class="team-name red">
+					{{ selectedLobby.teamOneName }}
+				</div>
+			</div>
+
+			<div class="middle">
+				<div class="badge next-pick" *ngIf="selectedChannel != null && hasWon == null && tiebreaker == false">
+					<mat-icon>play_arrow</mat-icon> <div class="team-name" [ngClass]="{'red': nextPick == selectedLobby.teamOneName, 'blue': nextPick == selectedLobby.teamTwoName }">{{ nextPick }} picks next</div>
+				</div>
+
+				<div class="badge match-point" *ngIf="selectedChannel != null && matchpoint != null && hasWon == null && tiebreaker == false">
+					<mat-icon>star</mat-icon> matchpoint <div class="team-name" [ngClass]="{'red': matchpoint == selectedLobby.teamOneName, 'blue': matchpoint == selectedLobby.teamTwoName }">{{ matchpoint }}</div>
+				</div>
+
+				<div class="badge tiebreaker" *ngIf="selectedChannel != null && tiebreaker == true">
+					<mat-icon>local_fire_department</mat-icon> Tiebreaker hype!
+				</div>
+
+				<div class="badge has-won" *ngIf="selectedChannel != null && hasWon != null">
+					<mat-icon>emoji_events</mat-icon> <div class="team-name" [ngClass]="{'red': hasWon == selectedLobby.teamOneName, 'blue': hasWon == selectedLobby.teamTwoName }">{{ hasWon }}</div> won, GG and wp!
+				</div>
+			</div>
+
+			<div class="team-two">
+				<div class="team-name blue">
+					{{ selectedLobby.teamTwoName }}
+				</div>
+
+				<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(2, 'middle') : $event.which == 3 ? adjustScore(2, 'right') : adjustScore(2, 'left')">
+					<div class="circle blue" [ngClass]="{ 'active': score <= teamTwoScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="first-pick-not-set" *ngIf="selectedLobby.firstPick == null || selectedLobby.bestOf == null" (click)="openLobbyDialog()">
+		You haven't set the <b>First pick</b> of the match yet. Click here to set who picks first.
+	</div>
+
+	<div class="irc-match-body">
+		<div class="irc-sidebar-left">
+			<div class="irc-lobbies">
+				Lobbies...
+			</div>
+
+			<div class="irc-slots">
+				Irc slots...
+			</div>
+
+			<div class="irc-sidebar-footer">
+				Footer buttons...
+			</div>
+		</div>
+
+		<div class="irc-body">
+			Irc...
+		</div>
+
+		<div class="irc-sidebar-right">
+			<div class="irc-match-settings">
+				Match settings...
+			</div>
+
+			<div class="irc-mappool">
+				Mappool...
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <div class="irc">
 	<div class="channels">
 		<div class="header">
 			<div class="header-buttons">
@@ -62,7 +146,7 @@
 	<div class="chat-content">
 		<div class="chat-container">
 			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.name.startsWith('#mp_')) && this.selectedLobby != null && selectedLobby.isQualifierLobby == false">
-				<!-- The mappool is for any tournament that is NOT Catch The Magic -->
+				// !!COMMENT!! The mappool is for any tournament that is NOT Catch The Magic
 				<div class="match-header-center" *ngIf="selectedLobby.mappool && selectedLobby.mappool.type != 4">
 					<div class="match-information">
 						<div class="team-one">
@@ -91,7 +175,7 @@
 					</div>
 				</div>
 
-				<!-- The mappool is for Catch The Magic -->
+				// !!COMMENT!! The mappool is for Catch The Magic
 				<div class="match-header-center" *ngIf="selectedLobby.mappool && selectedLobby.mappool.type == 4">
 					<div class="match-information">
 						<div class="team-one">
@@ -154,7 +238,7 @@
 				</div>
 			</div>
 
-			<!-- Normal messages -->
+			// !! COMMENT !! Normal messages
 			<cdk-virtual-scroll-viewport #normalChatVirtualScroller class="messages normal" itemSize="50">
 				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
 				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
@@ -607,4 +691,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> -->

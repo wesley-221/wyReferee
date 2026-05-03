@@ -8,6 +8,170 @@ $blue-team-chat-colour: #29b;
 
 $hyperlink-background-color: #2b4576;
 
+$match-header-background-color: #212121;
+$badge-background-color: rgba(255, 61, 110, 0.1);
+$badge-border-color: rgba(255, 61, 110, 0.25);
+$badge-color: #ff6b93;
+
+.irc-new {
+	display: flex;
+	flex-direction: column;
+
+	height: 100vh;
+
+	.irc-match-header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+
+		min-height: 75px;
+		position: relative;
+
+		background-color: $match-header-background-color;
+
+		.header-left {
+			position: absolute;
+			left: 14px;
+			top: 50%;
+			transform: translateY(-50%);
+			display: flex;
+			align-items: center;
+			gap: 7px;
+		}
+
+		.match-information {
+			display: flex;
+			gap: 8px;
+
+			.team-one,
+			.team-two {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				gap: 8px;
+
+				.team-name {
+					font-size: 21px;
+					font-weight: 800;
+					letter-spacing: -0.7px;
+					line-height: 1;
+
+					&.red {
+						color: $red-team-chat-colour;
+					}
+
+					&.blue {
+						color: $blue-team-chat-colour;
+					}
+				}
+
+				.circles {
+					display: flex;
+					gap: 4px;
+
+					.circle {
+						width: 15px;
+						height: 15px;
+
+						border-style: solid;
+						border-radius: 50%;
+						border-width: 1.5px;
+
+						&.red {
+							border-color: $red-team-chat-colour;
+
+							&.active {
+								background-color: $red-team-chat-colour;
+								box-shadow: 0 0 7px $red-team-chat-colour;
+							}
+						}
+
+						&.blue {
+							border-color: $blue-team-chat-colour;
+
+							&.active {
+								background-color: $blue-team-chat-colour;
+								box-shadow: 0 0 7px $blue-team-chat-colour;
+							}
+						}
+					}
+
+					&:hover {
+						cursor: pointer;
+					}
+				}
+			}
+
+			.middle {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				padding: 0 16px;
+				gap: 4px;
+
+				.badge {
+					display: flex;
+					align-items: center;
+
+					background: $badge-background-color;
+					border: 1px solid $badge-border-color;
+					border-radius: 20px;
+
+					padding: 0px 8px;
+					gap: 4px;
+
+					font-size: 13px;
+					font-weight: 700;
+					color: $badge-color;
+
+					letter-spacing: 0.3px;
+					white-space: nowrap;
+				}
+			}
+		}
+	}
+
+	.first-pick-not-set {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		height: 22px;
+		gap: 8px;
+
+		background: rgba(255, 61, 110, 0.065);
+		color: #d47088;
+		border-top: 1px solid rgba(255, 61, 110, 0.14);
+
+		transition: background 0.2s;
+		cursor: pointer;
+	}
+
+	.irc-match-body {
+		display: flex;
+		flex-direction: row;
+
+		flex: 1;
+		min-height: 0;
+		height: 100%;
+		overflow: hidden;
+
+		.irc-sidebar-left {
+		}
+
+		.irc-body {
+			flex: 1;
+			overflow-y: auto;
+		}
+
+		.irc-sidebar-rigth {
+		}
+	}
+}
+
 .irc {
 	display: flex;
 	flex-direction: row;
