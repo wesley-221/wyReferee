@@ -1,4 +1,4 @@
-<div #container class="tournament-edit" *ngIf="tournament">
+<div class="tournament-edit">
 	<app-debug [data]="{ tournament }"></app-debug>
 
 	<div class="tournament-edit-header" [ngClass]="{ 'local': !isPublishedTournament, 'published': isPublishedTournament }">
@@ -7,11 +7,11 @@
 		</ng-container>
 
 		<ng-container *ngIf="isPublishedTournament == true">
-			<div class="dot published"></div> Published tournament - saving pushes the update to all {{ tournament.availableTo.length || 0 }} referees
+			<div class="dot published"></div> Published tournament - saving pushes the update to all {{ tournament?.availableTo.length || 0 }} referees
 		</ng-container>
 	</div>
 
-	<div class="tournament-body">
+	<div class="tournament-body" *ngIf="tournament">
 		 <router-outlet></router-outlet>
 	</div>
 
@@ -23,7 +23,7 @@
 		</ng-container>
 
 		<ng-container *ngIf="isPublishedTournament == true">
-			<mat-icon>language</mat-icon> Saves and pushes the update to all {{ tournament.availableTo.length || 0 }} referees
+			<mat-icon>language</mat-icon> Saves and pushes the update to all {{ tournament?.availableTo.length || 0 }} referees
 		</ng-container>
 
 		<button mat-stroked-button color="primary" (click)="updateTournament()">
