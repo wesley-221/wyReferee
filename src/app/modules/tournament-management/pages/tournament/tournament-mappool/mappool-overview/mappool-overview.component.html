@@ -34,7 +34,7 @@
 					<div class="mappool" *ngFor="let mappoolGroup of mappools.controls; let i = index" [formGroupName]="i">
 						<div class="header" (click)="collapseMappool(mappoolGroup, $event)">
 							<div class="name">
-								<h3>{{ mappoolGroup.get('name')?.value }}</h3>
+								<h3>{{ mappoolGroup.get('name')?.value || 'Unnamed Mappool' }}</h3>
 							</div>
 
 							<div class="actions">

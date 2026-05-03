@@ -52,7 +52,7 @@
 					<div class="team" *ngFor="let teamGroup of teams.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
 						<div class="header" (click)="collapse(teamGroup, $event)">
 							<div class="information">
-								<h3>{{ teamGroup.get('name').value }}</h3>
+								<h3>{{ teamGroup.get('name')?.value || 'Unnamed Team' }}</h3>
 							</div>
 
 							<div class="buttons">
@@ -136,7 +136,7 @@
 					<div class="team" *ngFor="let playerGroup of players.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
 						<div class="header" (click)="collapse(playerGroup, $event)">
 							<div class="information">
-								<h3>{{ playerGroup.get('name').value }}</h3>
+								<h3>{{ playerGroup.get('name')?.value || 'Unnamed Player' }}</h3>
 							</div>
 
 							<div class="buttons">
