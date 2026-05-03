@@ -1,0 +1,39 @@
+<div class="all-channels" cdkDropList (cdkDropListDropped)="dropChannel($event)">
+	<div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragBoundary=".all-channels"
+						(click)="changeChannelClick(channel.name)"
+						[ngClass]="{'active': selectedChannel != undefined && (channel.name == selectedChannel.name), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages, 'editing': channel.editingLabel }">
+		<div class="channel-name" *ngIf="!channel.editingLabel">
+			<span *ngIf="channel.label">{{ channel.label }}</span>
+			<span *ngIf="!channel.label">{{ channel.name }}</span>
+		</div>
+
+		<div class="channel-name-label" *ngIf="channel.editingLabel">
+			<mat-form-field>
+				<mat-label>Label</mat-label>
+				<input matInput (keyup.enter)="editLabel(channel)" (keyup.esc)="cancelEditLabel(channel)" [(ngModel)]="channel.label" />
+			</mat-form-field>
+		</div>
+
+		<div class="channel-actions">
+			<div class="button not-muted" (click)="playSound(channel, false)" *ngIf="channel.playSoundOnMessage">
+				<mat-icon class="icon">volume_up</mat-icon>
+			</div>
+
+			<div class="button muted" (click)="playSound(channel, true)" *ngIf="!channel.playSoundOnMessage">
+				<mat-icon class="icon">volume_off</mat-icon>
+			</div>
+
+			<div class="button edit" (click)="editLabel(channel)" *ngIf="!channel.editingLabel">
+				<mat-icon class="icon">edit</mat-icon>
+			</div>
+
+			<div class="button edit" (click)="editLabel(channel)" *ngIf="channel.editingLabel">
+				<mat-icon class="icon">save</mat-icon>
+			</div>
+
+			<div class="button red" (click)="partChannel(channel.name)">
+				<mat-icon class="icon">close</mat-icon>
+			</div>
+		</div>
+	</div>
+</div>

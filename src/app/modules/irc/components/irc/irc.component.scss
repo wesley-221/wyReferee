@@ -9,6 +9,8 @@ $blue-team-chat-colour: #29b;
 $hyperlink-background-color: #2b4576;
 
 $match-header-background-color: #212121;
+$sidebar-background-color: #1a1a1a;
+
 $badge-background-color: rgba(255, 61, 110, 0.1);
 $badge-border-color: rgba(255, 61, 110, 0.25);
 $badge-color: #ff6b93;
@@ -160,6 +162,10 @@ $badge-color: #ff6b93;
 		overflow: hidden;
 
 		.irc-sidebar-left {
+			width: 200px;
+
+			flex-grow: 0;
+			background-color: $sidebar-background-color;
 		}
 
 		.irc-body {
@@ -167,7 +173,9 @@ $badge-color: #ff6b93;
 			overflow-y: auto;
 		}
 
-		.irc-sidebar-rigth {
+		.irc-sidebar-right {
+			flex-grow: 0;
+			background-color: $sidebar-background-color;
 		}
 	}
 }

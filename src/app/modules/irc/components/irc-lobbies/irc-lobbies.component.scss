@@ -1,0 +1,177 @@
+@import "variables";
+
+.all-channels {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+	padding-bottom: 5px;
+	flex-shrink: 0;
+
+	height: 250px;
+
+	overflow-y: auto;
+
+	.channel {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+
+		user-select: none;
+		overflow: hidden;
+
+		border-left: 2px solid transparent;
+
+		padding: 8px 8px;
+
+		position: relative;
+
+		.channel-name {
+			display: flex;
+			align-items: center;
+
+			font-size: 15px;
+			line-height: 15px;
+		}
+
+		.channel-name-label {
+			display: flex;
+			align-items: center;
+
+			font-size: 15px;
+			line-height: 15px;
+			color: white;
+		}
+
+		.channel-actions {
+			display: flex;
+			position: absolute;
+
+			gap: 2px;
+
+			right: 5px;
+			top: 50%;
+
+			transform: translateY(-50%);
+
+			opacity: 0;
+
+			transition: opacity 0.15s;
+			pointer-events: none;
+
+			.button {
+				display: flex;
+				flex-shrink: 0;
+
+				justify-content: center;
+				align-items: center;
+
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				border-radius: 4px;
+
+				width: 24px;
+				height: 24px;
+
+				.icon {
+					font-size: 15px;
+
+					width: 15px;
+					height: 15px;
+				}
+
+				&:hover {
+					cursor: pointer;
+				}
+
+				&.blue {
+					border-color: #4c63c7;
+				}
+
+				&.red {
+					background-color: $danger;
+
+					&:hover {
+						background-color: darken($danger, 5%);
+					}
+				}
+
+				&.muted {
+					background-color: $danger;
+
+					&:hover {
+						background-color: darken($danger, 5%);
+					}
+				}
+
+				&.not-muted {
+					background-color: $success;
+
+					&:hover {
+						background-color: darken($success, 5%);
+					}
+				}
+
+				&.edit {
+					background-color: $primary;
+
+					&:hover {
+						background-color: darken($primary, 5%);
+					}
+				}
+			}
+		}
+
+		&:hover,
+		&.editing {
+			cursor: pointer;
+
+			border-left: 2px solid $primary;
+
+			.channel-name {
+				color: $primary;
+			}
+
+			.channel-actions {
+				opacity: 1;
+				pointer-events: all;
+			}
+		}
+
+		&.inactive {
+			border-left: 2px solid transparent;
+
+			color: white;
+			background-color: rgba(255, 0, 0, 0.2);
+
+			&.active {
+				border-left: 2px solid $primary;
+			}
+		}
+
+		&.active {
+			.channel-name {
+				color: $primary;
+				font-weight: bold;
+			}
+
+			border-left: 2px solid $primary;
+		}
+
+		&.unread {
+			background-color: $info;
+			color: white;
+		}
+	}
+}
+
+.cdk-drag-preview {
+	display: flex;
+	align-items: center;
+
+	background-color: rgba(0, 0, 0, 0.9);
+	color: $primary;
+
+	border-left: 2px solid transparent;
+
+	.channel-actions {
+		display: none;
+	}
+}

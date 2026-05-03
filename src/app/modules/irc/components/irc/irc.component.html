@@ -50,14 +50,14 @@
 		</div>
 	</div>
 
-	<div class="first-pick-not-set" *ngIf="selectedLobby.firstPick == null || selectedLobby.bestOf == null" (click)="openLobbyDialog()">
+	<div class="first-pick-not-set" *ngIf="selectedLobby && (selectedLobby.firstPick == null || selectedLobby.bestOf == null)" (click)="openLobbyDialog()">
 		You haven't set the <b>First pick</b> of the match yet. Click here to set who picks first.
 	</div>
 
 	<div class="irc-match-body">
 		<div class="irc-sidebar-left">
 			<div class="irc-lobbies">
-				Lobbies...
+				<app-irc-lobbies [selectedChannel]="selectedChannel" [channels]="channels" (changeChannel)="changeChannel($event)"></app-irc-lobbies>
 			</div>
 
 			<div class="irc-slots">
