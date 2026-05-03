@@ -32,4 +32,12 @@ export class TournamentErrorFooterComponent {
 
 		return `${this.managementSidebarService.baseLink}/${errorSection}`;
 	}
+
+	getErrorSection(errorSection: string): string {
+		if (errorSection == 'triggerMessages') {
+			return 'triggers';
+		}
+
+		return errorSection;
+	}
 }
