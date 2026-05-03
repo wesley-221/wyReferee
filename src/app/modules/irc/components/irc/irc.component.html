@@ -3,12 +3,6 @@
 
 <div class="irc-new">
 	<div class="irc-match-header">
-		<div class="header-left">
-			<button mat-stroked-button color="primary">
-				<mat-icon>arrow_left</mat-icon> wyReferee
-			</button>
-		</div>
-
 		<div class="match-information" *ngIf="selectedLobby && selectedLobby.mappool">
 			<div class="team-one">
 				<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">
@@ -56,16 +50,22 @@
 
 	<div class="irc-match-body">
 		<div class="irc-sidebar-left">
+			<div class="irc-sidebar-header">
+				<button mat-stroked-button color="primary" (click)="goBack()">
+					<mat-icon>arrow_left</mat-icon> back
+				</button>
+
+				<button mat-stroked-button color="primary" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">
+					<mat-icon>add</mat-icon> join
+				</button>
+			</div>
+
 			<div class="irc-lobbies">
 				<app-irc-lobbies [selectedChannel]="selectedChannel" [channels]="channels" (changeChannel)="changeChannel($event)"></app-irc-lobbies>
 			</div>
 
-			<div class="irc-slots">
-				Irc slots...
-			</div>
-
-			<div class="irc-sidebar-footer">
-				Footer buttons...
+			<div class="irc-slots" *ngIf="selectedLobby != undefined && selectedChannel != undefined && selectedChannel.name.startsWith('#mp_')">
+				<app-irc-player-management [lobby]="selectedLobby" [channel]="selectedChannel"></app-irc-player-management>
 			</div>
 		</div>
 

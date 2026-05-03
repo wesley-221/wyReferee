@@ -32,16 +32,6 @@ $badge-color: #ff6b93;
 
 		background-color: $match-header-background-color;
 
-		.header-left {
-			position: absolute;
-			left: 14px;
-			top: 50%;
-			transform: translateY(-50%);
-			display: flex;
-			align-items: center;
-			gap: 7px;
-		}
-
 		.match-information {
 			display: flex;
 			gap: 8px;
@@ -162,10 +152,30 @@ $badge-color: #ff6b93;
 		overflow: hidden;
 
 		.irc-sidebar-left {
-			width: 200px;
-
+			display: flex;
+			flex-direction: column;
 			flex-grow: 0;
+
+			width: 220px;
 			background-color: $sidebar-background-color;
+
+			.irc-sidebar-header {
+				display: flex;
+				flex-direction: column;
+				flex: 0 0 auto;
+
+				padding: 4px;
+				gap: 4px;
+			}
+
+			.irc-lobbies {
+				height: 250px;
+			}
+
+			.irc-slots {
+				flex: 1;
+				overflow-y: auto;
+			}
 		}
 
 		.irc-body {
