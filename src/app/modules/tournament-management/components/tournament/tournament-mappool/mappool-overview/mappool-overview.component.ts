@@ -74,10 +74,7 @@ export class MappoolOverviewComponent implements OnInit {
 	}
 
 	createNewMappool(): void {
-		const newMappool = new WyMappool({
-			index: this.tournament.mappoolIndex,
-			name: 'Unnamed mappool'
-		});
+		const newMappool = new WyMappool();
 
 		this.mappools.push(FormGroupHelper.createMappoolFormGroup(newMappool));
 	}

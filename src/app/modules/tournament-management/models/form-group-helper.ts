@@ -18,7 +18,6 @@ export class FormGroupHelper {
 
 		return new FormGroup({
 			id: new FormControl(mod?.id ?? null),
-			name: new FormControl(mod?.name ?? '', Validators.required),
 			value: new FormControl(value ?? null, Validators.required)
 		});
 	}

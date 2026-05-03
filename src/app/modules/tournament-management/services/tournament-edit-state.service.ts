@@ -22,6 +22,7 @@ import { WyModBracketMap } from '../../../models/wytournament/mappool/wy-mod-bra
 import { WyModCategory } from '../../../models/wytournament/mappool/wy-mod-category';
 import { Calculate } from '../../../models/score-calculation/calculate';
 import { TournamentValidator, ValidationError, ValidationSection } from '../models/tournament-validator';
+import { Mods } from '../../../models/osu-models/osu';
 
 export type PageSectionState = {
 	valid: boolean;
@@ -262,7 +263,7 @@ export class TournamentEditStateService {
 						acronym: modBracket.acronym,
 						mods: modBracket.mods.map(mod => new WyMod({
 							id: mod.id,
-							name: mod.name,
+							name: mod.value == 'freemod' ? 'Freemod' : Mods[mod.value],
 							value: mod.value
 						})),
 						beatmaps: modBracket.beatmaps.map(beatmap => new WyModBracketMap({

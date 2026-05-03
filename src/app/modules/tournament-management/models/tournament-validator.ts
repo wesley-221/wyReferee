@@ -1,4 +1,5 @@
 import { WyTournament } from "../../../models/wytournament/wy-tournament";
+import { ValidationErrorMessage } from "./validation-error-message";
 
 export type ValidationSection =
 	| 'general'
@@ -30,16 +31,44 @@ function result(errors: ValidationError[]): ValidationResult {
 }
 
 export class TournamentValidator {
-	static validateTournament(tournament: WyTournament): ValidationResult {
-		if (!tournament) {
-			return result([{
-				section: 'general',
-				path: '',
-				message: 'Tournament is null',
-				code: 'NULL'
-			}]);
-		}
+	static validators = [
+		// General
+		new ValidationErrorMessage(/^name$/, 'You have to fill in the tournament name.'),
+		new ValidationErrorMessage(/^acronym$/, 'You have to fill in the tournament acronym.'),
+		new ValidationErrorMessage(/^gamemodeId$/, 'You have to select a gamemode.'),
+		new ValidationErrorMessage(/^protects$/, 'You have to select whether to use protects.'),
+		new ValidationErrorMessage(/^scoreSystem$/, 'You have to select a score system.'),
+		new ValidationErrorMessage(/^format$/, 'You have to select the tournament format.'),
+		new ValidationErrorMessage(/^teamSize$/, 'You have to set the team size.'),
 
+		new ValidationErrorMessage(/^defaultTeamMode$/, 'You have to set the team mode for the default multiplayer lobby settings.'),
+		new ValidationErrorMessage(/^defaultWinCondition$/, 'You have to set the win condition for the default multiplayer lobby settings.'),
+		new ValidationErrorMessage(/^defaultPlayers$/, 'You have to set the players amount for the default multiplayer lobby settings.'),
+
+		// Mappools
+		new ValidationErrorMessage(/^mappools\[(\d+)\]\.name$/, 'You have to set the name for the {0} mappool.'),
+		new ValidationErrorMessage(/^mappools\[(\d+)\]\.modBrackets\[(\d+)\]\.name$/, 'You have to set the name for the {1} mod bracket from the {0} mappool.'),
+		new ValidationErrorMessage(/^mappools\[(\d+)\]\.modBrackets\[(\d+)\]\.acronym$/, 'You have to set the acronym for the {1} mod bracket from the {0} mappool.'),
+		new ValidationErrorMessage(/^mappools\[(\d+)\]\.modBrackets\[(\d+)\]\.mods\[(\d+)\]\.valueNotUnique$/, 'The {2} mod is a duplicate for the {1} mod bracket from the {0} mappool.'),
+		new ValidationErrorMessage(/^mappools\[(\d+)\]\.modBrackets\[(\d+)\]\.mods\[(\d+)\]\.value$/, 'You have to select a mod for the {2} mod dropdown of the {1} mod bracket from the {0} mappool.'),
+
+		// Teams
+		new ValidationErrorMessage(/^teams\[(\d+)\]\.name$/, 'You have to set the name for the {0} team.'),
+		new ValidationErrorMessage(/^teams\[(\d+)\]\.players\[(\d+)\]\.name$/, 'You have to set the name for the {1} player of the {0} team.'),
+
+		// Stages
+		new ValidationErrorMessage(/^stages\[(\d+)\]\.name$/, 'You have to set the name for the {0} stage.'),
+		new ValidationErrorMessage(/^stages\[(\d+)\]\.bestOf$/, 'You have to set the best of for {0} stage.'),
+
+		// Webhooks
+		new ValidationErrorMessage(/^webhooks\[(\d+)\]\.name$/, 'You have to set the name for the {0} webhook.'),
+		new ValidationErrorMessage(/^webhooks\[(\d+)\]\.url$/, 'You have to set the URL for the {0} webhook.'),
+
+		// Trigger messages
+		new ValidationErrorMessage(/^triggerMessages\[(\d+)\]\.message$/, 'You have to set the message for the {0} trigger message.')
+	];
+
+	static validateTournament(tournament: WyTournament): ValidationResult {
 		const errors = [
 			...this.validateGeneral(tournament).errors,
 			...this.validateMappools(tournament).errors,
@@ -59,7 +88,7 @@ export class TournamentValidator {
 			errors.push({
 				section: 'general',
 				path: 'name',
-				message: 'Name is required',
+				message: this.getErrorMessage('name'),
 				code: 'REQUIRED'
 			});
 		}
@@ -68,7 +97,7 @@ export class TournamentValidator {
 			errors.push({
 				section: 'general',
 				path: 'acronym',
-				message: 'Acronym is required',
+				message: this.getErrorMessage('acronym'),
 				code: 'REQUIRED'
 			});
 		}
@@ -77,7 +106,70 @@ export class TournamentValidator {
 			errors.push({
 				section: 'general',
 				path: 'gamemodeId',
-				message: 'Gamemode is required',
+				message: this.getErrorMessage('gamemodeId'),
+				code: 'REQUIRED'
+			});
+		}
+
+		if (!tournament.protects) {
+			errors.push({
+				section: 'general',
+				path: 'protects',
+				message: this.getErrorMessage('protects'),
+				code: 'REQUIRED'
+			});
+		}
+
+		if (!tournament.scoreInterfaceIdentifier) {
+			errors.push({
+				section: 'general',
+				path: 'scoreSystem',
+				message: this.getErrorMessage('scoreSystem'),
+				code: 'REQUIRED'
+			});
+		}
+
+		if (!tournament.format) {
+			errors.push({
+				section: 'general',
+				path: 'format',
+				message: this.getErrorMessage('format'),
+				code: 'REQUIRED'
+			});
+		}
+
+		if (!tournament.teamSize) {
+			errors.push({
+				section: 'general',
+				path: 'teamSize',
+				message: this.getErrorMessage('teamSize'),
+				code: 'REQUIRED'
+			});
+		}
+
+		if (tournament.defaultTeamMode == null) {
+			errors.push({
+				section: 'general',
+				path: 'defaultTeamMode',
+				message: this.getErrorMessage('defaultTeamMode'),
+				code: 'REQUIRED'
+			});
+		}
+
+		if (tournament.defaultWinCondition == null) {
+			errors.push({
+				section: 'general',
+				path: 'defaultWinCondition',
+				message: this.getErrorMessage('defaultWinCondition'),
+				code: 'REQUIRED'
+			});
+		}
+
+		if (tournament.defaultPlayers == null) {
+			errors.push({
+				section: 'general',
+				path: 'defaultPlayers',
+				message: this.getErrorMessage('defaultPlayers'),
 				code: 'REQUIRED'
 			});
 		}
@@ -88,24 +180,14 @@ export class TournamentValidator {
 	static validateMappools(tournament: WyTournament): ValidationResult {
 		const errors: ValidationError[] = [];
 
-		if (!tournament.mappools || tournament.mappools.length === 0) {
-			errors.push({
-				section: 'mappools',
-				path: 'mappools',
-				message: 'At least one mappool is required',
-				code: 'MIN_LENGTH'
-			});
-			return result(errors);
-		}
-
 		tournament.mappools.forEach((mappool, i) => {
 			const base = `mappools[${i}]`;
 
-			if (!mappool.name) {
+			if (mappool.name == null || mappool.name.trim() == '') {
 				errors.push({
 					section: 'mappools',
 					path: `${base}.name`,
-					message: 'Name is required',
+					message: this.getErrorMessage(`${base}.name`),
 					code: 'REQUIRED'
 				});
 			}
@@ -113,20 +195,20 @@ export class TournamentValidator {
 			mappool.modBrackets?.forEach((modBracket, bi) => {
 				const bPath = `${base}.modBrackets[${bi}]`;
 
-				if (!modBracket.name) {
+				if (modBracket.name == null || modBracket.name.trim() == '') {
 					errors.push({
 						section: 'mappools',
 						path: `${bPath}.name`,
-						message: 'Name is required',
+						message: this.getErrorMessage(`${bPath}.name`),
 						code: 'REQUIRED'
 					});
 				}
 
-				if (!modBracket.acronym) {
+				if (modBracket.acronym == null || modBracket.acronym.trim() == '') {
 					errors.push({
 						section: 'mappools',
 						path: `${bPath}.acronym`,
-						message: 'Acronym is required',
+						message: this.getErrorMessage(`${bPath}.acronym`),
 						code: 'REQUIRED'
 					});
 				}
@@ -134,20 +216,11 @@ export class TournamentValidator {
 				modBracket.mods?.forEach((mod, mi) => {
 					const mPath = `${bPath}.mods[${mi}]`;
 
-					if (!mod.name) {
-						errors.push({
-							section: 'mappools',
-							path: `${mPath}.name`,
-							message: 'Name is required',
-							code: 'REQUIRED'
-						});
-					}
-
 					if (mod.value == null) {
 						errors.push({
 							section: 'mappools',
 							path: `${mPath}.value`,
-							message: 'Value is required',
+							message: this.getErrorMessage(`${mPath}.value`),
 							code: 'REQUIRED'
 						});
 					}
@@ -160,7 +233,7 @@ export class TournamentValidator {
 						errors.push({
 							section: 'mappools',
 							path: `${bmPath}.beatmapId`,
-							message: 'BeatmapId is required',
+							message: this.getErrorMessage(`${bmPath}.beatmapId`),
 							code: 'REQUIRED'
 						});
 					}
@@ -169,7 +242,7 @@ export class TournamentValidator {
 						errors.push({
 							section: 'mappools',
 							path: `${bmPath}.beatmapsetId`,
-							message: 'BeatmapsetId is required',
+							message: this.getErrorMessage(`${bmPath}.beatmapsetId`),
 							code: 'REQUIRED'
 						});
 					}
@@ -183,16 +256,6 @@ export class TournamentValidator {
 	static validateParticipants(tournament: WyTournament): ValidationResult {
 		const errors: ValidationError[] = [];
 
-		if (!tournament.teams || tournament.teams.length === 0) {
-			errors.push({
-				section: 'participants',
-				path: 'teams',
-				message: 'At least one participant is required',
-				code: 'MIN_LENGTH'
-			});
-			return result(errors);
-		}
-
 		tournament.teams.forEach((team, ti) => {
 			const base = `teams[${ti}]`;
 
@@ -200,7 +263,7 @@ export class TournamentValidator {
 				errors.push({
 					section: 'participants',
 					path: `${base}.name`,
-					message: 'Team name is required',
+					message: this.getErrorMessage(`${base}.name`),
 					code: 'REQUIRED'
 				});
 			}
@@ -210,7 +273,7 @@ export class TournamentValidator {
 					errors.push({
 						section: 'participants',
 						path: `${base}.players[${pi}].name`,
-						message: 'User is required',
+						message: this.getErrorMessage(`${base}.players[${pi}].name`),
 						code: 'REQUIRED'
 					});
 				}
@@ -230,7 +293,7 @@ export class TournamentValidator {
 				errors.push({
 					section: 'stages',
 					path: `${base}.name`,
-					message: 'Name is required',
+					message: this.getErrorMessage(`${base}.name`),
 					code: 'REQUIRED'
 				});
 			}
@@ -239,7 +302,7 @@ export class TournamentValidator {
 				errors.push({
 					section: 'stages',
 					path: `${base}.bestOf`,
-					message: 'BestOf is required',
+					message: this.getErrorMessage(`${base}.bestOf`),
 					code: 'REQUIRED'
 				});
 			}
@@ -258,7 +321,7 @@ export class TournamentValidator {
 				errors.push({
 					section: 'webhooks',
 					path: `${base}.name`,
-					message: 'Name is required',
+					message: this.getErrorMessage(`${base}.name`),
 					code: 'REQUIRED'
 				});
 			}
@@ -267,7 +330,7 @@ export class TournamentValidator {
 				errors.push({
 					section: 'webhooks',
 					path: `${base}.url`,
-					message: 'URL is required',
+					message: this.getErrorMessage(`${base}.url`),
 					code: 'REQUIRED'
 				});
 			}
@@ -280,16 +343,32 @@ export class TournamentValidator {
 		const errors: ValidationError[] = [];
 
 		tournament.triggerMessages?.forEach((triggerMessage, i) => {
+			const base = `triggerMessages[${i}]`;
+
 			if (!triggerMessage.message) {
 				errors.push({
 					section: 'triggerMessages',
-					path: `triggerMessages[${i}].message`,
-					message: 'Message is required',
+					path: `${base}.message`,
+					message: this.getErrorMessage(`${base}.message`),
 					code: 'REQUIRED'
 				});
 			}
 		});
 
 		return result(errors);
+	}
+
+	/**
+	 * Get the error message for the given validator key
+	 *
+	 * @param validatorKey the key to get the error message for
+	 */
+	static getErrorMessage(validatorKey: string): string {
+		for (const validator of this.validators) {
+			if (validator.validationRegex.test(validatorKey)) {
+				return validator.parseErrorMessage(validatorKey);
+			}
+		}
+		return null;
 	}
 }
