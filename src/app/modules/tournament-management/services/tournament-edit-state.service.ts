@@ -37,7 +37,8 @@ export type PageState = {
 	stages: PageSectionState;
 	participants: PageSectionState;
 	mappools: PageSectionState;
-	errors: ValidationError[];
+	errors: Record<ValidationSection, ValidationError[]>;
+	totalErrorCount: number;
 };
 
 @Injectable({
@@ -294,11 +295,22 @@ export class TournamentEditStateService {
 	private buildPageState(draft: WyTournament): PageState {
 		const validation = TournamentValidator.validateTournament(draft);
 
-		const countErrors = (section: ValidationSection) =>
-			validation.errors.filter(e => e.section === section).length;
+		const groupedErrors = validation.errors.reduce((acc, error) => {
+			if (!acc[error.section]) {
+				acc[error.section] = [];
+			}
+
+			acc[error.section].push(error);
+
+			return acc;
+		}, {} as Record<ValidationSection, ValidationError[]>);
+
+		const count = (section: ValidationSection) =>
+			groupedErrors[section]?.length ?? 0;
 
 		const buildSection = (section: ValidationSection): PageSectionState => {
-			const errorCount = countErrors(section);
+			const errorCount = count(section);
+
 			return {
 				valid: errorCount === 0,
 				errorCount
@@ -314,7 +326,8 @@ export class TournamentEditStateService {
 			stages: buildSection('stages'),
 			participants: buildSection('participants'),
 			mappools: buildSection('mappools'),
-			errors: validation.errors
+			errors: groupedErrors,
+			totalErrorCount: validation.errors.length
 		};
 	}
 }

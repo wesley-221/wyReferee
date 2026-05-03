@@ -25,6 +25,7 @@ import { LocalTournamentsComponent } from './pages/local-tournaments/local-tourn
 import { PublishedTournamentsComponent } from './pages/published-tournaments/published-tournaments.component';
 import { TournamentFiltersComponent } from './components/tournament-filters/tournament-filters.component';
 import { ManagementSidebarComponent } from './components/management-sidebar/management-sidebar.component';
+import { TournamentErrorFooterComponent } from './components/tournament-error-footer/tournament-error-footer.component';
 
 @NgModule({
 	declarations: [
@@ -48,7 +49,8 @@ import { ManagementSidebarComponent } from './components/management-sidebar/mana
 		LocalTournamentsComponent,
 		PublishedTournamentsComponent,
 		TournamentFiltersComponent,
-		ManagementSidebarComponent
+		ManagementSidebarComponent,
+		TournamentErrorFooterComponent
 	],
 	imports: [
 		CommonModule,

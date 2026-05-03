@@ -12,17 +12,10 @@
 	</div>
 
 	<div class="tournament-body">
-		<app-alert alertType="danger" *ngIf="errors.length > 0">
-			<b>One or more fields have not been filled in correctly.</b>
-
-			<ul>
-				<li *ngFor="let error of errors">{{ error }}</li>
-			</ul>
-		</app-alert>
-
-		<!-- <app-tournament [tournament]="tournament" [validationForm]="validationForm"></app-tournament> -->
 		 <router-outlet></router-outlet>
 	</div>
+
+	<app-tournament-error-footer></app-tournament-error-footer>
 
 	<div class="tournament-save-footer">
 		<ng-container *ngIf="isPublishedTournament == false">

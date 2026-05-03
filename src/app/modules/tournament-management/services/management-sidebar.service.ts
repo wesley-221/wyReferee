@@ -26,6 +26,8 @@ export class ManagementSidebarService {
 			shareReplay(1)
 		);
 
+	baseLink: string;
+
 	private readonly defaultRoutesItems: INavigationItem[] = [
 		{ type: 'header', header: 'browse' },
 		{ icon: 'computer', header: 'local', link: 'local-tournaments' },
@@ -72,7 +74,7 @@ export class ManagementSidebarService {
 	}
 
 	private buildTournamentManagementItems(tournamentId: number, type: 'local' | 'published' | 'create', pageState: PageState): INavigationItem[] {
-		const baseLink = `/tournament-management/${type == 'create' ? 'tournament-create' : 'tournament-edit'}/${type == 'published' ? 1 : 0}/${tournamentId ?? 0}`;
+		this.baseLink = `/tournament-management/${type == 'create' ? 'tournament-create' : 'tournament-edit'}/${type == 'published' ? 1 : 0}/${tournamentId ?? 0}`;
 
 		return [
 			{ type: 'link', icon: 'arrow_back', header: 'management', link: '/tournament-management' },
@@ -80,17 +82,17 @@ export class ManagementSidebarService {
 
 			{ type: 'header', header: 'settings' },
 
-			{ icon: 'settings', header: 'general', link: `${baseLink}/general`, validationBadgeCount: pageState.general.errorCount },
-			{ icon: 'link', header: 'wyBin', link: `${baseLink}/wybin`, validationBadgeCount: pageState.wyBin.errorCount },
-			{ icon: 'lock', header: 'access', link: `${baseLink}/access`, validationBadgeCount: pageState.access.errorCount },
-			{ icon: 'webhook', header: 'webhook', link: `${baseLink}/webhook`, validationBadgeCount: pageState.webhooks.errorCount },
-			{ icon: 'message', header: 'triggers', link: `${baseLink}/trigger-messages`, validationBadgeCount: pageState.triggerMessages.errorCount },
+			{ icon: 'settings', header: 'general', link: `${this.baseLink}/general`, validationBadgeCount: pageState.general.errorCount },
+			{ icon: 'link', header: 'wyBin', link: `${this.baseLink}/wybin`, validationBadgeCount: pageState.wyBin.errorCount },
+			{ icon: 'lock', header: 'access', link: `${this.baseLink}/access`, validationBadgeCount: pageState.access.errorCount },
+			{ icon: 'webhook', header: 'webhooks', link: `${this.baseLink}/webhooks`, validationBadgeCount: pageState.webhooks.errorCount },
+			{ icon: 'message', header: 'triggers', link: `${this.baseLink}/trigger-messages`, validationBadgeCount: pageState.triggerMessages.errorCount },
 
 			{ type: 'header', header: 'structure' },
 
-			{ icon: 'timeline', header: 'stages', link: `${baseLink}/stages`, validationBadgeCount: pageState.stages.errorCount },
-			{ icon: 'people', header: 'participants', link: `${baseLink}/participants`, validationBadgeCount: pageState.participants.errorCount },
-			{ icon: 'map', header: 'mappool', link: `${baseLink}/mappool`, validationBadgeCount: pageState.mappools.errorCount }
+			{ icon: 'timeline', header: 'stages', link: `${this.baseLink}/stages`, validationBadgeCount: pageState.stages.errorCount },
+			{ icon: 'people', header: 'participants', link: `${this.baseLink}/participants`, validationBadgeCount: pageState.participants.errorCount },
+			{ icon: 'map', header: 'mappool', link: `${this.baseLink}/mappool`, validationBadgeCount: pageState.mappools.errorCount }
 		];
 	}
 }
