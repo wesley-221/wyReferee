@@ -6,8 +6,8 @@ import { TournamentWybinForm } from '../interfaces/tournament-wybin-form.interfa
 import { TournamentAccessState } from '../interfaces/tournament-access-state.interface';
 import { TournamentWebhookForm } from '../interfaces/tournament-webhook-form.interface';
 import { WyWebhook } from '../../../models/wytournament/wy-webhook';
-import { TournamentConditionalMessageForm } from '../interfaces/tournament-conditional-messages-form.interface';
-import { WyConditionalMessage } from '../../../models/wytournament/wy-conditional-message';
+import { TournamentTriggerMessageForm } from '../interfaces/tournament-trigger-messages-form.interface';
+import { WyTriggerMessage } from '../../../models/wytournament/trigger-message';
 import { TournamentStageForm } from '../interfaces/tournament-stage-form.interface';
 import { WyStage } from '../../../models/wytournament/wy-stage';
 import { TournamentPlayerForm } from '../interfaces/tournament-player-form.interface';
@@ -33,7 +33,7 @@ export type PageState = {
 	wyBin: PageSectionState;
 	access: PageSectionState;
 	webhooks: PageSectionState;
-	conditionalMessages: PageSectionState;
+	triggerMessages: PageSectionState;
 	stages: PageSectionState;
 	participants: PageSectionState;
 	mappools: PageSectionState;
@@ -148,7 +148,7 @@ export class TournamentEditStateService {
 		this.draft$.next(updatedDraft);
 	}
 
-	updateConditionalMessagesForm(conditionalMessages: TournamentConditionalMessageForm[]) {
+	updateTriggerMessagesForm(triggerMessages: TournamentTriggerMessageForm[]) {
 		const currentDraft = this.draft$.getValue();
 
 		if (!currentDraft) {
@@ -157,15 +157,15 @@ export class TournamentEditStateService {
 
 		const updatedDraft = this.getCurrent();
 
-		updatedDraft.conditionalMessages = conditionalMessages.map(cm =>
-			new WyConditionalMessage({
-				id: cm.id,
-				message: cm.message,
-				beatmapResult: cm.beatmapResult,
-				beatmapPicked: cm.beatmapPicked,
-				nextPickMessage: cm.nextPickMessage,
-				nextPickTiebreakerMessage: cm.nextPickTiebreakerMessage,
-				matchWonMessage: cm.matchWonMessage
+		updatedDraft.triggerMessages = triggerMessages.map(tm =>
+			new WyTriggerMessage({
+				id: tm.id,
+				message: tm.message,
+				beatmapResult: tm.beatmapResult,
+				beatmapPicked: tm.beatmapPicked,
+				nextPickMessage: tm.nextPickMessage,
+				nextPickTiebreakerMessage: tm.nextPickTiebreakerMessage,
+				matchWonMessage: tm.matchWonMessage
 			})
 		);
 
@@ -310,7 +310,7 @@ export class TournamentEditStateService {
 			wyBin: buildSection('wyBin'),
 			access: buildSection('access'),
 			webhooks: buildSection('webhooks'),
-			conditionalMessages: buildSection('conditionalMessages'),
+			triggerMessages: buildSection('triggerMessages'),
 			stages: buildSection('stages'),
 			participants: buildSection('participants'),
 			mappools: buildSection('mappools'),

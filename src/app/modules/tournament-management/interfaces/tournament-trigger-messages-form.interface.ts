@@ -1,4 +1,4 @@
-export interface TournamentConditionalMessageForm {
+export interface TournamentTriggerMessageForm {
 	id: number;
 	message: string;
 	beatmapResult: boolean;

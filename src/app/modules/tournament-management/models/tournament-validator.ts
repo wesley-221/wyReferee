@@ -5,7 +5,7 @@ export type ValidationSection =
 	| 'wyBin'
 	| 'access'
 	| 'webhooks'
-	| 'conditionalMessages'
+	| 'triggerMessages'
 	| 'stages'
 	| 'participants'
 	| 'mappools';
@@ -46,7 +46,7 @@ export class TournamentValidator {
 			...this.validateParticipants(tournament).errors,
 			...this.validateStages(tournament).errors,
 			...this.validateWebhooks(tournament).errors,
-			...this.validateConditionalMessages(tournament).errors
+			...this.validateTriggerMessages(tournament).errors
 		];
 
 		return result(errors);
@@ -276,14 +276,14 @@ export class TournamentValidator {
 		return result(errors);
 	}
 
-	static validateConditionalMessages(tournament: WyTournament): ValidationResult {
+	static validateTriggerMessages(tournament: WyTournament): ValidationResult {
 		const errors: ValidationError[] = [];
 
-		tournament.conditionalMessages?.forEach((conditionalMessage, i) => {
-			if (!conditionalMessage.message) {
+		tournament.triggerMessages?.forEach((triggerMessage, i) => {
+			if (!triggerMessage.message) {
 				errors.push({
-					section: 'conditionalMessages',
-					path: `conditionalMessages[${i}].message`,
+					section: 'triggerMessages',
+					path: `triggerMessages[${i}].message`,
 					message: 'Message is required',
 					code: 'REQUIRED'
 				});

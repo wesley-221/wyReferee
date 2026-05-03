@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-	<h3>Conditional messages</h3>
+	<h3>Trigger messages</h3>
 	<p>Customize the message that will be sent in irc when a certain condition has been met.</p>
 
 	<hr />
@@ -37,14 +37,14 @@
 
 	<button mat-raised-button color="primary" (click)="createNewMessage()"><mat-icon>add</mat-icon> create new message</button>
 
-	<div class="messages" formArrayName="conditionalMessages">
-		<div class="message" *ngIf="conditionalMessages.length == 0">
+	<div class="messages" formArrayName="triggerMessages">
+		<div class="message" *ngIf="triggerMessages.length == 0">
 			<div class="content">
-				<app-alert alertType="info">There are no conditional messages.</app-alert>
+				<app-alert alertType="info">There are no trigger messages.</app-alert>
 			</div>
 		</div>
 
-		<div class="message" *ngFor="let messageGroup of conditionalMessages.controls; let i = index" [formGroupName]="i">
+		<div class="message" *ngFor="let messageGroup of triggerMessages.controls; let i = index" [formGroupName]="i">
 			<h2>Message</h2>
 			<p>The message that will be sent when one of the conditions are met.</p>
 
@@ -103,7 +103,7 @@
 			</ul>
 
 			<div class="actions">
-				<button mat-raised-button color="warn" (click)="removeConditionalMessage(i)"><mat-icon>delete</mat-icon> delete conditional message</button>
+				<button mat-raised-button color="warn" (click)="removeTriggerMessage(i)"><mat-icon>delete</mat-icon> delete trigger message</button>
 			</div>
 		</div>
 	</div>

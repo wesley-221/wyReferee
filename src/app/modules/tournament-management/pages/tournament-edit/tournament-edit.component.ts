@@ -117,8 +117,8 @@ export class TournamentEditComponent implements OnInit, OnDestroy {
 					this.validationForm.addControl(`webhook-${webhook.index}-final-result`, new FormControl(webhook.finalResult, Validators.required));
 				}
 
-				for (const beatmapResultMessage of tournament.conditionalMessages) {
-					this.validationForm.addControl(`conditional-message-${beatmapResultMessage.index}`, new FormControl(beatmapResultMessage.message, Validators.required));
+				for (const triggerMessage of tournament.triggerMessages) {
+					this.validationForm.addControl(`conditional-message-${triggerMessage.index}`, new FormControl(triggerMessage.message, Validators.required));
 				}
 
 				for (const mappool of tournament.mappools) {
@@ -280,8 +280,8 @@ export class TournamentEditComponent implements OnInit, OnDestroy {
 			webhook.finalResult = this.validationForm.get(`webhook-${webhook.index}-final-result`).value;
 		}
 
-		for (const beatmapResultMessage of this.tournament.conditionalMessages) {
-			beatmapResultMessage.message = this.validationForm.get(`conditional-message-${beatmapResultMessage.index}`).value;
+		for (const triggerMessage of this.tournament.triggerMessages) {
+			triggerMessage.message = this.validationForm.get(`conditional-message-${triggerMessage.index}`).value;
 		}
 
 		if (this.isPublishedTournament == false) {

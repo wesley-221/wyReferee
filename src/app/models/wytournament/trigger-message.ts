@@ -3,7 +3,7 @@ import { Lobby } from '../lobby';
 import { CTMCalculation } from '../score-calculation/calculation-types/ctm-calculation';
 import { MultiplayerData } from '../store-multiplayer/multiplayer-data';
 
-export class WyConditionalMessage {
+export class WyTriggerMessage {
 	id: number;
 	index: number;
 	message: string;
@@ -13,7 +13,7 @@ export class WyConditionalMessage {
 	nextPickTiebreakerMessage: boolean;
 	matchWonMessage: boolean;
 
-	constructor(init?: Partial<WyConditionalMessage>) {
+	constructor(init?: Partial<WyTriggerMessage>) {
 		this.beatmapResult = false;
 		this.beatmapPicked = false;
 		this.nextPickMessage = false;
@@ -23,16 +23,16 @@ export class WyConditionalMessage {
 		Object.assign(this, init);
 	}
 
-	public static makeTrueCopy(beatmapResultMessage: WyConditionalMessage): WyConditionalMessage {
-		return new WyConditionalMessage({
-			id: beatmapResultMessage.id,
-			index: beatmapResultMessage.index,
-			message: beatmapResultMessage.message,
-			beatmapResult: beatmapResultMessage.beatmapResult,
-			beatmapPicked: beatmapResultMessage.beatmapPicked,
-			nextPickMessage: beatmapResultMessage.nextPickMessage,
-			nextPickTiebreakerMessage: beatmapResultMessage.nextPickTiebreakerMessage,
-			matchWonMessage: beatmapResultMessage.matchWonMessage
+	public static makeTrueCopy(triggerMessage: WyTriggerMessage): WyTriggerMessage {
+		return new WyTriggerMessage({
+			id: triggerMessage.id,
+			index: triggerMessage.index,
+			message: triggerMessage.message,
+			beatmapResult: triggerMessage.beatmapResult,
+			beatmapPicked: triggerMessage.beatmapPicked,
+			nextPickMessage: triggerMessage.nextPickMessage,
+			nextPickTiebreakerMessage: triggerMessage.nextPickTiebreakerMessage,
+			matchWonMessage: triggerMessage.matchWonMessage
 		});
 	}
 

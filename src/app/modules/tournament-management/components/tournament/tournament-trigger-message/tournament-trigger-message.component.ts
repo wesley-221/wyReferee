@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MappoolType } from 'app/models/wytournament/mappool/wy-mappool';
-import { TournamentConditionalMessageForm } from '../../../interfaces/tournament-conditional-messages-form.interface';
+import { TournamentTriggerMessageForm } from '../../../interfaces/tournament-trigger-messages-form.interface';
 import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
 import { debounceTime, filter } from 'rxjs';
 
 @Component({
-	selector: 'app-tournament-conditional-message',
-	templateUrl: './tournament-conditional-message.component.html',
-	styleUrls: ['./tournament-conditional-message.component.scss']
+	selector: 'app-tournament-trigger-message',
+	templateUrl: './tournament-trigger-message.component.html',
+	styleUrls: ['./tournament-trigger-message.component.scss']
 })
-export class TournamentConditionalMessageComponent implements OnInit {
+export class TournamentTriggerMessageComponent implements OnInit {
 	form: FormGroup;
 
 	hasCTMMappool: boolean;
@@ -21,7 +21,7 @@ export class TournamentConditionalMessageComponent implements OnInit {
 		this.hasCTMMappool = false;
 
 		this.form = new FormGroup({
-			conditionalMessages: new FormArray([])
+			triggerMessages: new FormArray([])
 		})
 	}
 
@@ -31,16 +31,16 @@ export class TournamentConditionalMessageComponent implements OnInit {
 				filter(v => !!v)
 			)
 			.subscribe(tournament => {
-				if (this.conditionalMessages.length === 0) {
+				if (this.triggerMessages.length === 0) {
 					const formArray = new FormArray(
-						tournament.conditionalMessages.map(cm => this.createConditionalMessageGroup(cm))
+						tournament.triggerMessages.map(cm => this.createTriggerMessageGroup(cm))
 					);
 
-					this.form.setControl('conditionalMessages', formArray, { emitEvent: false });
+					this.form.setControl('triggerMessages', formArray, { emitEvent: false });
 				}
 				else {
-					tournament.conditionalMessages.forEach((cm, i) => {
-						this.conditionalMessages.at(i)?.patchValue(cm, { emitEvent: false });
+					tournament.triggerMessages.forEach((cm, i) => {
+						this.triggerMessages.at(i)?.patchValue(cm, { emitEvent: false });
 					});
 				}
 
@@ -50,20 +50,20 @@ export class TournamentConditionalMessageComponent implements OnInit {
 		this.form.valueChanges
 			.pipe(debounceTime(200))
 			.subscribe(value => {
-				this.tournamentEditStateService.updateConditionalMessagesForm(value.conditionalMessages);
+				this.tournamentEditStateService.updateTriggerMessagesForm(value.triggerMessages);
 			});
 	}
 
-	get conditionalMessages(): FormArray {
-		return this.form.get('conditionalMessages') as FormArray;
+	get triggerMessages(): FormArray {
+		return this.form.get('triggerMessages') as FormArray;
 	}
 
 	createNewMessage(): void {
-		this.conditionalMessages.push(this.createConditionalMessageGroup());
+		this.triggerMessages.push(this.createTriggerMessageGroup());
 	}
 
-	removeConditionalMessage(index: number) {
-		this.conditionalMessages.removeAt(index);
+	removeTriggerMessage(index: number) {
+		this.triggerMessages.removeAt(index);
 	}
 
 	toggleOption(group: AbstractControl, option: string): void {
@@ -71,7 +71,7 @@ export class TournamentConditionalMessageComponent implements OnInit {
 		control?.setValue(!control.value);
 	}
 
-	private createConditionalMessageGroup(message?: TournamentConditionalMessageForm): FormGroup {
+	private createTriggerMessageGroup(message?: TournamentTriggerMessageForm): FormGroup {
 		return new FormGroup({
 			id: new FormControl(message?.id || null),
 			message: new FormControl(message?.message || '', Validators.required),

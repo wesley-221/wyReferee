@@ -19,7 +19,7 @@ import { AdministratorTournamentsComponent } from './pages/administrator-tournam
 import { TournamentCardComponent } from './components/tournament-card/tournament-card.component';
 import { TournamentCreateComponent } from './pages/tournament-create/tournament-create.component';
 import { TournamentWybinComponent } from './components/tournament/tournament-wybin/tournament-wybin.component';
-import { TournamentConditionalMessageComponent } from './components/tournament/tournament-conditional-message/tournament-conditional-message.component';
+import { TournamentTriggerMessageComponent } from './components/tournament/tournament-trigger-message/tournament-trigger-message.component';
 import { TournamentEditComponent } from './pages/tournament-edit/tournament-edit.component';
 import { LocalTournamentsComponent } from './pages/local-tournaments/local-tournaments.component';
 import { PublishedTournamentsComponent } from './pages/published-tournaments/published-tournaments.component';
@@ -43,7 +43,7 @@ import { ManagementSidebarComponent } from './components/management-sidebar/mana
 		TournamentCardComponent,
 		TournamentCreateComponent,
 		TournamentWybinComponent,
-		TournamentConditionalMessageComponent,
+		TournamentTriggerMessageComponent,
 		TournamentEditComponent,
 		LocalTournamentsComponent,
 		PublishedTournamentsComponent,

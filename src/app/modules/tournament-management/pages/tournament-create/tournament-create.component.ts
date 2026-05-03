@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Mods } from 'app/models/osu-models/osu';
-import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
+import { WyTriggerMessage } from 'app/models/wytournament/trigger-message';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ValidationErrorService } from 'app/modules/tournament-management/services/validation-error.service';
 import { ToastService } from 'app/services/toast.service';
@@ -63,21 +63,21 @@ export class TournamentCreateComponent implements OnInit, OnDestroy {
 			'lobby-team-name-with-brackets': new FormControl(false)
 		});
 
-		const conditionalMessages = [
-			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '{{ beatmapWinner }} has won on {{ beatmap }}', beatmapResult: true }),
-			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: 'Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference : {{ scoreDifference }}', beatmapResult: true }),
-			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '{{ teamOneName }} | {{ matchTeamOneScore }} : {{ matchTeamTwoScore }} | {{ teamTwoName }}', beatmapResult: true }),
-			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: 'Next pick is for {{ nextPick }}', beatmapResult: true, nextPickMessage: true }),
-			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: 'The next pick is the tiebreaker!', beatmapResult: true, nextPickTiebreakerMessage: true }),
-			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '!mp aborttimer', beatmapPicked: true }),
-			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '!mp timer 120', beatmapPicked: true }),
-			new WyConditionalMessage({ index: this.tournament.conditionalMessageIndex++, message: '{{ matchWinner }} has won the match, GG and WP!', beatmapResult: true, matchWonMessage: true })
+		const triggerMessages = [
+			new WyTriggerMessage({ index: this.tournament.triggerMessageIndex++, message: '{{ beatmapWinner }} has won on {{ beatmap }}', beatmapResult: true }),
+			new WyTriggerMessage({ index: this.tournament.triggerMessageIndex++, message: 'Score: {{ beatmapTeamOneScore }} - {{ beatmapTeamTwoScore }} | score difference : {{ scoreDifference }}', beatmapResult: true }),
+			new WyTriggerMessage({ index: this.tournament.triggerMessageIndex++, message: '{{ teamOneName }} | {{ matchTeamOneScore }} : {{ matchTeamTwoScore }} | {{ teamTwoName }}', beatmapResult: true }),
+			new WyTriggerMessage({ index: this.tournament.triggerMessageIndex++, message: 'Next pick is for {{ nextPick }}', beatmapResult: true, nextPickMessage: true }),
+			new WyTriggerMessage({ index: this.tournament.triggerMessageIndex++, message: 'The next pick is the tiebreaker!', beatmapResult: true, nextPickTiebreakerMessage: true }),
+			new WyTriggerMessage({ index: this.tournament.triggerMessageIndex++, message: '!mp aborttimer', beatmapPicked: true }),
+			new WyTriggerMessage({ index: this.tournament.triggerMessageIndex++, message: '!mp timer 120', beatmapPicked: true }),
+			new WyTriggerMessage({ index: this.tournament.triggerMessageIndex++, message: '{{ matchWinner }} has won the match, GG and WP!', beatmapResult: true, matchWonMessage: true })
 		];
 
-		for (const beatmapResultMessage of conditionalMessages) {
-			this.validationForm.addControl(`conditional-message-${beatmapResultMessage.index}`, new FormControl(beatmapResultMessage.message, Validators.required));
+		for (const triggerMessage of triggerMessages) {
+			this.validationForm.addControl(`conditional-message-${triggerMessage.index}`, new FormControl(triggerMessage.message, Validators.required));
 
-			this.tournament.conditionalMessages.push(beatmapResultMessage);
+			this.tournament.triggerMessages.push(triggerMessage);
 		}
 	}
 

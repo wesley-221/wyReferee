@@ -84,7 +84,7 @@ export class ManagementSidebarService {
 			{ icon: 'link', header: 'wyBin', link: `${baseLink}/wybin`, validationBadgeCount: pageState.wyBin.errorCount },
 			{ icon: 'lock', header: 'access', link: `${baseLink}/access`, validationBadgeCount: pageState.access.errorCount },
 			{ icon: 'webhook', header: 'webhook', link: `${baseLink}/webhook`, validationBadgeCount: pageState.webhooks.errorCount },
-			{ icon: 'message', header: 'conditional messages', link: `${baseLink}/conditional-messages`, validationBadgeCount: pageState.conditionalMessages.errorCount },
+			{ icon: 'message', header: 'triggers', link: `${baseLink}/trigger-messages`, validationBadgeCount: pageState.triggerMessages.errorCount },
 
 			{ type: 'header', header: 'structure' },
 
