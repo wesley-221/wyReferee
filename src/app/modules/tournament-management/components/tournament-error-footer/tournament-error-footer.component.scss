@@ -1,10 +1,13 @@
+$header-height: 40px;
+$max-height: 350px;
+
 .tournament-error-footer {
 	border-top: 0.5px solid rgba(239, 68, 68, 0.2);
 	background: #141414;
 	flex-shrink: 0;
 	transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 	overflow: hidden;
-	max-height: 44px;
+	max-height: $header-height;
 
 	.header {
 		display: flex;
@@ -37,12 +40,12 @@
 	}
 
 	.body {
-		display: none;
+		display: flex;
 		flex-direction: column;
 
 		padding: 16px 8px;
 		overflow-y: auto;
-		max-height: 170px;
+		max-height: calc($max-height - $header-height);
 
 		.error {
 			display: flex;
@@ -96,10 +99,6 @@
 	}
 
 	&.open {
-		max-height: 220px;
-
-		.body {
-			display: flex;
-		}
+		max-height: $max-height;
 	}
 }
