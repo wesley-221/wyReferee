@@ -67,6 +67,7 @@ export class ManagementSidebarService {
 
 	setDefaultItems() {
 		this.sidebarMenu$.next(this.defaultRoutesItems);
+		this.baseLink = null;
 	}
 
 	setTournament(tournament: WyTournament) {

@@ -1,3 +1,52 @@
+@import "variables";
+
 .tournament-create {
-	padding: 8px;
+	display: flex;
+	flex-direction: column;
+
+	height: 100vh;
+	overflow: hidden;
+
+	.tournament-create-header {
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
+
+		padding: 8px 16px;
+		gap: 8px;
+
+		border-bottom: 0.5px solid $sidebar-border-color;
+		background: $sub-sidebar-background-color;
+		color: rgba(255, 255, 255, 0.7);
+
+		.dot {
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			flex-shrink: 0;
+
+			background: rgba(255, 255, 255, 0.7);
+		}
+	}
+
+	.tournament-body {
+		flex: 1;
+		overflow-y: auto;
+
+		padding: 8px;
+	}
+
+	.tournament-save-footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+
+		padding: 8px 16px;
+		gap: 8px;
+
+		border-top: 0.5px solid $sidebar-border-color;
+		background: $sub-sidebar-background-color;
+
+		flex-shrink: 0;
+	}
 }
