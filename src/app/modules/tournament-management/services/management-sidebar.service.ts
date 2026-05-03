@@ -93,7 +93,7 @@ export class ManagementSidebarService {
 
 			{ icon: 'timeline', header: 'stages', link: `${this.baseLink}/stages`, validationBadgeCount: pageState.stages.errorCount },
 			{ icon: 'people', header: 'participants', link: `${this.baseLink}/participants`, validationBadgeCount: pageState.participants.errorCount },
-			{ icon: 'map', header: 'mappool', link: `${this.baseLink}/mappool`, validationBadgeCount: pageState.mappools.errorCount }
+			{ icon: 'map', header: 'mappool', link: `${this.baseLink}/mappools`, validationBadgeCount: pageState.mappools.errorCount }
 		];
 	}
 }
