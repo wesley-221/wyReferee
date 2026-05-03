@@ -51,6 +51,11 @@ export class LocalTournamentsComponent implements OnInit {
 		}
 	}
 
+	onTournamentDeleted(tournament: WyTournament) {
+		this.allTournaments = this.allTournaments.filter(t => t.id !== tournament.id);
+		this.filteredTournaments = this.filteredTournaments.filter(t => t.id !== tournament.id);
+	}
+
 	onTournamentClick(tournament: WyTournament, event: any) {
 		if (event.target.localName == 'div') {
 			this.router.navigate(['/tournament-management/tournament-edit/', '0', tournament.id]);

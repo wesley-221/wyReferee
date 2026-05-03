@@ -9,7 +9,7 @@
 	<div class="all-tournaments">
 		 <cdk-virtual-scroll-viewport itemSize="74" class="viewport">
 			<div class="tournament-card" *cdkVirtualFor="let tournament of filteredTournaments">
-				<app-tournament-card [tournament]="tournament" cardType="administrator"></app-tournament-card>
+				<app-tournament-card [tournament]="tournament" cardType="administrator" (deletedTournamentEmitter)="onTournamentDeleted($event)"></app-tournament-card>
 			</div>
 		</cdk-virtual-scroll-viewport>
 	</div>

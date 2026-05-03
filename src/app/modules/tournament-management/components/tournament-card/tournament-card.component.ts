@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -19,9 +20,8 @@ export class TournamentCardComponent implements OnInit {
 	@Input() tournament: WyTournament;
 	@Input() cardType: 'local' | 'published' | 'import' | 'administrator';
 
-
-	@Output() deletedTournamentEmitter: EventEmitter<boolean>;
-	@Output() tournamentPublishedEmitter: EventEmitter<{ tournament: WyTournament; id: number }>;
+	@Output() deletedTournamentEmitter = new EventEmitter<WyTournament>();
+	@Output() tournamentPublishedEmitter = new EventEmitter<{ tournament: WyTournament; id: number }>();
 
 	constructor(
 		public authenticateService: AuthenticateService,
@@ -30,10 +30,7 @@ export class TournamentCardComponent implements OnInit {
 		private router: Router,
 		private toastService: ToastService,
 		public electronService: ElectronService
-	) {
-		this.deletedTournamentEmitter = new EventEmitter(false);
-		this.tournamentPublishedEmitter = new EventEmitter(null);
-	}
+	) { }
 
 	ngOnInit(): void { }
 
@@ -51,17 +48,22 @@ export class TournamentCardComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
-				if (this.cardType != 'published') {
+				if (this.cardType != 'published' && this.cardType != 'administrator') {
 					this.tournamentService.deleteTournament(tournament);
 					this.toastService.addToast(`Successfully deleted the mappool "${tournament.name}".`);
+
+					this.deletedTournamentEmitter.emit(tournament);
 				}
 				else {
-					this.tournamentService.deletePublishedTournament(tournament).subscribe(() => {
-						this.deletedTournamentEmitter.emit(true);
+					this.tournamentService.deletePublishedTournament(tournament).subscribe({
+						next: () => {
+							this.deletedTournamentEmitter.emit(tournament);
 
-						this.toastService.addToast('Successfully deleted the tournament.');
-					}, error => {
-						this.toastService.addToast(`Unable to delete the tournament: ${error.error.message as string}`, ToastType.Error);
+							this.toastService.addToast('Successfully deleted the tournament.');
+						},
+						error: (error: HttpErrorResponse) => {
+							this.toastService.addToast(`Unable to delete the tournament: ${error.error.message as string}`, ToastType.Error);
+						}
 					});
 				}
 			}
@@ -95,7 +97,7 @@ export class TournamentCardComponent implements OnInit {
 				publishTournament.resetAllIds();
 
 				this.tournamentService.publishTournament(publishTournament).subscribe((data: WyTournament) => {
-					this.tournamentPublishedEmitter.next({
+					this.tournamentPublishedEmitter.emit({
 						id: tournament.id,
 						tournament: data
 					});

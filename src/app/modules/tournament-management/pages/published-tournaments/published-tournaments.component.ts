@@ -59,10 +59,9 @@ export class PublishedTournamentsComponent implements OnInit {
 	 *
 	 * @param deleted if the tournament is deleted
 	 */
-	onTournamentDeleted(deleted: boolean) {
-		if (deleted == true) {
-			this.populateTournamentArray();
-		}
+	onTournamentDeleted(tournament: WyTournament) {
+		this.allTournaments = this.allTournaments.filter(t => t.id !== tournament.id);
+		this.filteredTournaments = this.filteredTournaments.filter(t => t.id !== tournament.id);
 	}
 
 	/**

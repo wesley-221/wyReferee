@@ -36,6 +36,11 @@ export class AdministratorTournamentsComponent implements OnInit {
 			});
 	}
 
+	onTournamentDeleted(tournament: WyTournament) {
+		this.allTournaments = this.allTournaments.filter(t => t.id !== tournament.id);
+		this.filteredTournaments = this.filteredTournaments.filter(t => t.id !== tournament.id);
+	}
+
 	/**
 	 * Filter the tournaments based on the provided filters
 	 *
