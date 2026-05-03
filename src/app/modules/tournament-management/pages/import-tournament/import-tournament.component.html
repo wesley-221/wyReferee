@@ -7,6 +7,12 @@
 	</div>
 
 	<div id="tutorial-all-tournaments" class="all-tournaments">
+		<ng-container *ngIf="allTournaments.length == 0">
+			<app-alert alertType="info">
+				You do not have access to any tournaments that can be imported. Contact a tournament host to be added to the tournament.
+			</app-alert>
+		</ng-container>
+
 		<cdk-virtual-scroll-viewport itemSize="74" class="viewport">
 			<div class="tournament-card" *cdkVirtualFor="let tournament of filteredTournaments">
 				<app-tournament-card [tournament]="tournament" cardType="import"></app-tournament-card>

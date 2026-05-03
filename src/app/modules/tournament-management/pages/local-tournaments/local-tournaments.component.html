@@ -7,6 +7,12 @@
 	</div>
 
 	<div id="tutorial-all-tournaments" class="all-tournaments">
+		<ng-container *ngIf="allTournaments.length == 0">
+			<app-alert alertType="info">
+				You don't have any local tournaments yet. Create a new one or import an existing one to get started.
+			</app-alert>
+		</ng-container>
+
 		<ng-container *ngIf="allTournaments.length > 0">
 			<app-tournament-card [tournament]="tournament" cardType="local" (tournamentPublishedEmitter)="onTournamentPublished($event)" (deletedTournamentEmitter)="onTournamentDeleted($event)" (click)="onTournamentClick(tournament, $event); $event.stopPropagation()" *ngFor="let tournament of filteredTournaments"></app-tournament-card>
 		</ng-container>
