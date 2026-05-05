@@ -1,98 +1,101 @@
 @import "variables";
 
-.slash-commands {
-	position: fixed;
-	bottom: 52px;
-	width: auto;
+.irc-chat-controls {
+	background: $irc-match-header-background-color;
 
-	background-color: $background-color;
+	.slash-commands {
+		position: fixed;
+		bottom: 52px;
+		width: auto;
 
-	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+		-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+		-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+		box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
 
-	.slash-command {
-		display: flex;
-		padding: 4px;
-
-		user-select: none;
-
-		.slash-command-name {
-			padding: 4px 8px;
-			border-radius: 8px;
-
-			font-weight: 500;
-			font-size: 14px;
-			white-space: nowrap;
-
-			background: color-mix(in srgb, $primary 13%, transparent);
-			color: $primary;
-
-			cursor: pointer;
-		}
-
-		.slash-command-description {
+		.slash-command {
+			display: flex;
 			padding: 4px;
-		}
 
-		&:hover,
-		&.active {
-			background-color: color-mix(in srgb, $primary 13%, transparent);
-			cursor: pointer;
-		}
-	}
-}
+			user-select: none;
 
-.send-message {
-	display: flex;
-	align-items: center;
+			.slash-command-name {
+				padding: 4px 8px;
+				border-radius: 8px;
 
-	padding: 8px;
-	gap: 8px;
+				font-weight: 500;
+				font-size: 14px;
+				white-space: nowrap;
 
-	border-top: 1px solid color-mix(in srgb, $primary 13%, transparent);
+				background: color-mix(in srgb, $primary 13%, transparent);
+				color: $primary;
 
-	.irc-message {
-		flex: 1;
+				cursor: pointer;
+			}
 
-		border: 1px solid color-mix(in srgb, $primary 13%, transparent);
-		border-radius: 8px;
+			.slash-command-description {
+				padding: 4px;
+			}
 
-		font-size: 16px;
-
-		padding: 12px 20px;
-
-		background: black;
-		color: #f0dada;
-
-		outline: none;
-
-		transition: border-color 0.2s;
-
-		&:focus {
-			border-color: color-mix(in srgb, $primary 30%, transparent);
+			&:hover,
+			&.active {
+				background-color: color-mix(in srgb, $primary 13%, transparent);
+				cursor: pointer;
+			}
 		}
 	}
 
-	.send-button {
+	.send-message {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		flex-shrink: 0;
 
-		width: 35px;
-		height: 35px;
+		padding: 8px;
+		gap: 8px;
 
-		border-radius: 8px;
-		border: none;
+		border-top: 1px solid $irc-border-color;
 
-		background: $primary;
-		color: black;
+		.irc-message {
+			flex: 1;
 
-		cursor: pointer;
+			border: 1px solid $irc-input-border-color;
+			border-radius: 8px;
 
-		&:hover {
-			background: darken($primary, 5%);
+			font-size: 16px;
+
+			padding: 12px 20px;
+
+			background: $irc-input-background-color;
+			color: $irc-input-text-color-active;
+
+			outline: none;
+
+			transition: border-color 0.2s;
+
+			&:focus {
+				border-color: rgba($primary, 0.26);
+				box-shadow: 0 0 0 3px rgba($primary, 0.08);
+			}
+		}
+
+		.send-button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+
+			width: 35px;
+			height: 35px;
+
+			border-radius: 8px;
+			border: none;
+
+			background: $primary;
+			color: black;
+
+			cursor: pointer;
+
+			&:hover {
+				background: darken($primary, 5%);
+			}
 		}
 	}
 }

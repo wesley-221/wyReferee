@@ -7,7 +7,8 @@
 	width: 100%;
 	gap: 4px;
 
-	border-top: 1px solid color-mix(in srgb, $primary 13%, transparent);
+	background: $irc-match-header-background-color;
+	border-top: 1px solid $irc-border-color;
 
 	.actions {
 		display: flex;
@@ -33,21 +34,22 @@
 		align-items: center;
 
 		padding: 4px 8px;
-		border-radius: 8px;
+		border-radius: 5px;
 
 		font-weight: 600;
 		white-space: nowrap;
 		letter-spacing: 0.15px;
 
-		background: color-mix(in srgb, $primary 8%, transparent);
-		border: 1px solid color-mix(in srgb, $primary 6%, transparent);
-		color: $primary;
+		background: $irc-input-background-color;
+		border: 1px solid $irc-input-border-color;
+		color: $irc-input-text-color;
 
 		cursor: pointer;
 
 		&:hover {
-			background: color-mix(in srgb, $primary 13%, transparent);
-			border-color: color-mix(in srgb, $primary 18%, transparent);
+			background: $irc-input-background-color-active;
+			color: $irc-input-text-color-active;
+			border-color: $irc-input-border-color-active;
 		}
 
 		&.disabled {
