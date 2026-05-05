@@ -40,6 +40,7 @@ import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-mes
 import { Subject, takeUntil } from 'rxjs';
 import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 import { IrcChatContainerComponent } from '../irc-chat-container/irc-chat-container.component';
+import { IrcChatControlsComponent } from '../irc-chat-controls/irc-chat-controls.component';
 
 @Component({
 	selector: 'app-irc',
@@ -55,6 +56,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	@ViewChild('players') players: MatSelect;
 
 	@ViewChild(IrcChatContainerComponent) ircChatContainerComponent: IrcChatContainerComponent;
+	@ViewChild(IrcChatControlsComponent) ircChatControlsComponent: IrcChatControlsComponent;
 
 	unsubscribeOnDestroy$ = new Subject<void>();
 
@@ -148,7 +150,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 *
 	 * @param event what key has been pressed
 	 */
-	@HostListener('document:keyup', ['$event'])
+	// @HostListener('document:keyup', ['$event'])
 	handleKeyboardEvent(event: KeyboardEvent) {
 		const modifiers = ['Shift', 'Alt', 'Control'];
 
@@ -156,9 +158,9 @@ export class IrcComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		if (this.chatMessage.nativeElement.value.startsWith('/')) {
+		if (this.ircChatControlsComponent.chatMessage.nativeElement.value.startsWith('/')) {
 			this.allSlashCommandsFiltered = this.allSlashCommands.filter(command =>
-				command.name.toLowerCase().includes(this.chatMessage.nativeElement.value.toLowerCase().substring(1)));
+				command.name.toLowerCase().includes(this.ircChatControlsComponent.chatMessage.nativeElement.value.toLowerCase().substring(1)));
 
 			if (event.key == 'ArrowUp') {
 				this.navigateSlashCommandSelection(1);
@@ -270,15 +272,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Prevent the arrow Up and Down from moving the cursor around
-	 */
-	preventDefault(event: KeyboardEvent) {
-		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-			event.preventDefault();
-		}
-	}
-
-	/**
 	 * Go back to normal menu
 	 */
 	goBack(): void {
@@ -329,12 +322,12 @@ export class IrcComponent implements OnInit, OnDestroy {
 		if (delayScroll) {
 			setTimeout(() => {
 				this.scrollToBottom();
-				this.chatMessage.nativeElement.focus();
+				this.ircChatControlsComponent.chatMessage.nativeElement.focus();
 			}, 500);
 		}
 		else {
 			this.scrollToBottom();
-			this.chatMessage.nativeElement.focus();
+			this.ircChatControlsComponent.chatMessage.nativeElement.focus();
 		}
 
 		// Reset search bar
@@ -360,34 +353,34 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 */
 	sendMessage(event: KeyboardEvent) {
 		if (event.key == 'Enter') {
-			if (this.chatMessage.nativeElement.value.startsWith('/')) {
+			if (this.ircChatControlsComponent.chatMessage.nativeElement.value.startsWith('/')) {
 				if (this.activeSlashCommand) {
-					this.chatMessage.nativeElement.value = `/${this.activeSlashCommand.name}`;
+					this.ircChatControlsComponent.chatMessage.nativeElement.value = `/${this.activeSlashCommand.name}`;
 
 					this.activeSlashCommand = null;
 					this.slashCommandIndex = -1;
 				}
 				else {
-					const slashCommand = this.slashCommandService.getSlashCommand(this.chatMessage.nativeElement.value.substring(1));
+					const slashCommand = this.slashCommandService.getSlashCommand(this.ircChatControlsComponent.chatMessage.nativeElement.value.substring(1));
 
 					if (slashCommand != undefined) {
 						slashCommand.execute();
 						this.currentMessageHistoryIndex = -1;
 					}
 
-					this.chatMessage.nativeElement.value = '';
+					this.ircChatControlsComponent.chatMessage.nativeElement.value = '';
 				}
 			}
-			else if (this.chatMessage.nativeElement.value != '') {
+			else if (this.ircChatControlsComponent.chatMessage.nativeElement.value != '') {
 				if (!this.ircService.isAuthenticated || (this.selectedChannel == undefined || !this.selectedChannel.active)) {
 					return;
 				}
 
-				this.ircService.sendMessage(this.selectedChannel.name, this.chatMessage.nativeElement.value);
+				this.ircService.sendMessage(this.selectedChannel.name, this.ircChatControlsComponent.chatMessage.nativeElement.value);
 
 				this.currentMessageHistoryIndex = -1;
 
-				this.chatMessage.nativeElement.value = '';
+				this.ircChatControlsComponent.chatMessage.nativeElement.value = '';
 			}
 		}
 	}
@@ -405,7 +398,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 		this.currentMessageHistoryIndex = Math.max(0, Math.min(this.currentMessageHistoryIndex, messageCount - 1));
 
-		const inputElement = this.chatMessage.nativeElement;
+		const inputElement = this.ircChatControlsComponent.chatMessage.nativeElement;
 		inputElement.value = messageHistory[messageCount - this.currentMessageHistoryIndex - 1];
 		inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
 	}
@@ -426,8 +419,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 * @param slashCommand the slash command to select
 	 */
 	selectSlashCommand(slashCommand: SlashCommand) {
-		this.chatMessage.nativeElement.value = `/${slashCommand.name}`;
-		this.chatMessage.nativeElement.focus();
+		this.ircChatControlsComponent.chatMessage.nativeElement.value = `/${slashCommand.name}`;
+		this.ircChatControlsComponent.chatMessage.nativeElement.focus();
 	}
 
 	/**

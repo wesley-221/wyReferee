@@ -1,0 +1,102 @@
+@import "variables";
+
+.slash-commands {
+	position: fixed;
+	bottom: 52px;
+	width: auto;
+
+	background-color: $background-color;
+
+	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+
+	.slash-command {
+		display: flex;
+		padding: 4px;
+
+		user-select: none;
+
+		.slash-command-name {
+			padding: 4px 8px;
+			border-radius: 8px;
+
+			font-size: 14px;
+			white-space: nowrap;
+
+			transition:
+				background 0.12s,
+				color 0.12s;
+
+			cursor: pointer;
+
+			background: color-mix(in srgb, $primary 13%, transparent);
+			color: $primary;
+			font-weight: 500;
+		}
+
+		.slash-command-description {
+			padding: 4px;
+		}
+
+		&:hover,
+		&.active {
+			background-color: color-mix(in srgb, $primary 13%, transparent);
+			cursor: pointer;
+		}
+	}
+}
+
+.send-message {
+	display: flex;
+	align-items: center;
+
+	padding: 8px;
+	gap: 8px;
+
+	border-top: 1px solid rgba(255, 255, 255, 0.055);
+
+	.irc-message {
+		flex: 1;
+
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 8px;
+
+		font-size: 16px;
+
+		padding: 12px 20px;
+
+		background: black;
+		color: #f0dada;
+
+		outline: none;
+
+		transition: border-color 0.2s;
+
+		&:focus {
+			border-color: color-mix(in srgb, $primary 30%, transparent);
+		}
+	}
+
+	.send-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		width: 35px;
+		height: 35px;
+
+		border-radius: 8px;
+		border: none;
+
+		background: $primary;
+		color: black;
+
+		cursor: pointer;
+
+		&:hover {
+			background: darken($primary, 5%);
+		}
+	}
+}

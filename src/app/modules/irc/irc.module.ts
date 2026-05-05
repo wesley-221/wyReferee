@@ -8,6 +8,7 @@ import { IrcShortcutCommandsComponent } from './components/irc-shortcut-commands
 import { IrcPlayerManagementComponent } from './components/irc-player-management/irc-player-management.component';
 import { IrcLobbiesComponent } from './components/irc-lobbies/irc-lobbies.component';
 import { IrcChatContainerComponent } from './components/irc-chat-container/irc-chat-container.component';
+import { IrcChatControlsComponent } from './components/irc-chat-controls/irc-chat-controls.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { IrcChatContainerComponent } from './components/irc-chat-container/irc-c
 		IrcShortcutCommandsComponent,
 		IrcPlayerManagementComponent,
 		IrcLobbiesComponent,
-		IrcChatContainerComponent
+		IrcChatContainerComponent,
+		IrcChatControlsComponent
 	],
 	imports: [
 		CommonModule,

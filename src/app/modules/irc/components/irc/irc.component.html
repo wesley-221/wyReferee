@@ -70,7 +70,21 @@
 		</div>
 
 		<div class="irc-body">
-			<app-irc-chat-container [selectedLobby]="selectedLobby" [selectedChannel]="selectedChannel" [normalChats]="normalChats" (pickBeatmapFromAcronymEmitter)="pickBeatmapFromAcronym($event)"></app-irc-chat-container>
+			<div class="irc-chat-container">
+				<app-irc-chat-container [selectedLobby]="selectedLobby" [selectedChannel]="selectedChannel" [normalChats]="normalChats" (pickBeatmapFromAcronymEmitter)="pickBeatmapFromAcronym($event)"></app-irc-chat-container>
+			</div>
+
+			<div class="irc-chat-controls">
+				<app-irc-shortcut-commands [lobby]="selectedLobby" [channel]="selectedChannel" (focusChat)="focusChat($event)"></app-irc-shortcut-commands>
+
+				<app-irc-chat-controls
+					[activeSlashCommand]="activeSlashCommand"
+					[allSlashCommandsFiltered]="allSlashCommandsFiltered"
+					(sendMessageEmitter)="sendMessage($event)"
+					(handleKeyboardEventEmitter)="handleKeyboardEvent($event)"
+					(selectSlashCommandEmitter)="selectSlashCommand($event)"
+				></app-irc-chat-controls>
+			</div>
 		</div>
 
 		<div class="irc-sidebar-right">

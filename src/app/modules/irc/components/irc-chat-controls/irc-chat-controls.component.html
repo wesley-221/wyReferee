@@ -1,0 +1,19 @@
+<div class="slash-commands" *ngIf="chatMessage.value.startsWith('/')">
+	<div class="slash-command" [ngClass]="{'active': activeSlashCommand && activeSlashCommand.name == slashCommand.name}" *ngFor="let slashCommand of allSlashCommandsFiltered | reverse" (click)="selectSlashCommand(slashCommand)">
+		<div class="slash-command-name">
+			/{{ slashCommand.name }}
+		</div>
+
+		<div class="slash-command-description">
+			{{ slashCommand.description }}
+		</div>
+	</div>
+</div>
+
+<div class="send-message">
+	<input type="text" class="irc-message" placeholder="Message..." #chatMessage (keypress)="sendMessage($event)" (keydown)="preventDefault($event)" />
+
+	<button class="send-button" (click)="sendMessageButton()">
+		<mat-icon>send</mat-icon>
+	</button>
+</div>
