@@ -1,0 +1,98 @@
+@import "variables";
+
+$badge-background-color: rgba(255, 61, 110, 0.1);
+$badge-border-color: rgba(255, 61, 110, 0.25);
+$badge-color: #ff6b93;
+
+.match-information {
+	display: flex;
+	gap: 8px;
+
+	.team-one,
+	.team-two {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		gap: 8px;
+
+		.team-name {
+			font-size: 21px;
+			font-weight: 800;
+			letter-spacing: -0.7px;
+			line-height: 1;
+
+			&.red {
+				color: $red-team-chat-colour;
+			}
+
+			&.blue {
+				color: $blue-team-chat-colour;
+			}
+		}
+
+		.circles {
+			display: flex;
+			gap: 4px;
+
+			.circle {
+				width: 15px;
+				height: 15px;
+
+				border-style: solid;
+				border-radius: 50%;
+				border-width: 1.5px;
+
+				&.red {
+					border-color: $red-team-chat-colour;
+
+					&.active {
+						background-color: $red-team-chat-colour;
+						box-shadow: 0 0 7px $red-team-chat-colour;
+					}
+				}
+
+				&.blue {
+					border-color: $blue-team-chat-colour;
+
+					&.active {
+						background-color: $blue-team-chat-colour;
+						box-shadow: 0 0 7px $blue-team-chat-colour;
+					}
+				}
+			}
+
+			&:hover {
+				cursor: pointer;
+			}
+		}
+	}
+
+	.middle {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		padding: 0 16px;
+		gap: 4px;
+
+		.badge {
+			display: flex;
+			align-items: center;
+
+			background: $badge-background-color;
+			border: 1px solid $badge-border-color;
+			border-radius: 20px;
+
+			padding: 0px 8px;
+			gap: 4px;
+
+			font-size: 13px;
+			font-weight: 700;
+			color: $badge-color;
+
+			letter-spacing: 0.3px;
+			white-space: nowrap;
+		}
+	}
+}

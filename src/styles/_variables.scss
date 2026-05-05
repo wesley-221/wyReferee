@@ -1,4 +1,4 @@
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 
 $md-primary: (
 	50: #fff2ef,
@@ -29,8 +29,8 @@ $md-primary: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-accent: (
@@ -62,8 +62,8 @@ $md-accent: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-success: (
@@ -95,8 +95,8 @@ $md-success: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-info: (
@@ -128,8 +128,8 @@ $md-info: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-danger: (
@@ -161,8 +161,8 @@ $md-danger: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-warning: (
@@ -194,8 +194,8 @@ $md-warning: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $font-family: "Montserrat", "Open Sans", Arial, Helvetica, sans-serif;
@@ -235,3 +235,6 @@ $wybin-schedule-border-color: rgba(255, 255, 255, 0.078);
 
 $information-tile-background-color: #262624;
 $information-header-text-color: #9c9a92;
+
+$red-team-chat-colour: #e94f64;
+$blue-team-chat-colour: #29b;

@@ -3,45 +3,18 @@
 
 <div class="irc-new">
 	<div class="irc-match-header">
-		<div class="match-information" *ngIf="selectedLobby && selectedLobby.mappool">
-			<div class="team-one">
-				<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">
-					<div class="circle red" [ngClass]="{ 'active': score <= teamOneScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
-				</div>
-
-				<div class="team-name red">
-					{{ selectedLobby.teamOneName }}
-				</div>
-			</div>
-
-			<div class="middle">
-				<div class="badge next-pick" *ngIf="selectedChannel != null && hasWon == null && tiebreaker == false">
-					<mat-icon>play_arrow</mat-icon> <div class="team-name" [ngClass]="{'red': nextPick == selectedLobby.teamOneName, 'blue': nextPick == selectedLobby.teamTwoName }">{{ nextPick }} picks next</div>
-				</div>
-
-				<div class="badge match-point" *ngIf="selectedChannel != null && matchpoint != null && hasWon == null && tiebreaker == false">
-					<mat-icon>star</mat-icon> matchpoint <div class="team-name" [ngClass]="{'red': matchpoint == selectedLobby.teamOneName, 'blue': matchpoint == selectedLobby.teamTwoName }">{{ matchpoint }}</div>
-				</div>
-
-				<div class="badge tiebreaker" *ngIf="selectedChannel != null && tiebreaker == true">
-					<mat-icon>local_fire_department</mat-icon> Tiebreaker hype!
-				</div>
-
-				<div class="badge has-won" *ngIf="selectedChannel != null && hasWon != null">
-					<mat-icon>emoji_events</mat-icon> <div class="team-name" [ngClass]="{'red': hasWon == selectedLobby.teamOneName, 'blue': hasWon == selectedLobby.teamTwoName }">{{ hasWon }}</div> won, GG and wp!
-				</div>
-			</div>
-
-			<div class="team-two">
-				<div class="team-name blue">
-					{{ selectedLobby.teamTwoName }}
-				</div>
-
-				<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(2, 'middle') : $event.which == 3 ? adjustScore(2, 'right') : adjustScore(2, 'left')">
-					<div class="circle blue" [ngClass]="{ 'active': score <= teamTwoScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
-				</div>
-			</div>
-		</div>
+		<app-irc-match-header
+			[selectedLobby]="selectedLobby"
+			[selectedChannel]="selectedChannel"
+			[teamOneScore]="teamOneScore"
+			[teamTwoScore]="teamTwoScore"
+			[tiebreaker]="tiebreaker"
+			[hasWon]="hasWon"
+			[nextPick]="nextPick"
+			[matchpoint]="matchpoint"
+			(adjustScoreEmitter)="adjustScore($event.team, $event.mouseClick)"
+		>
+		</app-irc-match-header>
 	</div>
 
 	<div class="first-pick-not-set" *ngIf="selectedLobby && (selectedLobby.firstPick == null || selectedLobby.bestOf == null)" (click)="openLobbyDialog()">
