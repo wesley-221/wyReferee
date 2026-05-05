@@ -9,6 +9,7 @@ export enum MessageType {
 export class MessageBuilder {
 	messageType: MessageType;
 	message: string;
+	linkLabel: string;
 	linkName: string;
 	modAcronymBeatmapId: number;
 	modAcronymGameMode: number;
@@ -27,6 +28,7 @@ export class MessageBuilder {
 			messageType: messageBuilder.messageType,
 			message: messageBuilder.message,
 			linkName: messageBuilder.linkName,
+			linkLabel: messageBuilder.linkLabel,
 			modAcronymBeatmapId: messageBuilder.modAcronymBeatmapId,
 			modAcronymMappoolId: messageBuilder.modAcronymMappoolId,
 			modAcronymModBracketId: messageBuilder.modAcronymModBracketId,

@@ -37,9 +37,9 @@ import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dial
 import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Subject, takeUntil } from 'rxjs';
 import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
+import { IrcChatContainerComponent } from '../irc-chat-container/irc-chat-container.component';
 
 @Component({
 	selector: 'app-irc',
@@ -54,8 +54,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	@ViewChild('winCondition') winCondition: MatSelect;
 	@ViewChild('players') players: MatSelect;
 
-	@ViewChild('normalChatVirtualScroller') normalChatVirtualScroller: CdkVirtualScrollViewport;
-	@ViewChild('banchoBotChatVirtualScroller') banchoBotChatVirtualScroller: CdkVirtualScrollViewport;
+	@ViewChild(IrcChatContainerComponent) ircChatContainerComponent: IrcChatContainerComponent;
 
 	unsubscribeOnDestroy$ = new Subject<void>();
 
@@ -429,15 +428,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	selectSlashCommand(slashCommand: SlashCommand) {
 		this.chatMessage.nativeElement.value = `/${slashCommand.name}`;
 		this.chatMessage.nativeElement.focus();
-	}
-
-	/**
-	 * Open the link to the users userpage
-	 *
-	 * @param username
-	 */
-	openUserpage(username: string) {
-		this.electronService.openLink(`https://osu.ppy.sh/users/${username}`);
 	}
 
 	/**
@@ -880,8 +870,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 * Scroll irc chat to top
 	 */
 	scrollToBottom() {
-		if (this.normalChatVirtualScroller != undefined) {
-			this.normalChatVirtualScroller.scrollToIndex(this.normalChats.length - 1);
+		if (this.ircChatContainerComponent) {
+			this.ircChatContainerComponent.scrollToBottom();
 		}
 	}
 

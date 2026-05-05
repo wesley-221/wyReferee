@@ -678,6 +678,9 @@ export class IrcService {
 
 		let regexSucceeded = false;
 
+		const stripUrlPrefix = (url: string) => url.trim()
+			.replace(/^(https?:\/\/)?(www\.)?/i, '');
+
 		// Handle all the regexes
 		for (const regex in allRegexes) {
 			const currentRegex = allRegexes[regex].run(message);
@@ -691,7 +694,8 @@ export class IrcService {
 				messageBuilder.push(new MessageBuilder({
 					messageType: MessageType.Link,
 					message: currentRegex.link,
-					linkName: currentRegex.name
+					linkName: currentRegex.name,
+					linkLabel: stripUrlPrefix(currentRegex.name)
 				}));
 
 				regexSucceeded = true;
@@ -713,7 +717,8 @@ export class IrcService {
 					messageBuilder.push(new MessageBuilder({
 						messageType: MessageType.Link,
 						message: linkSplit[0],
-						linkName: linkSplit[1]
+						linkName: linkSplit[1],
+						linkLabel: stripUrlPrefix(linkSplit[1])
 					}));
 				}
 				else {
@@ -725,7 +730,8 @@ export class IrcService {
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Link,
 								message: linkSplit[0],
-								linkName: linkSplit[1]
+								linkName: linkSplit[1],
+								linkLabel: stripUrlPrefix(linkSplit[1])
 							}));
 						}
 						// The split is a message
@@ -745,7 +751,9 @@ export class IrcService {
 				if (splittedString.length == 1) {
 					messageBuilder.push(new MessageBuilder({
 						messageType: MessageType.Link,
-						message: splittedString[0]
+						message: splittedString[0],
+						linkName: splittedString[0],
+						linkLabel: stripUrlPrefix(splittedString[0])
 					}));
 				}
 				else {
@@ -754,7 +762,9 @@ export class IrcService {
 						if (Regex.isLink.run(splittedString[split])) {
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Link,
-								message: splittedString[split]
+								message: splittedString[split],
+								linkName: splittedString[split],
+								linkLabel: stripUrlPrefix(splittedString[split])
 							}));
 						}
 						// The split is a message

@@ -1,0 +1,232 @@
+@import "variables";
+
+$background-color-irc: #282828;
+
+$red-team-chat-colour: #e94f64;
+$blue-team-chat-colour: #29b;
+$bancho-chat-colour: #df96c0;
+$me-chat-colour: #ffffff;
+
+$hyperlink-background-color: #2b4576;
+
+:host {
+	height: 100%;
+}
+
+.messages {
+	height: 100%;
+
+	overflow-y: auto;
+
+	.chat {
+		.chat-content {
+			display: grid;
+			grid-template-columns: 64px 90px 1fr;
+
+			gap: 2px;
+			width: 100%;
+
+			.divider {
+				grid-column: 1 / -1;
+
+				display: flex;
+				align-items: center;
+				text-align: center;
+
+				margin: 25px 0;
+
+				&::before,
+				&::after {
+					content: "";
+					flex: 1;
+					border-bottom: 3px solid $primary;
+				}
+
+				span {
+					color: $primary;
+					font-weight: bold;
+					font-size: 20px;
+					padding: 0 10px;
+					white-space: nowrap;
+				}
+			}
+
+			.time {
+				display: flex;
+				align-items: center;
+				text-align: center;
+
+				padding: 3px;
+			}
+
+			.author {
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+
+				padding: 3px;
+
+				font-weight: bold;
+
+				border-radius: 50px;
+
+				&.red {
+					color: $red-team-chat-colour;
+
+					&:hover {
+						color: darken($red-team-chat-colour, 15%);
+					}
+				}
+
+				&.blue {
+					color: $blue-team-chat-colour;
+
+					&:hover {
+						color: darken($blue-team-chat-colour, 15%);
+					}
+				}
+
+				&.bancho {
+					color: $bancho-chat-colour;
+
+					&:hover {
+						color: darken($bancho-chat-colour, 15%);
+					}
+				}
+
+				&.highlighted {
+					color: #36f027;
+
+					&:hover {
+						color: darken(#36f027, 15%);
+					}
+				}
+
+				&.me {
+					color: $me-chat-colour;
+
+					&:hover {
+						color: darken($me-chat-colour, 15%);
+					}
+				}
+
+				&:hover {
+					cursor: pointer;
+				}
+			}
+
+			.message {
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+				word-break: break-all;
+
+				padding: 4px;
+				gap: 2px;
+
+				.message-piece {
+					display: inline-block;
+
+					.link {
+						display: flex;
+						align-items: center;
+
+						gap: 2px;
+
+						margin-right: 3px;
+						margin-left: 3px;
+
+						background: rgba(61, 184, 240, 0.1);
+						color: #70ccf7;
+
+						border: 1px solid rgba(61, 184, 240, 0.18);
+						border-radius: 4px;
+
+						padding: 1px 4px;
+
+						text-decoration: none;
+						transition: all 0.14s;
+
+						cursor: pointer;
+
+						&:hover {
+							background: rgba(61, 184, 240, 0.2);
+						}
+					}
+
+					.pick-beatmap {
+						margin-right: 3px;
+						margin-left: 3px;
+
+						.url {
+							padding: 5px;
+							background-color: $hyperlink-background-color;
+						}
+
+						&:hover {
+							cursor: pointer;
+
+							.url {
+								background-color: lighten($hyperlink-background-color, 15%);
+							}
+						}
+					}
+
+					&:first-child {
+						.link {
+							margin-left: 0;
+						}
+
+						.pick-beatmap {
+							margin-left: 0;
+						}
+					}
+				}
+			}
+
+			@media only screen and (max-width: 1200px) {
+				.author {
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+			}
+		}
+
+		&:nth-child(odd) {
+			background-color: darken($background-color-irc, 5%);
+		}
+	}
+}
+
+.messages-divider {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	background-color: $primary;
+	z-index: 5;
+
+	padding: 4px;
+
+	.divider-buttons {
+		display: flex;
+		flex-direction: row;
+		position: absolute;
+
+		.divider-smaller,
+		.divider-reset,
+		.divider-bigger {
+			display: flex;
+			align-items: center;
+
+			background-color: $primary;
+			color: black;
+
+			&:hover {
+				background-color: darken($primary, 15%);
+				cursor: pointer;
+			}
+		}
+	}
+}

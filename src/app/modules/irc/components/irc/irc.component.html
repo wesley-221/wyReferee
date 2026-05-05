@@ -70,7 +70,7 @@
 		</div>
 
 		<div class="irc-body">
-			Irc...
+			<app-irc-chat-container [selectedLobby]="selectedLobby" [selectedChannel]="selectedChannel" [normalChats]="normalChats" (pickBeatmapFromAcronymEmitter)="pickBeatmapFromAcronym($event)"></app-irc-chat-container>
 		</div>
 
 		<div class="irc-sidebar-right">
@@ -86,158 +86,8 @@
 </div>
 
 <!-- <div class="irc">
-	<div class="channels">
-		<div class="header">
-			<div class="header-buttons">
-				<button mat-flat-button class="go-back-button" (click)="goBack()">Go back</button>
-				<button mat-flat-button class="join-channel-button" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">Join</button>
-			</div>
-
-			<div class="connect-area" *ngIf="isAttemptingToJoin">
-				<div><mat-spinner [diameter]="40"></mat-spinner></div>
-				Attempting to join {{ attemptingToJoinChannel }}
-			</div>
-		</div>
-
-		<div class="all-channels" *ngIf="ircService.isAuthenticated" cdkDropList (cdkDropListDropped)="dropChannel($event)">
-			<div class="channel" *ngFor="let channel of channels" cdkDrag cdkDragLockAxis="y" cdkDragBoundary="all-channels"
-								[ngClass]="{'active': selectedChannel != undefined && (channel.name == selectedChannel.name), 'inactive': !channel.active, 'unread': channel.hasUnreadMessages, 'editing': channel.editingLabel }">
-				<div class="channel-name" (click)="changeChannel(channel.name)" *ngIf="!channel.editingLabel">
-					<span *ngIf="channel.label">{{ channel.label }}</span>
-					<span *ngIf="!channel.label">{{ channel.name }}</span>
-				</div>
-
-				<div class="channel-name-label" *ngIf="channel.editingLabel">
-					<mat-form-field>
-						<mat-label>Label</mat-label>
-						<input matInput (keyup.enter)="editLabel(channel)" (keyup.esc)="cancelEditLabel(channel)" [(ngModel)]="channel.label" />
-					</mat-form-field>
-				</div>
-
-				<div class="side-button">
-					<div class="button not-muted" (click)="playSound(channel, false)" *ngIf="channel.playSoundOnMessage">
-						<mat-icon>volume_up</mat-icon>
-					</div>
-
-					<div class="button muted" (click)="playSound(channel, true)" *ngIf="!channel.playSoundOnMessage">
-						<mat-icon>volume_off</mat-icon>
-					</div>
-
-					<div class="button edit" (click)="editLabel(channel)" *ngIf="!channel.editingLabel">
-						<mat-icon>edit</mat-icon>
-					</div>
-
-					<div class="button edit" (click)="editLabel(channel)" *ngIf="channel.editingLabel">
-						<mat-icon>save</mat-icon>
-					</div>
-
-					<div class="button red" (click)="partChannel(channel.name)">
-						<mat-icon>close</mat-icon>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="player-management" *ngIf="selectedLobby != undefined && selectedChannel != undefined && selectedChannel.name.startsWith('#mp_')">
-			<app-irc-player-management [lobby]="selectedLobby" [channel]="selectedChannel"></app-irc-player-management>
-		</div>
-	</div>
-
 	<div class="chat-content">
 		<div class="chat-container">
-			<div class="match-header" *ngIf="(selectedChannel != null && selectedChannel.name.startsWith('#mp_')) && this.selectedLobby != null && selectedLobby.isQualifierLobby == false">
-				// !!COMMENT!! The mappool is for any tournament that is NOT Catch The Magic
-				<div class="match-header-center" *ngIf="selectedLobby.mappool && selectedLobby.mappool.type != 4">
-					<div class="match-information">
-						<div class="team-one">
-							<div class="team-name red">
-								{{ selectedLobby.teamOneName }}
-							</div>
-
-							<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(1, 'middle') : $event.which == 3 ? adjustScore(1, 'right') : adjustScore(1, 'left')">
-								<div class="circle red" [ngClass]="{ 'active': score <= teamOneScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
-							</div>
-						</div>
-
-						<div class="middle">
-							vs
-						</div>
-
-						<div class="team-two">
-							<div class="team-name blue">
-								{{ selectedLobby.teamTwoName }}
-							</div>
-
-							<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustScore(2, 'middle') : $event.which == 3 ? adjustScore(2, 'right') : adjustScore(2, 'left')">
-								<div class="circle blue" [ngClass]="{ 'active': score <= teamTwoScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				// !!COMMENT!! The mappool is for Catch The Magic
-				<div class="match-header-center" *ngIf="selectedLobby.mappool && selectedLobby.mappool.type == 4">
-					<div class="match-information">
-						<div class="team-one">
-							<div class="team-name red">
-								{{ selectedLobby.teamOneName }}
-							</div>
-
-							<div class="heart-container" matTooltip="Left click to increase the hitpoints, Right click to decrease the hitpoints, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustHealth(1, 'middle') : $event.which == 3 ? adjustHealth(1, 'right') : adjustHealth(1, 'left')">
-								<span class="heart-text">{{ selectedLobby.getTeamOneHealth() }}</span>
-
-								<svg class="heart" viewBox="0 0 32 29.6">
-									<path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
-										c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
-								</svg>
-							</div>
-						</div>
-
-						<div class="middle">
-							vs
-						</div>
-
-						<div class="team-two">
-							<div class="team-name blue">
-								{{ selectedLobby.teamTwoName }}
-							</div>
-
-							<div class="heart-container" matTooltip="Left click to increase the hitpoints, Right click to decrease the hitpoints, Middle mouse to reset to original" (mouseup)="$event.which == 2 ? adjustHealth(2, 'middle') : $event.which == 3 ? adjustHealth(2, 'right') : adjustHealth(2, 'left')">
-								<span class="heart-text">{{ selectedLobby.getTeamTwoHealth() }}</span>
-
-								<svg class="heart" viewBox="0 0 32 29.6">
-									<path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
-										c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
-								</svg>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="next-pick" *ngIf="selectedChannel != null && hasWon == null && tiebreaker == false">
-					Next pick is for <div class="team-name" [ngClass]="{'red': nextPick == selectedLobby.teamOneName, 'blue': nextPick == selectedLobby.teamTwoName }">{{ nextPick }}</div>
-				</div>
-
-				<div class="match-point" *ngIf="selectedChannel != null && matchpoint != null && hasWon == null && tiebreaker == false">
-					Matchpoint for <div class="team-name" [ngClass]="{'red': matchpoint == selectedLobby.teamOneName, 'blue': matchpoint == selectedLobby.teamTwoName }">{{ matchpoint }}</div>
-				</div>
-
-				<div class="tiebreaker" *ngIf="selectedChannel != null && tiebreaker == true">
-					<div class="team-name primary">
-						Tiebreaker hype!
-					</div>
-				</div>
-
-				<div class="has-won" *ngIf="selectedChannel != null && hasWon != null">
-					<div class="team-name" [ngClass]="{'red': hasWon == selectedLobby.teamOneName, 'blue': hasWon == selectedLobby.teamTwoName }">{{ hasWon }}</div> has won the match, GG and wp!
-				</div>
-
-				<div class="first-pick-dialog" *ngIf="selectedLobby.firstPick == null || selectedLobby.bestOf == null" (click)="openLobbyDialog()">
-					You haven't set the <b>First pick</b> of the match yet. <br />
-					<b>Click on me to change who picks first.</b>
-				</div>
-			</div>
-
 			// !! COMMENT !! Normal messages
 			<cdk-virtual-scroll-viewport #normalChatVirtualScroller class="messages normal" itemSize="50">
 				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
