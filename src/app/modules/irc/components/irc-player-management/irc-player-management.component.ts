@@ -38,6 +38,10 @@ export class IrcPlayerManagementComponent implements OnInit, OnChanges {
 		}
 	}
 
+	get playerCount(): number {
+		return this.multiplayerLobbyPlayers?.players?.filter(p => p.username !== 'Open').length ?? 0;
+	}
+
 	/**
 	 * Move the player to a different slot
 	 *

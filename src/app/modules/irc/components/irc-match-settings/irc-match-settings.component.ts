@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Lobby } from '../../../../models/lobby';
 import { IrcChannel } from '../../../../models/irc/irc-channel';
 import { IrcService } from '../../../../services/irc.service';
@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { WebhookService } from '../../../../services/webhook.service';
 import { SendBeatmapResultComponent } from '../../../../components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSelect } from '@angular/material/select';
 import { WyTeamPlayer } from '../../../../models/wytournament/wy-team-player';
 import { WyTeam } from '../../../../models/wytournament/wy-team';
 
@@ -18,9 +17,9 @@ import { WyTeam } from '../../../../models/wytournament/wy-team';
 	styleUrl: './irc-match-settings.component.scss'
 })
 export class IrcMatchSettingsComponent {
-	@ViewChild('teamMode') teamMode: MatSelect;
-	@ViewChild('winCondition') winCondition: MatSelect;
-	@ViewChild('players') players: MatSelect;
+	@ViewChild('teamMode') teamMode: ElementRef;
+	@ViewChild('winCondition') winCondition: ElementRef;
+	@ViewChild('players') players: ElementRef;
 
 	@Output() openLobbyDialogEmitter = new EventEmitter<void>();
 	@Output() synchronizeMpEmitter = new EventEmitter<void>()
@@ -104,11 +103,11 @@ export class IrcMatchSettingsComponent {
 			const timer =
 				setInterval(() => {
 					if (this.roomSettingDelay == 1) {
-						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.value as string} ${this.winCondition.value as string} ${this.players.value == undefined ? 8 : this.players.value as string}`);
+						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.nativeElement.value as string} ${this.winCondition.nativeElement.value as string} ${this.players.nativeElement.value == undefined ? 8 : this.players.nativeElement.value as string}`);
 
-						this.ircService.getChannelByName(this.selectedChannel.name).teamMode = this.teamMode.value;
-						this.ircService.getChannelByName(this.selectedChannel.name).winCondition = this.winCondition.value;
-						this.ircService.getChannelByName(this.selectedChannel.name).players = this.players.value;
+						this.ircService.getChannelByName(this.selectedChannel.name).teamMode = this.teamMode.nativeElement.value;
+						this.ircService.getChannelByName(this.selectedChannel.name).winCondition = this.winCondition.nativeElement.value;
+						this.ircService.getChannelByName(this.selectedChannel.name).players = this.players.nativeElement.value;
 
 						this.roomSettingGoingOn = false;
 						this.roomSettingDelay = 0;
