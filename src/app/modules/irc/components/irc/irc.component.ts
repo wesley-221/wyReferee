@@ -51,10 +51,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	@ViewChild('channelName') channelName: ElementRef;
 	@ViewChild('chatMessage') chatMessage: ElementRef;
 
-	@ViewChild('teamMode') teamMode: MatSelect;
-	@ViewChild('winCondition') winCondition: MatSelect;
-	@ViewChild('players') players: MatSelect;
-
 	@ViewChild(IrcChatContainerComponent) ircChatContainerComponent: IrcChatContainerComponent;
 	@ViewChild(IrcChatControlsComponent) ircChatControlsComponent: IrcChatControlsComponent;
 
@@ -75,9 +71,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	isInvitesMinimized = true;
 
 	searchValue: string;
-
-	roomSettingGoingOn = false;
-	roomSettingDelay = 0;
 
 	teamOneScore = 0;
 	teamTwoScore = 0;
@@ -632,56 +625,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Change the room settings
-	 */
-	onRoomSettingChange() {
-		if (!this.roomSettingGoingOn) {
-			const timer =
-				setInterval(() => {
-					if (this.roomSettingDelay == 1) {
-						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.value as string} ${this.winCondition.value as string} ${this.players.value == undefined ? 8 : this.players.value as string}`);
-
-						this.ircService.getChannelByName(this.selectedChannel.name).teamMode = this.teamMode.value;
-						this.ircService.getChannelByName(this.selectedChannel.name).winCondition = this.winCondition.value;
-						this.ircService.getChannelByName(this.selectedChannel.name).players = this.players.value;
-
-						this.roomSettingGoingOn = false;
-						this.roomSettingDelay = 0;
-
-						clearInterval(timer);
-					}
-
-					this.roomSettingDelay--;
-				}, 1000);
-
-			this.roomSettingGoingOn = true;
-		}
-
-		this.roomSettingDelay = 3;
-	}
-
-	/**
-	 * Navigate to the lobbyoverview from irc
-	 */
-	navigateLobbyOverview() {
-		const lobbyId = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name).lobbyId;
-
-		if (lobbyId) {
-			this.router.navigate(['/lobby-overview/lobby-view', lobbyId]);
-		}
-		else {
-			this.toastService.addToast('No lobby overview found for this irc channel');
-		}
-	}
-
-	/**
-	 * Send the addref command to the channel
-	 */
-	sendAddRefCommand() {
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp addref ${this.selectedLobby.tournament.addrefUsernames}`);
-	}
-
-	/**
 	 * Refresh the stats for a multiplayer lobby.
 	 *
 	 * @param multiplayerLobby the multiplayerlobby
@@ -869,20 +812,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Open a dialog to easily send result to the multiplayer lobby
-	 */
-	sendMatchResult() {
-		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
-
-		this.dialog.open(SendBeatmapResultComponent, {
-			data: {
-				multiplayerLobby: selectedMultiplayerLobby,
-				ircChannel: this.selectedChannel.name
-			}
-		});
-	}
-
-	/**
 	 * Update the match results in the lobby
 	 */
 	updateMatchResults() {
@@ -917,19 +846,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 		});
 
 		this.closeMatchDialog();
-	}
-
-	/**
-	 * Send the match summary to the given Discord webhooks
-	 */
-	sendMatchSummary() {
-		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
-
-		if (selectedMultiplayerLobby.sendWebhooks != true) {
-			return;
-		}
-
-		this.webhookService.sendMatchSummary(selectedMultiplayerLobby, this.ircService.authenticatedUser);
 	}
 
 	/**
@@ -1047,15 +963,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 */
 	openDMChannel(player: WyTeamPlayer): void {
 		this.ircService.joinChannel(player.name);
-	}
-
-	/**
-	 * Change the sidebar menu
-	 *
-	 * @param option the button that was pressed
-	 */
-	selectSidebarHeaderButton(option: number) {
-		this.sidebarHeaderButtonActive = option;
 	}
 
 	/**

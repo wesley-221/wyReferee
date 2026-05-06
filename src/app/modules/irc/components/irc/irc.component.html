@@ -60,9 +60,17 @@
 			</div>
 		</div>
 
-		<div class="irc-sidebar-right">
+		<div class="irc-sidebar-right" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
 			<div class="irc-match-settings">
-				Match settings...
+				<app-irc-match-settings
+					[selectedLobby]="selectedLobby"
+					[selectedChannel]="selectedChannel"
+					[qualifierTeams]="qualifierTeams"
+					(openLobbyDialogEmitter)="openLobbyDialog()"
+					(synchronizeMpEmitter)="synchronizeMp()"
+					(updateMatchResultsEmitter)="updateMatchResults()"
+				>
+				</app-irc-match-settings>
 			</div>
 
 			<div class="irc-mappool">
@@ -73,112 +81,6 @@
 </div>
 
 <!-- <div class="irc">
-	<div class="chat-content">
-		<div class="chat-container">
-			// !! COMMENT !! Normal messages
-			<cdk-virtual-scroll-viewport #normalChatVirtualScroller class="messages normal" itemSize="50">
-				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
-				<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
-				<div class="chat" *ngFor="let chat of normalChats">
-					<div class="chat-content divider" *ngIf="!chat.isADivider">
-						<div class="time" [title]="chat.date">
-							{{ chat.time }}
-						</div>
-
-						<div class="author" [matTooltip]="chat.author" *ngVar="(selectedLobby != null ? selectedLobby.getPlayerByUsername(chat.author, multiplayerLobbyPlayersService) : null) as ircManagementPlayer" [ngClass]="{'me': chat.author == ircService.authenticatedUser,
-							'bancho': chat.author == 'BanchoBot',
-							'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
-							'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false}" (click)="openUserpage(chat.author)">
-							{{ chat.author }}
-						</div>
-
-						<div class="message">
-							<div class="message-piece" *ngFor="let chatPiece of chat.messageBuilder">
-								<span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
-
-								<div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
-									<span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
-									<span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
-								</div>
-
-								<div class="pick-beatmap" *ngIf="chatPiece.messageType == 'ModAcronymPick'" (click)="pickBeatmapFromAcronym(chatPiece)" matTooltip="Click to pick beatmap" matTooltipPosition="above">
-									<span class="url">{{ chatPiece.message }}</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="chat-content" *ngIf="chat.isADivider">
-						<div class="divider"><span>{{ chat.author }}</span></div>
-					</div>
-				</div>
-			</cdk-virtual-scroll-viewport>
-
-			<div class="match-results" *ngIf="matchDialogHeaderName && (matchDialogMultiplayerData || matchDialogSendFinalResult)">
-				<div class="header">
-					<div class="text">
-						{{ matchDialogHeaderName }}
-					</div>
-
-					<div class="close" (click)="closeMatchDialog()">
-						<mat-icon>close</mat-icon>
-					</div>
-				</div>
-
-				<div *ngIf="matchDialogMultiplayerData" class="match-result-beatmap"[ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + cacheService.getBeatmapCoverUrl(matchDialogMultiplayerData.beatmap_id) + ')' }">
-					<div class="beatmap-header">
-						{{ cacheService.getBeatmapname(matchDialogMultiplayerData.beatmap_id) }}
-					</div>
-
-					<div class="teams">
-						<div class="red-team">
-							<span class="team-name">{{ selectedLobby.teamOneName }}</span>: {{ matchDialogMultiplayerData.team_one_score }}
-						</div>
-
-						<div class="blue-team">
-							<span class="team-name">{{ selectedLobby.teamTwoName }}</span>: {{ matchDialogMultiplayerData.team_two_score }}
-						</div>
-					</div>
-				</div>
-
-				<div class="match-result" *ngIf="matchDialogSendFinalResult">
-					<div class="match-score">
-						<span class="team-one">{{ selectedLobby.teamOneName }}</span> score : <span [ngClass]="selectedLobby.getTeamOneScore() > selectedLobby.getTeamTwoScore() ? 'win' : 'lose'">{{ selectedLobby.getTeamOneScore() }}</span>
-					</div>
-
-					<div class="match-score">
-						<span class="team-two">{{ selectedLobby.teamTwoName }}</span> score : <span [ngClass]="selectedLobby.getTeamOneScore() < selectedLobby.getTeamTwoScore() ? 'win' : 'lose'">{{ selectedLobby.getTeamTwoScore() }}</span>
-					</div>
-
-					<div class="team-name" [ngClass]="{'red': hasWon == selectedLobby.teamOneName, 'blue': hasWon == selectedLobby.teamTwoName }">{{ hasWon }}</div> has won the match!
-				</div>
-
-				<div class="message">
-					<button *ngIf="matchDialogMultiplayerData" mat-raised-button color="primary" (click)="sendBeatmapResult(matchDialogMultiplayerData)"><mat-icon>send</mat-icon> send beatmap result</button>
-					<button *ngIf="matchDialogSendFinalResult" mat-raised-button color="primary" (click)="updateMatchResults()"><mat-icon>send</mat-icon> update match results</button>
-				</div>
-			</div>
-
-			<app-irc-shortcut-commands [lobby]="selectedLobby" [channel]="selectedChannel" (focusChat)="focusChat($event)"></app-irc-shortcut-commands>
-
-			<div class="slash-commands" *ngIf="chatMessage.value.startsWith('/')">
-				<div class="slash-command" [ngClass]="{'active': activeSlashCommand && activeSlashCommand.name == slashCommand.name}" *ngFor="let slashCommand of allSlashCommandsFiltered | reverse" (click)="selectSlashCommand(slashCommand)">
-					<div class="slash-command-name">
-						/{{ slashCommand.name }}
-					</div>
-
-					<div class="slash-command-description">
-						{{ slashCommand.description }}
-					</div>
-				</div>
-			</div>
-
-			<div class="send-message">
-				<input type="text" placeholder="Message..." #chatMessage (keypress)="sendMessage($event)" (keydown)="preventDefault($event)" />
-			</div>
-		</div>
-	</div>
-
 	<div class="side-menu" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
 		<div class="side-menu-content">
 			<div class="header-buttons">
