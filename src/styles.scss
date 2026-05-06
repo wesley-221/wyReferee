@@ -11,20 +11,25 @@ body {
 	padding: 0;
 
 	::-webkit-scrollbar {
-		width: 10px;
-		height: 10px;
+		width: 7px;
+		height: 7px;
 	}
 
 	::-webkit-scrollbar-track {
-		background: lighten($sidebar-background-color, 8%);
+		background: transparent;
+
+		&:hover {
+			background: rgba($primary, 0.05);
+		}
 	}
 
 	::-webkit-scrollbar-thumb {
 		background: $primary;
+		border-radius: 99px;
 	}
 
-	::-webkit-scrollbar-thumb:hover {
-		background: darken($primary, 5%);
+	::-webkit-scrollbar-corner {
+		background: transparent;
 	}
 }
 
