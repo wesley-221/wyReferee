@@ -12,7 +12,7 @@
 	</div>
 
 	<div class="send-message">
-		<input type="text" class="irc-message" placeholder="Message..." #chatMessage (keypress)="sendMessage($event)" (keydown)="preventDefault($event)" />
+		<input type="text" class="form-input" placeholder="Message..." #chatMessage (keypress)="sendMessage($event)" (keydown)="preventDefault($event)" />
 
 		<button class="send-button" (click)="sendMessageButton()">
 			<mat-icon>send</mat-icon>

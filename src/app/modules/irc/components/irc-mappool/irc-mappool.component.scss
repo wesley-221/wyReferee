@@ -76,23 +76,8 @@ $unpick-text-color: #94a3b8;
 		padding: 8px 16px;
 		border-bottom: 1px solid $irc-border-color;
 
-		.mappool-search-input {
-			width: 100%;
+		.form-input {
 			padding: 8px 16px;
-
-			background: $irc-input-background-color;
-			color: $irc-input-text-color-active;
-
-			border: 1px solid $irc-border-color;
-			border-radius: 8px;
-			outline: none;
-
-			transition: border-color 0.18s;
-
-			&:focus {
-				border-color: rgba($primary, 0.26);
-				box-shadow: 0 0 0 3px rgba($primary, 0.08);
-			}
 		}
 	}
 

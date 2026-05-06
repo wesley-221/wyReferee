@@ -175,3 +175,26 @@ code {
 		}
 	}
 }
+
+.form-input {
+	flex: 1;
+
+	border: 1px solid $irc-input-border-color;
+	border-radius: 8px;
+
+	font-size: 16px;
+
+	padding: 12px 20px;
+
+	background: $irc-input-background-color;
+	color: $irc-input-text-color-active;
+
+	outline: none;
+
+	transition: border-color 0.2s;
+
+	&:focus {
+		border-color: rgba($primary, 0.26);
+		box-shadow: 0 0 0 3px rgba($primary, 0.08);
+	}
+}
