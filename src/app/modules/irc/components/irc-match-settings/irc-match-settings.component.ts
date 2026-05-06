@@ -42,7 +42,7 @@ export class IrcMatchSettingsComponent {
 		private ircService: IrcService,
 		private multiplayerLobbies: WyMultiplayerLobbiesService
 	) {
-		this.sidebarHeaderButtonActive = 3;
+		this.sidebarHeaderButtonActive = 1;
 		this.roomSettingGoingOn = false;
 		this.roomSettingDelay = 0;
 	}
