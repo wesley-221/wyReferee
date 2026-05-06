@@ -30,20 +30,18 @@
 					<div class="beatmap-cover" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(' + beatmap.getCoverImage() + ')' }"></div>
 
 					<div class="beatmap-information">
-						<div class="has-been-picked" [ngClass]="{ 'beatmap-picked-team-one': beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId), 'beatmap-picked-team-two': beatmapIsPickedByTeamTwo(selectedLobby, beatmap.beatmapId) }">
-							<div class="text">
-								{{ getPickedOrderOrdinal(selectedLobby, beatmap.beatmapId) }} pick by {{ beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
-							</div>
-						</div>
-
-						<div class="has-been-banned" [ngClass]="{ 'is-banned-one': selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId), 'is-banned-two': selectedLobby.beatmapIsBannedByTeamTwo(beatmap.beatmapId) }">
-							<div class="text">
-								{{ getBannedOrderOrdinal(selectedLobby, beatmap.beatmapId) }} ban by {{ selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
-							</div>
-						</div>
-
 						<div class="name" (click)="electronService.openLink(beatmap.beatmapUrl)">
 							{{ beatmap.beatmapName }}
+						</div>
+					</div>
+
+					<div class="beatmap-status">
+						<div class="beatmap-status-badge" [ngClass]="{ 'beatmap-picked-team-one': beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId), 'beatmap-picked-team-two': beatmapIsPickedByTeamTwo(selectedLobby, beatmap.beatmapId) }">
+							{{ getPickedOrderOrdinal(selectedLobby, beatmap.beatmapId) }} pick by {{ beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
+						</div>
+
+						<div class="beatmap-status-badge" [ngClass]="{ 'is-banned-one': selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId), 'is-banned-two': selectedLobby.beatmapIsBannedByTeamTwo(beatmap.beatmapId) }">
+							{{ getBannedOrderOrdinal(selectedLobby, beatmap.beatmapId) }} ban by {{ selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
 						</div>
 					</div>
 

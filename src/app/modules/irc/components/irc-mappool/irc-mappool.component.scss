@@ -13,25 +13,25 @@ $hover-opacity: 0.26;
 $active-opacity: 0.32;
 
 $ban-background-color: rgba(239, 68, 68);
-$ban-text-color: #ef4444;
+$ban-text-color: #fff;
 
-$unban-background-color: rgba(34, 197, 94);
-$unban-text-color: #22c55e;
+$unban-background-color: rgba(239, 68, 68);
+$unban-text-color: #fff;
 
 $protect-background-color: rgba(251, 191, 36);
-$protect-text-color: #fbbf24;
+$protect-text-color: #fff;
 
-$unprotect-background-color: rgba(148, 163, 184);
-$unprotect-text-color: #94a3b8;
+$unprotect-background-color: rgba(251, 191, 36);
+$unprotect-text-color: #fff;
 
-$reassign-background-color: rgba(59, 130, 246);
-$reassign-text-color: #3b82f6;
+$reassign-background-color: $primary;
+$reassign-text-color: #fff;
 
-$pick-background-color: rgba(168, 85, 247);
-$pick-text-color: #a855f7;
+$pick-background-color: rgb(56, 189, 248);
+$pick-text-color: #fff;
 
 $unpick-background-color: rgba(148, 163, 184);
-$unpick-text-color: #94a3b8;
+$unpick-text-color: #fff;
 
 .irc-mappool {
 	display: flex;
@@ -207,76 +207,8 @@ $unpick-text-color: #94a3b8;
 					}
 
 					.beatmap-information {
-						position: relative;
 						padding: 4px;
 						z-index: 1;
-
-						.has-been-picked {
-							display: none;
-							position: absolute;
-
-							justify-content: center;
-							align-items: center;
-
-							flex-direction: column;
-
-							top: 0;
-							left: 0;
-
-							width: 100%;
-							height: 100%;
-
-							border-radius: 8px 8px 0 0;
-
-							.text {
-								background-color: rgba(0, 0, 0, 0.6);
-								color: white;
-
-								padding: 4px;
-							}
-
-							&.beatmap-picked-team-one {
-								display: flex;
-								background-color: rgba($red-team-chat-colour, 0.5);
-							}
-
-							&.beatmap-picked-team-two {
-								display: flex;
-								background-color: rgba($blue-team-chat-colour, 0.5);
-							}
-						}
-
-						.has-been-banned {
-							display: none;
-							position: absolute;
-
-							justify-content: center;
-							align-items: center;
-
-							flex-direction: column;
-
-							top: 0;
-							left: 0;
-
-							width: 100%;
-							height: 100%;
-
-							border-radius: 8px 8px 0 0;
-
-							background-color: rgba(128, 128, 128, 0.6);
-
-							.text {
-								background-color: rgba(0, 0, 0, 0.6);
-								color: white;
-
-								padding: 4px;
-							}
-
-							&.is-banned-one,
-							&.is-banned-two {
-								display: flex;
-							}
-						}
 
 						.name {
 							display: flex;
@@ -289,6 +221,33 @@ $unpick-text-color: #94a3b8;
 							&:hover {
 								cursor: pointer;
 								color: $primary;
+							}
+						}
+					}
+
+					.beatmap-status {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+
+						z-index: 1;
+
+						.beatmap-status-badge {
+							display: none;
+
+							border-radius: 4px;
+							padding: 4px 8px;
+
+							&.beatmap-picked-team-one,
+							&.is-banned-one {
+								display: flex;
+								background-color: rgba($red-team-chat-colour, 0.5);
+							}
+
+							&.beatmap-picked-team-two,
+							&.is-banned-two {
+								display: flex;
+								background-color: rgba($blue-team-chat-colour, 0.5);
 							}
 						}
 					}
@@ -307,6 +266,8 @@ $unpick-text-color: #94a3b8;
 							align-items: center;
 							justify-content: center;
 							text-align: center;
+
+							flex: 1;
 
 							border: 1px solid $irc-border-color;
 							border-radius: 5px;
