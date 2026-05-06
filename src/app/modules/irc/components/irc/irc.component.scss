@@ -1,5 +1,7 @@
 @import "variables";
 
+$sidebar-width: 250px;
+
 .irc {
 	display: flex;
 	flex-direction: column;
@@ -47,16 +49,15 @@
 		.irc-sidebar-left {
 			display: flex;
 			flex-direction: column;
-			flex-grow: 0;
 
-			width: 220px;
 			background-color: $irc-sidebar-background-color;
 			border-right: 1px solid $irc-border-color;
+
+			flex: 0 0 $sidebar-width;
 
 			.irc-sidebar-header {
 				display: flex;
 				flex-direction: column;
-				flex: 0 0 auto;
 
 				padding: 4px;
 				gap: 4px;
@@ -68,7 +69,6 @@
 
 			.irc-slots {
 				flex: 1;
-				overflow-y: auto;
 			}
 		}
 
@@ -76,8 +76,8 @@
 			display: flex;
 			flex-direction: column;
 
-			width: 100%;
-			height: 100%;
+			flex: 1 1 auto;
+			min-width: 0;
 
 			overflow: hidden;
 
@@ -94,12 +94,11 @@
 		.irc-sidebar-right {
 			display: flex;
 			flex-direction: column;
-			flex-grow: 0;
 
 			background-color: $sidebar-background-color;
 			border-left: 1px solid $irc-border-color;
 
-			width: 300px;
+			flex: 0 0 $sidebar-width;
 
 			.irc-mappool {
 				flex: 1;
