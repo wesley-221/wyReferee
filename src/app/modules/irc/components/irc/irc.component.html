@@ -6,12 +6,6 @@
 		<app-irc-match-header
 			[selectedLobby]="selectedLobby"
 			[selectedChannel]="selectedChannel"
-			[teamOneScore]="teamOneScore"
-			[teamTwoScore]="teamTwoScore"
-			[tiebreaker]="tiebreaker"
-			[hasWon]="hasWon"
-			[nextPick]="nextPick"
-			[matchpoint]="matchpoint"
 			(adjustScoreEmitter)="adjustScore($event.team, $event.mouseClick)"
 		/>
 	</div>

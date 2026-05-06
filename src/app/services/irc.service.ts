@@ -41,6 +41,13 @@ export class IrcService {
 
 	setChannelUnreadMessages$: BehaviorSubject<IrcChannel>;
 
+	teamOneScore$: BehaviorSubject<number>;
+	teamTwoScore$: BehaviorSubject<number>;
+	nextPick$: BehaviorSubject<string>;
+	matchPoint$: BehaviorSubject<string>;
+	tiebreaker$: BehaviorSubject<boolean>;
+	hasWon$: BehaviorSubject<string>;
+
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
 	isCreatingMultiplayerLobby = -1;
 
@@ -61,6 +68,13 @@ export class IrcService {
 		this.messageHasBeenSend$ = new BehaviorSubject<boolean>(false);
 		this.isAuthenticated$ = new BehaviorSubject<boolean>(false);
 		this.setChannelUnreadMessages$ = new BehaviorSubject<IrcChannel>(null);
+
+		this.teamOneScore$ = new BehaviorSubject<number>(0);
+		this.teamTwoScore$ = new BehaviorSubject<number>(0);
+		this.nextPick$ = new BehaviorSubject<string>(null);
+		this.matchPoint$ = new BehaviorSubject<string>(null);
+		this.tiebreaker$ = new BehaviorSubject<boolean>(false);
+		this.hasWon$ = new BehaviorSubject<string>(null);
 
 		window.electronApi.osuAuthentication.getIrcCredentials().then(credentials => {
 			if (credentials.username && credentials.password) {

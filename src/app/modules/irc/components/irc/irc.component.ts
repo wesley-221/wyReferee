@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { IrcService } from '../../../../services/irc.service';
 import { ElectronService } from '../../../../services/electron.service';
 import { Router } from '@angular/router';
@@ -7,9 +7,8 @@ import { ToastType } from '../../../../models/toast';
 import { WebhookService } from '../../../../services/webhook.service';
 import { MatDialog } from '@angular/material/dialog';
 import { JoinIrcChannelComponent } from '../../../../components/dialogs/join-irc-channel/join-irc-channel.component';
-import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatSelectChange } from '@angular/material/select';
 import { BanBeatmapComponent } from '../../../../components/dialogs/ban-beatmap/ban-beatmap.component';
-import { SendBeatmapResultComponent } from '../../../../components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { IrcChannel } from 'app/models/irc/irc-channel';
 import { Lobby } from 'app/models/lobby';
@@ -72,16 +71,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 	searchValue: string;
 
-	teamOneScore = 0;
-	teamTwoScore = 0;
-
 	teamOneHealth = 0;
 	teamTwoHealth = 0;
-
-	nextPick: string = null;
-	matchpoint: string = null;
-	tiebreaker = false;
-	hasWon: string = null;
 
 	popupBannedMap: WyModBracketMap = null;
 	popupBannedBracket: WyModBracket = null;
@@ -99,8 +90,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	matchDialogHeaderName: string;
 	matchDialogMultiplayerData: MultiplayerData;
 	matchDialogSendFinalResult: boolean;
-
-	sidebarHeaderButtonActive = 1;
 
 	constructor(
 		public electronService: ElectronService,
@@ -299,14 +288,14 @@ export class IrcComponent implements OnInit, OnDestroy {
 		this.refreshIrcHeader(this.selectedLobby);
 
 		if (this.selectedLobby != undefined) {
-			this.teamOneScore = this.selectedLobby.getTeamOneScore();
-			this.teamTwoScore = this.selectedLobby.getTeamTwoScore();
+			this.ircService.teamOneScore$.next(this.selectedLobby.getTeamOneScore());
+			this.ircService.teamTwoScore$.next(this.selectedLobby.getTeamTwoScore());
 			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
 			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
-			this.nextPick = this.selectedLobby.getNextPick();
-			this.matchpoint = this.selectedLobby.getMatchPoint();
-			this.tiebreaker = this.selectedLobby.getTiebreaker();
-			this.hasWon = this.selectedLobby.teamHasWon();
+			this.ircService.nextPick$.next(this.selectedLobby.getNextPick());
+			this.ircService.matchPoint$.next(this.selectedLobby.getMatchPoint());
+			this.ircService.tiebreaker$.next(this.selectedLobby.getTiebreaker());
+			this.ircService.hasWon$.next(this.selectedLobby.teamHasWon());
 
 			if (this.selectedLobby.isQualifierLobby) {
 				this.initializeQualifierTeams();
@@ -535,7 +524,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 		this.webhookService.sendBeatmapPicked(this.selectedLobby, this.ircService.authenticatedUser, this.selectedLobby.getNextPick(), beatmap);
 
 		// Update picks
-		if (this.selectedLobby.teamOneName == this.nextPick) {
+		if (this.selectedLobby.teamOneName == this.ircService.nextPick$.value) {
 			this.selectedLobby.teamOnePicks.push(beatmap.beatmapId);
 		}
 		else {
@@ -643,14 +632,14 @@ export class IrcComponent implements OnInit, OnDestroy {
 		}
 
 		if (!this.selectedLobby.ircChannel.isPublicChannel && !this.selectedLobby.ircChannel.isPrivateChannel) {
-			this.teamOneScore = multiplayerLobby.getTeamOneScore();
-			this.teamTwoScore = multiplayerLobby.getTeamTwoScore();
+			this.ircService.teamOneScore$.next(multiplayerLobby.getTeamOneScore());
+			this.ircService.teamTwoScore$.next(multiplayerLobby.getTeamTwoScore());
 			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
 			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
-			this.nextPick = multiplayerLobby.getNextPick();
-			this.matchpoint = multiplayerLobby.getMatchPoint();
-			this.tiebreaker = multiplayerLobby.getTiebreaker();
-			this.hasWon = multiplayerLobby.teamHasWon();
+			this.ircService.nextPick$.next(multiplayerLobby.getNextPick());
+			this.ircService.matchPoint$.next(multiplayerLobby.getMatchPoint());
+			this.ircService.tiebreaker$.next(multiplayerLobby.getTiebreaker());
+			this.ircService.hasWon$.next(multiplayerLobby.teamHasWon());
 		}
 	}
 
@@ -857,7 +846,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 				this.matchDialogHeaderName = null;
 				this.matchDialogMultiplayerData = null;
 
-				if (this.hasWon != null && this.matchDialogSendFinalResult == false) {
+				if (this.ircService.hasWon$.value != null && this.matchDialogSendFinalResult == false) {
 					this.matchDialogHeaderName = 'Match has finished';
 					this.matchDialogSendFinalResult = true;
 				}
@@ -1023,18 +1012,26 @@ export class IrcComponent implements OnInit, OnDestroy {
 	adjustScore(team: number, mouseClick: string) {
 		if (mouseClick == 'left') {
 			if (team == 1) {
-				this.selectedLobby.teamOneOverwriteScore++;
+				if (this.selectedLobby.getTeamOneScore() != this.selectedLobby.getWinningConditionScore()) {
+					this.selectedLobby.teamOneOverwriteScore++;
+				}
 			}
 			else if (team == 2) {
-				this.selectedLobby.teamTwoOverwriteScore++;
+				if (this.selectedLobby.getTeamTwoScore() != this.selectedLobby.getWinningConditionScore()) {
+					this.selectedLobby.teamTwoOverwriteScore++;
+				}
 			}
 		}
 		else if (mouseClick == 'right') {
 			if (team == 1) {
-				this.selectedLobby.teamOneOverwriteScore--;
+				if (this.selectedLobby.getTeamOneScore() > 0) {
+					this.selectedLobby.teamOneOverwriteScore--;
+				}
 			}
 			else if (team == 2) {
-				this.selectedLobby.teamTwoOverwriteScore--;
+				if (this.selectedLobby.getTeamTwoScore() > 0) {
+					this.selectedLobby.teamTwoOverwriteScore--;
+				}
 			}
 		}
 		else if (mouseClick == 'middle') {
