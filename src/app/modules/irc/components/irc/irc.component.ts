@@ -277,6 +277,10 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 * @param channel the channel to change to
 	 */
 	changeChannel(channel: string, delayScroll = false) {
+		if (this.selectedChannel?.name == channel) {
+			return;
+		}
+
 		if (this.selectedChannel != undefined) {
 			this.selectedChannel.lastActiveChannel = false;
 			this.ircService.changeLastActiveChannel(this.selectedChannel, false);
