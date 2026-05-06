@@ -1,0 +1,84 @@
+<div class="irc-mappool">
+	<div class="mappool-header">
+		<div class="mappool-label">
+			Mappool
+		</div>
+
+		<div class="mappool-stage">
+			{{ selectedLobby?.mappool?.name }}
+		</div>
+	</div>
+
+	<div class="mappool-search">
+		<input class="mappool-search-input" [(ngModel)]="searchValue" placeholder="Search beatmap..." />
+	</div>
+
+	<div class="mappool-content">
+		<div class="mod-bracket" *ngFor="let modBracket of (selectedLobby.mappool.modBrackets | searchmodbracket : searchValue )">
+			<div class="mod-bracket-header" [ngClass]="modBracket?.acronym?.toLowerCase()">
+				<div class="acronym">
+					{{ modBracket.acronym }}
+				</div>
+
+				<div class="name">
+					{{ modBracket.name }}
+				</div>
+			</div>
+
+			<div class="beatmaps">
+				<div class="beatmap" *ngFor="let beatmap of modBracket.beatmaps">
+					<div class="beatmap-cover" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(' + beatmap.getCoverImage() + ')' }"></div>
+
+					<div class="beatmap-information">
+						<div class="has-been-picked" [ngClass]="{ 'beatmap-picked-team-one': beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId), 'beatmap-picked-team-two': beatmapIsPickedByTeamTwo(selectedLobby, beatmap.beatmapId) }">
+							<div class="text">
+								{{ getPickedOrderOrdinal(selectedLobby, beatmap.beatmapId) }} pick by {{ beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
+							</div>
+						</div>
+
+						<div class="has-been-banned" [ngClass]="{ 'is-banned-one': selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId), 'is-banned-two': selectedLobby.beatmapIsBannedByTeamTwo(beatmap.beatmapId) }">
+							<div class="text">
+								{{ getBannedOrderOrdinal(selectedLobby, beatmap.beatmapId) }} ban by {{ selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
+							</div>
+						</div>
+
+						<div class="name" (click)="electronService.openLink(beatmap.beatmapUrl)">
+							{{ beatmap.beatmapName }}
+						</div>
+					</div>
+
+					<div class="beatmap-actions">
+						<div class="button ban" matTooltip="Ban this beatmap" *ngIf="!selectedLobby.beatmapIsBanned(beatmap.beatmapId) && !selectedLobby.beatmapIsProtected(beatmap.beatmapId) && selectedLobby.isQualifierLobby == false" (click)="banBeatmap(beatmap, modBracket, selectedLobby)">
+							ban
+						</div>
+
+						<div class="button unban" matTooltip="Unban this beatmap" *ngIf="selectedLobby.beatmapIsBanned(beatmap.beatmapId) && selectedLobby.isQualifierLobby == false" (click)="unbanBeatmap(beatmap)">
+							unban
+						</div>
+
+						<div class="button protect" matTooltip="Protect this beatmap" *ngIf="!selectedLobby.beatmapIsProtected(beatmap.beatmapId) && !selectedLobby.beatmapIsBanned(beatmap.beatmapId)  && selectedLobby.tournament.protects == true && selectedLobby.isQualifierLobby == false" (click)="protectBeatmap(beatmap, modBracket, selectedLobby)">
+							protect
+						</div>
+
+						<div class="button unprotect" matTooltip="Unprotect this beatmap" *ngIf="selectedLobby.beatmapIsProtected(beatmap.beatmapId) && selectedLobby.tournament.protects == true && selectedLobby.isQualifierLobby == false" (click)="unprotectBeatmap(beatmap)">
+							unprotect
+						</div>
+
+
+						<div class="button reassign" matTooltip="Reassign which team has picked this beatmap" *ngIf="selectedLobby.beatmapIsPicked(beatmap.beatmapId) && selectedLobby.isQualifierLobby == false" (click)="changePickedBy(beatmap)">
+							reassign pick
+						</div>
+
+						<div class="button pick" matTooltip="Pick this beatmap" *ngIf="!selectedLobby.beatmapIsPicked(beatmap.beatmapId)" (click)="pickBeatmap(beatmap, modBracket, selectedLobby.tournament.gamemodeId)" [ngClass]="{'disabled': selectedLobby.beatmapIsBanned(beatmap.beatmapId) }">
+							pick
+						</div>
+
+						<div class="button unpick" matTooltip="Unpick this beatmap" *ngIf="selectedLobby.beatmapIsPicked(beatmap.beatmapId)" (click)="unpickBeatmap(beatmap)" [ngClass]="{'disabled': selectedLobby.beatmapIsBanned(beatmap.beatmapId) }">
+							unpick
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

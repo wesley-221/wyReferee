@@ -744,26 +744,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Check if a beatmap has been picked by team one in the current lobby
-	 *
-	 * @param multiplayerLobby the multiplayerlobby to check from
-	 * @param beatmapId the beatmap to check
-	 */
-	beatmapIsPickedByTeamOne(multiplayerLobby: Lobby, beatmapId: number) {
-		return multiplayerLobby.teamOnePicks != null && multiplayerLobby.teamOnePicks.indexOf(beatmapId) > -1;
-	}
-
-	/**
-	 * Check if a beatmap has been picked by team two in the current lobby
-	 *
-	 * @param multiplayerLobby the multiplayerlobby to check from
-	 * @param beatmapId the beatmap to check
-	 */
-	beatmapIsPickedByTeamTwo(multiplayerLobby: Lobby, beatmapId: number) {
-		return multiplayerLobby.teamTwoPicks != null && multiplayerLobby.teamTwoPicks.indexOf(beatmapId) > -1;
-	}
-
-	/**
 	 * Pick a mystery map
 	 *
 	 * @param mappool the mappool to pick from
