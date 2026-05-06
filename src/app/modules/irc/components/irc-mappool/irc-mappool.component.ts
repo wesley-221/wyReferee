@@ -62,19 +62,18 @@ export class IrcMappoolComponent {
 		const teamOneIndex = multiplayerLobby.teamOneBans?.indexOf(beatmapId) ?? -1;
 		const teamTwoIndex = multiplayerLobby.teamTwoBans?.indexOf(beatmapId) ?? -1;
 
-		// TODO: implement a first ban selector like the first pick selector
-		const teamOneFirstPick = multiplayerLobby.firstPick == multiplayerLobby.teamOneName;
+		const teamOneFirstBan = multiplayerLobby.firstBan == multiplayerLobby.teamOneName;
 
 		let banOrder = null;
 
 		if (teamOneIndex > -1) {
-			banOrder = teamOneFirstPick
+			banOrder = teamOneFirstBan
 				? teamOneIndex * 2 + 1
 				: teamOneIndex * 2 + 2;
 		}
 
 		if (teamTwoIndex > -1) {
-			banOrder = teamOneFirstPick
+			banOrder = teamOneFirstBan
 				? teamTwoIndex * 2 + 2
 				: teamTwoIndex * 2 + 1;
 		}

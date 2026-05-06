@@ -42,6 +42,7 @@ export class Lobby {
 	ircChannel: IrcChannel;
 
 	firstPick: string;
+	firstBan: string;
 	selectedStage: WyStage;
 	bestOf: number;
 	banCount: number;
@@ -148,6 +149,7 @@ export class Lobby {
 			mappool: lobby.mappool != null ? WyMappool.makeTrueCopy(lobby.mappool) : null,
 			ircChannel: lobby.ircChannel,
 			firstPick: lobby.firstPick,
+			firstBan: lobby.firstBan,
 			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
 			bestOf: lobby.bestOf,
 			banCount: lobby.banCount,

@@ -10,10 +10,14 @@
 
 	<div *ngIf="data.multiplayerLobby != undefined">
 		<h3>Webhooks</h3>
+
 		<mat-slide-toggle [(ngModel)]="data.multiplayerLobby.sendWebhooks" [ngModelOptions]="{ standalone: true }">Webhooks <span [ngClass]="{ 'green': data.multiplayerLobby.sendWebhooks == true, 'red': data.multiplayerLobby.sendWebhooks == false }">{{ data.multiplayerLobby.sendWebhooks == true ? 'will' : 'wont' }}</span> be sent</mat-slide-toggle>
 		<p>Use this option to disable webhooks from being sent. Could be used for practice lobby, testing, etc.</p>
 
+		<hr />
+
 		<h3>First pick</h3>
+
 		<mat-form-field class="full-width">
 			<mat-label>First pick</mat-label>
 			<mat-select (selectionChange)="change('firstPick', $event)" [value]="data.multiplayerLobby.firstPick">
@@ -23,9 +27,25 @@
 		</mat-form-field>
 
 		<p>The team or player that picks first</p>
+
+		<hr />
+
+		<h3>First ban</h3>
+
+		<mat-form-field class="full-width">
+			<mat-label>First ban</mat-label>
+			<mat-select (selectionChange)="change('firstBan', $event)" [value]="data.multiplayerLobby.firstBan">
+				<mat-option [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-option>
+				<mat-option [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<p>The team or player that bans first</p>
+
 		<hr />
 
 		<h3>Best of</h3>
+
 		<mat-form-field class="full-width">
 			<mat-label>Best of</mat-label>
 			<mat-select (selectionChange)="change('bestOf', $event)" [value]="data.multiplayerLobby.bestOf">

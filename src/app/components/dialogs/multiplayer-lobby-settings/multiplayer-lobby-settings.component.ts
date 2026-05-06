@@ -22,6 +22,9 @@ export class MultiplayerLobbySettingsComponent implements OnInit {
 		if (element == 'firstPick') {
 			this.data.multiplayerLobby.firstPick = event.value;
 		}
+		else if (element == 'firstBan') {
+			this.data.multiplayerLobby.firstBan = event.value;
+		}
 		else if (element == 'bestOf') {
 			this.data.multiplayerLobby.bestOf = event.value;
 		}
