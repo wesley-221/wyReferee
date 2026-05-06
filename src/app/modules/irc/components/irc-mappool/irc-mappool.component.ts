@@ -27,6 +27,46 @@ export class IrcMappoolComponent {
 		public electronService: ElectronService
 	) { }
 
+	showBanButton(beatmap: WyModBracketMap) {
+		return !this.selectedLobby.beatmapIsBanned(beatmap.beatmapId) &&
+			!this.selectedLobby.beatmapIsPicked(beatmap.beatmapId) &&
+			this.selectedLobby.isQualifierLobby == false;
+	}
+
+	showUnbanButton(beatmap: WyModBracketMap) {
+		return this.selectedLobby.beatmapIsBanned(beatmap.beatmapId);
+	}
+
+	showProtectButton(beatmap: WyModBracketMap) {
+		return this.selectedLobby.tournament.protects === true &&
+			!this.selectedLobby.isQualifierLobby &&
+			!this.selectedLobby.beatmapIsBanned(beatmap.beatmapId) &&
+			!this.selectedLobby.beatmapIsPicked(beatmap.beatmapId) &&
+			!this.selectedLobby.beatmapIsProtected(beatmap.beatmapId);
+	}
+
+	showUnprotectButton(beatmap: WyModBracketMap) {
+		return this.selectedLobby.tournament.protects === true &&
+			!this.selectedLobby.isQualifierLobby &&
+			this.selectedLobby.beatmapIsProtected(beatmap.beatmapId);
+	}
+
+	showReassignPickButton(beatmap: WyModBracketMap) {
+		return !this.selectedLobby.beatmapIsBanned(beatmap.beatmapId) &&
+			this.selectedLobby.beatmapIsPicked(beatmap.beatmapId) &&
+			this.selectedLobby.isQualifierLobby == false;
+	}
+
+	showPickButton(beatmap: WyModBracketMap) {
+		return !this.selectedLobby.beatmapIsBanned(beatmap.beatmapId) &&
+			!this.selectedLobby.beatmapIsPicked(beatmap.beatmapId);
+	}
+
+	showUnpickButton(beatmap: WyModBracketMap) {
+		return !this.selectedLobby.beatmapIsBanned(beatmap.beatmapId) &&
+			this.selectedLobby.beatmapIsPicked(beatmap.beatmapId);
+	}
+
 	beatmapIsPickedByTeamOne(multiplayerLobby: Lobby, beatmapId: number) {
 		return multiplayerLobby.teamOnePicks != null && multiplayerLobby.teamOnePicks.indexOf(beatmapId) > -1;
 	}
