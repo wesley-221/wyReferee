@@ -18,8 +18,7 @@
 						'bancho': chat.author == 'BanchoBot',
 						'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
 						'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false
-					}"
-				>
+					}">
 					{{ chat.author }}
 				</div>
 
@@ -28,7 +27,7 @@
 						<span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
 
 						<div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
-							<mat-icon>link</mat-icon>
+							<mat-icon class="icon">link</mat-icon>
 
 							<ng-container *ngIf="chatPiece.linkLabel != null; else noLinkLabel">
 								<span class="url">{{ chatPiece.linkLabel }}</span>
@@ -41,6 +40,7 @@
 						</div>
 
 						<div class="pick-beatmap" *ngIf="chatPiece.messageType == 'ModAcronymPick'" (click)="pickBeatmapFromAcronym(chatPiece)" matTooltip="Click to pick beatmap" matTooltipPosition="above">
+							<mat-icon class="icon">push_pin</mat-icon>
 							<span class="url">{{ chatPiece.message }}</span>
 						</div>
 					</div>

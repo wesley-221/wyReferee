@@ -7,7 +7,10 @@ $blue-team-chat-colour: #29b;
 $bancho-chat-colour: #df96c0;
 $me-chat-colour: #ffffff;
 
-$hyperlink-background-color: #2b4576;
+$url-background-color: rgba(61, 184, 240, 0.1);
+$url-text-color: #70ccf7;
+$url-border-color: rgba(61, 184, 240, 0.18);
+$url-hover-background-color: rgba(61, 184, 240, 0.2);
 
 :host {
 	height: 100%;
@@ -38,7 +41,7 @@ $hyperlink-background-color: #2b4576;
 					align-items: center;
 					text-align: center;
 
-					margin: 25px 0;
+					margin: 8px 0;
 
 					&::before,
 					&::after {
@@ -132,7 +135,8 @@ $hyperlink-background-color: #2b4576;
 					.message-piece {
 						display: inline-block;
 
-						.link {
+						.link,
+						.pick-beatmap {
 							display: flex;
 							align-items: center;
 
@@ -141,10 +145,10 @@ $hyperlink-background-color: #2b4576;
 							margin-right: 3px;
 							margin-left: 3px;
 
-							background: rgba(61, 184, 240, 0.1);
-							color: #70ccf7;
+							background: $url-background-color;
+							color: $url-text-color;
 
-							border: 1px solid rgba(61, 184, 240, 0.18);
+							border: 1px solid $url-border-color;
 							border-radius: 4px;
 
 							padding: 1px 4px;
@@ -154,27 +158,19 @@ $hyperlink-background-color: #2b4576;
 
 							cursor: pointer;
 
+							.icon {
+								width: 20px;
+								height: 20px;
+								font-size: 20px;
+							}
+
 							&:hover {
-								background: rgba(61, 184, 240, 0.2);
+								background: $url-hover-background-color;
 							}
 						}
 
 						.pick-beatmap {
-							margin-right: 3px;
-							margin-left: 3px;
-
-							.url {
-								padding: 5px;
-								background-color: $hyperlink-background-color;
-							}
-
-							&:hover {
-								cursor: pointer;
-
-								.url {
-									background-color: lighten($hyperlink-background-color, 15%);
-								}
-							}
+							text-transform: uppercase;
 						}
 
 						&:first-child {
