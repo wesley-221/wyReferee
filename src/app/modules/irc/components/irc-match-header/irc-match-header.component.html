@@ -11,13 +11,27 @@
 		</div>
 
 		<div class="middle">
-			<div class="badge next-pick" *ngIf="selectedChannel != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
-				<mat-icon>play_arrow</mat-icon>
+			<ng-container *ngIf="selectedChannel != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
+				<ng-container *ngIf="matchStatus.nextPick != null; else noNextPick">
+					<div class="badge next-pick">
+						<mat-icon>play_arrow</mat-icon>
 
-				<div class="team-name" [ngClass]="{'red': matchStatus.nextPick == selectedLobby.teamOneName, 'blue': matchStatus.nextPick == selectedLobby.teamTwoName }">
-					{{ matchStatus.nextPick }} picks next
-				</div>
-			</div>
+						<div class="team-name" [ngClass]="{'red': matchStatus.nextPick == selectedLobby.teamOneName, 'blue': matchStatus.nextPick == selectedLobby.teamTwoName }">
+							{{ matchStatus.nextPick }} picks next
+						</div>
+					</div>
+				</ng-container>
+
+				<ng-template #noNextPick>
+					<div class="badge next-pick">
+						<mat-icon>priority_high</mat-icon>
+
+						<div class="team-name">
+							Select a first pick
+						</div>
+					</div>
+				</ng-template>
+			</ng-container>
 
 			<div class="badge match-point" *ngIf="selectedChannel != null && matchStatus.matchPoint != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
 				<mat-icon>star</mat-icon>

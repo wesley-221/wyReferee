@@ -9,8 +9,17 @@ import { IMultiplayerLobbySettingsDialogData } from 'app/interfaces/i-multiplaye
 	styleUrls: ['./multiplayer-lobby-settings.component.scss']
 })
 export class MultiplayerLobbySettingsComponent implements OnInit {
+	firstPick: string;
+	firstBan: string;
+	bestOf: number;
+
 	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySettingsDialogData) { }
-	ngOnInit(): void { }
+
+	ngOnInit(): void {
+		this.firstPick = this.data.multiplayerLobby.firstPick;
+		this.firstBan = this.data.multiplayerLobby.firstBan;
+		this.bestOf = this.data.multiplayerLobby.bestOf;
+	}
 
 	/**
 	 * Change various settings for the lobby
@@ -20,13 +29,17 @@ export class MultiplayerLobbySettingsComponent implements OnInit {
 	 */
 	change(element: string, event: MatSelectChange) {
 		if (element == 'firstPick') {
-			this.data.multiplayerLobby.firstPick = event.value;
+			this.firstPick = event.value;
 		}
 		else if (element == 'firstBan') {
-			this.data.multiplayerLobby.firstBan = event.value;
+			this.firstBan = event.value;
 		}
 		else if (element == 'bestOf') {
-			this.data.multiplayerLobby.bestOf = event.value;
+			this.bestOf = event.value;
 		}
+	}
+
+	close() {
+		return { firstPick: this.firstPick, firstBan: this.firstBan, bestOf: this.bestOf };
 	}
 }
