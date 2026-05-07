@@ -242,7 +242,7 @@ export class WyMappool {
 			return null;
 		}
 
-		return RegExp(`(?:${regexOptions.join('|')})+`, 'gi');
+		return RegExp(`(?:${regexOptions.join('|')})+`, 'i');
 	}
 
 	/**

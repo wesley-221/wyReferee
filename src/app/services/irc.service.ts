@@ -696,8 +696,8 @@ export class IrcService {
 			.replace(/^(https?:\/\/)?(www\.)?/i, '');
 
 		// Handle all the regexes
-		for (const regex in allRegexes) {
-			const currentRegex = allRegexes[regex].run(message);
+		for (const regex of allRegexes) {
+			const currentRegex = regex.run(message);
 
 			if (currentRegex != null) {
 				messageBuilder.push(new MessageBuilder({
@@ -736,10 +736,10 @@ export class IrcService {
 					}));
 				}
 				else {
-					for (const split in splittedString) {
+					for (const split of splittedString) {
 						// The split is a link
-						if (Regex.isEmbedLink.run(splittedString[split])) {
-							const linkSplit = splittedString[split].split(Regex.isEmbedLink.regexSplit).filter(s => s != '' && s.trim());
+						if (Regex.isEmbedLink.run(split)) {
+							const linkSplit = split.split(Regex.isEmbedLink.regexSplit).filter(s => s != '' && s.trim());
 
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Link,
@@ -752,7 +752,7 @@ export class IrcService {
 						else {
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Message,
-								message: splittedString[split]
+								message: split
 							}));
 						}
 					}
@@ -771,21 +771,21 @@ export class IrcService {
 					}));
 				}
 				else {
-					for (const split in splittedString) {
+					for (const split of splittedString) {
 						// The split is a link
-						if (Regex.isLink.run(splittedString[split])) {
+						if (Regex.isLink.run(split)) {
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Link,
-								message: splittedString[split],
-								linkName: splittedString[split],
-								linkLabel: stripUrlPrefix(splittedString[split])
+								message: split,
+								linkName: split,
+								linkLabel: stripUrlPrefix(split)
 							}));
 						}
 						// The split is a message
 						else {
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Message,
-								message: splittedString[split]
+								message: split
 							}));
 						}
 					}
@@ -816,14 +816,16 @@ export class IrcService {
 						else {
 							regexp = lobby.mappool.getModbracketRegex();
 
-							for (const split in splittedString) {
+							for (const split of splittedString) {
+								const matches = regexp.test(split);
+
 								// The split is a mod acronym pick
-								if (regexp.test(splittedString[split])) {
-									const mapInformation = lobby.mappool.getInformationFromPickAcronym(splittedString[split]);
+								if (matches) {
+									const mapInformation = lobby.mappool.getInformationFromPickAcronym(split);
 
 									messageBuilder.push(new MessageBuilder({
 										messageType: MessageType.ModAcronymPick,
-										message: splittedString[split],
+										message: split,
 										modAcronymBeatmapId: mapInformation ? mapInformation.beatmapId : null,
 										modAcronymGameMode: lobby.tournament.gamemodeId,
 										modAcronymMappoolId: lobby.mappool.id,
@@ -835,7 +837,7 @@ export class IrcService {
 								else {
 									messageBuilder.push(new MessageBuilder({
 										messageType: MessageType.Message,
-										message: splittedString[split]
+										message: split
 									}));
 								}
 							}
