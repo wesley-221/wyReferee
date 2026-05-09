@@ -45,10 +45,13 @@ $sidebar-width: 250px;
 
 			.irc-sidebar-header {
 				display: flex;
-				flex-direction: column;
 
 				padding: 4px;
 				gap: 4px;
+
+				.irc-sidebar-button {
+					flex: 1;
+				}
 			}
 
 			.irc-lobbies {

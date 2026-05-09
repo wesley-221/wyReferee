@@ -9,11 +9,11 @@
 	<div class="irc-match-body">
 		<div class="irc-sidebar-left">
 			<div class="irc-sidebar-header">
-				<button mat-stroked-button color="primary" (click)="goBack()">
+				<button class="irc-sidebar-button" mat-stroked-button color="primary" (click)="goBack()">
 					<mat-icon>arrow_left</mat-icon> back
 				</button>
 
-				<button mat-stroked-button color="primary" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">
+				<button class="irc-sidebar-button" mat-stroked-button color="primary" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">
 					<mat-icon>add</mat-icon> join
 				</button>
 			</div>
