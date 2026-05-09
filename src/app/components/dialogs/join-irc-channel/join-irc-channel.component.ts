@@ -7,7 +7,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 	templateUrl: './join-irc-channel.component.html',
 	styleUrls: ['./join-irc-channel.component.scss']
 })
-export class JoinIrcChannelComponent implements OnInit {
+export class JoinIrcChannelComponent {
 	validationForm: FormGroup;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: string, private dialogRef: MatDialogRef<JoinIrcChannelComponent>) {
@@ -22,11 +22,9 @@ export class JoinIrcChannelComponent implements OnInit {
 		}
 	}
 
-	onEsc(): void {
+	close(): void {
 		this.dialogRef.close(null);
 	}
-
-	ngOnInit(): void { }
 
 	getChannelName(): string {
 		return this.validationForm.get('channel-name').value;
