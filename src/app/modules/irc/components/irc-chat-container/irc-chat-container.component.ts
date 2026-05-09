@@ -21,6 +21,7 @@ export class IrcChatContainerComponent {
 	@Input() normalChats: IrcMessage[] = [];
 
 	@Output() pickBeatmapFromAcronymEmitter = new EventEmitter<MessageBuilder>();
+	@Output() adjustScoreEmitter = new EventEmitter<{ team: number, mouseClick: string }>();
 
 	constructor(
 		public ircService: IrcService,
@@ -50,5 +51,9 @@ export class IrcChatContainerComponent {
 		if (this.normalChatVirtualScroller != null) {
 			this.normalChatVirtualScroller.scrollToIndex(this.normalChats.length - 1);
 		}
+	}
+
+	adjustScore(team: number, mouseClick: string) {
+		this.adjustScoreEmitter.emit({ team, mouseClick });
 	}
 }

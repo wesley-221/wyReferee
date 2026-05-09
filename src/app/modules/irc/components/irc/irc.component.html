@@ -2,14 +2,6 @@
 <app-debug [data]="{ selectedChannel, selectedLobby }"></app-debug>
 
 <div class="irc">
-	<div class="irc-match-header">
-		<app-irc-match-header
-			[selectedLobby]="selectedLobby"
-			[selectedChannel]="selectedChannel"
-			(adjustScoreEmitter)="adjustScore($event.team, $event.mouseClick)"
-		/>
-	</div>
-
 	<div class="first-pick-not-set" *ngIf="selectedLobby && (selectedLobby.firstPick == null || selectedLobby.bestOf == null)" (click)="openLobbyDialog()">
 		You haven't set the <b>First pick</b> of the match yet. Click here to set who picks first.
 	</div>
@@ -49,6 +41,7 @@
 					[selectedChannel]="selectedChannel"
 					[normalChats]="normalChats"
 					(pickBeatmapFromAcronymEmitter)="pickBeatmapFromAcronym($event)"
+					(adjustScoreEmitter)="adjustScore($event.team, $event.mouseClick)"
 				/>
 			</div>
 

@@ -8,19 +8,6 @@ $sidebar-width: 250px;
 
 	height: 100vh;
 
-	.irc-match-header {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-
-		min-height: 75px;
-		position: relative;
-
-		background-color: $irc-match-header-background-color;
-		border-bottom: 1px solid $irc-border-color;
-	}
-
 	.first-pick-not-set {
 		display: flex;
 		align-items: center;

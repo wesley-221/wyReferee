@@ -17,224 +17,245 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 }
 
 .message-container {
+	display: flex;
+	flex-direction: column;
 	position: relative;
+
 	height: 100%;
+
 	background: #0f0f0f;
 
-	.messages {
-		height: 100%;
+	.irc-match-header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
 
-		overflow-y: auto;
+		min-height: 75px;
+		position: relative;
 
-		.chat {
-			.chat-content {
-				display: grid;
-				grid-template-columns: 64px 90px 1fr;
+		background-color: $irc-match-header-background-color;
+		border-bottom: 1px solid $irc-border-color;
+	}
 
-				gap: 2px;
-				width: 100%;
+	.chat-container {
+		flex: 1;
 
-				.divider {
-					grid-column: 1 / -1;
+		.messages {
+			height: 100%;
 
-					display: flex;
-					align-items: center;
-					text-align: center;
+			overflow-y: auto;
 
-					margin: 8px 0;
+			.chat {
+				.chat-content {
+					display: grid;
+					grid-template-columns: 64px 90px 1fr;
 
-					&::before,
-					&::after {
-						content: "";
-						flex: 1;
-						border-bottom: 3px solid $primary;
-					}
-
-					span {
-						color: $primary;
-						font-weight: bold;
-						font-size: 20px;
-						padding: 0 10px;
-						white-space: nowrap;
-					}
-				}
-
-				.time {
-					display: flex;
-					align-items: center;
-					text-align: center;
-
-					padding: 3px;
-				}
-
-				.author {
-					display: flex;
-					align-items: center;
-					justify-content: flex-end;
-
-					padding: 3px;
-
-					font-weight: bold;
-
-					border-radius: 50px;
-
-					&.red {
-						color: $red-team-chat-colour;
-
-						&:hover {
-							color: darken($red-team-chat-colour, 15%);
-						}
-					}
-
-					&.blue {
-						color: $blue-team-chat-colour;
-
-						&:hover {
-							color: darken($blue-team-chat-colour, 15%);
-						}
-					}
-
-					&.bancho {
-						color: $bancho-chat-colour;
-
-						&:hover {
-							color: darken($bancho-chat-colour, 15%);
-						}
-					}
-
-					&.highlighted {
-						color: #36f027;
-
-						&:hover {
-							color: darken(#36f027, 15%);
-						}
-					}
-
-					&.me {
-						color: $me-chat-colour;
-
-						&:hover {
-							color: darken($me-chat-colour, 15%);
-						}
-					}
-
-					&:hover {
-						cursor: pointer;
-					}
-				}
-
-				.message {
-					display: flex;
-					align-items: center;
-					flex-wrap: wrap;
-					word-break: break-all;
-
-					padding: 4px;
 					gap: 2px;
+					width: 100%;
 
-					.message-piece {
-						display: inline-block;
+					.divider {
+						grid-column: 1 / -1;
 
-						.link,
-						.pick-beatmap {
-							display: flex;
-							align-items: center;
+						display: flex;
+						align-items: center;
+						text-align: center;
 
-							gap: 2px;
+						margin: 8px 0;
 
-							margin-right: 3px;
-							margin-left: 3px;
+						&::before,
+						&::after {
+							content: "";
+							flex: 1;
+							border-bottom: 3px solid $primary;
+						}
 
-							background: $url-background-color;
-							color: $url-text-color;
+						span {
+							color: $primary;
+							font-weight: bold;
+							font-size: 20px;
+							padding: 0 10px;
+							white-space: nowrap;
+						}
+					}
 
-							border: 1px solid $url-border-color;
-							border-radius: 4px;
+					.time {
+						display: flex;
+						align-items: center;
+						text-align: center;
 
-							padding: 1px 4px;
+						padding: 3px;
+					}
 
-							text-decoration: none;
-							transition: all 0.14s;
+					.author {
+						display: flex;
+						align-items: center;
+						justify-content: flex-end;
 
-							cursor: pointer;
+						padding: 3px;
 
-							.icon {
-								width: 20px;
-								height: 20px;
-								font-size: 20px;
-							}
+						font-weight: bold;
+
+						border-radius: 50px;
+
+						&.red {
+							color: $red-team-chat-colour;
 
 							&:hover {
-								background: $url-hover-background-color;
+								color: darken($red-team-chat-colour, 15%);
 							}
 						}
 
-						.pick-beatmap {
-							text-transform: uppercase;
+						&.blue {
+							color: $blue-team-chat-colour;
+
+							&:hover {
+								color: darken($blue-team-chat-colour, 15%);
+							}
 						}
 
-						&:first-child {
-							.link {
-								margin-left: 0;
+						&.bancho {
+							color: $bancho-chat-colour;
+
+							&:hover {
+								color: darken($bancho-chat-colour, 15%);
+							}
+						}
+
+						&.highlighted {
+							color: #36f027;
+
+							&:hover {
+								color: darken(#36f027, 15%);
+							}
+						}
+
+						&.me {
+							color: $me-chat-colour;
+
+							&:hover {
+								color: darken($me-chat-colour, 15%);
+							}
+						}
+
+						&:hover {
+							cursor: pointer;
+						}
+					}
+
+					.message {
+						display: flex;
+						align-items: center;
+						flex-wrap: wrap;
+						word-break: break-all;
+
+						padding: 4px;
+						gap: 2px;
+
+						.message-piece {
+							display: inline-block;
+
+							.link,
+							.pick-beatmap {
+								display: flex;
+								align-items: center;
+
+								gap: 2px;
+
+								margin-right: 3px;
+								margin-left: 3px;
+
+								background: $url-background-color;
+								color: $url-text-color;
+
+								border: 1px solid $url-border-color;
+								border-radius: 4px;
+
+								padding: 1px 4px;
+
+								text-decoration: none;
+								transition: all 0.14s;
+
+								cursor: pointer;
+
+								.icon {
+									width: 20px;
+									height: 20px;
+									font-size: 20px;
+								}
+
+								&:hover {
+									background: $url-hover-background-color;
+								}
 							}
 
 							.pick-beatmap {
-								margin-left: 0;
+								text-transform: uppercase;
+							}
+
+							&:first-child {
+								.link {
+									margin-left: 0;
+								}
+
+								.pick-beatmap {
+									margin-left: 0;
+								}
 							}
 						}
 					}
-				}
 
-				@media only screen and (max-width: 1200px) {
-					.author {
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
+					@media only screen and (max-width: 1200px) {
+						.author {
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
 					}
 				}
 			}
 		}
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			background-image:
+				linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+			background-size: 36px 36px;
+		}
 	}
 
-	&::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		background-image:
-			linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-			linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-		background-size: 36px 36px;
-	}
-}
-
-.messages-divider {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	background-color: $primary;
-	z-index: 5;
-
-	padding: 4px;
-
-	.divider-buttons {
+	.messages-divider {
 		display: flex;
-		flex-direction: row;
-		position: absolute;
+		align-items: center;
+		justify-content: center;
 
-		.divider-smaller,
-		.divider-reset,
-		.divider-bigger {
+		background-color: $primary;
+		z-index: 5;
+
+		padding: 4px;
+
+		.divider-buttons {
 			display: flex;
-			align-items: center;
+			flex-direction: row;
+			position: absolute;
 
-			background-color: $primary;
-			color: black;
+			.divider-smaller,
+			.divider-reset,
+			.divider-bigger {
+				display: flex;
+				align-items: center;
 
-			&:hover {
-				background-color: darken($primary, 15%);
-				cursor: pointer;
+				background-color: $primary;
+				color: black;
+
+				&:hover {
+					background-color: darken($primary, 15%);
+					cursor: pointer;
+				}
 			}
 		}
 	}

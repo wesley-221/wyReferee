@@ -1,55 +1,65 @@
 <div class="message-container">
-	<cdk-virtual-scroll-viewport #normalChatVirtualScroller class="messages normal" itemSize="50">
-		<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
-		<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
+	<div class="irc-match-header">
+		<app-irc-match-header
+			[selectedLobby]="selectedLobby"
+			[selectedChannel]="selectedChannel"
+			(adjustScoreEmitter)="adjustScore($event.team, $event.mouseClick)"
+		/>
+	</div>
 
-		<div class="chat" *ngFor="let chat of normalChats">
-			<div class="chat-content divider" *ngIf="!chat.isADivider">
-				<div class="time" [title]="chat.date">
-					{{ chat.time }}
-				</div>
+	<div class="chat-container">
+		<cdk-virtual-scroll-viewport #normalChatVirtualScroller class="messages normal" itemSize="50">
+			<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel != undefined">There are no messages yet.</app-alert>
+			<app-alert alertType="warn" *ngIf="normalChats.length == 0 && selectedChannel == undefined">There is no selected channel.</app-alert>
 
-				<div class="author"
-					[matTooltip]="chat.author"
-					*ngVar="(selectedLobby != null ? selectedLobby.getPlayerByUsername(chat.author, multiplayerLobbyPlayersService) : null) as ircManagementPlayer"
-					(click)="openUserpage(chat.author)"
-					[ngClass]="{
-						'me': chat.author == ircService.authenticatedUser,
-						'bancho': chat.author == 'BanchoBot',
-						'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
-						'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false
-					}">
-					{{ chat.author }}
-				</div>
+			<div class="chat" *ngFor="let chat of normalChats">
+				<div class="chat-content divider" *ngIf="!chat.isADivider">
+					<div class="time" [title]="chat.date">
+						{{ chat.time }}
+					</div>
 
-				<div class="message">
-					<div class="message-piece" *ngFor="let chatPiece of chat.messageBuilder">
-						<span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
+					<div class="author"
+						[matTooltip]="chat.author"
+						*ngVar="(selectedLobby != null ? selectedLobby.getPlayerByUsername(chat.author, multiplayerLobbyPlayersService) : null) as ircManagementPlayer"
+						(click)="openUserpage(chat.author)"
+						[ngClass]="{
+							'me': chat.author == ircService.authenticatedUser,
+							'bancho': chat.author == 'BanchoBot',
+							'blue': ircManagementPlayer != null ? ircManagementPlayer.team == 'Blue' : false,
+							'red': ircManagementPlayer != null ? ircManagementPlayer.team == 'Red' : false
+						}">
+						{{ chat.author }}
+					</div>
 
-						<div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
-							<mat-icon class="icon">link</mat-icon>
+					<div class="message">
+						<div class="message-piece" *ngFor="let chatPiece of chat.messageBuilder">
+							<span *ngIf="chatPiece.messageType == 'Message'">{{ chatPiece.message }}</span>
 
-							<ng-container *ngIf="chatPiece.linkLabel != null; else noLinkLabel">
-								<span class="url">{{ chatPiece.linkLabel }}</span>
-							</ng-container>
+							<div class="link" *ngIf="chatPiece.messageType == 'Link'" (click)="electronService.openLink(chatPiece.message)">
+								<mat-icon class="icon">link</mat-icon>
 
-							<ng-template #noLinkLabel>
-								<span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
-								<span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
-							</ng-template>
-						</div>
+								<ng-container *ngIf="chatPiece.linkLabel != null; else noLinkLabel">
+									<span class="url">{{ chatPiece.linkLabel }}</span>
+								</ng-container>
 
-						<div class="pick-beatmap" *ngIf="chatPiece.messageType == 'ModAcronymPick'" (click)="pickBeatmapFromAcronym(chatPiece)" matTooltip="Click to pick beatmap" matTooltipPosition="above">
-							<mat-icon class="icon">push_pin</mat-icon>
-							<span class="url">{{ chatPiece.message }}</span>
+								<ng-template #noLinkLabel>
+									<span class="url" *ngIf="chatPiece.linkName == null">{{ chatPiece.message }}</span>
+									<span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
+								</ng-template>
+							</div>
+
+							<div class="pick-beatmap" *ngIf="chatPiece.messageType == 'ModAcronymPick'" (click)="pickBeatmapFromAcronym(chatPiece)" matTooltip="Click to pick beatmap" matTooltipPosition="above">
+								<mat-icon class="icon">push_pin</mat-icon>
+								<span class="url">{{ chatPiece.message }}</span>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="chat-content" *ngIf="chat.isADivider">
-				<div class="divider"><span>{{ chat.author }}</span></div>
+				<div class="chat-content" *ngIf="chat.isADivider">
+					<div class="divider"><span>{{ chat.author }}</span></div>
+				</div>
 			</div>
-		</div>
-	</cdk-virtual-scroll-viewport>
+		</cdk-virtual-scroll-viewport>
+	</div>
 </div>
