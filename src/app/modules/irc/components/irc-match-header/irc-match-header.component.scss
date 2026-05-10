@@ -8,6 +8,23 @@ $badge-color: #ff6b93;
 	display: flex;
 	gap: 8px;
 
+	@media (max-width: 1280px) {
+		.team-one,
+		.team-two {
+			flex-direction: column;
+		}
+
+		.team-one {
+			.team-name {
+				order: 1;
+			}
+
+			.circles {
+				order: 2;
+			}
+		}
+	}
+
 	.team-one,
 	.team-two {
 		display: flex;
