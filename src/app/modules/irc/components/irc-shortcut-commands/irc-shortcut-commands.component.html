@@ -1,12 +1,12 @@
 <div class="action-bar">
 	<div class="actions">
-		<div class="button" *ngFor="let ircShortcutCommand of ircShortcutCommandsService.ircShortcutCommands" [ngClass]="{'disabled': !ircService.isAuthenticated}" (click)="executeIrcShortcutCommand(ircShortcutCommand)">
+		<button class="form-button no-wrap" [disabled]="!ircService.isAuthenticated" [class.danger]="ircShortcutCommand.warning == true" *ngFor="let ircShortcutCommand of ircShortcutCommandsService.ircShortcutCommands" (click)="executeIrcShortcutCommand(ircShortcutCommand)">
 			{{ ircShortcutCommand.label }}
-		</div>
+		</button>
 	</div>
 
 	<div class="settings">
-		<button class="button" color="primary" (click)="shortcutSettings()">
+		<button class="form-button primary" color="primary" (click)="shortcutSettings()">
 			<mat-icon>settings</mat-icon>
 		</button>
 	</div>

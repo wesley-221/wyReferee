@@ -28,31 +28,4 @@
 
 		margin-left: auto;
 	}
-
-	.button {
-		display: flex;
-		align-items: center;
-
-		padding: 4px 8px;
-		border-radius: 5px;
-
-		white-space: nowrap;
-		letter-spacing: 0.15px;
-
-		background: $irc-input-background-color;
-		border: 1px solid $irc-input-border-color;
-		color: $irc-input-text-color;
-
-		cursor: pointer;
-
-		&:hover {
-			background: $irc-input-background-color-active;
-			color: $irc-input-text-color-active;
-			border-color: $irc-input-border-color-active;
-		}
-
-		&.disabled {
-			cursor: not-allowed;
-		}
-	}
 }

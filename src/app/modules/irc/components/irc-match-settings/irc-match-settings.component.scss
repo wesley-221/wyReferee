@@ -102,7 +102,7 @@
 
 						.team-name {
 							font-size: 12px;
-							letter-spacing: .15px;
+							letter-spacing: 0.15px;
 							text-transform: uppercase;
 							color: $primary;
 						}
@@ -226,44 +226,6 @@
 
 					gap: 4px;
 					flex: 1;
-				}
-			}
-
-			.content-button {
-				display: flex;
-				align-items: center;
-
-				padding: 4px 8px;
-				gap: 4px;
-
-				border-radius: 9px;
-				border: 1px solid $irc-input-border-color;
-
-				background: $irc-input-background-color;
-				color: $irc-input-text-color;
-
-				line-height: 1.2;
-				letter-spacing: 0.15px;
-
-				transition: all 0.17s;
-				cursor: pointer;
-
-				.icon {
-					flex-shrink: 0;
-				}
-
-				&.big-button {
-					grid-column: 1 / -1;
-				}
-
-				&:hover {
-					background: $irc-input-background-color-active;
-					border-color: $irc-input-border-color-active;
-					color: $irc-input-text-color-active;
-
-					.text {
-						-webkit-box-orient: initial;
-					}
 				}
 			}
 
