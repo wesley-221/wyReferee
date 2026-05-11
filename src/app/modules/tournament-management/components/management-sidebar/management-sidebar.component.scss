@@ -1,5 +1,7 @@
 @import "variables";
 
+$error-pulse-color: rgb(239, 68, 68);
+
 .sidebar {
 	display: flex;
 	flex-direction: column;
@@ -9,15 +11,47 @@
 	height: 100vh;
 	top: 0;
 
+	padding-top: 8px;
 	gap: 8px;
 
 	border-right: 0.5px solid $sidebar-border-color;
 	background: $sub-sidebar-background-color;
 
+	.sidebar-header {
+		font-size: 10px;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.5);
+		padding: 8px 16px;
+	}
+
 	.sidebar-divider {
 		height: 0.5px;
 		background: $sidebar-border-color;
 		margin: 8px 0;
+	}
+
+	.sidebar-link {
+		display: flex;
+		align-items: center;
+
+		padding: 8px;
+		gap: 8px;
+
+		font-size: 13px;
+		color: $sidebar-text-color;
+
+		cursor: pointer;
+
+		.sidebar-item-content {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		&:hover {
+			background: rgba(255, 255, 255, 0.05);
+			color: $sidebar-text-color-hover;
+		}
 	}
 
 	.sidebar-item {
@@ -45,7 +79,46 @@
 		.sidebar-item-content {
 			display: flex;
 			align-items: center;
+			flex: 1;
+
 			gap: 8px;
+
+			.validation-badge {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+
+				margin-left: auto;
+
+				.error-dot {
+					width: 6px;
+					height: 6px;
+					border-radius: 50%;
+					background: #ef4444;
+					flex-shrink: 0;
+
+					box-shadow: 0 0 0 0 rgba($error-pulse-color, 0.4);
+					animation: pulse 2s ease-in-out infinite;
+
+					@keyframes pulse {
+						0% {
+							box-shadow: 0 0 0 0 rgba($error-pulse-color, 0.5);
+						}
+						60% {
+							box-shadow: 0 0 0 5px rgba($error-pulse-color, 0);
+						}
+						100% {
+							box-shadow: 0 0 0 0 rgba($error-pulse-color, 0);
+						}
+					}
+				}
+
+				.error-count {
+					font-size: 12px;
+					font-weight: 600;
+					color: #ef4444;
+				}
+			}
 		}
 
 		&:hover {

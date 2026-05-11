@@ -191,13 +191,13 @@ export class TutorialService {
 		});
 
 		importTournamentTutorial.addStep(new TutorialStep({
-			route: 'tournament-management/tournament-overview',
+			route: 'tournament-management',
 			content: 'This tutorial will help you to figure out how to import a tournament.\n\r' +
 				'Click on the arrows on the bottom to navigate through this tutorial.'
 		}));
 
 		importTournamentTutorial.addStep(new TutorialStep({
-			route: 'tournament-management/tournament-overview',
+			route: 'tournament-management',
 			targetElementIds: [
 				'tutorial-local-tournament',
 				'tutorial-all-tournaments'
@@ -213,7 +213,7 @@ export class TutorialService {
 		}));
 
 		importTournamentTutorial.addStep(new TutorialStep({
-			route: 'tournament-management/tournament-overview/tournament-all-published',
+			route: 'tournament-management/import-tournament',
 			targetElementIds: [
 				'tutorial-all-tournaments',
 				'tutorial-side-bar-all-tournaments'

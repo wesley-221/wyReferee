@@ -1,0 +1,37 @@
+<ng-container *ngIf="pageState$ | async as pageState">
+	<div class="tournament-error-footer" [ngClass]="{ 'open': errorFooterVisible }" *ngIf="pageState.totalErrorCount > 0">
+		<div class="header" (click)="toggleErrorFooter()">
+			<div class="error-dot"></div>
+
+			<div class="error-description">
+				{{ pageState.totalErrorCount }} errors need attention
+			</div>
+
+			<mat-icon>{{ errorFooterVisible ? 'expand_less' : 'expand_more' }}</mat-icon>
+		</div>
+
+		<div class="body">
+			<div class="error" *ngFor="let error of pageState.errors | keyvalue">
+				<div class="error-header">
+					{{ error.key }}
+				</div>
+
+				<div class="errors" *ngFor="let error of error.value" [routerLink]="getErrorLink(error.section)">
+					<div class="error-content">
+						<div class="error-path">
+							{{ error.path }}
+						</div>
+
+						<div class="error-description">
+							{{ error.message }} · {{ error.code }}
+						</div>
+					</div>
+
+					<div class="error-link">
+						Go to {{ getErrorSection(error.section) }} <mat-icon>arrow_right</mat-icon>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>

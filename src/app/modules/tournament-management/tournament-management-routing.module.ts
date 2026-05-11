@@ -7,18 +7,49 @@ import { TournamentCreateComponent } from './pages/tournament-create/tournament-
 import { TournamentEditComponent } from './pages/tournament-edit/tournament-edit.component';
 import { LocalTournamentsComponent } from './pages/local-tournaments/local-tournaments.component';
 import { PublishedTournamentsComponent } from './pages/published-tournaments/published-tournaments.component';
+import { TournamentGeneralComponent } from './pages/tournament/tournament-general/tournament-general.component';
+import { TournamentWybinComponent } from './pages/tournament/tournament-wybin/tournament-wybin.component';
+import { TournamentAccessComponent } from './pages/tournament/tournament-access/tournament-access.component';
+import { TournamentWebhookComponent } from './pages/tournament/tournament-webhook/tournament-webhook.component';
+import { TournamentStagesComponent } from './pages/tournament/tournament-stages/tournament-stages.component';
+import { TournamentParticipantsComponent } from './pages/tournament/tournament-participants/tournament-participants.component';
+import { MappoolOverviewComponent } from './pages/tournament/tournament-mappool/mappool-overview/mappool-overview.component';
+import { TournamentTriggerMessageComponent } from './pages/tournament/tournament-trigger-message/tournament-trigger-message.component';
 
 const routes: Routes = [
 	{
 		path: '', component: ManagementRouterComponent, children: [
 			{ path: '', redirectTo: 'local-tournaments', pathMatch: 'full' },
 			{ path: 'local-tournaments', component: LocalTournamentsComponent },
-			{ path: 'local-tournaments/:id/:published', component: TournamentEditComponent },
 			{ path: 'published-tournaments', component: PublishedTournamentsComponent },
-			{ path: 'published-tournaments/:id/:published', component: TournamentEditComponent },
-			{ path: 'create', component: TournamentCreateComponent },
 			{ path: 'import-tournament', component: ImportTournamentComponent },
-			{ path: 'administrator-tournaments', component: AdministratorTournamentsComponent }
+			{ path: 'administrator-tournaments', component: AdministratorTournamentsComponent },
+			{
+				path: 'tournament-create/:published/:id', component: TournamentCreateComponent, children: [
+					{ path: '', redirectTo: 'general', pathMatch: 'full' },
+					{ path: 'general', component: TournamentGeneralComponent },
+					{ path: 'wybin', component: TournamentWybinComponent },
+					{ path: 'access', component: TournamentAccessComponent },
+					{ path: 'webhooks', component: TournamentWebhookComponent },
+					{ path: 'trigger-messages', component: TournamentTriggerMessageComponent },
+					{ path: 'stages', component: TournamentStagesComponent },
+					{ path: 'participants', component: TournamentParticipantsComponent },
+					{ path: 'mappools', component: MappoolOverviewComponent }
+				]
+			},
+			{
+				path: 'tournament-edit/:published/:id', component: TournamentEditComponent, children: [
+					{ path: '', redirectTo: 'general', pathMatch: 'full' },
+					{ path: 'general', component: TournamentGeneralComponent },
+					{ path: 'wybin', component: TournamentWybinComponent },
+					{ path: 'access', component: TournamentAccessComponent },
+					{ path: 'webhooks', component: TournamentWebhookComponent },
+					{ path: 'trigger-messages', component: TournamentTriggerMessageComponent },
+					{ path: 'stages', component: TournamentStagesComponent },
+					{ path: 'participants', component: TournamentParticipantsComponent },
+					{ path: 'mappools', component: MappoolOverviewComponent }
+				]
+			}
 		]
 	}
 ];

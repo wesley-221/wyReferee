@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ISendBeatmapResultDialogData } from 'app/interfaces/i-send-beatmap-result-dialog-data';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
-import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
+import { WyTriggerMessage } from 'app/models/wytournament/trigger-message';
 import { CacheService } from 'app/services/cache.service';
 import { IrcService } from 'app/services/irc.service';
 
@@ -24,21 +24,21 @@ export class SendBeatmapResultComponent implements OnInit {
 	sendBeatmapResult(match: MultiplayerData) {
 		// User is connected to irc channel
 		if (this.ircService.getChannelByName(this.data.ircChannel) != null) {
-			for (const conditionalMessage of this.data.multiplayerLobby.tournament.conditionalMessages) {
-				const finalMessage = WyConditionalMessage.translateMessage(conditionalMessage.message, match, this.data.multiplayerLobby, this.cacheService.getBeatmapname(match.beatmap_id));
+			for (const triggerMessage of this.data.multiplayerLobby.tournament.triggerMessages) {
+				const finalMessage = WyTriggerMessage.translateMessage(triggerMessage.message, match, this.data.multiplayerLobby, this.cacheService.getBeatmapname(match.beatmap_id));
 
-				if (conditionalMessage.beatmapResult) {
-					if (conditionalMessage.nextPickMessage) {
+				if (triggerMessage.beatmapResult) {
+					if (triggerMessage.nextPickMessage) {
 						if (this.data.multiplayerLobby.teamHasWon() == null && !this.data.multiplayerLobby.getTiebreaker()) {
 							this.ircService.sendMessage(this.data.ircChannel, finalMessage);
 						}
 					}
-					else if (conditionalMessage.nextPickTiebreakerMessage) {
+					else if (triggerMessage.nextPickTiebreakerMessage) {
 						if (this.data.multiplayerLobby.teamHasWon() == null && this.data.multiplayerLobby.getTiebreaker()) {
 							this.ircService.sendMessage(this.data.ircChannel, finalMessage);
 						}
 					}
-					else if (conditionalMessage.matchWonMessage) {
+					else if (triggerMessage.matchWonMessage) {
 						if (this.data.multiplayerLobby.teamHasWon() != null) {
 							this.ircService.sendMessage(this.data.ircChannel, finalMessage);
 						}

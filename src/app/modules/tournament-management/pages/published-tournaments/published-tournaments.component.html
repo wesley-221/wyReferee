@@ -7,6 +7,13 @@
 	</div>
 
 	<div id="tutorial-all-tournaments" class="all-tournaments">
+		<ng-container *ngIf="allTournaments.length == 0 && loading == false">
+			<app-alert alertType="info">
+				You don't have any published tournaments yet. Publish a local tournament to get started.
+				Publishing a tournament will make it visible to other users and allow you to share it with others.
+			</app-alert>
+		</ng-container>
+
 		<ng-container *ngIf="allTournaments.length > 0">
 			<app-tournament-card [tournament]="tournament" cardType="published" (deletedTournamentEmitter)="onTournamentDeleted($event)" (click)="onTournamentClick(tournament, $event)" *ngFor="let tournament of filteredTournaments"></app-tournament-card>
 		</ng-container>

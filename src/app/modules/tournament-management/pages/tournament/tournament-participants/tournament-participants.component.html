@@ -1,0 +1,187 @@
+<form [formGroup]="form">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
+				<div *ngIf="!tournament.isSoloTournament()">
+					<h3>Teams</h3>
+					<p>Add a team to the tournament.</p>
+
+					<div class="buttons">
+						<button mat-raised-button (click)="addTeam()" color="primary"><mat-icon>add</mat-icon> add new team</button>
+						<button mat-raised-button (click)="addBulkTeams()" color="primary"><mat-icon>add</mat-icon> add bulk teams</button>
+						<button mat-raised-button (click)="importWyBinTeams()" color="primary" *ngIf="tournament.hasWyBinConnected()">
+							<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon>import teams from wyBin
+						</button>
+					</div>
+
+					<div class="split">
+						<div class="col">
+							<mat-form-field class="full-width margin-top">
+								<mat-label>Filter players/teams by name</mat-label>
+								<textarea matInput [(ngModel)]="teamFilter" [ngModelOptions]="{standalone: true}"></textarea>
+							</mat-form-field>
+						</div>
+					</div>
+				</div>
+
+				<div *ngIf="tournament.isSoloTournament()">
+					<h3>Players</h3>
+					<p>Add a player to the tournament.</p>
+
+					<div class="buttons">
+						<button mat-raised-button (click)="addTeam()" color="primary"><mat-icon>add</mat-icon> add new player</button>
+						<button mat-raised-button (click)="addBulkPlayersSoloTournament()" color="primary" [disabled]="teamsToAdd == null || teamsToAdd.length <= 0"><mat-icon>add</mat-icon> add bulk players</button>
+						<button mat-raised-button (click)="importWyBinPlayers()" color="primary" *ngIf="tournament.hasWyBinConnected()">
+							<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon>import players from wyBin
+						</button>
+					</div>
+
+					<div class="split">
+						<div class="col">
+							<mat-form-field class="full-width margin-top">
+								<mat-label>Bulk add players, list all players. 1 player (comma seperated: Username, userid) per line (click me)</mat-label>
+								<textarea matInput [(ngModel)]="teamsToAdd" [ngModelOptions]="{standalone: true}"></textarea>
+							</mat-form-field>
+						</div>
+					</div>
+				</div>
+
+				<hr />
+
+				<div class="all-teams" formArrayName="teams" *ngIf="!tournament.isSoloTournament()">
+					<div class="team" *ngFor="let teamGroup of teams.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+						<div class="header" (click)="collapse(teamGroup, $event)">
+							<div class="information">
+								<h3>{{ teamGroup.get('name')?.value || 'Unnamed Team' }}</h3>
+							</div>
+
+							<div class="buttons">
+								<button mat-mini-fab color="warn" (click)="deleteTeam(i)"><mat-icon>delete</mat-icon></button>
+							</div>
+						</div>
+
+						<div *ngIf="!(collapsedState.get(teamGroup) ?? true)" class="body">
+							<h3>Create a new team</h3>
+
+							<div class="split">
+								<div class="col">
+									<mat-form-field class="full-width">
+										<mat-label>Team name</mat-label>
+
+										<input matInput formControlName="name" />
+
+										<mat-error *ngIf="teamGroup.get('name') != null && teamGroup.get('name').errors && (teamGroup.get('name').touched || teamGroup.get('name').dirty)">
+											This field is required
+										</mat-error>
+									</mat-form-field>
+
+									<p>The name of the team</p>
+								</div>
+							</div>
+
+							<h3>Manage players</h3>
+							<p>Add or remove players from the given team</p>
+
+							<div class="buttons">
+								<button mat-raised-button (click)="addNewPlayer(teamGroup)" color="primary">
+									<mat-icon>add</mat-icon> add new player
+								</button>
+
+								<button mat-raised-button (click)="addBulkPlayers(teamGroup)" color="primary" [disabled]="usersToAdd == null || usersToAdd.length <= 0">
+									<mat-icon>add</mat-icon> add bulk players
+								</button>
+							</div>
+
+							<mat-form-field class="full-width">
+								<mat-label>List with all players. 1 player (comma seperated: Username, userid) per line (click me)</mat-label>
+								<textarea matInput [(ngModel)]="usersToAdd" [ngModelOptions]="{standalone: true}"></textarea>
+							</mat-form-field>
+
+							<div class="team-players" formArrayName="players">
+								<div class="player" *ngFor="let playerGroup of getPlayersFormArray(i).controls; let j = index; trackBy: trackByIndex" [formGroupName]="j">
+									<div class="split">
+										<div class="col">
+											<mat-form-field class="full-width">
+												<mat-label>Player name</mat-label>
+
+												<input matInput formControlName="name" />
+											</mat-form-field>
+
+											<p>The name of the player</p>
+										</div>
+
+										<div class="col">
+											<mat-form-field class="full-width">
+												<mat-label>User id</mat-label>
+
+												<input matInput formControlName="userId" />
+											</mat-form-field>
+
+											<p>The id of the user. Used to invite players and will work regardless of a name change. The id of the user are the numbers at the end of their profile link: https://osu.ppy.sh/users/2407265 (in this case 2407265)</p>
+										</div>
+									</div>
+
+									<div class="manage-buttons">
+										<button mat-mini-fab color="warn" (click)="removePlayerFromTeam(teamGroup, j)">
+											<mat-icon>delete</mat-icon>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="all-teams" formArrayName="players" *ngIf="tournament.isSoloTournament()">
+					<div class="team" *ngFor="let playerGroup of players.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+						<div class="header" (click)="collapse(playerGroup, $event)">
+							<div class="information">
+								<h3>{{ playerGroup.get('name')?.value || 'Unnamed Player' }}</h3>
+							</div>
+
+							<div class="buttons">
+								<button mat-mini-fab color="warn" (click)="deleteTeam(i)">
+									<mat-icon>delete</mat-icon>
+								</button>
+							</div>
+						</div>
+
+						<div *ngIf="!(collapsedState.get(playerGroup) ?? true)" class="body">
+							<h3>Create a new player</h3>
+
+							<div class="split">
+								<div class="col">
+									<mat-form-field class="full-width">
+										<mat-label>Player name</mat-label>
+
+										<input matInput formControlName="name" />
+
+										<mat-error *ngIf="playerGroup.get('name') != null && playerGroup.get('name').errors && (playerGroup.get('name').touched || playerGroup.get('name').dirty)">
+											This field is required
+										</mat-error>
+									</mat-form-field>
+
+									<p>The name of the player</p>
+								</div>
+
+								<div class="col">
+									<mat-form-field class="full-width">
+										<mat-label>User id</mat-label>
+
+										<input matInput formControlName="userId" />
+
+										<mat-error *ngIf="playerGroup.get('userId') != null && playerGroup.get('userId').errors && (playerGroup.get('userId').touched || playerGroup.get('userId').dirty)">
+											This field is required
+										</mat-error>
+									</mat-form-field>
+
+									<p>The id of the user. Used to invite players and will work regardless of a name change. The id of the user are the numbers at the end of their profile link: https://osu.ppy.sh/users/2407265 (in this case 2407265)</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

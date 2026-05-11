@@ -1,0 +1,104 @@
+$header-height: 40px;
+$max-height: 350px;
+
+.tournament-error-footer {
+	border-top: 0.5px solid rgba(239, 68, 68, 0.2);
+	background: #141414;
+	flex-shrink: 0;
+	transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	overflow: hidden;
+	max-height: $header-height;
+
+	.header {
+		display: flex;
+		align-items: center;
+
+		padding: 8px 16px;
+		gap: 8px;
+
+		cursor: pointer;
+		user-select: none;
+
+		.error-dot {
+			width: 6px;
+			height: 6px;
+			border-radius: 50%;
+			background: #ef4444;
+			flex-shrink: 0;
+		}
+
+		.error-description {
+			font-size: 12px;
+			font-weight: 600;
+			color: #f87171;
+			flex: 1;
+		}
+
+		&:hover {
+			background: rgba(255, 255, 255, 0.02);
+		}
+	}
+
+	.body {
+		display: flex;
+		flex-direction: column;
+
+		padding: 16px 8px;
+		overflow-y: auto;
+		max-height: calc($max-height - $header-height);
+
+		.error {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+
+			.error-header {
+				font-weight: 600;
+				text-transform: uppercase;
+				margin-bottom: 6px;
+				color: rgba(255, 255, 255, 0.6);
+			}
+
+			.errors {
+				display: flex;
+				align-items: center;
+
+				margin-bottom: 4px;
+				padding: 8px 16px;
+				gap: 8px;
+				border-radius: 7px;
+
+				transition: background 0.1s;
+				cursor: pointer;
+
+				.error-content {
+					.error-path {
+						color: #f87171;
+						margin-bottom: 1px;
+					}
+
+					.error-description {
+						color: rgba(255, 255, 255, 0.6);
+					}
+				}
+
+				.error-link {
+					display: flex;
+					align-items: center;
+
+					margin-left: auto;
+					color: rgba(255, 255, 255, 0.6);
+					white-space: nowrap;
+				}
+
+				&:hover {
+					background: rgba(239, 68, 68, 0.07);
+				}
+			}
+		}
+	}
+
+	&.open {
+		max-height: $max-height;
+	}
+}

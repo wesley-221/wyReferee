@@ -4,7 +4,7 @@ import { TournamentService } from '../../../../services/tournament.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../../../../models/authentication/user';
-import { TournamentFilter } from '../../models/tournament-filter';
+import { TournamentFilter } from '../../interfaces/tournament-filter';
 
 @Component({
 	selector: 'app-local-tournaments',
@@ -51,9 +51,14 @@ export class LocalTournamentsComponent implements OnInit {
 		}
 	}
 
+	onTournamentDeleted(tournament: WyTournament) {
+		this.allTournaments = this.allTournaments.filter(t => t.id !== tournament.id);
+		this.filteredTournaments = this.filteredTournaments.filter(t => t.id !== tournament.id);
+	}
+
 	onTournamentClick(tournament: WyTournament, event: any) {
 		if (event.target.localName == 'div') {
-			this.router.navigate(['/tournament-management/local-tournaments/', tournament.id, '0']);
+			this.router.navigate(['/tournament-management/tournament-edit/', '0', tournament.id]);
 		}
 	}
 

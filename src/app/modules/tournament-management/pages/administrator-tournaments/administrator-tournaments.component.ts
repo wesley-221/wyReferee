@@ -3,7 +3,7 @@ import { User } from 'app/models/authentication/user';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { TournamentService } from 'app/services/tournament.service';
 import { BehaviorSubject, map } from 'rxjs';
-import { TournamentFilter } from '../../models/tournament-filter';
+import { TournamentFilter } from '../../interfaces/tournament-filter';
 
 @Component({
 	selector: 'app-administrator-tournaments',
@@ -34,6 +34,11 @@ export class AdministratorTournamentsComponent implements OnInit {
 				this.filteredTournaments = tournaments;
 				this.allUsers$.next(users);
 			});
+	}
+
+	onTournamentDeleted(tournament: WyTournament) {
+		this.allTournaments = this.allTournaments.filter(t => t.id !== tournament.id);
+		this.filteredTournaments = this.filteredTournaments.filter(t => t.id !== tournament.id);
 	}
 
 	/**

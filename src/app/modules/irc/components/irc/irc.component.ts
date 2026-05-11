@@ -35,7 +35,7 @@ import { ProtectBeatmapDialogComponent } from 'app/components/dialogs/protect-be
 import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dialog-data';
 import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
-import { WyConditionalMessage } from 'app/models/wytournament/wy-conditional-message';
+import { WyTriggerMessage } from 'app/models/wytournament/trigger-message';
 import { Subject, takeUntil } from 'rxjs';
 import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 import { IrcChatContainerComponent } from '../irc-chat-container/irc-chat-container.component';
@@ -535,11 +535,11 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 		this.ircService.sendMessage(this.selectedChannel.name, `!mp mods ${modBit}${freemodEnabled ? ' freemod' : ''}`);
 
-		// Send the conditional messages if applicable
-		for (const beatmapResultMessage of this.selectedLobby.tournament.conditionalMessages) {
-			const finalMessage = beatmapResultMessage.message;
+		// Send the trigger messages if applicable
+		for (const triggerMessage of this.selectedLobby.tournament.triggerMessages) {
+			const finalMessage = triggerMessage.message;
 
-			if (beatmapResultMessage.beatmapPicked) {
+			if (triggerMessage.beatmapPicked) {
 				this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
 			}
 		}
@@ -873,21 +873,21 @@ export class IrcComponent implements OnInit, OnDestroy {
 	sendBeatmapResult(lastPlayedBeatmap: MultiplayerData) {
 		// User is connected to irc channel
 		if (this.selectedChannel.name != null) {
-			for (const conditionalMessage of this.selectedLobby.tournament.conditionalMessages) {
-				const finalMessage = WyConditionalMessage.translateMessage(conditionalMessage.message, lastPlayedBeatmap, this.selectedLobby, this.cacheService.getBeatmapname(lastPlayedBeatmap.beatmap_id));
+			for (const triggerMessage of this.selectedLobby.tournament.triggerMessages) {
+				const finalMessage = WyTriggerMessage.translateMessage(triggerMessage.message, lastPlayedBeatmap, this.selectedLobby, this.cacheService.getBeatmapname(lastPlayedBeatmap.beatmap_id));
 
-				if (conditionalMessage.beatmapResult) {
-					if (conditionalMessage.nextPickMessage) {
+				if (triggerMessage.beatmapResult) {
+					if (triggerMessage.nextPickMessage) {
 						if (this.selectedLobby.teamHasWon() == null && !this.selectedLobby.getTiebreaker()) {
 							this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
 						}
 					}
-					else if (conditionalMessage.nextPickTiebreakerMessage) {
+					else if (triggerMessage.nextPickTiebreakerMessage) {
 						if (this.selectedLobby.teamHasWon() == null && this.selectedLobby.getTiebreaker()) {
 							this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
 						}
 					}
-					else if (conditionalMessage.matchWonMessage) {
+					else if (triggerMessage.matchWonMessage) {
 						if (this.selectedLobby.teamHasWon() != null) {
 							this.ircService.sendMessage(this.selectedChannel.name, finalMessage);
 						}
