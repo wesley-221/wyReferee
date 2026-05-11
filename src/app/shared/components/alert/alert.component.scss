@@ -1,14 +1,12 @@
-$info-background-light-color: #0075dd;
-$info-background-dark-color: #0056a7;
+$border-alpha: 0.22;
+$background-alpha: 0.12;
+$header-alpha: 0.20;
+$icon-alpha: 0.8;
 
-$success-background-light-color: #00cd2a;
-$success-background-dark-color: #009a1d;
-
-$warn-background-light-color: #ff9d00;
-$warn-background-dark-color: #cb7600;
-
-$danger-background-light-color: #ff3f32;
-$danger-background-dark-color: #de2d23;
+$info-background-color: #0075dd;
+$success-background-color: #00cd2a;
+$warn-background-color: #ff9d00;
+$danger-background-color: #ff3f32;
 
 .alert {
 	display: flex;
@@ -48,36 +46,42 @@ $danger-background-dark-color: #de2d23;
 	}
 
 	&.info {
-		background-color: $info-background-light-color;
+		background-color: rgba($info-background-color, $background-alpha);
+		border: 1px solid rgba($info-background-color, $border-alpha);
 
 		.header {
-			background-color: $info-background-dark-color;
+			background-color: rgba($info-background-color, $header-alpha);
+			color: rgba($info-background-color, $icon-alpha);
 		}
 	}
 
 	&.success {
-		background-color: $success-background-light-color;
+		background-color: rgba($success-background-color, $background-alpha);
+		border: 1px solid rgba($success-background-color, $border-alpha);
 
 		.header {
-			background-color: $success-background-dark-color;
+			background-color: rgba($success-background-color, $header-alpha);
+			color: rgba($success-background-color, $icon-alpha);
 		}
 	}
 
 	&.warn {
-		background-color: $warn-background-light-color;
-		color: #000000;
+		background-color: rgba($warn-background-color, $background-alpha);
+		border: 1px solid rgba($warn-background-color, $border-alpha);
 
 		.header {
-			background-color: $warn-background-dark-color;
-			color: #ffffff;
+			background-color: rgba($warn-background-color, $header-alpha);
+			color: rgba($warn-background-color, $icon-alpha);
 		}
 	}
 
 	&.danger {
-		background-color: $danger-background-light-color;
+		background-color: rgba($danger-background-color, $background-alpha);
+		border: 1px solid rgba($danger-background-color, $border-alpha);
 
 		.header {
-			background-color: $danger-background-dark-color;
+			background-color: rgba($danger-background-color, $header-alpha);
+			color: rgba($danger-background-color, $icon-alpha);
 		}
 	}
 }
