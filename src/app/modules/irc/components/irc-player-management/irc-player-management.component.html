@@ -35,21 +35,21 @@
 			</div>
 
 			<div class="action-buttons">
-				<div class="button" [ngClass]="{'disabled': player.username == 'Open' }" [title]="'Move ' + player.username" (click)="movePlayer(player)">
+				<button class="form-button small-button" [disabled]="player.username == 'Open'" [title]="'Move ' + player.username" (click)="movePlayer(player)">
 					<mat-icon class="icon">open_with</mat-icon>
-				</div>
+				</button>
 
-				<div class="button" [ngClass]="{'disabled': player.username == 'Open' }" [title]="'Change ' + player.username + '\'s team'" (click)="changeTeam(player)">
+				<button class="form-button small-button" [disabled]="player.username == 'Open'" [title]="'Change ' + player.username + '\'s team'" (click)="changeTeam(player)">
 					<mat-icon class="icon">groups</mat-icon>
-				</div>
+				</button>
 
-				<div class="button" [ngClass]="{'disabled': player.isHost || player.username == 'Open' }" [title]="'Give host to ' + player.username" (click)="setHost(player)">
+				<button class="form-button small-button" [disabled]="player.isHost || player.username == 'Open'" [title]="'Give host to ' + player.username" (click)="setHost(player)">
 					<mat-icon class="icon">star</mat-icon>
-				</div>
+				</button>
 
-				<div class="button" [ngClass]="{'disabled': player.username == 'Open' }" [title]="'Kick ' + player.username" (click)="kickPlayer(player)">
+				<button class="form-button small-button danger" [disabled]="player.username == 'Open'" [title]="'Kick ' + player.username" (click)="kickPlayer(player)">
 					<mat-icon class="icon">close</mat-icon>
-				</div>
+				</button>
 			</div>
 		</div>
 	</div>

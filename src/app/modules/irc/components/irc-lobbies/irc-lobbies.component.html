@@ -31,25 +31,25 @@
 		</div>
 
 		<div class="channel-actions">
-			<div class="button" (click)="playSound(channel, false)" *ngIf="channel.playSoundOnMessage">
+			<button class="form-button small-button" (click)="playSound(channel, false)" *ngIf="channel.playSoundOnMessage">
 				<mat-icon class="icon">volume_up</mat-icon>
-			</div>
+			</button>
 
-			<div class="button" (click)="playSound(channel, true)" *ngIf="!channel.playSoundOnMessage">
+			<button class="form-button small-button" (click)="playSound(channel, true)" *ngIf="!channel.playSoundOnMessage">
 				<mat-icon class="icon">volume_off</mat-icon>
-			</div>
+			</button>
 
-			<div class="button" (click)="editLabel(channel)" *ngIf="!channel.editingLabel">
+			<button class="form-button small-button" (click)="editLabel(channel)" *ngIf="!channel.editingLabel">
 				<mat-icon class="icon">edit</mat-icon>
-			</div>
+			</button>
 
-			<div class="button" (click)="editLabel(channel)" *ngIf="channel.editingLabel">
+			<button class="form-button small-button" (click)="editLabel(channel)" *ngIf="channel.editingLabel">
 				<mat-icon class="icon">save</mat-icon>
-			</div>
+			</button>
 
-			<div class="button red" (click)="partChannel(channel.name)">
+			<button class="form-button small-button danger" (click)="partChannel(channel.name)">
 				<mat-icon class="icon">close</mat-icon>
-			</div>
+			</button>
 		</div>
 	</div>
 </div>

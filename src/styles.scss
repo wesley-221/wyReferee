@@ -45,7 +45,10 @@ body {
 	box-sizing: border-box;
 }
 
-button {
+button,
+select,
+input,
+textarea {
 	font-family: inherit;
 }
 
@@ -226,6 +229,21 @@ code {
 		flex-shrink: 0;
 	}
 
+	&.small-button {
+		justify-content: center;
+		align-items: center;
+
+		width: 24px;
+		height: 24px;
+
+		.icon {
+			font-size: 15px;
+
+			width: 15px;
+			height: 15px;
+		}
+	}
+
 	&.primary {
 		&:hover {
 			border-color: rgba($primary, 0.26);
@@ -236,9 +254,9 @@ code {
 
 	&.danger {
 		&:hover {
-			border-color: rgba($danger, 0.26);
-			background: rgba($danger, 0.1);
-			color: $danger;
+			border-color: $button-hover-red-border-color;
+			background: $button-hover-red-background-color;
+			color: $button-hover-red-color;
 		}
 	}
 
@@ -252,10 +270,6 @@ code {
 
 	&.no-wrap {
 		white-space: nowrap;
-	}
-
-	&.big-button {
-		grid-column: 1 / -1;
 	}
 
 	&:hover {

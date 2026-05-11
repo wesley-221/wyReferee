@@ -122,37 +122,6 @@ $button-hover-border-color: rgba(255, 255, 255, 0.2);
 				pointer-events: none;
 
 				transition: opacity 0.14s;
-
-				.button {
-					display: flex;
-					flex-shrink: 0;
-
-					justify-content: center;
-					align-items: center;
-
-					background: $irc-input-background-color-active;
-					color: $irc-input-text-color-active;
-
-					border: 1px solid $irc-border-color;
-					border-radius: 4px;
-
-					width: 24px;
-					height: 24px;
-
-					cursor: pointer;
-
-					.icon {
-						font-size: 15px;
-
-						width: 15px;
-						height: 15px;
-					}
-
-					&:hover {
-						background: $button-hover-background-color;
-						border-color: $button-hover-border-color;
-					}
-				}
 			}
 
 			&.red {

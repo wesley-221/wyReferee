@@ -6,9 +6,6 @@ $channel-inactive-label-color: rgba(255, 255, 255, 0.5);
 
 $button-hover-background-color: #363636;
 $button-hover-border-color: rgba(255, 255, 255, 0.2);
-$button-hover-red-background-color: rgba(245, 110, 110, 0.16);
-$button-hover-red-border-color: rgba(245, 110, 110, 0.34);
-$button-hover-red-color: #f56e6e;
 
 .all-channels {
 	border-bottom: 1px solid $irc-border-color;
@@ -137,43 +134,6 @@ $button-hover-red-color: #f56e6e;
 
 			transition: opacity 0.15s;
 			pointer-events: none;
-
-			.button {
-				display: flex;
-				flex-shrink: 0;
-
-				justify-content: center;
-				align-items: center;
-
-				background: $irc-input-background-color-active;
-				color: $irc-input-text-color-active;
-
-				border: 1px solid $irc-border-color;
-				border-radius: 4px;
-
-				width: 24px;
-				height: 24px;
-
-				cursor: pointer;
-
-				.icon {
-					font-size: 15px;
-
-					width: 15px;
-					height: 15px;
-				}
-
-				&:hover {
-					background: $button-hover-background-color;
-					border-color: $button-hover-border-color;
-
-					&.red {
-						background: $button-hover-red-background-color;
-						border-color: $button-hover-red-border-color;
-						color: $button-hover-red-color;
-					}
-				}
-			}
 		}
 
 		&:hover {
