@@ -21,10 +21,11 @@ export class SettingsComponent implements OnInit {
 	dialogMessage: string;
 
 	axsMenuStatus: boolean;
-	splitIrcMessages: boolean;
+	showIncorrectSlotStatus: boolean;
 
 	generalOptions: OptionsMenu[] = [
-		{ header: 'Show AxS menu item', description: 'Toggle visibility of the AxS menu item in the sidebar', buttonText: 'Toggle', action: () => this.toggleAxSMenu(), slideToggle: true, slideToggleValue: this.genericService.getAxSMenuStatus() }
+		{ header: 'Show AxS menu item', description: 'Toggle visibility of the AxS menu item in the sidebar', buttonText: 'Toggle', action: () => this.toggleAxSMenu(), slideToggle: true, slideToggleValue: this.genericService.getAxSMenuStatus() },
+		{ header: 'Show incorrect slot warning', description: 'Toggle whether to show a warning when a player is in an incorrect slot. This is shown when <code>!mp settings</code> is used', buttonText: 'Toggle', action: () => this.toggleShowIncorrectSlot(), slideToggle: true, slideToggleValue: this.genericService.getShowIncorrectSlotStatus() }
 	];
 
 	configurationOptions: OptionsMenu[] = [
@@ -55,6 +56,10 @@ export class SettingsComponent implements OnInit {
 			this.axsMenuStatus = status;
 		});
 
+		this.genericService.getShowIncorrectSlotStatus().subscribe(status => {
+			this.showIncorrectSlotStatus = status;
+		});
+
 		this.webhookAuthorImage = this.webhookService.authorImage;
 		this.webhookAuthorName = this.webhookService.authorName;
 		this.webhookBottomImage = this.webhookService.bottomImage;
@@ -73,11 +78,11 @@ export class SettingsComponent implements OnInit {
 	}
 
 	/**
-	 * Remove the pai key
+	 * Remove the API key
 	 */
 	removeApiKey() {
 		window.electronApi.osuAuthentication.clearApiKey();
-		this.toastService.addToast('Successfully removed your api key.');
+		this.toastService.addToast('Successfully removed your API key.');
 	}
 
 	/**
@@ -114,7 +119,7 @@ export class SettingsComponent implements OnInit {
 			dialogMessage = 'Are you sure you want to clear your cache?';
 		}
 		else if (dialogAction == 1) {
-			dialogMessage = 'Are you sure you want to remove your api key?';
+			dialogMessage = 'Are you sure you want to remove your API key?';
 		}
 
 		const dialogRef = this.dialog.open(RemoveSettingsComponent, {
@@ -138,6 +143,13 @@ export class SettingsComponent implements OnInit {
 	toggleAxSMenu(): void {
 		this.axsMenuStatus = !this.axsMenuStatus;
 		this.genericService.setAxSMenu(this.axsMenuStatus);
+	}
+
+	toggleShowIncorrectSlot(): void {
+		this.showIncorrectSlotStatus = !this.showIncorrectSlotStatus;
+		this.genericService.setShowIncorrectSlot(this.showIncorrectSlotStatus);
+
+		console.log('Toggled show incorrect slot warning:', this.showIncorrectSlotStatus);
 	}
 
 	updateWebhookCustomization() {
