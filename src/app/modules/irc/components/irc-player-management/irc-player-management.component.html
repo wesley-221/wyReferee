@@ -5,12 +5,14 @@
 		</div>
 
 		<div class="slot-count">
-			({{ playerCount }} / {{ channel.players ?? 0 }})
+			({{ playerCount | async }} / {{ channel.players ?? 0 }})
 		</div>
 	</div>
 
 	<div class="players">
-		<div class="player" *ngFor="let player of multiplayerLobbyPlayers.players" [ngClass]="{'red': player.team == 'Red', 'blue': player.team == 'Blue'}">
+		<div class="player" *ngFor="let player of multiplayerLobbyPlayers.players$ | async"
+			[class.red]="player.team == 'Red'"
+			[class.blue]="player.team == 'Blue'">
 			<div class="player-information">
 				<div class="player-slot">
 					{{ player.slot }}
@@ -28,7 +30,7 @@
 				</div>
 
 				<div class="player-status-container">
-					<div class="player-status" [ngClass]="{'ready': player.status == 'Ready'}">
+					<div class="player-status" [class.ready]="player.status == 'Ready'">
 						{{ player.status }}
 					</div>
 				</div>

@@ -20,7 +20,7 @@
 
 					<div class="author"
 						[matTooltip]="chat.author"
-						*ngVar="(selectedLobby != null ? selectedLobby.getPlayerByUsername(chat.author, multiplayerLobbyPlayersService) : null) as ircManagementPlayer"
+						*ngVar="(selectedLobby?.getPlayerByUsername(chat.author, multiplayerLobbyPlayersService) | async) as ircManagementPlayer"
 						(click)="openUserpage(chat.author)"
 						[ngClass]="{
 							'me': chat.author == ircService.authenticatedUser,

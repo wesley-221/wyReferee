@@ -19,6 +19,7 @@ import { WyModCategory } from './wytournament/mappool/wy-mod-category';
 import { WyStage } from './wytournament/wy-stage';
 import { WyTeamPlayer } from './wytournament/wy-team-player';
 import { WyTournament } from './wytournament/wy-tournament';
+import { Observable, map } from 'rxjs';
 
 export class Lobby {
 	rawFileName: string;
@@ -638,16 +639,20 @@ export class Lobby {
 	 * @param username the username of the user to get
 	 * @returns
 	 */
-	getPlayerByUsername(username: string, multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService): MultiplayerLobbyPlayersPlayer {
+	getPlayerByUsername(username: string, multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService): Observable<MultiplayerLobbyPlayersPlayer> {
 		const multiplayerLobbyPlayers: MultiplayerLobbyPlayers = multiplayerLobbyPlayersService.multiplayerLobbies[this.lobbyId].players;
 
-		for (const user of multiplayerLobbyPlayers.players) {
-			if (user.username == username) {
-				return user;
-			}
-		}
+		return multiplayerLobbyPlayers.players$.pipe(
+			map(players => {
+				for (const user of players) {
+					if (user.username == username) {
+						return user;
+					}
+				}
 
-		return null;
+				return null;
+			})
+		);
 	}
 
 	/**

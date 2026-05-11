@@ -38,8 +38,10 @@ export class IrcPlayerManagementComponent implements OnInit, OnChanges {
 		}
 	}
 
-	get playerCount(): number {
-		return this.multiplayerLobbyPlayers?.players?.filter(p => p.username !== 'Open').length ?? 0;
+	get playerCount(): Observable<number> {
+		return this.multiplayerLobbyPlayers?.players$?.pipe(
+			map(players => players.filter(p => p.username !== 'Open').length)
+		) ?? of(0);
 	}
 
 	/**
