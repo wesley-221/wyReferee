@@ -156,7 +156,8 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 							display: inline-block;
 
 							.link,
-							.pick-beatmap {
+							.pick-beatmap,
+							.incorrect-slot {
 								display: flex;
 								align-items: center;
 
@@ -182,6 +183,8 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 									width: 20px;
 									height: 20px;
 									font-size: 20px;
+
+									flex-shrink: 0;
 								}
 
 								&:hover {
@@ -191,6 +194,20 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 
 							.pick-beatmap {
 								text-transform: uppercase;
+							}
+
+							.incorrect-slot {
+								background: rgba(255, 61, 110, 0.1);
+								color: #d47088;
+								border: 1px solid rgba(255, 61, 110, 0.14);
+
+								cursor: default;
+
+								&:hover {
+									background: rgba(255, 61, 110, 0.1);
+									color: #d47088;
+									border: 1px solid rgba(255, 61, 110, 0.14);
+								}
 							}
 
 							&:first-child {

@@ -3,7 +3,8 @@ import { WyMod } from '../wytournament/mappool/wy-mod';
 export enum MessageType {
 	Message = 'Message',
 	Link = 'Link',
-	ModAcronymPick = 'ModAcronymPick'
+	ModAcronymPick = 'ModAcronymPick',
+	IncorrectSlot = 'IncorrectSlot'
 }
 
 export class MessageBuilder {

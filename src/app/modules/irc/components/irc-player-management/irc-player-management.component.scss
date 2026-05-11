@@ -142,6 +142,16 @@ $button-hover-border-color: rgba(255, 255, 255, 0.2);
 				}
 			}
 
+			&.incorrect-slot {
+				background-color: $button-hover-red-background-color;
+
+				.player-information {
+					.player-username {
+						text-shadow: 0 0 1px black;
+					}
+				}
+			}
+
 			&:hover {
 				.player-information {
 					.mods {

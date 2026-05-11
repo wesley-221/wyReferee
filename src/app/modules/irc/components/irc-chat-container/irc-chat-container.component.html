@@ -52,6 +52,11 @@
 								<mat-icon class="icon">push_pin</mat-icon>
 								<span class="url">{{ chatPiece.message }}</span>
 							</div>
+
+							<div class="incorrect-slot" *ngIf="chatPiece.messageType == 'IncorrectSlot'">
+								<mat-icon class="icon">priority_high</mat-icon>
+								<span class="url">{{ chatPiece.message }}</span>
+							</div>
 						</div>
 					</div>
 				</div>

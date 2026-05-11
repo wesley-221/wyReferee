@@ -12,7 +12,8 @@
 	<div class="players">
 		<div class="player" *ngFor="let player of multiplayerLobbyPlayers.players$ | async"
 			[class.red]="player.team == 'Red'"
-			[class.blue]="player.team == 'Blue'">
+			[class.blue]="player.team == 'Blue'"
+			[class.incorrect-slot]="(showIncorrectSlotWarning$ | async) && !multiplayerLobbyPlayersService.isInCorrectSlot(player.username, lobby)">
 			<div class="player-information">
 				<div class="player-slot">
 					{{ player.slot }}

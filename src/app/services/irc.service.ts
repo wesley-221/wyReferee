@@ -196,14 +196,15 @@ export class IrcService {
 					}
 
 					// Check if the player is in the correct slot
-					// TODO: Fix the isInCorrectSlot check, doesn't always work
-					// if (multiplayerLobby) {
-					// 	if (multiplayerLobby.isQualifierLobby != true) {
-					// 		if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
-					// 			message.message += ` | Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}`;
-					// 		}
-					// 	}
-					// }
+					if (this.genericService.getShowIncorrectSlotStatus().getValue() == true) {
+						if (multiplayerLobby) {
+							if (multiplayerLobby.isQualifierLobby != true) {
+								if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
+									message.message += `<incorrect-slot>Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}</incorrect-slot>`;
+								}
+							}
+						}
+					}
 				}
 			}
 
@@ -783,10 +784,22 @@ export class IrcService {
 						}
 						// The split is a message
 						else {
+							// Check if the split message contains the <incorrect-slot> tag
+							const incorrectSlotSplit = split.split(Regex.incorrectSlot.regex).filter(s => s != '' && s.trim());
+
+							// Always add message
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Message,
-								message: split
+								message: incorrectSlotSplit[0]
 							}));
+
+							// If array contains more than 1 element, it means that there is an incorrect slot message to add as well
+							if (incorrectSlotSplit.length > 1) {
+								messageBuilder.push(new MessageBuilder({
+									messageType: MessageType.IncorrectSlot,
+									message: incorrectSlotSplit[1]
+								}));
+							}
 						}
 					}
 				}

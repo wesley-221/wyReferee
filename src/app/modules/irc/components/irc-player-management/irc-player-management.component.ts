@@ -8,6 +8,8 @@ import { MultiplayerLobbyPlayers } from 'app/models/multiplayer-lobby-players/mu
 import { MultiplayerLobbyPlayersPlayer } from 'app/models/multiplayer-lobby-players/multiplayer-lobby-players-player';
 import { IrcService } from 'app/services/irc.service';
 import { MultiplayerLobbyPlayersService } from 'app/services/multiplayer-lobby-players.service';
+import { Observable, map, of } from 'rxjs';
+import { GenericService } from '../../../../services/generic.service';
 
 @Component({
 	selector: 'app-irc-player-management',
@@ -19,8 +21,14 @@ export class IrcPlayerManagementComponent implements OnInit, OnChanges {
 	@Input() channel: IrcChannel;
 
 	multiplayerLobbyPlayers: MultiplayerLobbyPlayers;
+	showIncorrectSlotWarning$ = this.genericService.getShowIncorrectSlotStatus();
 
-	constructor(private ircService: IrcService, private dialog: MatDialog, private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService) { }
+	constructor(
+		private ircService: IrcService,
+		private dialog: MatDialog,
+		public multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
+		private genericService: GenericService
+	) { }
 
 	ngOnInit(): void {
 		if (this.lobby != undefined) {
