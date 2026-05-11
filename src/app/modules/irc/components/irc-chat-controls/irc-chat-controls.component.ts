@@ -39,4 +39,8 @@ export class IrcChatControlsComponent {
 	selectSlashCommand(slashCommand: SlashCommand) {
 		this.selectSlashCommandEmitter.emit(slashCommand);
 	}
+
+	focusMessageInput() {
+		this.chatMessage.nativeElement.focus();
+	}
 }

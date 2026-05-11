@@ -909,7 +909,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 */
 	focusChat(focus: boolean): void {
 		if (focus == true) {
-			this.chatMessage.nativeElement.focus();
+			this.ircChatControlsComponent.focusMessageInput();
 		}
 	}
 
