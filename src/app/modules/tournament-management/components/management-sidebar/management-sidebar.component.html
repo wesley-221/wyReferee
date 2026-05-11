@@ -1,12 +1,32 @@
 <div class="sidebar">
-	<ng-container *ngFor="let sidebarItem of sidebarMenu">
+	<ng-container *ngFor="let sidebarItem of sidebarMenu$ | async">
+		<div class="sidebar-header" *ngIf="sidebarItem.type == 'header'">
+			{{ sidebarItem.header }}
+		</div>
+
 		<div class="sidebar-divider" *ngIf="sidebarItem.type == 'divider'"></div>
 
-		<div class="sidebar-item" [routerLink]="[sidebarItem.link]" routerLinkActive="active" *ngIf="sidebarItem.type != 'divider' && (sidebarItem.showIf != false && (sidebarItem.showIfObservable | async) != false)">
+		<div class="sidebar-link" [routerLink]="[sidebarItem.link]" *ngIf="sidebarItem.type == 'link'">
 			<div class="sidebar-item-content">
 				<mat-icon>{{ sidebarItem.icon }}</mat-icon>
 
 				{{ sidebarItem.header }}
+			</div>
+		</div>
+
+		<div class="sidebar-item" [routerLink]="[sidebarItem.link]" routerLinkActive="active" *ngIf="sidebarItem.type != 'divider' && sidebarItem.type != 'link' && sidebarItem.type != 'header' && (sidebarItem.showIf != false && (sidebarItem.showIfObservable | async) != false)">
+			<div class="sidebar-item-content">
+				<mat-icon>{{ sidebarItem.icon }}</mat-icon>
+
+				{{ sidebarItem.header }}
+
+				<div class="validation-badge" *ngIf="sidebarItem.validationBadgeCount != null && sidebarItem.validationBadgeCount > 0">
+					<div class="error-dot"></div>
+
+					<div class="error-count">
+						{{ sidebarItem.validationBadgeCount }}
+					</div>
+				</div>
 			</div>
 		</div>
 	</ng-container>

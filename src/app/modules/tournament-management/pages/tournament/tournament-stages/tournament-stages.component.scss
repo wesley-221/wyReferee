@@ -1,0 +1,23 @@
+.stage-buttons {
+	display: flex;
+	gap: 8px;
+}
+
+.all-stages {
+	display: flex;
+	flex-direction: column;
+
+	padding-top: 8px;
+	padding-bottom: 8px;
+
+	.stage {
+		display: grid;
+		grid-auto-flow: column;
+		gap: 8px;
+
+		.actions {
+			display: flex;
+			align-items: center;
+		}
+	}
+}

@@ -1,0 +1,110 @@
+<form [formGroup]="form">
+	<h3>Trigger messages</h3>
+	<p>Customize the message that will be sent in irc when a certain condition has been met.</p>
+
+	<hr />
+
+	<h3>Variables</h3>
+	<p>You can add variables to the messages to replace them with the appropriate data. The following variables can be used:</p>
+
+	<ul>
+		<li><code>{{ '{' }}{{ '{' }}beatmapWinner{{ '}' }}{{ '}' }}</code>: the name of the team that has won the beatmap</li>
+		<li><code>{{ '{' }}{{ '{' }}beatmap{{ '}' }}{{ '}' }}</code>: a hyperlink with the beatmap and link</li>
+		<li><code>{{ '{' }}{{ '{' }}beatmapTeamOneScore{{ '}' }}{{ '}' }}</code>: the score of team one of the beatmap</li>
+		<li><code>{{ '{' }}{{ '{' }}beatmapTeamTwoScore{{ '}' }}{{ '}' }}</code>: the score of team two of the beatmap</li>
+		<li><code>{{ '{' }}{{ '{' }}scoreDifference{{ '}' }}{{ '}' }}</code>: the score difference between the two scores</li>
+		<li><code>{{ '{' }}{{ '{' }}teamOneName{{ '}' }}{{ '}' }}</code>: the name of team one</li>
+		<li><code>{{ '{' }}{{ '{' }}teamTwoName{{ '}' }}{{ '}' }}</code>: the name of team two</li>
+		<li><code>{{ '{' }}{{ '{' }}matchTeamOneScore{{ '}' }}{{ '}' }}</code>: the match score of team one</li>
+		<li><code>{{ '{' }}{{ '{' }}matchTeamTwoScore{{ '}' }}{{ '}' }}</code>: the match score of team two</li>
+		<li><code>{{ '{' }}{{ '{' }}nextPick{{ '}' }}{{ '}' }}</code>: the team name of the next pick</li>
+		<li><code>{{ '{' }}{{ '{' }}matchWinner{{ '}' }}{{ '}' }}</code>: the team name of the winner of the match</li>
+	</ul>
+
+	<div *ngIf="hasCTMMappool == true">
+		<b>The following variables are only used for the Catch The Magic tournament</b>
+
+		<ul>
+			<li><code>{{ '{' }}{{ '{' }}teamOneHitpoints{{ '}' }}{{ '}' }}</code>: the hitpoints that team one has left</li>
+			<li><code>{{ '{' }}{{ '{' }}teamTwoHitpoints{{ '}' }}{{ '}' }}</code>: the hitpoints that team two has left</li>
+			<li><code>{{ '{' }}{{ '{' }}damageDealt{{ '}' }}{{ '}' }}</code>: the damage that was dealt by the beatmap</li>
+		</ul>
+	</div>
+
+	<p>Example message: <code>Score: {{ '{' }}{{ '{' }}matchTeamOneScore{{ '}' }}{{ '}' }} | {{ '{' }}{{ '{' }}matchTeamTwoScore{{ '}' }}{{ '}' }}</code></p>
+
+	<hr />
+
+	<button mat-raised-button color="primary" (click)="createNewMessage()"><mat-icon>add</mat-icon> create new message</button>
+
+	<div class="messages" formArrayName="triggerMessages">
+		<div class="message" *ngIf="triggerMessages.length == 0">
+			<div class="content">
+				<app-alert alertType="info">There are no trigger messages.</app-alert>
+			</div>
+		</div>
+
+		<div class="message" *ngFor="let messageGroup of triggerMessages.controls; let i = index" [formGroupName]="i">
+			<h2>Message</h2>
+			<p>The message that will be sent when one of the conditions are met.</p>
+
+			<div class="content">
+				<mat-form-field class="full-width">
+					<mat-label>Message</mat-label>
+					<input matInput formControlName="message" />
+
+					<mat-error *ngIf="messageGroup.get('message').errors && (messageGroup.get('message').touched || messageGroup.get('message').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+			</div>
+
+			<h2>Conditions</h2>
+			<p>The conditions that have to be met for when the message will be sent.</p>
+
+			<div class="options">
+				<div class="option" [ngClass]="{ 'active': messageGroup.get('beatmapResult').value }" (click)="toggleOption(messageGroup, 'beatmapResult')">
+					<mat-icon>check</mat-icon>
+
+					Beatmap result
+				</div>
+
+				<div class="option" [ngClass]="{ 'active': messageGroup.get('beatmapPicked').value }" (click)="toggleOption(messageGroup, 'beatmapPicked')">
+					<mat-icon>check</mat-icon>
+
+					Beatmap picked
+				</div>
+
+				<div class="option" [ngClass]="{ 'active': messageGroup.get('nextPickMessage').value }" (click)="toggleOption(messageGroup, 'nextPickMessage')">
+					<mat-icon>check</mat-icon>
+
+					Next pick
+				</div>
+
+				<div class="option" [ngClass]="{ 'active': messageGroup.get('nextPickTiebreakerMessage').value }" (click)="toggleOption(messageGroup, 'nextPickTiebreakerMessage')">
+					<mat-icon>check</mat-icon>
+
+					Next pick tiebreaker
+				</div>
+
+				<div class="option" [ngClass]="{ 'active': messageGroup.get('matchWonMessage').value }" (click)="toggleOption(messageGroup, 'matchWonMessage')">
+					<mat-icon>check</mat-icon>
+
+					Match won
+				</div>
+			</div>
+
+			<ul>
+				<li *ngIf="messageGroup.get('beatmapResult').value">This message will only be sent when the referee sends the beatmap result on the IRC screen.</li>
+				<li *ngIf="messageGroup.get('beatmapPicked').value">This message will only be sent after a map has been picked.</li>
+				<li *ngIf="messageGroup.get('nextPickMessage').value">This message will only be sent if there is a valid next pick, meaning the match isn't over yet or the next pick isn't a tiebreaker</li>
+				<li *ngIf="messageGroup.get('nextPickTiebreakerMessage').value">This message will only be sent when the next pick is a tiebreaker.</li>
+				<li *ngIf="messageGroup.get('matchWonMessage').value">This message will only be sent when the match has been won.</li>
+			</ul>
+
+			<div class="actions">
+				<button mat-raised-button color="warn" (click)="removeTriggerMessage(i)"><mat-icon>delete</mat-icon> delete trigger message</button>
+			</div>
+		</div>
+	</div>
+</form>

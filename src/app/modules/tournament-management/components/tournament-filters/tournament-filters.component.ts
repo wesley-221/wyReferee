@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, startWith, map, combineLatest } from 'rxjs';
 import { User } from '../../../../models/authentication/user';
-import { TournamentFilter } from '../../models/tournament-filter';
+import { TournamentFilter } from '../../interfaces/tournament-filter';
 
 @Component({
 	selector: 'app-tournament-filters',

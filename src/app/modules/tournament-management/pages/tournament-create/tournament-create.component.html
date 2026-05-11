@@ -1,15 +1,17 @@
-<div #container class="tournament-create">
-	<h1>Creating a new tournament</h1>
+<div class="tournament-create">
+	<div class="tournament-create-header">
+		<div class="dot published"></div> Create a tournament
+	</div>
 
-	<app-alert alertType="danger" *ngIf="errors.length > 0">
-		<b>One or more fields have not been filled in correctly.</b>
+	<div class="tournament-body" *ngIf="tournament">
+		<router-outlet></router-outlet>
+	</div>
 
-		<ul>
-			<li *ngFor="let error of errors">{{ error }}</li>
-		</ul>
-	</app-alert>
+	<app-tournament-error-footer></app-tournament-error-footer>
 
-	<app-tournament [tournament]="tournament" [validationForm]="validationForm"></app-tournament>
-
-	<button mat-raised-button color="primary" (click)="createTournament()">Create</button>
+	<div class="tournament-save-footer">
+		<button mat-stroked-button color="primary" (click)="createTournament()">
+			Create tournament
+		</button>
+	</div>
 </div>

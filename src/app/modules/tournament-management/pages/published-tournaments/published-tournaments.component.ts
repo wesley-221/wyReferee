@@ -4,7 +4,7 @@ import { WyTournament } from '../../../../models/wytournament/wy-tournament';
 import { BehaviorSubject, map } from 'rxjs';
 import { User } from '../../../../models/authentication/user';
 import { Router } from '@angular/router';
-import { TournamentFilter } from '../../models/tournament-filter';
+import { TournamentFilter } from '../../interfaces/tournament-filter';
 
 @Component({
 	selector: 'app-published-tournaments',
@@ -15,6 +15,8 @@ export class PublishedTournamentsComponent implements OnInit {
 	allTournaments: WyTournament[];
 	filteredTournaments: WyTournament[];
 	allUsers$: BehaviorSubject<User[]>;
+
+	loading = true;
 
 	constructor(
 		private tournamentService: TournamentService,
@@ -32,7 +34,7 @@ export class PublishedTournamentsComponent implements OnInit {
 
 	onTournamentClick(tournament: WyTournament, event: any) {
 		if (event.target.localName == 'div') {
-			this.router.navigate(['/tournament-management/published-tournaments/', tournament.id, '1']);
+			this.router.navigate(['/tournament-management/tournament-edit/', '1', tournament.id]);
 		}
 	}
 
@@ -51,6 +53,8 @@ export class PublishedTournamentsComponent implements OnInit {
 				this.allTournaments = tournaments;
 				this.filteredTournaments = tournaments;
 				this.allUsers$.next(users);
+
+				this.loading = false;
 			});
 	}
 
@@ -59,10 +63,9 @@ export class PublishedTournamentsComponent implements OnInit {
 	 *
 	 * @param deleted if the tournament is deleted
 	 */
-	onTournamentDeleted(deleted: boolean) {
-		if (deleted == true) {
-			this.populateTournamentArray();
-		}
+	onTournamentDeleted(tournament: WyTournament) {
+		this.allTournaments = this.allTournaments.filter(t => t.id !== tournament.id);
+		this.filteredTournaments = this.filteredTournaments.filter(t => t.id !== tournament.id);
 	}
 
 	/**

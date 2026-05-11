@@ -19,7 +19,7 @@ export class SidebarComponent implements OnInit {
 		{ icon: 'school', header: 'tutorial', link: 'tutorial' },
 		{ icon: 'update', header: 'changelog', link: 'changelog' },
 		{ type: 'divider' },
-		{ icon: 'dashboard', header: 'management', link: 'tournament-management/tournament-overview' },
+		{ icon: 'dashboard', header: 'management', link: 'tournament-management' },
 		{ icon: 'schedule', header: 'wyBin schedule', link: 'wybin-schedule' },
 		{ icon: 'list', header: 'lobby', link: 'lobby-overview' },
 		{ icon: 'chat', header: 'irc', link: 'irc' },

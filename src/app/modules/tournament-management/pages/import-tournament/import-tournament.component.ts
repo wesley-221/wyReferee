@@ -4,7 +4,7 @@ import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { BehaviorSubject, map } from 'rxjs';
-import { TournamentFilter } from '../../models/tournament-filter';
+import { TournamentFilter } from '../../interfaces/tournament-filter';
 
 @Component({
 	selector: 'app-import-tournament',
@@ -15,6 +15,8 @@ export class ImportTournamentComponent implements OnInit {
 	allTournaments: WyTournament[];
 	filteredTournaments: WyTournament[];
 	allUsers$: BehaviorSubject<User[]>;
+
+	loading = true;
 
 	constructor(private tournamentService: TournamentService, private toastService: ToastService) {
 		this.allUsers$ = new BehaviorSubject([]);
@@ -32,6 +34,8 @@ export class ImportTournamentComponent implements OnInit {
 				this.allTournaments = tournaments;
 				this.filteredTournaments = tournaments;
 				this.allUsers$.next(users);
+
+				this.loading = false;
 			});
 	}
 

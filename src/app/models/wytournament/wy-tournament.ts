@@ -7,7 +7,7 @@ import { WyTeam } from './wy-team';
 import { WyStage } from './wy-stage';
 import { WyModBracket } from './mappool/wy-mod-bracket';
 import { WyModBracketMap } from './mappool/wy-mod-bracket-map';
-import { WyConditionalMessage } from './wy-conditional-message';
+import { WyTriggerMessage } from './trigger-message';
 
 export enum TournamentFormat {
 	Solo = 'solo',
@@ -37,8 +37,8 @@ export class WyTournament {
 	webhooks: WyWebhook[];
 	webhookIndex: number;
 
-	conditionalMessages: WyConditionalMessage[];
-	conditionalMessageIndex: number;
+	triggerMessages: WyTriggerMessage[];
+	triggerMessageIndex: number;
 
 	defaultTeamMode: number;
 	defaultWinCondition: number;
@@ -69,8 +69,8 @@ export class WyTournament {
 		this.mappoolIndex = 0;
 		this.webhooks = [];
 		this.webhookIndex = 0;
-		this.conditionalMessages = [];
-		this.conditionalMessageIndex = 0;
+		this.triggerMessages = [];
+		this.triggerMessageIndex = 0;
 		this.mappools = [];
 		this.invalidateBeatmaps = true;
 		this.allowDoublePick = true;
@@ -139,13 +139,13 @@ export class WyTournament {
 			newTournament.webhooks.push(newWebhook);
 		}
 
-		for (const conditionalMessage in tournament.conditionalMessages) {
-			const newConditionalMessage = WyConditionalMessage.makeTrueCopy(tournament.conditionalMessages[conditionalMessage]);
+		for (const triggerMessage in tournament.triggerMessages) {
+			const newTriggerMessage = WyTriggerMessage.makeTrueCopy(tournament.triggerMessages[triggerMessage]);
 
-			newConditionalMessage.index = newTournament.conditionalMessageIndex;
-			newTournament.conditionalMessageIndex++;
+			newTriggerMessage.index = newTournament.triggerMessageIndex;
+			newTournament.triggerMessageIndex++;
 
-			newTournament.conditionalMessages.push(newConditionalMessage);
+			newTournament.triggerMessages.push(newTriggerMessage);
 		}
 
 		for (const mappool in tournament.mappools) {

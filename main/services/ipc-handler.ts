@@ -10,6 +10,7 @@ import { registerIrcAuthenticationHandlers } from "../handlers/irc-authenticatio
 import { registerDataMigrationHandler } from "./data-migration-handler";
 import { registerWebhookHandlers } from "../handlers/webhook-handlers";
 import { registerAuthenticationHandlers } from "../handlers/authentication-handlers";
+import { ConditionalToTriggerService } from "../migration/conditional-to-trigger-migration";
 
 export function setupIpcHandlers(win: BrowserWindow, osuOauthServer: OauthServer, allWindows: WindowManager[]) {
 	ipcMain.handle(IPC_CHANNELS.GET_APP_DATA_PATH, () => app.getPath('userData'));
@@ -19,11 +20,14 @@ export function setupIpcHandlers(win: BrowserWindow, osuOauthServer: OauthServer
 		osuOauthServer.startServer(oauthUrl);
 	});
 
-	registerDataMigrationHandler(win);
 	registerFileHandlers();
 	registerUiHandlers(win);
 	registerIrcHandlers(allWindows);
 	registerWebhookHandlers(allWindows);
 	registerIrcAuthenticationHandlers();
 	registerAuthenticationHandlers();
+
+	// Run data migration on startup
+	new ConditionalToTriggerService().migrate();
+	registerDataMigrationHandler(win);
 }

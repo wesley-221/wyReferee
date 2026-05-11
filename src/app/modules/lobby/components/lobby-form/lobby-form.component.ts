@@ -129,7 +129,7 @@ export class LobbyFormComponent implements OnInit {
 					// A wyReferee was not found in the wyBin stages, add it to the list
 					if (stageFound == false) {
 						this.wyBinStages.push(new WyBinStage({
-							wyRefereeId: parseInt(wyRefereeStage.id),
+							wyRefereeId: wyRefereeStage.id,
 							name: wyRefereeStage.name
 						}));
 					}
