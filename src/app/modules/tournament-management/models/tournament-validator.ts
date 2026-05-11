@@ -111,7 +111,7 @@ export class TournamentValidator {
 			});
 		}
 
-		if (!tournament.protects) {
+		if (tournament.protects == null) {
 			errors.push({
 				section: 'general',
 				path: 'protects',
