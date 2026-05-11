@@ -236,37 +236,37 @@
 			<ng-container *ngIf="selectedLobby && selectedLobby.tournament != null && selectedLobby.tournament.format == 'solo'">
 				<ng-container *ngIf="selectedLobby.isQualifierLobby == false">
 					<div class="team">
-						<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
-							<div class="name" [title]="player.name">
-								{{ player.name }}
+						<div class="players">
+							<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamOneName)">
+								<div class="name" [title]="player.name">
+									{{ player.name }}
+								</div>
+
+								<div class="actions">
+									<button class="form-button small-button primary" (click)="openDMChannel(player)" title="Click to message the player">
+										<mat-icon class="icon">chat</mat-icon>
+									</button>
+
+									<button class="form-button small-button primary" (click)="invitePlayer(player)" title="Click to invite player">
+										<mat-icon class="icon">add</mat-icon>
+									</button>
+								</div>
 							</div>
 
-							<div class="actions">
-								<button class="form-button small-button primary" (click)="openDMChannel(player)" title="Click to message the player">
-									<mat-icon class="icon">chat</mat-icon>
-								</button>
+							<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
+								<div class="name" [title]="player.name">
+									{{ player.name }}
+								</div>
 
-								<button class="form-button small-button primary" (click)="invitePlayer(player)" title="Click to invite player">
-									<mat-icon class="icon">add</mat-icon>
-								</button>
-							</div>
-						</div>
-					</div>
+								<div class="actions">
+									<button class="form-button small-button primary" (click)="openDMChannel(player)" title="Click to message the player">
+										<mat-icon class="icon">chat</mat-icon>
+									</button>
 
-					<div class="team">
-						<div class="player" *ngFor="let player of selectedLobby.getTeamPlayersFromTournament(selectedLobby.teamTwoName)">
-							<div class="name" [title]="player.name">
-								{{ player.name }}
-							</div>
-
-							<div class="actions">
-								<button class="form-button small-button primary" (click)="openDMChannel(player)" title="Click to message the player">
-									<mat-icon class="icon">chat</mat-icon>
-								</button>
-
-								<button class="form-button small-button primary" (click)="invitePlayer(player)" title="Click to invite player">
-									<mat-icon class="icon">add</mat-icon>
-								</button>
+									<button class="form-button small-button primary" (click)="invitePlayer(player)" title="Click to invite player">
+										<mat-icon class="icon">add</mat-icon>
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
