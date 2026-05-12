@@ -5,7 +5,7 @@
 		</div>
 
 		<div class="mappool-stage">
-			{{ selectedLobby?.mappool?.name }}
+			{{ selectedLobby?.mappool?.name ?? 'No mappool' }}
 		</div>
 	</div>
 
@@ -14,7 +14,7 @@
 	</div>
 
 	<div class="mappool-content">
-		<div class="mod-bracket" *ngFor="let modBracket of (selectedLobby.mappool.modBrackets | searchmodbracket : searchValue )">
+		<div class="mod-bracket" *ngFor="let modBracket of (selectedLobby?.mappool?.modBrackets | searchmodbracket : searchValue )">
 			<div class="mod-bracket-header" [ngClass]="modBracket?.acronym?.toLowerCase()">
 				<div class="acronym">
 					{{ modBracket.acronym }}
