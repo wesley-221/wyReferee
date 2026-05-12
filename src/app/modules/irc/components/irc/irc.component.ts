@@ -300,7 +300,9 @@ export class IrcComponent implements OnInit, OnDestroy {
 			this.ircService.hasWon$.next(this.selectedLobby.teamHasWon());
 
 			if (this.selectedLobby.isQualifierLobby) {
-				this.initializeQualifierTeams();
+				if (this.selectedLobby.hasWyBinConnected()) {
+					this.initializeQualifierTeams();
+				}
 			}
 		}
 

@@ -201,6 +201,14 @@
 				</ng-container>
 
 				<ng-container *ngIf="selectedLobby.isQualifierLobby == true">
+					<div class="team" *ngIf="qualifierTeams?.length === 0">
+						<div class="team-header">
+							<div class="team-name">
+								No players to invite
+							</div>
+						</div>
+					</div>
+
 					<div class="team" *ngFor="let team of qualifierTeams">
 						<div class="team-header">
 							<div class="team-name">
