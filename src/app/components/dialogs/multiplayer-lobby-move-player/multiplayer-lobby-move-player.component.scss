@@ -1,28 +1,54 @@
-@import 'variables';
+@import "variables";
 
 .all-players {
 	display: flex;
 	flex-direction: column;
 
+	gap: 4px;
+
 	.player {
 		display: flex;
-		background-color: $primary;
 
-		margin: 1px;
-		padding: 4px;
+		padding: 4px 8px;
+		gap: 4px;
+
+		border-radius: 5px;
+		border: 1px solid $irc-input-border-color;
+
+		letter-spacing: 0.15px;
+		line-height: 1.2;
+
+		background: $irc-input-background-color;
+		color: $irc-input-text-color;
+
+		cursor: pointer;
 
 		&.active {
-			background-color: darken($primary, 15%);
-		}
+			background: rgba($primary, 0.1);
+			border-color: rgba($primary, 0.26);
+			color: $irc-input-text-color-active;
 
-		&:hover {
-			cursor: pointer;
-			background-color: darken($primary, 15%);
+			&:hover {
+				background: rgba($primary, 0.1);
+				border-color: rgba($primary, 0.26);
+				color: $irc-input-text-color-active;
+			}
 		}
 
 		&.disabled {
 			background-color: $sidebar-background-color;
 			cursor: not-allowed;
+
+			&:hover {
+				background-color: $sidebar-background-color;
+				cursor: not-allowed;
+			}
+		}
+
+		&:hover {
+			background: rgba($primary, 0.1);
+			border-color: rgba($primary, 0.26);
+			color: $irc-input-text-color-active;
 		}
 	}
 }
