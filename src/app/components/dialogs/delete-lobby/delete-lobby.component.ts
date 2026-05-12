@@ -15,6 +15,11 @@ export class DeleteLobbyComponent implements OnInit {
 	 * Get the name of the lobby
 	 */
 	getLobbyName(): string {
-		return this.data.multiplayerLobby.tournament != null ? `${this.data.multiplayerLobby.tournament.acronym}: ${this.data.multiplayerLobby.description}` : this.data.multiplayerLobby.description;
+		if (this.data.multiplayerLobby.isQualifierLobby === false) {
+			return this.data.multiplayerLobby.getLobbyName();
+		}
+		else {
+			return this.data.multiplayerLobby.getQualifierName();
+		}
 	}
 }
