@@ -57,7 +57,7 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 
 			border: 1px solid $irc-input-border-color;
 
-			transition: background 120ms ease;
+			transition: background 0.12s ease;
 			cursor: row-resize;
 
 			.chat-divider-handle {
@@ -76,8 +76,8 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 				background: $irc-input-text-color-active;
 
 				transition:
-					background 0.15s,
-					border-color 0.15s;
+					background 0.12s,
+					border-color 0.12s;
 
 				span {
 					display: block;
@@ -189,14 +189,6 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 							}
 						}
 
-						&.highlighted {
-							color: #36f027;
-
-							&:hover {
-								color: darken(#36f027, 15%);
-							}
-						}
-
 						&.me {
 							color: $me-chat-colour;
 
@@ -265,15 +257,15 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 
 							.incorrect-slot {
 								background: rgba(255, 61, 110, 0.1);
-								color: #d47088;
 								border: 1px solid rgba(255, 61, 110, 0.14);
+								color: #d47088;
 
 								cursor: default;
 
 								&:hover {
 									background: rgba(255, 61, 110, 0.1);
-									color: #d47088;
 									border: 1px solid rgba(255, 61, 110, 0.14);
+									color: #d47088;
 								}
 							}
 
