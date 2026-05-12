@@ -148,8 +148,6 @@ export class SettingsComponent implements OnInit {
 	toggleShowIncorrectSlot(): void {
 		this.showIncorrectSlotStatus = !this.showIncorrectSlotStatus;
 		this.genericService.setShowIncorrectSlot(this.showIncorrectSlotStatus);
-
-		console.log('Toggled show incorrect slot warning:', this.showIncorrectSlotStatus);
 	}
 
 	updateWebhookCustomization() {
