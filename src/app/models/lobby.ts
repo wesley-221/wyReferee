@@ -669,6 +669,9 @@ export class Lobby {
 			else if (this.teamTwoName == username) {
 				return '2';
 			}
+			else {
+				return 'Unknown';
+			}
 		}
 		// Team tournament
 		else {

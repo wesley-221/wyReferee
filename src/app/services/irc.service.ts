@@ -200,7 +200,14 @@ export class IrcService {
 						if (multiplayerLobby) {
 							if (multiplayerLobby.isQualifierLobby != true) {
 								if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
-									message.message += `<incorrect-slot>Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}</incorrect-slot>`;
+									const correctSlot = multiplayerLobby.getCorrectSlot(playerInSlot.username);
+
+									if (correctSlot == 'Unknown') {
+										message.message += `<incorrect-slot>Player is not part of this match</incorrect-slot>`;
+									}
+									else {
+										message.message += `<incorrect-slot>Incorrect slot, player should be in slot ${correctSlot}</incorrect-slot>`;
+									}
 								}
 							}
 						}
