@@ -213,6 +213,8 @@ export class CreateLobbyComponent implements OnInit {
 				}
 			}
 
+			lobby.initializeTeamSlotArray();
+
 			this.multiplayerLobbiesPlayersService.createNewMultiplayerLobbyObject(lobby.lobbyId);
 
 			this.ircService.isCreatingMultiplayerLobby = lobby.lobbyId;

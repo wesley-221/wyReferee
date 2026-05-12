@@ -101,7 +101,7 @@ export class Lobby {
 		this.teamOnePicks = [];
 		this.teamTwoPicks = [];
 
-		Lobby.initializeTeamSlotArray(this);
+		this.initializeTeamSlotArray();
 
 		this.gamesCountTowardsScore = {};
 
@@ -175,7 +175,7 @@ export class Lobby {
 			sendWebhooks: lobby.sendWebhooks
 		});
 
-		Lobby.initializeTeamSlotArray(newLobby);
+		newLobby.initializeTeamSlotArray();
 
 		for (const pickedCategory in lobby.pickedCategories) {
 			newLobby.pickedCategories.push(PickedCategory.makeTrueCopy(lobby.pickedCategories[pickedCategory]));
@@ -208,16 +208,16 @@ export class Lobby {
 	 *
 	 * @param lobby the lobby to initialize the team slot arrays for
 	 */
-	private static initializeTeamSlotArray(lobby: Lobby): void {
-		lobby.teamOneSlotArray = [];
-		lobby.teamTwoSlotArray = [];
+	initializeTeamSlotArray(): void {
+		this.teamOneSlotArray = [];
+		this.teamTwoSlotArray = [];
 
-		for (let i = 0; i < lobby.teamSize * 2; i++) {
-			if (i < lobby.teamSize) {
-				lobby.teamOneSlotArray.push(i);
+		for (let i = 0; i < this.teamSize * 2; i++) {
+			if (i < this.teamSize) {
+				this.teamOneSlotArray.push(i);
 			}
 			else {
-				lobby.teamTwoSlotArray.push(i);
+				this.teamTwoSlotArray.push(i);
 			}
 		}
 	}
