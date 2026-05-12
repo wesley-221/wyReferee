@@ -45,17 +45,29 @@
 
 			<div class="body">
 				<div class="information">
-					<div class="lobby-name">
-						{{ lobby.getLobbyName() }}
-					</div>
+					<ng-container *ngIf="lobby.isQualifierLobby === false">
+						<div class="lobby-name">
+							{{ lobby.getLobbyName() }}
+						</div>
 
-					<div class="lobby-versus">
-						{{ lobby.teamOneName }} vs. {{ lobby.teamTwoName }}
-					</div>
+						<div class="lobby-versus">
+							{{ lobby.teamOneName }} vs. {{ lobby.teamTwoName }}
+						</div>
+					</ng-container>
+
+					<ng-container *ngIf="lobby.isQualifierLobby === true">
+						<div class="lobby-name">
+							{{ lobby.getQualifierName() }}
+						</div>
+
+						<div class="lobby-versus">
+							Qualifier lobby
+						</div>
+					</ng-container>
 				</div>
 
 				<div class="metadata">
-					<div class="metadata-pill score">
+					<div class="metadata-pill score" *ngIf="lobby.isQualifierLobby === false">
 						score {{ lobby.teamOneScore }} - {{ lobby.teamTwoScore }}
 					</div>
 
