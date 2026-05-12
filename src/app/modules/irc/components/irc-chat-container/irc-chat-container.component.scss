@@ -41,10 +41,77 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 	.chat-container {
 		flex: 1;
 
+		--top-height: 30%;
+		--divider-height: 18px;
+
+		.chat-divider {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+
+			position: relative;
+			height: var(--divider-height);
+
+			background: $irc-input-background-color;
+
+			border: 1px solid $irc-input-border-color;
+
+			transition: background 120ms ease;
+			cursor: row-resize;
+
+			.chat-divider-handle {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-shrink: 0;
+
+				width: 28px;
+				height: 12px;
+				gap: 3px;
+
+				border-radius: 3px;
+				border: 1px solid $irc-input-border-color;
+
+				background: $irc-input-text-color-active;
+
+				transition:
+					background 0.15s,
+					border-color 0.15s;
+
+				span {
+					display: block;
+					width: 1px;
+					height: 6px;
+					background: black;
+				}
+			}
+
+			&:hover,
+			&:active,
+			&:focus {
+				background: rgba($primary, 0.1);
+				border-color: rgba($primary, 0.26);
+
+				.chat-divider-handle {
+					background: $primary;
+					border-color: rgba($primary, 0.26);
+				}
+			}
+		}
+
 		.messages {
 			height: 100%;
 
 			overflow-y: auto;
+
+			&.banchobot {
+				height: var(--top-height);
+			}
+
+			&.normal {
+				height: calc(100% - var(--top-height) - var(--divider-height));
+			}
 
 			.chat {
 				.chat-content {

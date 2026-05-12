@@ -60,6 +60,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	channels: IrcChannel[];
 
 	normalChats: IrcMessage[] = [];
+	banchoBotChats: IrcMessage[] = [];
 
 	chatLength = 0;
 	keyPressed = false;
@@ -284,6 +285,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 		this.selectedChannel.hasUnreadMessages = false;
 
 		this.normalChats = this.selectedChannel.messages;
+		this.banchoBotChats = this.selectedChannel.banchoBotMessages;
 
 		this.refreshIrcHeader(this.selectedLobby);
 

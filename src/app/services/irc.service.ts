@@ -433,8 +433,14 @@ export class IrcService {
 			}
 
 			if (user.startsWith('#mp_')) {
-				channel.messages.push(newMessage);
-				this.saveMessageToHistory(user, newMessage, message);
+				if (this.genericService.getSplitBanchoBotMessagesStatus().getValue() == true) {
+					channel.banchoBotMessages.push(newMessage);
+					this.saveMessageToHistory(user, newMessage, message, true);
+				}
+				else {
+					channel.messages.push(newMessage);
+					this.saveMessageToHistory(user, newMessage, message);
+				}
 			}
 			else {
 				channel.messages.push(newMessage);
@@ -665,13 +671,14 @@ export class IrcService {
 	 * @param channelName the channel to save it in
 	 * @param message the message object to save
 	 * @param plainMessage the plain message that was sent
+	 * @param saveInBanchoBotHistory whether to save the message in the BanchoBot history instead of the normal message history
 	 */
-	saveMessageToHistory(channelName: string, message: IrcMessage, plainMessage: string) {
+	saveMessageToHistory(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoBotHistory: boolean = false) {
 		if (message.isADivider) {
 			return;
 		}
 
-		window.electronApi.irc.addIrcMessage(channelName, message, plainMessage);
+		window.electronApi.irc.addIrcMessage(channelName, message, plainMessage, saveInBanchoBotHistory);
 	}
 
 	/**

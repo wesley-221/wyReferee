@@ -8,6 +8,7 @@ interface AppSettings {
 	showAxs: boolean;
 	showIncorrectSlot: boolean;
 	splitBanchoBotMessages: boolean;
+	banchoChatContainerHeight: number;
 	[key: string]: any;
 }
 
@@ -15,7 +16,8 @@ const DEFAULT_SETTINGS: AppSettings = {
 	version: PackageJson.version,
 	showAxs: false,
 	showIncorrectSlot: true,
-	splitBanchoBotMessages: false
+	splitBanchoBotMessages: false,
+	banchoChatContainerHeight: 30
 };
 
 @Injectable({
