@@ -299,3 +299,14 @@ code {
 		}
 	}
 }
+
+.mat-mdc-dialog-inner-container {
+	.mat-mdc-dialog-surface {
+		background-color: $tile-background-color;
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+
+		.mat-mdc-dialog-content {
+			color: white;
+		}
+	}
+}
