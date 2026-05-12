@@ -3,6 +3,7 @@
 .tournament {
 	background-color: $wybin-schedule-background-color;
 	border: 1px solid $wybin-schedule-border-color;
+	border-radius: 8px;
 
 	.header {
 		display: flex;

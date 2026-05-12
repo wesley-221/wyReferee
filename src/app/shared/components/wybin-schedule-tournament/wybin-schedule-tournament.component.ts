@@ -51,6 +51,7 @@ export class WybinScheduleTournamentComponent {
 
 		const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 		const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+		const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
 
 		let result = 'in ';
 
@@ -59,11 +60,19 @@ export class WybinScheduleTournamentComponent {
 		}
 
 		if (hours > 0) {
-			if (result.length > 0) {
+			if (days > 0) {
 				result += ' and ';
 			}
 
 			result += `${hours} hour${hours > 1 ? 's' : ''}`;
+		}
+
+		if (minutes > 0 && days === 0 && hours === 0) {
+			if (days > 0 || hours > 0) {
+				result += ' and ';
+			}
+
+			result += `${minutes} minute${minutes > 1 ? 's' : ''}`;
 		}
 
 		return result.length > 0 ? result : 'less than an hour';
