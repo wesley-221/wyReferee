@@ -1,0 +1,338 @@
+@import "variables";
+
+$background-color-irc: #282828;
+
+$red-team-chat-colour: #e94f64;
+$blue-team-chat-colour: #29b;
+$bancho-chat-colour: #df96c0;
+$me-chat-colour: #ffffff;
+
+$url-background-color: rgba(61, 184, 240, 0.1);
+$url-text-color: #70ccf7;
+$url-border-color: rgba(61, 184, 240, 0.18);
+$url-hover-background-color: rgba(61, 184, 240, 0.2);
+
+:host {
+	height: 100%;
+}
+
+.message-container {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+
+	height: 100%;
+
+	background: #0f0f0f;
+
+	.irc-match-header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+
+		min-height: 75px;
+		position: relative;
+
+		background-color: $irc-match-header-background-color;
+		border-bottom: 1px solid $irc-border-color;
+	}
+
+	.chat-container {
+		flex: 1;
+
+		--top-height: 30%;
+		--divider-height: 18px;
+
+		.chat-divider {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+
+			position: relative;
+			height: var(--divider-height);
+
+			background: $irc-input-background-color;
+
+			border: 1px solid $irc-input-border-color;
+
+			transition: background 0.12s ease;
+			cursor: row-resize;
+
+			.chat-divider-handle {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-shrink: 0;
+
+				width: 28px;
+				height: 12px;
+				gap: 3px;
+
+				border-radius: 3px;
+				border: 1px solid $irc-input-border-color;
+
+				background: $irc-input-text-color-active;
+
+				transition:
+					background 0.12s,
+					border-color 0.12s;
+
+				span {
+					display: block;
+					width: 1px;
+					height: 6px;
+					background: black;
+				}
+			}
+
+			&:hover,
+			&:active,
+			&:focus {
+				background: rgba($primary, 0.1);
+				border-color: rgba($primary, 0.26);
+
+				.chat-divider-handle {
+					background: $primary;
+					border-color: rgba($primary, 0.26);
+				}
+			}
+		}
+
+		.messages {
+			height: 100%;
+
+			overflow-y: auto;
+
+			&.banchobot {
+				height: var(--top-height);
+			}
+
+			&.normal {
+				height: calc(100% - var(--top-height) - var(--divider-height));
+			}
+
+			.chat {
+				.chat-content {
+					display: grid;
+					grid-template-columns: 64px 90px 1fr;
+
+					gap: 2px;
+					width: 100%;
+
+					.divider {
+						grid-column: 1 / -1;
+
+						display: flex;
+						align-items: center;
+						text-align: center;
+
+						margin: 8px 0;
+
+						&::before,
+						&::after {
+							content: "";
+							flex: 1;
+							border-bottom: 3px solid $primary;
+						}
+
+						span {
+							color: $primary;
+							font-weight: bold;
+							font-size: 20px;
+							padding: 0 10px;
+							white-space: nowrap;
+						}
+					}
+
+					.time {
+						display: flex;
+						align-items: center;
+						text-align: center;
+
+						padding: 3px;
+					}
+
+					.author {
+						display: flex;
+						align-items: center;
+						justify-content: flex-end;
+
+						padding: 3px;
+
+						font-weight: bold;
+
+						border-radius: 50px;
+
+						&.red {
+							color: $red-team-chat-colour;
+
+							&:hover {
+								color: darken($red-team-chat-colour, 15%);
+							}
+						}
+
+						&.blue {
+							color: $blue-team-chat-colour;
+
+							&:hover {
+								color: darken($blue-team-chat-colour, 15%);
+							}
+						}
+
+						&.bancho {
+							color: $bancho-chat-colour;
+
+							&:hover {
+								color: darken($bancho-chat-colour, 15%);
+							}
+						}
+
+						&.me {
+							color: $me-chat-colour;
+
+							&:hover {
+								color: darken($me-chat-colour, 15%);
+							}
+						}
+
+						&:hover {
+							cursor: pointer;
+						}
+					}
+
+					.message {
+						display: flex;
+						align-items: center;
+						flex-wrap: wrap;
+						word-break: break-all;
+
+						padding: 4px;
+						gap: 2px;
+
+						.message-piece {
+							display: inline-block;
+
+							.link,
+							.pick-beatmap,
+							.incorrect-slot {
+								display: flex;
+								align-items: center;
+
+								gap: 2px;
+
+								margin-right: 3px;
+								margin-left: 3px;
+
+								background: $url-background-color;
+								color: $url-text-color;
+
+								border: 1px solid $url-border-color;
+								border-radius: 4px;
+
+								padding: 1px 4px;
+
+								text-decoration: none;
+								transition: all 0.14s;
+
+								cursor: pointer;
+
+								.icon {
+									width: 20px;
+									height: 20px;
+									font-size: 20px;
+
+									flex-shrink: 0;
+								}
+
+								&:hover {
+									background: $url-hover-background-color;
+								}
+							}
+
+							.pick-beatmap {
+								text-transform: uppercase;
+							}
+
+							.incorrect-slot {
+								background: rgba(255, 61, 110, 0.1);
+								border: 1px solid rgba(255, 61, 110, 0.14);
+								color: #d47088;
+
+								cursor: default;
+
+								&:hover {
+									background: rgba(255, 61, 110, 0.1);
+									border: 1px solid rgba(255, 61, 110, 0.14);
+									color: #d47088;
+								}
+							}
+
+							&:first-child {
+								.link {
+									margin-left: 0;
+								}
+
+								.pick-beatmap {
+									margin-left: 0;
+								}
+							}
+						}
+					}
+
+					@media only screen and (max-width: 1200px) {
+						.author {
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
+					}
+				}
+			}
+		}
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			background-image:
+				linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+			background-size: 36px 36px;
+		}
+	}
+
+	.messages-divider {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		background-color: $primary;
+		z-index: 5;
+
+		padding: 4px;
+
+		.divider-buttons {
+			display: flex;
+			flex-direction: row;
+			position: absolute;
+
+			.divider-smaller,
+			.divider-reset,
+			.divider-bigger {
+				display: flex;
+				align-items: center;
+
+				background-color: $primary;
+				color: black;
+
+				&:hover {
+					background-color: darken($primary, 15%);
+					cursor: pointer;
+				}
+			}
+		}
+	}
+}

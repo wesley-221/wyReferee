@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { PageState, TournamentEditStateService } from '../../services/tournament-edit-state.service';
+import { Component } from '@angular/core';
+import { TournamentEditStateService } from '../../services/tournament-edit-state.service';
 import { ManagementSidebarService } from '../../services/management-sidebar.service';
 
 @Component({

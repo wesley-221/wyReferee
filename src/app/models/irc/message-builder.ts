@@ -3,12 +3,14 @@ import { WyMod } from '../wytournament/mappool/wy-mod';
 export enum MessageType {
 	Message = 'Message',
 	Link = 'Link',
-	ModAcronymPick = 'ModAcronymPick'
+	ModAcronymPick = 'ModAcronymPick',
+	IncorrectSlot = 'IncorrectSlot'
 }
 
 export class MessageBuilder {
 	messageType: MessageType;
 	message: string;
+	linkLabel: string;
 	linkName: string;
 	modAcronymBeatmapId: number;
 	modAcronymGameMode: number;
@@ -27,6 +29,7 @@ export class MessageBuilder {
 			messageType: messageBuilder.messageType,
 			message: messageBuilder.message,
 			linkName: messageBuilder.linkName,
+			linkLabel: messageBuilder.linkLabel,
 			modAcronymBeatmapId: messageBuilder.modAcronymBeatmapId,
 			modAcronymMappoolId: messageBuilder.modAcronymMappoolId,
 			modAcronymModBracketId: messageBuilder.modAcronymModBracketId,

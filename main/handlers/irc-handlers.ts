@@ -109,6 +109,9 @@ function initializeAndGetIrcChannel(channelName: string) {
 		if (message.type === 'message') {
 			ircChannel.messages.push(message.content);
 		}
+		else if (message.type === 'banchoBot') {
+			ircChannel.banchoBotMessages.push(message.content);
+		}
 		else if (message.type === 'plain') {
 			ircChannel.plainMessageHistory.push(message.content);
 		}
@@ -125,16 +128,21 @@ function initializeAndGetIrcChannel(channelName: string) {
  * @param channelName the irc channel to write the message to
  * @param message the message object that was sent
  * @param plainMessage the plain message
+ * @param saveInBanchoBotHistory whether to save the message in the BanchoBot history instead of the normal message history
  */
-function writeMessageToIrcChannel(channelName: string, message: any, plainMessage: any) {
+function writeMessageToIrcChannel(channelName: string, message: any, plainMessage: any, saveInBanchoBotHistory?: boolean) {
 	const sanitizedChannelName = sanitizeString(channelName);
 
 	if (!streams[sanitizedChannelName]) {
 		return;
 	}
 
-	streams[sanitizedChannelName].write(JSON.stringify({ type: 'message', content: message }) + '\n');
-	streams[sanitizedChannelName].write(JSON.stringify({ type: 'plain', content: plainMessage }) + '\n');
+	if (saveInBanchoBotHistory) {
+		streams[sanitizedChannelName].write(JSON.stringify({ type: 'banchoBot', content: message }) + '\n');
+	} else {
+		streams[sanitizedChannelName].write(JSON.stringify({ type: 'message', content: message }) + '\n');
+		streams[sanitizedChannelName].write(JSON.stringify({ type: 'plain', content: plainMessage }) + '\n');
+	}
 }
 
 /**
@@ -250,11 +258,11 @@ export function registerIrcHandlers(allWindows: WindowManager[]) {
 	 *
 	 * Messages will only be added from the main-window to avoid duplicate messages
 	 */
-	ipcMain.handle(IPC_CHANNELS.ADD_IRC_MESSAGE, async (event, channelName, message, plainMessage) => {
+	ipcMain.handle(IPC_CHANNELS.ADD_IRC_MESSAGE, async (event, channelName, message, plainMessage, saveInBanchoBotHistory) => {
 		if (event.sender.id !== allWindows[0].win?.webContents.id)
 			return;
 
-		writeMessageToIrcChannel(channelName, message, plainMessage);
+		writeMessageToIrcChannel(channelName, message, plainMessage, saveInBanchoBotHistory);
 	});
 
 	/**

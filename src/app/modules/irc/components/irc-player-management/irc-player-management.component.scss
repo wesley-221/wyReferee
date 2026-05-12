@@ -1,155 +1,173 @@
 @import "variables";
 
-$background-color-irc: #282828;
+$button-hover-background-color: #363636;
+$button-hover-border-color: rgba(255, 255, 255, 0.2);
 
 .player-management {
 	display: flex;
-	overflow-y: auto;
+	flex-direction: column;
 
-	background-color: $background-color-irc;
+	height: 100%;
+
+	.slot-information {
+		display: flex;
+		align-items: center;
+
+		padding: 8px 16px;
+		gap: 4px;
+
+		background: $irc-match-header-background-color;
+		color: $irc-input-text-color;
+		border-bottom: 1px solid $irc-border-color;
+
+		font-size: 10px;
+		letter-spacing: 2px;
+		text-transform: uppercase;
+	}
 
 	.players {
-		display: flex;
-		flex-direction: column;
-
 		flex: 1;
-		max-width: 100%;
+		overflow-y: auto;
+
+		background-color: $irc-sidebar-background-color;
 
 		.player {
 			display: flex;
-			flex-direction: column;
+			align-items: center;
+			justify-content: space-between;
 
-			padding: 4px;
-			margin: 4px;
+			padding: 4px 8px;
 
-			background-color: rgba(0, 0, 0, 0.1);
-
-			.player-column {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-
-				margin-bottom: 4px;
-
-				.player-data {
-					display: flex;
-					overflow: hidden;
-
-					.player-slot {
-						display: flex;
-						justify-content: center;
-						align-items: center;
-
-						background-color: $primary;
-						color: black;
-
-						border-radius: 25px;
-
-						width: 20px;
-						height: 20px;
-
-						min-width: 20px;
-						min-height: 20px;
-
-						margin-right: 2px;
-
-						font-weight: bold;
-					}
-
-					.player-username {
-						text-overflow: ellipsis;
-
-						white-space: nowrap;
-						overflow: hidden;
-
-						font-size: 13px;
-					}
-				}
-
-				.player-buttons {
-					display: flex;
-
-					@media only screen and (max-width: 1200px) {
-						display: grid;
-
-						grid-auto-flow: column wrap;
-						grid-template-columns: 1fr 1fr;
-					}
-
-					.player-button {
-						display: flex;
-						align-items: center;
-						justify-content: center;
-
-						background-color: $primary;
-						color: black;
-						padding: 4px;
-
-						&:hover {
-							background-color: darken($primary, 15%);
-							cursor: pointer;
-						}
-
-						&.disabled {
-							background-color: rgba(255, 255, 255, 0.12);
-							color: rgba(255, 255, 255, 0.3);
-							cursor: default;
-
-							&:hover {
-								background-color: rgba(255, 255, 255, 0.12);
-								color: rgba(255, 255, 255, 0.3);
-								cursor: default;
-							}
-						}
-					}
-				}
-			}
+			position: relative;
 
 			.player-information {
 				display: flex;
-				justify-content: space-between;
-
 				align-items: center;
+				gap: 4px;
 
-				.player-status {
-					.red {
-						color: red;
-						text-shadow: 1px 1px black;
-					}
+				min-width: 0;
+				flex: 1;
 
-					.green {
-						color: green;
-						text-shadow: 1px 1px black;
-					}
+				.player-username {
+					color: $irc-input-text-color;
+					font-style: italic;
+
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+
+					min-width: 0;
+					flex: 1;
 				}
 
-				.player-mods {
+				.mods {
 					display: flex;
-					flex-direction: row;
+					align-items: center;
+
+					transition: opacity 0.14s;
 
 					.mod-icon {
-						display: flex;
-						align-items: center;
+						height: 20px;
+						position: relative;
 
-						margin-right: 4px;
+						margin-left: -12px;
 
 						img {
-							height: 25px;
+							height: 100%;
+
+							filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
 						}
 
-						&:last-child {
-							margin-right: 0;
+						&:first-child {
+							margin: 0;
 						}
 					}
 				}
+
+				.player-status-container {
+					margin-left: auto;
+					transition: opacity 0.14s;
+
+					.player-status {
+						padding: 2px 4px;
+						border-radius: 4px;
+
+						font-size: 10px;
+						letter-spacing: 0.15px;
+						text-transform: uppercase;
+						white-space: nowrap;
+
+						background: $irc-input-background-color;
+						color: $irc-input-text-color;
+
+						&.ready {
+							background: rgba(61, 219, 160, 0.11);
+							color: #3ddba0;
+						}
+					}
+				}
+			}
+
+			.action-buttons {
+				display: flex;
+				align-items: center;
+
+				position: absolute;
+				right: 0;
+
+				padding: 2px 4px;
+				gap: 4px;
+
+				opacity: 0;
+				pointer-events: none;
+
+				transition: opacity 0.14s;
 			}
 
 			&.red {
-				background-color: rgba(255, 0, 0, 0.1);
+				.player-information {
+					.player-username {
+						color: $red-team-chat-colour;
+						font-style: normal;
+					}
+				}
 			}
 
 			&.blue {
-				background-color: rgba(0, 0, 255, 0.1);
+				.player-information {
+					.player-username {
+						color: $blue-team-chat-colour;
+						font-style: normal;
+					}
+				}
+			}
+
+			&.incorrect-slot {
+				background-color: $button-hover-red-background-color;
+
+				.player-information {
+					.player-username {
+						text-shadow: 0 0 1px black;
+					}
+				}
+			}
+
+			&:hover {
+				.player-information {
+					.mods {
+						opacity: 0;
+						pointer-events: none;
+					}
+
+					.player-status-container {
+						opacity: 0;
+					}
+				}
+
+				.action-buttons {
+					opacity: 1;
+					pointer-events: auto;
+				}
 			}
 		}
 	}

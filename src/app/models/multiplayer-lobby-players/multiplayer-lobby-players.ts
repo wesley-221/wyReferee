@@ -1,9 +1,13 @@
 import { MultiplayerLobbyPlayersPlayer } from './multiplayer-lobby-players-player';
 import { BanchoLobbyPlayer } from 'bancho.js';
 import { OsuHelper } from '../osu-models/osu';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export class MultiplayerLobbyPlayers {
-	players: MultiplayerLobbyPlayersPlayer[];
+	private readonly playersSubject$: BehaviorSubject<MultiplayerLobbyPlayersPlayer[]>;
+	public readonly players$: Observable<MultiplayerLobbyPlayersPlayer[]>;
+
+	private players: MultiplayerLobbyPlayersPlayer[];
 
 	constructor() {
 		this.players = [];
@@ -13,6 +17,17 @@ export class MultiplayerLobbyPlayers {
 			newPlayer.slot = i;
 			this.players.push(newPlayer);
 		}
+
+		this.playersSubject$ = new BehaviorSubject(this.players);
+		this.players$ = this.playersSubject$.asObservable();
+	}
+
+	private emitPlayers() {
+		this.playersSubject$.next(this.players);
+	}
+
+	getPlayers(): MultiplayerLobbyPlayersPlayer[] {
+		return this.players;
 	}
 
 	/**
@@ -32,7 +47,7 @@ export class MultiplayerLobbyPlayers {
 			}
 		}
 
-		return this.players;
+		this.emitPlayers();
 	}
 
 	/**
@@ -53,7 +68,7 @@ export class MultiplayerLobbyPlayers {
 			}
 		}
 
-		return this.players;
+		this.emitPlayers();
 	}
 
 	/**
@@ -93,7 +108,7 @@ export class MultiplayerLobbyPlayers {
 			}
 		}
 
-		return this.players;
+		this.emitPlayers();
 	}
 
 	/**
@@ -111,7 +126,7 @@ export class MultiplayerLobbyPlayers {
 			}
 		}
 
-		return this.players;
+		this.emitPlayers();
 	}
 
 	/**
@@ -122,7 +137,7 @@ export class MultiplayerLobbyPlayers {
 			mpSlot.isHost = false;
 		}
 
-		return this.players;
+		this.emitPlayers();
 	}
 
 	/**
@@ -140,7 +155,7 @@ export class MultiplayerLobbyPlayers {
 			}
 		}
 
-		return this.players;
+		this.emitPlayers();
 	}
 
 	/**
@@ -175,6 +190,6 @@ export class MultiplayerLobbyPlayers {
 			}
 		}
 
-		return this.players;
+		this.emitPlayers();
 	}
 }

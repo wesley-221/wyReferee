@@ -1,16 +1,14 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { IrcService } from '../../../../services/irc.service';
 import { ElectronService } from '../../../../services/electron.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../services/toast.service';
 import { ToastType } from '../../../../models/toast';
 import { WebhookService } from '../../../../services/webhook.service';
 import { MatDialog } from '@angular/material/dialog';
 import { JoinIrcChannelComponent } from '../../../../components/dialogs/join-irc-channel/join-irc-channel.component';
-import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatSelectChange } from '@angular/material/select';
 import { BanBeatmapComponent } from '../../../../components/dialogs/ban-beatmap/ban-beatmap.component';
-import { SendBeatmapResultComponent } from '../../../../components/dialogs/send-beatmap-result/send-beatmap-result.component';
 import { WyMultiplayerLobbiesService } from 'app/services/wy-multiplayer-lobbies.service';
 import { IrcChannel } from 'app/models/irc/irc-channel';
 import { Lobby } from 'app/models/lobby';
@@ -38,9 +36,10 @@ import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dial
 import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyTriggerMessage } from 'app/models/wytournament/trigger-message';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Subject, takeUntil } from 'rxjs';
 import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
+import { IrcChatContainerComponent } from '../irc-chat-container/irc-chat-container.component';
+import { IrcChatControlsComponent } from '../irc-chat-controls/irc-chat-controls.component';
 
 @Component({
 	selector: 'app-irc',
@@ -51,12 +50,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 	@ViewChild('channelName') channelName: ElementRef;
 	@ViewChild('chatMessage') chatMessage: ElementRef;
 
-	@ViewChild('teamMode') teamMode: MatSelect;
-	@ViewChild('winCondition') winCondition: MatSelect;
-	@ViewChild('players') players: MatSelect;
-
-	@ViewChild('normalChatVirtualScroller') normalChatVirtualScroller: CdkVirtualScrollViewport;
-	@ViewChild('banchoBotChatVirtualScroller') banchoBotChatVirtualScroller: CdkVirtualScrollViewport;
+	@ViewChild(IrcChatContainerComponent) ircChatContainerComponent: IrcChatContainerComponent;
+	@ViewChild(IrcChatControlsComponent) ircChatControlsComponent: IrcChatControlsComponent;
 
 	unsubscribeOnDestroy$ = new Subject<void>();
 
@@ -65,6 +60,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	channels: IrcChannel[];
 
 	normalChats: IrcMessage[] = [];
+	banchoBotChats: IrcMessage[] = [];
 
 	chatLength = 0;
 	keyPressed = false;
@@ -76,19 +72,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 	searchValue: string;
 
-	roomSettingGoingOn = false;
-	roomSettingDelay = 0;
-
-	teamOneScore = 0;
-	teamTwoScore = 0;
-
 	teamOneHealth = 0;
 	teamTwoHealth = 0;
-
-	nextPick: string = null;
-	matchpoint: string = null;
-	tiebreaker = false;
-	hasWon: string = null;
 
 	popupBannedMap: WyModBracketMap = null;
 	popupBannedBracket: WyModBracket = null;
@@ -106,8 +91,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	matchDialogHeaderName: string;
 	matchDialogMultiplayerData: MultiplayerData;
 	matchDialogSendFinalResult: boolean;
-
-	sidebarHeaderButtonActive = 1;
 
 	constructor(
 		public electronService: ElectronService,
@@ -150,7 +133,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 *
 	 * @param event what key has been pressed
 	 */
-	@HostListener('document:keyup', ['$event'])
+	// @HostListener('document:keyup', ['$event'])
 	handleKeyboardEvent(event: KeyboardEvent) {
 		const modifiers = ['Shift', 'Alt', 'Control'];
 
@@ -158,9 +141,9 @@ export class IrcComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		if (this.chatMessage.nativeElement.value.startsWith('/')) {
+		if (this.ircChatControlsComponent.chatMessage.nativeElement.value.startsWith('/')) {
 			this.allSlashCommandsFiltered = this.allSlashCommands.filter(command =>
-				command.name.toLowerCase().includes(this.chatMessage.nativeElement.value.toLowerCase().substring(1)));
+				command.name.toLowerCase().includes(this.ircChatControlsComponent.chatMessage.nativeElement.value.toLowerCase().substring(1)));
 
 			if (event.key == 'ArrowUp') {
 				this.navigateSlashCommandSelection(1);
@@ -272,15 +255,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Prevent the arrow Up and Down from moving the cursor around
-	 */
-	preventDefault(event: KeyboardEvent) {
-		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-			event.preventDefault();
-		}
-	}
-
-	/**
 	 * Go back to normal menu
 	 */
 	goBack(): void {
@@ -293,6 +267,10 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 * @param channel the channel to change to
 	 */
 	changeChannel(channel: string, delayScroll = false) {
+		if (this.selectedChannel?.name == channel) {
+			return;
+		}
+
 		if (this.selectedChannel != undefined) {
 			this.selectedChannel.lastActiveChannel = false;
 			this.ircService.changeLastActiveChannel(this.selectedChannel, false);
@@ -307,18 +285,19 @@ export class IrcComponent implements OnInit, OnDestroy {
 		this.selectedChannel.hasUnreadMessages = false;
 
 		this.normalChats = this.selectedChannel.messages;
+		this.banchoBotChats = this.selectedChannel.banchoBotMessages;
 
 		this.refreshIrcHeader(this.selectedLobby);
 
 		if (this.selectedLobby != undefined) {
-			this.teamOneScore = this.selectedLobby.getTeamOneScore();
-			this.teamTwoScore = this.selectedLobby.getTeamTwoScore();
+			this.ircService.teamOneScore$.next(this.selectedLobby.getTeamOneScore());
+			this.ircService.teamTwoScore$.next(this.selectedLobby.getTeamTwoScore());
 			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
 			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
-			this.nextPick = this.selectedLobby.getNextPick();
-			this.matchpoint = this.selectedLobby.getMatchPoint();
-			this.tiebreaker = this.selectedLobby.getTiebreaker();
-			this.hasWon = this.selectedLobby.teamHasWon();
+			this.ircService.nextPick$.next(this.selectedLobby.getNextPick());
+			this.ircService.matchPoint$.next(this.selectedLobby.getMatchPoint());
+			this.ircService.tiebreaker$.next(this.selectedLobby.getTiebreaker());
+			this.ircService.hasWon$.next(this.selectedLobby.teamHasWon());
 
 			if (this.selectedLobby.isQualifierLobby) {
 				this.initializeQualifierTeams();
@@ -331,12 +310,12 @@ export class IrcComponent implements OnInit, OnDestroy {
 		if (delayScroll) {
 			setTimeout(() => {
 				this.scrollToBottom();
-				this.chatMessage.nativeElement.focus();
+				this.ircChatControlsComponent.chatMessage.nativeElement.focus();
 			}, 500);
 		}
 		else {
 			this.scrollToBottom();
-			this.chatMessage.nativeElement.focus();
+			this.ircChatControlsComponent.chatMessage.nativeElement.focus();
 		}
 
 		// Reset search bar
@@ -358,53 +337,38 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Part from a channel
-	 *
-	 * @param channelName the channel to part
-	 */
-	partChannel(channelName: string) {
-		this.ircService.partChannel(channelName);
-
-		if (this.selectedChannel != undefined && (this.selectedChannel.name == channelName)) {
-			this.selectedChannel = undefined;
-
-			this.normalChats = [];
-		}
-	}
-
-	/**
 	 * Send the entered message to the selected channel
 	 */
 	sendMessage(event: KeyboardEvent) {
 		if (event.key == 'Enter') {
-			if (this.chatMessage.nativeElement.value.startsWith('/')) {
+			if (this.ircChatControlsComponent.chatMessage.nativeElement.value.startsWith('/')) {
 				if (this.activeSlashCommand) {
-					this.chatMessage.nativeElement.value = `/${this.activeSlashCommand.name}`;
+					this.ircChatControlsComponent.chatMessage.nativeElement.value = `/${this.activeSlashCommand.name}`;
 
 					this.activeSlashCommand = null;
 					this.slashCommandIndex = -1;
 				}
 				else {
-					const slashCommand = this.slashCommandService.getSlashCommand(this.chatMessage.nativeElement.value.substring(1));
+					const slashCommand = this.slashCommandService.getSlashCommand(this.ircChatControlsComponent.chatMessage.nativeElement.value.substring(1));
 
 					if (slashCommand != undefined) {
 						slashCommand.execute();
 						this.currentMessageHistoryIndex = -1;
 					}
 
-					this.chatMessage.nativeElement.value = '';
+					this.ircChatControlsComponent.chatMessage.nativeElement.value = '';
 				}
 			}
-			else if (this.chatMessage.nativeElement.value != '') {
+			else if (this.ircChatControlsComponent.chatMessage.nativeElement.value != '') {
 				if (!this.ircService.isAuthenticated || (this.selectedChannel == undefined || !this.selectedChannel.active)) {
 					return;
 				}
 
-				this.ircService.sendMessage(this.selectedChannel.name, this.chatMessage.nativeElement.value);
+				this.ircService.sendMessage(this.selectedChannel.name, this.ircChatControlsComponent.chatMessage.nativeElement.value);
 
 				this.currentMessageHistoryIndex = -1;
 
-				this.chatMessage.nativeElement.value = '';
+				this.ircChatControlsComponent.chatMessage.nativeElement.value = '';
 			}
 		}
 	}
@@ -422,7 +386,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 		this.currentMessageHistoryIndex = Math.max(0, Math.min(this.currentMessageHistoryIndex, messageCount - 1));
 
-		const inputElement = this.chatMessage.nativeElement;
+		const inputElement = this.ircChatControlsComponent.chatMessage.nativeElement;
 		inputElement.value = messageHistory[messageCount - this.currentMessageHistoryIndex - 1];
 		inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
 	}
@@ -443,28 +407,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 * @param slashCommand the slash command to select
 	 */
 	selectSlashCommand(slashCommand: SlashCommand) {
-		this.chatMessage.nativeElement.value = `/${slashCommand.name}`;
-		this.chatMessage.nativeElement.focus();
-	}
-
-	/**
-	 * Drop a channel to rearrange it
-	 *
-	 * @param event
-	 */
-	dropChannel(event: CdkDragDrop<IrcChannel[]>) {
-		moveItemInArray(this.channels, event.previousIndex, event.currentIndex);
-
-		console.warn('Rearring IRC channels is currently not persisted. Will be added in a future update.');
-	}
-
-	/**
-	 * Open the link to the users userpage
-	 *
-	 * @param username
-	 */
-	openUserpage(username: string) {
-		this.electronService.openLink(`https://osu.ppy.sh/users/${username}`);
+		this.ircChatControlsComponent.chatMessage.nativeElement.value = `/${slashCommand.name}`;
+		this.ircChatControlsComponent.chatMessage.nativeElement.focus();
 	}
 
 	/**
@@ -582,7 +526,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 		this.webhookService.sendBeatmapPicked(this.selectedLobby, this.ircService.authenticatedUser, this.selectedLobby.getNextPick(), beatmap);
 
 		// Update picks
-		if (this.selectedLobby.teamOneName == this.nextPick) {
+		if (this.selectedLobby.teamOneName == this.ircService.nextPick$.value) {
 			this.selectedLobby.teamOnePicks.push(beatmap.beatmapId);
 		}
 		else {
@@ -676,56 +620,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Change the room settings
-	 */
-	onRoomSettingChange() {
-		if (!this.roomSettingGoingOn) {
-			const timer =
-				setInterval(() => {
-					if (this.roomSettingDelay == 1) {
-						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.value as string} ${this.winCondition.value as string} ${this.players.value == undefined ? 8 : this.players.value as string}`);
-
-						this.ircService.getChannelByName(this.selectedChannel.name).teamMode = this.teamMode.value;
-						this.ircService.getChannelByName(this.selectedChannel.name).winCondition = this.winCondition.value;
-						this.ircService.getChannelByName(this.selectedChannel.name).players = this.players.value;
-
-						this.roomSettingGoingOn = false;
-						this.roomSettingDelay = 0;
-
-						clearInterval(timer);
-					}
-
-					this.roomSettingDelay--;
-				}, 1000);
-
-			this.roomSettingGoingOn = true;
-		}
-
-		this.roomSettingDelay = 3;
-	}
-
-	/**
-	 * Navigate to the lobbyoverview from irc
-	 */
-	navigateLobbyOverview() {
-		const lobbyId = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name).lobbyId;
-
-		if (lobbyId) {
-			this.router.navigate(['/lobby-overview/lobby-view', lobbyId]);
-		}
-		else {
-			this.toastService.addToast('No lobby overview found for this irc channel');
-		}
-	}
-
-	/**
-	 * Send the addref command to the channel
-	 */
-	sendAddRefCommand() {
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp addref ${this.selectedLobby.tournament.addrefUsernames}`);
-	}
-
-	/**
 	 * Refresh the stats for a multiplayer lobby.
 	 *
 	 * @param multiplayerLobby the multiplayerlobby
@@ -740,61 +634,14 @@ export class IrcComponent implements OnInit, OnDestroy {
 		}
 
 		if (!this.selectedLobby.ircChannel.isPublicChannel && !this.selectedLobby.ircChannel.isPrivateChannel) {
-			this.teamOneScore = multiplayerLobby.getTeamOneScore();
-			this.teamTwoScore = multiplayerLobby.getTeamTwoScore();
+			this.ircService.teamOneScore$.next(multiplayerLobby.getTeamOneScore());
+			this.ircService.teamTwoScore$.next(multiplayerLobby.getTeamTwoScore());
 			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
 			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
-			this.nextPick = multiplayerLobby.getNextPick();
-			this.matchpoint = multiplayerLobby.getMatchPoint();
-			this.tiebreaker = multiplayerLobby.getTiebreaker();
-			this.hasWon = multiplayerLobby.teamHasWon();
-		}
-	}
-
-	/**
-	 * Play a sound when a message is being send to a specific channel
-	 *
-	 * @param channel the channel that should where a message should be send from
-	 * @param status mute or unmute the sound
-	 */
-	playSound(channel: IrcChannel, status: boolean) {
-		channel.playSoundOnMessage = status;
-		window.electronApi.irc.setIrcPlaySoundOnMessage(channel.name, status);
-
-		this.toastService.addToast(`${channel.name} will ${status == false ? 'no longer beep on message' : 'now beep on message'}.`);
-	}
-
-	/**
-	 * Edit the label of a channel
-	 *
-	 * @param channel the channel to edit the label for
-	 */
-	editLabel(channel: IrcChannel): void {
-		channel.editingLabel = !channel.editingLabel;
-
-		// Stopped editing the label
-		if (channel.editingLabel == false) {
-			window.electronApi.irc.setIrcChannelLabel(channel.name, channel.label);
-		}
-		else {
-			// Store old label when starting to edit so we can revert if canceled
-			channel.oldLabel = channel.label;
-		}
-	}
-
-	/**
-	 * Cancel editing the label of a channel
-	 *
-	 * @param channel the channel to cancel editing the label for
-	 */
-	cancelEditLabel(channel: IrcChannel): void {
-		channel.editingLabel = !channel.editingLabel;
-
-		// When creating label for the first time channel.oldLabel will get set to undefined since channel.label will be undefined
-		if (channel.oldLabel !== undefined && channel.oldLabel !== null) {
-			channel.label = channel.oldLabel;
-
-			window.electronApi.irc.setIrcChannelLabel(channel.name, channel.label);
+			this.ircService.nextPick$.next(multiplayerLobby.getNextPick());
+			this.ircService.matchPoint$.next(multiplayerLobby.getMatchPoint());
+			this.ircService.tiebreaker$.next(multiplayerLobby.getTiebreaker());
+			this.ircService.hasWon$.next(multiplayerLobby.teamHasWon());
 		}
 	}
 
@@ -892,26 +739,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Check if a beatmap has been picked by team one in the current lobby
-	 *
-	 * @param multiplayerLobby the multiplayerlobby to check from
-	 * @param beatmapId the beatmap to check
-	 */
-	beatmapIsPickedByTeamOne(multiplayerLobby: Lobby, beatmapId: number) {
-		return multiplayerLobby.teamOnePicks != null && multiplayerLobby.teamOnePicks.indexOf(beatmapId) > -1;
-	}
-
-	/**
-	 * Check if a beatmap has been picked by team two in the current lobby
-	 *
-	 * @param multiplayerLobby the multiplayerlobby to check from
-	 * @param beatmapId the beatmap to check
-	 */
-	beatmapIsPickedByTeamTwo(multiplayerLobby: Lobby, beatmapId: number) {
-		return multiplayerLobby.teamTwoPicks != null && multiplayerLobby.teamTwoPicks.indexOf(beatmapId) > -1;
-	}
-
-	/**
 	 * Pick a mystery map
 	 *
 	 * @param mappool the mappool to pick from
@@ -954,23 +781,9 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 * Scroll irc chat to top
 	 */
 	scrollToBottom() {
-		if (this.normalChatVirtualScroller != undefined) {
-			this.normalChatVirtualScroller.scrollToIndex(this.normalChats.length - 1);
+		if (this.ircChatContainerComponent) {
+			this.ircChatContainerComponent.scrollToBottom();
 		}
-	}
-
-	/**
-	 * Open a dialog to easily send result to the multiplayer lobby
-	 */
-	sendMatchResult() {
-		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
-
-		this.dialog.open(SendBeatmapResultComponent, {
-			data: {
-				multiplayerLobby: selectedMultiplayerLobby,
-				ircChannel: this.selectedChannel.name
-			}
-		});
 	}
 
 	/**
@@ -1011,19 +824,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Send the match summary to the given Discord webhooks
-	 */
-	sendMatchSummary() {
-		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
-
-		if (selectedMultiplayerLobby.sendWebhooks != true) {
-			return;
-		}
-
-		this.webhookService.sendMatchSummary(selectedMultiplayerLobby, this.ircService.authenticatedUser);
-	}
-
-	/**
 	 * Synchronizes the multiplayer lobby and calculates all the scores
 	 */
 	synchronizeMp() {
@@ -1048,7 +848,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 				this.matchDialogHeaderName = null;
 				this.matchDialogMultiplayerData = null;
 
-				if (this.hasWon != null && this.matchDialogSendFinalResult == false) {
+				if (this.ircService.hasWon$.value != null && this.matchDialogSendFinalResult == false) {
 					this.matchDialogHeaderName = 'Match has finished';
 					this.matchDialogSendFinalResult = true;
 				}
@@ -1111,7 +911,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 */
 	focusChat(focus: boolean): void {
 		if (focus == true) {
-			this.chatMessage.nativeElement.focus();
+			this.ircChatControlsComponent.focusMessageInput();
 		}
 	}
 
@@ -1141,15 +941,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Change the sidebar menu
-	 *
-	 * @param option the button that was pressed
-	 */
-	selectSidebarHeaderButton(option: number) {
-		this.sidebarHeaderButtonActive = option;
-	}
-
-	/**
 	 * Open lobby options dialog
 	 */
 	openLobbyDialog(): void {
@@ -1159,9 +950,13 @@ export class IrcComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe((result: Lobby) => {
+		dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, bestOf: number }) => {
 			if (result != null) {
-				this.multiplayerLobbies.updateMultiplayerLobby(result);
+				this.selectedLobby.firstPick = result.firstPick ?? null;
+				this.selectedLobby.firstBan = result.firstBan ?? null;
+				this.selectedLobby.bestOf = result.bestOf ?? null;
+
+				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 				this.refreshIrcHeader(this.selectedLobby);
 			}
 		});
@@ -1223,18 +1018,26 @@ export class IrcComponent implements OnInit, OnDestroy {
 	adjustScore(team: number, mouseClick: string) {
 		if (mouseClick == 'left') {
 			if (team == 1) {
-				this.selectedLobby.teamOneOverwriteScore++;
+				if (this.selectedLobby.getTeamOneScore() != this.selectedLobby.getWinningConditionScore()) {
+					this.selectedLobby.teamOneOverwriteScore++;
+				}
 			}
 			else if (team == 2) {
-				this.selectedLobby.teamTwoOverwriteScore++;
+				if (this.selectedLobby.getTeamTwoScore() != this.selectedLobby.getWinningConditionScore()) {
+					this.selectedLobby.teamTwoOverwriteScore++;
+				}
 			}
 		}
 		else if (mouseClick == 'right') {
 			if (team == 1) {
-				this.selectedLobby.teamOneOverwriteScore--;
+				if (this.selectedLobby.getTeamOneScore() > 0) {
+					this.selectedLobby.teamOneOverwriteScore--;
+				}
 			}
 			else if (team == 2) {
-				this.selectedLobby.teamTwoOverwriteScore--;
+				if (this.selectedLobby.getTeamTwoScore() > 0) {
+					this.selectedLobby.teamTwoOverwriteScore--;
+				}
 			}
 		}
 		else if (mouseClick == 'middle') {

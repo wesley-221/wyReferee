@@ -1,0 +1,383 @@
+@import "variables";
+
+$acronym-opacity: 0.13;
+$nm-color: #c4c4c4;
+$hd-color: #ffc93d;
+$hr-color: #ff6b42;
+$dt-color: #c27aff;
+$fm-color: #5ee7cc;
+$tb-color: #ff9c6e;
+
+$normal-opacity: 0.18;
+$hover-opacity: 0.26;
+$active-opacity: 0.32;
+
+$ban-background-color: rgba(239, 68, 68);
+$ban-text-color: #fff;
+
+$unban-background-color: rgba(239, 68, 68);
+$unban-text-color: #fff;
+
+$protect-background-color: rgba(251, 191, 36);
+$protect-text-color: #fff;
+
+$unprotect-background-color: rgba(251, 191, 36);
+$unprotect-text-color: #fff;
+
+$reassign-background-color: $primary;
+$reassign-text-color: #fff;
+
+$pick-background-color: rgb(56, 189, 248);
+$pick-text-color: #fff;
+
+$unpick-background-color: rgba(148, 163, 184);
+$unpick-text-color: #fff;
+
+.irc-mappool {
+	display: flex;
+	flex-direction: column;
+
+	border-top: 1px solid $irc-border-color;
+	background: $irc-sidebar-background-color;
+
+	height: 100%;
+
+	.mappool-header {
+		display: flex;
+		align-items: center;
+
+		padding: 8px 16px;
+		gap: 8px;
+
+		background: $irc-match-header-background-color;
+		border-bottom: 1px solid $irc-border-color;
+
+		.mappool-label {
+			font-size: 10px;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			color: $irc-input-text-color;
+		}
+
+		.mappool-stage {
+			font-size: 12px;
+			letter-spacing: 0.15px;
+
+			border: 1px solid rgba($primary, 0.26);
+			background: rgba($primary, 0.1);
+			color: $primary;
+
+			border-radius: 5px;
+			padding: 2px 8px;
+		}
+	}
+
+	.mappool-search {
+		padding: 8px 16px;
+		border-bottom: 1px solid $irc-border-color;
+
+		.form-input {
+			padding: 8px 16px;
+		}
+	}
+
+	.mappool-content {
+		flex: 1;
+		overflow-y: auto;
+
+		.mod-bracket {
+			.mod-bracket-header {
+				display: flex;
+
+				padding: 8px 16px 4px;
+				gap: 4px;
+
+				position: sticky;
+				z-index: 2;
+				top: 0;
+
+				background: $irc-sidebar-background-color;
+				border-bottom: 1px solid $irc-border-color;
+
+				.acronym {
+					display: flex;
+					align-items: center;
+
+					padding: 0 4px;
+					border-radius: 3px;
+
+					text-transform: uppercase;
+				}
+
+				.name {
+					text-transform: uppercase;
+					letter-spacing: 1px;
+				}
+
+				&.nm {
+					.acronym {
+						background-color: rgba($nm-color, $acronym-opacity);
+					}
+
+					color: $nm-color;
+				}
+
+				&.hd {
+					.acronym {
+						background-color: rgba($hd-color, $acronym-opacity);
+					}
+
+					color: $hd-color;
+				}
+
+				&.hr {
+					.acronym {
+						background-color: rgba($hr-color, $acronym-opacity);
+					}
+
+					color: $hr-color;
+				}
+
+				&.dt {
+					.acronym {
+						background-color: rgba($dt-color, $acronym-opacity);
+					}
+
+					color: $dt-color;
+				}
+
+				&.fm,
+				&.mm {
+					.acronym {
+						background-color: rgba($fm-color, $acronym-opacity);
+					}
+
+					color: $fm-color;
+				}
+
+				&.tb {
+					.acronym {
+						background-color: rgba($tb-color, $acronym-opacity);
+					}
+
+					color: $tb-color;
+				}
+			}
+
+			.beatmaps {
+				display: flex;
+				flex-direction: column;
+
+				padding: 4px;
+				gap: 8px;
+
+				.beatmap {
+					display: flex;
+					flex-direction: column;
+
+					position: relative;
+					gap: 4px;
+
+					border: 1px solid $irc-border-color;
+					border-radius: 8px;
+
+					.beatmap-cover {
+						pointer-events: none;
+						position: absolute;
+
+						background-position: center;
+						background-size: cover;
+
+						height: 100%;
+						width: 100%;
+
+						border-radius: 8px;
+
+						z-index: 0;
+
+						&::after {
+							content: "";
+							position: absolute;
+							inset: 0;
+							background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%);
+							pointer-events: none;
+
+							border-radius: 8px;
+						}
+					}
+
+					.beatmap-information {
+						padding: 4px;
+						z-index: 1;
+
+						.name {
+							display: flex;
+
+							align-items: center;
+
+							overflow: hidden;
+							word-wrap: break-word;
+
+							&:hover {
+								cursor: pointer;
+								color: $primary;
+							}
+						}
+					}
+
+					.beatmap-status {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+
+						z-index: 1;
+
+						.beatmap-status-badge {
+							display: none;
+
+							border-radius: 4px;
+							padding: 4px 8px;
+
+							&.beatmap-picked-team-one,
+							&.is-banned-one {
+								display: flex;
+								background-color: rgba($red-team-chat-colour, 0.5);
+							}
+
+							&.beatmap-picked-team-two,
+							&.is-banned-two {
+								display: flex;
+								background-color: rgba($blue-team-chat-colour, 0.5);
+							}
+						}
+					}
+
+					.beatmap-actions {
+						display: flex;
+						justify-content: center;
+
+						padding: 4px;
+						gap: 4px;
+
+						z-index: 1;
+
+						.button {
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							text-align: center;
+
+							flex: 1;
+
+							border: 1px solid $irc-border-color;
+							border-radius: 5px;
+
+							letter-spacing: 0.2px;
+							min-width: 70px;
+							padding: 4px 8px;
+
+							background: rgba(0, 0, 0, 0.35);
+							backdrop-filter: blur(6px);
+							-webkit-backdrop-filter: blur(6px);
+							text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+
+							transition: all 0.14s ease;
+							cursor: pointer;
+
+							&.ban {
+								background: rgba($ban-background-color, $normal-opacity);
+								color: $ban-text-color;
+
+								&:hover {
+									background: rgba($ban-background-color, $hover-opacity);
+								}
+
+								&:active {
+									background: rgba($ban-background-color, $active-opacity);
+								}
+							}
+
+							&.unban {
+								background: rgba($unban-background-color, $normal-opacity);
+								color: $unban-text-color;
+
+								&:hover {
+									background: rgba($unban-background-color, $hover-opacity);
+								}
+
+								&:active {
+									background: rgba($unban-background-color, $active-opacity);
+								}
+							}
+
+							&.protect {
+								background: rgba($protect-background-color, $normal-opacity);
+								color: $protect-text-color;
+
+								&:hover {
+									background: rgba($protect-background-color, $hover-opacity);
+								}
+
+								&:active {
+									background: rgba($protect-background-color, $active-opacity);
+								}
+							}
+
+							&.unprotect {
+								background: rgba($unprotect-background-color, $normal-opacity);
+								color: $unprotect-text-color;
+
+								&:hover {
+									background: rgba($unprotect-background-color, $hover-opacity);
+								}
+
+								&:active {
+									background: rgba($unprotect-background-color, $active-opacity);
+								}
+							}
+
+							&.reassign {
+								background: rgba($reassign-background-color, $normal-opacity);
+								color: $reassign-text-color;
+
+								&:hover {
+									background: rgba($reassign-background-color, $hover-opacity);
+								}
+
+								&:active {
+									background: rgba($reassign-background-color, $active-opacity);
+								}
+							}
+
+							&.pick {
+								background: rgba($pick-background-color, $normal-opacity);
+								color: $pick-text-color;
+
+								&:hover {
+									background: rgba($pick-background-color, $hover-opacity);
+								}
+
+								&:active {
+									background: rgba($pick-background-color, $active-opacity);
+								}
+							}
+
+							&.unpick {
+								background: rgba($unpick-background-color, $normal-opacity);
+								color: $unpick-text-color;
+
+								&:hover {
+									background: rgba($unpick-background-color, $hover-opacity);
+								}
+
+								&:active {
+									background: rgba($unpick-background-color, $active-opacity);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

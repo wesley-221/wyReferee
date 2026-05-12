@@ -1,0 +1,180 @@
+@import "variables";
+
+$channel-active-color: #3ddba0;
+$channel-inactive-color: #5c5248;
+$channel-inactive-label-color: rgba(255, 255, 255, 0.5);
+
+$button-hover-background-color: #363636;
+$button-hover-border-color: rgba(255, 255, 255, 0.2);
+
+.all-channels {
+	border-bottom: 1px solid $irc-border-color;
+	padding-bottom: 5px;
+
+	height: 100%;
+
+	overflow-y: auto;
+
+	.channel {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		user-select: none;
+		overflow: hidden;
+
+		border-left: 2px solid transparent;
+
+		padding: 8px 8px;
+
+		position: relative;
+		cursor: pointer;
+
+		.channel-description {
+			.channel-name {
+				display: flex;
+				align-items: center;
+
+				font-size: 15px;
+				line-height: 15px;
+
+				color: $irc-input-text-color;
+			}
+
+			.channel-name-label {
+				display: flex;
+				align-items: center;
+
+				font-size: 15px;
+				line-height: 15px;
+				color: white;
+
+				.form-input {
+					padding: 8px 16px;
+				}
+			}
+
+			.channel-status {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+
+				color: $channel-inactive-label-color;
+
+				.volume-off {
+					width: 15px;
+					height: 15px;
+					font-size: 15px;
+				}
+
+				.circle {
+					width: 6px;
+					height: 6px;
+					border-radius: 50%;
+
+					background: $channel-inactive-color;
+					box-shadow: 0 0 8px $channel-inactive-color;
+
+					&.active {
+						background: $channel-active-color;
+						box-shadow: 0 0 8px $channel-active-color;
+
+						animation: pulse 2s ease-in-out infinite;
+
+						@keyframes pulse {
+							0%,
+							100% {
+								opacity: 1;
+							}
+
+							50% {
+								opacity: 0.35;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.unread-messages {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			margin-left: auto;
+
+			background-color: $primary;
+			box-shadow: 0 0 4px $primary;
+			color: black;
+
+			border-radius: 50%;
+
+			width: 26px;
+			height: 26px;
+
+			.icon {
+				width: 20px;
+				height: 20px;
+				font-size: 20px;
+			}
+		}
+
+		.channel-actions {
+			display: flex;
+			position: absolute;
+
+			gap: 2px;
+
+			right: 5px;
+			top: 50%;
+
+			transform: translateY(-50%);
+
+			opacity: 0;
+
+			transition: opacity 0.15s;
+			pointer-events: none;
+		}
+
+		&:hover {
+			border-left: 2px solid $primary;
+
+			.channel-description {
+				.channel-name {
+					color: $irc-input-text-color-active;
+				}
+			}
+
+			.channel-actions {
+				opacity: 1;
+				pointer-events: all;
+			}
+		}
+
+		&.active {
+			border-left: 2px solid $primary;
+			background: rgba($primary, 0.08);
+
+			.channel-description {
+				.channel-name {
+					color: $primary;
+					font-weight: 600;
+				}
+			}
+		}
+	}
+}
+
+.cdk-drag-preview {
+	display: flex;
+	align-items: center;
+
+	background-color: rgba(0, 0, 0, 0.9);
+	color: $primary;
+
+	border-left: 2px solid transparent;
+
+	.channel-actions {
+		display: none;
+	}
+}

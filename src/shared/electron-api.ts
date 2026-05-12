@@ -74,7 +74,7 @@ interface ElectronApiIrc {
 	setIrcPlaySoundOnMessage(channelName: string, playSound: boolean): Promise<void>;
 	changeActiveChannel(channelName: string, active: boolean): Promise<void>;
 	changeLastActiveChannel(channelName: string, active: boolean): Promise<void>;
-	addIrcMessage(channelName: string, message: IrcMessage, plainMessage: string): Promise<void>;
+	addIrcMessage(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoBotHistory?: boolean): Promise<void>;
 	addOutgoingIrcMessage(channelName: string, message: IrcMessage, plainMessage: string): Promise<void>;
 }
 

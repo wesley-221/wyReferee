@@ -1,0 +1,78 @@
+@import "variables";
+
+.irc-chat-controls {
+	background: $irc-match-header-background-color;
+
+	.slash-commands {
+		position: fixed;
+		bottom: 52px;
+		width: auto;
+
+		-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+		-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+		box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+
+		.slash-command {
+			display: flex;
+			padding: 4px;
+
+			user-select: none;
+
+			.slash-command-name {
+				padding: 4px 8px;
+				border-radius: 8px;
+
+				font-weight: 500;
+				font-size: 14px;
+				white-space: nowrap;
+
+				background: color-mix(in srgb, $primary 13%, transparent);
+				color: $primary;
+
+				cursor: pointer;
+			}
+
+			.slash-command-description {
+				padding: 4px;
+			}
+
+			&:hover,
+			&.active {
+				background-color: color-mix(in srgb, $primary 13%, transparent);
+				cursor: pointer;
+			}
+		}
+	}
+
+	.send-message {
+		display: flex;
+		align-items: center;
+
+		padding: 8px;
+		gap: 8px;
+
+		border-top: 1px solid $irc-border-color;
+
+		.send-button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+
+			width: 35px;
+			height: 35px;
+
+			border-radius: 8px;
+			border: none;
+
+			background: linear-gradient(135deg, $primary, #d96e43);
+			color: black;
+
+			cursor: pointer;
+
+			&:hover {
+				background: darken($primary, 5%);
+			}
+		}
+	}
+}

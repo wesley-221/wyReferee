@@ -6,12 +6,18 @@ import PackageJson from '../../../../package.json';
 interface AppSettings {
 	version: string;
 	showAxs: boolean;
+	showIncorrectSlot: boolean;
+	splitBanchoBotMessages: boolean;
+	banchoChatContainerHeight: number;
 	[key: string]: any;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
 	version: PackageJson.version,
-	showAxs: false
+	showAxs: false,
+	showIncorrectSlot: true,
+	splitBanchoBotMessages: false,
+	banchoChatContainerHeight: 30
 };
 
 @Injectable({

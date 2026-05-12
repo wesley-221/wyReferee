@@ -11,19 +11,25 @@ body {
 	padding: 0;
 
 	::-webkit-scrollbar {
-		width: 10px;
+		width: 7px;
+		height: 7px;
 	}
 
 	::-webkit-scrollbar-track {
-		background: lighten($sidebar-background-color, 8%);
+		background: transparent;
+
+		&:hover {
+			background: rgba($primary, 0.05);
+		}
 	}
 
 	::-webkit-scrollbar-thumb {
 		background: $primary;
+		border-radius: 99px;
 	}
 
-	::-webkit-scrollbar-thumb:hover {
-		background: darken($primary, 5%);
+	::-webkit-scrollbar-corner {
+		background: transparent;
 	}
 }
 
@@ -31,12 +37,24 @@ body {
 	min-height: 100%;
 	margin: 0;
 	padding: 0;
+
+	&.resizing-chat-container {
+		cursor: row-resize;
+		user-select: none;
+	}
 }
 
 *,
 *::before,
 *::after {
 	box-sizing: border-box;
+}
+
+button,
+select,
+input,
+textarea {
+	font-family: inherit;
 }
 
 .mat-mdc-form-field {
@@ -166,6 +184,129 @@ code {
 				right 15px bottom,
 				left bottom 15px,
 				right top 15px;
+		}
+	}
+}
+
+.form-input {
+	flex: 1;
+
+	border: 1px solid $irc-input-border-color;
+	border-radius: 8px;
+
+	font-size: 16px;
+
+	padding: 12px 20px;
+
+	background: $irc-input-background-color;
+	color: $irc-input-text-color-active;
+
+	outline: none;
+
+	transition: border-color 0.2s;
+
+	&:focus {
+		border-color: rgba($primary, 0.26);
+		box-shadow: 0 0 0 3px rgba($primary, 0.08);
+	}
+}
+
+.form-button {
+	display: flex;
+	align-items: center;
+
+	padding: 4px 8px;
+	gap: 4px;
+
+	border-radius: 5px;
+	border: 1px solid $irc-input-border-color;
+
+	letter-spacing: 0.15px;
+	line-height: 1.2;
+
+	background: $irc-input-background-color;
+	color: $irc-input-text-color;
+
+	transition: all 0.17s;
+	cursor: pointer;
+
+	.icon {
+		flex-shrink: 0;
+	}
+
+	&.small-button {
+		justify-content: center;
+		align-items: center;
+
+		width: 24px;
+		height: 24px;
+
+		.icon {
+			font-size: 15px;
+
+			width: 15px;
+			height: 15px;
+		}
+	}
+
+	&.primary {
+		&:hover {
+			border-color: rgba($primary, 0.26);
+			background: rgba($primary, 0.1);
+			color: $primary;
+		}
+	}
+
+	&.danger {
+		&:hover {
+			border-color: $button-hover-red-border-color;
+			background: $button-hover-red-background-color;
+			color: $button-hover-red-color;
+		}
+	}
+
+	&.success {
+		&:hover {
+			border-color: rgba($success, 0.26);
+			background: rgba($success, 0.1);
+			color: $success;
+		}
+	}
+
+	&.no-wrap {
+		white-space: nowrap;
+	}
+
+	&:hover {
+		background: $irc-input-background-color-active;
+		color: $irc-input-text-color-active;
+		border-color: $irc-input-border-color-active;
+	}
+
+	&.disabled,
+	&:disabled {
+		background: $irc-input-background-color;
+		color: $irc-input-text-color;
+		border-color: rgba(255, 255, 255, 0.06);
+
+		cursor: not-allowed;
+		opacity: 0.45;
+
+		&:hover {
+			background: $irc-input-background-color;
+			color: $irc-input-text-color;
+			border-color: rgba(255, 255, 255, 0.06);
+		}
+	}
+}
+
+.mat-mdc-dialog-inner-container {
+	.mat-mdc-dialog-surface {
+		background-color: $tile-background-color;
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+
+		.mat-mdc-dialog-content {
+			color: white;
 		}
 	}
 }

@@ -1,0 +1,55 @@
+<div class="all-channels" cdkDropList (cdkDropListDropped)="dropChannel($event)">
+	<div class="channel" *ngFor="let channel of channels"
+						cdkDragBoundary=".all-channels"
+						(click)="changeChannelClick(channel.name)"
+						[ngClass]="{ 'active': selectedChannel != undefined && (channel.name == selectedChannel.name) }">
+		<div class="channel-description">
+			<div class="channel-name" *ngIf="!channel.editingLabel">
+				<span *ngIf="channel.label">{{ channel.label }}</span>
+				<span *ngIf="!channel.label">{{ channel.name }}</span>
+			</div>
+
+			<div class="channel-name-label" *ngIf="channel.editingLabel">
+				<input type="text" class="form-input"
+					[(ngModel)]="channel.label"
+					(keyup.enter)="editLabel(channel)"
+					(keyup.esc)="cancelEditLabel(channel)"
+				/>
+			</div>
+
+			<div class="channel-status">
+				<mat-icon class="volume-off" *ngIf="!channel.playSoundOnMessage">volume_off</mat-icon>
+
+				<div class="circle" [ngClass]="{ 'active': channel.active }"></div>
+
+				{{ channel.active ? 'Active' : 'Inactive' }}
+			</div>
+		</div>
+
+		<div class="unread-messages" *ngIf="channel.hasUnreadMessages">
+			<mat-icon class="icon">mark_email_unread</mat-icon>
+		</div>
+
+		<div class="channel-actions">
+			<button class="form-button small-button" (click)="playSound(channel, false)" *ngIf="channel.playSoundOnMessage">
+				<mat-icon class="icon">volume_up</mat-icon>
+			</button>
+
+			<button class="form-button small-button" (click)="playSound(channel, true)" *ngIf="!channel.playSoundOnMessage">
+				<mat-icon class="icon">volume_off</mat-icon>
+			</button>
+
+			<button class="form-button small-button" (click)="editLabel(channel)" *ngIf="!channel.editingLabel">
+				<mat-icon class="icon">edit</mat-icon>
+			</button>
+
+			<button class="form-button small-button" (click)="editLabel(channel)" *ngIf="channel.editingLabel">
+				<mat-icon class="icon">save</mat-icon>
+			</button>
+
+			<button class="form-button small-button danger" (click)="partChannel(channel.name)">
+				<mat-icon class="icon">close</mat-icon>
+			</button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,73 @@
+<div class="match-information" *ngIf="selectedLobby && selectedLobby.mappool">
+	<ng-container *ngIf="matchStatus$ | async as matchStatus">
+		<div class="team-one">
+			<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="adjustScore(1, $event)">
+				<div class="circle red" [ngClass]="{ 'active': score <= matchStatus.teamOneScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
+			</div>
+
+			<div class="team-name red">
+				{{ selectedLobby.teamOneName }}
+			</div>
+		</div>
+
+		<div class="middle">
+			<ng-container *ngIf="selectedChannel != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
+				<ng-container *ngIf="matchStatus.nextPick != null; else noNextPick">
+					<div class="badge next-pick">
+						<mat-icon>play_arrow</mat-icon>
+
+						<div class="team-name" [ngClass]="{'red': matchStatus.nextPick == selectedLobby.teamOneName, 'blue': matchStatus.nextPick == selectedLobby.teamTwoName }">
+							{{ matchStatus.nextPick }} picks next
+						</div>
+					</div>
+				</ng-container>
+
+				<ng-template #noNextPick>
+					<div class="badge next-pick">
+						<mat-icon>priority_high</mat-icon>
+
+						<div class="team-name">
+							Select a first pick
+						</div>
+					</div>
+				</ng-template>
+			</ng-container>
+
+			<div class="badge match-point" *ngIf="selectedChannel != null && matchStatus.matchPoint != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
+				<mat-icon>star</mat-icon>
+
+				matchpoint
+
+				<div class="team-name" [ngClass]="{'red': matchStatus.matchPoint == selectedLobby.teamOneName, 'blue': matchStatus.matchPoint == selectedLobby.teamTwoName }">
+					{{ matchStatus.matchPoint }}
+				</div>
+			</div>
+
+			<div class="badge tiebreaker" *ngIf="selectedChannel != null && matchStatus.tiebreaker == true">
+				<mat-icon>local_fire_department</mat-icon>
+
+				Tiebreaker hype!
+			</div>
+
+			<div class="badge has-won" *ngIf="selectedChannel != null && matchStatus.hasWon != null">
+				<mat-icon>emoji_events</mat-icon>
+
+				<div class="team-name" [ngClass]="{'red': matchStatus.hasWon == selectedLobby.teamOneName, 'blue': matchStatus.hasWon == selectedLobby.teamTwoName }">
+					{{ matchStatus.hasWon }}
+				</div>
+
+				won, GG and wp!
+			</div>
+		</div>
+
+		<div class="team-two">
+			<div class="team-name blue">
+				{{ selectedLobby.teamTwoName }}
+			</div>
+
+			<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="adjustScore(2, $event)">
+				<div class="circle blue" [ngClass]="{ 'active': score <= matchStatus.teamTwoScore }" *ngFor="let score of selectedLobby.getMaxMatchPointsForIrcHeader()"></div>
+			</div>
+		</div>
+	</ng-container>
+</div>

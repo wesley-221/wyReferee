@@ -324,4 +324,17 @@ export class Regex {
 			return null;
 		}
 	};
+
+	static incorrectSlot = {
+		regex: /<incorrect-slot>(.*?)<\/incorrect-slot>/,
+		run: (message: string): { incorrectSlotMessage: string } => {
+			const incorrectSlotRegex = RegExp(Regex.incorrectSlot.regex).exec(message);
+
+			if (incorrectSlotRegex !== null) {
+				return { incorrectSlotMessage: incorrectSlotRegex[1] };
+			}
+
+			return null;
+		}
+	};
 }

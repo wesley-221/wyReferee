@@ -1,4 +1,4 @@
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 
 $md-primary: (
 	50: #fff2ef,
@@ -29,8 +29,8 @@ $md-primary: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-accent: (
@@ -62,8 +62,8 @@ $md-accent: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-success: (
@@ -95,8 +95,8 @@ $md-success: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-info: (
@@ -128,8 +128,8 @@ $md-info: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-danger: (
@@ -161,8 +161,8 @@ $md-danger: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $md-warning: (
@@ -194,8 +194,8 @@ $md-warning: (
 		A100: #000000,
 		A200: #000000,
 		A400: #000000,
-		A700: #000000,
-	),
+		A700: #000000
+	)
 );
 
 $font-family: "Montserrat", "Open Sans", Arial, Helvetica, sans-serif;
@@ -235,3 +235,21 @@ $wybin-schedule-border-color: rgba(255, 255, 255, 0.078);
 
 $information-tile-background-color: #262624;
 $information-header-text-color: #9c9a92;
+
+$red-team-chat-colour: #e94f64;
+$blue-team-chat-colour: #29b;
+
+$irc-match-header-background-color: #141414;
+$irc-sidebar-background-color: #181818;
+$irc-border-color: rgba(255, 255, 255, 0.06);
+
+$irc-input-background-color: #242424;
+$irc-input-background-color-active: #2c2c2c;
+$irc-input-text-color-active: #f2ede6;
+$irc-input-text-color: #9e9088;
+$irc-input-border-color: rgba(255, 255, 255, 0.11);
+$irc-input-border-color-active: rgba(255, 255, 255, 0.2);
+
+$button-hover-red-background-color: rgba(245, 110, 110, 0.16);
+$button-hover-red-border-color: rgba(245, 110, 110, 0.34);
+$button-hover-red-color: #f56e6e;

@@ -41,6 +41,13 @@ export class IrcService {
 
 	setChannelUnreadMessages$: BehaviorSubject<IrcChannel>;
 
+	teamOneScore$: BehaviorSubject<number>;
+	teamTwoScore$: BehaviorSubject<number>;
+	nextPick$: BehaviorSubject<string>;
+	matchPoint$: BehaviorSubject<string>;
+	tiebreaker$: BehaviorSubject<boolean>;
+	hasWon$: BehaviorSubject<string>;
+
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
 	isCreatingMultiplayerLobby = -1;
 
@@ -61,6 +68,13 @@ export class IrcService {
 		this.messageHasBeenSend$ = new BehaviorSubject<boolean>(false);
 		this.isAuthenticated$ = new BehaviorSubject<boolean>(false);
 		this.setChannelUnreadMessages$ = new BehaviorSubject<IrcChannel>(null);
+
+		this.teamOneScore$ = new BehaviorSubject<number>(0);
+		this.teamTwoScore$ = new BehaviorSubject<number>(0);
+		this.nextPick$ = new BehaviorSubject<string>(null);
+		this.matchPoint$ = new BehaviorSubject<string>(null);
+		this.tiebreaker$ = new BehaviorSubject<boolean>(false);
+		this.hasWon$ = new BehaviorSubject<string>(null);
 
 		window.electronApi.osuAuthentication.getIrcCredentials().then(credentials => {
 			if (credentials.username && credentials.password) {
@@ -182,14 +196,15 @@ export class IrcService {
 					}
 
 					// Check if the player is in the correct slot
-					// TODO: Fix the isInCorrectSlot check, doesn't always work
-					// if (multiplayerLobby) {
-					// 	if (multiplayerLobby.isQualifierLobby != true) {
-					// 		if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
-					// 			message.message += ` | Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}`;
-					// 		}
-					// 	}
-					// }
+					if (this.genericService.getShowIncorrectSlotStatus().getValue() == true) {
+						if (multiplayerLobby) {
+							if (multiplayerLobby.isQualifierLobby != true) {
+								if (!this.multiplayerLobbyPlayersService.isInCorrectSlot(playerInSlot.username, multiplayerLobby)) {
+									message.message += `<incorrect-slot>Incorrect slot, player should be in slot ${multiplayerLobby.getCorrectSlot(playerInSlot.username)}</incorrect-slot>`;
+								}
+							}
+						}
+					}
 				}
 			}
 
@@ -418,8 +433,14 @@ export class IrcService {
 			}
 
 			if (user.startsWith('#mp_')) {
-				channel.messages.push(newMessage);
-				this.saveMessageToHistory(user, newMessage, message);
+				if (this.genericService.getSplitBanchoBotMessagesStatus().getValue() == true) {
+					channel.banchoBotMessages.push(newMessage);
+					this.saveMessageToHistory(user, newMessage, message, true);
+				}
+				else {
+					channel.messages.push(newMessage);
+					this.saveMessageToHistory(user, newMessage, message);
+				}
 			}
 			else {
 				channel.messages.push(newMessage);
@@ -650,13 +671,14 @@ export class IrcService {
 	 * @param channelName the channel to save it in
 	 * @param message the message object to save
 	 * @param plainMessage the plain message that was sent
+	 * @param saveInBanchoBotHistory whether to save the message in the BanchoBot history instead of the normal message history
 	 */
-	saveMessageToHistory(channelName: string, message: IrcMessage, plainMessage: string) {
+	saveMessageToHistory(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoBotHistory: boolean = false) {
 		if (message.isADivider) {
 			return;
 		}
 
-		window.electronApi.irc.addIrcMessage(channelName, message, plainMessage);
+		window.electronApi.irc.addIrcMessage(channelName, message, plainMessage, saveInBanchoBotHistory);
 	}
 
 	/**
@@ -678,9 +700,12 @@ export class IrcService {
 
 		let regexSucceeded = false;
 
+		const stripUrlPrefix = (url: string) => url.trim()
+			.replace(/^(https?:\/\/)?(www\.)?/i, '');
+
 		// Handle all the regexes
-		for (const regex in allRegexes) {
-			const currentRegex = allRegexes[regex].run(message);
+		for (const regex of allRegexes) {
+			const currentRegex = regex.run(message);
 
 			if (currentRegex != null) {
 				messageBuilder.push(new MessageBuilder({
@@ -691,7 +716,8 @@ export class IrcService {
 				messageBuilder.push(new MessageBuilder({
 					messageType: MessageType.Link,
 					message: currentRegex.link,
-					linkName: currentRegex.name
+					linkName: currentRegex.name,
+					linkLabel: stripUrlPrefix(currentRegex.name)
 				}));
 
 				regexSucceeded = true;
@@ -713,26 +739,28 @@ export class IrcService {
 					messageBuilder.push(new MessageBuilder({
 						messageType: MessageType.Link,
 						message: linkSplit[0],
-						linkName: linkSplit[1]
+						linkName: linkSplit[1],
+						linkLabel: stripUrlPrefix(linkSplit[1])
 					}));
 				}
 				else {
-					for (const split in splittedString) {
+					for (const split of splittedString) {
 						// The split is a link
-						if (Regex.isEmbedLink.run(splittedString[split])) {
-							const linkSplit = splittedString[split].split(Regex.isEmbedLink.regexSplit).filter(s => s != '' && s.trim());
+						if (Regex.isEmbedLink.run(split)) {
+							const linkSplit = split.split(Regex.isEmbedLink.regexSplit).filter(s => s != '' && s.trim());
 
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Link,
 								message: linkSplit[0],
-								linkName: linkSplit[1]
+								linkName: linkSplit[1],
+								linkLabel: stripUrlPrefix(linkSplit[1])
 							}));
 						}
 						// The split is a message
 						else {
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Message,
-								message: splittedString[split]
+								message: split
 							}));
 						}
 					}
@@ -745,24 +773,40 @@ export class IrcService {
 				if (splittedString.length == 1) {
 					messageBuilder.push(new MessageBuilder({
 						messageType: MessageType.Link,
-						message: splittedString[0]
+						message: splittedString[0],
+						linkName: splittedString[0],
+						linkLabel: stripUrlPrefix(splittedString[0])
 					}));
 				}
 				else {
-					for (const split in splittedString) {
+					for (const split of splittedString) {
 						// The split is a link
-						if (Regex.isLink.run(splittedString[split])) {
+						if (Regex.isLink.run(split)) {
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Link,
-								message: splittedString[split]
+								message: split,
+								linkName: split,
+								linkLabel: stripUrlPrefix(split)
 							}));
 						}
 						// The split is a message
 						else {
+							// Check if the split message contains the <incorrect-slot> tag
+							const incorrectSlotSplit = split.split(Regex.incorrectSlot.regex).filter(s => s != '' && s.trim());
+
+							// Always add message
 							messageBuilder.push(new MessageBuilder({
 								messageType: MessageType.Message,
-								message: splittedString[split]
+								message: incorrectSlotSplit[0]
 							}));
+
+							// If array contains more than 1 element, it means that there is an incorrect slot message to add as well
+							if (incorrectSlotSplit.length > 1) {
+								messageBuilder.push(new MessageBuilder({
+									messageType: MessageType.IncorrectSlot,
+									message: incorrectSlotSplit[1]
+								}));
+							}
 						}
 					}
 				}
@@ -792,14 +836,16 @@ export class IrcService {
 						else {
 							regexp = lobby.mappool.getModbracketRegex();
 
-							for (const split in splittedString) {
+							for (const split of splittedString) {
+								const matches = regexp.test(split);
+
 								// The split is a mod acronym pick
-								if (regexp.test(splittedString[split])) {
-									const mapInformation = lobby.mappool.getInformationFromPickAcronym(splittedString[split]);
+								if (matches) {
+									const mapInformation = lobby.mappool.getInformationFromPickAcronym(split);
 
 									messageBuilder.push(new MessageBuilder({
 										messageType: MessageType.ModAcronymPick,
-										message: splittedString[split],
+										message: split,
 										modAcronymBeatmapId: mapInformation ? mapInformation.beatmapId : null,
 										modAcronymGameMode: lobby.tournament.gamemodeId,
 										modAcronymMappoolId: lobby.mappool.id,
@@ -811,7 +857,7 @@ export class IrcService {
 								else {
 									messageBuilder.push(new MessageBuilder({
 										messageType: MessageType.Message,
-										message: splittedString[split]
+										message: split
 									}));
 								}
 							}

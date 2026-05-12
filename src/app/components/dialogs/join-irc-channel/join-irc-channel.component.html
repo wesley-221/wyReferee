@@ -1,27 +1,32 @@
 <h2 mat-dialog-title>Join irc channel</h2>
 
-<form [formGroup]="validationForm">
-	<mat-dialog-content class="mat-typography">
+<mat-dialog-content>
+	<form [formGroup]="validationForm">
 		<p>Enter the channel name you'd like to join.</p>
 
 		<ul>
 			<li>To send a direct message to a player simply enter their username</li>
-			<li>To join a multiplayer lobby, type #mp_012345 where the numbers is the multiplayer id</li>
+			<li>
+				To join a multiplayer lobby, type #mp_012345 where the numbers is the multiplayer id
+
+				<ul>
+					<li>Note: to have access to all wyReferee functionality, create or join a multiplayer lobby by clicking <a routerLink="/lobby-overview" (click)="close()">here</a>.</li>
+				</ul>
+			</li>
 		</ul>
 
 		<mat-form-field class="full-width">
 			<mat-label>Channel name</mat-label>
-			<input matInput (keyup.enter)="onEnter()" (keyup.esc)="onEsc()" formControlName="channel-name" />
+			<input matInput (keyup.enter)="onEnter()" formControlName="channel-name" />
 
 			<mat-error *ngIf="validationForm.get('channel-name').errors && (validationForm.get('channel-name').dirty || validationForm.get('channel-name').touched)">
 				This field is required.
 			</mat-error>
 		</mat-form-field>
+	</form>
+</mat-dialog-content>
 
-	</mat-dialog-content>
-
-	<mat-dialog-actions align="end">
-		<button mat-button [mat-dialog-close]="null">Cancel</button>
-		<button mat-button [mat-dialog-close]="getChannelName()" color="primary" [disabled]="validationForm.invalid">Join channel</button>
-	</mat-dialog-actions>
-</form>
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">Cancel</button>
+	<button mat-button [mat-dialog-close]="getChannelName()" color="primary" [disabled]="validationForm.invalid">Join channel</button>
+</mat-dialog-actions>

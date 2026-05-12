@@ -10,25 +10,45 @@
 
 	<div *ngIf="data.multiplayerLobby != undefined">
 		<h3>Webhooks</h3>
+
 		<mat-slide-toggle [(ngModel)]="data.multiplayerLobby.sendWebhooks" [ngModelOptions]="{ standalone: true }">Webhooks <span [ngClass]="{ 'green': data.multiplayerLobby.sendWebhooks == true, 'red': data.multiplayerLobby.sendWebhooks == false }">{{ data.multiplayerLobby.sendWebhooks == true ? 'will' : 'wont' }}</span> be sent</mat-slide-toggle>
 		<p>Use this option to disable webhooks from being sent. Could be used for practice lobby, testing, etc.</p>
 
+		<hr />
+
 		<h3>First pick</h3>
+
 		<mat-form-field class="full-width">
 			<mat-label>First pick</mat-label>
-			<mat-select (selectionChange)="change('firstPick', $event)" [value]="data.multiplayerLobby.firstPick">
+			<mat-select (selectionChange)="change('firstPick', $event)" [value]="firstPick">
 				<mat-option [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-option>
 				<mat-option [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-option>
 			</mat-select>
 		</mat-form-field>
 
 		<p>The team or player that picks first</p>
+
+		<hr />
+
+		<h3>First ban</h3>
+
+		<mat-form-field class="full-width">
+			<mat-label>First ban</mat-label>
+			<mat-select (selectionChange)="change('firstBan', $event)" [value]="firstBan">
+				<mat-option [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-option>
+				<mat-option [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<p>The team or player that bans first</p>
+
 		<hr />
 
 		<h3>Best of</h3>
+
 		<mat-form-field class="full-width">
 			<mat-label>Best of</mat-label>
-			<mat-select (selectionChange)="change('bestOf', $event)" [value]="data.multiplayerLobby.bestOf">
+			<mat-select (selectionChange)="change('bestOf', $event)" [value]="bestOf">
 				<mat-option [value]="item" *ngFor="let item of [3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25]">{{ item }}</mat-option>
 			</mat-select>
 		</mat-form-field>
@@ -38,5 +58,5 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-	<button mat-button [mat-dialog-close]="data.multiplayerLobby" color="accent">Update settings</button>
+	<button mat-button [mat-dialog-close]="close()" color="accent">Update settings</button>
 </mat-dialog-actions>

@@ -19,6 +19,7 @@ import { WyModCategory } from './wytournament/mappool/wy-mod-category';
 import { WyStage } from './wytournament/wy-stage';
 import { WyTeamPlayer } from './wytournament/wy-team-player';
 import { WyTournament } from './wytournament/wy-tournament';
+import { Observable, map } from 'rxjs';
 
 export class Lobby {
 	rawFileName: string;
@@ -42,6 +43,7 @@ export class Lobby {
 	ircChannel: IrcChannel;
 
 	firstPick: string;
+	firstBan: string;
 	selectedStage: WyStage;
 	bestOf: number;
 	banCount: number;
@@ -99,7 +101,7 @@ export class Lobby {
 		this.teamOnePicks = [];
 		this.teamTwoPicks = [];
 
-		Lobby.initializeTeamSlotArray(this);
+		this.initializeTeamSlotArray();
 
 		this.gamesCountTowardsScore = {};
 
@@ -148,6 +150,7 @@ export class Lobby {
 			mappool: lobby.mappool != null ? WyMappool.makeTrueCopy(lobby.mappool) : null,
 			ircChannel: lobby.ircChannel,
 			firstPick: lobby.firstPick,
+			firstBan: lobby.firstBan,
 			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
 			bestOf: lobby.bestOf,
 			banCount: lobby.banCount,
@@ -172,7 +175,7 @@ export class Lobby {
 			sendWebhooks: lobby.sendWebhooks
 		});
 
-		Lobby.initializeTeamSlotArray(newLobby);
+		newLobby.initializeTeamSlotArray();
 
 		for (const pickedCategory in lobby.pickedCategories) {
 			newLobby.pickedCategories.push(PickedCategory.makeTrueCopy(lobby.pickedCategories[pickedCategory]));
@@ -205,16 +208,16 @@ export class Lobby {
 	 *
 	 * @param lobby the lobby to initialize the team slot arrays for
 	 */
-	private static initializeTeamSlotArray(lobby: Lobby): void {
-		lobby.teamOneSlotArray = [];
-		lobby.teamTwoSlotArray = [];
+	initializeTeamSlotArray(): void {
+		this.teamOneSlotArray = [];
+		this.teamTwoSlotArray = [];
 
-		for (let i = 0; i < lobby.teamSize * 2; i++) {
-			if (i < lobby.teamSize) {
-				lobby.teamOneSlotArray.push(i);
+		for (let i = 0; i < this.teamSize * 2; i++) {
+			if (i < this.teamSize) {
+				this.teamOneSlotArray.push(i);
 			}
 			else {
-				lobby.teamTwoSlotArray.push(i);
+				this.teamTwoSlotArray.push(i);
 			}
 		}
 	}
@@ -636,16 +639,20 @@ export class Lobby {
 	 * @param username the username of the user to get
 	 * @returns
 	 */
-	getPlayerByUsername(username: string, multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService): MultiplayerLobbyPlayersPlayer {
+	getPlayerByUsername(username: string, multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService): Observable<MultiplayerLobbyPlayersPlayer> {
 		const multiplayerLobbyPlayers: MultiplayerLobbyPlayers = multiplayerLobbyPlayersService.multiplayerLobbies[this.lobbyId].players;
 
-		for (const user of multiplayerLobbyPlayers.players) {
-			if (user.username == username) {
-				return user;
-			}
-		}
+		return multiplayerLobbyPlayers.players$.pipe(
+			map(players => {
+				for (const user of players) {
+					if (user.username == username) {
+						return user;
+					}
+				}
 
-		return null;
+				return null;
+			})
+		);
 	}
 
 	/**
