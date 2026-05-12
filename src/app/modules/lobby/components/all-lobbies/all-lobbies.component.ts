@@ -128,4 +128,8 @@ export class AllLobbiesComponent implements OnInit {
 	navigateLobby(multiplayerLobby: Lobby) {
 		this.router.navigate(['lobby-overview/lobby-view', multiplayerLobby.lobbyId]);
 	}
+
+	stripUrlPrefix(url: string): string {
+		return url.trim().replace(/^(https?:\/\/)?(www\.)?/i, '');
+	}
 }

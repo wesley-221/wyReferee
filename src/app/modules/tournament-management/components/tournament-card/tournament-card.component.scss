@@ -1,8 +1,5 @@
 @import "variables";
 
-$background-color: #1a1a1a;
-$border-color: rgba(255, 255, 255, 0.07);
-
 $header-text-color: rgba(255, 255, 255, 0.6);
 $header-badge-background-color: rgba(255, 255, 255, 0.07);
 
@@ -13,7 +10,7 @@ $badge-background-color: rgba(255, 255, 255, 0.05);
 	padding: 16px;
 
 	background: $background-color;
-	border: 0.5px solid $border-color;
+	border: 0.5px solid $sidebar-border-color;
 
 	border-radius: 8px;
 
@@ -107,7 +104,7 @@ $badge-background-color: rgba(255, 255, 255, 0.05);
 				padding: 4px 8px;
 
 				background: $badge-background-color;
-				border: 0.5px solid $border-color;
+				border: 0.5px solid $sidebar-border-color;
 
 				color: $primary;
 
@@ -138,7 +135,7 @@ $badge-background-color: rgba(255, 255, 255, 0.05);
 					padding: 4px 8px;
 
 					background: $badge-background-color;
-					border: 0.5px solid $border-color;
+					border: 0.5px solid $sidebar-border-color;
 
 					color: $primary;
 
