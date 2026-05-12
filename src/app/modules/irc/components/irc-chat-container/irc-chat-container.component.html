@@ -36,6 +36,11 @@
 										<span class="url" *ngIf="chatPiece.linkName != null">{{ chatPiece.linkName }}</span>
 									</ng-template>
 								</div>
+
+								<div class="incorrect-slot" *ngIf="chatPiece.messageType == 'IncorrectSlot'">
+									<mat-icon class="icon">priority_high</mat-icon>
+									<span class="url">{{ chatPiece.message }}</span>
+								</div>
 							</div>
 						</div>
 					</div>
