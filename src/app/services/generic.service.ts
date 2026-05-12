@@ -8,17 +8,20 @@ import { SettingsStoreService } from './storage/settings-store.service';
 export class GenericService {
 	private showAxSMenu$: BehaviorSubject<boolean>;
 	private showIncorrectSlot$: BehaviorSubject<boolean>;
+	private splitBanchoBotMessages$: BehaviorSubject<boolean>;
 
 	constructor(private settingsStore: SettingsStoreService) {
 		settingsStore.watchSettings().subscribe(settings => {
 			if (settings) {
 				this.showAxSMenu$.next(settings.showAxs);
 				this.showIncorrectSlot$.next(settings.showIncorrectSlot);
+				this.splitBanchoBotMessages$.next(settings.splitBanchoBotMessages);
 			}
 		});
 
 		this.showAxSMenu$ = new BehaviorSubject(false);
 		this.showIncorrectSlot$ = new BehaviorSubject(true);
+		this.splitBanchoBotMessages$ = new BehaviorSubject(false);
 	}
 
 	/**
@@ -53,5 +56,22 @@ export class GenericService {
 	 */
 	getShowIncorrectSlotStatus(): BehaviorSubject<boolean> {
 		return this.showIncorrectSlot$;
+	}
+
+	/**
+	 * Hide or show the splitting of BanchoBot messages
+	 *
+	 * @param active the status of splitting BanchoBot messages
+	 */
+	setSplitBanchoBotMessages(active: boolean): void {
+		this.splitBanchoBotMessages$.next(active);
+		this.settingsStore.set('splitBanchoBotMessages', active);
+	}
+
+	/**
+	 * Get the status of splitting BanchoBot messages
+	 */
+	getSplitBanchoBotMessagesStatus(): BehaviorSubject<boolean> {
+		return this.splitBanchoBotMessages$;
 	}
 }

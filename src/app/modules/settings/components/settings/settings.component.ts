@@ -22,10 +22,12 @@ export class SettingsComponent implements OnInit {
 
 	axsMenuStatus: boolean;
 	showIncorrectSlotStatus: boolean;
+	splitBanchoBotMessages: boolean;
 
 	generalOptions: OptionsMenu[] = [
 		{ header: 'Show AxS menu item', description: 'Toggle visibility of the AxS menu item in the sidebar', buttonText: 'Toggle', action: () => this.toggleAxSMenu(), slideToggle: true, slideToggleValue: this.genericService.getAxSMenuStatus() },
-		{ header: 'Show incorrect slot warning', description: 'Toggle whether to show a warning when a player is in an incorrect slot. This is shown when <code>!mp settings</code> is used', buttonText: 'Toggle', action: () => this.toggleShowIncorrectSlot(), slideToggle: true, slideToggleValue: this.genericService.getShowIncorrectSlotStatus() }
+		{ header: 'Show incorrect slot warning', description: 'Toggle whether to show a warning when a player is in an incorrect slot. This is shown when <code>!mp settings</code> is used', buttonText: 'Toggle', action: () => this.toggleShowIncorrectSlot(), slideToggle: true, slideToggleValue: this.genericService.getShowIncorrectSlotStatus() },
+		{ header: 'Split BanchoBot messages', description: 'Toggle whether to split BanchoBot messages into its own chat container', buttonText: 'Toggle', action: () => this.toggleSplitBanchoBotMessages(), slideToggle: true, slideToggleValue: this.genericService.getSplitBanchoBotMessagesStatus() }
 	];
 
 	configurationOptions: OptionsMenu[] = [
@@ -58,6 +60,10 @@ export class SettingsComponent implements OnInit {
 
 		this.genericService.getShowIncorrectSlotStatus().subscribe(status => {
 			this.showIncorrectSlotStatus = status;
+		});
+
+		this.genericService.getSplitBanchoBotMessagesStatus().subscribe(status => {
+			this.splitBanchoBotMessages = status;
 		});
 
 		this.webhookAuthorImage = this.webhookService.authorImage;
@@ -148,6 +154,11 @@ export class SettingsComponent implements OnInit {
 	toggleShowIncorrectSlot(): void {
 		this.showIncorrectSlotStatus = !this.showIncorrectSlotStatus;
 		this.genericService.setShowIncorrectSlot(this.showIncorrectSlotStatus);
+	}
+
+	toggleSplitBanchoBotMessages(): void {
+		this.splitBanchoBotMessages = !this.splitBanchoBotMessages;
+		this.genericService.setSplitBanchoBotMessages(this.splitBanchoBotMessages);
 	}
 
 	updateWebhookCustomization() {

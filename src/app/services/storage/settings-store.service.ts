@@ -7,13 +7,15 @@ interface AppSettings {
 	version: string;
 	showAxs: boolean;
 	showIncorrectSlot: boolean;
+	splitBanchoBotMessages: boolean;
 	[key: string]: any;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
 	version: PackageJson.version,
 	showAxs: false,
-	showIncorrectSlot: true
+	showIncorrectSlot: true,
+	splitBanchoBotMessages: false
 };
 
 @Injectable({
