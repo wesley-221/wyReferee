@@ -106,7 +106,7 @@ export class WyMappool {
 				if (Mods.HardRock as number == OsuHelper.getBitFromMods([modBracket.mods]) || ['mixed mod', 'mixedmod'].includes(modBracket.name.toLowerCase())) {
 					const newMod = new WyMod({
 						index: newModBracket.modIndex,
-						name: modBracket.name,
+						name: 'Freemod',
 						value: 'freemod'
 					});
 
@@ -129,7 +129,7 @@ export class WyMappool {
 
 					const freemodMod = new WyMod({
 						index: newModBracket.modIndex,
-						name: modBracket.name,
+						name: 'Freemod',
 						value: 'freemod'
 					});
 
@@ -170,7 +170,7 @@ export class WyMappool {
 				if (!hasNoFail) {
 					const nofail = new WyMod({
 						index: newModBracket.modIndex,
-						name: modBracket.name,
+						name: 'NoFail',
 						value: Mods.NoFail
 					});
 
