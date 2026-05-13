@@ -36,10 +36,11 @@ import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dial
 import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyTriggerMessage } from 'app/models/wytournament/trigger-message';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, combineLatest, forkJoin, map, take, takeUntil } from 'rxjs';
 import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 import { IrcChatContainerComponent } from '../irc-chat-container/irc-chat-container.component';
 import { IrcChatControlsComponent } from '../irc-chat-controls/irc-chat-controls.component';
+import { GenericService } from '../../../../services/generic.service';
 
 @Component({
 	selector: 'app-irc',
@@ -92,6 +93,9 @@ export class IrcComponent implements OnInit, OnDestroy {
 	matchDialogMultiplayerData: MultiplayerData;
 	matchDialogSendFinalResult: boolean;
 
+	sidebarLeftWidth = 250;
+	sidebarRightWidth = 250;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -106,7 +110,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 		private tournamentService: TournamentService,
 		private challongeService: ChallongeService,
 		public slashCommandService: SlashCommandService,
-		public cacheService: CacheService) {
+		public cacheService: CacheService,
+		private genericService: GenericService) {
 		this.currentMessageHistoryIndex = -1;
 		this.slashCommandIndex = -1;
 
@@ -126,6 +131,16 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 		this.allSlashCommands = this.slashCommandService.getSlashCommands();
 		this.allSlashCommandsFiltered = this.slashCommandService.getSlashCommands();
+
+		combineLatest([
+			this.genericService.getIrcSidebarWidth('left'),
+			this.genericService.getIrcSidebarWidth('right')
+		])
+			.pipe(take(1))
+			.subscribe(([leftWidth, rightWidth]) => {
+				this.sidebarLeftWidth = leftWidth;
+				this.sidebarRightWidth = rightWidth;
+			});
 	}
 
 	/**
@@ -1142,6 +1157,26 @@ export class IrcComponent implements OnInit, OnDestroy {
 				this.toastService.addToast(error.error.message);
 			}
 		});
+	}
+
+	resizeSidebar(side: string, width: number) {
+		if (side == 'left') {
+			this.sidebarLeftWidth = width;
+		}
+		else if (side == 'right') {
+			this.sidebarRightWidth = width;
+		}
+	}
+
+	saveResizeSidebar(side: 'left' | 'right', width: number) {
+		if (side == 'left') {
+			this.sidebarLeftWidth = width;
+		}
+		else if (side == 'right') {
+			this.sidebarRightWidth = width;
+		}
+
+		this.genericService.setIrcSidebarWidth(side, width);
 	}
 }
 

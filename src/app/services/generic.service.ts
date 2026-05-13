@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { SettingsStoreService } from './storage/settings-store.service';
 
 @Injectable({
@@ -93,5 +93,15 @@ export class GenericService {
 	 */
 	getBanchoChatContainerHeight(): BehaviorSubject<number> {
 		return this.banchoChatContainerHeight$;
+	}
+
+	setIrcSidebarWidth(side: 'left' | 'right', width: number): void {
+		this.settingsStore.set(`sidebar${side === 'left' ? 'Left' : 'Right'}Width`, width);
+	}
+
+	getIrcSidebarWidth(side: 'left' | 'right'): Observable<number> {
+		const width = this.settingsStore.get(`sidebar${side === 'left' ? 'Left' : 'Right'}Width`) || 250;
+
+		return of(width);
 	}
 }
