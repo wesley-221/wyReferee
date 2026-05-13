@@ -1,0 +1,90 @@
+@import "variables";
+
+:host {
+	width: 100%;
+	height: 100%;
+}
+
+.players-invite {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	overflow-y: auto;
+	flex: 1;
+
+	padding: 0 8px;
+
+	.team {
+		display: flex;
+		flex-direction: column;
+
+		position: relative;
+
+		.team-header {
+			display: flex;
+			align-items: center;
+
+			position: sticky;
+			top: 0;
+
+			background: $irc-sidebar-background-color;
+
+			padding-bottom: 4px;
+			margin-bottom: 3px;
+			border-bottom: 1px solid $irc-border-color;
+
+			.team-name {
+				font-size: 12px;
+				letter-spacing: 0.15px;
+				text-transform: uppercase;
+				color: $primary;
+			}
+
+			.team-player-count {
+				margin-left: auto;
+
+				font-size: 10px;
+				color: $irc-input-text-color;
+			}
+		}
+
+		.players {
+			display: flex;
+			flex-direction: column;
+
+			.player {
+				display: flex;
+				align-items: center;
+
+				border-radius: 7px;
+				padding: 6px 4px;
+				gap: 4px;
+
+				transition: background 0.14s;
+				cursor: pointer;
+
+				.name {
+					flex: 1;
+				}
+
+				.actions {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+
+					opacity: 0;
+					transition: opacity 0.14s;
+				}
+
+				&:hover {
+					background: $irc-input-background-color;
+
+					.actions {
+						opacity: 1;
+					}
+				}
+			}
+		}
+	}
+}
