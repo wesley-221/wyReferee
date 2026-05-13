@@ -1,56 +1,69 @@
 @import "variables";
 
-.row {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 4px;
-
-	.col {
-		display: flex;
-		flex-direction: column;
-
-		gap: 4px;
-		flex: 1;
-	}
-}
-
-.sidebar-select {
+:host {
 	width: 100%;
+	height: 100%;
+}
 
-	background: $irc-input-background-color;
-	color: $irc-input-text-color-active;
+.container {
+	display: flex;
+	flex-direction: column;
 
-	border-radius: 7px;
-	border: 1px solid $irc-input-border-color;
-	outline: none;
+	padding: 8px;
+	gap: 8px;
 
-	padding: 8px 11px;
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
 
-	font-weight: 500;
+		.col {
+			display: flex;
+			flex-direction: column;
 
-	&:focus {
-		border-color: $irc-input-border-color-active;
+			gap: 4px;
+			flex: 1;
+		}
 	}
-}
 
-.updating-text {
-	font-size: 12px;
-	font-weight: 600;
-	font-style: italic;
-	color: $irc-input-text-color;
+	.sidebar-select {
+		width: 100%;
 
-	margin-top: 4px;
-}
+		background: $irc-input-background-color;
+		color: $irc-input-text-color-active;
 
-.label {
-	display: block;
+		border-radius: 7px;
+		border: 1px solid $irc-input-border-color;
+		outline: none;
 
-	font-size: 11px;
-	font-weight: 600;
+		padding: 8px 11px;
 
-	text-transform: uppercase;
+		font-weight: 500;
 
-	color: $irc-input-text-color;
+		&:focus {
+			border-color: $irc-input-border-color-active;
+		}
+	}
 
-	margin-bottom: 4px;
+	.updating-text {
+		font-size: 12px;
+		font-weight: 600;
+		font-style: italic;
+		color: $irc-input-text-color;
+
+		margin-top: 4px;
+	}
+
+	.label {
+		display: block;
+
+		font-size: 11px;
+		font-weight: 600;
+
+		text-transform: uppercase;
+
+		color: $irc-input-text-color;
+
+		margin-bottom: 4px;
+	}
 }

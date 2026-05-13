@@ -1,6 +1,13 @@
+:host {
+	width: 100%;
+	height: 100%;
+}
+
 .irc-match-settings-general {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
+
+	padding: 8px;
 	gap: 8px;
 
 	.form-button {
