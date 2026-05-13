@@ -2,12 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 import { Lobby } from '../../../../models/lobby';
 import { IrcChannel } from '../../../../models/irc/irc-channel';
 import { IrcService } from '../../../../services/irc.service';
-import { WyMultiplayerLobbiesService } from '../../../../services/wy-multiplayer-lobbies.service';
 import { ToastService } from '../../../../services/toast.service';
-import { Router } from '@angular/router';
-import { WebhookService } from '../../../../services/webhook.service';
-import { SendBeatmapResultComponent } from '../../../../components/dialogs/send-beatmap-result/send-beatmap-result.component';
-import { MatDialog } from '@angular/material/dialog';
 import { WyTeamPlayer } from '../../../../models/wytournament/wy-team-player';
 import { WyTeam } from '../../../../models/wytournament/wy-team';
 
@@ -34,12 +29,8 @@ export class IrcMatchSettingsComponent {
 	roomSettingDelay: number;
 
 	constructor(
-		private dialog: MatDialog,
-		private router: Router,
 		private toastService: ToastService,
-		private webhookService: WebhookService,
-		private ircService: IrcService,
-		private multiplayerLobbies: WyMultiplayerLobbiesService
+		private ircService: IrcService
 	) {
 		this.sidebarHeaderButtonActive = 1;
 		this.roomSettingGoingOn = false;
@@ -60,42 +51,6 @@ export class IrcMatchSettingsComponent {
 
 	updateMatchResults() {
 		this.updateMatchResultsEmitter.emit();
-	}
-
-	navigateLobbyOverview() {
-		const lobbyId = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name).lobbyId;
-
-		if (lobbyId) {
-			this.router.navigate(['/lobby-overview/lobby-view', lobbyId]);
-		}
-		else {
-			this.toastService.addToast('No lobby overview found for this irc channel');
-		}
-	}
-
-	sendAddRefCommand() {
-		this.ircService.sendMessage(this.selectedChannel.name, `!mp addref ${this.selectedLobby.tournament.addrefUsernames}`);
-	}
-
-	sendMatchSummary() {
-		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
-
-		if (selectedMultiplayerLobby.sendWebhooks != true) {
-			return;
-		}
-
-		this.webhookService.sendMatchSummary(selectedMultiplayerLobby, this.ircService.authenticatedUser);
-	}
-
-	sendMatchResult() {
-		const selectedMultiplayerLobby = this.multiplayerLobbies.getMultiplayerLobbyByIrc(this.selectedChannel.name);
-
-		this.dialog.open(SendBeatmapResultComponent, {
-			data: {
-				multiplayerLobby: selectedMultiplayerLobby,
-				ircChannel: this.selectedChannel.name
-			}
-		});
 	}
 
 	onRoomSettingChange() {

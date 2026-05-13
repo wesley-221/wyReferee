@@ -1,0 +1,13 @@
+.irc-match-settings-general {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+
+	.form-button {
+		flex: 1;
+
+		&.big-button {
+			grid-column: 1 / -1;
+		}
+	}
+}

@@ -52,18 +52,7 @@
 			padding: 8px;
 			gap: 4px;
 
-			max-width: 350px;
 			height: 200px;
-
-			&.general-container {
-				grid-template-columns: 1fr 1fr;
-
-				.form-button {
-					&.big-button {
-						grid-column: 1 / -1;
-					}
-				}
-			}
 
 			&.settings-container {
 				&.active {

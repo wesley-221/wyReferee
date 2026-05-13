@@ -1,0 +1,69 @@
+<div class="irc-match-settings-general">
+	<button class="form-button" (click)="openLobbyDialog()">
+		<mat-icon class="icon">settings</mat-icon>
+
+		<div class="text">
+			lobby settings
+		</div>
+	</button>
+
+	<button class="form-button" (click)="synchronizeMp()">
+		<mat-icon class="icon">sync</mat-icon>
+
+		<div class="text">
+			synchronize lobby
+		</div>
+	</button>
+
+	<button class="form-button" (click)="navigateLobbyOverview()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+		<mat-icon class="icon">list</mat-icon>
+
+		<div class="text">
+			lobby overview
+		</div>
+	</button>
+
+	<button class="form-button" (click)="sendAddRefCommand()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined) && selectedLobby.tournament.addrefUsernames?.length > 0">
+		<mat-icon class="icon">send</mat-icon>
+
+		<div class="text">
+			!mp addref
+		</div>
+	</button>
+
+	<ng-container *ngIf="selectedLobby && selectedLobby.isQualifierLobby == true">
+		<button class="form-button big-button" (click)="updateMatchResults()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+			<mat-icon class="icon">update</mat-icon>
+
+			<div class="text">
+				update match results
+			</div>
+		</button>
+	</ng-container>
+
+	<ng-container *ngIf="selectedLobby && selectedLobby.isQualifierLobby != true">
+		<button class="form-button" (click)="sendMatchSummary()" [disabled]="selectedLobby.sendWebhooks != true" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+			<mat-icon class="icon">send</mat-icon>
+
+			<div class="text">
+				match summary
+			</div>
+		</button>
+
+		<button class="form-button" (click)="sendMatchResult()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+			<mat-icon class="icon">send</mat-icon>
+
+			<div class="text">
+				send result to irc
+			</div>
+		</button>
+
+		<button class="form-button big-button primary" (click)="updateMatchResults()" *ngIf="selectedLobby && (selectedLobby.tournament != null || selectedLobby.tournament != undefined)">
+			<mat-icon class="icon">update</mat-icon>
+
+			<div class="text">
+				update match results
+			</div>
+		</button>
+	</ng-container>
+</div>

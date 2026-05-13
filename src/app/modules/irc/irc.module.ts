@@ -12,6 +12,7 @@ import { IrcChatControlsComponent } from './components/irc-chat-controls/irc-cha
 import { IrcMatchHeaderComponent } from './components/irc-match-header/irc-match-header.component';
 import { IrcMatchSettingsComponent } from './components/irc-match-settings/irc-match-settings.component';
 import { IrcMappoolComponent } from './components/irc-mappool/irc-mappool.component';
+import { IrcMatchSettingsGeneralComponent } from './components/irc-match-settings-general/irc-match-settings-general.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { IrcMappoolComponent } from './components/irc-mappool/irc-mappool.compon
 		IrcChatControlsComponent,
 		IrcMatchHeaderComponent,
 		IrcMatchSettingsComponent,
-		IrcMappoolComponent
+		IrcMappoolComponent,
+		IrcMatchSettingsGeneralComponent
 	],
 	imports: [
 		CommonModule,
