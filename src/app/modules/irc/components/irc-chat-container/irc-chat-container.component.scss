@@ -48,43 +48,26 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			flex-shrink: 0;
+
+			height: 16px;
+			gap: 4px;
 
 			position: relative;
-			height: var(--divider-height);
 
-			background: $irc-input-background-color;
-
-			border: 1px solid $irc-input-border-color;
-
-			transition: background 0.12s ease;
 			cursor: row-resize;
+			transition: border 0.15s;
 
-			.chat-divider-handle {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				flex-shrink: 0;
+			background: $background-color;
 
-				width: 28px;
-				height: 12px;
-				gap: 3px;
+			border-bottom: 1px solid $irc-border-color;
+			border-top: 1px solid $irc-border-color;
 
-				border-radius: 3px;
-				border: 1px solid $irc-input-border-color;
-
-				background: $irc-input-text-color-active;
-
-				transition:
-					background 0.12s,
-					border-color 0.12s;
-
-				span {
-					display: block;
-					width: 1px;
-					height: 6px;
-					background: black;
-				}
+			span {
+				width: 2px;
+				height: 2px;
+				border-radius: 50%;
+				background: $irc-input-text-color;
+				transition: background 0.15s;
 			}
 
 			&:hover,
@@ -92,11 +75,6 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 			&:focus {
 				background: rgba($primary, 0.1);
 				border-color: rgba($primary, 0.26);
-
-				.chat-divider-handle {
-					background: $primary;
-					border-color: rgba($primary, 0.26);
-				}
 			}
 		}
 
