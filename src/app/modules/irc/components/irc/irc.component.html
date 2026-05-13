@@ -18,20 +18,9 @@
 				</button>
 			</div>
 
-			<div class="irc-lobbies">
-				<app-irc-lobbies
-					[selectedChannel]="selectedChannel"
-					[channels]="channels"
-					(changeChannel)="changeChannel($event)"
-				/>
-			</div>
-
-			<div class="irc-slots" *ngIf="selectedLobby != undefined && selectedChannel != undefined && selectedChannel.name.startsWith('#mp_')">
-				<app-irc-player-management
-					[lobby]="selectedLobby"
-					[channel]="selectedChannel"
-				/>
-			</div>
+			<ng-container *ngFor="let sidebarItem of sidebarLeftSections">
+				<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
+			</ng-container>
 		</div>
 
 		<div class="irc-sidebar left-handle"
@@ -99,31 +88,58 @@
 		</div>
 
 		<div class="irc-sidebar-right" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
-			<div class="irc-match-settings">
-				<app-irc-match-settings
-					[selectedLobby]="selectedLobby"
-					[selectedChannel]="selectedChannel"
-					[qualifierTeams]="qualifierTeams"
-					(openLobbyDialogEmitter)="openLobbyDialog()"
-					(synchronizeMpEmitter)="synchronizeMp()"
-					(updateMatchResultsEmitter)="updateMatchResults()"
-				/>
-			</div>
-
-			<div class="irc-mappool">
-				<app-irc-mappool
-					[selectedLobby]="selectedLobby"
-					[selectedChannel]="selectedChannel"
-					[searchValue]="searchValue"
-					(banBeatmapEmitter)="banBeatmap($event.beatmap, $event.modBracket, $event.multiplayerLobby)"
-					(unbanBeatmapEmitter)="unbanBeatmap($event)"
-					(protectBeatmapEmitter)="protectBeatmap($event.beatmap, $event.modBracket, $event.multiplayerLobby)"
-					(unprotectBeatmapEmitter)="unprotectBeatmap($event)"
-					(changePickedByEmitter)="changePickedBy($event)"
-					(pickBeatmapEmitter)="pickBeatmap($event.beatmap, $event.modBracket, $event.gamemode)"
-					(unpickBeatmapEmitter)="unpickBeatmap($event)"
-				/>
-			</div>
+			<ng-container *ngFor="let sidebarItem of sidebarRightSections">
+				<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
+			</ng-container>
 		</div>
 	</div>
 </div>
+
+<ng-template #lobbiesTemplate>
+	<div class="irc-lobbies">
+		<app-irc-lobbies
+			[selectedChannel]="selectedChannel"
+			[channels]="channels"
+			(changeChannel)="changeChannel($event)"
+		/>
+	</div>
+</ng-template>
+
+<ng-template #playerManagementTemplate>
+	<div class="irc-slots" *ngIf="selectedLobby != undefined && selectedChannel != undefined && selectedChannel.name.startsWith('#mp_')">
+		<app-irc-player-management
+			[lobby]="selectedLobby"
+			[channel]="selectedChannel"
+		/>
+	</div>
+</ng-template>
+
+<ng-template #matchSettingsTemplate>
+	<div class="irc-match-settings">
+		<app-irc-match-settings
+			[selectedLobby]="selectedLobby"
+			[selectedChannel]="selectedChannel"
+			[qualifierTeams]="qualifierTeams"
+			(openLobbyDialogEmitter)="openLobbyDialog()"
+			(synchronizeMpEmitter)="synchronizeMp()"
+			(updateMatchResultsEmitter)="updateMatchResults()"
+		/>
+	</div>
+</ng-template>
+
+<ng-template #mappoolTemplate>
+	<div class="irc-mappool">
+		<app-irc-mappool
+			[selectedLobby]="selectedLobby"
+			[selectedChannel]="selectedChannel"
+			[searchValue]="searchValue"
+			(banBeatmapEmitter)="banBeatmap($event.beatmap, $event.modBracket, $event.multiplayerLobby)"
+			(unbanBeatmapEmitter)="unbanBeatmap($event)"
+			(protectBeatmapEmitter)="protectBeatmap($event.beatmap, $event.modBracket, $event.multiplayerLobby)"
+			(unprotectBeatmapEmitter)="unprotectBeatmap($event)"
+			(changePickedByEmitter)="changePickedBy($event)"
+			(pickBeatmapEmitter)="pickBeatmap($event.beatmap, $event.modBracket, $event.gamemode)"
+			(unpickBeatmapEmitter)="unpickBeatmap($event)"
+		/>
+	</div>
+</ng-template>

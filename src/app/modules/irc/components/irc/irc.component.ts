@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy, TemplateRef } from '@angular/core';
 import { IrcService } from '../../../../services/irc.service';
 import { ElectronService } from '../../../../services/electron.service';
 import { Router } from '@angular/router';
@@ -41,6 +41,8 @@ import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update
 import { IrcChatContainerComponent } from '../irc-chat-container/irc-chat-container.component';
 import { IrcChatControlsComponent } from '../irc-chat-controls/irc-chat-controls.component';
 import { GenericService } from '../../../../services/generic.service';
+import { IrcLayoutService } from '../../../../services/irc-layout.service';
+import { IrcLayoutSectionViewType } from '../../../../models/irc-layout-section';
 
 @Component({
 	selector: 'app-irc',
@@ -48,8 +50,10 @@ import { GenericService } from '../../../../services/generic.service';
 	styleUrls: ['./irc.component.scss']
 })
 export class IrcComponent implements OnInit, OnDestroy {
-	@ViewChild('channelName') channelName: ElementRef;
-	@ViewChild('chatMessage') chatMessage: ElementRef;
+	@ViewChild('lobbiesTemplate', { static: true }) private lobbiesTemplate!: TemplateRef<unknown>;
+	@ViewChild('playerManagementTemplate', { static: true }) private playerManagementTemplate!: TemplateRef<unknown>;
+	@ViewChild('matchSettingsTemplate', { static: true }) private matchSettingsTemplate!: TemplateRef<unknown>;
+	@ViewChild('mappoolTemplate', { static: true }) private mappoolTemplate!: TemplateRef<unknown>;
 
 	@ViewChild(IrcChatContainerComponent) ircChatContainerComponent: IrcChatContainerComponent;
 	@ViewChild(IrcChatControlsComponent) ircChatControlsComponent: IrcChatControlsComponent;
@@ -96,6 +100,9 @@ export class IrcComponent implements OnInit, OnDestroy {
 	sidebarLeftWidth = 250;
 	sidebarRightWidth = 250;
 
+	sidebarLeftSections = this.ircLayoutService.sidebarLeftSections;
+	sidebarRightSections = this.ircLayoutService.sidebarRightSections;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -111,7 +118,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 		private challongeService: ChallongeService,
 		public slashCommandService: SlashCommandService,
 		public cacheService: CacheService,
-		private genericService: GenericService) {
+		private genericService: GenericService,
+		private ircLayoutService: IrcLayoutService) {
 		this.currentMessageHistoryIndex = -1;
 		this.slashCommandIndex = -1;
 
@@ -1177,6 +1185,22 @@ export class IrcComponent implements OnInit, OnDestroy {
 		}
 
 		this.genericService.setIrcSidebarWidth(side, width);
+	}
+
+	getTemplate(view: IrcLayoutSectionViewType): TemplateRef<unknown> {
+		switch (view) {
+			case 'lobbies':
+				return this.lobbiesTemplate;
+
+			case 'player-management':
+				return this.playerManagementTemplate;
+
+			case 'match-settings':
+				return this.matchSettingsTemplate;
+
+			case 'mappool':
+				return this.mappoolTemplate;
+		}
 	}
 }
 
