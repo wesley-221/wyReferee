@@ -54,22 +54,6 @@
 
 			height: 200px;
 
-			&.settings-container {
-				&.active {
-					display: flex;
-					flex-direction: column;
-				}
-
-				.updating-text {
-					font-size: 12px;
-					font-weight: 600;
-					font-style: italic;
-					color: $irc-input-text-color;
-
-					margin-top: 4px;
-				}
-			}
-
 			&.players-container {
 				overflow-y: auto;
 				padding: 0;
@@ -147,52 +131,6 @@
 							}
 						}
 					}
-				}
-			}
-
-			.label {
-				display: block;
-
-				font-size: 11px;
-				font-weight: 600;
-
-				text-transform: uppercase;
-
-				color: $irc-input-text-color;
-
-				margin-bottom: 4px;
-			}
-
-			.sidebar-select {
-				width: 100%;
-
-				background: $irc-input-background-color;
-				color: $irc-input-text-color-active;
-
-				border-radius: 7px;
-				border: 1px solid $irc-input-border-color;
-				outline: none;
-
-				padding: 8px 11px;
-
-				font-weight: 500;
-
-				&:focus {
-					border-color: $irc-input-border-color-active;
-				}
-			}
-
-			.row {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 4px;
-
-				.col {
-					display: flex;
-					flex-direction: column;
-
-					gap: 4px;
-					flex: 1;
 				}
 			}
 

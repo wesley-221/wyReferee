@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Lobby } from '../../../../models/lobby';
 import { IrcChannel } from '../../../../models/irc/irc-channel';
 import { IrcService } from '../../../../services/irc.service';
@@ -12,10 +12,6 @@ import { WyTeam } from '../../../../models/wytournament/wy-team';
 	styleUrl: './irc-match-settings.component.scss'
 })
 export class IrcMatchSettingsComponent {
-	@ViewChild('teamMode') teamMode: ElementRef;
-	@ViewChild('winCondition') winCondition: ElementRef;
-	@ViewChild('players') players: ElementRef;
-
 	@Output() openLobbyDialogEmitter = new EventEmitter<void>();
 	@Output() synchronizeMpEmitter = new EventEmitter<void>()
 	@Output() updateMatchResultsEmitter = new EventEmitter<void>();
@@ -25,16 +21,12 @@ export class IrcMatchSettingsComponent {
 	@Input() qualifierTeams: WyTeam[];
 
 	sidebarHeaderButtonActive: number;
-	roomSettingGoingOn: boolean;
-	roomSettingDelay: number;
 
 	constructor(
 		private toastService: ToastService,
 		private ircService: IrcService
 	) {
 		this.sidebarHeaderButtonActive = 1;
-		this.roomSettingGoingOn = false;
-		this.roomSettingDelay = 0;
 	}
 
 	selectSidebarHeaderButton(button: number): void {
@@ -51,32 +43,6 @@ export class IrcMatchSettingsComponent {
 
 	updateMatchResults() {
 		this.updateMatchResultsEmitter.emit();
-	}
-
-	onRoomSettingChange() {
-		if (!this.roomSettingGoingOn) {
-			const timer =
-				setInterval(() => {
-					if (this.roomSettingDelay == 1) {
-						this.ircService.sendMessage(this.selectedChannel.name, `!mp set ${this.teamMode.nativeElement.value as string} ${this.winCondition.nativeElement.value as string} ${this.players.nativeElement.value == undefined ? 8 : this.players.nativeElement.value as string}`);
-
-						this.ircService.getChannelByName(this.selectedChannel.name).teamMode = this.teamMode.nativeElement.value;
-						this.ircService.getChannelByName(this.selectedChannel.name).winCondition = this.winCondition.nativeElement.value;
-						this.ircService.getChannelByName(this.selectedChannel.name).players = this.players.nativeElement.value;
-
-						this.roomSettingGoingOn = false;
-						this.roomSettingDelay = 0;
-
-						clearInterval(timer);
-					}
-
-					this.roomSettingDelay--;
-				}, 1000);
-
-			this.roomSettingGoingOn = true;
-		}
-
-		this.roomSettingDelay = 3;
 	}
 
 	/**
