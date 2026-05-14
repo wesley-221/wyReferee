@@ -32,6 +32,10 @@
 		gap: 8px;
 
 		border-bottom: 1px solid $irc-border-color;
+
+		.margin-left-auto {
+			margin-left: auto;
+		}
 	}
 
 	.body {
@@ -42,6 +46,8 @@
 
 			padding: 8px;
 			gap: 8px;
+
+			user-select: none;
 
 			.section {
 				display: flex;
@@ -72,9 +78,31 @@
 				}
 
 				&:hover {
+					background: rgba($primary, 0.1);
 					border-color: rgba($primary, 0.26);
 				}
 			}
 		}
 	}
+}
+
+.placeholder {
+	display: none;
+}
+
+.drag-preview {
+	display: flex;
+	align-items: center;
+
+	background-color: rgba($primary, 0.1);
+	color: $primary;
+
+	border: 1px solid rgba($primary, 0.26);
+	border-radius: 4px;
+
+	padding: 8px;
+	gap: 4px;
+
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
 }

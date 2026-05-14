@@ -47,6 +47,10 @@ body {
 		cursor: col-resize;
 		user-select: none;
 	}
+
+	&.grabbing-cursor {
+		cursor: grabbing;
+	}
 }
 
 *,

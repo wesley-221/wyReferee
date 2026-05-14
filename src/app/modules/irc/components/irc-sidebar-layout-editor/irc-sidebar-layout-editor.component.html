@@ -1,3 +1,33 @@
-<div class="add-section">
-	<mat-icon>add</mat-icon> add section
+<div class="sidebar-sections">
+	<div class="sidebar-section" *ngFor="let sidebarSection of sidebarSections | async">
+		<ng-container *ngVar="getLayoutBySection(sidebarSection) as section">
+			<div class="handle">
+				<mat-icon>drag_indicator</mat-icon>
+			</div>
+
+			<div class="body">
+				<div class="icon">
+					<mat-icon>{{ section.icon }}</mat-icon>
+				</div>
+
+				{{ section.header }}
+			</div>
+
+			<div class="actions">
+				<button class="form-button small-button danger" (click)="deleteSection(sidebarSection)">
+					<mat-icon class="icon">delete</mat-icon>
+				</button>
+			</div>
+		</ng-container>
+	</div>
+</div>
+
+<div
+	[id]="'sidebar-dropzone-' + sidebar"
+	class="add-section"
+	cdkDropList
+	(cdkDropListDropped)="drop($event)"
+	[cdkDropListConnectedTo]="['layout-library']"
+>
+	<mat-icon>add</mat-icon> drop a new section here
 </div>

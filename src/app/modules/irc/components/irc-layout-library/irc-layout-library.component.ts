@@ -18,4 +18,12 @@ export class IrcLayoutLibraryComponent {
 	closeLayoutEditor() {
 		this.closeLayoutEditorEmitter.emit();
 	}
+
+	onDragStarted() {
+		document.body.classList.add('grabbing-cursor');
+	}
+
+	onDragEnded() {
+		document.body.classList.remove('grabbing-cursor');
+	}
 }

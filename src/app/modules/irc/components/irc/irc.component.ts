@@ -103,15 +103,17 @@ export class IrcComponent implements OnInit, OnDestroy {
 	sidebarLeftWidth = 250;
 	sidebarRightWidth = 250;
 
-	private sidebarSections = this.ircLayoutService.sidebarSections;
+	private sidebarSections = this.ircLayoutService.sidebarSections$;
 
-	sidebarLeftSections = this.sidebarSections
-		.filter(section => section.sidebar === 'left')
-		.sort((a, b) => a.order - b.order);
+	sidebarLeftSections = this.sidebarSections.pipe(
+		map(sections => sections.filter(section => section.sidebar === 'left')),
+		map(sections => sections.sort((a, b) => a.order - b.order))
+	);
 
-	sidebarRightSections = this.sidebarSections
-		.filter(section => section.sidebar === 'right')
-		.sort((a, b) => a.order - b.order);
+	sidebarRightSections = this.sidebarSections.pipe(
+		map(sections => sections.filter(section => section.sidebar === 'right')),
+		map(sections => sections.sort((a, b) => a.order - b.order))
+	);
 
 	layoutEditorOpen = false;
 

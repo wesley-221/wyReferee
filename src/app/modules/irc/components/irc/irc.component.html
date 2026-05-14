@@ -25,14 +25,16 @@
 					</button>
 				</div>
 
-				<ng-container *ngFor="let sidebarItem of sidebarLeftSections">
+				<ng-container *ngFor="let sidebarItem of sidebarLeftSections | async">
 					<div class="sidebar-item" [class.full-height]="sidebarItem.size == null" [style.height]="sidebarItem.size != null ? sidebarItem.size + 'px' : 'auto'">
 						<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
 					</div>
 				</ng-container>
 			}
 			@else {
-				<app-irc-sidebar-layout-editor />
+				<app-irc-sidebar-layout-editor
+					sidebar="left"
+				/>
 			}
 		</div>
 
@@ -109,14 +111,16 @@
 
 		<div class="irc-sidebar right" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
 			@if(!layoutEditorOpen) {
-				<ng-container *ngFor="let sidebarItem of sidebarRightSections">
+				<ng-container *ngFor="let sidebarItem of sidebarRightSections | async">
 					<div class="sidebar-item" [class.full-height]="sidebarItem.size == null" [style.height]="sidebarItem.size != null ? sidebarItem.size + 'px' : 'auto'">
 						<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
 					</div>
 				</ng-container>
 			}
 			@else {
-				<app-irc-sidebar-layout-editor />
+				<app-irc-sidebar-layout-editor
+					sidebar="right"
+				/>
 			}
 		</div>
 	</div>

@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { IrcLayoutSection, IrcLayoutSectionViewType } from '../models/irc-layout-section';
 import { IrcLayout } from '../models/irc-layout';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class IrcLayoutService {
-	sidebarSections: IrcLayoutSection[];
+	private sidebarSections: IrcLayoutSection[];
+	sidebarSections$: BehaviorSubject<IrcLayoutSection[]>;
+
+	availableId = 0;
 
 	layouts: IrcLayout[] = [
 		{ icon: 'list', header: 'irc channels', body: 'A list with all the irc channels you have joined.', type: 'irc-channels' },
@@ -20,81 +24,93 @@ export class IrcLayoutService {
 
 	constructor() {
 		this.sidebarSections = [];
+		this.sidebarSections$ = new BehaviorSubject(this.sidebarSections);
 
 		this.createDefaultSections();
 	}
 
 	createSection(id: number | string, order: number, sidebar: 'left' | 'right', view: IrcLayoutSectionViewType) {
-		switch (view) {
-			case 'irc-channels':
-				return new IrcLayoutSection({
-					id: id,
-					order: order,
-					sidebar: sidebar,
-					size: 250,
-					view: 'irc-channels'
-				});
+		let section: IrcLayoutSection;
 
-			case 'player-management':
-				return new IrcLayoutSection({
-					id: id,
-					order: order,
-					sidebar: sidebar,
-					view: 'player-management'
-				});
-
-			case 'match-settings':
-				return new IrcLayoutSection({
-					id: id,
-					order: order,
-					sidebar: sidebar,
-					size: 250,
-					view: 'match-settings'
-				});
-
-			case 'general-interactions':
-				return new IrcLayoutSection({
-					id: id,
-					order: order,
-					sidebar: sidebar,
-					size: 250,
-					view: 'general-interactions'
-				});
-
-			case 'multiplayer-lobby-settings':
-				return new IrcLayoutSection({
-					id: id,
-					order: order,
-					sidebar: sidebar,
-					size: 250,
-					view: 'multiplayer-lobby-settings'
-				});
-
-			case 'player-invites':
-				return new IrcLayoutSection({
-					id: id,
-					order: order,
-					sidebar: sidebar,
-					size: 250,
-					view: 'player-invites'
-				});
-
-			case 'mappool':
-				return new IrcLayoutSection({
-					id: id,
-					order: order,
-					sidebar: sidebar,
-					view: 'mappool'
-				});
+		if (view === 'irc-channels') {
+			section = new IrcLayoutSection({
+				id: id,
+				order: order,
+				sidebar: sidebar,
+				size: 250,
+				view: 'irc-channels'
+			});
 		}
+		else if (view === 'player-management') {
+			section = new IrcLayoutSection({
+				id: id,
+				order: order,
+				sidebar: sidebar,
+				view: 'player-management'
+			});
+		}
+		else if (view === 'match-settings') {
+			section = new IrcLayoutSection({
+				id: id,
+				order: order,
+				sidebar: sidebar,
+				size: 250,
+				view: 'match-settings'
+			});
+		}
+		else if (view === 'general-interactions') {
+			section = new IrcLayoutSection({
+				id: id,
+				order: order,
+				sidebar: sidebar,
+				size: 250,
+				view: 'general-interactions'
+			});
+		}
+		else if (view === 'multiplayer-lobby-settings') {
+			section = new IrcLayoutSection({
+				id: id,
+				order: order,
+				sidebar: sidebar,
+				size: 250,
+				view: 'multiplayer-lobby-settings'
+			});
+		}
+		else if (view === 'player-invites') {
+			section = new IrcLayoutSection({
+				id: id,
+				order: order,
+				sidebar: sidebar,
+				size: 250,
+				view: 'player-invites'
+			});
+		}
+		else if (view === 'mappool') {
+			section = new IrcLayoutSection({
+				id: id,
+				order: order,
+				sidebar: sidebar,
+				view: 'mappool'
+			});
+		}
+
+		this.sidebarSections.push(section);
+		this.sidebarSections$.next(this.sidebarSections);
+	}
+
+	deleteSection(id: number | string) {
+		this.sidebarSections = this.sidebarSections.filter(section => section.id !== id);
+		this.sidebarSections$.next(this.sidebarSections);
+	}
+
+	getLayoutByView(view: IrcLayoutSectionViewType) {
+		return this.layouts.find(layout => layout.type === view);
 	}
 
 	private createDefaultSections() {
-		this.sidebarSections = [
-			this.createSection(0, 0, 'left', 'irc-channels'),
-			this.createSection(1, 1, 'left', 'player-management'),
-			this.createSection(2, 0, 'right', 'match-settings'),
-			this.createSection(3, 1, 'right', 'mappool')
-		];
+		this.createSection(this.availableId++, 0, 'left', 'irc-channels');
+		this.createSection(this.availableId++, 1, 'left', 'player-management');
+		this.createSection(this.availableId++, 0, 'right', 'match-settings');
+		this.createSection(this.availableId++, 1, 'right', 'mappool');
 	}
 }
