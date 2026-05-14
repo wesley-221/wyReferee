@@ -36,14 +36,12 @@ $sidebar-width: 250px;
 		--sidebar-left-width: $sidebar-width;
 		--sidebar-right-width: $sidebar-width;
 
-		.irc-sidebar-left {
+		.irc-sidebar {
 			display: flex;
 			flex-direction: column;
 
 			background-color: $irc-sidebar-background-color;
-			border-right: 1px solid $irc-border-color;
 
-			flex: 0 0 var(--sidebar-left-width);
 			min-width: 0;
 
 			.irc-sidebar-header {
@@ -58,17 +56,25 @@ $sidebar-width: 250px;
 				}
 			}
 
-			.irc-lobbies {
-				height: 250px;
+			&.left {
+				border-right: 1px solid $irc-border-color;
+				flex: 0 0 var(--sidebar-left-width);
 			}
 
-			.irc-slots {
-				flex: 1;
-				min-height: 0;
+			&.right {
+				border-left: 1px solid $irc-border-color;
+				flex: 0 0 var(--sidebar-right-width);
+			}
+
+			.sidebar-item {
+				&.full-height {
+					flex: 1;
+					min-height: 0;
+				}
 			}
 		}
 
-		.irc-sidebar {
+		.irc-sidebar-resize {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
@@ -93,11 +99,11 @@ $sidebar-width: 250px;
 				transition: background 0.15s;
 			}
 
-			&.left-handle {
+			&.left {
 				border-right: 1px solid $irc-border-color;
 			}
 
-			&.right-handle {
+			&.right {
 				border-left: 1px solid $irc-border-color;
 			}
 
@@ -128,21 +134,6 @@ $sidebar-width: 250px;
 
 			.irc-chat-controls {
 				flex: 0 0 auto;
-			}
-		}
-
-		.irc-sidebar-right {
-			display: flex;
-			flex-direction: column;
-
-			background-color: $sidebar-background-color;
-			border-left: 1px solid $irc-border-color;
-
-			flex: 0 0 var(--sidebar-right-width);
-
-			.irc-mappool {
-				flex: 1;
-				min-height: 0;
 			}
 		}
 	}

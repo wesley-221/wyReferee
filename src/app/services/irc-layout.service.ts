@@ -20,7 +20,7 @@ export class IrcLayoutService {
 			id: 0,
 			order: 0,
 			sidebar: 'left',
-			maxSize: 250,
+			size: 250,
 			view: 'lobbies'
 		});
 
@@ -35,7 +35,7 @@ export class IrcLayoutService {
 			id: 2,
 			order: 0,
 			sidebar: 'right',
-			maxSize: 250,
+			size: 250,
 			view: 'match-settings'
 		});
 
