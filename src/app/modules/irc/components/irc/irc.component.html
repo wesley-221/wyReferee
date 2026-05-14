@@ -8,21 +8,36 @@
 
 	<div class="irc-match-body" [style.--sidebar-left-width]="sidebarLeftWidth + 'px'" [style.--sidebar-right-width]="sidebarRightWidth + 'px'">
 		<div class="irc-sidebar left">
-			<div class="irc-sidebar-header">
-				<button class="form-button danger" (click)="goBack()">
-					<mat-icon>arrow_left</mat-icon> back
-				</button>
+			@if(!layoutEditorOpen) {
+				<div class="irc-sidebar-header">
+					<button class="form-button danger" (click)="goBack()">
+						<mat-icon>arrow_left</mat-icon> back
+					</button>
 
-				<button class="form-button primary" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">
-					<mat-icon>add</mat-icon> join
-				</button>
-			</div>
-
-			<ng-container *ngFor="let sidebarItem of sidebarLeftSections">
-				<div class="sidebar-item" [class.full-height]="sidebarItem.size == null" [style.height]="sidebarItem.size != null ? sidebarItem.size + 'px' : 'auto'">
-					<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
+					<button class="form-button primary" (click)="joinChannel()" [disabled]="!ircService.isAuthenticated">
+						<mat-icon>add</mat-icon> join
+					</button>
 				</div>
-			</ng-container>
+
+				<div class="irc-sidebar-header">
+					<button class="form-button primary" (click)="openLayoutEditor()">
+						<mat-icon>edit</mat-icon> edit layout
+					</button>
+				</div>
+
+				<ng-container *ngFor="let sidebarItem of sidebarLeftSections">
+					<div class="sidebar-item" [class.full-height]="sidebarItem.size == null" [style.height]="sidebarItem.size != null ? sidebarItem.size + 'px' : 'auto'">
+						<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
+					</div>
+				</ng-container>
+			}
+			@else {
+				<div class="irc-sidebar-header">
+					<button class="form-button primary" (click)="openLayoutEditor()">
+						<mat-icon>close</mat-icon> close layout editor
+					</button>
+				</div>
+			}
 		</div>
 
 		<div class="irc-sidebar-resize left"
@@ -43,32 +58,37 @@
 		</div>
 
 		<div class="irc-body">
-			<div class="irc-chat-container">
-				<app-irc-chat-container
-					[selectedLobby]="selectedLobby"
-					[selectedChannel]="selectedChannel"
-					[normalChats]="normalChats"
-					[banchoBotChats]="banchoBotChats"
-					(pickBeatmapFromAcronymEmitter)="pickBeatmapFromAcronym($event)"
-					(adjustScoreEmitter)="adjustScore($event.team, $event.mouseClick)"
-				/>
-			</div>
+			@if(!layoutEditorOpen) {
+				<div class="irc-chat-container">
+					<app-irc-chat-container
+						[selectedLobby]="selectedLobby"
+						[selectedChannel]="selectedChannel"
+						[normalChats]="normalChats"
+						[banchoBotChats]="banchoBotChats"
+						(pickBeatmapFromAcronymEmitter)="pickBeatmapFromAcronym($event)"
+						(adjustScoreEmitter)="adjustScore($event.team, $event.mouseClick)"
+					/>
+				</div>
 
-			<div class="irc-chat-controls">
-				<app-irc-shortcut-commands
-					[lobby]="selectedLobby"
-					[channel]="selectedChannel"
-					(focusChat)="focusChat($event)"
-				/>
+				<div class="irc-chat-controls">
+					<app-irc-shortcut-commands
+						[lobby]="selectedLobby"
+						[channel]="selectedChannel"
+						(focusChat)="focusChat($event)"
+					/>
 
-				<app-irc-chat-controls
-					[activeSlashCommand]="activeSlashCommand"
-					[allSlashCommandsFiltered]="allSlashCommandsFiltered"
-					(sendMessageEmitter)="sendMessage($event)"
-					(handleKeyboardEventEmitter)="handleKeyboardEvent($event)"
-					(selectSlashCommandEmitter)="selectSlashCommand($event)"
-				/>
-			</div>
+					<app-irc-chat-controls
+						[activeSlashCommand]="activeSlashCommand"
+						[allSlashCommandsFiltered]="allSlashCommandsFiltered"
+						(sendMessageEmitter)="sendMessage($event)"
+						(handleKeyboardEventEmitter)="handleKeyboardEvent($event)"
+						(selectSlashCommandEmitter)="selectSlashCommand($event)"
+					/>
+				</div>
+			}
+			@else {
+
+			}
 		</div>
 
 		<div class="irc-sidebar-resize right"
@@ -90,11 +110,16 @@
 		</div>
 
 		<div class="irc-sidebar right" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
-			<ng-container *ngFor="let sidebarItem of sidebarRightSections">
-				<div class="sidebar-item" [class.full-height]="sidebarItem.size == null" [style.height]="sidebarItem.size != null ? sidebarItem.size + 'px' : 'auto'">
-					<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
-				</div>
-			</ng-container>
+			@if(!layoutEditorOpen) {
+				<ng-container *ngFor="let sidebarItem of sidebarRightSections">
+					<div class="sidebar-item" [class.full-height]="sidebarItem.size == null" [style.height]="sidebarItem.size != null ? sidebarItem.size + 'px' : 'auto'">
+						<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
+					</div>
+				</ng-container>
+			}
+			@else {
+
+			}
 		</div>
 	</div>
 </div>

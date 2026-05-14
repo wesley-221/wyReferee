@@ -103,6 +103,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 	sidebarLeftSections = this.ircLayoutService.sidebarLeftSections;
 	sidebarRightSections = this.ircLayoutService.sidebarRightSections;
 
+	layoutEditorOpen = false;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -1201,6 +1203,10 @@ export class IrcComponent implements OnInit, OnDestroy {
 			case 'mappool':
 				return this.mappoolTemplate;
 		}
+	}
+
+	openLayoutEditor() {
+		this.layoutEditorOpen = !this.layoutEditorOpen;
 	}
 }
 
