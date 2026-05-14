@@ -32,11 +32,7 @@
 				</ng-container>
 			}
 			@else {
-				<div class="irc-sidebar-header">
-					<button class="form-button primary" (click)="openLayoutEditor()">
-						<mat-icon>close</mat-icon> close layout editor
-					</button>
-				</div>
+				<app-irc-sidebar-layout-editor />
 			}
 		</div>
 
@@ -87,7 +83,9 @@
 				</div>
 			}
 			@else {
-
+				<app-irc-layout-library
+					(closeLayoutEditorEmitter)="layoutEditorOpen = false"
+				/>
 			}
 		</div>
 
@@ -118,13 +116,13 @@
 				</ng-container>
 			}
 			@else {
-
+				<app-irc-sidebar-layout-editor />
 			}
 		</div>
 	</div>
 </div>
 
-<ng-template #lobbiesTemplate>
+<ng-template #ircChannelsTemplate>
 	<app-irc-lobbies
 		[selectedChannel]="selectedChannel"
 		[channels]="channels"
@@ -148,6 +146,30 @@
 		(openLobbyDialogEmitter)="openLobbyDialog()"
 		(synchronizeMpEmitter)="synchronizeMp()"
 		(updateMatchResultsEmitter)="updateMatchResults()"
+	/>
+</ng-template>
+
+<ng-template #matchSettingsGeneralInteractionsTemplate>
+	<app-irc-match-settings-general
+		[selectedLobby]="selectedLobby"
+		[selectedChannel]="selectedChannel"
+		(openLobbyDialogEmitter)="openLobbyDialog()"
+		(synchronizeMpEmitter)="synchronizeMp()"
+		(updateMatchResultsEmitter)="updateMatchResults()"
+	/>
+</ng-template>
+
+<ng-template #matchSettingsMultiplayerLobbySettingsTemplate>
+	<app-irc-match-settings-multiplayer-lobby-settings
+		[selectedChannel]="selectedChannel"
+	/>
+</ng-template>
+
+<ng-template #matchSettingsPlayersInvitationTemplate>
+	<app-irc-match-settings-players-invite
+		[selectedLobby]="selectedLobby"
+		[selectedChannel]="selectedChannel"
+		[qualifierTeams]="qualifierTeams"
 	/>
 </ng-template>
 

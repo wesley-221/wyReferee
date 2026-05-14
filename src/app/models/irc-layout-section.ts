@@ -1,10 +1,10 @@
 export type IrcLayoutSectionViewType =
-	| 'lobbies'
+	| 'irc-channels'
 	| 'player-management'
 	| 'mappool'
 	| 'match-settings'
-	| 'general-settings'
-	| 'lobby-settings'
+	| 'general-interactions'
+	| 'multiplayer-lobby-settings'
 	| 'player-invites';
 
 export class IrcLayoutSection {

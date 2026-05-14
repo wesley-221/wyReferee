@@ -1,0 +1,35 @@
+<div class="irc-layout-library">
+	<div class="irc-layout-library-header">
+		<div class="header">
+			Section library
+		</div>
+
+		<div class="description">
+			Customize your irc layout.
+		</div>
+	</div>
+
+	<div class="actions">
+		<button class="form-button danger">
+			<mat-icon>restore</mat-icon> reset to default
+		</button>
+
+		<button class="form-button primary" (click)="closeLayoutEditor()">
+			<mat-icon>close</mat-icon> close and save layout
+		</button>
+	</div>
+
+	<div class="body">
+		<div class="sections">
+			<div class="section" *ngFor="let layout of layouts">
+				<div class="section-header">
+					<mat-icon>{{ layout.icon }}</mat-icon> {{ layout.header }}
+				</div>
+
+				<div class="section-body">
+					{{ layout.body }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -15,6 +15,8 @@ import { IrcMappoolComponent } from './components/irc-mappool/irc-mappool.compon
 import { IrcMatchSettingsGeneralComponent } from './components/irc-match-settings-general/irc-match-settings-general.component';
 import { IrcMatchSettingsMultiplayerLobbySettingsComponent } from './components/irc-match-settings-multiplayer-lobby-settings/irc-match-settings-multiplayer-lobby-settings.component';
 import { IrcMatchSettingsPlayersInviteComponent } from './components/irc-match-settings-players-invite/irc-match-settings-players-invite.component';
+import { IrcLayoutLibraryComponent } from './components/irc-layout-library/irc-layout-library.component';
+import { IrcSidebarLayoutEditorComponent } from './components/irc-sidebar-layout-editor/irc-sidebar-layout-editor.component';
 
 
 @NgModule({
@@ -30,7 +32,9 @@ import { IrcMatchSettingsPlayersInviteComponent } from './components/irc-match-s
 		IrcMappoolComponent,
 		IrcMatchSettingsGeneralComponent,
 		IrcMatchSettingsMultiplayerLobbySettingsComponent,
-		IrcMatchSettingsPlayersInviteComponent
+		IrcMatchSettingsPlayersInviteComponent,
+		IrcLayoutLibraryComponent,
+		IrcSidebarLayoutEditorComponent
 	],
 	imports: [
 		CommonModule,

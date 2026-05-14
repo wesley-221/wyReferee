@@ -50,9 +50,12 @@ import { IrcLayoutSectionViewType } from '../../../../models/irc-layout-section'
 	styleUrls: ['./irc.component.scss']
 })
 export class IrcComponent implements OnInit, OnDestroy {
-	@ViewChild('lobbiesTemplate', { static: true }) private lobbiesTemplate!: TemplateRef<unknown>;
+	@ViewChild('ircChannelsTemplate', { static: true }) private ircChannelsTemplate!: TemplateRef<unknown>;
 	@ViewChild('playerManagementTemplate', { static: true }) private playerManagementTemplate!: TemplateRef<unknown>;
 	@ViewChild('matchSettingsTemplate', { static: true }) private matchSettingsTemplate!: TemplateRef<unknown>;
+	@ViewChild('matchSettingsGeneralInteractionsTemplate', { static: true }) private matchSettingsGeneralInteractionsTemplate!: TemplateRef<unknown>;
+	@ViewChild('matchSettingsMultiplayerLobbySettingsTemplate', { static: true }) private matchSettingsMultiplayerLobbySettingsTemplate!: TemplateRef<unknown>;
+	@ViewChild('matchSettingsPlayersInvitationTemplate', { static: true }) private matchSettingsPlayersInvitationTemplate!: TemplateRef<unknown>;
 	@ViewChild('mappoolTemplate', { static: true }) private mappoolTemplate!: TemplateRef<unknown>;
 
 	@ViewChild(IrcChatContainerComponent) ircChatContainerComponent: IrcChatContainerComponent;
@@ -100,8 +103,15 @@ export class IrcComponent implements OnInit, OnDestroy {
 	sidebarLeftWidth = 250;
 	sidebarRightWidth = 250;
 
-	sidebarLeftSections = this.ircLayoutService.sidebarLeftSections;
-	sidebarRightSections = this.ircLayoutService.sidebarRightSections;
+	private sidebarSections = this.ircLayoutService.sidebarSections;
+
+	sidebarLeftSections = this.sidebarSections
+		.filter(section => section.sidebar === 'left')
+		.sort((a, b) => a.order - b.order);
+
+	sidebarRightSections = this.sidebarSections
+		.filter(section => section.sidebar === 'right')
+		.sort((a, b) => a.order - b.order);
 
 	layoutEditorOpen = false;
 
@@ -1191,14 +1201,23 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 	getTemplate(view: IrcLayoutSectionViewType): TemplateRef<unknown> {
 		switch (view) {
-			case 'lobbies':
-				return this.lobbiesTemplate;
+			case 'irc-channels':
+				return this.ircChannelsTemplate;
 
 			case 'player-management':
 				return this.playerManagementTemplate;
 
 			case 'match-settings':
 				return this.matchSettingsTemplate;
+
+			case 'general-interactions':
+				return this.matchSettingsGeneralInteractionsTemplate;
+
+			case 'multiplayer-lobby-settings':
+				return this.matchSettingsMultiplayerLobbySettingsTemplate;
+
+			case 'player-invites':
+				return this.matchSettingsPlayersInvitationTemplate;
 
 			case 'mappool':
 				return this.mappoolTemplate;

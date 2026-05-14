@@ -1,0 +1,80 @@
+@import "variables";
+
+:host {
+	flex: 1;
+}
+
+.irc-layout-library {
+	display: flex;
+	flex-direction: column;
+
+	height: 100%;
+
+	background: $sub-sidebar-background-color;
+
+	.irc-layout-library-header {
+		padding: 8px;
+
+		background-color: $sidebar-background-color;
+		border-bottom: 1px solid $irc-border-color;
+
+		.header {
+			font-size: 18px;
+		}
+	}
+
+	.actions {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+
+		padding: 8px;
+		gap: 8px;
+
+		border-bottom: 1px solid $irc-border-color;
+	}
+
+	.body {
+		.sections {
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+
+			padding: 8px;
+			gap: 8px;
+
+			.section {
+				display: flex;
+				flex-direction: column;
+				flex: 1 1 calc((100% - 16px) / 3);
+
+				border: 1px solid $irc-border-color;
+				border-radius: 5px;
+
+				background: $irc-input-background-color;
+
+				padding: 8px 16px;
+				gap: 5px;
+
+				cursor: grab;
+				transition: border-color 0.12s;
+
+				.section-header {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+
+					font-size: 18px;
+
+					mat-icon {
+						flex-shrink: 0;
+					}
+				}
+
+				&:hover {
+					border-color: rgba($primary, 0.26);
+				}
+			}
+		}
+	}
+}
