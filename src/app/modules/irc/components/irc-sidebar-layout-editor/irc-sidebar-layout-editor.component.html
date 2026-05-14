@@ -1,22 +1,26 @@
-<div class="sidebar-sections">
-	<div class="sidebar-section" *ngFor="let sidebarSection of sidebarSections | async">
+<div class="sidebar-sections" cdkDropList (cdkDropListDropped)="reorderSidebar($event)">
+	<div class="sidebar-section" cdkDrag *ngFor="let sidebarSection of sidebarSections | async">
 		<ng-container *ngVar="getLayoutBySection(sidebarSection) as section">
-			<div class="handle">
-				<mat-icon>drag_indicator</mat-icon>
-			</div>
-
-			<div class="body">
-				<div class="icon">
-					<mat-icon>{{ section.icon }}</mat-icon>
-				</div>
-
-				{{ section.header }}
-			</div>
+			<ng-container *ngTemplateOutlet="sidebarSectionTemplate; context: { $implicit: section }"></ng-container>
 
 			<div class="actions">
 				<button class="form-button small-button danger" (click)="deleteSection(sidebarSection)">
 					<mat-icon class="icon">delete</mat-icon>
 				</button>
+			</div>
+
+			<div *cdkDragPreview class="drag-preview">
+				<div class="sidebar-sections">
+					<div class="sidebar-section">
+						<ng-container *ngTemplateOutlet="sidebarSectionTemplate; context: { $implicit: section }"></ng-container>
+					</div>
+				</div>
+			</div>
+
+			<div *cdkDragPlaceholder class="placeholder">
+				<div class="sidebar-section">
+					<ng-container *ngTemplateOutlet="sidebarSectionTemplate; context: { $implicit: section }"></ng-container>
+				</div>
 			</div>
 		</ng-container>
 	</div>
@@ -31,3 +35,17 @@
 >
 	<mat-icon>add</mat-icon> drop a new section here
 </div>
+
+<ng-template #sidebarSectionTemplate let-section>
+	<div class="handle">
+		<mat-icon>drag_indicator</mat-icon>
+	</div>
+
+	<div class="body">
+		<div class="icon">
+			<mat-icon>{{ section.icon }}</mat-icon>
+		</div>
+
+		{{ section.header }}
+	</div>
+</ng-template>

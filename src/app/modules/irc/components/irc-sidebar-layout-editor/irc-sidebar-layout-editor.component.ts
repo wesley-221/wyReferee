@@ -26,6 +26,10 @@ export class IrcSidebarLayoutEditorComponent {
 		this.ircLayoutService.createSection(this.ircLayoutService.availableId++, 10, this.sidebar, event.item.data.type);
 	}
 
+	reorderSidebar(event: CdkDragDrop<IrcLayoutSection[]>) {
+		this.ircLayoutService.reorderSections(this.sidebar, event.previousIndex, event.currentIndex);
+	}
+
 	getLayoutBySection(section: IrcLayoutSection) {
 		return this.ircLayoutService.getLayoutByView(section.view);
 	}

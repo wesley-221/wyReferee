@@ -67,3 +67,10 @@
 		}
 	}
 }
+
+.placeholder {
+	opacity: 0.4;
+
+	border: 1px dashed $primary;
+	border-radius: 5px;
+}

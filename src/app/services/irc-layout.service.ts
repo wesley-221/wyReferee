@@ -107,6 +107,30 @@ export class IrcLayoutService {
 		return this.layouts.find(layout => layout.type === view);
 	}
 
+	reorderSections(sidebar: 'left' | 'right', previousIndex: number, currentIndex: number) {
+		const sections = this.sidebarSections
+			.filter(section => section.sidebar === sidebar)
+			.sort((a, b) => a.order - b.order);
+
+		const section = sections[previousIndex];
+
+		sections.splice(previousIndex, 1);
+		sections.splice(currentIndex, 0, section);
+
+		sections.forEach((section, index) => {
+			section.order = index;
+		});
+
+		this.sidebarSections = this.sidebarSections.map(section => {
+			if (section.sidebar !== sidebar) return section;
+
+			const updated = sections.find(s => s.id === section.id);
+			return updated ?? section;
+		});
+
+		this.sidebarSections$.next(this.sidebarSections);
+	}
+
 	private createDefaultSections() {
 		this.createSection(this.availableId++, 0, 'left', 'irc-channels');
 		this.createSection(this.availableId++, 1, 'left', 'player-management');
