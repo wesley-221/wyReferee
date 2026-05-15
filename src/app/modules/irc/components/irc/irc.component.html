@@ -155,18 +155,6 @@
 	</div>
 </ng-template>
 
-<ng-template #playerManagementTemplate let-sidebarItem>
-	<div class="sidebar-item" [style.height]="'auto'">
-		<div class="content">
-			<app-irc-player-management
-				[lobby]="selectedLobby"
-				[channel]="selectedChannel"
-				*ngIf="selectedLobby != undefined && selectedChannel != undefined && selectedChannel.name.startsWith('#mp_')"
-			/>
-		</div>
-	</div>
-</ng-template>
-
 <ng-template #matchSettingsTemplate let-sidebarItem>
 	<div class="sidebar-item" [style.height]="sidebarItem.size != null ? (sidebarItem.size + 16) + 'px' : 'auto'">
 		<div class="content">
@@ -286,8 +274,20 @@
 	</div>
 </ng-template>
 
+<ng-template #playerManagementTemplate let-sidebarItem>
+	<div class="sidebar-item auto">
+		<div class="content">
+			<app-irc-player-management
+				[lobby]="selectedLobby"
+				[channel]="selectedChannel"
+				*ngIf="selectedLobby != undefined && selectedChannel != undefined && selectedChannel.name.startsWith('#mp_')"
+			/>
+		</div>
+	</div>
+</ng-template>
+
 <ng-template #mappoolTemplate let-sidebarItem>
-	<div class="sidebar-item" [style.height]="'auto'">
+	<div class="sidebar-item auto">
 		<div class="content">
 			<app-irc-mappool
 				[selectedLobby]="selectedLobby"
