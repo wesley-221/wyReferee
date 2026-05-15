@@ -10,12 +10,12 @@
 	</div>
 
 	<div class="actions">
-		<button class="form-button primary" (click)="closeLayoutEditor()">
-			<mat-icon>save</mat-icon> close and and update layout
+		<button class="form-button primary" (click)="saveChanges()">
+			<mat-icon>save</mat-icon> save changes
 		</button>
 
-		<button class="form-button danger" (click)="closeLayoutEditor()">
-			<mat-icon>close</mat-icon> close and discard changes
+		<button class="form-button danger" (click)="discardChanges()">
+			<mat-icon>close</mat-icon> discard changes
 		</button>
 
 		<button class="form-button danger margin-left-auto" (click)="resetLayout()">

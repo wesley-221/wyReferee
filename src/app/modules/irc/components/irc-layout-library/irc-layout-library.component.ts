@@ -20,7 +20,13 @@ export class IrcLayoutLibraryComponent {
 		private ircLayoutService: IrcLayoutService,
 	) { }
 
-	closeLayoutEditor() {
+	saveChanges() {
+		this.ircLayoutService.commitChanges();
+		this.closeLayoutEditorEmitter.emit();
+	}
+
+	discardChanges() {
+		this.ircLayoutService.discardChanges();
 		this.closeLayoutEditorEmitter.emit();
 	}
 

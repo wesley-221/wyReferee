@@ -8,6 +8,7 @@ import { IrcLayoutStoreService } from './storage/irc-layout-store.service';
 	providedIn: 'root'
 })
 export class IrcLayoutService {
+	private savedSidebarSections: IrcLayoutSection[];
 	sidebarSections$: BehaviorSubject<IrcLayoutSection[]>;
 
 	availableId = 0;
@@ -25,6 +26,7 @@ export class IrcLayoutService {
 	constructor(
 		private ircLayoutStore: IrcLayoutStoreService
 	) {
+		this.savedSidebarSections = [];
 		this.sidebarSections$ = new BehaviorSubject([]);
 
 		this.ircLayoutStore.watchIrcLayoutSections()
@@ -34,10 +36,12 @@ export class IrcLayoutService {
 			)
 			.subscribe(ircLayoutSections => {
 				if (ircLayoutSections.length === 0) {
-					this.createDefaultSections();
+					this.createDefaultSections(false);
+					this.commitChanges();
 				}
 				else {
-					this.sidebarSections$.next(ircLayoutSections);
+					this.savedSidebarSections = structuredClone(ircLayoutSections);
+					this.sidebarSections$.next(structuredClone(ircLayoutSections));
 					this.availableId = this.getNextAvailableId();
 				}
 			});
@@ -112,14 +116,10 @@ export class IrcLayoutService {
 			...this.sidebarSections$.value,
 			section
 		]);
-
-		this.saveAllSections();
 	}
 
 	deleteSection(id: number) {
 		this.sidebarSections$.next(this.sidebarSections$.value.filter(section => section.id !== id));
-
-		this.saveAllSections();
 	}
 
 	getLayoutByView(view: IrcLayoutSectionViewType) {
@@ -150,8 +150,6 @@ export class IrcLayoutService {
 				return updatedSidebarSections.find(updated => updated.id === section.id) ?? section;
 			})
 		);
-
-		this.saveAllSections();
 	}
 
 	resetToDefault() {
@@ -161,21 +159,31 @@ export class IrcLayoutService {
 		this.availableId = this.getNextAvailableId();
 	}
 
-	private createDefaultSections() {
+	commitChanges() {
+		const cloned = structuredClone(this.sidebarSections$.value);
+
+		this.savedSidebarSections = cloned;
+		this.ircLayoutStore.saveAllIrcLayoutSections(cloned);
+	}
+
+	discardChanges() {
+		this.sidebarSections$.next(structuredClone(this.savedSidebarSections));
+		this.availableId = this.getNextAvailableId();
+	}
+
+	private createDefaultSections(save = true) {
 		this.createSection(this.availableId++, 0, 'left', 'irc-channels');
 		this.createSection(this.availableId++, 1, 'left', 'player-management');
 		this.createSection(this.availableId++, 0, 'right', 'match-settings');
 		this.createSection(this.availableId++, 1, 'right', 'mappool');
 
-		this.saveAllSections();
+		if (save) {
+			this.commitChanges();
+		}
 	}
 
 	private getNextAvailableId() {
 		const allSections = this.sidebarSections$.value;
 		return allSections.length > 0 ? Math.max(...allSections.map(section => section.id)) + 1 : 0;
-	}
-
-	private saveAllSections() {
-		this.ircLayoutStore.saveAllIrcLayoutSections(this.sidebarSections$.value);
 	}
 }
