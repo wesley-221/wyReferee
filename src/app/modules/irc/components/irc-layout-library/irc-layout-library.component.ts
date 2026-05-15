@@ -3,6 +3,7 @@ import { IrcLayoutService } from '../../../../services/irc-layout.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ResetIrcLayoutDialogComponent } from '../../../../components/dialogs/reset-irc-layout-dialog/reset-irc-layout-dialog.component';
 import { ToastService } from '../../../../services/toast.service';
+import { ToastType } from '../../../../models/toast';
 
 @Component({
 	selector: 'app-irc-layout-library',
@@ -24,10 +25,12 @@ export class IrcLayoutLibraryComponent {
 
 	saveChanges() {
 		this.ircLayoutService.commitChanges();
+		this.toastService.addToast('Your IRC layout changes have been saved.');
 	}
 
 	discardChanges() {
 		this.ircLayoutService.discardChanges();
+		this.toastService.addToast('Your IRC layout changes have been discarded.', ToastType.Warning);
 	}
 
 	resetLayout() {
