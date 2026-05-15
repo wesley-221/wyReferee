@@ -23,7 +23,7 @@ export class IrcSidebarLayoutEditorComponent {
 	) { }
 
 	drop(event: CdkDragDrop<IrcLayoutSection[]>) {
-		this.ircLayoutService.createSection(this.ircLayoutService.availableId++, 10, this.sidebar, event.item.data.type);
+		this.ircLayoutService.createSection(this.ircLayoutService.getNextAvailableId(), this.ircLayoutService.getNextAvailableOrder(this.sidebar), this.sidebar, event.item.data.type);
 	}
 
 	reorderSidebar(event: CdkDragDrop<IrcLayoutSection[]>) {

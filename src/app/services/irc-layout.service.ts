@@ -8,19 +8,7 @@ import { IrcLayoutStoreService } from './storage/irc-layout-store.service';
 	providedIn: 'root'
 })
 export class IrcLayoutService {
-	private savedSidebarSections: IrcLayoutSection[] = [];
 	sidebarSections$ = new BehaviorSubject<IrcLayoutSection[]>([]);
-
-	readonly hasChanges$ = this.sidebarSections$.pipe(
-		map(sections => {
-			// Strip .size from coparison
-			const noSizeObject = (s: IrcLayoutSection[]) => s.map((({ size, ...rest }) => rest));
-
-			return JSON.stringify(noSizeObject(sections)) !== JSON.stringify(noSizeObject(this.savedSidebarSections));
-		})
-	);
-
-	availableId = 0;
 
 	layouts: IrcLayout[] = [
 		{ icon: 'list', header: 'irc channels', body: 'A list with all the irc channels you have joined.', type: 'irc-channels' },
@@ -31,6 +19,18 @@ export class IrcLayoutService {
 		{ icon: 'person_add', header: 'player invitation', body: 'A list with all players that are playing for the current match and allows you to invite them to the multiplayer lobby.', type: 'player-invites' },
 		{ icon: 'map', header: 'mappool', body: 'A mappool overview of all the maps which allows you to pick or ban them.', type: 'mappool' }
 	];
+
+	readonly hasChanges$ = this.sidebarSections$.pipe(
+		map(sections => {
+			// Strip .size from coparison
+			const noSizeObject = (s: IrcLayoutSection[]) => s.map((({ size, ...rest }) => rest));
+
+			return JSON.stringify(noSizeObject(sections)) !== JSON.stringify(noSizeObject(this.savedSidebarSections));
+		})
+	);
+
+	private availableId = 0;
+	private savedSidebarSections: IrcLayoutSection[] = [];
 
 	constructor(
 		private ircLayoutStore: IrcLayoutStoreService
@@ -178,6 +178,23 @@ export class IrcLayoutService {
 		this.availableId = this.getNextAvailableId();
 	}
 
+	save(sidebarItem: IrcLayoutSection) {
+		const allSections = this.sidebarSections$.value;
+		const updatedSections = allSections.map(section => section.id === sidebarItem.id ? sidebarItem : section);
+		this.sidebarSections$.next(updatedSections);
+		this.ircLayoutStore.saveAllIrcLayoutSections(updatedSections);
+	}
+
+	getNextAvailableId() {
+		const allSections = this.sidebarSections$.value;
+		return allSections.length > 0 ? Math.max(...allSections.map(section => section.id)) + 1 : 0;
+	}
+
+	getNextAvailableOrder(sidebar: 'left' | 'right') {
+		const sidebarSections = this.sidebarSections$.value.filter(section => section.sidebar === sidebar);
+		return sidebarSections.length > 0 ? Math.max(...sidebarSections.map(section => section.order)) + 1 : 0;
+	}
+
 	private createDefaultSections(save = true) {
 		this.createSection(this.availableId++, 0, 'left', 'irc-channels');
 		this.createSection(this.availableId++, 1, 'left', 'player-management');
@@ -187,10 +204,5 @@ export class IrcLayoutService {
 		if (save) {
 			this.commitChanges();
 		}
-	}
-
-	private getNextAvailableId() {
-		const allSections = this.sidebarSections$.value;
-		return allSections.length > 0 ? Math.max(...allSections.map(section => section.id)) + 1 : 0;
 	}
 }

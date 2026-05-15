@@ -1234,7 +1234,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 		sidebarItem.size = size;
 
 		if (save) {
-			// TODO: store changes
+			this.ircLayoutService.save(sidebarItem);
 		}
 	}
 }
