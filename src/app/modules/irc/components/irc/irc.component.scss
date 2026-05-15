@@ -36,38 +36,59 @@ $sidebar-width: 250px;
 		--sidebar-left-width: $sidebar-width;
 		--sidebar-right-width: $sidebar-width;
 
+		.irc-sidebar-container {
+			display: flex;
+			flex-direction: column;
+
+			min-height: 0;
+			gap: 4px;
+
+			&.left {
+				flex: 0 0 var(--sidebar-left-width);
+			}
+
+			&.right {
+				flex: 0 0 var(--sidebar-right-width);
+			}
+
+			.irc-sidebar-header {
+				display: flex;
+
+				padding: 0 4px;
+				gap: 4px;
+
+				.form-button {
+					flex: 1;
+					justify-content: center;
+				}
+			}
+		}
+
 		.irc-sidebar {
 			display: flex;
 			flex-direction: column;
 
 			background-color: $irc-sidebar-background-color;
 
-			min-width: 0;
-
-			.irc-sidebar-header {
-				display: flex;
-
-				padding: 4px;
-				gap: 4px;
-
-				.form-button {
-					justify-content: center;
-					flex: 1;
-				}
-			}
+			flex: 1 1 auto;
+			min-height: 0;
 
 			&.left {
 				border-right: 1px solid $irc-border-color;
-				flex: 0 0 var(--sidebar-left-width);
 			}
 
 			&.right {
 				border-left: 1px solid $irc-border-color;
-				flex: 0 0 var(--sidebar-right-width);
 			}
 
 			.sidebar-item {
-				&.full-height {
+				display: flex;
+				flex-direction: column;
+				background-color: $irc-sidebar-background-color;
+
+				overflow: hidden;
+
+				.content {
 					flex: 1;
 					min-height: 0;
 				}
@@ -86,7 +107,7 @@ $sidebar-width: 250px;
 			flex-shrink: 0;
 			position: relative;
 
-			background: transparent;
+			background-color: $sub-sidebar-background-color;
 
 			cursor: col-resize;
 			transition: border 0.15s;
@@ -107,10 +128,24 @@ $sidebar-width: 250px;
 				border-left: 1px solid $irc-border-color;
 			}
 
+			&.bottom {
+				flex-direction: row;
+
+				width: auto;
+				height: 16px;
+
+				border-bottom: 1px solid $irc-border-color;
+
+				cursor: row-resize;
+			}
+
 			&:hover,
 			&.active {
 				background-color: rgba($primary, 0.1);
 				border-color: rgba($primary, 0.26);
+
+				backdrop-filter: blur(6px);
+				-webkit-backdrop-filter: blur(6px);
 
 				span {
 					background: $irc-input-text-color-active;

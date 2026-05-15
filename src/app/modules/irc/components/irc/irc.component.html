@@ -7,7 +7,7 @@
 	</div>
 
 	<div class="irc-match-body" [style.--sidebar-left-width]="sidebarLeftWidth + 'px'" [style.--sidebar-right-width]="sidebarRightWidth + 'px'">
-		<div class="irc-sidebar left">
+		<div class="irc-sidebar-container left">
 			@if(!layoutEditorOpen) {
 				<div class="irc-sidebar-header">
 					<button class="form-button danger" (click)="goBack()">
@@ -25,11 +25,11 @@
 					</button>
 				</div>
 
-				<ng-container *ngFor="let sidebarItem of sidebarLeftSections | async">
-					<div class="sidebar-item" [class.full-height]="sidebarItem.size == null" [style.height]="sidebarItem.size != null ? sidebarItem.size + 'px' : 'auto'">
-						<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
-					</div>
-				</ng-container>
+				<div class="irc-sidebar left">
+					<ng-container *ngFor="let sidebarItem of sidebarLeftSections | async">
+						<ng-container *ngTemplateOutlet="getTemplate(sidebarItem.view); context: { $implicit: sidebarItem }"></ng-container>
+					</ng-container>
+				</div>
 			}
 			@else {
 				<app-irc-sidebar-layout-editor
@@ -41,7 +41,7 @@
 		<div class="irc-sidebar-resize left"
 			appResize
 			resizeAxis="x"
-			resizingClass="resizing-sidebar"
+			resizingClass="resizing-x"
 			container=".irc-match-body"
 			[min]="250"
 			(resize)="resizeSidebar('left', $event)"
@@ -94,7 +94,7 @@
 		<div class="irc-sidebar-resize right"
 			appResize
 			resizeAxis="x"
-			resizingClass="resizing-sidebar"
+			resizingClass="resizing-x"
 			container=".irc-match-body"
 			[min]="250"
 			[reverse]="true"
@@ -109,85 +109,198 @@
 			<span></span>
 		</div>
 
-		<div class="irc-sidebar right" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
-			@if(!layoutEditorOpen) {
-				<ng-container *ngFor="let sidebarItem of sidebarRightSections | async">
-					<div class="sidebar-item" [class.full-height]="sidebarItem.size == null" [style.height]="sidebarItem.size != null ? sidebarItem.size + 'px' : 'auto'">
-						<ng-container [ngTemplateOutlet]="getTemplate(sidebarItem.view)"></ng-container>
-					</div>
-				</ng-container>
-			}
-			@else {
-				<app-irc-sidebar-layout-editor
-					sidebar="right"
-				/>
-			}
+		<div class="irc-sidebar-container right" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
+			<div class="irc-sidebar right">
+				@if(!layoutEditorOpen) {
+					<ng-container *ngFor="let sidebarItem of sidebarRightSections | async">
+						<ng-container *ngTemplateOutlet="getTemplate(sidebarItem.view); context: { $implicit: sidebarItem }"></ng-container>
+					</ng-container>
+				}
+				@else {
+					<app-irc-sidebar-layout-editor
+						sidebar="right"
+					/>
+				}
+			</div>
 		</div>
 	</div>
 </div>
 
-<ng-template #ircChannelsTemplate>
-	<app-irc-lobbies
-		[selectedChannel]="selectedChannel"
-		[channels]="channels"
-		(changeChannel)="changeChannel($event)"
-	/>
+<ng-template #ircChannelsTemplate let-sidebarItem>
+	<div class="sidebar-item" [style.height]="sidebarItem.size != null ? (sidebarItem.size + 16) + 'px' : 'auto'">
+		<div class="content">
+			<app-irc-lobbies
+				[selectedChannel]="selectedChannel"
+				[channels]="channels"
+				(changeChannel)="changeChannel($event)"
+			/>
+		</div>
+
+		<div class="irc-sidebar-resize bottom"
+			appResize
+			resizeAxis="y"
+			resizingClass="resizing-y"
+			container="parent"
+			[max]="500"
+			(resize)="resizeIrcSection(sidebarItem, $event, false)"
+			(resizeEnd)="resizeIrcSection(sidebarItem, $event, true)"
+		>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
 </ng-template>
 
-<ng-template #playerManagementTemplate>
-	<app-irc-player-management
-		[lobby]="selectedLobby"
-		[channel]="selectedChannel"
-		*ngIf="selectedLobby != undefined && selectedChannel != undefined && selectedChannel.name.startsWith('#mp_')"
-	/>
+<ng-template #playerManagementTemplate let-sidebarItem>
+	<div class="sidebar-item" [style.height]="'auto'">
+		<div class="content">
+			<app-irc-player-management
+				[lobby]="selectedLobby"
+				[channel]="selectedChannel"
+				*ngIf="selectedLobby != undefined && selectedChannel != undefined && selectedChannel.name.startsWith('#mp_')"
+			/>
+		</div>
+	</div>
 </ng-template>
 
-<ng-template #matchSettingsTemplate>
-	<app-irc-match-settings
-		[selectedLobby]="selectedLobby"
-		[selectedChannel]="selectedChannel"
-		[qualifierTeams]="qualifierTeams"
-		(openLobbyDialogEmitter)="openLobbyDialog()"
-		(synchronizeMpEmitter)="synchronizeMp()"
-		(updateMatchResultsEmitter)="updateMatchResults()"
-	/>
+<ng-template #matchSettingsTemplate let-sidebarItem>
+	<div class="sidebar-item" [style.height]="sidebarItem.size != null ? (sidebarItem.size + 16) + 'px' : 'auto'">
+		<div class="content">
+			<app-irc-match-settings
+				[selectedLobby]="selectedLobby"
+				[selectedChannel]="selectedChannel"
+				[qualifierTeams]="qualifierTeams"
+				(openLobbyDialogEmitter)="openLobbyDialog()"
+				(synchronizeMpEmitter)="synchronizeMp()"
+				(updateMatchResultsEmitter)="updateMatchResults()"
+			/>
+		</div>
+
+		<div class="irc-sidebar-resize bottom"
+			appResize
+			resizeAxis="y"
+			resizingClass="resizing-y"
+			container="parent"
+			[max]="500"
+			(resize)="resizeIrcSection(sidebarItem, $event, false)"
+			(resizeEnd)="resizeIrcSection(sidebarItem, $event, true)"
+		>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
 </ng-template>
 
-<ng-template #matchSettingsGeneralInteractionsTemplate>
-	<app-irc-match-settings-general
-		[selectedLobby]="selectedLobby"
-		[selectedChannel]="selectedChannel"
-		(openLobbyDialogEmitter)="openLobbyDialog()"
-		(synchronizeMpEmitter)="synchronizeMp()"
-		(updateMatchResultsEmitter)="updateMatchResults()"
-	/>
+<ng-template #matchSettingsGeneralInteractionsTemplate let-sidebarItem>
+	<div class="sidebar-item" [style.height]="sidebarItem.size != null ? (sidebarItem.size + 16) + 'px' : 'auto'">
+		<div class="content">
+			<app-irc-match-settings-general
+				[selectedLobby]="selectedLobby"
+				[selectedChannel]="selectedChannel"
+				(openLobbyDialogEmitter)="openLobbyDialog()"
+				(synchronizeMpEmitter)="synchronizeMp()"
+				(updateMatchResultsEmitter)="updateMatchResults()"
+			/>
+		</div>
+
+		<div class="irc-sidebar-resize bottom"
+			appResize
+			resizeAxis="y"
+			resizingClass="resizing-y"
+			container="parent"
+			[max]="500"
+			(resize)="resizeIrcSection(sidebarItem, $event, false)"
+			(resizeEnd)="resizeIrcSection(sidebarItem, $event, true)"
+		>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
 </ng-template>
 
-<ng-template #matchSettingsMultiplayerLobbySettingsTemplate>
-	<app-irc-match-settings-multiplayer-lobby-settings
-		[selectedChannel]="selectedChannel"
-	/>
+<ng-template #matchSettingsMultiplayerLobbySettingsTemplate let-sidebarItem>
+	<div class="sidebar-item" [style.height]="sidebarItem.size != null ? (sidebarItem.size + 16) + 'px' : 'auto'">
+		<div class="content">
+			<app-irc-match-settings-multiplayer-lobby-settings
+				[selectedChannel]="selectedChannel"
+			/>
+		</div>
+
+		<div class="irc-sidebar-resize bottom"
+			appResize
+			resizeAxis="y"
+			resizingClass="resizing-y"
+			container="parent"
+			[max]="500"
+			(resize)="resizeIrcSection(sidebarItem, $event, false)"
+			(resizeEnd)="resizeIrcSection(sidebarItem, $event, true)"
+		>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
 </ng-template>
 
-<ng-template #matchSettingsPlayersInvitationTemplate>
-	<app-irc-match-settings-players-invite
-		[selectedLobby]="selectedLobby"
-		[selectedChannel]="selectedChannel"
-		[qualifierTeams]="qualifierTeams"
-	/>
+<ng-template #matchSettingsPlayersInvitationTemplate let-sidebarItem>
+	<div class="sidebar-item" [style.height]="sidebarItem.size != null ? (sidebarItem.size + 16) + 'px' : 'auto'">
+		<div class="content">
+			<app-irc-match-settings-players-invite
+				[selectedLobby]="selectedLobby"
+				[selectedChannel]="selectedChannel"
+				[qualifierTeams]="qualifierTeams"
+			/>
+		</div>
+
+		<div class="irc-sidebar-resize bottom"
+			appResize
+			resizeAxis="y"
+			resizingClass="resizing-y"
+			container="parent"
+			[max]="500"
+			(resize)="resizeIrcSection(sidebarItem, $event, false)"
+			(resizeEnd)="resizeIrcSection(sidebarItem, $event, true)"
+		>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
 </ng-template>
 
-<ng-template #mappoolTemplate>
-	<app-irc-mappool
-		[selectedLobby]="selectedLobby"
-		[selectedChannel]="selectedChannel"
-		[searchValue]="searchValue"
-		(banBeatmapEmitter)="banBeatmap($event.beatmap, $event.modBracket, $event.multiplayerLobby)"
-		(unbanBeatmapEmitter)="unbanBeatmap($event)"
-		(protectBeatmapEmitter)="protectBeatmap($event.beatmap, $event.modBracket, $event.multiplayerLobby)"
-		(unprotectBeatmapEmitter)="unprotectBeatmap($event)"
-		(changePickedByEmitter)="changePickedBy($event)"
-		(pickBeatmapEmitter)="pickBeatmap($event.beatmap, $event.modBracket, $event.gamemode)"
-		(unpickBeatmapEmitter)="unpickBeatmap($event)"
-	/>
+<ng-template #mappoolTemplate let-sidebarItem>
+	<div class="sidebar-item" [style.height]="'auto'">
+		<div class="content">
+			<app-irc-mappool
+				[selectedLobby]="selectedLobby"
+				[selectedChannel]="selectedChannel"
+				[searchValue]="searchValue"
+				(banBeatmapEmitter)="banBeatmap($event.beatmap, $event.modBracket, $event.multiplayerLobby)"
+				(unbanBeatmapEmitter)="unbanBeatmap($event)"
+				(protectBeatmapEmitter)="protectBeatmap($event.beatmap, $event.modBracket, $event.multiplayerLobby)"
+				(unprotectBeatmapEmitter)="unprotectBeatmap($event)"
+				(changePickedByEmitter)="changePickedBy($event)"
+				(pickBeatmapEmitter)="pickBeatmap($event.beatmap, $event.modBracket, $event.gamemode)"
+				(unpickBeatmapEmitter)="unpickBeatmap($event)"
+			/>
+		</div>
+	</div>
 </ng-template>

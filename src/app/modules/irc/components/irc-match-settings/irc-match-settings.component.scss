@@ -5,8 +5,7 @@
 	flex-direction: column;
 	overflow: hidden;
 
-	grid-column: 3;
-	grid-row: 2;
+	height: 100%;
 
 	.header-buttons {
 		display: flex;
@@ -48,11 +47,10 @@
 		background: $irc-sidebar-background-color;
 
 		flex: 1;
+		overflow-x: auto;
 
 		.content {
 			display: none;
-
-			height: 200px;
 			gap: 4px;
 
 			flex: 1;

@@ -43,8 +43,13 @@ body {
 		user-select: none;
 	}
 
-	&.resizing-sidebar {
+	&.resizing-x {
 		cursor: col-resize;
+		user-select: none;
+	}
+
+	&.resizing-y {
+		cursor: row-resize;
 		user-select: none;
 	}
 

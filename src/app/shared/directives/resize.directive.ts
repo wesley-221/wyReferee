@@ -146,10 +146,14 @@ export class ResizeDirective implements OnDestroy {
 	};
 
 	private resolveContainer(): HTMLElement | null {
-		if (typeof this.container === 'string') {
-			return this.document.querySelector(this.container);
+		if (this.container instanceof HTMLElement) {
+			return this.container;
 		}
 
-		return this.container;
+		if (this.container === 'parent') {
+			return this.elementRef.nativeElement.parentElement;
+		}
+
+		return this.document.querySelector(this.container);
 	}
 }

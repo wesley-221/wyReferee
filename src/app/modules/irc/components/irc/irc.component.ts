@@ -36,13 +36,13 @@ import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dial
 import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyTriggerMessage } from 'app/models/wytournament/trigger-message';
-import { Subject, combineLatest, forkJoin, map, take, takeUntil } from 'rxjs';
+import { Subject, combineLatest, map, take, takeUntil } from 'rxjs';
 import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 import { IrcChatContainerComponent } from '../irc-chat-container/irc-chat-container.component';
 import { IrcChatControlsComponent } from '../irc-chat-controls/irc-chat-controls.component';
 import { GenericService } from '../../../../services/generic.service';
 import { IrcLayoutService } from '../../../../services/irc-layout.service';
-import { IrcLayoutSectionViewType } from '../../../../models/irc-layout-section';
+import { IrcLayoutSection, IrcLayoutSectionViewType } from '../../../../models/irc-layout-section';
 
 @Component({
 	selector: 'app-irc',
@@ -1228,6 +1228,14 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 	openLayoutEditor() {
 		this.layoutEditorOpen = !this.layoutEditorOpen;
+	}
+
+	resizeIrcSection(sidebarItem: IrcLayoutSection, size: number, save: boolean) {
+		sidebarItem.size = size;
+
+		if (save) {
+			// TODO: store changes
+		}
 	}
 }
 
