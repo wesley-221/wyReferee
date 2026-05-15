@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
 import { IrcLayoutSection, IrcLayoutSectionViewType } from '../models/irc-layout-section';
 import { IrcLayout } from '../models/irc-layout';
-import { BehaviorSubject, filter, take } from 'rxjs';
+import { BehaviorSubject, filter, map, take } from 'rxjs';
 import { IrcLayoutStoreService } from './storage/irc-layout-store.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class IrcLayoutService {
-	private savedSidebarSections: IrcLayoutSection[];
-	sidebarSections$: BehaviorSubject<IrcLayoutSection[]>;
+	private savedSidebarSections: IrcLayoutSection[] = [];
+	sidebarSections$ = new BehaviorSubject<IrcLayoutSection[]>([]);
+
+	readonly hasChanges$ = this.sidebarSections$.pipe(
+		map(sections =>
+			JSON.stringify(sections) !== JSON.stringify(this.savedSidebarSections)
+		)
+	);
 
 	availableId = 0;
 
@@ -26,9 +32,6 @@ export class IrcLayoutService {
 	constructor(
 		private ircLayoutStore: IrcLayoutStoreService
 	) {
-		this.savedSidebarSections = [];
-		this.sidebarSections$ = new BehaviorSubject([]);
-
 		this.ircLayoutStore.watchIrcLayoutSections()
 			.pipe(
 				filter(ircLayoutSections => ircLayoutSections !== null),

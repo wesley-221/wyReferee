@@ -10,11 +10,11 @@
 	</div>
 
 	<div class="actions">
-		<button class="form-button primary" (click)="saveChanges()">
+		<button class="form-button primary" (click)="saveChanges()" [disabled]="!(hasChanged$ | async)">
 			<mat-icon>save</mat-icon> save changes
 		</button>
 
-		<button class="form-button danger" (click)="discardChanges()">
+		<button class="form-button danger" (click)="discardChanges()" [disabled]="!(hasChanged$ | async)">
 			<mat-icon>close</mat-icon> discard changes
 		</button>
 

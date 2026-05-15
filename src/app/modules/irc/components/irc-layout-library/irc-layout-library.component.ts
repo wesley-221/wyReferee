@@ -14,6 +14,8 @@ export class IrcLayoutLibraryComponent {
 
 	layouts = this.ircLayoutService.layouts;
 
+	hasChanged$	= this.ircLayoutService.hasChanges$;
+
 	constructor(
 		private dialog: MatDialog,
 		private toastService: ToastService,
@@ -22,12 +24,10 @@ export class IrcLayoutLibraryComponent {
 
 	saveChanges() {
 		this.ircLayoutService.commitChanges();
-		this.closeLayoutEditorEmitter.emit();
 	}
 
 	discardChanges() {
 		this.ircLayoutService.discardChanges();
-		this.closeLayoutEditorEmitter.emit();
 	}
 
 	resetLayout() {
