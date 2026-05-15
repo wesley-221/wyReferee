@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { IrcLayoutSection, IrcLayoutSectionViewType } from '../models/irc-layout-section';
 import { IrcLayout } from '../models/irc-layout';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, filter, take } from 'rxjs';
+import { IrcLayoutStoreService } from './storage/irc-layout-store.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class IrcLayoutService {
-	private sidebarSections: IrcLayoutSection[];
 	sidebarSections$: BehaviorSubject<IrcLayoutSection[]>;
 
 	availableId = 0;
@@ -22,14 +22,28 @@ export class IrcLayoutService {
 		{ icon: 'map', header: 'mappool', body: 'A mappool overview of all the maps which allows you to pick or ban them.', type: 'mappool' }
 	];
 
-	constructor() {
-		this.sidebarSections = [];
-		this.sidebarSections$ = new BehaviorSubject(this.sidebarSections);
+	constructor(
+		private ircLayoutStore: IrcLayoutStoreService
+	) {
+		this.sidebarSections$ = new BehaviorSubject([]);
 
-		this.createDefaultSections();
+		this.ircLayoutStore.watchIrcLayoutSections()
+			.pipe(
+				filter(ircLayoutSections => ircLayoutSections !== null),
+				take(1)
+			)
+			.subscribe(ircLayoutSections => {
+				if (ircLayoutSections.length === 0) {
+					this.createDefaultSections();
+				}
+				else {
+					this.sidebarSections$.next(ircLayoutSections);
+					this.availableId = Math.max(...ircLayoutSections.map(section => section.id)) + 1;
+				}
+			});
 	}
 
-	createSection(id: number | string, order: number, sidebar: 'left' | 'right', view: IrcLayoutSectionViewType) {
+	createSection(id: number, order: number, sidebar: 'left' | 'right', view: IrcLayoutSectionViewType) {
 		let section: IrcLayoutSection;
 
 		if (view === 'irc-channels') {
@@ -94,13 +108,18 @@ export class IrcLayoutService {
 			});
 		}
 
-		this.sidebarSections.push(section);
-		this.sidebarSections$.next(this.sidebarSections);
+		this.sidebarSections$.next([
+			...this.sidebarSections$.value,
+			section
+		]);
+
+		this.saveAllSections();
 	}
 
-	deleteSection(id: number | string) {
-		this.sidebarSections = this.sidebarSections.filter(section => section.id !== id);
-		this.sidebarSections$.next(this.sidebarSections);
+	deleteSection(id: number) {
+		this.sidebarSections$.next(this.sidebarSections$.value.filter(section => section.id !== id));
+
+		this.saveAllSections();
 	}
 
 	getLayoutByView(view: IrcLayoutSectionViewType) {
@@ -108,27 +127,31 @@ export class IrcLayoutService {
 	}
 
 	reorderSections(sidebar: 'left' | 'right', previousIndex: number, currentIndex: number) {
-		const sections = this.sidebarSections
+		const allSections = this.sidebarSections$.value;
+
+		const sidebarSections = allSections
 			.filter(section => section.sidebar === sidebar)
 			.sort((a, b) => a.order - b.order);
 
-		const section = sections[previousIndex];
+		const [movedSection] = sidebarSections.splice(previousIndex, 1);
+		sidebarSections.splice(currentIndex, 0, movedSection);
 
-		sections.splice(previousIndex, 1);
-		sections.splice(currentIndex, 0, section);
+		const updatedSidebarSections = sidebarSections.map((section, index) => ({
+			...section,
+			order: index
+		}));
 
-		sections.forEach((section, index) => {
-			section.order = index;
-		});
+		this.sidebarSections$.next(
+			allSections.map(section => {
+				if (section.sidebar !== sidebar) {
+					return section;
+				}
 
-		this.sidebarSections = this.sidebarSections.map(section => {
-			if (section.sidebar !== sidebar) return section;
+				return updatedSidebarSections.find(updated => updated.id === section.id) ?? section;
+			})
+		);
 
-			const updated = sections.find(s => s.id === section.id);
-			return updated ?? section;
-		});
-
-		this.sidebarSections$.next(this.sidebarSections);
+		this.saveAllSections();
 	}
 
 	private createDefaultSections() {
@@ -136,5 +159,11 @@ export class IrcLayoutService {
 		this.createSection(this.availableId++, 1, 'left', 'player-management');
 		this.createSection(this.availableId++, 0, 'right', 'match-settings');
 		this.createSection(this.availableId++, 1, 'right', 'mappool');
+
+		this.saveAllSections();
+	}
+
+	private saveAllSections() {
+		this.ircLayoutStore.saveAllIrcLayoutSections(this.sidebarSections$.value);
 	}
 }

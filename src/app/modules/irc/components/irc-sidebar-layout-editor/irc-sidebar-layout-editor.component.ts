@@ -30,11 +30,11 @@ export class IrcSidebarLayoutEditorComponent {
 		this.ircLayoutService.reorderSections(this.sidebar, event.previousIndex, event.currentIndex);
 	}
 
-	getLayoutBySection(section: IrcLayoutSection) {
-		return this.ircLayoutService.getLayoutByView(section.view);
-	}
-
 	deleteSection(section: IrcLayoutSection) {
 		this.ircLayoutService.deleteSection(section.id);
+	}
+
+	getLayoutBySection(section: IrcLayoutSection) {
+		return this.ircLayoutService.getLayoutByView(section.view);
 	}
 }

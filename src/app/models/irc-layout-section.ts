@@ -8,7 +8,7 @@ export type IrcLayoutSectionViewType =
 	| 'player-invites';
 
 export class IrcLayoutSection {
-	id: string | number;
+	id: number;
 	sidebar: 'left' | 'right';
 	order: number;
 	size: number;
