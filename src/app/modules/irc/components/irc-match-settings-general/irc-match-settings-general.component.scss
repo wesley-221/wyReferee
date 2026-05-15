@@ -1,3 +1,8 @@
+:host {
+	flex: 1;
+	min-width: 0;
+}
+
 .irc-match-settings-general {
 	display: flex;
 	overflow: hidden;
