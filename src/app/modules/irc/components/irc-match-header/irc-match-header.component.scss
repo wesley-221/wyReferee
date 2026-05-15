@@ -4,11 +4,24 @@ $badge-background-color: rgba(255, 61, 110, 0.1);
 $badge-border-color: rgba(255, 61, 110, 0.25);
 $badge-color: #ff6b93;
 
+:host {
+	display: flex;
+	flex: 1;
+}
+
 .match-information {
 	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
 	gap: 8px;
 
-	@media (max-width: 1280px) {
+	flex: 1 1 auto;
+
+	container-type: inline-size;
+	container-name: matchInfo;
+
+	@container matchInfo (max-width: 1280px) {
 		.team-one,
 		.team-two {
 			flex-direction: column;
@@ -21,6 +34,12 @@ $badge-color: #ff6b93;
 
 			.circles {
 				order: 2;
+			}
+		}
+
+		.middle {
+			.badge {
+				max-width: 150px;
 			}
 		}
 	}
@@ -109,7 +128,10 @@ $badge-color: #ff6b93;
 			color: $badge-color;
 
 			letter-spacing: 0.3px;
-			white-space: nowrap;
+
+			.icon {
+				flex-shrink: 0;
+			}
 		}
 	}
 }
