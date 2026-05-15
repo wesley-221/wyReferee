@@ -28,6 +28,7 @@
 		align-items: center;
 		flex-wrap: wrap;
 
+		margin-bottom: 8px;
 		padding: 8px;
 		gap: 8px;
 
@@ -39,12 +40,20 @@
 	}
 
 	.body {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		.information {
+			padding: 0 8px;
+		}
+
 		.sections {
 			display: flex;
 			justify-content: center;
 			flex-wrap: wrap;
 
-			padding: 8px;
+			padding: 0 8px;
 			gap: 8px;
 
 			user-select: none;
