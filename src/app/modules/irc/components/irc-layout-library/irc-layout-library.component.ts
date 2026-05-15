@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { IrcLayoutService } from '../../../../services/irc-layout.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ResetIrcLayoutDialogComponent } from '../../../../components/dialogs/reset-irc-layout-dialog/reset-irc-layout-dialog.component';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
 	selector: 'app-irc-layout-library',
@@ -12,7 +15,9 @@ export class IrcLayoutLibraryComponent {
 	layouts = this.ircLayoutService.layouts;
 
 	constructor(
-		private ircLayoutService: IrcLayoutService
+		private dialog: MatDialog,
+		private toastService: ToastService,
+		private ircLayoutService: IrcLayoutService,
 	) { }
 
 	closeLayoutEditor() {
@@ -25,5 +30,16 @@ export class IrcLayoutLibraryComponent {
 
 	onDragEnded() {
 		document.body.classList.remove('grabbing-cursor');
+	}
+
+	resetLayout() {
+		const dialogRef = this.dialog.open(ResetIrcLayoutDialogComponent);
+
+		dialogRef.afterClosed().subscribe(result => {
+			if (result === true) {
+				this.ircLayoutService.resetToDefault();
+				this.toastService.addToast('Your IRC layout has been reset to the default configuration.');
+			}
+		});
 	}
 }

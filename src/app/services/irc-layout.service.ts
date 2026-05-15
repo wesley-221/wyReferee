@@ -38,7 +38,7 @@ export class IrcLayoutService {
 				}
 				else {
 					this.sidebarSections$.next(ircLayoutSections);
-					this.availableId = Math.max(...ircLayoutSections.map(section => section.id)) + 1;
+					this.availableId = this.getNextAvailableId();
 				}
 			});
 	}
@@ -154,6 +154,13 @@ export class IrcLayoutService {
 		this.saveAllSections();
 	}
 
+	resetToDefault() {
+		this.sidebarSections$.next([]);
+		this.createDefaultSections();
+
+		this.availableId = this.getNextAvailableId();
+	}
+
 	private createDefaultSections() {
 		this.createSection(this.availableId++, 0, 'left', 'irc-channels');
 		this.createSection(this.availableId++, 1, 'left', 'player-management');
@@ -161,6 +168,11 @@ export class IrcLayoutService {
 		this.createSection(this.availableId++, 1, 'right', 'mappool');
 
 		this.saveAllSections();
+	}
+
+	private getNextAvailableId() {
+		const allSections = this.sidebarSections$.value;
+		return allSections.length > 0 ? Math.max(...allSections.map(section => section.id)) + 1 : 0;
 	}
 
 	private saveAllSections() {
