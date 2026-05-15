@@ -3,20 +3,22 @@
 	overflow: hidden;
 
 	height: 100%;
+	min-height: 0;
 
 	.button-grid {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
 		align-content: start;
+		grid-template-columns: repeat(2, 1fr);
 
-		padding: 8px;
-		gap: 8px;
+		padding: 4px;
+		gap: 4px;
+
+		width: 100%;
+		min-width: 0;
 
 		overflow-x: auto;
 
 		.form-button {
-			flex: 1;
-
 			&.big-button {
 				grid-column: 1 / -1;
 			}
