@@ -349,12 +349,12 @@ export class IrcComponent implements OnInit, OnDestroy {
 		if (delayScroll) {
 			setTimeout(() => {
 				this.scrollToBottom();
-				this.ircChatControlsComponent.chatMessage?.nativeElement.focus();
+				this.ircChatControlsComponent?.chatMessage.nativeElement.focus();
 			}, 500);
 		}
 		else {
 			this.scrollToBottom();
-			this.ircChatControlsComponent.chatMessage?.nativeElement.focus();
+			this.ircChatControlsComponent?.chatMessage.nativeElement.focus();
 		}
 
 		// Reset search bar
