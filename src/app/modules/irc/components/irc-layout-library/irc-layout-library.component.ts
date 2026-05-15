@@ -30,14 +30,6 @@ export class IrcLayoutLibraryComponent {
 		this.closeLayoutEditorEmitter.emit();
 	}
 
-	onDragStarted() {
-		document.body.classList.add('grabbing-cursor');
-	}
-
-	onDragEnded() {
-		document.body.classList.remove('grabbing-cursor');
-	}
-
 	resetLayout() {
 		const dialogRef = this.dialog.open(ResetIrcLayoutDialogComponent);
 
@@ -47,5 +39,17 @@ export class IrcLayoutLibraryComponent {
 				this.toastService.addToast('Your IRC layout has been reset to the default configuration.');
 			}
 		});
+	}
+
+	closeLibrary() {
+		this.closeLayoutEditorEmitter.emit();
+	}
+
+	onDragStarted() {
+		document.body.classList.add('grabbing-cursor');
+	}
+
+	onDragEnded() {
+		document.body.classList.remove('grabbing-cursor');
 	}
 }
