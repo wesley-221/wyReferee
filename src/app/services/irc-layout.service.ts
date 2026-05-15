@@ -12,9 +12,12 @@ export class IrcLayoutService {
 	sidebarSections$ = new BehaviorSubject<IrcLayoutSection[]>([]);
 
 	readonly hasChanges$ = this.sidebarSections$.pipe(
-		map(sections =>
-			JSON.stringify(sections) !== JSON.stringify(this.savedSidebarSections)
-		)
+		map(sections => {
+			// Strip .size from coparison
+			const noSizeObject = (s: IrcLayoutSection[]) => s.map((({ size, ...rest }) => rest));
+
+			return JSON.stringify(noSizeObject(sections)) !== JSON.stringify(noSizeObject(this.savedSidebarSections));
+		})
 	);
 
 	availableId = 0;
@@ -166,6 +169,7 @@ export class IrcLayoutService {
 		const cloned = structuredClone(this.sidebarSections$.value);
 
 		this.savedSidebarSections = cloned;
+		this.sidebarSections$.next(cloned);
 		this.ircLayoutStore.saveAllIrcLayoutSections(cloned);
 	}
 
