@@ -14,7 +14,7 @@ export class IrcLayoutService {
 	readonly hasChanges$ = this.sidebarSections$.pipe(
 		map(sections => {
 			// Strip .size from coparison
-			const noSizeObject = (s: IrcLayoutSection[]) => s.map((({ size, ...rest }) => rest));
+			const noSizeObject = (s: IrcLayoutSection[]) => s.map((({ size: _size, ...rest }) => rest));
 
 			return JSON.stringify(noSizeObject(sections)) !== JSON.stringify(noSizeObject(this.savedSidebarSections));
 		})
