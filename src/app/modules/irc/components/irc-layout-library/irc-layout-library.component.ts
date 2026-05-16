@@ -13,9 +13,8 @@ import { ToastType } from '../../../../models/toast';
 export class IrcLayoutLibraryComponent {
 	@Output() closeLayoutEditorEmitter = new EventEmitter<void>();
 
-	layouts = this.ircLayoutService.layouts;
-
-	hasChanged$	= this.ircLayoutService.hasChanges$;
+	layoutCategories = this.ircLayoutService.layoutCategories;
+	hasChanged$ = this.ircLayoutService.hasChanges$;
 
 	constructor(
 		private dialog: MatDialog,

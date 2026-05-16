@@ -5,4 +5,5 @@ export interface IrcLayout {
 	header: string;
 	body: string;
 	type: IrcLayoutSectionViewType;
+	category: 'general' | 'lobby' | 'mappool' | 'participants';
 }

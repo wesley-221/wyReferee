@@ -9,16 +9,7 @@ import { IrcLayoutStoreService } from './storage/irc-layout-store.service';
 })
 export class IrcLayoutService {
 	sidebarSections$ = new BehaviorSubject<IrcLayoutSection[]>([]);
-
-	layouts: IrcLayout[] = [
-		{ icon: 'list', header: 'irc channels', body: 'A list with all the irc channels you have joined.', type: 'irc-channels' },
-		{ icon: 'group', header: 'player management', body: 'A list with all the players in the multiplayer lobby and allows you to manage them.', type: 'player-management' },
-		{ icon: 'tab', header: 'match settings', body: 'A combined group of 3 tabs with general interactions, multiplayer lobby settings and player invitations.', type: 'match-settings' },
-		{ icon: 'home', header: 'general interactions', body: 'General interactions', type: 'general-interactions' },
-		{ icon: 'settings', header: 'multiplayer lobby settings', body: 'Allows you to change the team mode, win condition and player slots of the multiplayer lobby.', type: 'multiplayer-lobby-settings' },
-		{ icon: 'person_add', header: 'player invitation', body: 'A list with all players that are playing for the current match and allows you to invite them to the multiplayer lobby.', type: 'player-invites' },
-		{ icon: 'map', header: 'mappool', body: 'A mappool overview of all the maps which allows you to pick or ban them.', type: 'mappool' }
-	];
+	layoutCategories: { name: string; layouts: IrcLayout[] }[];
 
 	readonly hasChanges$ = this.sidebarSections$.pipe(
 		map(sections => {
@@ -28,6 +19,16 @@ export class IrcLayoutService {
 			return JSON.stringify(noSizeObject(sections)) !== JSON.stringify(noSizeObject(this.savedSidebarSections));
 		})
 	);
+
+	private layouts: IrcLayout[] = [
+		{ icon: 'list', category: 'general', header: 'irc channels', body: 'Browse and switch between all the IRC channels you have joined.', type: 'irc-channels' },
+		{ icon: 'group', category: 'participants', header: 'player management', body: 'See everyone in the lobby. Kick, move players to slots, or pass host directly from this panel - no need to type any commands.', type: 'player-management' },
+		{ icon: 'tab', category: 'lobby', header: 'match settings', body: 'A combined panel containing <i>Referee tools</i>, <i>Lobby settings</i>, and <i>Player invitations</i> as three tabs - save sidebar space if you want all three in one place.', type: 'match-settings' },
+		{ icon: 'build', category: 'lobby', header: 'referee tools', body: 'Various actions for referees such as synchronizing the match state, managing the lobby and updating the match result to wyBin.', type: 'general-interactions' },
+		{ icon: 'settings', category: 'lobby', header: 'lobby settings', body: 'Change team mode (head-to-head, team vs, etc.), win condition (score, accuracy, etc.) and the number of open player slots.', type: 'multiplayer-lobby-settings' },
+		{ icon: 'person_add', category: 'participants', header: 'player actions', body: 'Both teams and their players for this match. Invite them to the lobby or send a message to them directly.', type: 'player-invites' },
+		{ icon: 'map', category: 'mappool', header: 'mappool', body: 'View the full mappool for this match. Pick or ban maps directly from this panel and keep track of which ', type: 'mappool' }
+	];
 
 	private availableId = 0;
 	private savedSidebarSections: IrcLayoutSection[] = [];
@@ -51,6 +52,17 @@ export class IrcLayoutService {
 					this.availableId = this.getNextAvailableId();
 				}
 			});
+
+		const ircLayoutsMap = new Map<string, IrcLayout[]>();
+
+		for (const layout of this.layouts) {
+			ircLayoutsMap.set(layout.category, [...(ircLayoutsMap.get(layout.category) ?? []), layout]);
+		}
+
+		this.layoutCategories = Array.from(ircLayoutsMap, ([name, layouts]) => ({
+			name,
+			layouts
+		}));
 	}
 
 	createSection(id: number, order: number, sidebar: 'left' | 'right', view: IrcLayoutSectionViewType) {

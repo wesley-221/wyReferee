@@ -34,34 +34,39 @@
 			</app-alert>
 		</div>
 
-		<div
-			id="layout-library"
-			class="sections"
-			cdkDropList
-			[cdkDropListSortingDisabled]="true"
-			[cdkDropListConnectedTo]="['sidebar-dropzone-left', 'sidebar-dropzone-right']"
-		>
-			<div
-				class="section"
-				*ngFor="let layout of layouts"
-				cdkDrag
-				[cdkDragData]="layout"
-				(cdkDragStarted)="onDragStarted()"
-				(cdkDragEnded)="onDragEnded()"
-			>
-				<div class="section-header">
-					<mat-icon>{{ layout.icon }}</mat-icon> {{ layout.header }}
+		<div class="categories">
+			<div class="category" *ngFor="let category of layoutCategories">
+				<div class="category-header">
+					{{ category.name | titlecase }}
 				</div>
 
-				<div class="section-body">
-					{{ layout.body }}
-				</div>
+				<div
+					class="sections"
+					cdkDropList
+					[cdkDropListSortingDisabled]="true"
+					[cdkDropListConnectedTo]="['sidebar-dropzone-left', 'sidebar-dropzone-right']"
+				>
+					<div
+						class="section"
+						*ngFor="let layout of category.layouts"
+						cdkDrag
+						[cdkDragData]="layout"
+						(cdkDragStarted)="onDragStarted()"
+						(cdkDragEnded)="onDragEnded()"
+					>
+						<div class="section-header">
+							<mat-icon>{{ layout.icon }}</mat-icon> {{ layout.header }}
+						</div>
 
-				<div *cdkDragPreview class="drag-preview">
-					<mat-icon>{{ layout.icon }}</mat-icon> {{ layout.header }}
-				</div>
+						<div class="section-body" [innerHTML]="layout.body"></div>
 
-				<div *cdkDragPlaceholder class="placeholder"></div>
+						<div *cdkDragPreview class="drag-preview">
+							<mat-icon>{{ layout.icon }}</mat-icon> {{ layout.header }}
+						</div>
+
+						<div *cdkDragPlaceholder class="placeholder"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

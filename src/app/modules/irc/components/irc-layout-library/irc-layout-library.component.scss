@@ -2,6 +2,7 @@
 
 :host {
 	flex: 1;
+	min-height: 0;
 }
 
 .irc-layout-library {
@@ -9,6 +10,7 @@
 	flex-direction: column;
 
 	height: 100%;
+	min-height: 0;
 
 	background: $sub-sidebar-background-color;
 
@@ -44,51 +46,82 @@
 		flex-direction: column;
 		gap: 8px;
 
+		flex: 1;
+		min-height: 0;
+
 		.information {
 			padding: 0 8px;
 		}
 
-		.sections {
+		.categories {
 			display: flex;
-			justify-content: center;
-			flex-wrap: wrap;
+			flex-direction: column;
 
-			padding: 0 8px;
-			gap: 8px;
+			padding: 8px;
+			gap: 16px;
 
-			user-select: none;
+			flex: 1;
+			min-height: 0;
 
-			.section {
+			overflow-y: auto;
+
+			.category-header {
 				display: flex;
-				flex-direction: column;
-				flex: 1 1 calc((100% - 16px) / 3);
+				align-items: center;
 
-				border: 1px solid $irc-border-color;
-				border-radius: 5px;
+				margin-bottom: 8px;
+				gap: 6px;
 
-				background: $irc-input-background-color;
+				font-size: 18px;
+				color: $irc-input-text-color;
 
-				padding: 8px 16px;
-				gap: 5px;
-
-				cursor: grab;
-				transition: border-color 0.12s;
-
-				.section-header {
-					display: flex;
-					align-items: center;
-					gap: 4px;
-
-					font-size: 18px;
-
-					mat-icon {
-						flex-shrink: 0;
-					}
+				&::after {
+					content: "";
+					flex: 1;
+					height: 1px;
+					background: $irc-border-color;
 				}
+			}
 
-				&:hover {
-					background: rgba($primary, 0.1);
-					border-color: rgba($primary, 0.26);
+			.sections {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+
+				gap: 8px;
+
+				user-select: none;
+
+				.section {
+					display: flex;
+					flex-direction: column;
+
+					border: 1px solid $irc-border-color;
+					border-radius: 5px;
+
+					background: $irc-input-background-color;
+
+					padding: 8px 16px;
+					gap: 5px;
+
+					cursor: grab;
+					transition: border-color 0.12s;
+
+					.section-header {
+						display: flex;
+						align-items: center;
+						gap: 4px;
+
+						font-size: 18px;
+
+						mat-icon {
+							flex-shrink: 0;
+						}
+					}
+
+					&:hover {
+						background: rgba($primary, 0.1);
+						border-color: rgba($primary, 0.26);
+					}
 				}
 			}
 		}
