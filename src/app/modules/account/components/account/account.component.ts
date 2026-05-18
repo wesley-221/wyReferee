@@ -6,6 +6,7 @@ import { ElectronService } from 'app/services/electron.service';
 import { IrcService } from 'app/services/irc.service';
 import { ApiKeyValidation } from 'app/services/osu-api/api-key-validation.service';
 import { ToastService } from 'app/services/toast.service';
+import { AppConfig } from '../../../../../environments/environment';
 
 @Component({
 	selector: 'app-account',
@@ -13,6 +14,8 @@ import { ToastService } from 'app/services/toast.service';
 	styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit {
+	readonly wyRefereeGithubUrl = AppConfig.links.githubPlain;
+
 	apiKey: string;
 	apiKeyIsValid: boolean;
 

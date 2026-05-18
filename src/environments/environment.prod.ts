@@ -7,6 +7,7 @@ export const AppConfig = {
 		redirect_uri: 'http://localhost:3000/osu-oauth-callback'
 	},
 	links: {
+		githubPlain: 'https://github.com/wesley-221/wyReferee',
 		githubApiReleases: 'https://api.github.com/repos/wesley-221/wyReferee/releases',
 		githubWiki: 'https://github.com/wesley-221/wyReferee/wiki',
 		githubIssues: 'https://github.com/wesley-221/wyReferee/issues',

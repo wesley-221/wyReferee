@@ -1,10 +1,15 @@
 <div class="account scroll container-fluid">
 	<div id="tutorial-api-key" *ngIf="!apiKeyIsValid">
 		<h2>osu!api key</h2>
-		<p>In order for wyReferee to work properly, you have to enter your osu! api key in the textbox below. wyReferee uses this api key to grab relevant data from the osu! servers, for example multiplayer data andbeatmap data.</p>
+		<p>To use wyReferee, you need to provide your osu! API key in the field below. This key allows wyReferee to access data from osu! servers, such as multiplayer match information and beatmap details. Without a valid API key, certain features will not function correctly or simply not at all.</p>
 		<p>You can find your api key <a [routerLink]="[]" (click)="electronService.openLink('https://osu.ppy.sh/home/account/edit#legacy-api');">here</a>.</p>
 
-		<p>If you are unsure what to fill in for the <code>Application name</code> and <code>Application url</code>, you can simply enter <code>wyReferee</code> for the name and <code>none</code> for the url.</p>
+		<p>If you are unsure what to fill in for the fields, you can use the following:</p>
+
+		<ul>
+			<li><code>Application name</code>: wyReferee</li>
+			<li><code>Application url</code>: {{ wyRefereeGithubUrl }}</li>
+		</ul>
 
 		<mat-form-field id="tutorial-api-key-input" class="full-width">
 			<mat-label>osu!api key</mat-label>
