@@ -93,6 +93,11 @@ export class MultiplayerLobbyPlayersService {
 			return false;
 		}
 
+		// Not a tournament lobby, ignore
+		if (lobby.tournament == null) {
+			return true;
+		}
+
 		// Solo tournament, check if the user is in the correct slot for their team
 		if (lobby.tournament.isSoloTournament()) {
 			if (lobby.teamOneName === username) {
