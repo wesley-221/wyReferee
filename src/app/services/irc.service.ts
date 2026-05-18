@@ -441,8 +441,14 @@ export class IrcService {
 
 			if (user.startsWith('#mp_')) {
 				if (this.genericService.getSplitBanchoBotMessagesStatus().getValue() == true) {
-					channel.banchoBotMessages.push(newMessage);
-					this.saveMessageToHistory(user, newMessage, message, true);
+					if (recipient == 'BanchoBot') {
+						channel.banchoBotMessages.push(newMessage);
+						this.saveMessageToHistory(user, newMessage, message, true);
+					}
+					else {
+						channel.messages.push(newMessage);
+						this.saveMessageToHistory(user, newMessage, message);
+					}
 				}
 				else {
 					channel.messages.push(newMessage);
