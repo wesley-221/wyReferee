@@ -36,27 +36,33 @@
 			<div class="badge match-point" *ngIf="selectedChannel != null && matchStatus.matchPoint != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
 				<mat-icon class="icon">star</mat-icon>
 
-				matchpoint
+				<div class="content">
+					<span>matchpoint</span>
 
-				<div class="team-name" [ngClass]="{'red': matchStatus.matchPoint == selectedLobby.teamOneName, 'blue': matchStatus.matchPoint == selectedLobby.teamTwoName }">
-					{{ matchStatus.matchPoint }}
+					<span class="team-name" [ngClass]="{'red': matchStatus.matchPoint == selectedLobby.teamOneName, 'blue': matchStatus.matchPoint == selectedLobby.teamTwoName }">
+						{{ matchStatus.matchPoint }}
+					</span>
 				</div>
 			</div>
 
 			<div class="badge tiebreaker" *ngIf="selectedChannel != null && matchStatus.tiebreaker == true">
 				<mat-icon class="icon">local_fire_department</mat-icon>
 
-				Tiebreaker hype!
+				<div class="content">
+					Tiebreaker hype!
+				</div>
 			</div>
 
 			<div class="badge has-won" *ngIf="selectedChannel != null && matchStatus.hasWon != null">
 				<mat-icon class="icon">emoji_events</mat-icon>
 
-				<div class="team-name" [ngClass]="{'red': matchStatus.hasWon == selectedLobby.teamOneName, 'blue': matchStatus.hasWon == selectedLobby.teamTwoName }">
-					{{ matchStatus.hasWon }}
-				</div>
+				<div class="content">
+					<div class="team-name" [ngClass]="{'red': matchStatus.hasWon == selectedLobby.teamOneName, 'blue': matchStatus.hasWon == selectedLobby.teamTwoName }">
+						{{ matchStatus.hasWon }}
+					</div>
 
-				won, GG and wp!
+					won, GG and wp!
+				</div>
 			</div>
 		</div>
 
