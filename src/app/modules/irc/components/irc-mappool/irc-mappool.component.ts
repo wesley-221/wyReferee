@@ -75,7 +75,7 @@ export class IrcMappoolComponent {
 		return multiplayerLobby.teamTwoPicks != null && multiplayerLobby.teamTwoPicks.indexOf(beatmapId) > -1;
 	}
 
-	getPickedOrderOrdinal(multiplayerLobby: Lobby, beatmapId: number) {
+	getPickedOrder(multiplayerLobby: Lobby, beatmapId: number) {
 		const teamOneIndex = multiplayerLobby.teamOnePicks?.indexOf(beatmapId) ?? -1;
 		const teamTwoIndex = multiplayerLobby.teamTwoPicks?.indexOf(beatmapId) ?? -1;
 
@@ -95,10 +95,15 @@ export class IrcMappoolComponent {
 				: teamTwoIndex * 2 + 1;
 		}
 
+		return pickOrder;
+	}
+
+	getPickedOrderOrdinal(multiplayerLobby: Lobby, beatmapId: number) {
+		const pickOrder = this.getPickedOrder(multiplayerLobby, beatmapId);
 		return pickOrder != null ? this.getOrdinal(pickOrder) : null;
 	}
 
-	getBannedOrderOrdinal(multiplayerLobby: Lobby, beatmapId: number) {
+	getBannedOrder(multiplayerLobby: Lobby, beatmapId: number) {
 		const teamOneIndex = multiplayerLobby.teamOneBans?.indexOf(beatmapId) ?? -1;
 		const teamTwoIndex = multiplayerLobby.teamTwoBans?.indexOf(beatmapId) ?? -1;
 
@@ -118,6 +123,11 @@ export class IrcMappoolComponent {
 				: teamTwoIndex * 2 + 1;
 		}
 
+		return banOrder;
+	}
+
+	getBannedOrderOrdinal(multiplayerLobby: Lobby, beatmapId: number) {
+		const banOrder = this.getBannedOrder(multiplayerLobby, beatmapId);
 		return banOrder != null ? this.getOrdinal(banOrder) : null;
 	}
 

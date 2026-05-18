@@ -37,11 +37,11 @@
 
 					<div class="beatmap-status">
 						<div class="beatmap-status-badge" [ngClass]="{ 'beatmap-picked-team-one': beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId), 'beatmap-picked-team-two': beatmapIsPickedByTeamTwo(selectedLobby, beatmap.beatmapId) }">
-							{{ getPickedOrderOrdinal(selectedLobby, beatmap.beatmapId) }} pick by {{ beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
+							Pick #{{ getPickedOrder(selectedLobby, beatmap.beatmapId) }} • {{ beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
 						</div>
 
 						<div class="beatmap-status-badge" [ngClass]="{ 'is-banned-one': selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId), 'is-banned-two': selectedLobby.beatmapIsBannedByTeamTwo(beatmap.beatmapId) }">
-							{{ getBannedOrderOrdinal(selectedLobby, beatmap.beatmapId) }} ban by {{ selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
+							Ban #{{ getBannedOrder(selectedLobby, beatmap.beatmapId) }} • {{ selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
 						</div>
 					</div>
 
