@@ -42,6 +42,11 @@ body {
 		cursor: row-resize;
 		user-select: none;
 	}
+
+	&.resizing-sidebar {
+		cursor: col-resize;
+		user-select: none;
+	}
 }
 
 *,

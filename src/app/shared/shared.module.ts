@@ -17,6 +17,7 @@ import { ToastComponent } from './components/toast/toast.component';
 import { TutorialComponent } from './components/tutorial/tutorial.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { WybinScheduleTournamentComponent } from './components/wybin-schedule-tournament/wybin-schedule-tournament.component';
+import { ResizeDirective } from './directives/resize.directive';
 
 const declerations = [
 	FilterTournamentPipe,
@@ -31,7 +32,8 @@ const declerations = [
 	ClickableLinksDirective,
 	ToastComponent,
 	TutorialComponent,
-	WybinScheduleTournamentComponent
+	WybinScheduleTournamentComponent,
+	ResizeDirective
 ];
 
 const modules = [

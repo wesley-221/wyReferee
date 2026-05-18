@@ -6,7 +6,7 @@
 		You haven't set the <b>First pick</b> of the match yet. Click here to set who picks first.
 	</div>
 
-	<div class="irc-match-body">
+	<div class="irc-match-body" [style.--sidebar-left-width]="sidebarLeftWidth + 'px'" [style.--sidebar-right-width]="sidebarRightWidth + 'px'">
 		<div class="irc-sidebar-left">
 			<div class="irc-sidebar-header">
 				<button class="form-button danger" (click)="goBack()">
@@ -32,6 +32,23 @@
 					[channel]="selectedChannel"
 				/>
 			</div>
+		</div>
+
+		<div class="irc-sidebar left-handle"
+			appResize
+			resizeAxis="x"
+			resizingClass="resizing-sidebar"
+			container=".irc-match-body"
+			[min]="250"
+			(sizeChanged)="resizeSidebar('left', $event)"
+			(sizeChangedEnd)="saveResizeSidebar('left', $event)"
+		>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
 		</div>
 
 		<div class="irc-body">
@@ -61,6 +78,24 @@
 					(selectSlashCommandEmitter)="selectSlashCommand($event)"
 				/>
 			</div>
+		</div>
+
+		<div class="irc-sidebar right-handle"
+			appResize
+			resizeAxis="x"
+			resizingClass="resizing-sidebar"
+			container=".irc-match-body"
+			[min]="250"
+			[reverse]="true"
+			(sizeChanged)="resizeSidebar('right', $event)"
+			(sizeChangedEnd)="saveResizeSidebar('right', $event)"
+		>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
 		</div>
 
 		<div class="irc-sidebar-right" *ngIf="selectedChannel != null && selectedChannel.name.startsWith('#mp_')">
