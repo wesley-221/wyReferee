@@ -12,6 +12,18 @@
 
 <div class="settings">
 	<div class="settings-header">
+		IRC settings
+	</div>
+
+	<div class="options">
+		<ng-container *ngFor="let option of ircOptions">
+			<ng-template *ngTemplateOutlet="optionTemplate; context: { $implicit: option }"></ng-template>
+		</ng-container>
+	</div>
+</div>
+
+<div class="settings">
+	<div class="settings-header">
 		Webhook customization
 	</div>
 
