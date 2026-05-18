@@ -18,8 +18,8 @@ export class DashboardComponent implements OnInit {
 
 	gettingStartedItems = [
 		{ title: 'Login', description: 'Connect your osu! account to get started.', 'link-label': 'account', 'link': '/account' },
-		{ title: 'Set up Discord webhooks', description: 'Customize how the Discord webhook looks when a match update is being sent.', 'link-label': 'webhooks', 'link': '/webhook' },
-		{ title: 'Import or create a tournament', description: 'Import an existing tournament or create a new one to manage.', 'link-label': 'tournaments', 'link': '/tournament-management/tournament-overview' },
+		{ title: 'Set up Discord webhooks', description: 'Customize how the Discord webhook looks when a match update is being sent.', 'link-label': 'webhooks', 'link': '/settings' },
+		{ title: 'Import or create a tournament', description: 'Import an existing tournament or create a new one to manage.', 'link-label': 'tournaments', 'link': '/tournament-management' },
 		{ title: 'Create a lobby', description: 'Start refereeing - the IRC view handles the rest', 'link-label': 'lobby', 'link': '/lobby-overview' }
 	];
 
