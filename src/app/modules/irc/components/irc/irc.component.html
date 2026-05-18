@@ -40,8 +40,8 @@
 			resizingClass="resizing-sidebar"
 			container=".irc-match-body"
 			[min]="250"
-			(resize)="resizeSidebar('left', $event)"
-			(resizeEnd)="saveResizeSidebar('left', $event)"
+			(sizeChanged)="resizeSidebar('left', $event)"
+			(sizeChangedEnd)="saveResizeSidebar('left', $event)"
 		>
 			<span></span>
 			<span></span>
@@ -87,8 +87,8 @@
 			container=".irc-match-body"
 			[min]="250"
 			[reverse]="true"
-			(resize)="resizeSidebar('right', $event)"
-			(resizeEnd)="saveResizeSidebar('right', $event)"
+			(sizeChanged)="resizeSidebar('right', $event)"
+			(sizeChangedEnd)="saveResizeSidebar('right', $event)"
 		>
 			<span></span>
 			<span></span>

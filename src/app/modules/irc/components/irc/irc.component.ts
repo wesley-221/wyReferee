@@ -36,7 +36,7 @@ import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dial
 import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyTriggerMessage } from 'app/models/wytournament/trigger-message';
-import { Subject, combineLatest, forkJoin, map, take, takeUntil } from 'rxjs';
+import { Subject, combineLatest, take, takeUntil } from 'rxjs';
 import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 import { IrcChatContainerComponent } from '../irc-chat-container/irc-chat-container.component';
 import { IrcChatControlsComponent } from '../irc-chat-controls/irc-chat-controls.component';
