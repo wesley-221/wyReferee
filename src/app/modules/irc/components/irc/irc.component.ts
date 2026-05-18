@@ -53,7 +53,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	@ViewChild('ircChannelsTemplate', { static: true }) private ircChannelsTemplate!: TemplateRef<unknown>;
 	@ViewChild('playerManagementTemplate', { static: true }) private playerManagementTemplate!: TemplateRef<unknown>;
 	@ViewChild('matchSettingsTemplate', { static: true }) private matchSettingsTemplate!: TemplateRef<unknown>;
-	@ViewChild('matchSettingsGeneralInteractionsTemplate', { static: true }) private matchSettingsGeneralInteractionsTemplate!: TemplateRef<unknown>;
+	@ViewChild('matchSettingsRefereeToolsTemplate', { static: true }) private matchSettingsRefereeToolsTemplate!: TemplateRef<unknown>;
 	@ViewChild('matchSettingsMultiplayerLobbySettingsTemplate', { static: true }) private matchSettingsMultiplayerLobbySettingsTemplate!: TemplateRef<unknown>;
 	@ViewChild('matchSettingsPlayersInvitationTemplate', { static: true }) private matchSettingsPlayersInvitationTemplate!: TemplateRef<unknown>;
 	@ViewChild('mappoolTemplate', { static: true }) private mappoolTemplate!: TemplateRef<unknown>;
@@ -1212,8 +1212,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 			case 'match-settings':
 				return this.matchSettingsTemplate;
 
-			case 'general-interactions':
-				return this.matchSettingsGeneralInteractionsTemplate;
+			case 'referee-tools':
+				return this.matchSettingsRefereeToolsTemplate;
 
 			case 'multiplayer-lobby-settings':
 				return this.matchSettingsMultiplayerLobbySettingsTemplate;

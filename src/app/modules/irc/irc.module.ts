@@ -12,7 +12,7 @@ import { IrcChatControlsComponent } from './components/irc-chat-controls/irc-cha
 import { IrcMatchHeaderComponent } from './components/irc-match-header/irc-match-header.component';
 import { IrcMatchSettingsComponent } from './components/irc-match-settings/irc-match-settings.component';
 import { IrcMappoolComponent } from './components/irc-mappool/irc-mappool.component';
-import { IrcMatchSettingsGeneralComponent } from './components/irc-match-settings-general/irc-match-settings-general.component';
+import { IrcRefereeToolsComponent } from './components/irc-referee-tools/irc-referee-tools.component';
 import { IrcMatchSettingsMultiplayerLobbySettingsComponent } from './components/irc-match-settings-multiplayer-lobby-settings/irc-match-settings-multiplayer-lobby-settings.component';
 import { IrcMatchSettingsPlayersInviteComponent } from './components/irc-match-settings-players-invite/irc-match-settings-players-invite.component';
 import { IrcLayoutLibraryComponent } from './components/irc-layout-library/irc-layout-library.component';
@@ -30,7 +30,7 @@ import { IrcSidebarLayoutEditorComponent } from './components/irc-sidebar-layout
 		IrcMatchHeaderComponent,
 		IrcMatchSettingsComponent,
 		IrcMappoolComponent,
-		IrcMatchSettingsGeneralComponent,
+		IrcRefereeToolsComponent,
 		IrcMatchSettingsMultiplayerLobbySettingsComponent,
 		IrcMatchSettingsPlayersInviteComponent,
 		IrcLayoutLibraryComponent,

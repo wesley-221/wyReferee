@@ -187,10 +187,10 @@
 	</div>
 </ng-template>
 
-<ng-template #matchSettingsGeneralInteractionsTemplate let-sidebarItem>
+<ng-template #matchSettingsRefereeToolsTemplate let-sidebarItem>
 	<div class="sidebar-item" [style.height]="sidebarItem.size != null ? (sidebarItem.size + 16) + 'px' : 'auto'">
 		<div class="content">
-			<app-irc-match-settings-general
+			<app-irc-referee-tools
 				[selectedLobby]="selectedLobby"
 				[selectedChannel]="selectedChannel"
 				(openLobbyDialogEmitter)="openLobbyDialog()"

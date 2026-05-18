@@ -24,7 +24,7 @@ export class IrcLayoutService {
 		{ icon: 'list', category: 'general', header: 'irc channels', body: 'Browse and switch between all the IRC channels you have joined.', type: 'irc-channels' },
 		{ icon: 'group', category: 'participants', header: 'player management', body: 'See everyone in the lobby. Kick, move players to slots, or pass host directly from this panel - no need to type any commands.', type: 'player-management' },
 		{ icon: 'tab', category: 'lobby', header: 'match settings', body: 'A combined panel containing <i>Referee tools</i>, <i>Lobby settings</i>, and <i>Player invitations</i> as three tabs - save sidebar space if you want all three in one place.', type: 'match-settings' },
-		{ icon: 'build', category: 'lobby', header: 'referee tools', body: 'Various actions for referees such as synchronizing the match state, managing the lobby and updating the match result to wyBin.', type: 'general-interactions' },
+		{ icon: 'build', category: 'lobby', header: 'referee tools', body: 'Various actions for referees such as synchronizing the match state, managing the lobby and updating the match result to wyBin.', type: 'referee-tools' },
 		{ icon: 'settings', category: 'lobby', header: 'lobby settings', body: 'Change team mode (head-to-head, team vs, etc.), win condition (score, accuracy, etc.) and the number of open player slots.', type: 'multiplayer-lobby-settings' },
 		{ icon: 'person_add', category: 'participants', header: 'player actions', body: 'Both teams and their players for this match. Invite them to the lobby or send a message to them directly.', type: 'player-invites' },
 		{ icon: 'map', category: 'mappool', header: 'mappool', body: 'View the full mappool for this match. Pick or ban maps directly from this panel and keep track of which ', type: 'mappool' }
@@ -94,13 +94,13 @@ export class IrcLayoutService {
 				view: 'match-settings'
 			});
 		}
-		else if (view === 'general-interactions') {
+		else if (view === 'referee-tools') {
 			section = new IrcLayoutSection({
 				id: id,
 				order: order,
 				sidebar: sidebar,
 				size: 250,
-				view: 'general-interactions'
+				view: 'referee-tools'
 			});
 		}
 		else if (view === 'multiplayer-lobby-settings') {

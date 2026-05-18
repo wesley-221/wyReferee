@@ -1,7 +1,7 @@
 <div class="irc-match-settings">
 	<div class="header-buttons">
 		<div title="IRC actions" class="header-button" [ngClass]="{'active': sidebarHeaderButtonActive == 1}" (click)="selectSidebarHeaderButton(1)">
-			<mat-icon>home</mat-icon> general
+			<mat-icon>build</mat-icon> tools
 		</div>
 
 		<div title="Multiplayer lobby settings" class="header-button" [ngClass]="{'active': sidebarHeaderButtonActive == 2}" (click)="selectSidebarHeaderButton(2)">
@@ -15,7 +15,7 @@
 
 	<div class="content-container">
 		<div class="content" [ngClass]="{ 'active': sidebarHeaderButtonActive == 1 }">
-			<app-irc-match-settings-general
+			<app-irc-referee-tools
 				[selectedLobby]="selectedLobby"
 				[selectedChannel]="selectedChannel"
 				(openLobbyDialogEmitter)="openLobbyDialog()"

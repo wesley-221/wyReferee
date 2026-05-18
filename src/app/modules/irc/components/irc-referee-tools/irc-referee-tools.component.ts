@@ -10,11 +10,11 @@ import { SendBeatmapResultComponent } from '../../../../components/dialogs/send-
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-	selector: 'app-irc-match-settings-general',
-	templateUrl: './irc-match-settings-general.component.html',
-	styleUrl: './irc-match-settings-general.component.scss'
+	selector: 'app-irc-referee-tools',
+	templateUrl: './irc-referee-tools.component.html',
+	styleUrls: ['./irc-referee-tools.component.scss']
 })
-export class IrcMatchSettingsGeneralComponent {
+export class IrcRefereeToolsComponent {
 	@Input() selectedLobby: Lobby;
 	@Input() selectedChannel: IrcChannel;
 

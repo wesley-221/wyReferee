@@ -3,7 +3,7 @@ export type IrcLayoutSectionViewType =
 	| 'player-management'
 	| 'mappool'
 	| 'match-settings'
-	| 'general-interactions'
+	| 'referee-tools'
 	| 'multiplayer-lobby-settings'
 	| 'player-invites';
 
