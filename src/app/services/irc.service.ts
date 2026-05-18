@@ -225,6 +225,25 @@ export class IrcService {
 			}
 		});
 
+		this.client.on('disconnected', (error: Error) => {
+			if (error.message == 'Bancho Auth failed') {
+				return;
+			}
+
+			console.group('Disconnected from IRC');
+			console.info('-------------------------------');
+			console.warn('You have been disconnected from IRC.');
+			console.warn('If you see this, contact me on Discord (feel free to ping), check the dashboard for link.');
+			console.warn(`Name: ${error.name}`);
+			console.warn(`Message: ${error.message}`);
+			console.warn('Stack:');
+			console.error(error.stack);
+			console.warn('Json:');
+			console.error(JSON.stringify(error));
+			console.info('-------------------------------');
+			console.groupEnd();
+		});
+
 		from(this.client.connect()).subscribe({
 			next: () => {
 				this.isAuthenticated = true;
