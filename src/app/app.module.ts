@@ -33,6 +33,7 @@ import { DataMigrationDialogComponent } from './components/dialogs/data-migratio
 import { UpdateMatchResultsDialogComponent } from './components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 import { DeleteLobbiesDialogComponent } from './components/dialogs/delete-lobbies-dialog/delete-lobbies-dialog.component';
 import { NewUpdateDialogComponent } from './components/dialogs/new-update-dialog/new-update-dialog.component';
+import { ResetIrcLayoutDialogComponent } from './components/dialogs/reset-irc-layout-dialog/reset-irc-layout-dialog.component';
 
 export function initStorage(storageDriver: StorageDriverService) {
 	return () => storageDriver.init();
@@ -65,7 +66,8 @@ export function initStorage(storageDriver: StorageDriverService) {
 		AddBulkTeamsDialogComponent,
 		DataMigrationDialogComponent,
 		UpdateMatchResultsDialogComponent,
-		NewUpdateDialogComponent
+		NewUpdateDialogComponent,
+		ResetIrcLayoutDialogComponent
 	],
 	imports: [
 		BrowserModule,

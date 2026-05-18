@@ -1,0 +1,32 @@
+:host {
+	flex: 1;
+	min-width: 0;
+}
+
+.irc-match-settings-general {
+	display: flex;
+	overflow: hidden;
+
+	height: 100%;
+	min-height: 0;
+
+	.button-grid {
+		display: grid;
+		align-content: start;
+		grid-template-columns: repeat(2, 1fr);
+
+		padding: 4px;
+		gap: 4px;
+
+		width: 100%;
+		min-width: 0;
+
+		overflow-x: auto;
+
+		.form-button {
+			&.big-button {
+				grid-column: 1 / -1;
+			}
+		}
+	}
+}

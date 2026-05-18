@@ -1,0 +1,150 @@
+@import "variables";
+
+:host {
+	flex: 1;
+	min-height: 0;
+}
+
+.irc-layout-library {
+	display: flex;
+	flex-direction: column;
+
+	height: 100%;
+	min-height: 0;
+
+	background: $sub-sidebar-background-color;
+
+	.irc-layout-library-header {
+		padding: 8px;
+
+		background-color: $sidebar-background-color;
+		border-bottom: 1px solid $irc-border-color;
+
+		.header {
+			font-size: 18px;
+		}
+	}
+
+	.actions {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+
+		margin-bottom: 8px;
+		padding: 8px;
+		gap: 8px;
+
+		border-bottom: 1px solid $irc-border-color;
+
+		.margin-left-auto {
+			margin-left: auto;
+		}
+	}
+
+	.body {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		flex: 1;
+		min-height: 0;
+
+		.information {
+			padding: 0 8px;
+		}
+
+		.categories {
+			display: flex;
+			flex-direction: column;
+
+			padding: 8px;
+			gap: 16px;
+
+			flex: 1;
+			min-height: 0;
+
+			overflow-y: auto;
+
+			.category-header {
+				display: flex;
+				align-items: center;
+
+				margin-bottom: 8px;
+				gap: 6px;
+
+				font-size: 18px;
+				color: $irc-input-text-color;
+
+				&::after {
+					content: "";
+					flex: 1;
+					height: 1px;
+					background: $irc-border-color;
+				}
+			}
+
+			.sections {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+
+				gap: 8px;
+
+				user-select: none;
+
+				.section {
+					display: flex;
+					flex-direction: column;
+
+					border: 1px solid $irc-border-color;
+					border-radius: 5px;
+
+					background: $irc-input-background-color;
+
+					padding: 8px 16px;
+					gap: 5px;
+
+					cursor: grab;
+					transition: border-color 0.12s;
+
+					.section-header {
+						display: flex;
+						align-items: center;
+						gap: 4px;
+
+						font-size: 18px;
+
+						mat-icon {
+							flex-shrink: 0;
+						}
+					}
+
+					&:hover {
+						background: rgba($primary, 0.1);
+						border-color: rgba($primary, 0.26);
+					}
+				}
+			}
+		}
+	}
+}
+
+.placeholder {
+	display: none;
+}
+
+.drag-preview {
+	display: flex;
+	align-items: center;
+
+	background-color: rgba($primary, 0.1);
+	color: $primary;
+
+	border: 1px solid rgba($primary, 0.26);
+	border-radius: 4px;
+
+	padding: 8px;
+	gap: 4px;
+
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+}

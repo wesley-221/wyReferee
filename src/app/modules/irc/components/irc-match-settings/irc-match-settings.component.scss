@@ -5,8 +5,7 @@
 	flex-direction: column;
 	overflow: hidden;
 
-	grid-column: 3;
-	grid-row: 2;
+	height: 100%;
 
 	.header-buttons {
 		display: flex;
@@ -44,171 +43,21 @@
 	}
 
 	.content-container {
+		display: flex;
 		background: $irc-sidebar-background-color;
+
+		flex: 1;
+		overflow-x: auto;
 
 		.content {
 			display: none;
-
-			padding: 8px;
 			gap: 4px;
 
-			max-width: 350px;
-			height: 200px;
-
-			&.general-container {
-				grid-template-columns: 1fr 1fr;
-
-				.form-button {
-					&.big-button {
-						grid-column: 1 / -1;
-					}
-				}
-			}
-
-			&.settings-container {
-				&.active {
-					display: flex;
-					flex-direction: column;
-				}
-
-				.updating-text {
-					font-size: 12px;
-					font-weight: 600;
-					font-style: italic;
-					color: $irc-input-text-color;
-
-					margin-top: 4px;
-				}
-			}
-
-			&.players-container {
-				overflow-y: auto;
-				padding: 0;
-
-				.team {
-					display: flex;
-					flex-direction: column;
-
-					position: relative;
-
-					padding: 8px;
-
-					.team-header {
-						display: flex;
-						align-items: center;
-
-						position: sticky;
-						top: 0;
-
-						background: $irc-sidebar-background-color;
-
-						padding-bottom: 4px;
-						margin-bottom: 3px;
-						border-bottom: 1px solid $irc-border-color;
-
-						.team-name {
-							font-size: 12px;
-							letter-spacing: 0.15px;
-							text-transform: uppercase;
-							color: $primary;
-						}
-
-						.team-player-count {
-							margin-left: auto;
-
-							font-size: 10px;
-							color: $irc-input-text-color;
-						}
-					}
-
-					.players {
-						display: flex;
-						flex-direction: column;
-
-						.player {
-							display: flex;
-							align-items: center;
-
-							border-radius: 7px;
-							padding: 6px 4px;
-							gap: 4px;
-
-							transition: background 0.14s;
-							cursor: pointer;
-
-							.name {
-								flex: 1;
-							}
-
-							.actions {
-								display: flex;
-								align-items: center;
-								gap: 4px;
-
-								opacity: 0;
-								transition: opacity 0.14s;
-							}
-
-							&:hover {
-								background: $irc-input-background-color;
-
-								.actions {
-									opacity: 1;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			.label {
-				display: block;
-
-				font-size: 11px;
-				font-weight: 600;
-
-				text-transform: uppercase;
-
-				color: $irc-input-text-color;
-
-				margin-bottom: 4px;
-			}
-
-			.sidebar-select {
-				width: 100%;
-
-				background: $irc-input-background-color;
-				color: $irc-input-text-color-active;
-
-				border-radius: 7px;
-				border: 1px solid $irc-input-border-color;
-				outline: none;
-
-				padding: 8px 11px;
-
-				font-weight: 500;
-
-				&:focus {
-					border-color: $irc-input-border-color-active;
-				}
-			}
-
-			.row {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 4px;
-
-				.col {
-					display: flex;
-					flex-direction: column;
-
-					gap: 4px;
-					flex: 1;
-				}
-			}
+			flex: 1;
+			min-height: 0;
 
 			&.active {
-				display: grid;
+				display: flex;
 			}
 		}
 	}

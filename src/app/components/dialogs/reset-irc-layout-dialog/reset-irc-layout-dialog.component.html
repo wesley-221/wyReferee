@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Reset IRC layout to default</h2>
+
+<mat-dialog-content class="mat-typography">
+	You are about to reset your IRC layout to the default configuration. Are you sure you want to proceed?
+
+	<app-alert alertType="danger">
+		<b>NOTE:</b> This action is permanent. Once you reset your layout, all your customizations will be lost and cannot be recovered.
+	</app-alert>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button mat-dialog-close>Cancel</button>
+	<button mat-button [mat-dialog-close]="true" color="warn">Accept</button>
+</mat-dialog-actions>

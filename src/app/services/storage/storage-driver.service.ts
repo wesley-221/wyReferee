@@ -13,6 +13,7 @@ export class StorageDriverService {
 	settingsFilePath: string;
 	webhookSettingsFilePath: string;
 	ircShortcutCommandsFilePath: string;
+	ircLayoutSectionsFilePath: string;
 
 	private appDataPath: string;
 	private initialized = false;
@@ -84,7 +85,7 @@ export class StorageDriverService {
 		this.settingsFilePath = await this.joinPath(this.mainDataPath, 'settings.json');
 		this.webhookSettingsFilePath = await this.joinPath(this.mainDataPath, 'webhook-settings.json');
 		this.ircShortcutCommandsFilePath = await this.joinPath(this.mainDataPath, 'irc-shortcut-commands.json');
-
+		this.ircLayoutSectionsFilePath = await this.joinPath(this.mainDataPath, 'irc-layout-sections.json');
 		await this.createRequiredDirectories();
 
 		this.initialized = true;

@@ -14,7 +14,7 @@
 			<ng-container *ngIf="selectedChannel != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
 				<ng-container *ngIf="matchStatus.nextPick != null; else noNextPick">
 					<div class="badge next-pick">
-						<mat-icon>play_arrow</mat-icon>
+						<mat-icon class="icon">play_arrow</mat-icon>
 
 						<div class="team-name" [ngClass]="{'red': matchStatus.nextPick == selectedLobby.teamOneName, 'blue': matchStatus.nextPick == selectedLobby.teamTwoName }">
 							{{ matchStatus.nextPick }} picks next
@@ -24,7 +24,7 @@
 
 				<ng-template #noNextPick>
 					<div class="badge next-pick">
-						<mat-icon>priority_high</mat-icon>
+						<mat-icon class="icon">priority_high</mat-icon>
 
 						<div class="team-name">
 							Select a first pick
@@ -34,7 +34,7 @@
 			</ng-container>
 
 			<div class="badge match-point" *ngIf="selectedChannel != null && matchStatus.matchPoint != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
-				<mat-icon>star</mat-icon>
+				<mat-icon class="icon">star</mat-icon>
 
 				matchpoint
 
@@ -44,13 +44,13 @@
 			</div>
 
 			<div class="badge tiebreaker" *ngIf="selectedChannel != null && matchStatus.tiebreaker == true">
-				<mat-icon>local_fire_department</mat-icon>
+				<mat-icon class="icon">local_fire_department</mat-icon>
 
 				Tiebreaker hype!
 			</div>
 
 			<div class="badge has-won" *ngIf="selectedChannel != null && matchStatus.hasWon != null">
-				<mat-icon>emoji_events</mat-icon>
+				<mat-icon class="icon">emoji_events</mat-icon>
 
 				<div class="team-name" [ngClass]="{'red': matchStatus.hasWon == selectedLobby.teamOneName, 'blue': matchStatus.hasWon == selectedLobby.teamTwoName }">
 					{{ matchStatus.hasWon }}

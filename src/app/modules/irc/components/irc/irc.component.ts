@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy, TemplateRef } from '@angular/core';
 import { IrcService } from '../../../../services/irc.service';
 import { ElectronService } from '../../../../services/electron.service';
 import { Router } from '@angular/router';
@@ -36,11 +36,13 @@ import { IProtectBeatmapDialogData } from 'app/interfaces/i-protect-beatmap-dial
 import { CacheService } from 'app/services/cache.service';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { WyTriggerMessage } from 'app/models/wytournament/trigger-message';
-import { Subject, combineLatest, take, takeUntil } from 'rxjs';
+import { Subject, combineLatest, map, take, takeUntil } from 'rxjs';
 import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
 import { IrcChatContainerComponent } from '../irc-chat-container/irc-chat-container.component';
 import { IrcChatControlsComponent } from '../irc-chat-controls/irc-chat-controls.component';
 import { GenericService } from '../../../../services/generic.service';
+import { IrcLayoutService } from '../../../../services/irc-layout.service';
+import { IrcLayoutSection, IrcLayoutSectionViewType } from '../../../../models/irc-layout-section';
 
 @Component({
 	selector: 'app-irc',
@@ -48,8 +50,13 @@ import { GenericService } from '../../../../services/generic.service';
 	styleUrls: ['./irc.component.scss']
 })
 export class IrcComponent implements OnInit, OnDestroy {
-	@ViewChild('channelName') channelName: ElementRef;
-	@ViewChild('chatMessage') chatMessage: ElementRef;
+	@ViewChild('ircChannelsTemplate', { static: true }) private ircChannelsTemplate!: TemplateRef<unknown>;
+	@ViewChild('playerManagementTemplate', { static: true }) private playerManagementTemplate!: TemplateRef<unknown>;
+	@ViewChild('matchSettingsTemplate', { static: true }) private matchSettingsTemplate!: TemplateRef<unknown>;
+	@ViewChild('matchSettingsGeneralInteractionsTemplate', { static: true }) private matchSettingsGeneralInteractionsTemplate!: TemplateRef<unknown>;
+	@ViewChild('matchSettingsMultiplayerLobbySettingsTemplate', { static: true }) private matchSettingsMultiplayerLobbySettingsTemplate!: TemplateRef<unknown>;
+	@ViewChild('matchSettingsPlayersInvitationTemplate', { static: true }) private matchSettingsPlayersInvitationTemplate!: TemplateRef<unknown>;
+	@ViewChild('mappoolTemplate', { static: true }) private mappoolTemplate!: TemplateRef<unknown>;
 
 	@ViewChild(IrcChatContainerComponent) ircChatContainerComponent: IrcChatContainerComponent;
 	@ViewChild(IrcChatControlsComponent) ircChatControlsComponent: IrcChatControlsComponent;
@@ -96,6 +103,20 @@ export class IrcComponent implements OnInit, OnDestroy {
 	sidebarLeftWidth = 250;
 	sidebarRightWidth = 250;
 
+	private sidebarSections = this.ircLayoutService.sidebarSections$;
+
+	sidebarLeftSections = this.sidebarSections.pipe(
+		map(sections => sections.filter(section => section.sidebar === 'left')),
+		map(sections => sections.sort((a, b) => a.order - b.order))
+	);
+
+	sidebarRightSections = this.sidebarSections.pipe(
+		map(sections => sections.filter(section => section.sidebar === 'right')),
+		map(sections => sections.sort((a, b) => a.order - b.order))
+	);
+
+	layoutEditorOpen = false;
+
 	constructor(
 		public electronService: ElectronService,
 		public ircService: IrcService,
@@ -111,7 +132,8 @@ export class IrcComponent implements OnInit, OnDestroy {
 		private challongeService: ChallongeService,
 		public slashCommandService: SlashCommandService,
 		public cacheService: CacheService,
-		private genericService: GenericService) {
+		private genericService: GenericService,
+		private ircLayoutService: IrcLayoutService) {
 		this.currentMessageHistoryIndex = -1;
 		this.slashCommandIndex = -1;
 
@@ -327,12 +349,12 @@ export class IrcComponent implements OnInit, OnDestroy {
 		if (delayScroll) {
 			setTimeout(() => {
 				this.scrollToBottom();
-				this.ircChatControlsComponent.chatMessage.nativeElement.focus();
+				this.ircChatControlsComponent?.chatMessage.nativeElement.focus();
 			}, 500);
 		}
 		else {
 			this.scrollToBottom();
-			this.ircChatControlsComponent.chatMessage.nativeElement.focus();
+			this.ircChatControlsComponent?.chatMessage.nativeElement.focus();
 		}
 
 		// Reset search bar
@@ -1177,6 +1199,43 @@ export class IrcComponent implements OnInit, OnDestroy {
 		}
 
 		this.genericService.setIrcSidebarWidth(side, width);
+	}
+
+	getTemplate(view: IrcLayoutSectionViewType): TemplateRef<unknown> {
+		switch (view) {
+			case 'irc-channels':
+				return this.ircChannelsTemplate;
+
+			case 'player-management':
+				return this.playerManagementTemplate;
+
+			case 'match-settings':
+				return this.matchSettingsTemplate;
+
+			case 'general-interactions':
+				return this.matchSettingsGeneralInteractionsTemplate;
+
+			case 'multiplayer-lobby-settings':
+				return this.matchSettingsMultiplayerLobbySettingsTemplate;
+
+			case 'player-invites':
+				return this.matchSettingsPlayersInvitationTemplate;
+
+			case 'mappool':
+				return this.mappoolTemplate;
+		}
+	}
+
+	openLayoutEditor() {
+		this.layoutEditorOpen = !this.layoutEditorOpen;
+	}
+
+	resizeIrcSection(sidebarItem: IrcLayoutSection, size: number, save: boolean) {
+		sidebarItem.size = size;
+
+		if (save) {
+			this.ircLayoutService.save(sidebarItem);
+		}
 	}
 }
 

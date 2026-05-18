@@ -1,0 +1,51 @@
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<div class="label">
+				Team mode
+			</div>
+
+			<select class="sidebar-select" #teamMode (change)="onRoomSettingChange()" [value]="selectedChannel.teamMode">
+				<option></option>
+
+				<option [value]="0">Head To Head</option>
+				<option [value]="1">Tag Coop</option>
+				<option [value]="2">Team Vs</option>
+				<option [value]="3">Tag Team Vs</option>
+			</select>
+		</div>
+
+		<div class="col">
+			<div class="label">
+				Win condition
+			</div>
+
+			<select class="sidebar-select" #winCondition (change)="onRoomSettingChange()" [value]="selectedChannel.winCondition">
+				<option [value]="0">Score</option>
+				<option [value]="1">Accuracy</option>
+				<option [value]="2">Combo</option>
+				<option [value]="3">Score V2</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<div class="label">
+				Players
+			</div>
+
+			<select class="sidebar-select" #players (change)="onRoomSettingChange()" [value]="selectedChannel.players">
+				<option></option>
+
+				<option *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]" [value]="number">
+					{{ number }}
+				</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="updating-text" *ngIf="roomSettingDelay > 0">
+		Updating multiplayer settings in {{ roomSettingDelay }}...
+	</div>
+</div>

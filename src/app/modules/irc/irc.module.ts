@@ -12,6 +12,11 @@ import { IrcChatControlsComponent } from './components/irc-chat-controls/irc-cha
 import { IrcMatchHeaderComponent } from './components/irc-match-header/irc-match-header.component';
 import { IrcMatchSettingsComponent } from './components/irc-match-settings/irc-match-settings.component';
 import { IrcMappoolComponent } from './components/irc-mappool/irc-mappool.component';
+import { IrcMatchSettingsGeneralComponent } from './components/irc-match-settings-general/irc-match-settings-general.component';
+import { IrcMatchSettingsMultiplayerLobbySettingsComponent } from './components/irc-match-settings-multiplayer-lobby-settings/irc-match-settings-multiplayer-lobby-settings.component';
+import { IrcMatchSettingsPlayersInviteComponent } from './components/irc-match-settings-players-invite/irc-match-settings-players-invite.component';
+import { IrcLayoutLibraryComponent } from './components/irc-layout-library/irc-layout-library.component';
+import { IrcSidebarLayoutEditorComponent } from './components/irc-sidebar-layout-editor/irc-sidebar-layout-editor.component';
 
 
 @NgModule({
@@ -24,7 +29,12 @@ import { IrcMappoolComponent } from './components/irc-mappool/irc-mappool.compon
 		IrcChatControlsComponent,
 		IrcMatchHeaderComponent,
 		IrcMatchSettingsComponent,
-		IrcMappoolComponent
+		IrcMappoolComponent,
+		IrcMatchSettingsGeneralComponent,
+		IrcMatchSettingsMultiplayerLobbySettingsComponent,
+		IrcMatchSettingsPlayersInviteComponent,
+		IrcLayoutLibraryComponent,
+		IrcSidebarLayoutEditorComponent
 	],
 	imports: [
 		CommonModule,

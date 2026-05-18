@@ -1,0 +1,73 @@
+<div class="irc-layout-library">
+	<div class="irc-layout-library-header">
+		<div class="header">
+			Section library
+		</div>
+
+		<div class="description">
+			Drag and drop a tile to add it to your layout on the panel on either the left or right.
+		</div>
+	</div>
+
+	<div class="actions">
+		<button class="form-button primary" (click)="saveChanges()" [disabled]="!(hasChanged$ | async)">
+			<mat-icon>save</mat-icon> save changes
+		</button>
+
+		<button class="form-button danger" (click)="discardChanges()" [disabled]="!(hasChanged$ | async)">
+			<mat-icon>close</mat-icon> discard changes
+		</button>
+
+		<button class="form-button danger" (click)="resetLayout()">
+			<mat-icon>restore</mat-icon> reset to default
+		</button>
+
+		<button class="form-button danger margin-left-auto" (click)="closeLibrary()">
+			<mat-icon>close</mat-icon> close library
+		</button>
+	</div>
+
+	<div class="body">
+		<div class="information">
+			<app-alert alertType="info" [noMargin]="true">
+				Sections are panels you can place in your left or right sidebar. You can have as many sections as you like, you can place them in any order you like, and you can even have multiple of the same section if you want. Just drag and drop them to the sidebar to add them to your layout.
+			</app-alert>
+		</div>
+
+		<div class="categories">
+			<div class="category" *ngFor="let category of layoutCategories">
+				<div class="category-header">
+					{{ category.name | titlecase }}
+				</div>
+
+				<div
+					class="sections"
+					cdkDropList
+					[cdkDropListSortingDisabled]="true"
+					[cdkDropListConnectedTo]="['sidebar-dropzone-left', 'sidebar-dropzone-right']"
+				>
+					<div
+						class="section"
+						*ngFor="let layout of category.layouts"
+						cdkDrag
+						[cdkDragData]="layout"
+						(cdkDragStarted)="onDragStarted()"
+						(cdkDragEnded)="onDragEnded()"
+					>
+						<div class="section-header">
+							<mat-icon>{{ layout.icon }}</mat-icon> {{ layout.header }}
+						</div>
+
+						<div class="section-body" [innerHTML]="layout.body"></div>
+
+						<div *cdkDragPreview class="drag-preview">
+							<mat-icon>{{ layout.icon }}</mat-icon> {{ layout.header }}
+						</div>
+
+						<div *cdkDragPlaceholder class="placeholder"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
