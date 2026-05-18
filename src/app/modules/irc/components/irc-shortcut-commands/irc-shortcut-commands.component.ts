@@ -7,6 +7,7 @@ import { IrcChannel } from 'app/models/irc/irc-channel';
 import { Lobby } from 'app/models/lobby';
 import { IrcShortcutCommandsService } from 'app/services/irc-shortcut-commands.service';
 import { IrcService } from 'app/services/irc.service';
+import { GenericService } from '../../../../services/generic.service';
 
 @Component({
 	selector: 'app-irc-shortcut-commands',
@@ -18,7 +19,14 @@ export class IrcShortcutCommandsComponent implements OnInit {
 	@Input() channel: IrcChannel;
 	@Output() focusChat: EventEmitter<boolean>;
 
-	constructor(public ircService: IrcService, public ircShortcutCommandsService: IrcShortcutCommandsService, private dialog: MatDialog) {
+	showWithoutScrollbar$ = this.genericService.getShowAllShortcutsStatus();
+
+	constructor(
+		private dialog: MatDialog,
+		private genericService: GenericService,
+		public ircService: IrcService,
+		public ircShortcutCommandsService: IrcShortcutCommandsService,
+	) {
 		this.focusChat = new EventEmitter(false);
 	}
 

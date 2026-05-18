@@ -19,6 +19,12 @@
 		flex: 1;
 
 		overflow-x: auto;
+
+		&.no-scrollbar {
+			overflow-x: initial;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
 	}
 
 	.settings {

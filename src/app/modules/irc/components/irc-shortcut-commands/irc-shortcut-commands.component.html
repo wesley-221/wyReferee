@@ -1,5 +1,5 @@
 <div class="action-bar">
-	<div class="actions">
+	<div class="actions" [class.no-scrollbar]="showWithoutScrollbar$ | async">
 		<button class="form-button no-wrap" [disabled]="!ircService.isAuthenticated" [class.danger]="ircShortcutCommand.warning == true" *ngFor="let ircShortcutCommand of ircShortcutCommandsService.ircShortcutCommands" (click)="executeIrcShortcutCommand(ircShortcutCommand)">
 			{{ ircShortcutCommand.label }}
 		</button>

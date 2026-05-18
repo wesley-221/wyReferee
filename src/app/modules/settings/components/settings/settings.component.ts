@@ -23,14 +23,16 @@ export class SettingsComponent implements OnInit {
 	axsMenuStatus: boolean;
 	showIncorrectSlotStatus: boolean;
 	splitBanchoBotMessages: boolean;
+	showAllShortcutsStatus: boolean;
 
 	generalOptions: OptionsMenu[] = [
-		{ header: 'Show AxS menu item', description: 'Toggle visibility of the AxS menu item in the sidebar', buttonText: 'Toggle', action: () => this.toggleAxSMenu(), slideToggle: true, slideToggleValue: this.genericService.getAxSMenuStatus() }
+		{ header: 'Show AxS menu item', description: 'Toggle visibility of the AxS menu item in the sidebar', action: () => this.toggleAxSMenu(), slideToggle: true, slideToggleValue: this.genericService.getAxSMenuStatus() }
 	];
 
 	ircOptions: OptionsMenu[] = [
-		{ header: 'Show incorrect slot warning', description: 'Toggle whether to show a warning when a player is in an incorrect slot. This is shown when <code>!mp settings</code> is used', buttonText: 'Toggle', action: () => this.toggleShowIncorrectSlot(), slideToggle: true, slideToggleValue: this.genericService.getShowIncorrectSlotStatus() },
-		{ header: 'Split BanchoBot messages', description: 'Toggle whether to split BanchoBot messages into its own chat container', buttonText: 'Toggle', action: () => this.toggleSplitBanchoBotMessages(), slideToggle: true, slideToggleValue: this.genericService.getSplitBanchoBotMessagesStatus() }
+		{ header: 'Show incorrect slot warning', description: 'Toggle whether to show a warning when a player is in an incorrect slot. This is shown when <code>!mp settings</code> is used', action: () => this.toggleShowIncorrectSlot(), slideToggle: true, slideToggleValue: this.genericService.getShowIncorrectSlotStatus() },
+		{ header: 'Split BanchoBot messages', description: 'Toggle whether to split BanchoBot messages into its own chat container', action: () => this.toggleSplitBanchoBotMessages(), slideToggle: true, slideToggleValue: this.genericService.getSplitBanchoBotMessagesStatus() },
+		{ header: 'Display all shortcut commands without scrollbar', description: 'Toggle whether to display all shortcut commands in the shortcuts menu without a scrollbar. These are the buttons above the send message input on the IRC page', action: () => this.toggleShowAllShortcuts(), slideToggle: true, slideToggleValue: this.genericService.getShowAllShortcutsStatus() }
 	];
 
 	configurationOptions: OptionsMenu[] = [
@@ -67,6 +69,10 @@ export class SettingsComponent implements OnInit {
 
 		this.genericService.getSplitBanchoBotMessagesStatus().subscribe(status => {
 			this.splitBanchoBotMessages = status;
+		});
+
+		this.genericService.getShowAllShortcutsStatus().subscribe(status => {
+			this.showAllShortcutsStatus = status;
 		});
 
 		this.webhookAuthorImage = this.webhookService.authorImage;
@@ -167,5 +173,10 @@ export class SettingsComponent implements OnInit {
 	updateWebhookCustomization() {
 		this.webhookService.updateWebhookCustomization(this.webhookAuthorImage, this.webhookAuthorName, this.webhookBottomImage, this.webhookFooterIconUrl, this.webhookFooterText);
 		this.toastService.addToast(`Successfully updated your personal webhook customizations.`);
+	}
+
+	toggleShowAllShortcuts(): void {
+		this.showAllShortcutsStatus = !this.showAllShortcutsStatus;
+		this.genericService.setShowAllShortcuts(this.showAllShortcutsStatus);
 	}
 }

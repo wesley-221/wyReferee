@@ -24,7 +24,9 @@
 		</mat-expansion-panel>
 	</mat-accordion>
 
-	<div class="extra-spacing"></div>
+	<app-alert alertType="info">
+		You can change how the shortcut commands are displayed by going to the <a [routerLink]="['/settings']" (click)="closeDialog()">settings</a> and toggling the "Display all shortcut commands without scrollbar" option. This will show all of your shortcut commands in the shortcuts menu above the send message input on the IRC page without a scrollbar. If you have a lot of shortcut commands, it is recommended to keep this option turned off to prevent the shortcuts menu from taking up too much space.
+	</app-alert>
 
 	<div class="buttons">
 		<button mat-raised-button color="accent" (click)="createNewShortcutCommand()"><mat-icon>add</mat-icon> create new shortcut command</button>

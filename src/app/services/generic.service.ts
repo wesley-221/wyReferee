@@ -10,6 +10,7 @@ export class GenericService {
 	private showIncorrectSlot$: BehaviorSubject<boolean>;
 	private splitBanchoBotMessages$: BehaviorSubject<boolean>;
 	private banchoChatContainerHeight$: BehaviorSubject<number>;
+	private showAllShortcuts$: BehaviorSubject<boolean>;
 
 	constructor(private settingsStore: SettingsStoreService) {
 		settingsStore.watchSettings().subscribe(settings => {
@@ -18,6 +19,7 @@ export class GenericService {
 				this.showIncorrectSlot$.next(settings.showIncorrectSlot);
 				this.splitBanchoBotMessages$.next(settings.splitBanchoBotMessages);
 				this.banchoChatContainerHeight$.next(settings.banchoChatContainerHeight);
+				this.showAllShortcuts$.next(settings.showAllShortcuts);
 			}
 		});
 
@@ -25,6 +27,7 @@ export class GenericService {
 		this.showIncorrectSlot$ = new BehaviorSubject(true);
 		this.splitBanchoBotMessages$ = new BehaviorSubject(false);
 		this.banchoChatContainerHeight$ = new BehaviorSubject(30);
+		this.showAllShortcuts$ = new BehaviorSubject(false);
 	}
 
 	/**
@@ -95,13 +98,42 @@ export class GenericService {
 		return this.banchoChatContainerHeight$;
 	}
 
+	/**
+	 * Set the width of the IRC sidebars
+	 *
+	 * @param side which sidebar to set the width of, either 'left' or 'right'
+	 * @param width the width of the sidebar in pixels
+	 */
 	setIrcSidebarWidth(side: 'left' | 'right', width: number): void {
 		this.settingsStore.set(`sidebar${side === 'left' ? 'Left' : 'Right'}Width`, width);
 	}
 
+	/**
+	 * Get the width of the IRC sidebar
+	 *
+	 * @param side which sidebar to get the width of, either 'left' or 'right'
+	 */
 	getIrcSidebarWidth(side: 'left' | 'right'): Observable<number> {
 		const width = this.settingsStore.get(`sidebar${side === 'left' ? 'Left' : 'Right'}Width`) || 250;
 
 		return of(width);
+	}
+
+	/**
+	 * Set the status of showing all shortcuts in the shortcuts menu without a scrollbar
+	 *
+	 * @param active the status of showing all shortcuts
+	 */
+	setShowAllShortcuts(active: boolean): void {
+		console.log(active);
+		this.showAllShortcuts$.next(active);
+		this.settingsStore.set('showAllShortcuts', active);
+	}
+
+	/**
+	 * Get the status of showing all shortcuts in the shortcuts menu without a scrollbar
+	 */
+	getShowAllShortcutsStatus(): BehaviorSubject<boolean> {
+		return this.showAllShortcuts$;
 	}
 }
