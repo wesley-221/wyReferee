@@ -51,7 +51,8 @@ import { IPC_CHANNELS } from './ipc-channels';
 		changeActiveChannel: (channelName: string, active: boolean) => ipcRenderer.invoke(IPC_CHANNELS.CHANGE_ACTIVE_CHANNEL, channelName, active),
 		changeLastActiveChannel: (channelName: string, active: boolean) => ipcRenderer.invoke(IPC_CHANNELS.CHANGE_LAST_ACTIVE_CHANNEL, channelName, active),
 		addIrcMessage: (channelName: string, message: any, plainMessage: any, saveInBanchoBotHistory?: boolean) => ipcRenderer.invoke(IPC_CHANNELS.ADD_IRC_MESSAGE, channelName, message, plainMessage, saveInBanchoBotHistory),
-		addOutgoingIrcMessage: (channelName: string, message: any, plainMessage: any) => ipcRenderer.invoke(IPC_CHANNELS.ADD_OUTGOING_IRC_MESSAGE, channelName, message, plainMessage)
+		addOutgoingIrcMessage: (channelName: string, message: any, plainMessage: any) => ipcRenderer.invoke(IPC_CHANNELS.ADD_OUTGOING_IRC_MESSAGE, channelName, message, plainMessage),
+		updateChannelsOrder: (channels: any[]) => ipcRenderer.invoke(IPC_CHANNELS.UPDATE_CHANNELS_ORDER, channels)
 	},
 	osuAuthentication: {
 		getIrcCredentials: () => ipcRenderer.invoke(IPC_CHANNELS.GET_IRC_CREDENTIALS),

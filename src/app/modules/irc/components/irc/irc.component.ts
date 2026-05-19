@@ -196,7 +196,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.channels = this.ircService.allChannels;
+		this.channels = this.ircService.allChannels.sort((a, b) => a.order - b.order);
 
 		this.ircService.getIsJoiningChannel()
 			.pipe(takeUntil(this.unsubscribeOnDestroy$))

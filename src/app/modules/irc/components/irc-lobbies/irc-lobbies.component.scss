@@ -165,16 +165,28 @@ $button-hover-border-color: rgba(255, 255, 255, 0.2);
 	}
 }
 
-.cdk-drag-preview {
+.drag-base {
 	display: flex;
 	align-items: center;
 
-	background-color: rgba(0, 0, 0, 0.9);
-	color: $primary;
+	border-radius: 4px;
 
-	border-left: 2px solid transparent;
+	padding: 8px;
+	gap: 4px;
 
-	.channel-actions {
-		display: none;
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+
+	&.placeholder {
+		flex: 1;
+
+		background-color: $irc-input-background-color;
+		border: 1.5px dashed rgba($primary, 0.26);
+	}
+
+	&.preview {
+		background-color: rgba($primary, 0.1);
+		border: 1px solid rgba($primary, 0.26);
+		color: $primary;
 	}
 }
