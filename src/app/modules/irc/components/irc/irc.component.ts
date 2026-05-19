@@ -484,9 +484,14 @@ export class IrcComponent implements OnInit, OnDestroy {
 				}
 			});
 
-			dialogRef.afterClosed().subscribe((result: Lobby) => {
+			dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, bestOf: number }) => {
 				if (result != null) {
-					this.multiplayerLobbies.updateMultiplayerLobby(result);
+					this.selectedLobby.firstPick = result.firstPick ?? null;
+					this.selectedLobby.firstBan = result.firstBan ?? null;
+					this.selectedLobby.bestOf = result.bestOf ?? null;
+
+					this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+					this.refreshIrcHeader(this.selectedLobby);
 				}
 			});
 
