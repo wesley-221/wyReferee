@@ -87,6 +87,24 @@ export class IrcLobbiesComponent {
 	dropChannel(event: CdkDragDrop<IrcChannel[]>) {
 		moveItemInArray(this.channels, event.previousIndex, event.currentIndex);
 
-		console.warn('Rearring IRC channels is currently not persisted. Will be added in a future update.');
+		const changedChannels = this.channels
+			.map((channel, index) => {
+				if (channel.order !== index) {
+					channel.order = index;
+
+					return {
+						...channel,
+						order: index,
+						messages: [],
+						banchoBotMessages: [],
+						plainMessageHistory: []
+					};
+				}
+
+				return null;
+			})
+			.filter(channel => channel != null);
+
+		window.electronApi.irc.updateChannelsOrder(changedChannels);
 	}
 }

@@ -167,6 +167,21 @@ function updateIrcChannelData(channelName: string, key: string, value: any) {
 	fs.writeFileSync(getChannelFileName(channelName), JSON.stringify(updatedIrcChannel, null, 4), 'utf-8');
 }
 
+function updateIrcChannelOrder(channelName: string, newOrder: number) {
+	const ircChannel = getIrcChannel(channelName);
+
+	if (ircChannel == null) {
+		return;
+	}
+
+	const updatedIrcChannel = {
+		...ircChannel,
+		order: newOrder
+	};
+
+	fs.writeFileSync(getChannelFileName(channelName), JSON.stringify(updatedIrcChannel, null, 4), 'utf-8');
+}
+
 export function registerIrcHandlers(allWindows: WindowManager[]) {
 	/**
 	 * Create a new irc channel
@@ -291,6 +306,12 @@ export function registerIrcHandlers(allWindows: WindowManager[]) {
 	 */
 	ipcMain.handle(IPC_CHANNELS.CHANGE_ACTIVE_CHANNEL, async (event, channelName, active) => {
 		updateIrcChannelData(channelName, 'active', active);
+	});
+
+	ipcMain.handle(IPC_CHANNELS.UPDATE_CHANNELS_ORDER, async (event, channels) => {
+		for (const channel of channels) {
+			updateIrcChannelOrder(channel.name, channel.order);
+		}
 	});
 }
 

@@ -34,6 +34,7 @@ export const IPC_CHANNELS = {
 	CHANGE_LAST_ACTIVE_CHANNEL: 'changeLastActiveChannel',
 	ADD_IRC_MESSAGE: 'addIrcMessage',
 	ADD_OUTGOING_IRC_MESSAGE: 'addOutgoingIrcMessage',
+	UPDATE_CHANNELS_ORDER: 'updateChannelsOrder',
 	GET_IRC_CREDENTIALS: 'getIrcCredentials',
 	GET_IRC_USERNAME: 'getIrcUsername',
 	GET_API_KEY: 'getApiKey',

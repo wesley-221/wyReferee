@@ -2,6 +2,7 @@
 	<div class="channel" *ngFor="let channel of channels"
 						cdkDragBoundary=".all-channels"
 						(click)="changeChannelClick(channel.name)"
+						cdkDrag
 						[ngClass]="{ 'active': selectedChannel != undefined && (channel.name == selectedChannel.name) }">
 		<div class="channel-description">
 			<div class="channel-name" *ngIf="!channel.editingLabel">
@@ -50,6 +51,14 @@
 			<button class="form-button small-button danger" (click)="partChannel(channel.name)">
 				<mat-icon class="icon">close</mat-icon>
 			</button>
+		</div>
+
+		<div *cdkDragPreview class="drag-base preview">
+			{{ channel.label ?? channel.name }}
+		</div>
+
+		<div *cdkDragPlaceholder class="drag-base placeholder">
+			{{ channel.label ?? channel.name }}
 		</div>
 	</div>
 </div>

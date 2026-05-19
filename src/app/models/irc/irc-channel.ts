@@ -18,6 +18,7 @@ export class IrcChannel {
 	name: string;
 	label: string;
 	active: boolean;
+	order: number;
 	messages: IrcMessage[];
 	banchoBotMessages: IrcMessage[];
 	plainMessageHistory: string[];
@@ -50,6 +51,7 @@ export class IrcChannel {
 			name: ircChannel.name,
 			label: ircChannel.label,
 			active: ircChannel.active,
+			order: ircChannel.order,
 			lastActiveChannel: ircChannel.lastActiveChannel,
 			isPrivateChannel: ircChannel.isPrivateChannel,
 			isPublicChannel: ircChannel.isPublicChannel,

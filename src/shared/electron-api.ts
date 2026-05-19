@@ -76,6 +76,7 @@ interface ElectronApiIrc {
 	changeLastActiveChannel(channelName: string, active: boolean): Promise<void>;
 	addIrcMessage(channelName: string, message: IrcMessage, plainMessage: string, saveInBanchoBotHistory?: boolean): Promise<void>;
 	addOutgoingIrcMessage(channelName: string, message: IrcMessage, plainMessage: string): Promise<void>;
+	updateChannelsOrder(channels: IrcChannel[]): Promise<void>;
 }
 
 interface ElectronApiOsuAuthentication {
