@@ -1,4 +1,4 @@
-<div class="match-information" *ngIf="selectedLobby && selectedLobby.mappool">
+<div class="match-information" *ngIf="selectedLobby">
 	<ng-container *ngIf="matchStatus$ | async as matchStatus">
 		<div class="team-one">
 			<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="adjustScore(1, $event)">
