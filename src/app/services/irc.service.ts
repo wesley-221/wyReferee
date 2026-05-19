@@ -12,6 +12,7 @@ import { Lobby } from 'app/models/lobby';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 import { ElectronService } from './electron.service';
 import { GenericService } from './generic.service';
+import { MultiplayerData } from '../models/store-multiplayer/multiplayer-data';
 
 @Injectable({
 	providedIn: 'root'
@@ -48,6 +49,10 @@ export class IrcService {
 	tiebreaker$: BehaviorSubject<boolean>;
 	hasWon$: BehaviorSubject<string>;
 
+	matchDialogHeaderName$: BehaviorSubject<string>;
+	matchDialogMultiplayerData$: BehaviorSubject<MultiplayerData>;
+	matchDialogSendFinalResult$: BehaviorSubject<boolean>;
+
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
 	isCreatingMultiplayerLobby = -1;
 
@@ -75,6 +80,10 @@ export class IrcService {
 		this.matchPoint$ = new BehaviorSubject<string>(null);
 		this.tiebreaker$ = new BehaviorSubject<boolean>(false);
 		this.hasWon$ = new BehaviorSubject<string>(null);
+
+		this.matchDialogHeaderName$ = new BehaviorSubject<string>(null);
+		this.matchDialogMultiplayerData$ = new BehaviorSubject<MultiplayerData>(null);
+		this.matchDialogSendFinalResult$ = new BehaviorSubject<boolean>(false);
 
 		window.electronApi.osuAuthentication.getIrcCredentials().then(credentials => {
 			if (credentials.username && credentials.password) {

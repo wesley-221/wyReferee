@@ -1,0 +1,78 @@
+<ng-container *ngIf="matchDialogData$ | async as matchDialogData">
+	<div class="match-result" *ngIf="matchDialogData.headerName && (matchDialogData.multiplayerData || matchDialogData.sendFinalResult)">
+		<div class="header">
+			<div class="text">
+				{{ matchDialogData.headerName }}
+			</div>
+
+			<div class="close" (click)="closeMatchDialog()">
+				<mat-icon>close</mat-icon>
+			</div>
+		</div>
+
+		<div class="match-result-beatmap">
+			@if(matchDialogData.multiplayerData) {
+				<div class="beatmap-cover" [ngStyle]="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(' + getBeatmapCoverUrl(matchDialogData.multiplayerData.beatmap_id) + ')' }"></div>
+
+				<div class="beatmap-information">
+					<div class="name">
+						{{ getBeatmapName(matchDialogData.multiplayerData.beatmap_id) }}
+					</div>
+				</div>
+
+				<div class="teams">
+					<div class="red-team">
+						<span class="team-name">{{ selectedLobby.teamOneName }}</span>: {{ matchDialogData.multiplayerData.team_one_score }}
+					</div>
+
+					<div class="blue-team">
+						<span class="team-name">{{ selectedLobby.teamTwoName }}</span>: {{ matchDialogData.multiplayerData.team_two_score }}
+					</div>
+				</div>
+			}
+			@else {
+				<div class="match-information" *ngIf="matchDialogData.sendFinalResult">
+					<div class="match-score">
+						<span class="team-one">
+							{{ selectedLobby.teamOneName }}
+						</span>
+
+						score :
+
+						<span [ngClass]="selectedLobby.getTeamOneScore() > selectedLobby.getTeamTwoScore() ? 'win' : 'lose'">
+							{{ selectedLobby.getTeamOneScore() }}
+						</span>
+					</div>
+
+					<div class="match-score">
+						<span class="team-two">
+							{{ selectedLobby.teamTwoName }}
+						</span>
+
+						score :
+
+						<span [ngClass]="selectedLobby.getTeamOneScore() < selectedLobby.getTeamTwoScore() ? 'win' : 'lose'">
+							{{ selectedLobby.getTeamTwoScore() }}
+						</span>
+					</div>
+
+					<div class="team-name" [ngClass]="{'red': (hasWon$ | async) == selectedLobby.teamOneName, 'blue': (hasWon$ | async) == selectedLobby.teamTwoName }">
+						{{ hasWon$ | async }}
+					</div>
+
+					has won the match!
+				</div>
+			}
+
+			<div class="actions">
+				<button *ngIf="matchDialogData.multiplayerData" class="form-button primary" (click)="sendBeatmapResult(matchDialogData.multiplayerData)">
+					<mat-icon>send</mat-icon> send beatmap result
+				</button>
+
+				<button *ngIf="matchDialogData.sendFinalResult" class="form-button primary" (click)="updateMatchResults()">
+					<mat-icon>send</mat-icon> update match results
+				</button>
+			</div>
+		</div>
+	</div>
+</ng-container>

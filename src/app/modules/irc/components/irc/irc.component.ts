@@ -96,10 +96,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 	allSlashCommandsFiltered: SlashCommand[];
 	activeSlashCommand: SlashCommand;
 
-	matchDialogHeaderName: string;
-	matchDialogMultiplayerData: MultiplayerData;
-	matchDialogSendFinalResult: boolean;
-
 	sidebarLeftWidth = 250;
 	sidebarRightWidth = 250;
 
@@ -137,7 +133,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 		this.currentMessageHistoryIndex = -1;
 		this.slashCommandIndex = -1;
 
-		this.matchDialogSendFinalResult = false;
+		this.ircService.matchDialogSendFinalResult$.next(false);
 
 		this.slashCommandService.registerCommand(new SlashCommand({
 			name: 'savelog',
@@ -259,11 +255,9 @@ export class IrcComponent implements OnInit, OnDestroy {
 
 					if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
 						if (this.selectedLobby.isQualifierLobby == false) {
-							this.matchDialogHeaderName = 'Last played beatmap';
-							this.matchDialogMultiplayerData = this.selectedLobby.getLastPlayedBeatmap();
-							this.matchDialogSendFinalResult = false;
-
-							this.ref.detectChanges();
+							this.ircService.matchDialogHeaderName$.next('Last played beatmap');
+							this.ircService.matchDialogMultiplayerData$.next(this.selectedLobby.getLastPlayedBeatmap());
+							this.ircService.matchDialogSendFinalResult$.next(false);
 						}
 					}
 				}
@@ -884,30 +878,28 @@ export class IrcComponent implements OnInit, OnDestroy {
 	closeMatchDialog() {
 		if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
 			if (this.selectedLobby.isQualifierLobby == true) {
-				this.matchDialogHeaderName = null;
-				this.matchDialogMultiplayerData = null;
-				this.matchDialogSendFinalResult = false;
+				this.ircService.matchDialogHeaderName$.next(null);
+				this.ircService.matchDialogMultiplayerData$.next(null);
+				this.ircService.matchDialogSendFinalResult$.next(false);
 			}
 			else {
-				this.matchDialogHeaderName = null;
-				this.matchDialogMultiplayerData = null;
+				this.ircService.matchDialogHeaderName$.next(null);
+				this.ircService.matchDialogMultiplayerData$.next(null);
 
-				if (this.ircService.hasWon$.value != null && this.matchDialogSendFinalResult == false) {
-					this.matchDialogHeaderName = 'Match has finished';
-					this.matchDialogSendFinalResult = true;
+				if (this.ircService.hasWon$.value != null && this.ircService.matchDialogSendFinalResult$.value == false) {
+					this.ircService.matchDialogHeaderName$.next('Match has finished');
+					this.ircService.matchDialogSendFinalResult$.next(true);
 				}
 				else {
-					this.matchDialogSendFinalResult = false;
+					this.ircService.matchDialogSendFinalResult$.next(false);
 				}
 			}
 		}
 		else {
-			this.matchDialogHeaderName = null;
-			this.matchDialogMultiplayerData = null;
-			this.matchDialogSendFinalResult = false;
+			this.ircService.matchDialogHeaderName$.next(null);
+			this.ircService.matchDialogMultiplayerData$.next(null);
+			this.ircService.matchDialogSendFinalResult$.next(false);
 		}
-
-		this.ref.detectChanges();
 	}
 
 	/**

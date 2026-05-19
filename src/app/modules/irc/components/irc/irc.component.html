@@ -68,6 +68,13 @@
 					/>
 				</div>
 
+				<app-irc-match-result
+					[selectedLobby]="selectedLobby"
+					(closeMatchDialogEmitter)="closeMatchDialog()"
+					(sendBeatmapResultEmitter)="sendBeatmapResult($event)"
+					(updateMatchResultsEmitter)="updateMatchResults()"
+				/>
+
 				<div class="irc-chat-controls">
 					<app-irc-shortcut-commands
 						[lobby]="selectedLobby"

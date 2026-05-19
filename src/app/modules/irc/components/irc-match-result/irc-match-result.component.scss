@@ -1,0 +1,189 @@
+@import "variables";
+
+.match-result {
+	position: absolute;
+	z-index: 10;
+
+	right: 0;
+	bottom: 62px;
+	max-width: 300px;
+
+	margin: 8px;
+
+	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+
+	border-radius: 8px;
+
+	background: $irc-sidebar-background-color;
+	border: 1px solid $irc-border-color;
+
+	.header {
+		display: flex;
+		justify-content: space-between;
+
+		background-color: $irc-match-header-background-color;
+		color: $irc-input-text-color-active;
+
+		border-radius: 8px;
+
+		.text {
+			display: flex;
+			align-items: center;
+
+			font-weight: bold;
+
+			padding: 4px;
+		}
+
+		.close {
+			display: flex;
+			padding: 4px;
+
+			cursor: pointer;
+
+			border-top-right-radius: 8px;
+
+			&:hover {
+				border-color: rgba($primary, 0.26);
+				background: rgba($primary, 0.1);
+				color: $primary;
+			}
+		}
+
+		& + .match-result-beatmap {
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+		}
+	}
+
+	.match-result-beatmap {
+		display: flex;
+		flex-direction: column;
+
+		position: relative;
+		gap: 4px;
+
+		border: 1px solid $irc-border-color;
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
+
+		.beatmap-cover {
+			pointer-events: none;
+			position: absolute;
+
+			background-position: center;
+			background-size: cover;
+
+			height: 100%;
+			width: 100%;
+
+			border-bottom-left-radius: 8px;
+			border-bottom-right-radius: 8px;
+
+			z-index: 0;
+
+			&::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%);
+				pointer-events: none;
+
+				border-bottom-left-radius: 8px;
+				border-bottom-right-radius: 8px;
+			}
+		}
+
+		.beatmap-information {
+			padding: 4px;
+			z-index: 1;
+
+			.name {
+				display: flex;
+
+				align-items: center;
+
+				overflow: hidden;
+				word-wrap: break-word;
+			}
+		}
+
+		.teams {
+			padding: 4px;
+			z-index: 1;
+
+			.red-team {
+				.team-name {
+					color: $red-team-chat-colour;
+				}
+			}
+
+			.blue-team {
+				.team-name {
+					color: $blue-team-chat-colour;
+				}
+			}
+		}
+
+		.match-information {
+			padding: 4px;
+			z-index: 1;
+
+			.match-score {
+				.team-one {
+					color: $red-team-chat-colour;
+				}
+
+				.team-two {
+					color: $blue-team-chat-colour;
+				}
+
+				.win {
+					font-weight: bold;
+					color: #008000;
+				}
+
+				.lose {
+					color: #ff0000;
+				}
+			}
+
+			.team-name {
+				display: inline-block;
+
+				margin-top: 8px;
+				margin-bottom: 2px;
+				padding: 2px 16px 2px 16px;
+
+				border-radius: 25px;
+
+				&.red {
+					background-color: $red-team-chat-colour;
+				}
+
+				&.blue {
+					background-color: $blue-team-chat-colour;
+				}
+
+				&.primary {
+					background-color: $primary;
+					color: #000000;
+				}
+			}
+		}
+
+		.actions {
+			display: flex;
+			align-items: center;
+
+			padding: 4px;
+			z-index: 1;
+
+			.form-button {
+				flex: 1;
+			}
+		}
+	}
+}
