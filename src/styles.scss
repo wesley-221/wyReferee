@@ -265,6 +265,9 @@ code {
 
 	&.primary {
 		&:hover {
+			backdrop-filter: blur(6px);
+			-webkit-backdrop-filter: blur(6px);
+
 			border-color: rgba($primary, 0.26);
 			background: rgba($primary, 0.1);
 			color: $primary;
@@ -273,6 +276,9 @@ code {
 
 	&.danger {
 		&:hover {
+			backdrop-filter: blur(6px);
+			-webkit-backdrop-filter: blur(6px);
+
 			border-color: $button-hover-red-border-color;
 			background: $button-hover-red-background-color;
 			color: $button-hover-red-color;
@@ -281,6 +287,9 @@ code {
 
 	&.success {
 		&:hover {
+			backdrop-filter: blur(6px);
+			-webkit-backdrop-filter: blur(6px);
+
 			border-color: rgba($success, 0.26);
 			background: rgba($success, 0.1);
 			color: $success;
