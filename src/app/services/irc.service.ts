@@ -529,12 +529,15 @@ export class IrcService {
 			}
 		}
 
+		const newOrder = this.allChannels.length > 0 ? Math.max(...this.allChannels.map(c => c.order)) + 1 : 1;
+
 		// ===================================
 		// Joining a multiplayer match channel
 		if (channelName.startsWith('#mp_')) {
 			const newChannel = new IrcChannel({
 				name: channelName,
 				label: customLabel == null ? null : customLabel,
+				order: newOrder,
 				active: true,
 				lastActiveChannel: false,
 				isPrivateChannel: false,
@@ -557,6 +560,7 @@ export class IrcService {
 		else if (channelName.startsWith('#')) {
 			const newChannel = new IrcChannel({
 				name: channelName,
+				order: newOrder,
 				active: true,
 				lastActiveChannel: false,
 				isPrivateChannel: false,
@@ -582,6 +586,7 @@ export class IrcService {
 			if (getChannel == null) {
 				const newChannel = new IrcChannel({
 					name: channelName,
+					order: newOrder,
 					active: true,
 					lastActiveChannel: false,
 					isPrivateChannel: true,
