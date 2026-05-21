@@ -143,6 +143,10 @@ export class LobbyFormComponent implements OnInit {
 					this.stageIdSubscription.unsubscribe();
 				}
 
+				if (this.wyBinStages.length > 0) {
+					this.validationForm.get('stage-id').enable();
+				}
+
 				// Subscribe to stage changes to update matches when a stage is selected
 				this.stageIdSubscription = this.validationForm.get('stage-id').valueChanges.subscribe(() => {
 					this.changeStage();
@@ -154,9 +158,9 @@ export class LobbyFormComponent implements OnInit {
 			});
 
 			this.validationForm.setControl('stage', new FormControl(''));
-			this.validationForm.addControl('stage-id', new FormControl('', Validators.required));
+			this.validationForm.addControl('stage-id', new FormControl({ value: '', disabled: this.wyBinStages.length <= 0 }, Validators.required));
 
-			this.validationForm.addControl('selected-match-name', new FormControl(''));
+			this.validationForm.addControl('selected-match-name', new FormControl({ value: '', disabled: this.wyBinMatches.length <= 0 }));
 			this.validationForm.addControl('selected-match-id', new FormControl(''));
 
 			this.validationForm.setControl('team-one-name', new FormControl(''));
@@ -316,7 +320,7 @@ export class LobbyFormComponent implements OnInit {
 			this.validatorWyBinMatchList.push(match.getMatchName());
 		}
 
-		this.validationForm.setControl('selected-match-name', new FormControl('', [(control) => this.matchValidator(control)]));
+		this.validationForm.setControl('selected-match-name', new FormControl({ value: '', disabled: this.wyBinMatches.length <= 0 }, [(control) => this.matchValidator(control)]));
 		this.validationForm.setControl('selected-match-id', new FormControl(''));
 
 		if (this.wyBinMatches.length <= 0) {
