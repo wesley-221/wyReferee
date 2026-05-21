@@ -23,6 +23,7 @@ export class SettingsComponent implements OnInit {
 	axsMenuStatus: boolean;
 	showIncorrectSlotStatus: boolean;
 	splitBanchoBotMessages: boolean;
+	chatContainerSwitched: boolean;
 	showAllShortcutsStatus: boolean;
 
 	generalOptions: OptionsMenu[] = [
@@ -32,6 +33,7 @@ export class SettingsComponent implements OnInit {
 	ircOptions: OptionsMenu[] = [
 		{ header: 'Show incorrect slot warning', description: 'Toggle whether to show a warning when a player is in an incorrect slot. This is shown when <code>!mp settings</code> is used', action: () => this.toggleShowIncorrectSlot(), slideToggle: true, slideToggleValue: this.genericService.getShowIncorrectSlotStatus() },
 		{ header: 'Split BanchoBot messages', description: 'Toggle whether to split BanchoBot messages into its own chat container', action: () => this.toggleSplitBanchoBotMessages(), slideToggle: true, slideToggleValue: this.genericService.getSplitBanchoBotMessagesStatus() },
+		{ header: 'Switch chat containers', description: 'Toggle whether to switch the chat containers, default is BanchoBot container on top, normal chat container on the bottom. When enabled, the normal chat container will be on top and the BanchoBot container will be on the bottom.', action: () => this.toggleChatContainerSwitch(), slideToggle: true, slideToggleValue: this.genericService.getChatContainerSwitchStatus() },
 		{ header: 'Display all shortcut commands without scrollbar', description: 'Toggle whether to display all shortcut commands in the shortcuts menu without a scrollbar. These are the buttons above the send message input on the IRC page', action: () => this.toggleShowAllShortcuts(), slideToggle: true, slideToggleValue: this.genericService.getShowAllShortcutsStatus() }
 	];
 
@@ -69,6 +71,10 @@ export class SettingsComponent implements OnInit {
 
 		this.genericService.getSplitBanchoBotMessagesStatus().subscribe(status => {
 			this.splitBanchoBotMessages = status;
+		});
+
+		this.genericService.getChatContainerSwitchStatus().subscribe(status => {
+			this.chatContainerSwitched = status;
 		});
 
 		this.genericService.getShowAllShortcutsStatus().subscribe(status => {
@@ -170,7 +176,12 @@ export class SettingsComponent implements OnInit {
 		this.genericService.setSplitBanchoBotMessages(this.splitBanchoBotMessages);
 	}
 
-	updateWebhookCustomization() {
+	toggleChatContainerSwitch(): void {
+		this.chatContainerSwitched = !this.chatContainerSwitched;
+		this.genericService.toggleChatContainerSwitch(this.chatContainerSwitched);
+	}
+
+	updateWebhookCustomization(): void {
 		this.webhookService.updateWebhookCustomization(this.webhookAuthorImage, this.webhookAuthorName, this.webhookBottomImage, this.webhookFooterIconUrl, this.webhookFooterText);
 		this.toastService.addToast(`Successfully updated your personal webhook customizations.`);
 	}
