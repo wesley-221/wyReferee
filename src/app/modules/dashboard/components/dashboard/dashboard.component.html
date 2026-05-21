@@ -6,6 +6,26 @@
 
 	<hr />
 
+	<div class="notifications">
+		<app-alert [alertType]="notification.type" *ngFor="let notification of notifications">
+			<div class="notification">
+				<div class="header">
+					{{ notification.title }}
+
+					<button class="form-button danger" (click)="dismissNotification(notification)">
+						<mat-icon class="icon">close</mat-icon>
+
+						dismiss
+					</button>
+				</div>
+
+				<div class="body">
+					{{ notification.message }}
+				</div>
+			</div>
+		</app-alert>
+	</div>
+
 	<div class="information-columns">
 		<div class="row">
 			<div class="column">

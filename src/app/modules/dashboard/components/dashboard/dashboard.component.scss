@@ -3,6 +3,30 @@
 .information {
 	padding: 8px;
 
+	.notifications {
+		.notification {
+			display: flex;
+			flex-direction: column;
+
+			.header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				font-size: 18px;
+
+				.dismiss {
+					margin-left: auto;
+				}
+			}
+
+			.body {
+				font-size: 14px;
+				line-height: 1.5;
+			}
+		}
+	}
+
 	.row {
 		display: flex;
 		flex-wrap: wrap;

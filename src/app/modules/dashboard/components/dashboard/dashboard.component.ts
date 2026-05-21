@@ -5,6 +5,10 @@ import { PersonalSchedule } from '../../../../models/wybintournament/personal-sc
 import { AuthenticateService } from '../../../../services/authenticate.service';
 import { WybinService } from '../../../../services/wybin.service';
 import { take } from 'rxjs';
+import { WyRefereeNotificationsService } from '../../../../services/wyreferee-notifications.service';
+import { SettingsStoreService } from '../../../../services/storage/settings-store.service';
+import { WyRefereeNotification } from '../../../../models/wyreferee-notification';
+import PackageJson from '../../../../../../package.json';
 
 @Component({
 	selector: 'app-dashboard',
@@ -32,12 +36,28 @@ export class DashboardComponent implements OnInit {
 	loading: boolean;
 	personalScheduleData: PersonalSchedule[];
 
+	notifications: WyRefereeNotification[] = [];
+
+	private currentVersion = PackageJson.version;
+
 	constructor(
 		public electronService: ElectronService,
 		private authService: AuthenticateService,
-		private wyBinService: WybinService
+		private wyBinService: WybinService,
+		private notificationService: WyRefereeNotificationsService,
+		private settingsStore: SettingsStoreService
 	) {
 		this.loading = true;
+
+		const notificationDismissed = this.settingsStore.get(`notification-${this.currentVersion}-dismissed`);
+
+		if (!notificationDismissed) {
+			this.notificationService.getNotifications(this.currentVersion).subscribe(notifications => {
+				if (notifications.length > 0) {
+					this.notifications = notifications;
+				}
+			});
+		}
 	}
 
 	ngOnInit() {
@@ -90,5 +110,10 @@ export class DashboardComponent implements OnInit {
 				this.loading = false;
 			}
 		});
+	}
+
+	dismissNotification(notification: WyRefereeNotification) {
+		this.settingsStore.set(`notification-${this.currentVersion}-dismissed`, true);
+		this.notifications = this.notifications.filter(n => n.id !== notification.id);
 	}
 }
