@@ -39,6 +39,8 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 	}
 
 	.chat-container {
+		display: flex;
+		flex-direction: column;
 		flex: 1;
 
 		--top-height: 30%;
@@ -279,6 +281,10 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 				linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
 				linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 			background-size: 36px 36px;
+		}
+
+		&.switch-containers {
+			flex-direction: column-reverse;
 		}
 	}
 

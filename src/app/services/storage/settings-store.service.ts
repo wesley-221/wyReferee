@@ -8,6 +8,7 @@ interface AppSettings {
 	showAxs: boolean;
 	showIncorrectSlot: boolean;
 	splitBanchoBotMessages: boolean;
+	chatContainerSwitched: boolean;
 	banchoChatContainerHeight: number;
 	showAllShortcuts: boolean;
 	[key: string]: any;
@@ -18,6 +19,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 	showAxs: false,
 	showIncorrectSlot: true,
 	splitBanchoBotMessages: false,
+	chatContainerSwitched: false,
 	banchoChatContainerHeight: 30,
 	showAllShortcuts: false
 };

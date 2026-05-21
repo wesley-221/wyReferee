@@ -28,6 +28,7 @@ export class IrcChatContainerComponent implements OnInit {
 	@Output() adjustScoreEmitter = new EventEmitter<{ team: number, mouseClick: string }>();
 
 	splitBanchoBotMessages$ = this.genericService.getSplitBanchoBotMessagesStatus();
+	switchChatContainers$ = this.genericService.getChatContainerSwitchStatus();
 	topHeight = 30;
 
 	private resizing = false;
@@ -116,6 +117,10 @@ export class IrcChatContainerComponent implements OnInit {
 			const rect = container.getBoundingClientRect();
 			const offsetY = this.latestEvent.clientY - rect.top;
 			let percentage = (offsetY / rect.height) * 100;
+
+			if (this.switchChatContainers$.value) {
+				percentage = 100 - percentage;
+			}
 
 			percentage = Math.max(10, Math.min(90, percentage));
 

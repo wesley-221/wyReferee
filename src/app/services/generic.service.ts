@@ -9,6 +9,7 @@ export class GenericService {
 	private showAxSMenu$: BehaviorSubject<boolean>;
 	private showIncorrectSlot$: BehaviorSubject<boolean>;
 	private splitBanchoBotMessages$: BehaviorSubject<boolean>;
+	private chatContainerSwitched$: BehaviorSubject<boolean>;
 	private banchoChatContainerHeight$: BehaviorSubject<number>;
 	private showAllShortcuts$: BehaviorSubject<boolean>;
 
@@ -18,6 +19,7 @@ export class GenericService {
 				this.showAxSMenu$.next(settings.showAxs);
 				this.showIncorrectSlot$.next(settings.showIncorrectSlot);
 				this.splitBanchoBotMessages$.next(settings.splitBanchoBotMessages);
+				this.chatContainerSwitched$.next(settings.chatContainerSwitched);
 				this.banchoChatContainerHeight$.next(settings.banchoChatContainerHeight);
 				this.showAllShortcuts$.next(settings.showAllShortcuts);
 			}
@@ -26,6 +28,7 @@ export class GenericService {
 		this.showAxSMenu$ = new BehaviorSubject(false);
 		this.showIncorrectSlot$ = new BehaviorSubject(true);
 		this.splitBanchoBotMessages$ = new BehaviorSubject(false);
+		this.chatContainerSwitched$ = new BehaviorSubject(false);
 		this.banchoChatContainerHeight$ = new BehaviorSubject(30);
 		this.showAllShortcuts$ = new BehaviorSubject(false);
 	}
@@ -79,6 +82,23 @@ export class GenericService {
 	 */
 	getSplitBanchoBotMessagesStatus(): BehaviorSubject<boolean> {
 		return this.splitBanchoBotMessages$;
+	}
+
+	/**
+	 * Get the status of switching chat containers
+	 */
+	getChatContainerSwitchStatus(): BehaviorSubject<boolean> {
+		return this.chatContainerSwitched$;
+	}
+
+	/**
+	 * Set the status of switching chat containers
+	 *
+	 * @param enabled the status of switching chat containers
+	 */
+	toggleChatContainerSwitch(enabled: boolean): void {
+		this.chatContainerSwitched$.next(enabled);
+		this.settingsStore.set('chatContainerSwitched', enabled);
 	}
 
 	/**
