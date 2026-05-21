@@ -7,7 +7,7 @@
 		/>
 	</div>
 
-	<div class="chat-container" [style.--top-height]="topHeight + '%'">
+	<div class="chat-container" [style.--top-height]="topHeight + '%'" [class.switch-containers]="switchChatContainers$ | async">
 		<ng-container *ngIf="selectedChannel?.name.startsWith('#mp_') && (splitBanchoBotMessages$ | async) as splitBanchoBotMessages">
 			<cdk-virtual-scroll-viewport #banchoBotVirtualScroller class="messages banchobot" itemSize="50" *ngIf="splitBanchoBotMessages == true">
 				<div class="chat" *ngFor="let chat of banchoBotChats">
