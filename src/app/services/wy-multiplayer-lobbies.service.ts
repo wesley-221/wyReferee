@@ -276,6 +276,11 @@ export class WyMultiplayerLobbiesService {
 						}
 					}
 
+					// Apply game mode specific accuracy if beatmap has a gamemode attached to it
+					if (foundModBracketBeatmap && foundModBracketBeatmap.gamemodeId != null) {
+						newMultiplayerDataUser.accuracy = Calculations.getAccuracyOfScore(currentScore, foundModBracketBeatmap.gamemodeId);
+					}
+
 					multiplayerData.addPlayer(newMultiplayerDataUser);
 				}
 
