@@ -34,6 +34,7 @@ import { UpdateMatchResultsDialogComponent } from './components/dialogs/update-m
 import { DeleteLobbiesDialogComponent } from './components/dialogs/delete-lobbies-dialog/delete-lobbies-dialog.component';
 import { NewUpdateDialogComponent } from './components/dialogs/new-update-dialog/new-update-dialog.component';
 import { ResetIrcLayoutDialogComponent } from './components/dialogs/reset-irc-layout-dialog/reset-irc-layout-dialog.component';
+import { ImportWybinParticipantsDialogComponent } from './components/dialogs/import-wybin-participants-dialog/import-wybin-participants-dialog.component';
 
 export function initStorage(storageDriver: StorageDriverService) {
 	return () => storageDriver.init();
@@ -67,7 +68,8 @@ export function initStorage(storageDriver: StorageDriverService) {
 		DataMigrationDialogComponent,
 		UpdateMatchResultsDialogComponent,
 		NewUpdateDialogComponent,
-		ResetIrcLayoutDialogComponent
+		ResetIrcLayoutDialogComponent,
+		ImportWybinParticipantsDialogComponent
 	],
 	imports: [
 		BrowserModule,

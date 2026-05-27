@@ -10,6 +10,7 @@ import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
 import { debounceTime, filter } from 'rxjs';
+import { ImportWybinParticipantsDialogComponent } from '../../../../../components/dialogs/import-wybin-participants-dialog/import-wybin-participants-dialog.component';
 
 @Component({
 	selector: 'app-tournament-participants',
@@ -28,6 +29,7 @@ export class TournamentParticipantsComponent implements OnInit {
 	teamFilter: string;
 
 	importingFromWyBin: boolean;
+	private initialized = false;
 
 	constructor(
 		private dialog: MatDialog,
@@ -37,10 +39,7 @@ export class TournamentParticipantsComponent implements OnInit {
 	) {
 		this.importingFromWyBin = false;
 
-		this.form = new FormGroup({
-			players: new FormArray([]),
-			teams: new FormArray([])
-		});
+		this.initializeForm();
 
 		this.collapsedState = new WeakMap();
 	}
@@ -50,6 +49,10 @@ export class TournamentParticipantsComponent implements OnInit {
 			.pipe(filter(v => !!v))
 			.subscribe(tournament => {
 				this.tournament = tournament;
+
+				if (this.initialized == true) {
+					return;
+				}
 
 				if (tournament.isSoloTournament()) {
 					if (this.players.length === 0) {
@@ -98,6 +101,8 @@ export class TournamentParticipantsComponent implements OnInit {
 						});
 					}
 				}
+
+				this.initialized = true;
 			});
 
 		this.form.valueChanges
@@ -246,63 +251,87 @@ export class TournamentParticipantsComponent implements OnInit {
 	}
 
 	importWyBinPlayers(): void {
-		this.importingFromWyBin = true;
-
-		this.tournamentService.getWyBinTournamentPlayers(this.tournament.wyBinTournamentId).subscribe((players: any) => {
-			const existingUserIds = new Set(
-				this.players.controls
-					.map(ctrl => ctrl.get('userId')?.value)
-					.filter(v => v != null)
-			);
-
-			for (const player of players) {
-				if (existingUserIds.has(player.user.userOsu.id)) {
-					continue;
-				}
-
-				this.players.push(this.createPlayerGroup(null, player.user.username, player.user.userOsu.id));
+		const dialogRef = this.dialog.open(ImportWybinParticipantsDialogComponent, {
+			data: {
+				type: 'players'
 			}
+		});
 
-			this.importingFromWyBin = false;
+		dialogRef.afterClosed().subscribe(result => {
+			if (result != null) {
+				this.importingFromWyBin = true;
+
+				this.initializeForm();
+
+				this.tournamentService.getWyBinTournamentPlayers(this.tournament.wyBinTournamentId).subscribe((players: any) => {
+					const existingUserIds = new Set(
+						this.players.controls
+							.map(ctrl => ctrl.get('userId')?.value)
+							.filter(v => v != null)
+					);
+
+					for (const player of players) {
+						if (existingUserIds.has(player.user.userOsu.id)) {
+							continue;
+						}
+
+						this.players.push(this.createPlayerGroup(null, player.user.username, player.user.userOsu.id));
+					}
+
+					this.importingFromWyBin = false;
+				});
+			}
 		});
 	}
 
 	importWyBinTeams(): void {
-		this.importingFromWyBin = true;
-
-		this.tournamentService.getWyBinTournamentTeams(this.tournament.wyBinTournamentId).subscribe((teams: any) => {
-			const existingUserIds = new Set(
-				this.teams.controls
-					.map(ctrl => ctrl.get('name')?.value)
-					.filter(v => v != null)
-			);
-
-			for (const team of teams) {
-				if (existingUserIds.has(team.name)) {
-					continue;
-				}
-
-				const newTeam = new WyTeam({
-					name: team.name,
-					index: this.tournament.teamIndex,
-					collapsed: true
-				});
-
-				this.tournament.teamIndex++;
-
-				for (const teamMember of team.teamMembers) {
-					const newPlayer = new WyTeamPlayer({
-						name: teamMember.user.username,
-						userId: teamMember.user.userOsu.id
-					});
-
-					newTeam.players.push(newPlayer);
-				}
-
-				this.teams.push(this.createTeamGroup(newTeam));
+		const dialogRef = this.dialog.open(ImportWybinParticipantsDialogComponent, {
+			data: {
+				type: 'teams'
 			}
+		});
 
-			this.importingFromWyBin = false;
+		dialogRef.afterClosed().subscribe(result => {
+			if (result != null) {
+				this.importingFromWyBin = true;
+
+				this.initializeForm();
+
+				this.tournamentService.getWyBinTournamentTeams(this.tournament.wyBinTournamentId).subscribe((teams: any) => {
+					const existingUserIds = new Set(
+						this.teams.controls
+							.map(ctrl => ctrl.get('name')?.value)
+							.filter(v => v != null)
+					);
+
+					for (const team of teams) {
+						if (existingUserIds.has(team.name)) {
+							continue;
+						}
+
+						const newTeam = new WyTeam({
+							name: team.name,
+							index: this.tournament.teamIndex,
+							collapsed: true
+						});
+
+						this.tournament.teamIndex++;
+
+						for (const teamMember of team.teamMembers) {
+							const newPlayer = new WyTeamPlayer({
+								name: teamMember.user.username,
+								userId: teamMember.user.userOsu.id
+							});
+
+							newTeam.players.push(newPlayer);
+						}
+
+						this.teams.push(this.createTeamGroup(newTeam));
+					}
+
+					this.importingFromWyBin = false;
+				});
+			}
 		});
 	}
 
@@ -327,6 +356,13 @@ export class TournamentParticipantsComponent implements OnInit {
 			id: new FormControl(team?.id || null),
 			name: new FormControl(team?.name || '', Validators.required),
 			players: playersFormArray
+		});
+	}
+
+	private initializeForm() {
+		this.form = new FormGroup({
+			players: new FormArray([]),
+			teams: new FormArray([])
 		});
 	}
 }
