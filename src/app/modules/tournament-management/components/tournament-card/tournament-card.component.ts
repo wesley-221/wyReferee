@@ -128,6 +128,6 @@ export class TournamentCardComponent implements OnInit {
 	 * Edit a tournament from the entered tournament id
 	 */
 	editTournament(tournament: WyTournament) {
-		this.router.navigate(['/tournament-management/published-tournaments/', tournament.id, '1']);
+		this.router.navigate(['/tournament-management/tournament-edit/', '1', tournament.id]);
 	}
 }
