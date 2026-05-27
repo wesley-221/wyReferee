@@ -28,6 +28,7 @@ export class TournamentParticipantsComponent implements OnInit {
 	teamFilter: string;
 
 	importingFromWyBin: boolean;
+	private initialized = false;
 
 	constructor(
 		private dialog: MatDialog,
@@ -37,10 +38,7 @@ export class TournamentParticipantsComponent implements OnInit {
 	) {
 		this.importingFromWyBin = false;
 
-		this.form = new FormGroup({
-			players: new FormArray([]),
-			teams: new FormArray([])
-		});
+		this.initializeForm();
 
 		this.collapsedState = new WeakMap();
 	}
@@ -248,6 +246,8 @@ export class TournamentParticipantsComponent implements OnInit {
 	importWyBinPlayers(): void {
 		this.importingFromWyBin = true;
 
+		this.initializeForm();
+
 		this.tournamentService.getWyBinTournamentPlayers(this.tournament.wyBinTournamentId).subscribe((players: any) => {
 			const existingUserIds = new Set(
 				this.players.controls
@@ -269,6 +269,8 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	importWyBinTeams(): void {
 		this.importingFromWyBin = true;
+
+		this.initializeForm();
 
 		this.tournamentService.getWyBinTournamentTeams(this.tournament.wyBinTournamentId).subscribe((teams: any) => {
 			const existingUserIds = new Set(
@@ -327,6 +329,13 @@ export class TournamentParticipantsComponent implements OnInit {
 			id: new FormControl(team?.id || null),
 			name: new FormControl(team?.name || '', Validators.required),
 			players: playersFormArray
+		});
+	}
+
+	private initializeForm() {
+		this.form = new FormGroup({
+			players: new FormArray([]),
+			teams: new FormArray([])
 		});
 	}
 }
