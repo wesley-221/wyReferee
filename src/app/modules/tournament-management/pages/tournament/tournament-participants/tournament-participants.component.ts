@@ -49,6 +49,10 @@ export class TournamentParticipantsComponent implements OnInit {
 			.subscribe(tournament => {
 				this.tournament = tournament;
 
+				if (this.initialized == true) {
+					return;
+				}
+
 				if (tournament.isSoloTournament()) {
 					if (this.players.length === 0) {
 						const formArray = new FormArray(
@@ -96,6 +100,8 @@ export class TournamentParticipantsComponent implements OnInit {
 						});
 					}
 				}
+
+				this.initialized = true;
 			});
 
 		this.form.valueChanges
