@@ -27,7 +27,7 @@ export class NewUpdateDialogComponent {
 		this.fileSizeInMB = fileSizeMB;
 		this.downloadStatus = 'idle';
 
-		this.changelog$ = this.http.get(`${this.GIT_RELEASE_URL}/tags/${this.data.info.version}`, {
+		this.changelog$ = this.http.get(`${this.GIT_RELEASE_URL}/tags/v${this.data.info.version}`, {
 			headers: {
 				"Accept": "application/vnd.github+json"
 			}
