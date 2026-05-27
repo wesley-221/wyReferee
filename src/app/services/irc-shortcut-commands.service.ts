@@ -49,12 +49,14 @@ export class IrcShortcutCommandsService {
 	 * Save the irc shortcut commands
 	 */
 	saveIrcShortcutCommands(): void {
+		let id = 0;
+
 		for (const command of this.ircShortcutCommands) {
-			if (command.id == undefined || command.id == null) {
-				command.id = this.highestId;
-				this.highestId++;
-			}
+			command.id = id;
+			id++;
 		}
+
+		this.highestId = id;
 
 		this.ircShortcutCommandsStore.saveAllShortcutCommands(this.ircShortcutCommands);
 	}
