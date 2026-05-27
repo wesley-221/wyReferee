@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Import {{ data.type }}</h2>
+
+<mat-dialog-content class="mat-typography">
+	Importing {{ data.type }} from wyBin will remove all existing {{ data.type }} and replace them with the imported {{ data.type }}.
+	<p></p>
+	Are you sure you want to continue?
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button [mat-dialog-close]="null">cancel</button>
+	<button mat-button [mat-dialog-close]="true" color="primary">import</button>
+</mat-dialog-actions>

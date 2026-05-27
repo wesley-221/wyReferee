@@ -10,6 +10,7 @@ import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
 import { debounceTime, filter } from 'rxjs';
+import { ImportWybinParticipantsDialogComponent } from '../../../../../components/dialogs/import-wybin-participants-dialog/import-wybin-participants-dialog.component';
 
 @Component({
 	selector: 'app-tournament-participants',
@@ -250,67 +251,87 @@ export class TournamentParticipantsComponent implements OnInit {
 	}
 
 	importWyBinPlayers(): void {
-		this.importingFromWyBin = true;
-
-		this.initializeForm();
-
-		this.tournamentService.getWyBinTournamentPlayers(this.tournament.wyBinTournamentId).subscribe((players: any) => {
-			const existingUserIds = new Set(
-				this.players.controls
-					.map(ctrl => ctrl.get('userId')?.value)
-					.filter(v => v != null)
-			);
-
-			for (const player of players) {
-				if (existingUserIds.has(player.user.userOsu.id)) {
-					continue;
-				}
-
-				this.players.push(this.createPlayerGroup(null, player.user.username, player.user.userOsu.id));
+		const dialogRef = this.dialog.open(ImportWybinParticipantsDialogComponent, {
+			data: {
+				type: 'players'
 			}
+		});
 
-			this.importingFromWyBin = false;
+		dialogRef.afterClosed().subscribe(result => {
+			if (result != null) {
+				this.importingFromWyBin = true;
+
+				this.initializeForm();
+
+				this.tournamentService.getWyBinTournamentPlayers(this.tournament.wyBinTournamentId).subscribe((players: any) => {
+					const existingUserIds = new Set(
+						this.players.controls
+							.map(ctrl => ctrl.get('userId')?.value)
+							.filter(v => v != null)
+					);
+
+					for (const player of players) {
+						if (existingUserIds.has(player.user.userOsu.id)) {
+							continue;
+						}
+
+						this.players.push(this.createPlayerGroup(null, player.user.username, player.user.userOsu.id));
+					}
+
+					this.importingFromWyBin = false;
+				});
+			}
 		});
 	}
 
 	importWyBinTeams(): void {
-		this.importingFromWyBin = true;
-
-		this.initializeForm();
-
-		this.tournamentService.getWyBinTournamentTeams(this.tournament.wyBinTournamentId).subscribe((teams: any) => {
-			const existingUserIds = new Set(
-				this.teams.controls
-					.map(ctrl => ctrl.get('name')?.value)
-					.filter(v => v != null)
-			);
-
-			for (const team of teams) {
-				if (existingUserIds.has(team.name)) {
-					continue;
-				}
-
-				const newTeam = new WyTeam({
-					name: team.name,
-					index: this.tournament.teamIndex,
-					collapsed: true
-				});
-
-				this.tournament.teamIndex++;
-
-				for (const teamMember of team.teamMembers) {
-					const newPlayer = new WyTeamPlayer({
-						name: teamMember.user.username,
-						userId: teamMember.user.userOsu.id
-					});
-
-					newTeam.players.push(newPlayer);
-				}
-
-				this.teams.push(this.createTeamGroup(newTeam));
+		const dialogRef = this.dialog.open(ImportWybinParticipantsDialogComponent, {
+			data: {
+				type: 'teams'
 			}
+		});
 
-			this.importingFromWyBin = false;
+		dialogRef.afterClosed().subscribe(result => {
+			if (result != null) {
+				this.importingFromWyBin = true;
+
+				this.initializeForm();
+
+				this.tournamentService.getWyBinTournamentTeams(this.tournament.wyBinTournamentId).subscribe((teams: any) => {
+					const existingUserIds = new Set(
+						this.teams.controls
+							.map(ctrl => ctrl.get('name')?.value)
+							.filter(v => v != null)
+					);
+
+					for (const team of teams) {
+						if (existingUserIds.has(team.name)) {
+							continue;
+						}
+
+						const newTeam = new WyTeam({
+							name: team.name,
+							index: this.tournament.teamIndex,
+							collapsed: true
+						});
+
+						this.tournament.teamIndex++;
+
+						for (const teamMember of team.teamMembers) {
+							const newPlayer = new WyTeamPlayer({
+								name: teamMember.user.username,
+								userId: teamMember.user.userOsu.id
+							});
+
+							newTeam.players.push(newPlayer);
+						}
+
+						this.teams.push(this.createTeamGroup(newTeam));
+					}
+
+					this.importingFromWyBin = false;
+				});
+			}
 		});
 	}
 
