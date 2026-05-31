@@ -1,0 +1,98 @@
+$height: 32px;
+$width: 45px;
+
+$increase: #f66;
+$decrease: #b3ff66;
+$visual: #fc2;
+$speed: #6cf;
+
+@mixin mod-icon($bg-color, $icon) {
+	&::before {
+		background-color: $bg-color;
+		mask-image: url("~assets/osu-mods/blanks/mod-icon.svg");
+	}
+
+	&::after {
+		background-color: color-mix(in srgb-linear, #000, $bg-color 10%);
+		mask-image: url($icon);
+	}
+}
+
+.mod {
+	display: inline-block;
+	position: relative;
+
+	height: $height;
+	width: $width;
+
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+
+	&.nm {
+		@include mod-icon($visual, "~assets/osu-mods/mod-no-mod.svg");
+	}
+
+	&.hd {
+		@include mod-icon($visual, "~assets/osu-mods/mod-hidden.svg");
+	}
+
+	&.fl {
+		@include mod-icon($visual, "~assets/osu-mods/mod-flashlight.svg");
+	}
+
+	&.fi {
+		@include mod-icon($visual, "~assets/osu-mods/mod-fade-in.svg");
+	}
+
+	&.mr {
+		@include mod-icon($visual, "~assets/osu-mods/mod-mirror.svg");
+	}
+
+	&.ez {
+		@include mod-icon($decrease, "~assets/osu-mods/mod-easy.svg");
+	}
+
+	&.hr {
+		@include mod-icon($increase, "~assets/osu-mods/mod-hard-rock.svg");
+	}
+
+	&.dt {
+		@include mod-icon($speed, "~assets/osu-mods/mod-double-time.svg");
+	}
+
+	&.nc {
+		@include mod-icon($speed, "~assets/osu-mods/mod-nightcore.svg");
+	}
+
+	&.ht {
+		@include mod-icon($decrease, "~assets/osu-mods/mod-half-time.svg");
+	}
+
+	&.sd {
+		@include mod-icon($increase, "~assets/osu-mods/mod-sudden-death.svg");
+	}
+
+	&.pf {
+		@include mod-icon($increase, "~assets/osu-mods/mod-perfect.svg");
+	}
+
+	&.nf {
+		@include mod-icon($decrease, "~assets/osu-mods/mod-no-fail.svg");
+	}
+
+	&.rx {
+		@include mod-icon($decrease, "~assets/osu-mods/mod-relax.svg");
+	}
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+
+		mask-position: center;
+		mask-repeat: no-repeat;
+		mask-size: contain;
+	}
+}
