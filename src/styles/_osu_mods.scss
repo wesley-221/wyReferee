@@ -1,6 +1,3 @@
-$height: 32px;
-$width: 45px;
-
 $increase: #f66;
 $decrease: #b3ff66;
 $visual: #fc2;
@@ -22,8 +19,9 @@ $speed: #6cf;
 	display: inline-block;
 	position: relative;
 
-	height: $height;
-	width: $width;
+	height: 32px;
+	max-height: 100%;
+	aspect-ratio: 45 / 32;
 
 	background-position: center;
 	background-repeat: no-repeat;
