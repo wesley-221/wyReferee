@@ -16,7 +16,11 @@
 							{{ chat.time }}
 						</div>
 
-						<div class="author bancho" [matTooltip]="chat.author" (click)="openUserpage(chat.author)">
+						<div class="author bancho"
+							[matTooltip]="chat.author"
+							matTooltipPosition="right"
+							(click)="openUserpage(chat.author)"
+							>
 							{{ chat.author }}
 						</div>
 
@@ -73,6 +77,7 @@
 
 					<div class="author"
 						[matTooltip]="chat.author"
+						matTooltipPosition="right"
 						*ngVar="(selectedLobby?.getPlayerByUsername(chat.author, multiplayerLobbyPlayersService) | async) as ircManagementPlayer"
 						(click)="openUserpage(chat.author)"
 						[ngClass]="{

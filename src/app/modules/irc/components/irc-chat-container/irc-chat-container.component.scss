@@ -96,7 +96,7 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 			.chat {
 				.chat-content {
 					display: grid;
-					grid-template-columns: 64px 90px 1fr;
+					grid-template-columns: 64px 110px 1fr;
 
 					gap: 2px;
 					width: 100%;
@@ -135,15 +135,16 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 					}
 
 					.author {
-						display: flex;
-						align-items: center;
-						justify-content: flex-end;
+						text-align: right;
+						font-weight: bold;
+
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
 
 						padding: 3px;
 
-						font-weight: bold;
-
-						border-radius: 50px;
+						cursor: pointer;
 
 						&.red {
 							color: $red-team-chat-colour;
@@ -175,10 +176,6 @@ $url-hover-background-color: rgba(61, 184, 240, 0.2);
 							&:hover {
 								color: darken($me-chat-colour, 15%);
 							}
-						}
-
-						&:hover {
-							cursor: pointer;
 						}
 					}
 
