@@ -1,0 +1,98 @@
+$base-url: "~assets/osu-mods/";
+
+$increase: #f66;
+$decrease: #b3ff66;
+$visual: #fc2;
+$speed: #6cf;
+
+@mixin mod-icon($bg-color, $icon) {
+	&::before {
+		background-color: $bg-color;
+		mask-image: url("#{$base-url}blanks/mod-icon.svg");
+	}
+
+	&::after {
+		background-color: color-mix(in srgb-linear, #000, $bg-color 10%);
+		mask-image: url("#{$base-url}#{$icon}");
+	}
+}
+
+.mod {
+	display: inline-block;
+	position: relative;
+
+	height: 32px;
+	max-height: 100%;
+	aspect-ratio: 45 / 32;
+
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+
+	&.nm {
+		@include mod-icon($visual, "mod-no-mod.svg");
+	}
+
+	&.hd {
+		@include mod-icon($visual, "mod-hidden.svg");
+	}
+
+	&.fl {
+		@include mod-icon($visual, "mod-flashlight.svg");
+	}
+
+	&.fi {
+		@include mod-icon($visual, "mod-fade-in.svg");
+	}
+
+	&.mr {
+		@include mod-icon($visual, "mod-mirror.svg");
+	}
+
+	&.ez {
+		@include mod-icon($decrease, "mod-easy.svg");
+	}
+
+	&.hr {
+		@include mod-icon($increase, "mod-hard-rock.svg");
+	}
+
+	&.dt {
+		@include mod-icon($speed, "mod-double-time.svg");
+	}
+
+	&.nc {
+		@include mod-icon($speed, "mod-nightcore.svg");
+	}
+
+	&.ht {
+		@include mod-icon($decrease, "mod-half-time.svg");
+	}
+
+	&.sd {
+		@include mod-icon($increase, "mod-sudden-death.svg");
+	}
+
+	&.pf {
+		@include mod-icon($increase, "mod-perfect.svg");
+	}
+
+	&.nf {
+		@include mod-icon($decrease, "mod-no-fail.svg");
+	}
+
+	&.rx {
+		@include mod-icon($decrease, "mod-relax.svg");
+	}
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+
+		mask-position: center;
+		mask-repeat: no-repeat;
+		mask-size: contain;
+	}
+}

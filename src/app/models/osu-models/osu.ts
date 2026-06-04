@@ -130,6 +130,8 @@ export class OsuHelper {
 			new ModAbbreviation(Mods.NoFail, 'nf'),
 			new ModAbbreviation(Mods.Perfect, 'pf'),
 			new ModAbbreviation(Mods.SuddenDeath, 'sd'),
+			new ModAbbreviation(Mods.FadeIn, 'fi'),
+			new ModAbbreviation(Mods.Mirror, 'mr'),
 			{ fullModName: 'Nomod', abbreviationModName: 'nm' },
 			{ fullModName: 'No mod', abbreviationModName: 'nm' },
 			{ fullModName: 'Mixed mod', abbreviationModName: 'mm' },
