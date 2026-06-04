@@ -43,6 +43,7 @@ import { IrcChatControlsComponent } from '../irc-chat-controls/irc-chat-controls
 import { GenericService } from '../../../../services/generic.service';
 import { IrcLayoutService } from '../../../../services/irc-layout.service';
 import { IrcLayoutSection, IrcLayoutSectionViewType } from '../../../../models/irc-layout-section';
+import { MatchDialogDataContextService } from '../../../../services/match-dialog-data-context.service';
 
 @Component({
 	selector: 'app-irc',
@@ -129,11 +130,10 @@ export class IrcComponent implements OnInit, OnDestroy {
 		public slashCommandService: SlashCommandService,
 		public cacheService: CacheService,
 		private genericService: GenericService,
-		private ircLayoutService: IrcLayoutService) {
+		private ircLayoutService: IrcLayoutService,
+		private matchDialogDataContextService: MatchDialogDataContextService) {
 		this.currentMessageHistoryIndex = -1;
 		this.slashCommandIndex = -1;
-
-		this.ircService.matchDialogSendFinalResult$.next(false);
 
 		this.slashCommandService.registerCommand(new SlashCommand({
 			name: 'savelog',
@@ -252,14 +252,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 				if (data.lobbyId == this.selectedLobby.lobbyId) {
 					this.selectedLobby = data;
 					this.refreshIrcHeader(this.selectedLobby);
-
-					if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
-						if (this.selectedLobby.isQualifierLobby == false) {
-							this.ircService.matchDialogHeaderName$.next('Last played beatmap');
-							this.ircService.matchDialogMultiplayerData$.next(this.selectedLobby.getLastPlayedBeatmap());
-							this.ircService.matchDialogSendFinalResult$.next(false);
-						}
-					}
 				}
 			});
 
@@ -878,27 +870,35 @@ export class IrcComponent implements OnInit, OnDestroy {
 	closeMatchDialog() {
 		if (this.selectedLobby && this.selectedLobby.hasWyBinConnected()) {
 			if (this.selectedLobby.isQualifierLobby == true) {
-				this.ircService.matchDialogHeaderName$.next(null);
-				this.ircService.matchDialogMultiplayerData$.next(null);
-				this.ircService.matchDialogSendFinalResult$.next(false);
+				this.matchDialogDataContextService.clearMatchDialogData(this.selectedLobby.lobbyId);
 			}
 			else {
-				this.ircService.matchDialogHeaderName$.next(null);
-				this.ircService.matchDialogMultiplayerData$.next(null);
-
-				if (this.ircService.hasWon$.value != null && this.ircService.matchDialogSendFinalResult$.value == false) {
-					this.ircService.matchDialogHeaderName$.next('Match has finished');
-					this.ircService.matchDialogSendFinalResult$.next(true);
+				if (this.ircService.hasWon$.value != null) {
+					this.matchDialogDataContextService.getMatchDialogData(this.selectedLobby.lobbyId)
+						.pipe(take(1))
+						.subscribe(data => {
+							if (data.sendFinalResult == false) {
+								this.matchDialogDataContextService.setMatchDialogData(
+									this.selectedLobby.lobbyId,
+									'Match has finished',
+									null,
+									true
+								);
+							}
+							else {
+								this.matchDialogDataContextService.setMatchDialogData(
+									this.selectedLobby.lobbyId,
+									null,
+									null,
+									false
+								);
+							}
+						});
 				}
 				else {
-					this.ircService.matchDialogSendFinalResult$.next(false);
+					this.matchDialogDataContextService.clearMatchDialogData(this.selectedLobby.lobbyId);
 				}
 			}
-		}
-		else {
-			this.ircService.matchDialogHeaderName$.next(null);
-			this.ircService.matchDialogMultiplayerData$.next(null);
-			this.ircService.matchDialogSendFinalResult$.next(false);
 		}
 	}
 

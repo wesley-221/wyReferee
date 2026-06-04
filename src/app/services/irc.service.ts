@@ -10,9 +10,8 @@ import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyMultiplayerLobbiesService } from './wy-multiplayer-lobbies.service';
 import { Lobby } from 'app/models/lobby';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
-import { ElectronService } from './electron.service';
 import { GenericService } from './generic.service';
-import { MultiplayerData } from '../models/store-multiplayer/multiplayer-data';
+import { MatchDialogDataContextService } from './match-dialog-data-context.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -49,10 +48,6 @@ export class IrcService {
 	tiebreaker$: BehaviorSubject<boolean>;
 	hasWon$: BehaviorSubject<string>;
 
-	matchDialogHeaderName$: BehaviorSubject<string>;
-	matchDialogMultiplayerData$: BehaviorSubject<MultiplayerData>;
-	matchDialogSendFinalResult$: BehaviorSubject<boolean>;
-
 	// Indicates if the multiplayerlobby is being created for "Create a lobby" route
 	isCreatingMultiplayerLobby = -1;
 
@@ -64,8 +59,8 @@ export class IrcService {
 	constructor(private toastService: ToastService,
 		private multiplayerLobbiesService: WyMultiplayerLobbiesService,
 		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
-		private electronService: ElectronService,
-		private genericService: GenericService) {
+		private genericService: GenericService,
+		private matchDialogDataContextService: MatchDialogDataContextService) {
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
@@ -80,10 +75,6 @@ export class IrcService {
 		this.matchPoint$ = new BehaviorSubject<string>(null);
 		this.tiebreaker$ = new BehaviorSubject<boolean>(false);
 		this.hasWon$ = new BehaviorSubject<string>(null);
-
-		this.matchDialogHeaderName$ = new BehaviorSubject<string>(null);
-		this.matchDialogMultiplayerData$ = new BehaviorSubject<MultiplayerData>(null);
-		this.matchDialogSendFinalResult$ = new BehaviorSubject<boolean>(false);
 
 		window.electronApi.osuAuthentication.getIrcCredentials().then(credentials => {
 			if (credentials.username && credentials.password) {
@@ -112,6 +103,26 @@ export class IrcService {
 				this.allChannels.push(nChannel);
 			}
 		});
+
+		this.multiplayerLobbiesService.synchronizeIsCompleted()
+			.subscribe(lobby => {
+				if (lobby == null || lobby == undefined) {
+					return;
+				}
+
+				if (!lobby.hasWyBinConnected()) {
+					return;
+				}
+
+				if (lobby.isQualifierLobby == false) {
+					this.matchDialogDataContextService.setMatchDialogData(
+						lobby.lobbyId,
+						'Last played beatmap',
+						lobby.getLastPlayedBeatmap(),
+						false
+					);
+				}
+			});
 	}
 
 	/**

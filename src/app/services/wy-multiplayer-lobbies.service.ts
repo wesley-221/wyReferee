@@ -27,6 +27,7 @@ import { WebhookService } from './webhook.service';
 import { CTMCalculation } from 'app/models/score-calculation/calculation-types/ctm-calculation';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { LobbyStoreService } from './storage/lobby-store.service';
+import { MatchDialogDataContextService } from './match-dialog-data-context.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -46,7 +47,8 @@ export class WyMultiplayerLobbiesService {
 		private webhookService: WebhookService,
 		private http: HttpClient,
 		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
-		private lobbyStoreService: LobbyStoreService) {
+		private lobbyStoreService: LobbyStoreService,
+		private matchDialogDataContextService: MatchDialogDataContextService) {
 		this.allLobbies = [];
 		this.availableLobbyId = 0;
 
@@ -79,6 +81,8 @@ export class WyMultiplayerLobbiesService {
 						if (newLobby.lobbyId >= highestLobbyId) {
 							highestLobbyId = newLobby.lobbyId;
 						}
+
+						this.matchDialogDataContextService.initializeMatchDialogData(newLobby.lobbyId);
 					}
 
 					this.availableLobbyId = highestLobbyId + 1;
@@ -156,6 +160,7 @@ export class WyMultiplayerLobbiesService {
 	 */
 	deleteMultiplayerLobby(multiplayerLobby: Lobby): void {
 		this.allLobbies.splice(this.allLobbies.indexOf(multiplayerLobby), 1);
+		this.matchDialogDataContextService.deleteMatchDialogData(multiplayerLobby.lobbyId);
 
 		this.lobbyStoreService.deleteLobby(multiplayerLobby);
 	}
