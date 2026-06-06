@@ -39,7 +39,10 @@ export class TournamentParticipantsComponent implements OnInit {
 	) {
 		this.importingFromWyBin = false;
 
-		this.initializeForm();
+		this.form = new FormGroup({
+			players: new FormArray([]),
+			teams: new FormArray([])
+		});
 
 		this.collapsedState = new WeakMap();
 	}
@@ -261,7 +264,7 @@ export class TournamentParticipantsComponent implements OnInit {
 			if (result != null) {
 				this.importingFromWyBin = true;
 
-				this.initializeForm();
+				this.clearForm();
 
 				this.tournamentService.getWyBinTournamentPlayers(this.tournament.wyBinTournamentId).subscribe((players: any) => {
 					const existingUserIds = new Set(
@@ -295,7 +298,7 @@ export class TournamentParticipantsComponent implements OnInit {
 			if (result != null) {
 				this.importingFromWyBin = true;
 
-				this.initializeForm();
+				this.clearForm();
 
 				this.tournamentService.getWyBinTournamentTeams(this.tournament.wyBinTournamentId).subscribe((teams: any) => {
 					const existingUserIds = new Set(
@@ -359,10 +362,8 @@ export class TournamentParticipantsComponent implements OnInit {
 		});
 	}
 
-	private initializeForm() {
-		this.form = new FormGroup({
-			players: new FormArray([]),
-			teams: new FormArray([])
-		});
+	private clearForm() {
+		this.players.clear();
+		this.teams.clear();
 	}
 }
