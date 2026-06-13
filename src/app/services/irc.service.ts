@@ -12,6 +12,8 @@ import { Lobby } from 'app/models/lobby';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
 import { GenericService } from './generic.service';
 import { MatchDialogDataContextService } from './match-dialog-data-context.service';
+import { ApiKeyValidation } from './osu-api/api-key-validation.service';
+import { ToastType } from '../models/toast';
 
 @Injectable({
 	providedIn: 'root'
@@ -56,11 +58,14 @@ export class IrcService {
 	// Indication if a sound is playing or not
 	private soundIsPlaying = false;
 
-	constructor(private toastService: ToastService,
+	constructor(
+		private apiKeyValidation: ApiKeyValidation,
+		private toastService: ToastService,
 		private multiplayerLobbiesService: WyMultiplayerLobbiesService,
 		private multiplayerLobbyPlayersService: MultiplayerLobbyPlayersService,
 		private genericService: GenericService,
-		private matchDialogDataContextService: MatchDialogDataContextService) {
+		private matchDialogDataContextService: MatchDialogDataContextService
+	) {
 		// Create observables for is(Dis)Connecting
 		this.isConnecting$ = new BehaviorSubject<boolean>(false);
 		this.isDisconnecting$ = new BehaviorSubject<boolean>(false);
@@ -77,6 +82,15 @@ export class IrcService {
 		this.hasWon$ = new BehaviorSubject<string>(null);
 
 		window.electronApi.osuAuthentication.getIrcCredentials().then(credentials => {
+			if (credentials.apiKey) {
+				this.apiKeyValidation.validate(credentials.apiKey).subscribe({
+					error: () => {
+						this.toastService.addToast('Your API key is no longer valid. ' +
+							'To ensure everything works correctly, reset your API key in Settings, then update it in your Account page.', ToastType.Error, 15);
+					}
+				});
+			}
+
 			if (credentials.username && credentials.password) {
 				this.connect(credentials.username, credentials.password, credentials.apiKey);
 			}
