@@ -137,6 +137,8 @@ export class OsuHelper {
 			{ fullModName: 'Mixed mod', abbreviationModName: 'mm' },
 			{ fullModName: 'Mixedmod', abbreviationModName: 'mm' },
 			{ fullModName: 'Tiebreaker', abbreviationModName: 'tb' },
+			{ fullModName: 'Hard rock', abbreviationModName: 'hr' },
+			{ fullModName: 'Double time', abbreviationModName: 'dt' },
 		];
 
 		let modAbbreviations: string = null;
