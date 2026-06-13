@@ -2,7 +2,7 @@
 <app-debug [data]="{ selectedChannel, selectedLobby }"></app-debug>
 
 <div class="irc">
-	<div class="first-pick-not-set" *ngIf="selectedLobby && (selectedLobby.firstPick == null || selectedLobby.bestOf == null)" (click)="openLobbyDialog()">
+	<div class="first-pick-not-set" *ngIf="selectedLobby?.isQualifierLobby != true && (selectedLobby?.firstPick == null || selectedLobby?.bestOf == null)" (click)="openLobbyDialog()">
 		You haven't set the <b>First pick</b> of the match yet. Click here to set who picks first.
 	</div>
 
