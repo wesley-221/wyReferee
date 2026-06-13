@@ -68,6 +68,8 @@ export class CreateLobbyComponent implements OnInit {
 			'team-two-name': new FormControl('', [
 				Validators.required
 			]),
+			'qualifier-lobby-identifier': new FormControl(''),
+			'is-qualifier-lobby': new FormControl(''),
 			'selected-tournament': new FormControl(''),
 			'custom-match': new FormControl(false)
 		});
@@ -101,6 +103,7 @@ export class CreateLobbyComponent implements OnInit {
 										this.validationForm.get('team-two-name').setValue(match.opponentTwo.name);
 									}
 									else {
+										this.validationForm.get('is-qualifier-lobby').setValue(true);
 										this.validationForm.get('qualifier-lobby-identifier').setValue(match.qualifierIdentifier);
 									}
 
