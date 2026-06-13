@@ -36,9 +36,16 @@
 					</div>
 
 					<div class="beatmap-status">
-						<div class="beatmap-status-badge" [ngClass]="{ 'beatmap-picked-team-one': beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId), 'beatmap-picked-team-two': beatmapIsPickedByTeamTwo(selectedLobby, beatmap.beatmapId) }">
-							Pick #{{ getPickedOrder(selectedLobby, beatmap.beatmapId) }} • {{ beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
-						</div>
+						@if (selectedLobby?.isQualifierLobby != true) {
+							<div class="beatmap-status-badge" [ngClass]="{ 'beatmap-picked-team-one': beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId), 'beatmap-picked-team-two': beatmapIsPickedByTeamTwo(selectedLobby, beatmap.beatmapId) }">
+								Pick #{{ getPickedOrder(selectedLobby, beatmap.beatmapId) }} • {{ beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
+							</div>
+						}
+						@else {
+							<div class="beatmap-status-badge" [ngClass]="{ 'beatmap-picked-team-one': beatmapIsPickedByTeamOne(selectedLobby, beatmap.beatmapId) || beatmapIsPickedByTeamTwo(selectedLobby, beatmap.beatmapId) }">
+								Pick #{{ getPickedOrder(selectedLobby, beatmap.beatmapId, true) }}
+							</div>
+						}
 
 						<div class="beatmap-status-badge" [ngClass]="{ 'is-banned-one': selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId), 'is-banned-two': selectedLobby.beatmapIsBannedByTeamTwo(beatmap.beatmapId) }">
 							Ban #{{ getBannedOrder(selectedLobby, beatmap.beatmapId) }} • {{ selectedLobby.beatmapIsBannedByTeamOne(beatmap.beatmapId) ? selectedLobby.teamOneName : selectedLobby.teamTwoName }}
