@@ -30,8 +30,6 @@ export class LobbyFormComponent implements OnInit {
 	selectedScoreInterface: ScoreInterface;
 	calculateScoreInterfaces: Calculate;
 
-	qualifier: boolean;
-	qualifierLobbyIdentifier: string;
 	lobbyWithBrackets: boolean;
 	webhook: boolean;
 
@@ -71,7 +69,6 @@ export class LobbyFormComponent implements OnInit {
 
 		this.calculateScoreInterfaces = new Calculate();
 
-		this.qualifier = false;
 		this.webhook = true;
 		this.customMatch = false;
 
@@ -90,6 +87,14 @@ export class LobbyFormComponent implements OnInit {
 
 	getValidation(key: string): any {
 		return this.validationForm.get(key);
+	}
+
+	get isQualifierLobby() {
+		return this.validationForm.get('is-qualifier-lobby');
+	}
+
+	get qualifierLobbyIdentifier() {
+		return this.validationForm.get('qualifier-lobby-identifier');
 	}
 
 	changeTournament() {
@@ -150,6 +155,19 @@ export class LobbyFormComponent implements OnInit {
 				// Subscribe to stage changes to update matches when a stage is selected
 				this.stageIdSubscription = this.validationForm.get('stage-id').valueChanges.subscribe(() => {
 					this.changeStage();
+				});
+
+				this.isQualifierLobby.valueChanges.subscribe((value: boolean) => {
+					if (value == true) {
+						this.validationForm.get('team-one-name').setValidators(null);
+						this.validationForm.get('team-two-name').setValidators(null);
+						this.validationForm.get('qualifier-lobby-identifier').setValidators(Validators.required);
+					}
+					else {
+						this.validationForm.get('team-one-name').setValidators(Validators.required);
+						this.validationForm.get('team-two-name').setValidators(Validators.required);
+						this.validationForm.get('qualifier-lobby-identifier').setValidators(null);
+					}
 				});
 			}, (error: HttpErrorResponse) => {
 				this.loadingWyBinStages = false;
@@ -239,7 +257,7 @@ export class LobbyFormComponent implements OnInit {
 			if (match.getMatchName() == option.option.value) {
 				this.validationForm.get('selected-match-id').setValue(match.id);
 
-				if (this.qualifier == false) {
+				if (this.isQualifierLobby?.value == false) {
 					this.validationForm.get('team-one-name').setValue(match.opponentOne.name);
 					this.validationForm.get('team-two-name').setValue(match.opponentTwo.name);
 				}
@@ -247,23 +265,6 @@ export class LobbyFormComponent implements OnInit {
 					this.validationForm.get('qualifier-lobby-identifier').setValue(match.qualifierIdentifier);
 				}
 			}
-		}
-	}
-
-	changeQualifierLobby(): void {
-		if (this.qualifier == true) {
-			this.validationForm.addControl('qualifier-lobby-identifier', new FormControl('', Validators.required));
-			this.validationForm.removeControl('team-one-name');
-			this.validationForm.removeControl('team-two-name');
-
-			this.validationForm.controls['qualifier-lobby-identifier'].valueChanges.subscribe(value => {
-				this.qualifierLobbyIdentifier = value;
-			});
-		}
-		else {
-			this.validationForm.removeControl('qualifier-lobby-identifier');
-			this.validationForm.addControl('team-one-name', new FormControl('', Validators.required));
-			this.validationForm.addControl('team-two-name', new FormControl('', Validators.required));
 		}
 	}
 
@@ -288,8 +289,8 @@ export class LobbyFormComponent implements OnInit {
 	getVariables() {
 		return {
 			selectedTournament: this.selectedTournament,
-			qualifier: this.qualifier,
-			qualifierLobbyIdentifier: this.qualifierLobbyIdentifier,
+			qualifier: this.isQualifierLobby?.value,
+			qualifierLobbyIdentifier: this.qualifierLobbyIdentifier?.value,
 			lobbyWithBrackets: this.lobbyWithBrackets,
 			webhook: this.webhook
 		};

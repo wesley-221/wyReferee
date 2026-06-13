@@ -125,16 +125,16 @@
 			<h1>Qualifier lobby</h1>
 			<p>Use this option if the lobby you are creating is supposed to be a qualifier lobby.</p>
 
-			<mat-slide-toggle [(ngModel)]="qualifier" (change)="changeQualifierLobby()" [ngModelOptions]="{ standalone: true }"></mat-slide-toggle>
+			<mat-slide-toggle formControlName="is-qualifier-lobby"></mat-slide-toggle>
 		</div>
 
 		<hr />
 
-		<div *ngIf="qualifier == true">
-			<ng-container *ngTemplateOutlet="qualifierInput; context: { tournamentAcronym: tournamentAcronym, qualifierLobbyIdentifier: qualifierLobbyIdentifier, formGroup: validationForm }"></ng-container>
+		<div *ngIf="isQualifierLobby?.value == true">
+			<ng-container *ngTemplateOutlet="qualifierInput; context: { tournamentAcronym: tournamentAcronym, qualifierLobbyIdentifier: qualifierLobbyIdentifier?.value, formGroup: validationForm }"></ng-container>
 		</div>
 
-		<div class="row r-2" *ngIf="qualifier == false">
+		<div class="row r-2" *ngIf="isQualifierLobby?.value == false">
 			<div class="col">
 				<h2>Team one name</h2>
 
@@ -222,7 +222,7 @@
 				<h1>Qualifier lobby</h1>
 				<p>Use this option if the lobby you are creating is supposed to be a qualifier lobby.</p>
 
-				<mat-slide-toggle [(ngModel)]="qualifier" (change)="changeQualifierLobby()" [ngModelOptions]="{ standalone: true }"></mat-slide-toggle>
+				<mat-slide-toggle formControlName="is-qualifier-lobby"></mat-slide-toggle>
 			</div>
 
 			<div id="tutorial-webhooks" class="col">
@@ -231,7 +231,7 @@
 
 				<mat-slide-toggle [(ngModel)]="webhook" [ngModelOptions]="{ standalone: true }">Webhooks <span [ngClass]="{ 'green': webhook == true, 'red': webhook == false }">{{ webhook == true ? 'will' : 'wont' }}</span> be sent</mat-slide-toggle>
 
-				<app-alert alertType="info" *ngIf="qualifier == true">Because you are creating a Qualifier lobby, only the <code>Match creation</code> webhook will be sent. All other webhooks will <b>NOT</b> be sent.</app-alert>
+				<app-alert alertType="info" *ngIf="isQualifierLobby?.value == true">Because you are creating a Qualifier lobby, only the <code>Match creation</code> webhook will be sent. All other webhooks will <b>NOT</b> be sent.</app-alert>
 			</div>
 		</div>
 
@@ -243,8 +243,8 @@
 					<h2>Select a match</h2>
 					<p>Choose a match to referee from the list below. Ensure you select the correct match before proceeding.</p>
 
-					<mat-slide-toggle class="spacing-bottom" [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()" *ngIf="qualifier == true">Manually enter qualifier identifier</mat-slide-toggle>
-					<mat-slide-toggle class="spacing-bottom" [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()" *ngIf="qualifier == false">Manually enter participant names</mat-slide-toggle>
+					<mat-slide-toggle class="spacing-bottom" [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()" *ngIf="isQualifierLobby?.value == true">Manually enter qualifier identifier</mat-slide-toggle>
+					<mat-slide-toggle class="spacing-bottom" [(ngModel)]="customMatch" [ngModelOptions]="{ standalone: true }" (change)="changeCustomMatch()" *ngIf="isQualifierLobby?.value == false">Manually enter participant names</mat-slide-toggle>
 
 					<div *ngIf="customMatch == false">
 						<mat-form-field class="full-width">
@@ -266,11 +266,11 @@
 					</div>
 
 					<div *ngIf="customMatch == true">
-						<div *ngIf="qualifier == true">
-							<ng-container *ngTemplateOutlet="qualifierInput; context: { tournamentAcronym: selectedTournament.acronym, qualifierLobbyIdentifier: qualifierLobbyIdentifier, formGroup: validationForm }"></ng-container>
+						<div *ngIf="isQualifierLobby?.value == true">
+							<ng-container *ngTemplateOutlet="qualifierInput; context: { tournamentAcronym: selectedTournament.acronym, qualifierLobbyIdentifier: qualifierLobbyIdentifier?.value, formGroup: validationForm }"></ng-container>
 						</div>
 
-						<div class="row r-2" *ngIf="qualifier == false">
+						<div class="row r-2" *ngIf="isQualifierLobby?.value == false">
 							<div class="col">
 								<ng-container *ngTemplateOutlet="teamInput; context: { controlName: 'team-one-name', label: 'Team one', filter: teamOneFilter, slots: teamOneArray, formGroup: validationForm }"></ng-container>
 							</div>
@@ -293,7 +293,7 @@
 		<hr *ngIf="selectedTournament.hasWyBinConnected()" />
 
 		<div id="tutorial-participants" *ngIf="!selectedTournament.hasWyBinConnected()">
-			<div class="row r-2" *ngIf="qualifier == false">
+			<div class="row r-2" *ngIf="isQualifierLobby?.value == false">
 				<div class="col">
 					<ng-container *ngTemplateOutlet="teamInput; context: { controlName: 'team-one-name', label: 'Team one', filter: teamOneFilter, slots: teamOneArray, formGroup: validationForm }"></ng-container>
 				</div>
@@ -303,8 +303,8 @@
 				</div>
 			</div>
 
-			<div *ngIf="qualifier == true">
-				<ng-container *ngTemplateOutlet="qualifierInput; context: { tournamentAcronym: selectedTournament.acronym, qualifierLobbyIdentifier: qualifierLobbyIdentifier, formGroup: validationForm }"></ng-container>
+			<div *ngIf="isQualifierLobby?.value == true">
+				<ng-container *ngTemplateOutlet="qualifierInput; context: { tournamentAcronym: selectedTournament.acronym, qualifierLobbyIdentifier: qualifierLobbyIdentifier?.value, formGroup: validationForm }"></ng-container>
 			</div>
 		</div>
 	</div>
