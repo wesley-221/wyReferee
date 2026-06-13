@@ -75,7 +75,18 @@ export class IrcMappoolComponent {
 		return multiplayerLobby.teamTwoPicks != null && multiplayerLobby.teamTwoPicks.indexOf(beatmapId) > -1;
 	}
 
-	getPickedOrder(multiplayerLobby: Lobby, beatmapId: number) {
+	getPickedOrder(multiplayerLobby: Lobby, beatmapId: number, isQualifierLobby: boolean = false) {
+		if (isQualifierLobby == true) {
+			const combinedPicks = [
+				...(multiplayerLobby.teamOnePicks ?? []),
+				...(multiplayerLobby.teamTwoPicks ?? []),
+			];
+
+			const index = combinedPicks.indexOf(beatmapId);
+
+			return index > -1 ? index + 1 : null;
+		}
+
 		const teamOneIndex = multiplayerLobby.teamOnePicks?.indexOf(beatmapId) ?? -1;
 		const teamTwoIndex = multiplayerLobby.teamTwoPicks?.indexOf(beatmapId) ?? -1;
 

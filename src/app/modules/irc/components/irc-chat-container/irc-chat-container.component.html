@@ -1,5 +1,5 @@
 <div class="message-container">
-	<div class="irc-match-header" *ngIf="selectedChannel?.name.startsWith('#mp_')">
+	<div class="irc-match-header" *ngIf="selectedChannel?.name.startsWith('#mp_') && selectedLobby?.isQualifierLobby != true">
 		<app-irc-match-header
 			[selectedLobby]="selectedLobby"
 			[selectedChannel]="selectedChannel"
