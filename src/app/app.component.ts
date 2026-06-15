@@ -12,6 +12,7 @@ import { DataMigrationDialogComponent } from './components/dialogs/data-migratio
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppConfig } from '../environments/environment';
 import { NewUpdateDialogComponent } from './components/dialogs/new-update-dialog/new-update-dialog.component';
+import { TournamentService } from './services/tournament.service';
 
 @Component({
 	selector: 'app-root',
@@ -27,6 +28,7 @@ export class AppComponent implements OnInit {
 		private ircService: IrcService,
 		private authService: AuthenticateService,
 		private settingsStore: SettingsStoreService,
+		private tournamentService: TournamentService,
 		private cacheService: CacheService,
 		private dialog: MatDialog,
 		private ngZone: NgZone,
@@ -50,6 +52,8 @@ export class AppComponent implements OnInit {
 				this.versionCheckComplete = true;
 			}
 		});
+
+		this.tournamentService.loadTournaments();
 
 		this.authService.getMeData().subscribe({
 			next: user => {
