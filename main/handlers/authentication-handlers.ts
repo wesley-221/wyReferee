@@ -5,7 +5,9 @@ import * as path from "path";
 import * as fs from "fs";
 
 export function registerAuthenticationHandlers() {
-	const sessionFilePath = path.join(app.getPath('userData'), 'data', 'authentication-session.bin');
+	const serve = process.argv.includes('--serve');
+	const sessionFileName = serve ? 'authentication-session-dev.bin' : 'authentication-session.bin';
+	const sessionFilePath = path.join(app.getPath('userData'), 'data', sessionFileName);
 
 	ipcMain.handle(IPC_CHANNELS.GET_SESSION, async (event) => {
 		try {
