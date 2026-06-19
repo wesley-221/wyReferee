@@ -73,48 +73,51 @@ export class CreateLobbyComponent implements OnInit {
 			'selected-tournament': new FormControl(''),
 			'custom-match': new FormControl(false)
 		});
-
-		this.tournamentService.loadTournaments(false);
 	}
 
 	ngOnInit() {
-		const { tournament, match } = this.lobbyCreationContextService.getContext();
+		this.tournamentService.tournamentsHaveBeenUpdated().subscribe(updated => {
+			if (updated == true) {
+				const { tournament, match } = this.lobbyCreationContextService.getContext();
 
-		if (tournament && match) {
-			for (const findTournament of this.tournamentService.allTournaments) {
-				if (findTournament.wyBinTournamentId == tournament.id) {
-					// Delay setting the value to make sure the form has been loaded properly
-					// Otherwise it will not trigger the valueChanges observable
-					setTimeout(() => {
-						this.validationForm.get('selected-tournament').setValue(findTournament.id);
+				if (tournament && match) {
+					for (const findTournament of this.tournamentService.allTournaments) {
+						if (findTournament.wyBinTournamentId == tournament.id) {
+							// Delay setting the value to make sure the form has been loaded properly
+							// Otherwise it will not trigger the valueChanges observable
+							setTimeout(() => {
+								this.validationForm.get('selected-tournament').setValue(findTournament.id);
 
-						this.lobbyCreationContextService.getStagesLoadedObservable().subscribe(stagesLoaded => {
-							if (stagesLoaded == true) {
-								// Delay setting the value to make sure the form has been loaded properly
-								// Otherwise the matches will not be populated
-								setTimeout(() => {
-									this.validationForm.get('stage-id').setValue(match.wyBinStageId);
+								this.lobbyCreationContextService.getStagesLoadedObservable().subscribe(stagesLoaded => {
+									if (stagesLoaded == true) {
+										// Delay setting the value to make sure the form has been loaded properly
+										// Otherwise the matches will not be populated
+										setTimeout(() => {
+											this.validationForm.get('stage-id').setValue(match.wyBinStageId);
 
-									this.validationForm.get('selected-match-id').setValue(match.id);
-									this.validationForm.get('selected-match-name').setValue(match.getMatchName());
+											this.validationForm.get('selected-match-id').setValue(match.id);
+											this.validationForm.get('selected-match-name').setValue(match.getMatchName());
 
-									if (match.qualifierIdentifier == null) {
-										this.validationForm.get('team-one-name').setValue(match.opponentOne.name);
-										this.validationForm.get('team-two-name').setValue(match.opponentTwo.name);
+											if (match.qualifierIdentifier == null) {
+												this.validationForm.get('team-one-name').setValue(match.opponentOne.name);
+												this.validationForm.get('team-two-name').setValue(match.opponentTwo.name);
+											}
+											else {
+												this.validationForm.get('is-qualifier-lobby').setValue(true);
+												this.validationForm.get('qualifier-lobby-identifier').setValue(match.qualifierIdentifier);
+											}
+
+											this.lobbyCreationContextService.clear();
+										}, 1);
 									}
-									else {
-										this.validationForm.get('is-qualifier-lobby').setValue(true);
-										this.validationForm.get('qualifier-lobby-identifier').setValue(match.qualifierIdentifier);
-									}
-
-									this.lobbyCreationContextService.clear();
-								}, 1);
-							}
-						});
-					}, 1);
+								});
+							}, 1);
+						}
+					}
 				}
 			}
-		}
+		});
+
 	}
 
 	/**

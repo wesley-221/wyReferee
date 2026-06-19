@@ -3,7 +3,7 @@ import { AppConfig } from '../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject, filter, take } from 'rxjs';
+import { BehaviorSubject, EMPTY, catchError, filter, forkJoin, take, tap } from 'rxjs';
 import { ToastService } from './toast.service';
 import { ToastType } from 'app/models/toast';
 import { WyBinStage } from 'app/models/wybintournament/wybin-stage';
@@ -23,22 +23,26 @@ export class TournamentService {
 
 	private readonly apiUrl = AppConfig.apiUrl;
 	private tournamentsInitialized$: BehaviorSubject<boolean>;
+	private tournamentsUpdated$: BehaviorSubject<boolean>;
 
 	constructor(private tournamentStoreService: TournamentStoreService, private httpClient: HttpClient, private toastService: ToastService, private cacheService: CacheService) {
 		this.availableTournamentId = 0;
 		this.allTournaments = [];
 
 		this.tournamentsInitialized$ = new BehaviorSubject(false);
+		this.tournamentsUpdated$ = new BehaviorSubject(false);
 
-		this.loadTournaments(true);
+		this.tournamentsInitialized$.subscribe(initialized => {
+			if (initialized == true) {
+				this.updateTournaments();
+			}
+		});
 	}
 
 	/**
-	 * Load all tournaments from the store and update them if they have been updated
-	 *
-	 * @param initialLoad if this is the initial load of tournaments
+	 * Load all tournaments from the store
 	 */
-	loadTournaments(initialLoad: boolean): void {
+	loadTournaments(): void {
 		this.tournamentStoreService
 			.watchTournaments()
 			.pipe(
@@ -49,47 +53,53 @@ export class TournamentService {
 				if (tournamentStore) {
 					let highestTournamentId = 0;
 
-					// Only load in tournaments for the initial load
-					if (initialLoad == true) {
-						const tournaments = Object.values(tournamentStore);
+					const tournaments = Object.values(tournamentStore);
 
-						for (const tournament of tournaments) {
-							const newTournament = WyTournament.makeTrueCopy(tournament);
-							this.allTournaments.push(newTournament);
+					for (const tournament of tournaments) {
+						const newTournament = WyTournament.makeTrueCopy(tournament);
+						this.allTournaments.push(newTournament);
 
-							if (newTournament.id >= highestTournamentId) {
-								highestTournamentId = newTournament.id;
-							}
-						}
-
-						this.availableTournamentId = highestTournamentId + 1;
-					}
-
-					// Update tournaments if they have been updated
-					for (const tournament of this.allTournaments) {
-						if (tournament.publishId != undefined) {
-							this.getPublishedTournament(tournament.publishId).subscribe({
-								next: (data) => {
-									const publishedTournament: WyTournament = WyTournament.makeTrueCopy(data);
-
-									if (publishedTournament.updateDate.getTime() != tournament.updateDate.getTime()) {
-										publishedTournament.publishId = publishedTournament.id;
-
-										this.toastService.addToast(`The tournament "${tournament.name}" has been updated.`, ToastType.Information, 10);
-
-										this.updateTournament(publishedTournament, tournament.publishId, true);
-									}
-								},
-								error: (error: HttpErrorResponse) => {
-									console.warn(`Failed to update tournament "${tournament.name}": ${error.error.message}`);
-								}
-							});
+						if (newTournament.id >= highestTournamentId) {
+							highestTournamentId = newTournament.id;
 						}
 					}
 
-					this.tournamentsInitialized$.next(true);
+					this.availableTournamentId = highestTournamentId + 1;
 				}
+
+				this.tournamentsInitialized$.next(true);
 			});
+	}
+
+	/**
+	 * Update the tournaments if they have received an update
+	 */
+	updateTournaments() {
+		const updateRequests: Observable<WyTournament>[] = this.allTournaments
+			.filter(tournament => tournament.publishId != null)
+			.map(tournament => {
+				return this.getPublishedTournament(tournament.publishId).pipe(
+					tap(data => {
+						const publishedTournament = WyTournament.makeTrueCopy(data);
+
+						if (publishedTournament.updateDate.getTime() != tournament.updateDate.getTime()) {
+							publishedTournament.publishId = publishedTournament.id;
+
+							this.toastService.addToast(`The tournament "${tournament.name}" has been updated.`, ToastType.Information, 10);
+
+							this.updateTournament(publishedTournament, tournament.publishId, true);
+						}
+					}),
+					catchError((error: HttpErrorResponse) => {
+						console.warn(`Failed to update tournament "${tournament.name}": ${error.error.message}`);
+						return EMPTY;
+					})
+				)
+			});
+
+		forkJoin(updateRequests).subscribe(() => {
+			this.tournamentsUpdated$.next(true);
+		});
 	}
 
 	/**
@@ -97,6 +107,13 @@ export class TournamentService {
 	 */
 	tournamentsHaveBeenInitialized(): Observable<boolean> {
 		return this.tournamentsInitialized$.asObservable();
+	}
+
+	/**
+	 * Check if the tournaments have been updated
+	 */
+	tournamentsHaveBeenUpdated(): Observable<boolean> {
+		return this.tournamentsUpdated$.asObservable();
 	}
 
 	/**
