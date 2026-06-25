@@ -242,16 +242,46 @@ $unpick-text-color: #fff;
 							border-radius: 4px;
 							padding: 4px 8px;
 
-							&.beatmap-picked-team-one,
-							&.is-banned-one {
+							&.beatmap-picked-team-one {
 								display: flex;
 								background-color: rgba($red-team-chat-colour, 0.5);
+								text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 							}
 
-							&.beatmap-picked-team-two,
+							&.beatmap-picked-team-two {
+								display: flex;
+								text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+								background-color: rgba($blue-team-chat-colour, 0.5);
+							}
+
+							&.is-banned-one {
+								display: flex;
+
+								text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+								background:
+									repeating-linear-gradient(
+										-55deg,
+										transparent 0px,
+										transparent 10px,
+										rgba(0, 0, 0, 0.32) 10px,
+										rgba(0, 0, 0, 0.32) 20px
+									),
+									rgba($red-team-chat-colour, 0.5);
+							}
+
 							&.is-banned-two {
 								display: flex;
-								background-color: rgba($blue-team-chat-colour, 0.5);
+
+								text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+								background:
+									repeating-linear-gradient(
+										-55deg,
+										transparent 0px,
+										transparent 10px,
+										rgba(0, 0, 0, 0.32) 10px,
+										rgba(0, 0, 0, 0.32) 20px
+									),
+									rgba($blue-team-chat-colour, 0.5);
 							}
 						}
 					}
