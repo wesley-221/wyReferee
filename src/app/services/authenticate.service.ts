@@ -34,7 +34,7 @@ export class AuthenticateService {
 	 * @param token the oauth code from the user
 	 */
 	public handleOauth(token: string): Observable<AuthenticationResponse> {
-		return this.httpClient.post<AuthenticationResponse>(`${this.apiUrl}user/authenticate`, {
+		return this.httpClient.post<AuthenticationResponse>(`${this.apiUrl}v1/user/authenticate`, {
 			token: token,
 			issuer: 'wyreferee'
 		});
@@ -46,7 +46,7 @@ export class AuthenticateService {
 	public logout(): void {
 		window.electronApi.authentication.clearSession();
 
-		this.httpClient.get(`${this.apiUrl}user/logout/wyreferee`).subscribe(() => {
+		this.httpClient.get(`${this.apiUrl}v1/user/logout/wyreferee`).subscribe(() => {
 			this.loggedIn = false;
 			this.loggedInUser = null;
 		});
@@ -56,14 +56,14 @@ export class AuthenticateService {
 	 * Get the data from the authenticated user
 	 */
 	public getMeData(): Observable<User> {
-		return this.httpClient.get<User>(`${this.apiUrl}me`);
+		return this.httpClient.get<User>(`${this.apiUrl}v1/me`);
 	}
 
 	/**
 	 * Get all the users
 	 */
 	public getAllUser(): Observable<any> {
-		return this.httpClient.get(`${this.apiUrl}users`);
+		return this.httpClient.get(`${this.apiUrl}v1/users`);
 	}
 
 	/**

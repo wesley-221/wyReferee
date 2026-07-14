@@ -157,7 +157,7 @@ export class TournamentService {
 	 * @param tournament the tournament to update
 	 */
 	updatePublishedTournament(tournament: WyTournament): Observable<WyTournament> {
-		return this.httpClient.post<WyTournament>(`${this.apiUrl}wyreferee/tournament`, tournament);
+		return this.httpClient.post<WyTournament>(`${this.apiUrl}v1/wyreferee/tournament`, tournament);
 	}
 
 	/**
@@ -176,7 +176,7 @@ export class TournamentService {
 	 * @param tournament the tournament to delete
 	 */
 	deletePublishedTournament(tournament: WyTournament): Observable<void> {
-		return this.httpClient.delete<void>(`${this.apiUrl}wyreferee/tournament/${tournament.id}`);
+		return this.httpClient.delete<void>(`${this.apiUrl}v1/wyreferee/tournament/${tournament.id}`);
 	}
 
 	/**
@@ -203,28 +203,28 @@ export class TournamentService {
 	 * @param tournament the tournament to publish
 	 */
 	publishTournament(tournament: WyTournament): Observable<WyTournament> {
-		return this.httpClient.post<WyTournament>(`${this.apiUrl}wyreferee/tournament`, tournament);
+		return this.httpClient.post<WyTournament>(`${this.apiUrl}v1/wyreferee/tournament`, tournament);
 	}
 
 	/**
 	 * Get all published tournaments
 	 */
 	getAllPublishedTournaments() {
-		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}wyreferee/tournament`);
+		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}v1/wyreferee/tournament`);
 	}
 
 	/**
 	 * Get all published tournaments that you have administrator permissions to
 	 */
 	getAllPublishedTournamentsWithAdminPermissions() {
-		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}wyreferee/tournament/administrator_permission`);
+		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}v1/wyreferee/tournament/administrator_permission`);
 	}
 
 	/**
 	 * Get all published tournaments that you have global administrator permissions to
 	 */
 	getAllPublishedTournamentsWithGlobalAdminPermissions() {
-		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}wyreferee/tournament/global_administrator_permission`);
+		return this.httpClient.get<WyTournament[]>(`${this.apiUrl}v1/wyreferee/tournament/global_administrator_permission`);
 	}
 
 	/**
@@ -233,7 +233,7 @@ export class TournamentService {
 	 * @param tournamentId the id of the tournament that was published
 	 */
 	getPublishedTournament(tournamentId: number): Observable<WyTournament> {
-		return this.httpClient.get<WyTournament>(`${this.apiUrl}wyreferee/tournament/${tournamentId}`);
+		return this.httpClient.get<WyTournament>(`${this.apiUrl}v1/wyreferee/tournament/${tournamentId}`);
 	}
 
 	/**
@@ -242,7 +242,7 @@ export class TournamentService {
 	 * @param tournamentId the id of the tournament
 	 */
 	getWyBinTournamentMappools(tournamentId: number) {
-		return this.httpClient.get(`${this.apiUrl}tournament-mappools/${tournamentId}`);
+		return this.httpClient.get(`${this.apiUrl}v1/tournament-mappools/${tournamentId}`);
 	}
 
 	/**
@@ -251,7 +251,7 @@ export class TournamentService {
 	 * @param tournamentId the id of the tournament
 	 */
 	getWyBinTournamentPlayers(tournamentId: number) {
-		return this.httpClient.get(`${this.apiUrl}tournament-players/${tournamentId}`);
+		return this.httpClient.get(`${this.apiUrl}v1/tournament-players/${tournamentId}`);
 	}
 
 	/**
@@ -260,7 +260,7 @@ export class TournamentService {
 	 * @param tournamentId the id of the tournament
 	 */
 	getWyBinTournamentTeams(tournamentId: number) {
-		return this.httpClient.get(`${this.apiUrl}tournament-teams/${tournamentId}`);
+		return this.httpClient.get(`${this.apiUrl}v1/tournament-teams/${tournamentId}`);
 	}
 
 	/**
@@ -270,7 +270,7 @@ export class TournamentService {
 	 * @param wyBinMatchId the id of the wyBin qualifier match
 	 */
 	getWyBinQualifierLobbyTeams(tournamentId: number, wyBinMatchId: number) {
-		return this.httpClient.get(`${this.apiUrl}tournament-qualifier-lobby-participants/${tournamentId}/${wyBinMatchId}`);
+		return this.httpClient.get(`${this.apiUrl}v1/tournament-qualifier-lobby-participants/${tournamentId}/${wyBinMatchId}`);
 	}
 
 	/**
@@ -279,7 +279,7 @@ export class TournamentService {
 	 * @param tournamentId the id of the tournament
 	 */
 	getWyBinStages(tournamentId: number) {
-		return this.httpClient.get<WyBinStage[]>(`${this.apiUrl}tournament-stages/${tournamentId}`);
+		return this.httpClient.get<WyBinStage[]>(`${this.apiUrl}v1/tournament-stages/${tournamentId}`);
 	}
 
 	/**

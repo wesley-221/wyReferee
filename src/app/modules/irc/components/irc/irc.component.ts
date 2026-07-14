@@ -15,7 +15,6 @@ import { Lobby } from 'app/models/lobby';
 import { IrcMessage } from 'app/models/irc/irc-message';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
-import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
 import { IrcShortcutCommandsService } from 'app/services/irc-shortcut-commands.service';
 import { MultiplayerLobbySettingsComponent } from '../../../../components/dialogs/multiplayer-lobby-settings/multiplayer-lobby-settings.component';
 import { IrcPickMapSameModBracketComponent } from '../../../../components/dialogs/irc-pick-map-same-mod-bracket/irc-pick-map-same-mod-bracket.component';
@@ -766,28 +765,6 @@ export class IrcComponent implements OnInit, OnDestroy {
 		}
 
 		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
-	}
-
-	/**
-	 * Pick a mystery map
-	 *
-	 * @param mappool the mappool to pick from
-	 * @param modBracket the modbracket to pick from
-	 */
-	pickMysteryMap(mappool: WyMappool, modBracket: WyModBracket) {
-		this.multiplayerLobbies.pickMysteryMap(mappool, modBracket, this.selectedLobby, this.ircService.authenticatedUser).subscribe((res: any) => {
-			if (res.modCategory == null) {
-				this.toastService.addToast(res.beatmapName, ToastType.Error, 60);
-			}
-			else {
-				const modBracketMap = WyModBracketMap.makeTrueCopy(res);
-				this.pickBeatmap(modBracketMap, modBracket, mappool.gamemodeId);
-
-				// Pick a random map and update it to the cache
-				this.selectedLobby.pickModCategoryFromBracket(modBracket, modBracketMap.modCategory);
-				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
-			}
-		});
 	}
 
 	/**
