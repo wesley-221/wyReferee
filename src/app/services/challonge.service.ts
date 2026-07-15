@@ -24,7 +24,7 @@ export class ChallongeService {
 	 * @param winnerName the name of team or player that is the winner of the match
 	 */
 	updateMatchScore(tournamentId: number, wyBinStageId: number, wyBinMatchId: number, stageName: string, teamOneName: string, teamTwoName: string, teamOneScore: number, teamTwoScore: number, winnerName: string) {
-		return this.http.post(`${this.apiUrl}challonge-match-score`, {
+		return this.http.post(`${this.apiUrl}v1/challonge-match-score`, {
 			tournamentId,
 			wyBinStageId,
 			wyBinMatchId,

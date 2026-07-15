@@ -11,10 +11,7 @@ import { OMLScoreCalculation } from 'app/models/score-calculation/calculation-ty
 import { ThreeCwcScoreCalculation } from 'app/models/score-calculation/calculation-types/three-cwc-score-calculation';
 import { MultiplayerData } from 'app/models/store-multiplayer/multiplayer-data';
 import { MultiplayerDataUser } from 'app/models/store-multiplayer/multiplayer-data-user';
-import { WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
-import { WyMysteryMappoolHelper } from 'app/models/wytournament/mappool/wy-mystery-mappool-helper';
-import { AppConfig } from 'environments/environment';
 import { BehaviorSubject, filter, Observable, take } from 'rxjs';
 import { CacheService } from './cache.service';
 import { MultiplayerLobbyPlayersService } from './multiplayer-lobby-players.service';
@@ -365,24 +362,5 @@ export class WyMultiplayerLobbiesService {
 				});
 			}
 		});
-	}
-
-	/**
-	 * Get a map from the given mystery mappool
-	 *
-	 * @param mappool the mappool to get the mystery map from
-	 * @param modBracket the modbracket to get the mystery map from
-	 */
-	public pickMysteryMap(mappool: WyMappool, modBracket: WyModBracket, lobby: Lobby, refereeName: string) {
-		const mysteryMappoolHelper = new WyMysteryMappoolHelper({
-			tournamentId: lobby.tournamentId,
-			mappoolId: mappool.publishId,
-			modBracketId: modBracket.id,
-			multiplayerLobbyName: `[${lobby.tournament.acronym}: (${lobby.teamOneName}) vs. (${lobby.teamTwoName})](${lobby.multiplayerLink})`,
-			refereeName: refereeName,
-			pickedCategories: lobby.pickedCategories
-		});
-
-		return this.http.post<WyMysteryMappoolHelper>(`${AppConfig.apiUrl}wyreferee/mystery-mappool`, mysteryMappoolHelper);
 	}
 }

@@ -33,7 +33,7 @@ export class TournamentWybinComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.http.get<any[]>(`${this.apiUrl}tournament`).subscribe(tournaments => {
+		this.http.get<any[]>(`${this.apiUrl}v1/tournament`).subscribe(tournaments => {
 			this.tournaments = tournaments.map(t => ({
 				id: t.id,
 				name: t.name

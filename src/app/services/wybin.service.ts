@@ -12,15 +12,15 @@ export class WybinService {
 	constructor(private http: HttpClient) { }
 
 	importStages(tournamentId: number) {
-		return this.http.get(`${this.API_URL}tournament-stages/${tournamentId}`);
+		return this.http.get(`${this.API_URL}v1/tournament-stages/${tournamentId}`);
 	}
 
 	importStaff(tournamentId: number) {
-		return this.http.get(`${this.API_URL}tournament-staff-member/${tournamentId}`);
+		return this.http.get(`${this.API_URL}v1/tournament-staff-member/${tournamentId}`);
 	}
 
 	getMatch(tournamentId: number, wyBinStageId: number, wyBinMatchId: number, stageName: string, opponentOne: string, opponentTwo: string) {
-		return this.http.post(`${this.API_URL}tournament-wyreferee-match`, {
+		return this.http.post(`${this.API_URL}v1/tournament-wyreferee-match`, {
 			tournamentId,
 			wyBinStageId,
 			wyBinMatchId,
@@ -31,7 +31,7 @@ export class WybinService {
 	}
 
 	updateMatchScore(tournamentId: number, wyBinStageId: number, wyBinMatchId: number, stageName: string, multiplayerLink: string, opponentOne: string, opponentTwo: string, opponentOneScore: number, opponentTwoScore: number, winByDefaultWinner: string, opponentOneBans: number[], opponentTwoBans: number[], qualifierIdentifier?: string) {
-		return this.http.post(`${this.API_URL}tournament-wyreferee-score-update`, {
+		return this.http.post(`${this.API_URL}v1/tournament-wyreferee-score-update`, {
 			tournamentId: tournamentId,
 			wyBinStageId: wyBinStageId,
 			wyBinMatchId: wyBinMatchId,
@@ -49,6 +49,6 @@ export class WybinService {
 	}
 
 	getPersonalSchedule() {
-		return this.http.get<PersonalSchedule[]>(`${this.API_URL}personal-schedule?type=referee`);
+		return this.http.get<PersonalSchedule[]>(`${this.API_URL}v1/personal-schedule?type=referee`);
 	}
 }

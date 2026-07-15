@@ -12,6 +12,6 @@ export class WyRefereeNotificationsService {
 	constructor(private http: HttpClient) { }
 
 	getNotifications(version: string) {
-		return this.http.get<WyRefereeNotification[]>(`${this.apiUrl}wyreferee-notification?version=${version}`);
+		return this.http.get<WyRefereeNotification[]>(`${this.apiUrl}v1/wyreferee-notification?version=${version}`);
 	}
 }

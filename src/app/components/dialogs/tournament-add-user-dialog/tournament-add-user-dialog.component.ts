@@ -22,12 +22,15 @@ export class TournamentAddUserDialogComponent implements OnInit {
 	ngOnInit(): void { }
 
 	searchForUser(): void {
-		this.http.get(`${AppConfig.apiUrl}user-from-osu-user/${this.osuUsername}/0`).subscribe((user: User) => {
-			this.error = null;
-			this.foundUser = User.makeTrueCopy(user);
-			this.foundOsuUser = this.foundUser.userOsu;
-		}, (error: HttpErrorResponse) => {
-			this.error = error.error.message;
+		this.http.get(`${AppConfig.apiUrl}v1/user-from-osu-user/${this.osuUsername}/0`).subscribe({
+			next: (user: User) => {
+				this.error = null;
+				this.foundUser = User.makeTrueCopy(user);
+				this.foundOsuUser = this.foundUser.userOsu;
+			},
+			error: (error: HttpErrorResponse) => {
+				this.error = error.error.message;
+			}
 		});
 	}
 }
