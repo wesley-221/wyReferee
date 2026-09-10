@@ -112,6 +112,7 @@ export class TournamentStagesComponent implements OnInit {
 			name: new FormControl(stage?.name || '', Validators.required),
 			bestOf: new FormControl(stage?.bestOf || 0, Validators.required),
 			bans: new FormControl(stage?.bans || 0),
+			protects: new FormControl(stage?.protects || 0),
 			hitpoints: new FormControl(stage?.hitpoints || 0)
 		});
 	}

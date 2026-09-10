@@ -26,14 +26,14 @@
 		<div class="row">
 			<div class="col">
 				<div class="all-stages" formArrayName="stages">
-					<div class="stage" *ngFor="let stageGroup of stages.controls; let i = index" [formGroupName]="i" [ngStyle]="{'grid-template-columns': tournament.scoreInterfaceIdentifier == CTM_SCORE_IDENTIFIER ? '2fr 1fr 1fr 1fr 50px' : '2fr 1fr 1fr 50px'}">
+					<div class="stage" *ngFor="let stageGroup of stages.controls; let i = index" [formGroupName]="i" [ngClass]="{ 'has-protects': tournament.protects == true }">
 						<div class="name">
 							<mat-form-field class="full-width">
 								<mat-label>Stage name</mat-label>
 
 								<input matInput formControlName="name" />
 
-								<mat-error *ngIf="stageGroup.get('name') != null && stageGroup.get('name').errors && (stageGroup.get('name').touched || stageGroup.get('name').dirty)">
+								<mat-error *ngIf="stageGroup.get('name')?.errors && (stageGroup.get('name')?.touched || stageGroup.get('name')?.dirty)">
 									This field is required
 								</mat-error>
 							</mat-form-field>
@@ -45,7 +45,7 @@
 
 								<input matInput formControlName="hitpoints" />
 
-								<mat-error *ngIf="stageGroup.get('hitpoints') != null && stageGroup.get('hitpoints').errors && (stageGroup.get('hitpoints').touched || stageGroup.get('hitpoints').dirty)">
+								<mat-error *ngIf="stageGroup.get('hitpoints') != null && stageGroup.get('hitpoints')?.errors && (stageGroup.get('hitpoints')?.touched || stageGroup.get('hitpoints')?.dirty)">
 									This field is required
 								</mat-error>
 							</mat-form-field>
@@ -57,7 +57,19 @@
 
 								<input matInput formControlName="bans" />
 
-								<mat-error *ngIf="stageGroup.get('bans') != null && stageGroup.get('bans').errors && (stageGroup.get('bans').touched || stageGroup.get('bans').dirty)">
+								<mat-error *ngIf="stageGroup.get('bans') != null && stageGroup.get('bans')?.errors && (stageGroup.get('bans')?.touched || stageGroup.get('bans')?.dirty)">
+									This field is required
+								</mat-error>
+							</mat-form-field>
+						</div>
+
+						<div class="protects" *ngIf="tournament.protects == true">
+							<mat-form-field class="full-width">
+								<mat-label>Protects</mat-label>
+
+								<input matInput formControlName="protects" />
+
+								<mat-error *ngIf="stageGroup.get('protects') != null && stageGroup.get('protects')?.errors && (stageGroup.get('protects')?.touched || stageGroup.get('protects')?.dirty)">
 									This field is required
 								</mat-error>
 							</mat-form-field>
@@ -78,7 +90,7 @@
 									<mat-option [value]="19">19</mat-option>
 								</mat-select>
 
-								<mat-error *ngIf="stageGroup.get('bestOf') != null && stageGroup.get('bestOf').errors && (stageGroup.get('bestOf').touched || stageGroup.get('bestOf').dirty)">
+								<mat-error *ngIf="stageGroup.get('bestOf') != null && stageGroup.get('bestOf')?.errors && (stageGroup.get('bestOf')?.touched || stageGroup.get('bestOf')?.dirty)">
 									This field is required
 								</mat-error>
 							</mat-form-field>
