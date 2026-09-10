@@ -45,6 +45,10 @@ export class IrcService {
 
 	teamOneScore$: BehaviorSubject<number>;
 	teamTwoScore$: BehaviorSubject<number>;
+	teamOneBans$: BehaviorSubject<number[]>;
+	teamTwoBans$: BehaviorSubject<number[]>;
+	teamOneProtects$: BehaviorSubject<number[]>;
+	teamTwoProtects$: BehaviorSubject<number[]>;
 	nextPick$: BehaviorSubject<string>;
 	matchPoint$: BehaviorSubject<string>;
 	tiebreaker$: BehaviorSubject<boolean>;
@@ -76,6 +80,10 @@ export class IrcService {
 
 		this.teamOneScore$ = new BehaviorSubject<number>(0);
 		this.teamTwoScore$ = new BehaviorSubject<number>(0);
+		this.teamOneBans$ = new BehaviorSubject<number[]>([]);
+		this.teamTwoBans$ = new BehaviorSubject<number[]>([]);
+		this.teamOneProtects$ = new BehaviorSubject<number[]>([]);
+		this.teamTwoProtects$ = new BehaviorSubject<number[]>([]);
 		this.nextPick$ = new BehaviorSubject<string>(null);
 		this.matchPoint$ = new BehaviorSubject<string>(null);
 		this.tiebreaker$ = new BehaviorSubject<boolean>(false);

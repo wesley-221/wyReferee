@@ -314,8 +314,12 @@ export class IrcComponent implements OnInit, OnDestroy {
 		if (this.selectedLobby != undefined) {
 			this.ircService.teamOneScore$.next(this.selectedLobby.getTeamOneScore());
 			this.ircService.teamTwoScore$.next(this.selectedLobby.getTeamTwoScore());
+			this.ircService.teamOneBans$.next(this.selectedLobby.teamOneBans);
+			this.ircService.teamTwoBans$.next(this.selectedLobby.teamTwoBans);
+			this.ircService.teamOneProtects$.next(this.selectedLobby.teamOneProtects);
+			this.ircService.teamTwoProtects$.next(this.selectedLobby.teamTwoProtects);
 			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
-			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
+			this.teamTwoHealth = this.selectedLobby.getTeamTwoHealth();
 			this.ircService.nextPick$.next(this.selectedLobby.getNextPick());
 			this.ircService.matchPoint$.next(this.selectedLobby.getMatchPoint());
 			this.ircService.tiebreaker$.next(this.selectedLobby.getTiebreaker());
@@ -665,8 +669,12 @@ export class IrcComponent implements OnInit, OnDestroy {
 		if (!this.selectedLobby.ircChannel.isPublicChannel && !this.selectedLobby.ircChannel.isPrivateChannel) {
 			this.ircService.teamOneScore$.next(multiplayerLobby.getTeamOneScore());
 			this.ircService.teamTwoScore$.next(multiplayerLobby.getTeamTwoScore());
+			this.ircService.teamOneBans$.next(this.selectedLobby.teamOneBans);
+			this.ircService.teamTwoBans$.next(this.selectedLobby.teamTwoBans);
+			this.ircService.teamOneProtects$.next(this.selectedLobby.teamOneProtects);
+			this.ircService.teamTwoProtects$.next(this.selectedLobby.teamTwoProtects);
 			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
-			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
+			this.teamTwoHealth = this.selectedLobby.getTeamTwoHealth();
 			this.ircService.nextPick$.next(multiplayerLobby.getNextPick());
 			this.ircService.matchPoint$.next(multiplayerLobby.getMatchPoint());
 			this.ircService.tiebreaker$.next(multiplayerLobby.getTiebreaker());
@@ -697,6 +705,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser);
 				}
 
+				this.refreshIrcHeader(this.selectedLobby);
 				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 			}
 		});
@@ -716,6 +725,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 			this.selectedLobby.teamTwoBans.splice(this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId), 1);
 		}
 
+		this.refreshIrcHeader(this.selectedLobby);
 		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 	}
 
@@ -746,6 +756,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 					this.webhookService.sendProtectResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser);
 				}
 
+				this.refreshIrcHeader(this.selectedLobby);
 				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 			}
 		});
@@ -764,6 +775,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 			this.selectedLobby.teamTwoProtects.splice(this.selectedLobby.teamTwoProtects.indexOf(beatmap.beatmapId), 1);
 		}
 
+		this.refreshIrcHeader(this.selectedLobby);
 		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 	}
 
