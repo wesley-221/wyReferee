@@ -44,6 +44,7 @@ export class Lobby {
 
 	firstPick: string;
 	firstBan: string;
+	firstProtect: string;
 	selectedStage: WyStage;
 	bestOf: number;
 	banCount: number;
@@ -151,6 +152,7 @@ export class Lobby {
 			ircChannel: lobby.ircChannel,
 			firstPick: lobby.firstPick,
 			firstBan: lobby.firstBan,
+			firstProtect: lobby.firstProtect,
 			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
 			bestOf: lobby.bestOf,
 			banCount: lobby.banCount,

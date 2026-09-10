@@ -473,10 +473,11 @@ export class IrcComponent implements OnInit, OnDestroy {
 				}
 			});
 
-			dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, bestOf: number }) => {
+			dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, firstProtect: string, bestOf: number }) => {
 				if (result != null) {
 					this.selectedLobby.firstPick = result.firstPick ?? null;
 					this.selectedLobby.firstBan = result.firstBan ?? null;
+					this.selectedLobby.firstProtect = result.firstProtect ?? null;
 					this.selectedLobby.bestOf = result.bestOf ?? null;
 
 					this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
@@ -975,10 +976,11 @@ export class IrcComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, bestOf: number }) => {
+		dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, firstProtect: string, bestOf: number }) => {
 			if (result != null) {
 				this.selectedLobby.firstPick = result.firstPick ?? null;
 				this.selectedLobby.firstBan = result.firstBan ?? null;
+				this.selectedLobby.firstProtect = result.firstProtect ?? null;
 				this.selectedLobby.bestOf = result.bestOf ?? null;
 
 				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);

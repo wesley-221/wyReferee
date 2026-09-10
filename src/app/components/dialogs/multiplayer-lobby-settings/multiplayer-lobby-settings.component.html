@@ -44,6 +44,20 @@
 
 		<hr />
 
+		<h3>First protect</h3>
+
+		<mat-form-field class="full-width">
+			<mat-label>First protect</mat-label>
+			<mat-select (selectionChange)="change('firstProtect', $event)" [value]="firstProtect">
+				<mat-option [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-option>
+				<mat-option [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<p>The team or player that protects first</p>
+
+		<hr />
+
 		<h3>Best of</h3>
 
 		<mat-form-field class="full-width">
