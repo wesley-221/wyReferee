@@ -52,48 +52,71 @@ export class IrcMatchHeaderComponent {
 					teamTwoProtects
 				};
 
-				const protectCount = (teamOneProtects?.length || 0) + (teamTwoProtects?.length || 0);
-				const banCount = (teamOneBans?.length || 0) + (teamTwoBans?.length || 0);
+				const teamOneProtectCount = teamOneProtects.length;
+				const teamTwoProtectCount = teamTwoProtects.length;
+
+				const teamOneBanCount = teamOneBans.length;
+				const teamTwoBanCount = teamTwoBans.length;
 
 				let currentAction = {
 					team: null,
-					action: null
+					action: null,
+					color: null
 				};
 
 				if (selectedLobby.tournament) {
-					const totalBans = selectedLobby.selectedStage.bans;
+					const firstProtect = selectedLobby.firstProtect;
+					const secondProtect = this.getOtherTeam(selectedLobby, firstProtect);
 
-					// TODO: change this once protects are implemented for stages
-					const totalProtects = 2; /* selectedLobby.selectedStage.protects; */
+					const firstBan = selectedLobby.firstBan;
+					const secondBan = this.getOtherTeam(selectedLobby, firstBan);
 
 					if (selectedLobby.tournament.protects == true) {
-						// TODO: same as above, implement protects/bans/picks once it has been implemented for stages
-						// if (protectCount < totalProtects) {
-						// 	// currentAction = {
-						// 	// 	team: protectCount === 0 ? selectedLobby.first
-						// 	// }
-						// }
-					}
-					else {
-						if (banCount < totalBans) {
+						if (teamOneProtectCount < selectedLobby.selectedStage.protects || teamTwoProtectCount < selectedLobby.selectedStage.protects) {
 							currentAction = {
-								team: banCount === 0 ? selectedLobby.firstBan : this.getOtherTeam(selectedLobby, selectedLobby.firstBan),
-								action: 'bans'
-							}
+								team: teamOneProtectCount === teamTwoProtectCount ? firstProtect : secondProtect,
+								action: 'protects',
+								color: teamOneProtectCount === teamTwoProtectCount ? 'blue' : 'red'
+							};
+						}
+						else if (teamOneBanCount < selectedLobby.selectedStage.bans || teamTwoBanCount < selectedLobby.selectedStage.bans) {
+							currentAction = {
+								team: teamOneBanCount === teamTwoBanCount ? firstBan : secondBan,
+								action: 'bans',
+								color: teamOneBanCount === teamTwoBanCount ? 'blue' : 'red'
+							};
 						}
 						else {
 							currentAction = {
 								team: nextPick,
-								action: 'picks'
-							}
+								action: 'picks',
+								color: nextPick === selectedLobby.teamOneName ? 'blue' : 'red'
+							};
+						}
+					}
+					else {
+						if (teamOneBanCount < selectedLobby.selectedStage.bans || teamTwoBanCount < selectedLobby.selectedStage.bans) {
+							currentAction = {
+								team: teamOneBanCount === teamTwoBanCount ? firstBan : secondBan,
+								action: 'bans',
+								color: teamOneBanCount === teamTwoBanCount ? 'blue' : 'red'
+							};
+						}
+						else {
+							currentAction = {
+								team: nextPick,
+								action: 'picks',
+								color: nextPick === selectedLobby.teamOneName ? 'blue' : 'red'
+							};
 						}
 					}
 				}
 				else {
 					currentAction = {
 						team: nextPick,
-						action: 'picks'
-					}
+						action: 'picks',
+						color: nextPick === selectedLobby.teamOneName ? 'blue' : 'red'
+					};
 				}
 
 				return {
