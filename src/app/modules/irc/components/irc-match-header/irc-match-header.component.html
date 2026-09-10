@@ -13,11 +13,12 @@
 		<div class="middle">
 			<ng-container *ngIf="selectedChannel != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
 				<div class="badge next-pick" [ngClass]="matchStatus.currentAction.color">
-					<mat-icon class="icon">{{ matchStatus.currentAction.team ? 'play_arrow' : 'priority_high' }}</mat-icon>
+					<mat-icon class="icon" *ngIf="matchStatus.currentAction.icon">{{ matchStatus.currentAction.icon }}</mat-icon>
+					<mat-icon class="icon" *ngIf="matchStatus.currentAction.svgIcon" [svgIcon]="matchStatus.currentAction.svgIcon"></mat-icon>
 
 					<div class="team-name">
 						<ng-container *ngIf="matchStatus.currentAction.team; else noAction">
-							{{ matchStatus.currentAction.team }} {{ matchStatus.currentAction.action }} next
+							{{ matchStatus.currentAction.team }} {{ matchStatus.currentAction.description }} next
 						</ng-container>
 
 						<ng-template #noAction>
