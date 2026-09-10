@@ -16,19 +16,21 @@
 
 		<hr />
 
-		<h3>First pick</h3>
+		<ng-container *ngIf="data.multiplayerLobby.tournament?.protects == true">
+			<h3>First protect</h3>
 
-		<mat-form-field class="full-width">
-			<mat-label>First pick</mat-label>
-			<mat-select (selectionChange)="change('firstPick', $event)" [value]="firstPick">
-				<mat-option [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-option>
-				<mat-option [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-option>
-			</mat-select>
-		</mat-form-field>
+			<mat-form-field class="full-width">
+				<mat-label>First protect</mat-label>
+				<mat-select (selectionChange)="change('firstProtect', $event)" [value]="firstProtect">
+					<mat-option [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-option>
+					<mat-option [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-option>
+				</mat-select>
+			</mat-form-field>
 
-		<p>The team or player that picks first</p>
+			<p>The team or player that protects first</p>
 
-		<hr />
+			<hr />
+		</ng-container>
 
 		<h3>First ban</h3>
 
@@ -44,17 +46,17 @@
 
 		<hr />
 
-		<h3>First protect</h3>
+		<h3>First pick</h3>
 
 		<mat-form-field class="full-width">
-			<mat-label>First protect</mat-label>
-			<mat-select (selectionChange)="change('firstProtect', $event)" [value]="firstProtect">
+			<mat-label>First pick</mat-label>
+			<mat-select (selectionChange)="change('firstPick', $event)" [value]="firstPick">
 				<mat-option [value]="data.multiplayerLobby.teamOneName">{{ data.multiplayerLobby.teamOneName }}</mat-option>
 				<mat-option [value]="data.multiplayerLobby.teamTwoName">{{ data.multiplayerLobby.teamTwoName }}</mat-option>
 			</mat-select>
 		</mat-form-field>
 
-		<p>The team or player that protects first</p>
+		<p>The team or player that picks first</p>
 
 		<hr />
 
