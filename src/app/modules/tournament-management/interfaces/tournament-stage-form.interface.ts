@@ -6,4 +6,5 @@ export interface TournamentStageForm {
 	hitpoints: number;
 	bestOf: number;
 	bans: number;
+	protects: number;
 }

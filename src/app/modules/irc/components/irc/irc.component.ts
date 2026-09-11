@@ -43,6 +43,7 @@ import { GenericService } from '../../../../services/generic.service';
 import { IrcLayoutService } from '../../../../services/irc-layout.service';
 import { IrcLayoutSection, IrcLayoutSectionViewType } from '../../../../models/irc-layout-section';
 import { MatchDialogDataContextService } from '../../../../services/match-dialog-data-context.service';
+import { IMatchActionData } from '../../../../interfaces/i-match-action-data';
 
 @Component({
 	selector: 'app-irc',
@@ -314,8 +315,12 @@ export class IrcComponent implements OnInit, OnDestroy {
 		if (this.selectedLobby != undefined) {
 			this.ircService.teamOneScore$.next(this.selectedLobby.getTeamOneScore());
 			this.ircService.teamTwoScore$.next(this.selectedLobby.getTeamTwoScore());
+			this.ircService.teamOneBans$.next(this.selectedLobby.teamOneBans);
+			this.ircService.teamTwoBans$.next(this.selectedLobby.teamTwoBans);
+			this.ircService.teamOneProtects$.next(this.selectedLobby.teamOneProtects);
+			this.ircService.teamTwoProtects$.next(this.selectedLobby.teamTwoProtects);
 			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
-			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
+			this.teamTwoHealth = this.selectedLobby.getTeamTwoHealth();
 			this.ircService.nextPick$.next(this.selectedLobby.getNextPick());
 			this.ircService.matchPoint$.next(this.selectedLobby.getMatchPoint());
 			this.ircService.tiebreaker$.next(this.selectedLobby.getTiebreaker());
@@ -469,10 +474,11 @@ export class IrcComponent implements OnInit, OnDestroy {
 				}
 			});
 
-			dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, bestOf: number }) => {
+			dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, firstProtect: string, bestOf: number }) => {
 				if (result != null) {
 					this.selectedLobby.firstPick = result.firstPick ?? null;
 					this.selectedLobby.firstBan = result.firstBan ?? null;
+					this.selectedLobby.firstProtect = result.firstProtect ?? null;
 					this.selectedLobby.bestOf = result.bestOf ?? null;
 
 					this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
@@ -665,8 +671,12 @@ export class IrcComponent implements OnInit, OnDestroy {
 		if (!this.selectedLobby.ircChannel.isPublicChannel && !this.selectedLobby.ircChannel.isPrivateChannel) {
 			this.ircService.teamOneScore$.next(multiplayerLobby.getTeamOneScore());
 			this.ircService.teamTwoScore$.next(multiplayerLobby.getTeamTwoScore());
+			this.ircService.teamOneBans$.next(this.selectedLobby.teamOneBans);
+			this.ircService.teamTwoBans$.next(this.selectedLobby.teamTwoBans);
+			this.ircService.teamOneProtects$.next(this.selectedLobby.teamOneProtects);
+			this.ircService.teamTwoProtects$.next(this.selectedLobby.teamTwoProtects);
 			this.teamOneHealth = this.selectedLobby.getTeamOneHealth();
-			this.teamTwoHealth = this.selectedLobby.getTeamOneHealth();
+			this.teamTwoHealth = this.selectedLobby.getTeamTwoHealth();
 			this.ircService.nextPick$.next(multiplayerLobby.getNextPick());
 			this.ircService.matchPoint$.next(multiplayerLobby.getMatchPoint());
 			this.ircService.tiebreaker$.next(multiplayerLobby.getTiebreaker());
@@ -677,29 +687,45 @@ export class IrcComponent implements OnInit, OnDestroy {
 	/**
 	 * Ban a beatmap
 	 */
-	banBeatmap(beatmap: WyModBracketMap, modBracket: WyModBracket, multiplayerLobby: Lobby) {
-		const dialogRef = this.dialog.open(BanBeatmapComponent, {
-			data: {
-				beatmap: beatmap,
-				modBracket: modBracket,
-				multiplayerLobby: multiplayerLobby
-			}
-		});
-
-		dialogRef.afterClosed().subscribe((result: IBanBeatmapDialogData) => {
-			if (result != null) {
-				if (result.banForTeam == result.multiplayerLobby.teamOneName) {
-					this.selectedLobby.teamOneBans.push(result.beatmap.beatmapId);
-					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser);
+	banBeatmap(beatmap: WyModBracketMap, modBracket: WyModBracket, multiplayerLobby: Lobby, team?: 'teamOne' | 'teamTwo') {
+		if (team == null || team == undefined) {
+			const dialogRef = this.dialog.open(BanBeatmapComponent, {
+				data: {
+					beatmap: beatmap,
+					modBracket: modBracket,
+					multiplayerLobby: multiplayerLobby
 				}
-				else {
-					this.selectedLobby.teamTwoBans.push(result.beatmap.beatmapId);
-					this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser);
-				}
+			});
 
-				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+			dialogRef.afterClosed().subscribe((result: IBanBeatmapDialogData) => {
+				if (result != null) {
+					if (result.banForTeam == result.multiplayerLobby.teamOneName) {
+						this.selectedLobby.teamOneBans.push(result.beatmap.beatmapId);
+						this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser);
+					}
+					else {
+						this.selectedLobby.teamTwoBans.push(result.beatmap.beatmapId);
+						this.webhookService.sendBanResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser);
+					}
+
+					this.refreshIrcHeader(this.selectedLobby);
+					this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+				}
+			});
+		}
+		else {
+			if (team == 'teamOne') {
+				this.selectedLobby.teamOneBans.push(beatmap.beatmapId);
+				this.webhookService.sendBanResult(multiplayerLobby, multiplayerLobby.teamOneName, beatmap, this.ircService.authenticatedUser);
 			}
-		});
+			else if (team == 'teamTwo') {
+				this.selectedLobby.teamTwoBans.push(beatmap.beatmapId);
+				this.webhookService.sendBanResult(multiplayerLobby, multiplayerLobby.teamTwoName, beatmap, this.ircService.authenticatedUser);
+			}
+
+			this.refreshIrcHeader(this.selectedLobby);
+			this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+		}
 	}
 
 	/**
@@ -716,6 +742,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 			this.selectedLobby.teamTwoBans.splice(this.selectedLobby.teamTwoBans.indexOf(beatmap.beatmapId), 1);
 		}
 
+		this.refreshIrcHeader(this.selectedLobby);
 		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 	}
 
@@ -726,29 +753,45 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 * @param modBracket the mod bracket the beatmap belongs to
 	 * @param multiplayerLobby the lobby the beatmap should be protected in
 	 */
-	protectBeatmap(beatmap: WyModBracketMap, modBracket: WyModBracket, multiplayerLobby: Lobby) {
-		const dialogRef = this.dialog.open(ProtectBeatmapDialogComponent, {
-			data: {
-				beatmap: beatmap,
-				modBracket: modBracket,
-				multiplayerLobby: multiplayerLobby
-			}
-		});
-
-		dialogRef.afterClosed().subscribe((result: IProtectBeatmapDialogData) => {
-			if (result != null) {
-				if (result.protectForTeam == result.multiplayerLobby.teamOneName) {
-					this.selectedLobby.teamOneProtects.push(result.beatmap.beatmapId);
-					this.webhookService.sendProtectResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser);
+	protectBeatmap(beatmap: WyModBracketMap, modBracket: WyModBracket, multiplayerLobby: Lobby, team?: 'teamOne' | 'teamTwo') {
+		if (team == null || team == undefined) {
+			const dialogRef = this.dialog.open(ProtectBeatmapDialogComponent, {
+				data: {
+					beatmap: beatmap,
+					modBracket: modBracket,
+					multiplayerLobby: multiplayerLobby
 				}
-				else {
-					this.selectedLobby.teamTwoProtects.push(result.beatmap.beatmapId);
-					this.webhookService.sendProtectResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser);
-				}
+			});
 
-				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+			dialogRef.afterClosed().subscribe((result: IProtectBeatmapDialogData) => {
+				if (result != null) {
+					if (result.protectForTeam == result.multiplayerLobby.teamOneName) {
+						this.selectedLobby.teamOneProtects.push(result.beatmap.beatmapId);
+						this.webhookService.sendProtectResult(result.multiplayerLobby, result.multiplayerLobby.teamOneName, result.beatmap, this.ircService.authenticatedUser);
+					}
+					else {
+						this.selectedLobby.teamTwoProtects.push(result.beatmap.beatmapId);
+						this.webhookService.sendProtectResult(result.multiplayerLobby, result.multiplayerLobby.teamTwoName, result.beatmap, this.ircService.authenticatedUser);
+					}
+
+					this.refreshIrcHeader(this.selectedLobby);
+					this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+				}
+			});
+		}
+		else {
+			if (team == 'teamOne') {
+				this.selectedLobby.teamOneProtects.push(beatmap.beatmapId);
+				this.webhookService.sendProtectResult(multiplayerLobby, multiplayerLobby.teamOneName, beatmap, this.ircService.authenticatedUser);
 			}
-		});
+			else if (team == 'teamTwo') {
+				this.selectedLobby.teamTwoProtects.push(beatmap.beatmapId);
+				this.webhookService.sendProtectResult(multiplayerLobby, multiplayerLobby.teamTwoName, beatmap, this.ircService.authenticatedUser);
+			}
+
+			this.refreshIrcHeader(this.selectedLobby);
+			this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
+		}
 	}
 
 	/**
@@ -764,6 +807,7 @@ export class IrcComponent implements OnInit, OnDestroy {
 			this.selectedLobby.teamTwoProtects.splice(this.selectedLobby.teamTwoProtects.indexOf(beatmap.beatmapId), 1);
 		}
 
+		this.refreshIrcHeader(this.selectedLobby);
 		this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
 	}
 
@@ -963,10 +1007,11 @@ export class IrcComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, bestOf: number }) => {
+		dialogRef.afterClosed().subscribe((result: { firstPick: string, firstBan: string, firstProtect: string, bestOf: number }) => {
 			if (result != null) {
 				this.selectedLobby.firstPick = result.firstPick ?? null;
 				this.selectedLobby.firstBan = result.firstBan ?? null;
+				this.selectedLobby.firstProtect = result.firstProtect ?? null;
 				this.selectedLobby.bestOf = result.bestOf ?? null;
 
 				this.multiplayerLobbies.updateMultiplayerLobby(this.selectedLobby);
@@ -980,14 +1025,23 @@ export class IrcComponent implements OnInit, OnDestroy {
 	 *
 	 * @param chatPiece a MessageBuilder from irc to pick the map
 	 */
-	pickBeatmapFromAcronym(chatPiece: MessageBuilder) {
+	selectFromAcronym(event: { chatPiece: MessageBuilder, currentAction: IMatchActionData }) {
+		const chatPiece = event.chatPiece;
+		const currentAction = event.currentAction;
+
+		let foundBeatmap: WyModBracketMap;
+		let foundModBracket: WyModBracket;
+
+		const team = currentAction.team == this.selectedLobby.teamOneName ? 'teamOne' : 'teamTwo';
+
 		if (this.selectedLobby.mappool.id == chatPiece.modAcronymMappoolId) {
 			for (const modBracket of this.selectedLobby.mappool.modBrackets) {
 				if (modBracket.id == chatPiece.modAcronymModBracketId) {
 					for (const map of modBracket.beatmaps) {
 						if (map.beatmapId == chatPiece.modAcronymBeatmapId) {
-							this.pickBeatmap(map, modBracket, chatPiece.modAcronymGameMode);
-							return;
+							foundBeatmap = map;
+							foundModBracket = modBracket;
+							break;
 						}
 					}
 				}
@@ -1000,8 +1054,9 @@ export class IrcComponent implements OnInit, OnDestroy {
 						if (modBracket.id == chatPiece.modAcronymModBracketId) {
 							for (const map of modBracket.beatmaps) {
 								if (map.beatmapId == chatPiece.modAcronymBeatmapId) {
-									this.pickBeatmap(map, modBracket, chatPiece.modAcronymGameMode);
-									return;
+									foundBeatmap = map;
+									foundModBracket = modBracket;
+									break;
 								}
 							}
 						}
@@ -1010,7 +1065,32 @@ export class IrcComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		this.toastService.addToast(`Unable to pick ${chatPiece.message}.`);
+		if (currentAction.action == 'protect') {
+			if (foundBeatmap && foundModBracket) {
+				this.protectBeatmap(foundBeatmap, foundModBracket, this.selectedLobby, team);
+				this.toastService.addToast(`Successfully protected ${chatPiece.message} for ${currentAction.team}.`);
+				return;
+			}
+
+			this.toastService.addToast(`Unable to protect ${chatPiece.message}.`);
+		}
+		else if (currentAction.action == 'ban') {
+			if (foundBeatmap && foundModBracket) {
+				this.banBeatmap(foundBeatmap, foundModBracket, this.selectedLobby, team);
+				this.toastService.addToast(`Successfully banned ${chatPiece.message} for ${currentAction.team}.`);
+				return;
+			}
+
+			this.toastService.addToast(`Unable to ban ${chatPiece.message}.`);
+		}
+		else if (currentAction.action == 'pick') {
+			if (foundBeatmap && foundModBracket) {
+				this.pickBeatmap(foundBeatmap, foundModBracket, chatPiece.modAcronymGameMode);
+				return;
+			}
+
+			this.toastService.addToast(`Unable to pick ${chatPiece.message}.`);
+		}
 	}
 
 	/**

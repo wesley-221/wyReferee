@@ -1,4 +1,4 @@
-<div class="match-information" *ngIf="selectedLobby">
+<div class="match-information" *ngIf="selectedLobby$ | async as selectedLobby">
 	<ng-container *ngIf="matchStatus$ | async as matchStatus">
 		<div class="team-one">
 			<div class="circles" matTooltip="Left click to increase the score, Right click to decrease the score, Middle mouse to reset to original" (mouseup)="adjustScore(1, $event)">
@@ -12,25 +12,22 @@
 
 		<div class="middle">
 			<ng-container *ngIf="selectedChannel != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">
-				<ng-container *ngIf="matchStatus.nextPick != null; else noNextPick">
-					<div class="badge next-pick">
-						<mat-icon class="icon">play_arrow</mat-icon>
+				<div class="badge next-pick" [ngClass]="matchStatus.currentAction.color">
+					<mat-icon class="icon" *ngIf="matchStatus.currentAction.icon">{{ matchStatus.currentAction.icon }}</mat-icon>
+					<mat-icon class="icon" *ngIf="matchStatus.currentAction.svgIcon" [svgIcon]="matchStatus.currentAction.svgIcon"></mat-icon>
 
-						<div class="team-name" [ngClass]="{'red': matchStatus.nextPick == selectedLobby.teamOneName, 'blue': matchStatus.nextPick == selectedLobby.teamTwoName }">
-							{{ matchStatus.nextPick }} picks next
-						</div>
+					<div class="team-name">
+						<ng-container *ngIf="matchStatus.currentAction.team; else noAction">
+							{{ matchStatus.currentAction.team }} {{ matchStatus.currentAction.description }} next
+						</ng-container>
+
+						<ng-template #noAction>
+							<div class="team-name">
+								Select a first pick
+							</div>
+						</ng-template>
 					</div>
-				</ng-container>
-
-				<ng-template #noNextPick>
-					<div class="badge next-pick">
-						<mat-icon class="icon">priority_high</mat-icon>
-
-						<div class="team-name">
-							Select a first pick
-						</div>
-					</div>
-				</ng-template>
+				</div>
 			</ng-container>
 
 			<div class="badge match-point" *ngIf="selectedChannel != null && matchStatus.matchPoint != null && matchStatus.hasWon == null && matchStatus.tiebreaker == false">

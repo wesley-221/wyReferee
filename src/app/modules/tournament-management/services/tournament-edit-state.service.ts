@@ -190,6 +190,7 @@ export class TournamentEditStateService {
 				name: stage.name,
 				bestOf: stage.bestOf,
 				bans: stage.bans,
+				protects: stage.protects,
 				hitpoints: stage.hitpoints
 			})
 		);

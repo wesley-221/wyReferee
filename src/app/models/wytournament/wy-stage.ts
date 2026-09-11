@@ -6,6 +6,7 @@ export class WyStage {
 	hitpoints: number;
 	bestOf: number;
 	bans: number;
+	protects: number;
 
 	constructor(init?: Partial<WyStage>) {
 		Object.assign(this, init);
@@ -18,7 +19,8 @@ export class WyStage {
 			name: stage.name,
 			hitpoints: stage.hitpoints,
 			bestOf: stage.bestOf,
-			bans: stage.bans
+			bans: stage.bans,
+			protects: stage.protects
 		});
 	}
 
@@ -27,7 +29,8 @@ export class WyStage {
 			wyBinStageId: stage.id,
 			name: stage.name,
 			bestOf: stage.bestOf,
-			bans: stage.bans
+			bans: stage.bans,
+			protects: stage.protects
 		});
 	}
 }

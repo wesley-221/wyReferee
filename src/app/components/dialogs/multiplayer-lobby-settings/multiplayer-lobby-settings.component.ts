@@ -11,6 +11,7 @@ import { IMultiplayerLobbySettingsDialogData } from 'app/interfaces/i-multiplaye
 export class MultiplayerLobbySettingsComponent implements OnInit {
 	firstPick: string;
 	firstBan: string;
+	firstProtect: string;
 	bestOf: number;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: IMultiplayerLobbySettingsDialogData) { }
@@ -18,6 +19,7 @@ export class MultiplayerLobbySettingsComponent implements OnInit {
 	ngOnInit(): void {
 		this.firstPick = this.data.multiplayerLobby.firstPick;
 		this.firstBan = this.data.multiplayerLobby.firstBan;
+		this.firstProtect = this.data.multiplayerLobby.firstProtect;
 		this.bestOf = this.data.multiplayerLobby.bestOf;
 	}
 
@@ -34,12 +36,15 @@ export class MultiplayerLobbySettingsComponent implements OnInit {
 		else if (element == 'firstBan') {
 			this.firstBan = event.value;
 		}
+		else if (element == 'firstProtect') {
+			this.firstProtect = event.value;
+		}
 		else if (element == 'bestOf') {
 			this.bestOf = event.value;
 		}
 	}
 
 	close() {
-		return { firstPick: this.firstPick, firstBan: this.firstBan, bestOf: this.bestOf };
+		return { firstPick: this.firstPick, firstBan: this.firstBan, firstProtect: this.firstProtect, bestOf: this.bestOf };
 	}
 }

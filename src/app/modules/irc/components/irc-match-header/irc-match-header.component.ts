@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Lobby } from '../../../../models/lobby';
 import { IrcChannel } from '../../../../models/irc/irc-channel';
 import { IrcService } from '../../../../services/irc.service';
-import { combineLatest, map } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { IMatchActionData } from '../../../../interfaces/i-match-action-data';
 
 @Component({
 	selector: 'app-irc-match-header',
@@ -10,29 +11,28 @@ import { combineLatest, map } from 'rxjs';
 	styleUrl: './irc-match-header.component.scss'
 })
 export class IrcMatchHeaderComponent {
-	@Input() selectedLobby: Lobby;
+	@Input()
+	set selectedLobby(value: Lobby) {
+		this.selectedLobby$.next(value);
+	}
 	@Input() selectedChannel: IrcChannel;
-
+	@Input() matchStatus$: Observable<{
+		currentAction: IMatchActionData;
+		nextPick: string;
+		matchPoint: string;
+		tiebreaker: boolean;
+		hasWon: string;
+		teamOneScore: number;
+		teamTwoScore: number;
+		teamOneBans: number[];
+		teamTwoBans: number[];
+		teamOneProtects: number[];
+		teamTwoProtects: number[];
+	}>;
 	@Output() adjustScoreEmitter = new EventEmitter<{ team: number, mouseClick: string }>();
 
-	matchStatus$ = combineLatest([
-		this.ircService.nextPick$,
-		this.ircService.matchPoint$,
-		this.ircService.tiebreaker$,
-		this.ircService.hasWon$,
-		this.ircService.teamOneScore$,
-		this.ircService.teamTwoScore$
-	])
-		.pipe(
-			map(([nextPick, matchPoint, tiebreaker, hasWon, teamOneScore, teamTwoScore]) => ({
-				nextPick,
-				matchPoint,
-				tiebreaker,
-				hasWon,
-				teamOneScore,
-				teamTwoScore
-			}))
-		);
+	selectedLobby$ = new BehaviorSubject<Lobby>(null);
+
 
 	constructor(
 		private ircService: IrcService

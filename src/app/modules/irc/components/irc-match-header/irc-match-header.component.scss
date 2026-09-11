@@ -138,6 +138,18 @@ $badge-color: #ff6b93;
 			.content {
 				flex-wrap: wrap;
 			}
+
+			&.blue {
+				color: $blue-team-chat-colour;
+				border-color: rgba($blue-team-chat-colour, 0.25);
+				background-color: rgba($blue-team-chat-colour, 0.1);
+			}
+
+			&.red {
+				color: $red-team-chat-colour;
+				border-color: rgba($red-team-chat-colour, 0.25);
+				background-color: rgba($red-team-chat-colour, 0.1);
+			}
 		}
 	}
 }

@@ -20,6 +20,7 @@ import { WyStage } from './wytournament/wy-stage';
 import { WyTeamPlayer } from './wytournament/wy-team-player';
 import { WyTournament } from './wytournament/wy-tournament';
 import { Observable, map } from 'rxjs';
+import { IMatchActionData } from '../interfaces/i-match-action-data';
 
 export class Lobby {
 	rawFileName: string;
@@ -44,6 +45,7 @@ export class Lobby {
 
 	firstPick: string;
 	firstBan: string;
+	firstProtect: string;
 	selectedStage: WyStage;
 	bestOf: number;
 	banCount: number;
@@ -151,6 +153,7 @@ export class Lobby {
 			ircChannel: lobby.ircChannel,
 			firstPick: lobby.firstPick,
 			firstBan: lobby.firstBan,
+			firstProtect: lobby.firstProtect,
 			selectedStage: lobby.selectedStage != null ? WyStage.makeTrueCopy(lobby.selectedStage) : null,
 			bestOf: lobby.bestOf,
 			banCount: lobby.banCount,
@@ -765,5 +768,108 @@ export class Lobby {
 	 */
 	getMatchPointScore(): number {
 		return this.getWinningConditionScore() - 1;
+	}
+
+	/**
+	 * Get the current match action based on the bans, protects, and next pick
+	 *
+	 * @param teamOneBans beatmap ids of the bans from team one
+	 * @param teamTwoBans beatmap ids of the bans from team two
+	 * @param teamOneProtects beatmap ids of the protects from team one
+	 * @param teamTwoProtects beatmap ids of the protects from team two
+	 * @param nextPick the team that picks next
+	 */
+	getMatchAction(teamOneBans: number[], teamTwoBans: number[], teamOneProtects: number[], teamTwoProtects: number[], nextPick: string): IMatchActionData {
+		const teamOneProtectCount = teamOneProtects.length;
+		const teamTwoProtectCount = teamTwoProtects.length;
+
+		const teamOneBanCount = teamOneBans.length;
+		const teamTwoBanCount = teamTwoBans.length;
+
+		let currentAction: IMatchActionData = {
+			team: null,
+			action: null,
+			description: null,
+			color: null
+		};
+
+		if (this.tournament) {
+			const firstProtect = this.firstProtect;
+			const secondProtect = this.getOtherTeam(firstProtect);
+
+			const firstBan = this.firstBan;
+			const secondBan = this.getOtherTeam(firstBan);
+
+			if (this.tournament.protects == true) {
+				if (teamOneProtectCount < this.selectedStage.protects || teamTwoProtectCount < this.selectedStage.protects) {
+					const team = teamOneProtectCount === teamTwoProtectCount ? firstProtect : secondProtect;
+
+					currentAction = {
+						team: team,
+						action: 'protect',
+						description: 'protects',
+						color: team == this.teamOneName ? 'red' : 'blue',
+						icon: 'shield'
+					};
+				}
+				else if (teamOneBanCount < this.selectedStage.bans || teamTwoBanCount < this.selectedStage.bans) {
+					const team = teamOneBanCount === teamTwoBanCount ? firstBan : secondBan;
+
+					currentAction = {
+						team: team,
+						action: 'ban',
+						description: 'bans',
+						color: team == this.teamOneName ? 'red' : 'blue',
+						svgIcon: 'hammer'
+					};
+				}
+				else {
+					currentAction = {
+						team: nextPick,
+						action: 'pick',
+						description: 'picks',
+						color: nextPick === this.teamOneName ? 'red' : 'blue',
+						icon: 'play_arrow'
+					};
+				}
+			}
+			else {
+				if (teamOneBanCount < this.selectedStage.bans || teamTwoBanCount < this.selectedStage.bans) {
+					const team = teamOneBanCount === teamTwoBanCount ? firstBan : secondBan;
+
+					currentAction = {
+						team: team,
+						action: 'ban',
+						description: 'bans',
+						color: team == this.teamOneName ? 'red' : 'blue',
+						svgIcon: 'hammer'
+					};
+				}
+				else {
+					currentAction = {
+						team: nextPick,
+						action: 'pick',
+						description: 'picks',
+						color: nextPick === this.teamOneName ? 'red' : 'blue',
+						icon: 'play_arrow'
+					};
+				}
+			}
+		}
+		else {
+			currentAction = {
+				team: nextPick,
+				action: 'pick',
+				description: 'picks',
+				color: nextPick === this.teamOneName ? 'red' : 'blue',
+				icon: 'play_arrow'
+			};
+		}
+
+		return currentAction;
+	}
+
+	private getOtherTeam(teamName: string) {
+		return this.teamOneName == teamName ? this.teamTwoName : this.teamOneName;
 	}
 }
