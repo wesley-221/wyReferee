@@ -48,6 +48,9 @@ export class MultiplayerLobbyPlayersService {
 			else if (changed.action == 'playerInSlot') {
 				multiplayerLobby.playerChanged(data);
 			}
+			else if (changed.action == 'allPlayersReady') {
+				multiplayerLobby.allPlayersReady();
+			}
 		});
 	}
 

@@ -368,6 +368,10 @@ export class IrcService {
 		channel.lobby.on('playerChangedTeam', (obj: { player: BanchoLobbyPlayer; team: string }) => {
 			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'playerChangedTeam', obj);
 		});
+
+		channel.lobby.on('allPlayersReady', () => {
+			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'allPlayersReady', null);
+		});
 	}
 
 	/**

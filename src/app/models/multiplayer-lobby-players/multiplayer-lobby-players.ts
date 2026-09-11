@@ -192,4 +192,17 @@ export class MultiplayerLobbyPlayers {
 
 		this.emitPlayers();
 	}
+
+	/**
+	 * Gets called when BanchoBot indicates that all players are ready
+	 */
+	allPlayersReady() {
+		for (let i = 0; i < this.players.length; i++) {
+			if (this.players[i].username != 'Open') {
+				this.players[i].status = 'Ready';
+			}
+		}
+
+		this.emitPlayers();
+	}
 }
