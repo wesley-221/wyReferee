@@ -1,5 +1,6 @@
 @import "variables";
 
+$background-opacity: 0.1;
 $acronym-opacity: 0.13;
 $nm-color: #c4c4c4;
 $hd-color: #ffc93d;
@@ -88,6 +89,31 @@ $unpick-text-color: #fff;
 		overflow-y: auto;
 
 		.mod-bracket {
+			&.nm {
+				background-color: rgba($nm-color, $background-opacity);
+			}
+
+			&.hd {
+				background-color: rgba($hd-color, $background-opacity);
+			}
+
+			&.hr {
+				background-color: rgba($hr-color, $background-opacity);
+			}
+
+			&.dt {
+				background-color: rgba($dt-color, $background-opacity);
+			}
+
+			&.fm,
+			&.mm {
+				background-color: rgba($fm-color, $background-opacity);
+			}
+
+			&.tb {
+				background-color: rgba($tb-color, $background-opacity);
+			}
+
 			.mod-bracket-header {
 				display: flex;
 
