@@ -336,6 +336,7 @@ export class IrcService {
 
 		channel.lobby.on('matchFinished', () => {
 			this.multiplayerLobbiesService.synchronizeMultiplayerMatch(lobby, true, true);
+			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'matchFinished', null);
 		});
 
 		channel.lobby.on('size', (size: number) => {
@@ -367,6 +368,10 @@ export class IrcService {
 
 		channel.lobby.on('playerChangedTeam', (obj: { player: BanchoLobbyPlayer; team: string }) => {
 			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'playerChangedTeam', obj);
+		});
+
+		channel.lobby.on('allPlayersReady', () => {
+			this.multiplayerLobbyPlayersService.lobbyChange(lobby.lobbyId, 'allPlayersReady', null);
 		});
 	}
 

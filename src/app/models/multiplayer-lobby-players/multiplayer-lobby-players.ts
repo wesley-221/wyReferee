@@ -192,4 +192,28 @@ export class MultiplayerLobbyPlayers {
 
 		this.emitPlayers();
 	}
+
+	/**
+	 * Gets called when BanchoBot indicates that all players are ready
+	 */
+	allPlayersReady() {
+		for (let i = 0; i < this.players.length; i++) {
+			if (this.players[i].username != 'Open') {
+				this.players[i].status = 'Ready';
+			}
+		}
+
+		this.emitPlayers();
+	}
+
+	/**
+	 * Gets called when the match has finished. Resets all players' status to 'Not ready'.
+	 */
+	matchHasFinished() {
+		for (let i = 0; i < this.players.length; i++) {
+			this.players[i].status = 'Not ready';
+		}
+
+		this.emitPlayers();
+	}
 }
