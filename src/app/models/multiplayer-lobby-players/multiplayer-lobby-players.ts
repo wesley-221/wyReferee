@@ -205,4 +205,15 @@ export class MultiplayerLobbyPlayers {
 
 		this.emitPlayers();
 	}
+
+	/**
+	 * Gets called when the match has finished. Resets all players' status to 'Not ready'.
+	 */
+	matchHasFinished() {
+		for (let i = 0; i < this.players.length; i++) {
+			this.players[i].status = 'Not ready';
+		}
+
+		this.emitPlayers();
+	}
 }
