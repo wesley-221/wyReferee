@@ -4,7 +4,6 @@ import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 @Pipe({
 	name: 'searchmodbracket'
 })
-
 export class SearchModBracketPipe implements PipeTransform {
 	transform(allModbrackets: WyModBracket[], beatmapName: string): any {
 		if (beatmapName == '' || beatmapName == undefined) {
@@ -16,7 +15,12 @@ export class SearchModBracketPipe implements PipeTransform {
 		for (const bracket in allModbrackets) {
 			const currentBracket = WyModBracket.makeTrueCopy(allModbrackets[bracket]);
 
-			currentBracket.beatmaps = currentBracket.beatmaps.filter(beatmap => beatmap.beatmapName.toLowerCase().includes(beatmapName.toLowerCase()));
+			currentBracket.beatmaps = currentBracket.beatmaps.filter(beatmap => {
+				const beatmapAcronym = currentBracket.acronym + (beatmap.index + 1);
+
+				return beatmap.beatmapName.toLowerCase().includes(beatmapName.toLowerCase()) ||
+					beatmapAcronym.toLowerCase().includes(beatmapName.toLowerCase());
+			});
 
 			if (currentBracket.beatmaps.length > 0) {
 				returnModBrackets.push(currentBracket);
