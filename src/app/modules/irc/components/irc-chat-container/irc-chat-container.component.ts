@@ -66,13 +66,22 @@ export class IrcChatContainerComponent implements OnInit {
 					teamTwoProtects
 				};
 
-				const currentAction = selectedLobby.getMatchAction(
-					teamOneBans,
-					teamTwoBans,
-					teamOneProtects,
-					teamTwoProtects,
-					nextPick
-				);
+				let currentAction = {
+					team: null,
+					action: null,
+					description: null,
+					color: null
+				};
+
+				if (selectedLobby) {
+					currentAction = selectedLobby.getMatchAction(
+						teamOneBans,
+						teamTwoBans,
+						teamOneProtects,
+						teamTwoProtects,
+						nextPick
+					);
+				}
 
 				return {
 					...matchStatus,

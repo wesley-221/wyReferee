@@ -1,4 +1,6 @@
-<div class="message-container" *ngIf="selectedLobby$ | async as selectedLobby">
+@let selectedLobby = selectedLobby$ | async;
+
+<div class="message-container">
 	<ng-container *ngIf="matchStatus$ | async as matchStatus">
 		<div class="irc-match-header" *ngIf="selectedChannel?.name.startsWith('#mp_') && selectedLobby?.isQualifierLobby != true">
 			<app-irc-match-header
