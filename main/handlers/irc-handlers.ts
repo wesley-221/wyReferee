@@ -7,9 +7,10 @@ import * as path from "path";
 
 const streams: Record<string, fs.WriteStream> = {};
 const channelsDir = path.join(app.getPath('userData'), 'data', 'irc');
+const archiveDir = path.join(channelsDir, 'archive');
 
-if (!fs.existsSync(channelsDir)) {
-	fs.mkdirSync(channelsDir, { recursive: true });
+if (!fs.existsSync(archiveDir)) {
+	fs.mkdirSync(archiveDir, { recursive: true });
 }
 
 /**
@@ -240,16 +241,38 @@ export function registerIrcHandlers(allWindows: WindowManager[]) {
 	 * Deletes both the channel data file and the messages file
 	 * Closes and deletes the message stream if it exists
 	 */
-	ipcMain.handle(IPC_CHANNELS.DELETE_IRC_CHANNEL, async (event, channelName) => {
+	ipcMain.handle(IPC_CHANNELS.DELETE_IRC_CHANNEL, async (event, channelName, archive) => {
 		const filePath = getChannelFileName(channelName);
 		const messagesFilePath = getChannelMessagesFileName(channelName);
 
 		if (fs.existsSync(filePath)) {
-			fs.unlinkSync(filePath);
+			if (archive) {
+				const archiveFilePath = path.join(archiveDir, path.basename(filePath));
+				fs.mkdirSync(path.dirname(archiveFilePath), { recursive: true });
+				fs.renameSync(filePath, archiveFilePath);
+			}
+			else {
+				fs.unlinkSync(filePath);
+			}
 		}
 
 		if (fs.existsSync(messagesFilePath)) {
-			fs.unlinkSync(messagesFilePath);
+			if (archive) {
+				const archiveMessagesFilePath = path.join(archiveDir, path.basename(messagesFilePath));
+
+				fs.mkdirSync(path.dirname(archiveMessagesFilePath), { recursive: true });
+
+				if (fs.existsSync(archiveMessagesFilePath)) {
+					fs.appendFileSync(archiveMessagesFilePath, fs.readFileSync(messagesFilePath));
+					fs.unlinkSync(messagesFilePath);
+				}
+				else {
+					fs.renameSync(messagesFilePath, archiveMessagesFilePath);
+				}
+			}
+			else {
+				fs.unlinkSync(messagesFilePath);
+			}
 		}
 
 		// Close and delete message stream if it exists

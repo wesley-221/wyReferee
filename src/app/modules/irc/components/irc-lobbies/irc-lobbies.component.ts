@@ -99,8 +99,7 @@ export class IrcLobbiesComponent {
 
 					// User chose not to archive the channel
 					if (result.result == false) {
-						// TODO: uncomment this
-						// this.ircService.partChannel(channelName);
+						this.ircService.partChannel(channelName);
 
 						if (result.rememberChoice == true) {
 							this.settingsStore.set('archiveAfterPartingIrc', false);
@@ -109,8 +108,7 @@ export class IrcLobbiesComponent {
 					}
 					// User chose to archive the channel
 					else {
-						// TODO: uncomment this, implement the `true` in partChannel (archive channel)
-						// this.ircService.partChannel(channelName, true);
+						this.ircService.partChannel(channelName, true);
 
 						if (result.rememberChoice == true) {
 							this.settingsStore.set('archiveAfterPartingIrc', true);
@@ -121,13 +119,13 @@ export class IrcLobbiesComponent {
 			});
 		}
 		else {
+			// User chose not to archive the channel
 			if (archiveAfterPartingIrc == false) {
-				// TODO: uncomment this
-				// this.ircService.partChannel(channelName);
+				this.ircService.partChannel(channelName);
 			}
+			// User chose to archive the channel
 			else {
-				// TODO: uncomment this, implement the `true` in partChannel (archive channel)
-				// this.ircService.partChannel(channelName, true);
+				this.ircService.partChannel(channelName, true);
 			}
 		}
 	}
