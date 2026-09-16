@@ -3,9 +3,9 @@ import { IrcService } from '../../../../services/irc.service';
 import { IrcChannel } from '../../../../models/irc/irc-channel';
 import { ToastService } from '../../../../services/toast.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SettingsStoreService } from '../../../../services/storage/settings-store.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ArchiveIrcChannelDialogComponent } from '../../../../components/dialogs/archive-irc-channel-dialog/archive-irc-channel-dialog.component';
+import { GenericService } from '../../../../services/generic.service';
 
 @Component({
 	selector: 'app-irc-lobbies',
@@ -20,8 +20,8 @@ export class IrcLobbiesComponent {
 	constructor(
 		public ircService: IrcService,
 		private toastService: ToastService,
-		private settingsStore: SettingsStoreService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private genericService: GenericService
 	) { }
 
 	changeChannelClick(channelName: string) {
@@ -81,10 +81,10 @@ export class IrcLobbiesComponent {
 	 * @param channelName the channel to part
 	 */
 	partChannel(channelName: string) {
-		const archiveAfterPartingIrc = this.settingsStore.get('archiveAfterPartingIrc');
-		const remindAboutArchivingIrc = this.settingsStore.get('remindAboutArchivingIrc');
+		const archiveAfterPartingIrc = this.genericService.getArchiveIrcChannelsStatus().value;
+		const rememberArchivingPreference = this.genericService.getRememberArchivePreferenceStatus().value;
 
-		if (remindAboutArchivingIrc == true) {
+		if (rememberArchivingPreference == false) {
 			const ircChannel = this.ircService.getChannelByName(channelName);
 
 			const dialogRef = this.dialog.open(ArchiveIrcChannelDialogComponent, {
@@ -102,8 +102,8 @@ export class IrcLobbiesComponent {
 						this.ircService.partChannel(channelName);
 
 						if (result.rememberChoice == true) {
-							this.settingsStore.set('archiveAfterPartingIrc', false);
-							this.settingsStore.set('remindAboutArchivingIrc', false);
+							this.genericService.setArchiveIrcChannels(false);
+							this.genericService.setRememberArchivePreference(false);
 						}
 					}
 					// User chose to archive the channel
@@ -111,8 +111,8 @@ export class IrcLobbiesComponent {
 						this.ircService.partChannel(channelName, true);
 
 						if (result.rememberChoice == true) {
-							this.settingsStore.set('archiveAfterPartingIrc', true);
-							this.settingsStore.set('remindAboutArchivingIrc', false);
+							this.genericService.setArchiveIrcChannels(true);
+							this.genericService.setRememberArchivePreference(false);
 						}
 					}
 				}
