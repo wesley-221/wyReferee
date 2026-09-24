@@ -17,6 +17,10 @@
 			padding: 4px;
 
 			user-select: none;
+			background-color: $irc-input-background-color;
+
+			border-radius: 5px;
+			border: 1px solid $irc-input-border-color;
 
 			.slash-command-name {
 				padding: 4px 8px;
@@ -38,7 +42,8 @@
 
 			&:hover,
 			&.active {
-				background-color: color-mix(in srgb, $primary 13%, transparent);
+				background-color: $irc-input-background-color-active;
+				border-color: $irc-input-border-color-active;
 				cursor: pointer;
 			}
 		}
