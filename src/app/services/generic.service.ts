@@ -12,6 +12,8 @@ export class GenericService {
 	private chatContainerSwitched$: BehaviorSubject<boolean>;
 	private banchoChatContainerHeight$: BehaviorSubject<number>;
 	private showAllShortcuts$: BehaviorSubject<boolean>;
+	private archiveIrcChannels$: BehaviorSubject<boolean>;
+	private rememberArchivePreference$: BehaviorSubject<boolean>;
 
 	constructor(private settingsStore: SettingsStoreService) {
 		settingsStore.watchSettings().subscribe(settings => {
@@ -22,6 +24,8 @@ export class GenericService {
 				this.chatContainerSwitched$.next(settings.chatContainerSwitched);
 				this.banchoChatContainerHeight$.next(settings.banchoChatContainerHeight);
 				this.showAllShortcuts$.next(settings.showAllShortcuts);
+				this.archiveIrcChannels$.next(settings.archiveIrcChannels);
+				this.rememberArchivePreference$.next(settings.rememberArchivePreference);
 			}
 		});
 
@@ -31,6 +35,8 @@ export class GenericService {
 		this.chatContainerSwitched$ = new BehaviorSubject(false);
 		this.banchoChatContainerHeight$ = new BehaviorSubject(30);
 		this.showAllShortcuts$ = new BehaviorSubject(false);
+		this.archiveIrcChannels$ = new BehaviorSubject(false);
+		this.rememberArchivePreference$ = new BehaviorSubject(false);
 	}
 
 	/**
@@ -120,6 +126,38 @@ export class GenericService {
 
 	/**
 	 * Set the width of the IRC sidebars
+	 *
+	 * @param side which sidebar to set the width of, either 'left' or 'right'
+	 */
+	setArchiveIrcChannels(active: boolean): void {
+		this.archiveIrcChannels$.next(active);
+		this.settingsStore.set('archiveIrcChannels', active);
+	}
+
+	/**
+	 * Get the status of archiving IRC channels
+	 */
+	getArchiveIrcChannelsStatus(): BehaviorSubject<boolean> {
+		return this.archiveIrcChannels$;
+	}
+
+	/**
+	 * Set the status of remembering archive preference
+	 */
+	setRememberArchivePreference(active: boolean): void {
+		this.rememberArchivePreference$.next(active);
+		this.settingsStore.set('rememberArchivePreference', active);
+	}
+
+	/**
+	 * Get the status of remembering archive preference
+	 */
+	getRememberArchivePreferenceStatus(): BehaviorSubject<boolean> {
+		return this.rememberArchivePreference$;
+	}
+
+	/**
+	 * Set the width of the IRC sidebar
 	 *
 	 * @param side which sidebar to set the width of, either 'left' or 'right'
 	 * @param width the width of the sidebar in pixels

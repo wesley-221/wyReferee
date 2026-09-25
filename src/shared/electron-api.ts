@@ -67,7 +67,7 @@ interface ElectronApiAutoUpdater {
 
 interface ElectronApiIrc {
 	createIrcChannel(channelName: string, ircChannel: IrcChannel): Promise<void>;
-	deleteIrcChannel(channelName: string): Promise<void>;
+	deleteIrcChannel(channelName: string, archive?: boolean): Promise<void>;
 	getAllIrcChannels(): Promise<any>;
 	getIrcChannel(channelName: string): Promise<any>;
 	setIrcChannelLabel(channelName: string, label: string): Promise<void>;

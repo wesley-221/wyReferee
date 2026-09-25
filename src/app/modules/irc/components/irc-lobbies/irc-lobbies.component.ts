@@ -3,6 +3,9 @@ import { IrcService } from '../../../../services/irc.service';
 import { IrcChannel } from '../../../../models/irc/irc-channel';
 import { ToastService } from '../../../../services/toast.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { ArchiveIrcChannelDialogComponent } from '../../../../components/dialogs/archive-irc-channel-dialog/archive-irc-channel-dialog.component';
+import { GenericService } from '../../../../services/generic.service';
 
 @Component({
 	selector: 'app-irc-lobbies',
@@ -16,7 +19,9 @@ export class IrcLobbiesComponent {
 
 	constructor(
 		public ircService: IrcService,
-		private toastService: ToastService
+		private toastService: ToastService,
+		private dialog: MatDialog,
+		private genericService: GenericService
 	) { }
 
 	changeChannelClick(channelName: string) {
@@ -76,7 +81,53 @@ export class IrcLobbiesComponent {
 	 * @param channelName the channel to part
 	 */
 	partChannel(channelName: string) {
-		this.ircService.partChannel(channelName);
+		const archiveAfterPartingIrc = this.genericService.getArchiveIrcChannelsStatus().value;
+		const rememberArchivingPreference = this.genericService.getRememberArchivePreferenceStatus().value;
+
+		if (rememberArchivingPreference == false) {
+			const ircChannel = this.ircService.getChannelByName(channelName);
+
+			const dialogRef = this.dialog.open(ArchiveIrcChannelDialogComponent, {
+				data: ircChannel
+			});
+
+			dialogRef.afterClosed().subscribe(result => {
+				if (result != null) {
+					if (result.result == null) {
+						return;
+					}
+
+					// User chose not to archive the channel
+					if (result.result == false) {
+						this.ircService.partChannel(channelName);
+
+						if (result.rememberChoice == true) {
+							this.genericService.setArchiveIrcChannels(false);
+							this.genericService.setRememberArchivePreference(false);
+						}
+					}
+					// User chose to archive the channel
+					else {
+						this.ircService.partChannel(channelName, true);
+
+						if (result.rememberChoice == true) {
+							this.genericService.setArchiveIrcChannels(true);
+							this.genericService.setRememberArchivePreference(false);
+						}
+					}
+				}
+			});
+		}
+		else {
+			// User chose not to archive the channel
+			if (archiveAfterPartingIrc == false) {
+				this.ircService.partChannel(channelName);
+			}
+			// User chose to archive the channel
+			else {
+				this.ircService.partChannel(channelName, true);
+			}
+		}
 	}
 
 	/**
