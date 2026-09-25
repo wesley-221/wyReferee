@@ -83,6 +83,17 @@ export class LobbyFormComponent implements OnInit {
 		this.validationForm.get('selected-tournament').valueChanges.subscribe(() => {
 			this.changeTournament();
 		});
+
+		this.validationForm.get('is-qualifier-lobby').valueChanges.subscribe((isQualifierLobby: boolean) => {
+			if (isQualifierLobby == true) {
+				this.validationForm.get('team-one-name').setValue('Team 1');
+				this.validationForm.get('team-two-name').setValue('Team 2');
+			}
+			else {
+				this.validationForm.get('team-one-name').setValue('');
+				this.validationForm.get('team-two-name').setValue('');
+			}
+		});
 	}
 
 	getValidation(key: string): any {
