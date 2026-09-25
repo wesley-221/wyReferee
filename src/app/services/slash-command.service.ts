@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { IrcChannel } from 'app/models/irc/irc-channel';
 import { Lobby } from 'app/models/lobby';
 import { SlashCommand } from 'app/models/slash-command';
-import { ElectronService } from './electron.service';
 import { ToastService } from './toast.service';
 import { ToastType } from 'app/models/toast';
 
@@ -12,7 +11,7 @@ import { ToastType } from 'app/models/toast';
 export class SlashCommandService {
 	slashCommands: Map<string, SlashCommand>;
 
-	constructor(private electronService: ElectronService, private toastService: ToastService) {
+	constructor(private toastService: ToastService) {
 		this.slashCommands = new Map();
 	}
 
@@ -76,6 +75,10 @@ export class SlashCommandService {
 			title: `Save the log of ${ircChannel.name}`,
 			defaultPath: `${ircChannel.name}.txt`
 		}).then(file => {
+			if (file.canceled == true) {
+				return;
+			}
+
 			window.electronApi.fs.saveLog(file.filePath, allMessages.join('\n')).then(() => {
 				this.toastService.addToast(`Successfully saved the log file to "${file.filePath}".`);
 			}).catch((err: Error) => {
@@ -100,6 +103,10 @@ export class SlashCommandService {
 			title: `Save the debug file`,
 			defaultPath: `debug_${multiplayerLobby.getLobbyNameSlug()}.json`
 		}).then(file => {
+			if (file.canceled == true) {
+				return;
+			}
+
 			window.electronApi.fs.writeFile(file.filePath, data).then(() => {
 				this.toastService.addToast(`Successfully saved the debug file to "${file.filePath}".`);
 			}).catch((err: Error) => {
