@@ -21,6 +21,8 @@ import { WyTeamPlayer } from './wytournament/wy-team-player';
 import { WyTournament } from './wytournament/wy-tournament';
 import { Observable, map } from 'rxjs';
 import { IMatchActionData } from '../interfaces/i-match-action-data';
+import { MatchFlowEngine } from './match-flow/match-flow-engine';
+import { FlowAction, MatchFlow, MatchTeam } from './match-flow/match-flow';
 
 export class Lobby {
 	rawFileName: string;
@@ -772,6 +774,7 @@ export class Lobby {
 
 	/**
 	 * Get the current match action based on the bans, protects, and next pick
+	 * If no match flow has been added, the normal ban/pick order is followed
 	 *
 	 * @param teamOneBans beatmap ids of the bans from team one
 	 * @param teamTwoBans beatmap ids of the bans from team two
@@ -793,7 +796,12 @@ export class Lobby {
 			color: null
 		};
 
-		if (this.tournament) {
+		const matchFlow = this.getMatchFlow();
+
+		if (this.tournament && matchFlow) {
+			currentAction = this.getMatchActionFromFlow(matchFlow, teamOneBans, teamTwoBans, teamOneProtects, teamTwoProtects, nextPick);
+		}
+		else if (this.tournament) {
 			const firstProtect = this.firstProtect;
 			const secondProtect = this.getOtherTeam(firstProtect);
 
@@ -869,6 +877,66 @@ export class Lobby {
 		return currentAction;
 	}
 
+	/**
+	 * Get the match flow of the selected stage
+	 */
+	getMatchFlow(): MatchFlow | null {
+		const key = this.selectedStage?.matchFlowKey;
+
+		if (!key || !this.tournament?.matchFlows) {
+			return null;
+		}
+
+		return this.tournament.matchFlows.find(flow => flow.key === key) ?? null;
+	}
+
+	/**
+	 * Get the current match action by following the given match flow
+	 *
+	 * @param flow the match flow of the selected stage
+	 * @param teamOneBans beatmap ids of the bans from team one
+	 * @param teamTwoBans beatmap ids of the bans from team two
+	 * @param teamOneProtects beatmap ids of the protects from team one
+	 * @param teamTwoProtects beatmap ids of the protects from team two
+	 * @param nextPick the team that picks next
+	 */
+	private getMatchActionFromFlow(flow: MatchFlow, teamOneBans: number[], teamTwoBans: number[], teamOneProtects: number[], teamTwoProtects: number[], nextPick: string): IMatchActionData {
+		const toTeam = (name: string): MatchTeam => name === this.teamTwoName ? 'team2' : 'team1';
+		const toName = (team: MatchTeam) => team === 'team1' ? this.teamOneName : this.teamTwoName;
+
+		const turn = MatchFlowEngine.getCurrentTurnFromProgress(flow, {
+			firstTeams: { protect: toTeam(this.firstProtect), ban: toTeam(this.firstBan), pick: toTeam(this.firstPick) },
+			stage: { bans: this.selectedStage.bans, protects: this.selectedStage.protects },
+			score: { team1: this.getTeamOneScore(), team2: this.getTeamTwoScore() },
+			done: {
+				protect: { team1: teamOneProtects.length, team2: teamTwoProtects.length },
+				ban: { team1: teamOneBans.length, team2: teamTwoBans.length }
+			},
+			nextPickTeam: toTeam(nextPick)
+		});
+
+		const descriptions: Record<FlowAction, Pick<IMatchActionData, 'description' | 'icon' | 'svgIcon'>> = {
+			protect: { description: 'protects', icon: 'shield' },
+			ban: { description: 'bans', svgIcon: 'hammer' },
+			pick: { description: 'picks', icon: 'play_arrow' }
+		};
+
+		const team = turn ? toName(turn.team) : nextPick;
+		const action: FlowAction = turn ? turn.action : 'pick';
+
+		return {
+			team,
+			action,
+			color: team === this.teamOneName ? 'red' : 'blue',
+			...descriptions[action]
+		};
+	}
+
+	/**
+	 * Get the name of the team that is not the given team
+	 *
+	 * @param teamName the name of the team to get the other team of
+	 */
 	private getOtherTeam(teamName: string) {
 		return this.teamOneName == teamName ? this.teamTwoName : this.teamOneName;
 	}
