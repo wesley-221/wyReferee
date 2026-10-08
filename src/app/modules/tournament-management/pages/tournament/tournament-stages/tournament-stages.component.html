@@ -96,6 +96,17 @@
 							</mat-form-field>
 						</div>
 
+						<div class="match-flow">
+							<mat-form-field class="full-width">
+								<mat-label>Match flow</mat-label>
+
+								<mat-select formControlName="matchFlowKey">
+									<mat-option [value]="null">None</mat-option>
+									<mat-option *ngFor="let flow of tournament.matchFlows" [value]="flow.key">{{ flow.name }}</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+
 						<div class="actions">
 							<button mat-mini-fab color="warn" (click)="removeStage(i)">
 								<mat-icon>delete</mat-icon>

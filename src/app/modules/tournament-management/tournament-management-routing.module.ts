@@ -15,6 +15,7 @@ import { TournamentStagesComponent } from './pages/tournament/tournament-stages/
 import { TournamentParticipantsComponent } from './pages/tournament/tournament-participants/tournament-participants.component';
 import { MappoolOverviewComponent } from './pages/tournament/tournament-mappool/mappool-overview/mappool-overview.component';
 import { TournamentTriggerMessageComponent } from './pages/tournament/tournament-trigger-message/tournament-trigger-message.component';
+import { TournamentMatchFlowComponent } from './pages/tournament/tournament-match-flow/tournament-match-flow.component';
 
 const routes: Routes = [
 	{
@@ -32,6 +33,7 @@ const routes: Routes = [
 					{ path: 'access', component: TournamentAccessComponent },
 					{ path: 'webhooks', component: TournamentWebhookComponent },
 					{ path: 'trigger-messages', component: TournamentTriggerMessageComponent },
+					{ path: 'match-flow', component: TournamentMatchFlowComponent },
 					{ path: 'stages', component: TournamentStagesComponent },
 					{ path: 'participants', component: TournamentParticipantsComponent },
 					{ path: 'mappools', component: MappoolOverviewComponent }
@@ -45,6 +47,7 @@ const routes: Routes = [
 					{ path: 'access', component: TournamentAccessComponent },
 					{ path: 'webhooks', component: TournamentWebhookComponent },
 					{ path: 'trigger-messages', component: TournamentTriggerMessageComponent },
+					{ path: 'match-flow', component: TournamentMatchFlowComponent },
 					{ path: 'stages', component: TournamentStagesComponent },
 					{ path: 'participants', component: TournamentParticipantsComponent },
 					{ path: 'mappools', component: MappoolOverviewComponent }

@@ -1,0 +1,154 @@
+@import "variables";
+
+$protect-icon-color: #45b878;
+$ban-icon-color: #d95f5f;
+$pick-icon-color: #a96fc4;
+
+.flow-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 16px;
+}
+
+.flow-header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	.name {
+		flex: 1;
+	}
+
+	.description {
+		flex: 2;
+	}
+}
+
+.used-by {
+	margin-bottom: 8px;
+	opacity: 0.7;
+}
+
+.phases {
+	margin-bottom: 8px;
+
+	.phase {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+
+		background-color: $background-color;
+		padding: 8px;
+		margin-bottom: 8px;
+		border: 1px solid darken(#3c4452, 15%);
+
+		.information {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			min-width: 320px;
+
+			.label {
+				text-transform: capitalize;
+				font-weight: bold;
+			}
+
+			.description {
+				opacity: 0.7;
+			}
+
+			.icon {
+				display: flex;
+
+				&.protect {
+					color: $protect-icon-color;
+				}
+
+				&.ban {
+					color: $ban-icon-color;
+				}
+
+				&.pick {
+					color: $pick-icon-color;
+				}
+			}
+		}
+
+		.fields {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.actions {
+			display: flex;
+			gap: 8px;
+		}
+	}
+}
+
+.triggers {
+	margin-bottom: 8px;
+
+	.trigger {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px;
+
+		background-color: $background-color;
+		padding: 8px;
+		margin-bottom: 8px;
+		border: 1px solid darken(#3c4452, 15%);
+
+		.small {
+			width: 130px;
+		}
+
+		.tiny {
+			width: 70px;
+		}
+	}
+}
+
+.preview-options {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 8px;
+
+	.sample {
+		opacity: 0.7;
+	}
+}
+
+.preview {
+	list-style: none;
+	padding: 0;
+
+	li {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 2px 0;
+
+		.icon {
+			display: flex;
+
+			&.protect {
+				color: $protect-icon-color;
+			}
+
+			&.ban {
+				color: $ban-icon-color;
+			}
+
+			&.pick {
+				color: $pick-icon-color;
+			}
+		}
+	}
+}

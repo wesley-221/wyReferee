@@ -7,4 +7,5 @@ export interface TournamentStageForm {
 	bestOf: number;
 	bans: number;
 	protects: number;
+	matchFlowKey: string | null;
 }

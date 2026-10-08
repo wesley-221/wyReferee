@@ -91,6 +91,7 @@ export class ManagementSidebarService {
 
 			{ type: 'header', header: 'structure' },
 
+			{ icon: 'air', header: 'match flow', link: `${this.baseLink}/match-flow`, validationBadgeCount: pageState.matchFlow.errorCount },
 			{ icon: 'timeline', header: 'stages', link: `${this.baseLink}/stages`, validationBadgeCount: pageState.stages.errorCount },
 			{ icon: 'people', header: 'participants', link: `${this.baseLink}/participants`, validationBadgeCount: pageState.participants.errorCount },
 			{ icon: 'map', header: 'mappools', link: `${this.baseLink}/mappools`, validationBadgeCount: pageState.mappools.errorCount }
