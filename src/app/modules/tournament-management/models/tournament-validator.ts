@@ -7,6 +7,7 @@ export type ValidationSection =
 	| 'access'
 	| 'webhooks'
 	| 'triggerMessages'
+	| 'matchFlow'
 	| 'stages'
 	| 'participants'
 	| 'mappools';
@@ -65,7 +66,16 @@ export class TournamentValidator {
 		new ValidationErrorMessage(/^webhooks\[(\d+)\]\.url$/, 'You have to set the URL for the {0} webhook.'),
 
 		// Trigger messages
-		new ValidationErrorMessage(/^triggerMessages\[(\d+)\]\.message$/, 'You have to set the message for the {0} trigger message.')
+		new ValidationErrorMessage(/^triggerMessages\[(\d+)\]\.message$/, 'You have to set the message for the {0} trigger message.'),
+
+		// Match flows
+		new ValidationErrorMessage(/^matchFlows\[(\d+)\]\.name$/, 'You have to set the name for the {0} match flow.'),
+		new ValidationErrorMessage(/^matchFlows\[(\d+)\]\.phases$/, 'The {0} match flow needs at least one phase.'),
+		new ValidationErrorMessage(/^matchFlows\[(\d+)\]\.phases\[(\d+)\]\.count$/, 'You have to set the amount for the {1} phase of the {0} match flow.'),
+		new ValidationErrorMessage(/^matchFlows\[(\d+)\]\.phases\[(\d+)\]\.protect$/, 'The {1} phase of the {0} match flow protects, but protects are disabled for this tournament.'),
+		new ValidationErrorMessage(/^matchFlows\[(\d+)\]\.triggers\[(\d+)\]\.protect$/, 'The {1} trigger of the {0} match flow grants protects, but protects are disabled for this tournament.'),
+		new ValidationErrorMessage(/^matchFlows\[(\d+)\]\.triggers\[(\d+)\]\.threshold$/, 'You have to set the score threshold for the {1} trigger of the {0} match flow.'),
+		new ValidationErrorMessage(/^matchFlows\[(\d+)\]\.triggers\[(\d+)\]\.count$/, 'You have to set the amount for the {1} trigger of the {0} match flow.')
 	];
 
 	static validateTournament(tournament: WyTournament): ValidationResult {
@@ -74,6 +84,7 @@ export class TournamentValidator {
 			...this.validateMappools(tournament).errors,
 			...this.validateParticipants(tournament).errors,
 			...this.validateStages(tournament).errors,
+			...this.validateMatchFlows(tournament).errors,
 			...this.validateWebhooks(tournament).errors,
 			...this.validateTriggerMessages(tournament).errors
 		];
@@ -306,6 +317,83 @@ export class TournamentValidator {
 					code: 'REQUIRED'
 				});
 			}
+		});
+
+		return result(errors);
+	}
+
+	static validateMatchFlows(tournament: WyTournament): ValidationResult {
+		const errors: ValidationError[] = [];
+
+		tournament.matchFlows?.forEach((flow, fi) => {
+			const base = `matchFlows[${fi}]`;
+
+			if (!flow.name) {
+				errors.push({
+					section: 'matchFlow',
+					path: `${base}.name`,
+					message: this.getErrorMessage(`${base}.name`),
+					code: 'REQUIRED'
+				});
+			}
+
+			if (flow.phases.length === 0) {
+				errors.push({
+					section: 'matchFlow',
+					path: `${base}.phases`,
+					message: this.getErrorMessage(`${base}.phases`),
+					code: 'REQUIRED'
+				});
+			}
+
+			flow.phases.forEach((phase, pi) => {
+				if (phase.action === 'protect' && !tournament.protects) {
+					errors.push({
+						section: 'matchFlow',
+						path: `${base}.phases[${pi}].protect`,
+						message: this.getErrorMessage(`${base}.phases[${pi}].protect`),
+						code: 'INVALID'
+					});
+				}
+
+				if (!phase.useStageCount && phase.countPerTeam !== null && !(phase.countPerTeam >= 1)) {
+					errors.push({
+						section: 'matchFlow',
+						path: `${base}.phases[${pi}].count`,
+						message: this.getErrorMessage(`${base}.phases[${pi}].count`),
+						code: 'REQUIRED'
+					});
+				}
+			});
+
+			flow.triggers.forEach((trigger, ti) => {
+				if (trigger.action === 'protect' && !tournament.protects) {
+					errors.push({
+						section: 'matchFlow',
+						path: `${base}.triggers[${ti}].protect`,
+						message: this.getErrorMessage(`${base}.triggers[${ti}].protect`),
+						code: 'INVALID'
+					});
+				}
+
+				if (!(trigger.threshold >= 1)) {
+					errors.push({
+						section: 'matchFlow',
+						path: `${base}.triggers[${ti}].threshold`,
+						message: this.getErrorMessage(`${base}.triggers[${ti}].threshold`),
+						code: 'REQUIRED'
+					});
+				}
+
+				if (!(trigger.count >= 1)) {
+					errors.push({
+						section: 'matchFlow',
+						path: `${base}.triggers[${ti}].count`,
+						message: this.getErrorMessage(`${base}.triggers[${ti}].count`),
+						code: 'REQUIRED'
+					});
+				}
+			});
 		});
 
 		return result(errors);

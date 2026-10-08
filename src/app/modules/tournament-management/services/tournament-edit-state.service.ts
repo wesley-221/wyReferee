@@ -7,6 +7,7 @@ import { TournamentAccessState } from '../interfaces/tournament-access-state.int
 import { TournamentWebhookForm } from '../interfaces/tournament-webhook-form.interface';
 import { WyWebhook } from '../../../models/wytournament/wy-webhook';
 import { TournamentTriggerMessageForm } from '../interfaces/tournament-trigger-messages-form.interface';
+import { MatchFlow } from '../../../models/match-flow/match-flow';
 import { WyTriggerMessage } from '../../../models/wytournament/trigger-message';
 import { TournamentStageForm } from '../interfaces/tournament-stage-form.interface';
 import { WyStage } from '../../../models/wytournament/wy-stage';
@@ -36,6 +37,7 @@ export type PageState = {
 	webhooks: PageSectionState;
 	triggerMessages: PageSectionState;
 	stages: PageSectionState;
+	matchFlow: PageSectionState;
 	participants: PageSectionState;
 	mappools: PageSectionState;
 	errors: Record<ValidationSection, ValidationError[]>;
@@ -174,6 +176,27 @@ export class TournamentEditStateService {
 		this.draft$.next(updatedDraft);
 	}
 
+	updateMatchFlowsForm(matchFlows: MatchFlow[]) {
+		const currentDraft = this.draft$.getValue();
+
+		if (!currentDraft) {
+			return;
+		}
+
+		const updatedDraft = this.getCurrent();
+		const flowKeys = matchFlows.map(flow => flow.key);
+
+		updatedDraft.matchFlows = matchFlows;
+
+		updatedDraft.stages.forEach(stage => {
+			if (stage.matchFlowKey && !flowKeys.includes(stage.matchFlowKey)) {
+				stage.matchFlowKey = null;
+			}
+		});
+
+		this.draft$.next(updatedDraft);
+	}
+
 	updateStagesForm(stages: TournamentStageForm[]) {
 		const currentDraft = this.draft$.getValue();
 
@@ -191,7 +214,8 @@ export class TournamentEditStateService {
 				bestOf: stage.bestOf,
 				bans: stage.bans,
 				protects: stage.protects,
-				hitpoints: stage.hitpoints
+				hitpoints: stage.hitpoints,
+				matchFlowKey: stage.matchFlowKey
 			})
 		);
 
@@ -325,6 +349,7 @@ export class TournamentEditStateService {
 			access: buildSection('access'),
 			webhooks: buildSection('webhooks'),
 			triggerMessages: buildSection('triggerMessages'),
+			matchFlow: buildSection('matchFlow'),
 			stages: buildSection('stages'),
 			participants: buildSection('participants'),
 			mappools: buildSection('mappools'),
