@@ -4,6 +4,9 @@ $protect-icon-color: #45b878;
 $ban-icon-color: #d95f5f;
 $pick-icon-color: #a96fc4;
 
+$card-background-color: #1a1a1a;
+$card-border-color: #2b2b2b;
+
 .flow-tabs {
 	display: flex;
 	flex-wrap: wrap;
@@ -13,103 +16,136 @@ $pick-icon-color: #a96fc4;
 
 .flow-header {
 	display: flex;
-	align-items: center;
-	gap: 8px;
+	flex-direction: column;
 
-	.name {
-		flex: 1;
-	}
-
-	.description {
-		flex: 2;
-	}
-}
-
-.used-by {
-	margin-bottom: 8px;
-	opacity: 0.7;
-}
-
-.phases {
+	gap: 16px;
+	padding: 20px 24px;
 	margin-bottom: 8px;
 
-	.phase {
+	background-color: $card-background-color;
+	border: 1px solid $card-border-color;
+
+	.body {
 		display: flex;
 		align-items: center;
-		gap: 16px;
-
-		background-color: $background-color;
-		padding: 8px;
-		margin-bottom: 8px;
-		border: 1px solid darken(#3c4452, 15%);
-
-		.information {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			min-width: 320px;
-
-			.label {
-				text-transform: capitalize;
-				font-weight: bold;
-			}
-
-			.description {
-				opacity: 0.7;
-			}
-
-			.icon {
-				display: flex;
-
-				&.protect {
-					color: $protect-icon-color;
-				}
-
-				&.ban {
-					color: $ban-icon-color;
-				}
-
-				&.pick {
-					color: $pick-icon-color;
-				}
-			}
-		}
-
-		.fields {
-			flex: 1;
-			display: flex;
-			align-items: center;
-			flex-wrap: wrap;
-			gap: 8px;
-		}
-
-		.actions {
-			display: flex;
-			gap: 8px;
-		}
-	}
-}
-
-.triggers {
-	margin-bottom: 8px;
-
-	.trigger {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
 		gap: 8px;
 
-		background-color: $background-color;
-		padding: 8px;
-		margin-bottom: 8px;
-		border: 1px solid darken(#3c4452, 15%);
-
-		.small {
-			width: 130px;
+		.name {
+			flex: 1;
 		}
 
-		.tiny {
-			width: 70px;
+		.description {
+			flex: 2;
+		}
+	}
+
+	.used-by {
+		opacity: 0.7;
+	}
+}
+
+.phases-content {
+	margin-bottom: 8px;
+
+	.header {
+		margin-bottom: 8px;
+	}
+
+	.body {
+		.phases {
+			display: flex;
+			flex-direction: column;
+
+			gap: 8px;
+
+			.phase {
+				display: flex;
+				align-items: center;
+
+				gap: 16px;
+				padding: 8px;
+
+				background-color: $card-background-color;
+				border: 1px solid $card-border-color;
+
+				.information {
+					display: flex;
+					align-items: center;
+					gap: 8px;
+					min-width: 320px;
+
+					.label {
+						text-transform: capitalize;
+						font-weight: bold;
+					}
+
+					.description {
+						opacity: 0.7;
+					}
+
+					.icon {
+						display: flex;
+
+						&.protect {
+							color: $protect-icon-color;
+						}
+
+						&.ban {
+							color: $ban-icon-color;
+						}
+
+						&.pick {
+							color: $pick-icon-color;
+						}
+					}
+				}
+
+				.fields {
+					flex: 1;
+					display: flex;
+					align-items: center;
+					flex-wrap: wrap;
+					gap: 8px;
+				}
+
+				.actions {
+					display: flex;
+					gap: 8px;
+				}
+			}
+		}
+	}
+}
+
+.triggers-content {
+	.header {
+		margin-bottom: 8px;
+	}
+
+	.body {
+		.triggers {
+			margin-bottom: 8px;
+
+			.trigger {
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+
+				background-color: $card-background-color;
+				border: 1px solid $card-border-color;
+
+				gap: 8px;
+				padding: 8px;
+				margin-bottom: 8px;
+
+				.small {
+					width: 130px;
+				}
+
+				.tiny {
+					width: 70px;
+				}
+			}
 		}
 	}
 }
