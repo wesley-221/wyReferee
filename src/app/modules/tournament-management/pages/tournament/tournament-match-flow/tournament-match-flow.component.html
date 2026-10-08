@@ -37,7 +37,7 @@
 						<input matInput formControlName="description" />
 					</mat-form-field>
 
-					<button mat-mini-fab color="warn" (click)="removeFlow(selectedIndex)" [disabled]="stagesUsingFlow(selectedFlow.get('key')?.value).length > 0">
+					<button class="form-button danger" (click)="removeFlow(selectedIndex)" [disabled]="stagesUsingFlow(selectedFlow.get('key')?.value).length > 0">
 						<mat-icon>delete</mat-icon>
 					</button>
 				</div>
@@ -60,66 +60,90 @@
 				<div class="body">
 					<div class="phases" formArrayName="phases">
 						<div class="phase" *ngFor="let phase of phases.controls; let i = index" [formGroupName]="i">
-							<div class="information">
-								<div class="icon" [ngClass]="phase.get('action')?.value">
-									<mat-icon>{{ getPhaseIcon(phase) }}</mat-icon>
+							<div class="top">
+								<div class="information">
+									<div class="index">
+										{{ i + 1 }}
+									</div>
+
+									<div class="icon" [ngClass]="phase.get('action')?.value">
+										<mat-icon>{{ getPhaseIcon(phase) }}</mat-icon>
+									</div>
+
+									<div class="phase-action">
+										<div class="phase-label">
+											{{ phase.get('action')?.value }}
+										</div>
+
+										<div class="phase-description">
+											{{ describePhase($any(phase)) }}
+										</div>
+									</div>
 								</div>
 
-								<div class="label">
-									{{ phase.get('action')?.value }}
-								</div>
+								<div class="settings">
+									<mat-form-field>
+										<mat-label>Action</mat-label>
 
-								<div class="description">
-									{{ describePhase($any(phase)) }}
+										<mat-select formControlName="action" (selectionChange)="onActionChange($any(phase))">
+											<mat-option *ngFor="let action of actions" [value]="action">{{ action }}</mat-option>
+										</mat-select>
+									</mat-form-field>
+
+									<mat-form-field>
+										<mat-label>Order</mat-label>
+
+										<mat-select formControlName="order">
+											<mat-option value="alternate">Alternating</mat-option>
+											<mat-option value="sequential">First team, then second team</mat-option>
+										</mat-select>
+									</mat-form-field>
 								</div>
 							</div>
 
-							<div class="fields">
-								<mat-form-field>
-									<mat-label>Action</mat-label>
+							<div class="bottom">
+								<div class="fields">
+									<div class="count-selector">
+										<div class="count-label">
+											Count
+										</div>
 
-									<mat-select formControlName="action" (selectionChange)="onActionChange($any(phase))">
-										<mat-option *ngFor="let action of actions" [value]="action">{{ action }}</mat-option>
-									</mat-select>
-								</mat-form-field>
+										<ng-container *ngIf="phase.get('action')?.value != 'pick'">
+											<mat-button-toggle-group formControlName="useStageCount">
+												<mat-button-toggle [value]="false">Fixed</mat-button-toggle>
+												<mat-button-toggle [value]="true">Stage</mat-button-toggle>
+											</mat-button-toggle-group>
+										</ng-container>
 
-								<mat-form-field>
-									<mat-label>Order</mat-label>
+										<ng-container *ngIf="phase.get('action')?.value == 'pick'">
+											<mat-button-toggle-group formControlName="untilEnd">
+												<mat-button-toggle [value]="false">Fixed</mat-button-toggle>
+												<mat-button-toggle [value]="true">Stage</mat-button-toggle>
+											</mat-button-toggle-group>
+										</ng-container>
+									</div>
 
-									<mat-select formControlName="order">
-										<mat-option value="alternate">Alternating</mat-option>
-										<mat-option value="sequential">First team, then second team</mat-option>
-									</mat-select>
-								</mat-form-field>
+									<mat-form-field class="count" *ngIf="!phase.get('useStageCount')?.value && !phase.get('untilEnd')?.value">
+										<mat-label>Amount per team</mat-label>
 
-								<ng-container *ngIf="phase.get('action')?.value != 'pick'">
-									<mat-checkbox formControlName="useStageCount">Use stage {{ phase.get('action')?.value }} count</mat-checkbox>
-								</ng-container>
+										<input matInput type="number" min="1" formControlName="countPerTeam" />
+										<mat-error>Must be at least 1</mat-error>
+									</mat-form-field>
+								</div>
 
-								<ng-container *ngIf="phase.get('action')?.value == 'pick'">
-									<mat-checkbox formControlName="untilEnd">Until the match is decided</mat-checkbox>
-								</ng-container>
+								<div class="actions">
+									<button class="form-button" (click)="movePhase(i, -1)" [disabled]="i == 0">
+										<mat-icon>arrow_upward</mat-icon>
+									</button>
 
-								<mat-form-field class="count" *ngIf="!phase.get('useStageCount')?.value && !phase.get('untilEnd')?.value">
-									<mat-label>Amount per team</mat-label>
+									<button class="form-button" (click)="movePhase(i, 1)" [disabled]="i == phases.length - 1">
+										<mat-icon>arrow_downward</mat-icon>
+									</button>
 
-									<input matInput type="number" min="1" formControlName="countPerTeam" />
-									<mat-error>Must be at least 1</mat-error>
-								</mat-form-field>
-							</div>
-
-							<div class="actions">
-								<button mat-mini-fab color="primary" (click)="movePhase(i, -1)" [disabled]="i == 0">
-									<mat-icon>arrow_upward</mat-icon>
-								</button>
-
-								<button mat-mini-fab color="primary" (click)="movePhase(i, 1)" [disabled]="i == phases.length - 1">
-									<mat-icon>arrow_downward</mat-icon>
-								</button>
-
-								<button mat-mini-fab color="warn" (click)="removePhase(i)">
-									<mat-icon>delete</mat-icon>
-								</button>
+									<button class="form-button danger" (click)="removePhase(i)">
+										<mat-icon>delete</mat-icon>
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
