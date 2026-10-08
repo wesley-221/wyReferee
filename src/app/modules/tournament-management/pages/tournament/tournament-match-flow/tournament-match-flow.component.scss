@@ -210,6 +210,34 @@ $card-border-color: #2b2b2b;
 				.tiny {
 					width: 70px;
 				}
+
+				.trigger-section {
+					.trigger-label {
+						font-weight: bold;
+						opacity: 0.7;
+						text-transform: capitalize;
+
+						&.invisible {
+							opacity: 0;
+						}
+
+						&.lowercase {
+							text-transform: lowercase;
+						}
+
+						&.no-bold {
+							font-weight: normal;
+						}
+
+						&.disabled {
+							opacity: 0.3;
+						}
+					}
+
+					&.float-right {
+						margin-left: auto;
+					}
+				}
 			}
 		}
 	}

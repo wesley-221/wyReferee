@@ -163,53 +163,92 @@
 				<div class="body">
 					<div class="triggers" formArrayName="triggers">
 						<div class="trigger" *ngFor="let trigger of triggers.controls; let i = index" [formGroupName]="i">
-							<span>When</span>
+							<div class="trigger-section">
+								<div class="trigger-label">
+									When
+								</div>
 
-							<mat-form-field class="small">
-								<mat-select formControlName="subject">
-									<mat-option value="team1">team 1</mat-option>
-									<mat-option value="team2">team 2</mat-option>
-								</mat-select>
-							</mat-form-field>
+								<mat-form-field class="small">
+									<mat-select formControlName="subject">
+										<mat-option value="team1">team 1</mat-option>
+										<mat-option value="team2">team 2</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
 
-							<span>reaches</span>
+							<div class="trigger-section">
+								<div class="trigger-label">
+									reaches
+								</div>
 
-							<mat-form-field class="tiny">
-								<input matInput type="number" min="1" formControlName="threshold" />
-							</mat-form-field>
+								<mat-form-field class="tiny">
+									<input matInput type="number" min="1" formControlName="threshold" />
+								</mat-form-field>
+							</div>
 
-							<span>points</span>
+							<div class="trigger-section">
+								<div class="trigger-label invisible">&#8203;</div>
+								<div class="trigger-label lowercase no-bold">points</div>
+							</div>
 
-							<mat-checkbox formControlName="repeat">repeat every</mat-checkbox>
+							<div class="trigger-section">
+								<div class="trigger-label invisible">&#8203;</div>
 
-							<mat-form-field class="tiny" *ngIf="trigger.get('repeat')?.value">
-								<input matInput type="number" min="1" formControlName="repeatEvery" />
-							</mat-form-field>
+								<mat-slide-toggle formControlName="repeat">repeat every</mat-slide-toggle>
+							</div>
 
-							<span>, </span>
+							<div class="trigger-section">
+								<div class="trigger-label" [ngClass]="{'disabled': !trigger.get('repeat')?.value}">points</div>
 
-							<mat-form-field class="small">
-								<mat-select formControlName="grantTo">
-									<mat-option value="opponent">the opponent</mat-option>
-									<mat-option value="subject">that team</mat-option>
-								</mat-select>
-							</mat-form-field>
+								<mat-form-field class="tiny">
+									<input matInput type="number" min="1" formControlName="repeatEvery" />
+								</mat-form-field>
+							</div>
 
-							<span>gets</span>
+							<div class="trigger-section">
+								<div class="trigger-label invisible">&#8203;</div>
+								<div class="trigger-label lowercase no-bold"><mat-icon>arrow_right_alt</mat-icon></div>
+							</div>
 
-							<mat-form-field class="tiny">
-								<input matInput type="number" min="1" formControlName="count" />
-							</mat-form-field>
+							<div class="trigger-section">
+								<div class="trigger-label">
+									who
+								</div>
 
-							<mat-form-field class="small">
-								<mat-select formControlName="action">
-									<mat-option *ngFor="let action of actions" [value]="action">{{ action }}</mat-option>
-								</mat-select>
-							</mat-form-field>
+								<mat-form-field>
+									<mat-select formControlName="grantTo">
+										<mat-option value="opponent">the opponent</mat-option>
+										<mat-option value="subject">that team</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
 
-							<button mat-mini-fab color="warn" (click)="removeTrigger(i)">
-								<mat-icon>delete</mat-icon>
-							</button>
+							<div class="trigger-section">
+								<div class="trigger-label">gets</div>
+
+								<mat-form-field class="tiny">
+									<input matInput type="number" min="1" formControlName="count" />
+								</mat-form-field>
+							</div>
+
+
+							<div class="trigger-section">
+								<div class="trigger-label">action</div>
+
+								<mat-form-field class="small">
+									<mat-select formControlName="action">
+										<mat-option *ngFor="let action of actions" [value]="action">{{ action }}</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
+
+							<div class="trigger-section float-right">
+								<div class="trigger-label invisible">&#8203;</div>
+
+								<button class="form-button danger" (click)="removeTrigger(i)">
+									<mat-icon>delete</mat-icon>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>

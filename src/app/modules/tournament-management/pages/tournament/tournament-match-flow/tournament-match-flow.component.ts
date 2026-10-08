@@ -286,16 +286,30 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 	}
 
 	private createTriggerGroup(trigger: FlowTrigger): FormGroup {
-		return new FormGroup({
+		const repeat = trigger.repeatEvery != null;
+
+		const group = new FormGroup({
 			id: new FormControl(trigger.id ?? null),
 			key: new FormControl(trigger.key),
 			subject: new FormControl(trigger.subject),
 			threshold: new FormControl(trigger.threshold ?? 1, [Validators.required, Validators.min(1)]),
-			repeat: new FormControl(trigger.repeatEvery != null),
-			repeatEvery: new FormControl(trigger.repeatEvery ?? trigger.threshold ?? 1, [Validators.required, Validators.min(1)]),
+			repeat: new FormControl(repeat),
+			repeatEvery: new FormControl({ value: trigger.repeatEvery ?? trigger.threshold ?? 1, disabled: !repeat }, [Validators.required, Validators.min(1)]),
 			grantTo: new FormControl(trigger.grantTo),
 			action: new FormControl(trigger.action),
 			count: new FormControl(trigger.count, [Validators.required, Validators.min(1)])
 		});
+
+		group.get('repeat')?.valueChanges.subscribe(repeat => {
+			const repeatEvery = group.get('repeatEvery');
+
+			if (repeat) {
+				repeatEvery?.enable();
+			} else {
+				repeatEvery?.disable();
+			}
+		});
+
+		return group;
 	}
 }
