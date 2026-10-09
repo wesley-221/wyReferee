@@ -235,7 +235,7 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 		return {
 			steps: procedure.steps.map(step => ({ action: step.action, team: MatchFlowEngine.resolveTeam(procedure, step) })),
 			open: procedure.openPhase ? { action: procedure.openPhase.action, team: this.previewFirstTeam } : null,
-			sample: stage ? `${stage.name}: ${counts.bans} ban(s), ${counts.protects} protect(s)` : `${counts.bans} ban(s), ${counts.protects} protect(s)`
+			sample: stage ? `Stage ${stage.name}: ${counts.bans} ban(s), ${counts.protects} protect(s)` : `${counts.bans} ban(s), ${counts.protects} protect(s)`
 		};
 	}
 
