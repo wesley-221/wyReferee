@@ -11,6 +11,8 @@ $pick-icon-color: #b583e6;
 $card-background-color: #1a1a1a;
 $card-border-color: #2b2b2b;
 
+$faded-text-color: #a3a3a3;
+
 .flow-tabs {
 	display: flex;
 	flex-wrap: wrap;
@@ -44,7 +46,11 @@ $card-border-color: #2b2b2b;
 	}
 
 	.used-by {
-		opacity: 0.7;
+		color: $faded-text-color;
+
+		.used-by-stage {
+			color: white;
+		}
 	}
 }
 
@@ -94,7 +100,7 @@ $card-border-color: #2b2b2b;
 							border-radius: 50%;
 
 							background: #262626;
-							opacity: 0.7;
+							color: $faded-text-color;
 						}
 
 						.icon {
@@ -130,7 +136,7 @@ $card-border-color: #2b2b2b;
 							}
 
 							.phase-description {
-								opacity: 0.7;
+								color: $faded-text-color;
 							}
 						}
 					}
@@ -159,7 +165,7 @@ $card-border-color: #2b2b2b;
 
 						.count-selector {
 							.count-label {
-								opacity: 0.7;
+								color: $faded-text-color;
 								font-weight: bold;
 
 								margin-bottom: 4px;
@@ -214,7 +220,7 @@ $card-border-color: #2b2b2b;
 				.trigger-section {
 					.trigger-label {
 						font-weight: bold;
-						opacity: 0.7;
+						color: $faded-text-color;
 						text-transform: capitalize;
 
 						&.invisible {
@@ -243,40 +249,72 @@ $card-border-color: #2b2b2b;
 	}
 }
 
-.preview-options {
+.preview-content {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+
 	gap: 16px;
+	padding: 20px 24px;
 	margin-bottom: 8px;
 
-	.sample {
-		opacity: 0.7;
-	}
-}
+	background-color: $card-background-color;
+	border: 1px solid $card-border-color;
 
-.preview {
-	list-style: none;
-	padding: 0;
-
-	li {
+	.preview-options {
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		padding: 2px 0;
+		gap: 16px;
+		margin-bottom: 8px;
+	}
 
-		.icon {
+	.preview-sample {
+		color: $faded-text-color;
+		background: #121212;
+		padding: 8px 16px;
+	}
+
+	.preview {
+		list-style: none;
+		padding: 0;
+
+		li {
 			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 2px 0;
 
-			&.protect {
-				color: $protect-icon-color;
-			}
+			.icon-container {
+				display: flex;
+				align-items: center;
+				justify-content: center;
 
-			&.ban {
-				color: $ban-icon-color;
-			}
+				width: 32px;
+				height: 32px;
 
-			&.pick {
-				color: $pick-icon-color;
+				border-radius: 8px;
+
+				.icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					font-size: 16px;
+				}
+
+				&.protect {
+					background: $protect-background-color;
+					color: $protect-icon-color;
+				}
+
+				&.ban {
+					background: $ban-background-color;
+					color: $ban-icon-color;
+				}
+
+				&.pick {
+					background: $pick-background-color;
+					color: $pick-icon-color;
+				}
 			}
 		}
 	}

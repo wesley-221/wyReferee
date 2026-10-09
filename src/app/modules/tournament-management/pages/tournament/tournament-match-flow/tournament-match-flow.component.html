@@ -43,7 +43,7 @@
 				</div>
 
 				<div class="used-by" *ngIf="stagesUsingFlow(selectedFlow.get('key')?.value).length > 0">
-					Used by: {{ stagesUsingFlow(selectedFlow.get('key')?.value).join(', ') }}. Unassign it from these stages before deleting it.
+					Used by: <span class="used-by-stage">{{ stagesUsingFlow(selectedFlow.get('key')?.value).join(', ') }}</span>. Unassign it from these stages before deleting it.
 				</div>
 			</div>
 
@@ -254,28 +254,33 @@
 				</div>
 			</div>
 
-			<h3>Preview</h3>
+			<div class="preview-content">
+				<h3>Preview</h3>
 
-			<ng-container *ngIf="getPreview() as preview">
-				<div class="preview-options">
-					<mat-button-toggle-group [(ngModel)]="previewFirstTeam" [ngModelOptions]="{ standalone: true }">
-						<mat-button-toggle value="team1">Team 1 first</mat-button-toggle>
-						<mat-button-toggle value="team2">Team 2 first</mat-button-toggle>
-					</mat-button-toggle-group>
+				<ng-container *ngIf="getPreview() as preview">
+					<div class="preview-options">
+						<mat-button-toggle-group [(ngModel)]="previewFirstTeam" [ngModelOptions]="{ standalone: true }">
+							<mat-button-toggle value="team1">Team 1 first</mat-button-toggle>
+							<mat-button-toggle value="team2">Team 2 first</mat-button-toggle>
+						</mat-button-toggle-group>
 
-					<span class="sample">{{ preview.sample }}</span>
-				</div>
+					</div>
 
-				<ol class="preview">
-					<li *ngFor="let step of preview.steps">
-						<span class="icon" [ngClass]="step.action"><mat-icon>{{ actionIcons[step.action] }}</mat-icon></span> {{ step.team == 'team1' ? 'Team 1' : 'Team 2' }} {{ step.action }}s
-					</li>
+					<div class="preview-sample">
+						{{ preview.sample }}
+					</div>
 
-					<li *ngIf="preview.open">
-						<span class="icon" [ngClass]="preview.open.action"><mat-icon>{{ actionIcons[preview.open.action] }}</mat-icon></span> {{ preview.open.team == 'team1' ? 'Team 1' : 'Team 2' }} starts, then alternating {{ preview.open.action }}s until the match is decided
-					</li>
-				</ol>
-			</ng-container>
+					<ol class="preview">
+						<li *ngFor="let step of preview.steps">
+							<span class="icon-container" [ngClass]="step.action"><mat-icon class="icon">{{ actionIcons[step.action] }}</mat-icon></span> {{ step.team == 'team1' ? 'Team 1' : 'Team 2' }} {{ step.action }}s
+						</li>
+
+						<li *ngIf="preview.open">
+							<span class="icon-container" [ngClass]="preview.open.action"><mat-icon class="icon">{{ actionIcons[preview.open.action] }}</mat-icon></span> {{ preview.open.team == 'team1' ? 'Team 1' : 'Team 2' }} starts, then alternating {{ preview.open.action }}s until the match is decided
+						</li>
+					</ol>
+				</ng-container>
+			</div>
 		</div>
 	</form>
 </div>
