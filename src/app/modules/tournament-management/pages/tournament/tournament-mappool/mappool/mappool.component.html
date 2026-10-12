@@ -1,42 +1,58 @@
 <form [formGroup]="form">
-	<div class="row">
-		<div class="col">
-			<h3>Mappool name</h3>
+	<div class="mappool-settings">
+		<div class="mappool-settings-header">
+			<div class="mappool-settings-name">
+				<h3>Mappool name</h3>
 
-			<mat-form-field class="full-width">
-				<mat-label>Mappool name</mat-label>
+				<mat-form-field class="full-width">
+					<mat-label>Mappool name</mat-label>
 
-				<mat-select formControlName="name">
-					<mat-option *ngFor="let stage of tournament.stages" [value]="stage.name">
-						{{ stage.name }}
-					</mat-option>
-				</mat-select>
-			</mat-form-field>
+					<mat-select formControlName="name">
+						<mat-option *ngFor="let stage of tournament.stages" [value]="stage.name">
+							{{ stage.name }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
 
-			<p>Select the name of the mappool</p>
+				<p>Select the name of the mappool</p>
 
-			<app-alert alertType="warn" *ngIf="tournament.stages.length <= 0">To make a mappool you have to create a stage first.</app-alert>
+				<app-alert alertType="warn" *ngIf="tournament.stages.length <= 0">To make a mappool you have to create a stage first.</app-alert>
+			</div>
+
+			<div class="mappool-settings-type">
+				<h3>Mappool type</h3>
+
+				<mat-form-field class="full-width">
+					<mat-label>Mappool type</mat-label>
+					<mat-select formControlName="type">
+						<mat-option [value]="0">Normal</mat-option>
+						<mat-option [value]="1">AxS</mat-option>
+						<mat-option [value]="2">Mystery tournament</mat-option>
+						<mat-option [value]="3">RNG tournament</mat-option>
+						<mat-option [value]="4">CTM tournament</mat-option>
+					</mat-select>
+
+					<mat-error *ngIf="form.get('type').errors && (form.get('type').touched || form.get('type').dirty)">
+						This field is required
+					</mat-error>
+				</mat-form-field>
+
+				<p>Various mappool types depending on what tournament it is being used for. Pick normal if you are unsure what to pick</p>
+			</div>
 		</div>
 
-		<div class="col">
-			<h3>Mappool type</h3>
+		<div class="mappool-actions">
+			<button type="button" class="form-button" (click)="moveEarlier.emit()" [disabled]="mappoolIndex === 0">
+				<mat-icon>arrow_backward</mat-icon> move earlier
+			</button>
 
-			<mat-form-field class="full-width">
-				<mat-label>Mappool type</mat-label>
-				<mat-select formControlName="type">
-					<mat-option [value]="0">Normal</mat-option>
-					<mat-option [value]="1">AxS</mat-option>
-					<mat-option [value]="2">Mystery tournament</mat-option>
-					<mat-option [value]="3">RNG tournament</mat-option>
-					<mat-option [value]="4">CTM tournament</mat-option>
-				</mat-select>
+			<button type="button" class="form-button" (click)="moveLater.emit()" [disabled]="mappoolIndex === mappoolCount - 1">
+				move later <mat-icon>arrow_forward</mat-icon>
+			</button>
 
-				<mat-error *ngIf="form.get('type').errors && (form.get('type').touched || form.get('type').dirty)">
-					This field is required
-				</mat-error>
-			</mat-form-field>
-
-			<p>Various mappool types depending on what tournament it is being used for. Pick normal if you are unsure what to pick</p>
+			<button type="button" class="form-button danger" (click)="deleteMappool.emit()">
+				<mat-icon>delete</mat-icon> delete mappool
+			</button>
 		</div>
 	</div>
 
@@ -79,35 +95,76 @@
 		<hr />
 	</div>
 
-	<h3>Mod brackets</h3>
-	<p>Because mod brackets can vary in various mod combinations and size, you are able to customize your own mod bracket. Fill in the name of the bracket</p>
-
-	<div class="buttons">
-		<button mat-raised-button (click)="createNewBracket()" color="primary">
-			<mat-icon>add</mat-icon> create new bracket
+	<div class="mod-bracket-tabs">
+		<button *ngFor="let modBracketGroup of modBrackets.controls; let i = index" class="pill-button" [class.active]="activeModBracketIndex === i" (click)="selectModBracket(i)">
+			{{ modBracketGroup.get('name')?.value || 'Unnamed bracket' }}
+			&bull;&nbsp;
+			<span class="beatmap-count">{{ modBracketGroup.get('beatmaps')?.value.length }}</span>
 		</button>
 
-		<button mat-raised-button (click)="createDefaultBrackets(false)" color="primary">
-			<mat-icon>add</mat-icon> create default brackets
-		</button>
-
-		<button mat-raised-button (click)="createDefaultBrackets(true)" color="primary">
-			<mat-icon>add</mat-icon> create default brackets with NF
+		<button class="pill-button" [class.active]="showBracketCreator" (click)="toggleBracketCreator()">
+			<mat-icon>add</mat-icon> add bracket
 		</button>
 	</div>
 
-	<hr />
+	<div class="bracket-creator" *ngIf="showBracketCreator">
+		<h4>Add brackets</h4>
 
-	<ng-container formArrayName="modBrackets">
+		<div class="creator-mode">
+			<button class="pill-button" [class.active]="bracketCreationMode === 'default'" (click)="selectBracketCreationMode('default')">
+				Default set
+			</button>
+
+			<button class="pill-button" [class.active]="bracketCreationMode === 'empty'" (click)="selectBracketCreationMode('empty')">
+				Empty bracket
+			</button>
+		</div>
+
+		<ng-container *ngIf="bracketCreationMode === 'default'">
+			<div class="default-mod-brackets-list">
+				<button
+					*ngFor="let bracket of defaultBracketOptions"
+					class="pill-button"
+					[class.active]="selectedDefaultBracketNames.has(bracket.name) && !defaultBracketExists(bracket)"
+					[disabled]="defaultBracketExists(bracket)"
+					(click)="toggleDefaultBracket(bracket.name)"
+				>
+					{{ bracket.name }}<span *ngIf="defaultBracketExists(bracket)">&nbsp;(exists)</span>
+				</button>
+			</div>
+
+			<mat-slide-toggle [(ngModel)]="addNoFailToBrackets" [ngModelOptions]="{ standalone: true }">
+				Add NoFail to every bracket
+			</mat-slide-toggle>
+
+			<p class="existing-bracket-count" *ngIf="existingDefaultBracketCount > 0">
+				{{ existingDefaultBracketCount }} already in this mappool, those are skipped
+			</p>
+		</ng-container>
+
+		<div class="creator-actions">
+			<button class="form-button success" (click)="addConfiguredBrackets()" [disabled]="bracketCreationCount === 0">
+				<mat-icon>add</mat-icon> create {{ bracketCreationCount }} {{ bracketCreationCount === 1 ? 'bracket' : 'brackets' }}
+			</button>
+
+			<button class="form-button danger" (click)="closeBracketCreator()">Cancel</button>
+		</div>
+	</div>
+
+	<app-alert alertType="warn" *ngIf="modBrackets.length == 0">
+		There are no mod brackets yet.
+	</app-alert>
+
+	<ng-container *ngIf="modBrackets.length > 0" formArrayName="modBrackets">
 		<app-mod-bracket
-			[form]="modBracketGroup"
-			[formGroupName]="i"
+			[form]="modBrackets.at(activeModBracketIndex)"
 			[modBracketForm]="modBrackets"
-			[modBracketFormIndex]="i"
+			[modBracketFormIndex]="activeModBracketIndex"
 			[mappoolForm]="form"
 			[tournament]="tournament"
 			[mappoolType]="form.get('type').value"
-			*ngFor="let modBracketGroup of modBrackets.controls; let i = index"
+			(modBracketDeleted)="onModBracketDeleted($event)"
+			(modBracketMoved)="selectModBracket($event)"
 		>
 		</app-mod-bracket>
 	</ng-container>

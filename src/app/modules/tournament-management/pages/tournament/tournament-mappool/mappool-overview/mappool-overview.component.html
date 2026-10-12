@@ -24,27 +24,29 @@
 			</div>
 
 			<form [formGroup]="form">
-				<div class="mappool-spacing" *ngIf="mappools.length > 0"></div>
-
 				<app-alert alertType="warn" *ngIf="mappools.length == 0">
 					There are no mappools yet.
 				</app-alert>
 
-				<div class="mappools" formArrayName="mappools">
-					<div class="mappool" *ngFor="let mappoolGroup of mappools.controls; let i = index" [formGroupName]="i">
-						<div class="header" (click)="collapseMappool(mappoolGroup, $event)">
-							<div class="name">
-								<h3>{{ mappoolGroup.get('name')?.value || 'Unnamed Mappool' }}</h3>
-							</div>
+				<div class="mappools" *ngIf="mappools.length > 0">
+					<nav class="mappool-tabs">
+						<button *ngFor="let mappoolGroup of mappools.controls; let i = index" class="pill-button" [class.active]="activeMappoolIndex === i" (click)="selectMappool(i)">
+							{{ mappoolGroup.get('name')?.value || 'Unnamed Mappool' }}
+						</button>
+					</nav>
 
-							<div class="actions">
-								<button mat-mini-fab color="warn" (click)="deleteMappool(i)"><mat-icon>delete</mat-icon></button>
-							</div>
-						</div>
-
-						<div class="body" *ngIf="collapsedState.get(mappoolGroup) == false">
-							<app-mappool [tournament]="tournament" [form]="mappoolGroup"></app-mappool>
-						</div>
+					<div class="mappool-panel" formArrayName="mappools">
+						<ng-container [formGroupName]="activeMappoolIndex">
+							<app-mappool
+								[tournament]="tournament"
+								[form]="getMappoolFormArray(activeMappoolIndex)"
+								[mappoolIndex]="activeMappoolIndex"
+								[mappoolCount]="mappools.length"
+								(moveEarlier)="moveMappoolEarlier(activeMappoolIndex)"
+								(moveLater)="moveMappoolLater(activeMappoolIndex)"
+								(deleteMappool)="deleteMappool(activeMappoolIndex)"
+							></app-mappool>
+						</ng-container>
 					</div>
 				</div>
 			</form>

@@ -1,3 +1,49 @@
+@import "variables";
+
+$card-background-color: #1a1a1a;
+$card-border-color: #2b2b2b;
+
+.pill-button {
+	display: inline-flex;
+	align-items: center;
+	flex: 0 0 auto;
+
+	padding: 8px 16px;
+	min-height: 40px;
+
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 24px;
+
+	background: transparent;
+	color: inherit;
+
+	cursor: pointer;
+
+	.beatmap-count {
+		opacity: 0.6;
+	}
+
+	&.active {
+		font-weight: bold;
+		border-color: $primary;
+		background: $primary;
+		color: #000000;
+	}
+}
+
+.mappool-settings {
+	background: $card-background-color;
+	border: 1px solid $card-border-color;
+
+	padding: 16px;
+
+	.mappool-settings-header {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+	}
+}
+
 .categories {
 	display: flex;
 	flex-direction: row;
@@ -8,10 +54,6 @@
 
 	max-height: 350px;
 	overflow-y: auto;
-
-	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
 
 	.category {
 		display: flex;
@@ -29,5 +71,49 @@
 		&:last-child {
 			margin-right: 0;
 		}
+	}
+}
+
+.mappool-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 8px 0 16px;
+}
+
+.mod-bracket-tabs {
+	display: flex;
+
+	overflow-x: auto;
+
+	margin: 16px 0;
+	gap: 8px;
+}
+
+.bracket-creator {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin: 8px 0 16px;
+	padding: 16px;
+	border: 1px solid $card-border-color;
+	background: $card-background-color;
+
+	.creator-mode,
+	.creator-actions,
+	.default-mod-brackets-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	mat-slide-toggle {
+		padding: 12px;
+		border: 1px solid $card-border-color;
+		border-radius: 8px;
+	}
+
+	.existing-bracket-count {
+		opacity: 0.6;
 	}
 }
