@@ -29,6 +29,10 @@ $card-border-color: #2b2b2b;
 		background: $primary;
 		color: #000000;
 	}
+
+	&:hover {
+		border-color: $primary;
+	}
 }
 
 .mappool-settings {

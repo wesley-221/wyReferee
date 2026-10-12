@@ -4,10 +4,6 @@
 	margin-top: 8px;
 }
 
-.wybin-import-nofail {
-	margin-top: 8px;
-}
-
 .pill-button {
 	display: inline-flex;
 	align-items: center;
@@ -34,6 +30,10 @@
 		background: $primary;
 		color: #000000;
 	}
+
+	&:hover {
+		border-color: $primary;
+	}
 }
 
 .buttons {
@@ -42,33 +42,30 @@
 	flex-wrap: wrap;
 }
 
-.wybin-mappools {
-	display: grid;
-	grid-auto-flow: column;
-
-	gap: 8px;
-
-	grid-template-columns: repeat(auto-fill, 1fr);
+.wybin-import {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
 
 	margin-top: 8px;
+	padding: 16px;
 
-	.wybin-mappool {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
+	border: 1px solid #2b2b2b;
+	background: #1a1a1a;
+}
 
-		padding: 8px;
+.wybin-mappools {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
 
-		border: 1px solid darken(#3c4452, 15%);
+	.pill-button {
+		gap: 4px;
 
-		-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-		-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-		box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-
-		&:hover {
-			background: darken($background-color, 5%);
-			cursor: pointer;
+		mat-icon {
+			font-size: 18px;
+			width: 18px;
+			height: 18px;
 		}
 	}
 }
