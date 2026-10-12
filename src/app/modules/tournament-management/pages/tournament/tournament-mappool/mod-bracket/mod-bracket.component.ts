@@ -167,6 +167,23 @@ export class ModBracketComponent implements OnInit {
 	}
 
 	/**
+	 * Moves the given beatmap to the target index
+	 *
+	 * @param index the current index of the beatmap to move
+	 * @param targetIndex the target index to move the beatmap to
+	 */
+	moveBeatmap(index: number, targetIndex: number): void {
+		if (targetIndex < 0 || targetIndex >= this.beatmaps.length) {
+			return;
+		}
+
+		const beatmap = this.beatmaps.at(index);
+		this.beatmaps.removeAt(index, { emitEvent: false });
+		this.beatmaps.insert(targetIndex, beatmap, { emitEvent: false });
+		this.beatmaps.updateValueAndValidity();
+	}
+
+	/**
 	 * Adds a single beatmap to the mod bracket
 	 */
 	addBeatmap(): void {

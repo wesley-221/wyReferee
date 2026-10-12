@@ -186,17 +186,25 @@
 						</div>
 
 						<div class="buttons">
-							<button class="form-button" [matTooltip]="beatmapGroup.get('reverseScore').value != true ? 'Beatmap will use normal score (Highest score wins)' : 'Beatmap will use reverse score (Lowest score wins)'" (click)="reverseScore(beatmapGroup)">
-								<mat-icon *ngIf="beatmapGroup.get('reverseScore').value != true">expand_less</mat-icon>
-								<mat-icon *ngIf="beatmapGroup.get('reverseScore').value == true">expand_more</mat-icon>
+							<button class="form-button small-button" [matTooltip]="beatmapGroup.get('reverseScore').value != true ? 'Beatmap will use normal score (Highest score wins)' : 'Beatmap will use reverse score (Lowest score wins)'" (click)="reverseScore(beatmapGroup)">
+								<mat-icon class="icon" *ngIf="beatmapGroup.get('reverseScore').value != true">expand_less</mat-icon>
+								<mat-icon class="icon" *ngIf="beatmapGroup.get('reverseScore').value == true">expand_more</mat-icon>
 							</button>
 
-							<button class="form-button" (click)="synchronizeBeatmap(beatmapGroup)">
-								<mat-icon [ngClass]="{ 'rotate': beatmapGroup.get('isSynchronizing').value }">sync</mat-icon>
+							<button class="form-button small-button" matTooltip="Move up" [disabled]="i === 0" (click)="moveBeatmap(i, i - 1)">
+								<mat-icon class="icon">arrow_upward</mat-icon>
 							</button>
 
-							<button class="form-button danger" (click)="removeBeatmap(i)">
-								<mat-icon>delete</mat-icon>
+							<button class="form-button small-button" matTooltip="Move down" [disabled]="i === beatmaps.length - 1" (click)="moveBeatmap(i, i + 1)">
+								<mat-icon class="icon">arrow_downward</mat-icon>
+							</button>
+
+							<button class="form-button small-button" (click)="synchronizeBeatmap(beatmapGroup)">
+								<mat-icon class="icon" [ngClass]="{ 'rotate': beatmapGroup.get('isSynchronizing').value }">sync</mat-icon>
+							</button>
+
+							<button class="form-button small-button danger" (click)="removeBeatmap(i)">
+								<mat-icon class="icon">delete</mat-icon>
 							</button>
 						</div>
 					</div>
