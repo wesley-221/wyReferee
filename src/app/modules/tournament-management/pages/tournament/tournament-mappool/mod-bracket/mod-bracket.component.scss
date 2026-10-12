@@ -4,6 +4,53 @@ $card-background-color: #1a1a1a;
 $card-border-color: #2b2b2b;
 $card-background-accent-color: #131315;
 
+.pill-button {
+	display: inline-flex;
+	align-items: center;
+	flex: 0 0 auto;
+
+	padding: 8px 16px;
+	min-height: 40px;
+
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 24px;
+
+	background: transparent;
+	color: inherit;
+
+	cursor: pointer;
+
+	.beatmap-count {
+		opacity: 0.6;
+	}
+
+	.caret {
+		font-size: 18px;
+
+		width: 18px;
+		height: 18px;
+		line-height: 18px;
+
+		margin-right: -4px;
+	}
+
+	&.highlighted {
+		border-color: $primary;
+		color: #ffffff;
+	}
+
+	&.active {
+		font-weight: bold;
+		border-color: $primary;
+		background: $primary;
+		color: #000000;
+	}
+
+	&:hover {
+		border-color: $primary;
+	}
+}
+
 .mod-bracket {
 	margin-bottom: 8px;
 	padding: 16px;
@@ -89,6 +136,7 @@ $card-background-accent-color: #131315;
 			.bulk-beatmaps {
 				display: flex;
 				flex-direction: column;
+
 				gap: 8px;
 				margin-top: 8px;
 
@@ -109,71 +157,129 @@ $card-background-accent-color: #131315;
 
 				.beatmap {
 					display: flex;
-					justify-content: space-between;
+					flex-direction: column;
+
 					background-color: $card-background-accent-color;
+
 					border: 1px solid $card-border-color;
+					border-radius: 8px;
 
-					padding: 0 8px;
+					overflow: hidden;
 
-					.data {
+					.beatmap-row {
 						display: flex;
-						flex-direction: row;
+						justify-content: space-between;
 						align-items: center;
 
-						padding: 4px;
+						padding: 4px 8px;
 
-						.column {
-							padding-right: 4px;
+						.data {
+							display: flex;
+							flex-direction: row;
+							align-items: center;
 
-							&.category {
-								display: flex;
-								flex-direction: column;
+							padding: 4px;
+
+							.column {
+								padding-right: 4px;
+
+								&.category {
+									display: flex;
+									flex-direction: column;
+								}
+
+								&.mod-acronym {
+									display: inline-flex;
+									align-items: center;
+									justify-content: center;
+
+									min-width: 44px;
+									height: 28px;
+
+									padding: 0 8px;
+									margin-right: 8px;
+
+									background-color: rgba($primary, 0.1);
+									color: $primary;
+
+									border: 1px solid rgba($primary, 0.26);
+									border-radius: 6px;
+								}
+							}
+						}
+
+						.information {
+							display: flex;
+							align-items: center;
+						}
+
+						.buttons {
+							display: flex;
+							align-items: center;
+
+							.rotate {
+								animation: rotate 0.5s ease-in-out 0s;
 							}
 
-							&.mod-acronym {
-								display: inline-flex;
-								align-items: center;
-								justify-content: center;
+							@keyframes rotate {
+								from {
+									transform: rotate(0deg);
+								}
+								to {
+									transform: rotate(360deg);
+								}
+							}
 
-								min-width: 44px;
-								height: 28px;
+							button {
+								margin-right: 4px;
+							}
+						}
+					}
 
-								padding: 0 8px;
-								margin-right: 8px;
+					.winning-condition-panel {
+						display: flex;
+						flex-direction: column;
 
-								background-color: rgba($primary, 0.1);
+						gap: 14px;
+						padding: 16px 20px;
+
+						background: #141416;
+						border-top: 1px solid $card-border-color;
+
+						.panel-section {
+							display: flex;
+							flex-direction: column;
+							gap: 8px;
+
+							.panel-title {
+								font-size: 11px;
+								font-weight: bold;
+								text-transform: uppercase;
+
+								color: rgba(255, 255, 255, 0.45);
+							}
+
+							.pill-group {
+								display: flex;
+								flex-wrap: wrap;
+								gap: 8px;
+							}
+						}
+
+						.panel-footer {
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
+
+							margin-top: 4px;
+							padding-top: 4px;
+
+							.summary-text {
 								color: $primary;
 
-								border: 1px solid rgba($primary, 0.26);
-								border-radius: 6px;
+								font-size: 14px;
+								font-weight: bold;
 							}
-						}
-					}
-
-					.information {
-						display: flex;
-						align-items: center;
-					}
-
-					.buttons {
-						display: flex;
-						align-items: center;
-
-						.rotate {
-							animation: rotate 0.5s ease-in-out 0s;
-						}
-
-						@keyframes rotate {
-							from {
-								transform: rotate(0deg);
-							}
-							to {
-								transform: rotate(360deg);
-							}
-						}
-
-						button {
-							margin-right: 4px;
 						}
 					}
 				}

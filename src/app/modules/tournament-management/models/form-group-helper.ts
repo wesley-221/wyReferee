@@ -23,6 +23,9 @@ export class FormGroupHelper {
 	}
 
 	static createBeatmapFormGroup(beatmap?: WyModBracketMap): FormGroup {
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+		const winner = beatmap?.winningConditionWinner ?? (beatmap?.reverseScore ? 'lowest' : 'highest');
+
 		return new FormGroup({
 			id: new FormControl(beatmap?.id ?? null),
 			invalid: new FormControl(beatmap?.invalid ?? false),
@@ -34,7 +37,9 @@ export class FormGroupHelper {
 			damageAmount: new FormControl(beatmap?.damageAmount ?? null),
 			modCategory: new FormControl(beatmap?.modCategory ?? null),
 			gamemodeId: new FormControl(beatmap?.gamemodeId ?? null),
-			reverseScore: new FormControl(beatmap?.reverseScore ?? false),
+			reverseScore: new FormControl(compare === 'score' && winner === 'lowest'),
+			winningConditionCompare: new FormControl(compare),
+			winningConditionWinner: new FormControl(winner),
 			picked: new FormControl(beatmap?.picked ?? false),
 			isSynchronizing: new FormControl(beatmap?.isSynchronizing ?? false)
 		});

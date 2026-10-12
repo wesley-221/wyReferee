@@ -108,104 +108,150 @@
 
 				<div class="all-beatmaps" formArrayName="beatmaps">
 					<div class="beatmap" *ngFor="let beatmapGroup of beatmaps.controls; let i = index" [formGroupName]="i">
-						<div class="data">
-							<div class="column mod-acronym">
-								{{ form.get('acronym').value | uppercase }}{{ i + 1 }}
+						<div class="beatmap-row">
+							<div class="data">
+								<div class="column mod-acronym">
+									{{ form.get('acronym').value | uppercase }}{{ i + 1 }}
+								</div>
+
+								<div class="column">
+									<mat-form-field class="full-width">
+										<mat-label>Beatmap id</mat-label>
+
+										<input matInput formControlName="beatmapId" />
+									</mat-form-field>
+								</div>
+
+								<div class="column" *ngIf="mappoolType == 1">
+									<mat-form-field class="full-width">
+										<mat-label>Modifier</mat-label>
+										<input matInput formControlName="modifier" />
+
+										<mat-error *ngIf="beatmapGroup.get('modifier').errors && (beatmapGroup.get('modifier').touched || beatmapGroup.get('modifier').dirty)">
+											This field is required
+										</mat-error>
+									</mat-form-field>
+								</div>
+
+								<div class="column" *ngIf="mappoolType == 4">
+									<mat-form-field class="full-width">
+										<mat-label>Damage amount</mat-label>
+										<input matInput formControlName="damageAmount" />
+
+										<mat-error *ngIf="beatmapGroup.get('damageAmount').errors && (beatmapGroup.get('damageAmount').touched || beatmapGroup.get('damageAmount').dirty)">
+											This field is required
+										</mat-error>
+									</mat-form-field>
+								</div>
+
+								<div class="column category" *ngIf="mappoolType == 2 && tournament.publishId != null">
+									<mat-form-field>
+										<mat-label>Mod category</mat-label>
+										<mat-select formControlName="modCategory">
+											<mat-option [value]="modCategory.get('name').value" *ngFor="let modCategory of modCategories.controls">
+												{{ modCategory.get('name').value }}
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+
+									<mat-slide-toggle formControlName="picked">
+										<span *ngIf="beatmapGroup.get('picked').value == true">Picked</span>
+										<span *ngIf="beatmapGroup.get('picked').value == false || beatmapGroup.get('picked').value == null">Not picked</span>
+									</mat-slide-toggle>
+								</div>
+
+								<div class="column" *ngIf="tournament.gamemodeId == 4">
+									<mat-form-field>
+										<mat-label>Gamemode</mat-label>
+										<mat-select formControlName="gamemodeId">
+											<mat-option [value]="0">osu!</mat-option>
+											<mat-option [value]="1">osu!taiko</mat-option>
+											<mat-option [value]="2">osu!catch</mat-option>
+											<mat-option [value]="3">osu!mania</mat-option>
+										</mat-select>
+									</mat-form-field>
+								</div>
 							</div>
 
-							<div class="column">
-								<mat-form-field class="full-width">
-									<mat-label>Beatmap id</mat-label>
-									<input matInput formControlName="beatmapId" />
-								</mat-form-field>
+							<div class="information">
+								<span *ngIf="beatmapGroup.get('beatmapName').value == null && beatmapGroup.get('invalid').value == false" class="has-error">
+									No beatmap found, have you tried synchronizing?
+								</span>
+
+								<a [routerLink]="[]" *ngIf="beatmapGroup.get('beatmapName').value && !beatmapGroup.get('invalid').value" (click)="electronService.openLink(beatmapGroup.get('beatmapUrl').value)">
+									{{ beatmapGroup.get('beatmapName').value }}
+								</a>
+
+								<span *ngIf="beatmapGroup.get('invalid').value" class="has-error">
+									There was no beatmap found with the beatmap id "{{ beatmapGroup.get('beatmapId').value }}".
+								</span>
 							</div>
 
-							<div class="column" *ngIf="mappoolType == 1">
-								<mat-form-field class="full-width">
-									<mat-label>Modifier</mat-label>
-									<input matInput formControlName="modifier" />
+							<div class="buttons">
+								<button class="pill-button" [class.highlighted]="!isDefaultWinningCondition(beatmapGroup)" [class.active]="openWinningConditionIndex === i" (click)="toggleWinningCondition(i)">
+									<span>{{ getWinningConditionLabel(beatmapGroup) }}</span>
 
-									<mat-error *ngIf="beatmapGroup.get('modifier').errors && (beatmapGroup.get('modifier').touched || beatmapGroup.get('modifier').dirty)">
-										This field is required
-									</mat-error>
-								</mat-form-field>
-							</div>
+									<mat-icon class="caret">arrow_drop_down</mat-icon>
+								</button>
 
-							<div class="column" *ngIf="mappoolType == 4">
-								<mat-form-field class="full-width">
-									<mat-label>Damage amount</mat-label>
-									<input matInput formControlName="damageAmount" />
+								<button class="form-button small-button" matTooltip="Move up" [disabled]="i === 0" (click)="moveBeatmap(i, i - 1)">
+									<mat-icon class="icon">arrow_upward</mat-icon>
+								</button>
 
-									<mat-error *ngIf="beatmapGroup.get('damageAmount').errors && (beatmapGroup.get('damageAmount').touched || beatmapGroup.get('damageAmount').dirty)">
-										This field is required
-									</mat-error>
-								</mat-form-field>
-							</div>
+								<button class="form-button small-button" matTooltip="Move down" [disabled]="i === beatmaps.length - 1" (click)="moveBeatmap(i, i + 1)">
+									<mat-icon class="icon">arrow_downward</mat-icon>
+								</button>
 
-							<div class="column category" *ngIf="mappoolType == 2 && tournament.publishId != null">
-								<mat-form-field>
-									<mat-label>Mod category</mat-label>
-									<mat-select formControlName="modCategory">
-										<mat-option [value]="modCategory.get('name').value" *ngFor="let modCategory of modCategories.controls">
-											{{ modCategory.get('name').value }}
-										</mat-option>
-									</mat-select>
-								</mat-form-field>
+								<button class="form-button small-button" (click)="synchronizeBeatmap(beatmapGroup)">
+									<mat-icon class="icon" [ngClass]="{ 'rotate': beatmapGroup.get('isSynchronizing').value }">sync</mat-icon>
+								</button>
 
-								<mat-slide-toggle formControlName="picked">
-									<span *ngIf="beatmapGroup.get('picked').value == true">Picked</span>
-									<span *ngIf="beatmapGroup.get('picked').value == false || beatmapGroup.get('picked').value == null">Not picked</span>
-								</mat-slide-toggle>
-							</div>
-
-							<div class="column" *ngIf="tournament.gamemodeId == 4">
-								<mat-form-field>
-									<mat-label>Gamemode</mat-label>
-									<mat-select formControlName="gamemodeId">
-										<mat-option [value]="0">osu!</mat-option>
-										<mat-option [value]="1">osu!taiko</mat-option>
-										<mat-option [value]="2">osu!catch</mat-option>
-										<mat-option [value]="3">osu!mania</mat-option>
-									</mat-select>
-								</mat-form-field>
+								<button class="form-button small-button danger" (click)="removeBeatmap(i)">
+									<mat-icon class="icon">delete</mat-icon>
+								</button>
 							</div>
 						</div>
 
-						<div class="information">
-							<span *ngIf="beatmapGroup.get('beatmapName').value == null && beatmapGroup.get('invalid').value == false" class="has-error">
-								No beatmap found, have you tried synchronizing?
-							</span>
+						<div class="winning-condition-panel" *ngIf="openWinningConditionIndex === i">
+							<div class="panel-section">
+								<div class="panel-title">Compare by</div>
 
-							<a [routerLink]="[]" *ngIf="beatmapGroup.get('beatmapName').value && !beatmapGroup.get('invalid').value" (click)="electronService.openLink(beatmapGroup.get('beatmapUrl').value)">
-								{{ beatmapGroup.get('beatmapName').value }}
-							</a>
+								<div class="pill-group">
+									<button class="pill-button" [class.active]="getWinningConditionCompare(beatmapGroup) === 'score'" (click)="setWinningConditionCompare(beatmapGroup, 'score')">
+										Score
+									</button>
 
-							<span *ngIf="beatmapGroup.get('invalid').value" class="has-error">
-								There was no beatmap found with the beatmap id "{{ beatmapGroup.get('beatmapId').value }}".
-							</span>
-						</div>
+									<button class="pill-button" [class.active]="getWinningConditionCompare(beatmapGroup) === 'accuracy'" (click)="setWinningConditionCompare(beatmapGroup, 'accuracy')">
+										Accuracy
+									</button>
 
-						<div class="buttons">
-							<button class="form-button small-button" [matTooltip]="beatmapGroup.get('reverseScore').value != true ? 'Beatmap will use normal score (Highest score wins)' : 'Beatmap will use reverse score (Lowest score wins)'" (click)="reverseScore(beatmapGroup)">
-								<mat-icon class="icon" *ngIf="beatmapGroup.get('reverseScore').value != true">expand_less</mat-icon>
-								<mat-icon class="icon" *ngIf="beatmapGroup.get('reverseScore').value == true">expand_more</mat-icon>
-							</button>
+									<button class="pill-button" [class.active]="getWinningConditionCompare(beatmapGroup) === 'misses'" (click)="setWinningConditionCompare(beatmapGroup, 'misses')">
+										Misses
+									</button>
+								</div>
+							</div>
 
-							<button class="form-button small-button" matTooltip="Move up" [disabled]="i === 0" (click)="moveBeatmap(i, i - 1)">
-								<mat-icon class="icon">arrow_upward</mat-icon>
-							</button>
+							<div class="panel-section">
+								<div class="panel-title">Winner is the</div>
 
-							<button class="form-button small-button" matTooltip="Move down" [disabled]="i === beatmaps.length - 1" (click)="moveBeatmap(i, i + 1)">
-								<mat-icon class="icon">arrow_downward</mat-icon>
-							</button>
+								<div class="pill-group">
+									<button class="pill-button" [class.active]="getWinningConditionWinner(beatmapGroup) === 'highest'" (click)="setWinningConditionWinner(beatmapGroup, 'highest')">
+										Highest
+									</button>
 
-							<button class="form-button small-button" (click)="synchronizeBeatmap(beatmapGroup)">
-								<mat-icon class="icon" [ngClass]="{ 'rotate': beatmapGroup.get('isSynchronizing').value }">sync</mat-icon>
-							</button>
+									<button class="pill-button" [class.active]="getWinningConditionWinner(beatmapGroup) === 'lowest'" (click)="setWinningConditionWinner(beatmapGroup, 'lowest')">
+										Lowest
+									</button>
+								</div>
+							</div>
 
-							<button class="form-button small-button danger" (click)="removeBeatmap(i)">
-								<mat-icon class="icon">delete</mat-icon>
-							</button>
+							<div class="panel-footer">
+								<span class="summary-text">{{ getWinningConditionSummary(beatmapGroup) }}</span>
+
+								<button class="form-button danger" (click)="resetWinningCondition(beatmapGroup)">
+									Reset to highest score
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>

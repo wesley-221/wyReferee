@@ -1,3 +1,5 @@
+import { WinConditionCompare, WinConditionWinner } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
+
 export interface TournamentBeatmapForm {
 	id: number;
 	invalid: boolean;
@@ -10,6 +12,8 @@ export interface TournamentBeatmapForm {
 	modCategory: any;
 	gamemodeId: number;
 	reverseScore: boolean;
+	winningConditionCompare: WinConditionCompare;
+	winningConditionWinner: WinConditionWinner;
 	picked: boolean;
 	isSynchronizing: boolean;
 }

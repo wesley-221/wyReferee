@@ -279,6 +279,8 @@ export class TournamentEditStateService {
 							modCategory: beatmap.modCategory,
 							gamemodeId: beatmap.gamemodeId,
 							reverseScore: beatmap.reverseScore,
+							winningConditionCompare: beatmap.winningConditionCompare,
+							winningConditionWinner: beatmap.winningConditionWinner,
 							picked: beatmap.picked,
 							isSynchronizing: beatmap.isSynchronizing
 						}))

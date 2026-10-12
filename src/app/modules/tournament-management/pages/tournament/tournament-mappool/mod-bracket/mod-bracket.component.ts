@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -8,7 +8,7 @@ import { ToastType } from 'app/models/toast';
 import { MappoolType } from 'app/models/wytournament/mappool/wy-mappool';
 import { WyMod } from 'app/models/wytournament/mappool/wy-mod';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
-import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
+import { WinConditionCompare, WinConditionWinner, WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ElectronService } from 'app/services/electron.service';
 import { GetBeatmap } from 'app/services/osu-api/get-beatmap.service';
@@ -20,7 +20,7 @@ import { FormGroupHelper } from '../../../../models/form-group-helper';
 	templateUrl: './mod-bracket.component.html',
 	styleUrls: ['./mod-bracket.component.scss']
 })
-export class ModBracketComponent implements OnInit {
+export class ModBracketComponent implements OnInit, OnChanges {
 	@Input() tournament: WyTournament;
 
 	@Input() form: FormGroup;
@@ -39,6 +39,7 @@ export class ModBracketComponent implements OnInit {
 	bulkBeatmaps: string;
 	synchAllDisabled: boolean;
 	showBulkBeatmaps = false;
+	openWinningConditionIndex: number = null;
 
 	constructor(private getBeatmap: GetBeatmap, private dialog: MatDialog, private toastService: ToastService, public electronService: ElectronService) {
 		this.availableMods = [
@@ -61,6 +62,10 @@ export class ModBracketComponent implements OnInit {
 	}
 
 	ngOnInit(): void { }
+
+	ngOnChanges(): void {
+		this.openWinningConditionIndex = null;
+	}
 
 	get mods(): FormArray<FormGroup> {
 		return this.form.get('mods') as FormArray<FormGroup>;
@@ -177,6 +182,13 @@ export class ModBracketComponent implements OnInit {
 			return;
 		}
 
+		if (this.openWinningConditionIndex === index) {
+			this.openWinningConditionIndex = targetIndex;
+		}
+		else if (this.openWinningConditionIndex === targetIndex) {
+			this.openWinningConditionIndex = index;
+		}
+
 		const beatmap = this.beatmaps.at(index);
 		this.beatmaps.removeAt(index, { emitEvent: false });
 		this.beatmaps.insert(targetIndex, beatmap, { emitEvent: false });
@@ -244,12 +256,99 @@ export class ModBracketComponent implements OnInit {
 	}
 
 	/**
-	 * Reverses the score win condition for the given beatmap
+	 * Toggles the winning condition panel for the beatmap
 	 *
-	 * @param beatmapGroup the form group to reverse the score for
+	 * @param index the beatmap to toggle the winning condition panel for
 	 */
-	reverseScore(beatmapGroup: FormGroup): void {
-		beatmapGroup.get('reverseScore').setValue(!beatmapGroup.get('reverseScore').value);
+	toggleWinningCondition(index: number): void {
+		this.openWinningConditionIndex = this.openWinningConditionIndex === index ? null : index;
+	}
+
+	/**
+	 * Gets the winning condition comparison type
+	 *
+	 * @param beatmapGroup the beatmap form group
+	 */
+	getWinningConditionCompare(beatmapGroup: FormGroup): WinConditionCompare {
+		return beatmapGroup.get('winningConditionCompare')?.value ?? 'score';
+	}
+
+	/**
+	 * Gets the winning condition winner type
+	 *
+	 * @param beatmapGroup the beatmap form group
+	 */
+	getWinningConditionWinner(beatmapGroup: FormGroup): WinConditionWinner {
+		return beatmapGroup.get('winningConditionWinner')?.value ?? (beatmapGroup.get('reverseScore')?.value ? 'lowest' : 'highest');
+	}
+
+	/**
+	 * Sets the comparison type for winning condition
+	 *
+	 * @param beatmapGroup the beatmap form group
+	 * @param compare the comparison type
+	 */
+	setWinningConditionCompare(beatmapGroup: FormGroup, compare: WinConditionCompare): void {
+		beatmapGroup.get('winningConditionCompare').setValue(compare);
+		this.syncReverseScore(beatmapGroup);
+		beatmapGroup.markAsDirty();
+	}
+
+	/**
+	 * Sets the winner type for winning condition
+	 *
+	 * @param beatmapGroup the beatmap form group
+	 * @param winner the winner type
+	 */
+	setWinningConditionWinner(beatmapGroup: FormGroup, winner: WinConditionWinner): void {
+		beatmapGroup.get('winningConditionWinner').setValue(winner);
+		this.syncReverseScore(beatmapGroup);
+		beatmapGroup.markAsDirty();
+	}
+
+	/**
+	 * Resets the winning condition to default (highest score wins)
+	 *
+	 * @param beatmapGroup the beatmap form group
+	 */
+	resetWinningCondition(beatmapGroup: FormGroup): void {
+		beatmapGroup.get('winningConditionCompare').setValue('score');
+		beatmapGroup.get('winningConditionWinner').setValue('highest');
+		beatmapGroup.get('reverseScore').setValue(false);
+		beatmapGroup.markAsDirty();
+	}
+
+	/**
+	 * Checks if the winning condition is the default condition (Highest score)
+	 *
+	 * @param beatmapGroup the beatmap form group
+	 */
+	isDefaultWinningCondition(beatmapGroup: FormGroup): boolean {
+		return this.getWinningConditionCompare(beatmapGroup) === 'score' &&
+			this.getWinningConditionWinner(beatmapGroup) === 'highest';
+	}
+
+	/**
+	 * Gets the label for the winning condition dropdown button
+	 *
+	 * @param beatmapGroup the beatmap form group
+	 */
+	getWinningConditionLabel(beatmapGroup: FormGroup): string {
+		const compare = this.getWinningConditionCompare(beatmapGroup);
+		const winner = this.getWinningConditionWinner(beatmapGroup);
+		const winnerLabel = winner === 'lowest' ? 'Lowest' : 'Highest';
+		const compareLabel = compare === 'accuracy' ? 'accuracy' : compare === 'misses' ? 'misses' : 'score';
+
+		return `${winnerLabel} ${compareLabel}`;
+	}
+
+	/**
+	 * Gets the winning condition summary text
+	 *
+	 * @param beatmapGroup the beatmap form group
+	 */
+	getWinningConditionSummary(beatmapGroup: FormGroup): string {
+		return `${this.getWinningConditionLabel(beatmapGroup)} wins`;
 	}
 
 	/**
@@ -273,6 +372,13 @@ export class ModBracketComponent implements OnInit {
 	 * @param index the index of the beatmap to remove
 	 */
 	removeBeatmap(index: number): void {
+		if (this.openWinningConditionIndex === index) {
+			this.openWinningConditionIndex = null;
+		}
+		else if (this.openWinningConditionIndex !== null && this.openWinningConditionIndex > index) {
+			this.openWinningConditionIndex--;
+		}
+
 		this.beatmaps.removeAt(index);
 	}
 
@@ -310,5 +416,11 @@ export class ModBracketComponent implements OnInit {
 		this.modBracketForm.insert(targetIndex, modBracket, { emitEvent: false });
 		this.modBracketForm.updateValueAndValidity();
 		this.modBracketMoved.emit(targetIndex);
+	}
+
+	private syncReverseScore(beatmapGroup: FormGroup): void {
+		const compare = this.getWinningConditionCompare(beatmapGroup);
+		const winner = this.getWinningConditionWinner(beatmapGroup);
+		beatmapGroup.get('reverseScore').setValue(compare === 'score' && winner === 'lowest');
 	}
 }

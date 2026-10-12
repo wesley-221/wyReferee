@@ -1,5 +1,8 @@
 import { WyModCategory } from './wy-mod-category';
 
+export type WinConditionCompare = 'score' | 'accuracy' | 'misses';
+export type WinConditionWinner = 'highest' | 'lowest';
+
 export class WyModBracketMap {
 	id: number;
 	index: number;
@@ -16,10 +19,14 @@ export class WyModBracketMap {
 	gamemodeId: number;
 
 	reverseScore: boolean;
+	winningConditionCompare: WinConditionCompare;
+	winningConditionWinner: WinConditionWinner;
 	picked: boolean;
 	isSynchronizing: boolean;
 
 	constructor(init?: Partial<WyModBracketMap>) {
+		this.winningConditionCompare = init?.winningConditionCompare ?? 'score';
+		this.winningConditionWinner = init?.winningConditionWinner ?? (init?.reverseScore ? 'lowest' : 'highest');
 		Object.assign(this, init);
 	}
 
@@ -42,6 +49,8 @@ export class WyModBracketMap {
 			modCategory: modBracketMap.modCategory != undefined ? WyModCategory.makeTrueCopy(modBracketMap.modCategory) : null,
 			gamemodeId: modBracketMap.gamemodeId,
 			reverseScore: modBracketMap.reverseScore,
+			winningConditionCompare: modBracketMap.winningConditionCompare,
+			winningConditionWinner: modBracketMap.winningConditionWinner,
 			picked: modBracketMap.picked,
 			isSynchronizing: modBracketMap.isSynchronizing
 		});
