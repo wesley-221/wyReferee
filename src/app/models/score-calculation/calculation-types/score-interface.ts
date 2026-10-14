@@ -78,6 +78,7 @@ export abstract class ScoreInterface {
 		newUser.passed = 0;
 		newUser.accuracy = 0;
 		newUser.mods = null;
+		newUser.countmiss = 0;
 
 		return newUser;
 	}
@@ -177,6 +178,68 @@ export abstract class ScoreInterface {
 	}
 
 	/**
+	 * Get all the users that are in team one
+	 */
+	public getTeamOneUsers(): MultiplayerDataUser[] {
+		if (this.usesStaticSlots()) {
+			const users: MultiplayerDataUser[] = [];
+
+			for (let i = 0; i < this.getTeamSize(); i++) {
+				users.push(this.getUserBySlot(i));
+			}
+
+			return users;
+		}
+
+		return this.getTeamRedUsers();
+	}
+
+	/**
+	 * Get all the users that are in team two
+	 */
+	public getTeamTwoUsers(): MultiplayerDataUser[] {
+		if (this.usesStaticSlots()) {
+			const users: MultiplayerDataUser[] = [];
+
+			for (let i = this.getTeamSize(); i < this.getTeamSize() * 2; i++) {
+				users.push(this.getUserBySlot(i));
+			}
+
+			return users;
+		}
+
+		return this.getTeamBlueUsers();
+	}
+
+	/**
+	 * Calculate average accuracy for team one
+	 */
+	public calculateTeamOneAccuracy(): number {
+		return this.calculateAverageAccuracy(this.getTeamOneUsers());
+	}
+
+	/**
+	 * Calculate average accuracy for team two
+	 */
+	public calculateTeamTwoAccuracy(): number {
+		return this.calculateAverageAccuracy(this.getTeamTwoUsers());
+	}
+
+	/**
+	 * Calculate total misses for team one
+	 */
+	public calculateTeamOneMisses(): number {
+		return this.calculateTotalMisses(this.getTeamOneUsers());
+	}
+
+	/**
+	 * Calculate total misses for team two
+	 */
+	public calculateTeamTwoMisses(): number {
+		return this.calculateTotalMisses(this.getTeamTwoUsers());
+	}
+
+	/**
 	 * Populates the team arrays with the appropriate players
 	 */
 	private populateTeamArrays(): void {
@@ -188,6 +251,48 @@ export abstract class ScoreInterface {
 				this.teamBlueUsers.push(player);
 			}
 		}
+	}
+
+	/**
+	 * Calculate the average accuracy for the given players
+	 *
+	 * @param players the array of players to calculate the average accuracy for
+	 */
+	private calculateAverageAccuracy(players: MultiplayerDataUser[]): number {
+		if (!players || players.length === 0) {
+			return 0;
+		}
+
+		let totalAccuracy = 0;
+
+		for (const player of players) {
+			if (player && player.passed == 1) {
+				totalAccuracy += Number(player.accuracy || 0);
+			}
+		}
+
+		return Number((totalAccuracy / players.length).toFixed(2));
+	}
+
+	/**
+	 * Calculate the total misses for the given players
+	 *
+	 * @param players the array of players to calculate the total misses for
+	 */
+	private calculateTotalMisses(players: MultiplayerDataUser[]): number {
+		if (!players || players.length === 0) {
+			return 0;
+		}
+
+		let totalMisses = 0;
+
+		for (const player of players) {
+			if (player) {
+				totalMisses += Number(player.countmiss || 0);
+			}
+		}
+
+		return totalMisses;
 	}
 
 	/**

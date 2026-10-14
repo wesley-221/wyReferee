@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { WyModBracket } from 'app/models/wytournament/mappool/wy-mod-bracket';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
@@ -6,18 +6,50 @@ import { Gamemodes, Mods } from 'app/models/osu-models/osu';
 import { WyMod } from 'app/models/wytournament/mappool/wy-mod';
 import { FormGroupHelper } from '../../../../models/form-group-helper';
 
+interface DefaultBracketDefinition {
+	name: string;
+	acronym: string;
+	mods: { name: string; value: number | string }[];
+}
+
 @Component({
 	selector: 'app-mappool',
 	templateUrl: './mappool.component.html',
 	styleUrls: ['./mappool.component.scss']
 })
-export class MappoolComponent implements OnInit {
+export class MappoolComponent implements OnChanges, OnInit {
 	@Input() tournament: WyTournament;
 	@Input() form: FormGroup;
+	@Input() mappoolIndex: number;
+	@Input() mappoolCount: number;
 
-	constructor() { }
+	@Output() moveEarlier = new EventEmitter<void>();
+	@Output() moveLater = new EventEmitter<void>();
+	@Output() deleteMappool = new EventEmitter<void>();
 
-	ngOnInit(): void { }
+	activeModBracketIndex: number;
+	showBracketCreator: boolean;
+	bracketCreationMode: 'default' | 'empty';
+	selectedDefaultBracketNames: Set<string>;
+	addNoFailToBrackets: boolean;
+
+	constructor() {
+		this.activeModBracketIndex = 0;
+		this.showBracketCreator = false;
+		this.bracketCreationMode = 'default';
+		this.selectedDefaultBracketNames = new Set<string>();
+		this.addNoFailToBrackets = false;
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes.form) {
+			this.activeModBracketIndex = 0;
+		}
+	}
+
+	ngOnInit(): void {
+		this.activeModBracketIndex = 0;
+	}
 
 	get modBrackets(): FormArray<FormGroup> {
 		return this.form.get('modBrackets') as FormArray<FormGroup>;
@@ -25,6 +57,50 @@ export class MappoolComponent implements OnInit {
 
 	get modCategories(): FormArray<FormGroup> {
 		return this.form.get('modCategories') as FormArray<FormGroup>;
+	}
+
+	get defaultBracketOptions(): DefaultBracketDefinition[] {
+		if (this.tournament.gamemodeId == Gamemodes.Mania as number) {
+			return [
+				{ name: 'Rice', acronym: 'RC', mods: [{ name: 'Freemod', value: 'freemod' }] },
+				{ name: 'Long Note', acronym: 'LN', mods: [{ name: 'Freemod', value: 'freemod' }] },
+				{ name: 'Hybrid', acronym: 'HB', mods: [{ name: 'Freemod', value: 'freemod' }] },
+				{ name: 'Speed Velocity', acronym: 'SV', mods: [{ name: 'Freemod', value: 'freemod' }] },
+				{ name: 'Tiebreaker', acronym: 'TB', mods: [{ name: 'Freemod', value: 'freemod' }] }
+			];
+		}
+
+		if (this.tournament.gamemodeId == Gamemodes.Catch as number) {
+			return [
+				{ name: 'Nomod', acronym: 'NM', mods: [{ name: 'Nomod', value: Mods.None }] },
+				{ name: 'Hidden', acronym: 'HD', mods: [{ name: 'Hidden', value: Mods.Hidden }] },
+				{ name: 'Hardrock', acronym: 'HR', mods: [{ name: 'Freemod', value: 'freemod' }] },
+				{ name: 'Doubletime', acronym: 'DT', mods: [{ name: 'Doubletime', value: Mods.DoubleTime }, { name: 'Freemod', value: 'freemod' }] },
+				{ name: 'Tiebreaker', acronym: 'TB', mods: [{ name: 'Freemod', value: 'freemod' }] }
+			];
+		}
+
+		return [
+			{ name: 'Nomod', acronym: 'NM', mods: [{ name: 'Nomod', value: Mods.None }] },
+			{ name: 'Hidden', acronym: 'HD', mods: [{ name: 'Hidden', value: Mods.Hidden }] },
+			{ name: 'Hardrock', acronym: 'HR', mods: [{ name: 'Hardrock', value: Mods.HardRock }] },
+			{ name: 'Doubletime', acronym: 'DT', mods: [{ name: 'Doubletime', value: Mods.DoubleTime }] },
+			{ name: 'Tiebreaker', acronym: 'TB', mods: [{ name: 'Freemod', value: 'freemod' }] }
+		];
+	}
+
+	get existingDefaultBracketCount(): number {
+		return this.defaultBracketOptions.filter(bracket => this.defaultBracketExists(bracket)).length;
+	}
+
+	get selectedDefaultBracketCount(): number {
+		return this.defaultBracketOptions.filter(bracket =>
+			this.selectedDefaultBracketNames.has(bracket.name) && !this.defaultBracketExists(bracket)
+		).length;
+	}
+
+	get bracketCreationCount(): number {
+		return this.bracketCreationMode === 'empty' ? 1 : this.selectedDefaultBracketCount;
 	}
 
 	addNewCategory(): void {
@@ -35,6 +111,50 @@ export class MappoolComponent implements OnInit {
 		this.modCategories.removeAt(index);
 	}
 
+	toggleBracketCreator(): void {
+		if (this.showBracketCreator) {
+			this.closeBracketCreator();
+		}
+		else {
+			this.openBracketCreator();
+		}
+	}
+
+	openBracketCreator(): void {
+		this.showBracketCreator = true;
+		this.bracketCreationMode = 'default';
+		this.addNoFailToBrackets = false;
+		this.selectedDefaultBracketNames = new Set(
+			this.defaultBracketOptions
+				.filter(bracket => !this.defaultBracketExists(bracket))
+				.map(bracket => bracket.name)
+		);
+	}
+
+	closeBracketCreator(): void {
+		this.showBracketCreator = false;
+	}
+
+	selectBracketCreationMode(mode: 'default' | 'empty'): void {
+		this.bracketCreationMode = mode;
+	}
+
+	toggleDefaultBracket(name: string): void {
+		if (this.selectedDefaultBracketNames.has(name)) {
+			this.selectedDefaultBracketNames.delete(name);
+		}
+		else {
+			this.selectedDefaultBracketNames.add(name);
+		}
+	}
+
+	defaultBracketExists(bracket: DefaultBracketDefinition): boolean {
+		const acronym = bracket.acronym.toLowerCase();
+		return this.modBrackets.controls.some(control =>
+			String(control.get('acronym')?.value ?? '').toLowerCase() === acronym
+		);
+	}
+
 	createNewBracket(): void {
 		const newModBracket = new WyModBracket({
 			name: 'Unnamed mod bracket',
@@ -42,52 +162,54 @@ export class MappoolComponent implements OnInit {
 		});
 
 		this.modBrackets.push(FormGroupHelper.createModBracketFormGroup(newModBracket));
+		this.activeModBracketIndex = this.modBrackets.length - 1;
 	}
 
-	createDefaultBrackets(nofail: boolean): void {
-		if (this.tournament.gamemodeId == Gamemodes.Mania as number) {
-			this.createDefaultBracket('Rice', 'RC', [{ name: 'Freemod', value: 'freemod' }]);
-			this.createDefaultBracket('Long Note', 'LN', [{ name: 'Freemod', value: 'freemod' }]);
-			this.createDefaultBracket('Hybrid', 'HB', [{ name: 'Freemod', value: 'freemod' }]);
-			this.createDefaultBracket('Speed Velocity ', 'TB', [{ name: 'Freemod', value: 'freemod' }]);
+	addConfiguredBrackets(): void {
+		if (this.bracketCreationMode === 'empty') {
+			this.createNewBracket();
 		}
 		else {
-			if (nofail) {
-				this.createDefaultBracket('Nomod', 'NM', [{ name: 'Nofail', value: Mods.NoFail }]);
-				this.createDefaultBracket('Hidden', 'HD', [{ name: 'Hidden', value: Mods.Hidden }, { name: 'Nofail', value: Mods.NoFail }]);
-
-				if (this.tournament.gamemodeId != Gamemodes.Catch as number) {
-					this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Hardrock', value: Mods.HardRock }, { name: 'Nofail', value: Mods.NoFail }]);
-					this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }, { name: 'Nofail', value: Mods.NoFail }]);
-				}
+			const selectedBrackets = this.defaultBracketOptions.filter(bracket =>
+				this.selectedDefaultBracketNames.has(bracket.name) && !this.defaultBracketExists(bracket)
+			);
+			for (const bracket of selectedBrackets) {
+				this.createDefaultBracket(bracket, this.addNoFailToBrackets);
 			}
-			else {
-				this.createDefaultBracket('Nomod', 'NM', [{ name: 'Nomod', value: Mods.None }]);
-				this.createDefaultBracket('Hidden', 'HD', [{ name: 'Hidden', value: Mods.Hidden }]);
-
-				if (this.tournament.gamemodeId != Gamemodes.Catch as number) {
-					this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Hardrock', value: Mods.HardRock }]);
-					this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }]);
-				}
-			}
-
-			if (this.tournament.gamemodeId == Gamemodes.Catch as number) {
-				this.createDefaultBracket('Hardrock', 'HR', [{ name: 'Freemod', value: 'freemod' }]);
-				this.createDefaultBracket('Doubletime', 'DT', [{ name: 'Doubletime', value: Mods.DoubleTime }, { name: 'Freemod', value: 'freemod' }]);
+			if (selectedBrackets.length > 0) {
+				this.activeModBracketIndex = this.modBrackets.length - 1;
 			}
 		}
 
-		this.createDefaultBracket('Tiebreaker', 'TB', [{ name: 'Freemod', value: 'freemod' }]);
+		this.closeBracketCreator();
 	}
 
-	private createDefaultBracket(name: string, acronym: string, modsEnabled: any[]): void {
+	selectModBracket(index: number): void {
+		this.activeModBracketIndex = index;
+	}
+
+	onModBracketDeleted(index: number): void {
+		if (this.activeModBracketIndex > index) {
+			this.activeModBracketIndex--;
+		}
+		else if (this.activeModBracketIndex === index) {
+			this.activeModBracketIndex = Math.min(index, this.modBrackets.length - 1);
+		}
+	}
+
+	private createDefaultBracket(bracket: DefaultBracketDefinition, addNoFail: boolean): void {
 		const newModBracket = new WyModBracket({
-			name: name,
-			acronym: acronym,
+			name: bracket.name,
+			acronym: bracket.acronym,
 			collapsed: true
 		});
 
-		modsEnabled.forEach(mod => {
+		const mods = [...bracket.mods];
+		if (addNoFail && !mods.some(mod => mod.value === Mods.NoFail)) {
+			mods.push({ name: 'Nofail', value: Mods.NoFail });
+		}
+
+		mods.forEach(mod => {
 			const newMod = new WyMod({
 				name: mod.name,
 				value: mod.value

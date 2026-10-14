@@ -1,47 +1,70 @@
 @import "variables";
 
+$card-background-color: #1a1a1a;
+$card-border-color: #2b2b2b;
+$card-background-accent-color: #131315;
+
+.pill-button {
+	display: inline-flex;
+	align-items: center;
+	flex: 0 0 auto;
+
+	padding: 8px 16px;
+	min-height: 40px;
+
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 24px;
+
+	background: transparent;
+	color: inherit;
+
+	cursor: pointer;
+
+	.beatmap-count {
+		opacity: 0.6;
+	}
+
+	.caret {
+		font-size: 18px;
+
+		width: 18px;
+		height: 18px;
+		line-height: 18px;
+
+		margin-right: -4px;
+	}
+
+	&.highlighted {
+		border-color: $primary;
+		color: #ffffff;
+	}
+
+	&.active {
+		font-weight: bold;
+		border-color: $primary;
+		background: $primary;
+		color: #000000;
+	}
+
+	&:hover {
+		border-color: $primary;
+	}
+}
+
 .mod-bracket {
 	margin-bottom: 8px;
+	padding: 16px;
+	border: 1px solid $card-border-color;
+	background: $card-background-color;
 
-	border: 1px solid darken(#3c4452, 15%);
-
-	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-
-	.header {
+	.bracket-actions {
 		display: flex;
-		justify-content: space-between;
-
-		padding: 16px;
-
-		.information {
-			display: flex;
-			align-items: center;
-
-			h3 {
-				margin: 0;
-			}
-		}
-
-		button {
-			margin-left: 4px;
-		}
-
-		.collapse {
-			position: fixed;
-			right: 0;
-		}
-
-		&:hover {
-			background: darken($background-color, 5%);
-			cursor: pointer;
-		}
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-bottom: 8px;
 	}
 
 	.body {
-		padding: 16px;
-
 		.mod-details {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
@@ -51,92 +74,213 @@
 
 		.all-mods {
 			display: flex;
-			flex-direction: row;
-			flex-flow: row wrap;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin: 8px 0;
 
-			.mod {
+			.selected-mod {
 				display: flex;
-				justify-content: space-between;
-				flex: 1 1 45%;
+				align-items: center;
+				gap: 4px;
+				min-height: 36px;
+				padding: 4px 6px 4px 12px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				border-radius: 20px;
+				background: #242424;
 
-				margin: 8px;
-
-				.mod-select {
-					flex: 1;
-					margin-right: 4px;
-				}
-
-				.buttons {
+				.remove-mod {
 					display: flex;
 					align-items: center;
+					justify-content: center;
+					width: 24px;
+					height: 24px;
+					padding: 0;
+					border: 0;
+					border-radius: 50%;
+					background: transparent;
+					color: inherit;
+					cursor: pointer;
+
+					mat-icon {
+						width: 16px;
+						height: 16px;
+						font-size: 16px;
+					}
+
+					&:hover {
+						background: rgba(255, 255, 255, 0.12);
+					}
 				}
 			}
+
+			.add-mod-select {
+				width: 160px;
+				margin: 0;
+			}
+		}
+
+		.mod-limit {
+			margin: 0;
+			opacity: 0.65;
 		}
 
 		.beatmaps {
 			.modify-buttons {
-				button {
-					margin-right: 4px;
+				display: flex;
+				justify-content: flex-end;
+
+				gap: 8px;
+			}
+
+			.bulk-beatmaps {
+				display: flex;
+				flex-direction: column;
+
+				gap: 8px;
+				margin-top: 8px;
+
+				.bulk-actions {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 8px;
+					margin-bottom: 8px;
 				}
 			}
 
-			.extra-spacing {
-				margin-top: 4px;
-			}
-
 			.all-beatmaps {
+				display: flex;
+				flex-direction: column;
+
 				margin-top: 8px;
+				gap: 8px;
 
 				.beatmap {
 					display: flex;
-					justify-content: space-between;
+					flex-direction: column;
 
-					.data {
+					background-color: $card-background-accent-color;
+
+					border: 1px solid $card-border-color;
+					border-radius: 8px;
+
+					overflow: hidden;
+
+					.beatmap-row {
 						display: flex;
-						flex-direction: row;
+						justify-content: space-between;
 						align-items: center;
 
-						padding: 4px;
+						padding: 4px 8px;
 
-						.column {
-							padding-right: 4px;
+						.data {
+							display: flex;
+							flex-direction: row;
+							align-items: center;
 
-							&.category {
+							padding: 4px;
+
+							.column {
+								padding-right: 4px;
+
+								&.category {
+									display: flex;
+									flex-direction: column;
+								}
+
+								&.mod-acronym {
+									display: inline-flex;
+									align-items: center;
+									justify-content: center;
+
+									min-width: 44px;
+									height: 28px;
+
+									padding: 0 8px;
+									margin-right: 8px;
+
+									background-color: rgba($primary, 0.1);
+									color: $primary;
+
+									border: 1px solid rgba($primary, 0.26);
+									border-radius: 6px;
+								}
+							}
+						}
+
+						.information {
+							display: flex;
+							align-items: center;
+						}
+
+						.buttons {
+							display: flex;
+							align-items: center;
+
+							.rotate {
+								animation: rotate 0.5s ease-in-out 0s;
+							}
+
+							@keyframes rotate {
+								from {
+									transform: rotate(0deg);
+								}
+								to {
+									transform: rotate(360deg);
+								}
+							}
+
+							button {
+								margin-right: 4px;
+							}
+						}
+					}
+
+					.winning-condition-panel {
+						display: flex;
+						flex-direction: column;
+
+						gap: 14px;
+						padding: 16px 20px;
+
+						background: #141416;
+						border-top: 1px solid $card-border-color;
+
+						.panel-section {
+							display: flex;
+							flex-direction: column;
+							gap: 8px;
+
+							.panel-title {
+								font-size: 11px;
+								font-weight: bold;
+								text-transform: uppercase;
+
+								color: rgba(255, 255, 255, 0.45);
+							}
+
+							.pill-group {
 								display: flex;
-								flex-direction: column;
-							}
-						}
-					}
-
-					.information {
-						display: flex;
-						align-items: center;
-					}
-
-					.buttons {
-						display: flex;
-						align-items: center;
-
-						.rotate {
-							animation: rotate 0.5s ease-in-out 0s;
-						}
-
-						@keyframes rotate {
-							from {
-								transform: rotate(0deg);
-							}
-							to {
-								transform: rotate(360deg);
+								flex-wrap: wrap;
+								gap: 8px;
 							}
 						}
 
-						button {
-							margin-right: 4px;
-						}
-					}
+						.panel-footer {
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
 
-					&:nth-child(odd) {
-						background-color: lighten($background-color, 15%);
+							margin-top: 4px;
+							padding-top: 4px;
+
+							.summary-text {
+								color: $primary;
+
+								font-size: 14px;
+								font-weight: bold;
+							}
+						}
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteMappoolDialogComponent } from 'app/components/dialogs/delete-mappool-dialog/delete-mappool-dialog.component';
 import { MappoolType, WyMappool } from 'app/models/wytournament/mappool/wy-mappool';
@@ -20,7 +20,7 @@ export class MappoolOverviewComponent implements OnInit {
 	@Input() validationForm: FormGroup;
 
 	form: FormGroup;
-	collapsedState: WeakMap<AbstractControl, boolean>;
+	activeMappoolIndex: number;
 
 	wyBinMappools: WyMappool[];
 	importingFromWyBin: boolean;
@@ -35,7 +35,7 @@ export class MappoolOverviewComponent implements OnInit {
 		this.wyBinMappools = [];
 		this.importingFromWyBin = false;
 		this.addNoFail = true;
-		this.collapsedState = new WeakMap<AbstractControl, boolean>();
+		this.activeMappoolIndex = 0;
 
 		this.form = new FormGroup({
 			mappools: new FormArray([])
@@ -54,6 +54,7 @@ export class MappoolOverviewComponent implements OnInit {
 					);
 
 					this.form.setControl('mappools', formArray, { emitEvent: false });
+					this.activeMappoolIndex = 0;
 				}
 				else {
 					tournament.mappools.forEach((m, i) => {
@@ -77,6 +78,7 @@ export class MappoolOverviewComponent implements OnInit {
 		const newMappool = new WyMappool();
 
 		this.mappools.push(FormGroupHelper.createMappoolFormGroup(newMappool));
+		this.activeMappoolIndex = this.mappools.length - 1;
 	}
 
 	importWyBinMappool(): void {
@@ -110,10 +112,11 @@ export class MappoolOverviewComponent implements OnInit {
 		newMappool.index = this.tournament.mappoolIndex;
 
 		this.mappools.push(FormGroupHelper.createMappoolFormGroup(newMappool));
+		this.activeMappoolIndex = this.mappools.length - 1;
 	}
 
 	deleteMappool(index: number): void {
-		const mappool = this.tournament.mappools[index];
+		const mappool = new WyMappool(this.mappools.at(index).value);
 
 		const dialogRef = this.dialog.open(DeleteMappoolDialogComponent, {
 			data: {
@@ -124,22 +127,43 @@ export class MappoolOverviewComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
 			if (result != null) {
 				this.mappools.removeAt(index);
+				if (this.activeMappoolIndex > index) {
+					this.activeMappoolIndex--;
+				}
+				else if (this.activeMappoolIndex === index) {
+					this.activeMappoolIndex = Math.min(index, this.mappools.length - 1);
+				}
 
 				this.toastService.addToast(`Successfully deleted ${mappool.name}.`);
 			}
 		});
 	}
 
-	collapseMappool(mappool: AbstractControl, event: MouseEvent): void {
-		if ((event.target as HTMLElement).closest('button')) {
-			return;
-		}
+	selectMappool(index: number): void {
+		this.activeMappoolIndex = index;
+	}
 
-		const currentState = this.collapsedState.get(mappool) ?? true;
-		this.collapsedState.set(mappool, !currentState);
+	moveMappoolEarlier(index: number): void {
+		this.moveMappool(index, index - 1);
+	}
+
+	moveMappoolLater(index: number): void {
+		this.moveMappool(index, index + 1);
 	}
 
 	getMappoolFormArray(index: number): FormGroup {
 		return this.mappools.at(index);
+	}
+
+	private moveMappool(index: number, targetIndex: number): void {
+		if (targetIndex < 0 || targetIndex >= this.mappools.length) {
+			return;
+		}
+
+		const mappool = this.mappools.at(index);
+		this.mappools.removeAt(index, { emitEvent: false });
+		this.mappools.insert(targetIndex, mappool, { emitEvent: false });
+		this.mappools.updateValueAndValidity();
+		this.activeMappoolIndex = targetIndex;
 	}
 }

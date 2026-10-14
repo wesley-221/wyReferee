@@ -19,6 +19,7 @@ import { ChallongeService } from 'app/services/challonge.service';
 import { Misc } from 'app/shared/misc';
 import { LobbyStoreService } from 'app/services/storage/lobby-store.service';
 import { UpdateMatchResultsDialogComponent } from 'app/components/dialogs/update-match-results-dialog/update-match-results-dialog.component';
+import { WyModBracketMap } from 'app/models/wytournament/mappool/wy-mod-bracket-map';
 
 @Component({
 	selector: 'app-lobby-view',
@@ -89,14 +90,20 @@ export class LobbyViewComponent implements OnInit {
 				nextPick = this.selectedLobby.firstPick == this.selectedLobby.teamOneName ? this.selectedLobby.teamTwoName : this.selectedLobby.teamOneName;
 			}
 
-			if (match.team_one_score > match.team_two_score) {
-				const teamOneHasWon = (this.selectedLobby.getTeamOneScore() == Math.ceil(this.selectedLobby.bestOf / 2));
-				this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_one_score - match.team_two_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.getTeamOneScore()} : ${this.selectedLobby.getTeamTwoScore()} | ${this.selectedLobby.teamTwoName} ${!teamOneHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
-			}
-			else {
-				const teamTwoHasWon = (this.selectedLobby.teamTwoScore == Math.ceil(this.selectedLobby.bestOf / 2));
-				this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | Score: ${this.addDot(match.team_one_score, ' ')} - ${this.addDot(match.team_two_score, ' ')} // Score difference : ${this.addDot(match.team_two_score - match.team_one_score, ' ')}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.getTeamOneScore()} : ${this.selectedLobby.getTeamTwoScore()} | ${this.selectedLobby.teamTwoName} ${!teamTwoHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
-			}
+			const winningTeam = this.getWinningTeam(match);
+			const beatmap = this.getBeatmapFromMappool(match.beatmap_id);
+			const winnerName = winningTeam === 'teamOne' ? this.selectedLobby.teamOneName : this.selectedLobby.teamTwoName;
+			const teamHasWon = winningTeam === 'teamOne'
+				? (this.selectedLobby.getTeamOneScore() == Math.ceil(this.selectedLobby.bestOf / 2))
+				: (this.selectedLobby.teamTwoScore == Math.ceil(this.selectedLobby.bestOf / 2));
+
+			const compare = beatmap?.winningConditionCompare ?? 'score';
+			const metricLabel = compare === 'accuracy' ? 'Accuracy' : compare === 'misses' ? 'Misses' : 'Score';
+			const teamOneVal = compare === 'accuracy' ? `${match.getTeamOneAccuracy()}%` : compare === 'misses' ? `${match.getTeamOneMisses()}` : this.addDot(match.team_one_score, ' ');
+			const teamTwoVal = compare === 'accuracy' ? `${match.getTeamTwoAccuracy()}%` : compare === 'misses' ? `${match.getTeamTwoMisses()}` : this.addDot(match.team_two_score, ' ');
+			const diffVal = this.getDifferenceValueOnly(match);
+
+			this.ircService.sendMessage(this.selectedLobby.ircChannel.name, `"${winnerName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | ${metricLabel}: ${teamOneVal} - ${teamTwoVal} // ${metricLabel} difference : ${diffVal}${(totalMapsPlayed != 0) ? ` | ${this.selectedLobby.teamOneName} | ${this.selectedLobby.getTeamOneScore()} : ${this.selectedLobby.getTeamTwoScore()} | ${this.selectedLobby.teamTwoName} ${!teamHasWon ? '// Next pick is for ' + nextPick : ''}` : ''}`);
 		}
 	}
 
@@ -106,14 +113,16 @@ export class LobbyViewComponent implements OnInit {
 	 * @param match
 	 */
 	copyBeatmapResult(match: MultiplayerData) {
-		let beatmapResult = '';
+		const winningTeam = this.getWinningTeam(match);
+		const beatmap = this.getBeatmapFromMappool(match.beatmap_id);
+		const winnerName = winningTeam === 'teamOne' ? this.selectedLobby.teamOneName : this.selectedLobby.teamTwoName;
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+		const metricLabel = compare === 'accuracy' ? 'Accuracy' : compare === 'misses' ? 'Misses' : 'Score';
+		const teamOneVal = compare === 'accuracy' ? `${match.getTeamOneAccuracy()}%` : compare === 'misses' ? `${match.getTeamOneMisses()}` : match.team_one_score;
+		const teamTwoVal = compare === 'accuracy' ? `${match.getTeamTwoAccuracy()}%` : compare === 'misses' ? `${match.getTeamTwoMisses()}` : match.team_two_score;
+		const diffVal = this.getDifferenceValueOnly(match);
 
-		if (match.team_one_score > match.team_two_score) {
-			beatmapResult = `"${this.selectedLobby.teamOneName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_one_score - match.team_two_score}`;
-		}
-		else {
-			beatmapResult = `"${this.selectedLobby.teamTwoName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${match.team_one_score} | ${this.selectedLobby.teamTwoName} : ${match.team_two_score} | Score difference : ${match.team_two_score - match.team_one_score}`;
-		}
+		const beatmapResult = `"${winnerName}" has won on [https://osu.ppy.sh/beatmaps/${match.beatmap_id} ${this.cacheService.getBeatmapname(match.beatmap_id)}] | ${this.selectedLobby.teamOneName} : ${teamOneVal} | ${this.selectedLobby.teamTwoName} : ${teamTwoVal} | ${metricLabel} difference : ${diffVal}`;
 
 		navigator.clipboard.writeText(beatmapResult).then(() => {
 			this.toastService.addToast(`Copied the result for "${this.cacheService.getBeatmapname(match.beatmap_id)}"`);
@@ -282,22 +291,130 @@ export class LobbyViewComponent implements OnInit {
 	}
 
 	/**
-	 * Check whether the beatmap uses reverse scoring
+	 * Get the beatmap from the current lobby's mappool
 	 *
-	 * @param beatmapId the beatmap to check
+	 * @param beatmapId the beatmap id
 	 */
-	isReverseScoreBeatmap(beatmapId: number) {
-		if (this.selectedLobby.mappool) {
+	getBeatmapFromMappool(beatmapId: number): WyModBracketMap {
+		if (this.selectedLobby && this.selectedLobby.mappool) {
 			for (const modBracket of this.selectedLobby.mappool.modBrackets) {
 				for (const beatmap of modBracket.beatmaps) {
-					if (beatmap.beatmapId == beatmapId && beatmap.reverseScore == true) {
-						return true;
+					if (beatmap.beatmapId == beatmapId) {
+						return beatmap;
 					}
 				}
 			}
 		}
 
-		return false;
+		return null;
+	}
+
+	/**
+	 * Get the winning team for the given match
+	 *
+	 * @param match the multiplayer data
+	 */
+	getWinningTeam(match: MultiplayerData): 'teamOne' | 'teamTwo' | 'tie' {
+		const beatmap = this.getBeatmapFromMappool(match.beatmap_id);
+
+		return WyModBracketMap.getWinningTeam(beatmap, match);
+	}
+
+	/**
+	 * Get the result string for team one
+	 */
+	getTeamOneResultText(match: MultiplayerData): string {
+		const beatmap = this.getBeatmapFromMappool(match.beatmap_id);
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+
+		if (compare === 'accuracy') {
+			return `accuracy : ${match.getTeamOneAccuracy()}%`;
+		}
+		else if (compare === 'misses') {
+			return `misses : ${match.getTeamOneMisses()}`;
+		}
+		else {
+			return `score : ${this.addDot(match.team_one_score, ' ')}`;
+		}
+	}
+
+	/**
+	 * Get the result string for team two
+	 */
+	getTeamTwoResultText(match: MultiplayerData): string {
+		const beatmap = this.getBeatmapFromMappool(match.beatmap_id);
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+
+		if (compare === 'accuracy') {
+			return `${match.getTeamTwoAccuracy()}% : accuracy`;
+		}
+		else if (compare === 'misses') {
+			return `${match.getTeamTwoMisses()} : misses`;
+		}
+		else {
+			return `${this.addDot(match.team_two_score, ' ')} : score`;
+		}
+	}
+
+	/**
+	 * Get the difference result string for the match
+	 */
+	getDifferenceResultText(match: MultiplayerData): string {
+		const beatmap = this.getBeatmapFromMappool(match.beatmap_id);
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+		const diff = this.getDifferenceValueOnly(match);
+
+		if (compare === 'accuracy') {
+			return `Accuracy difference: ${diff}`;
+		}
+		else if (compare === 'misses') {
+			return `Misses difference: ${diff}`;
+		}
+		else {
+			return `Score difference: ${diff}`;
+		}
+	}
+
+	/**
+	 * Get just the formatted difference value
+	 */
+	getDifferenceValueOnly(match: MultiplayerData): string {
+		const beatmap = this.getBeatmapFromMappool(match.beatmap_id);
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+
+		if (compare === 'accuracy') {
+			const diff = Math.abs(match.getTeamOneAccuracy() - match.getTeamTwoAccuracy());
+
+			return `${diff.toFixed(2)}%`;
+		}
+		else if (compare === 'misses') {
+			const diff = Math.abs(match.getTeamOneMisses() - match.getTeamTwoMisses());
+
+			return `${diff}`;
+		}
+		else {
+			const diff = Math.abs(match.team_one_score - match.team_two_score);
+
+			return this.addDot(diff, ' ');
+		}
+	}
+
+	/**
+	 * Check whether the beatmap uses reverse scoring
+	 *
+	 * @param beatmapId the beatmap to check
+	 */
+	isReverseScoreBeatmap(beatmapId: number) {
+		const beatmap = this.getBeatmapFromMappool(beatmapId);
+
+		if (!beatmap) {
+			return false;
+		}
+
+		const compare = beatmap.winningConditionCompare ?? 'score';
+		const winner = beatmap.winningConditionWinner ?? (beatmap.reverseScore ? 'lowest' : 'highest');
+
+		return compare === 'score' && winner === 'lowest';
 	}
 
 	/**

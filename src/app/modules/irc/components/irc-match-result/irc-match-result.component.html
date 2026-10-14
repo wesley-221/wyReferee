@@ -22,11 +22,11 @@
 
 				<div class="teams">
 					<div class="red-team">
-						<span class="team-name">{{ selectedLobby.teamOneName }}</span>: {{ matchDialogData.multiplayerData.team_one_score }}
+						<span class="team-name">{{ selectedLobby.teamOneName }}</span>: {{ getTeamOneScoreDisplay(matchDialogData.multiplayerData) }}
 					</div>
 
 					<div class="blue-team">
-						<span class="team-name">{{ selectedLobby.teamTwoName }}</span>: {{ matchDialogData.multiplayerData.team_two_score }}
+						<span class="team-name">{{ selectedLobby.teamTwoName }}</span>: {{ getTeamTwoScoreDisplay(matchDialogData.multiplayerData) }}
 					</div>
 				</div>
 			}

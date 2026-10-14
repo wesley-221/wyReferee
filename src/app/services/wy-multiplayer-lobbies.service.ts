@@ -242,7 +242,8 @@ export class WyMultiplayerLobbiesService {
 						passed: +currentScore.pass,
 						slot: +currentScore.slot,
 						mods: +currentScore.enabled_mods,
-						team: +currentScore.team
+						team: +currentScore.team,
+						countmiss: isNaN(+currentScore.countmiss) ? 0 : +currentScore.countmiss
 					});
 
 					// Invalidate beatmaps that aren't part of the mappool
@@ -308,33 +309,25 @@ export class WyMultiplayerLobbiesService {
 
 				multiplayerData.team_one_score = scoreInterface.calculateTeamOneScore();
 				multiplayerData.team_two_score = scoreInterface.calculateTeamTwoScore();
+				multiplayerData.team_one_accuracy = scoreInterface.calculateTeamOneAccuracy();
+				multiplayerData.team_two_accuracy = scoreInterface.calculateTeamTwoAccuracy();
+				multiplayerData.team_one_misses = scoreInterface.calculateTeamOneMisses();
+				multiplayerData.team_two_misses = scoreInterface.calculateTeamTwoMisses();
 
-				if (multiplayerData.team_one_score > multiplayerData.team_two_score) {
-					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
-						// Team one has won, reverse score was not enabled, give point to team one
-						if (foundModBracketBeatmap == undefined || foundModBracketBeatmap == null || foundModBracketBeatmap.reverseScore != true) {
-							multiplayerLobby.teamOneScore++;
-						}
-						else {
-							multiplayerLobby.teamTwoScore++;
-						}
+				const winningTeam = WyModBracketMap.getWinningTeam(foundModBracketBeatmap, multiplayerData);
 
-						if (scoreInterface instanceof CTMCalculation) {
+				if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
+					if (winningTeam === 'teamOne') {
+						multiplayerLobby.teamOneScore++;
+
+						if (scoreInterface instanceof CTMCalculation && foundModBracketBeatmap) {
 							multiplayerLobby.teamTwoHealth -= foundModBracketBeatmap.damageAmount;
 						}
 					}
-				}
-				else {
-					if (multiplayerLobby.gamesCountTowardsScore.hasOwnProperty(multiplayerData.game_id) && multiplayerLobby.gamesCountTowardsScore[multiplayerData.game_id] == true) {
-						// Team two has won, reverse score was not enabled, give point to team two
-						if (foundModBracketBeatmap == undefined || foundModBracketBeatmap == null || foundModBracketBeatmap.reverseScore != true) {
-							multiplayerLobby.teamTwoScore++;
-						}
-						else {
-							multiplayerLobby.teamOneScore++;
-						}
+					else if (winningTeam === 'teamTwo') {
+						multiplayerLobby.teamTwoScore++;
 
-						if (scoreInterface instanceof CTMCalculation) {
+						if (scoreInterface instanceof CTMCalculation && foundModBracketBeatmap) {
 							multiplayerLobby.teamOneHealth -= foundModBracketBeatmap.damageAmount;
 						}
 					}
