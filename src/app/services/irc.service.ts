@@ -658,8 +658,9 @@ export class IrcService {
 	 * Part from the given channel
 	 *
 	 * @param channelName the channel to part
+	 * @param archive whether to archive the channel after parting
 	 */
-	partChannel(channelName: string) {
+	partChannel(channelName: string, archive?: boolean) {
 		for (const channel of this.allChannels) {
 			if (channel.name == channelName) {
 				this.allChannels.splice(this.allChannels.indexOf(channel), 1);
@@ -668,7 +669,7 @@ export class IrcService {
 					this.client.getChannel(channelName).leave();
 				}
 
-				window.electronApi.irc.deleteIrcChannel(channelName);
+				window.electronApi.irc.deleteIrcChannel(channelName, archive);
 				this.toastService.addToast(`Successfully parted "${channelName}".`);
 
 				break;

@@ -11,6 +11,8 @@ interface AppSettings {
 	chatContainerSwitched: boolean;
 	banchoChatContainerHeight: number;
 	showAllShortcuts: boolean;
+	archiveAfterPartingIrc: boolean;
+	rememberArchivingPreference: boolean;
 	[key: string]: any;
 }
 
@@ -21,7 +23,9 @@ const DEFAULT_SETTINGS: AppSettings = {
 	splitBanchoBotMessages: false,
 	chatContainerSwitched: false,
 	banchoChatContainerHeight: 30,
-	showAllShortcuts: false
+	showAllShortcuts: false,
+	archiveAfterPartingIrc: false,
+	rememberArchivingPreference: true
 };
 
 @Injectable({

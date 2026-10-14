@@ -43,7 +43,7 @@ import { IPC_CHANNELS } from './ipc-channels';
 	},
 	irc: {
 		createIrcChannel: (channelName: string, ircChannel: any) => ipcRenderer.invoke(IPC_CHANNELS.CREATE_IRC_CHANNEL, channelName, ircChannel),
-		deleteIrcChannel: (channelName: string) => ipcRenderer.invoke(IPC_CHANNELS.DELETE_IRC_CHANNEL, channelName),
+		deleteIrcChannel: (channelName: string, archive?: boolean) => ipcRenderer.invoke(IPC_CHANNELS.DELETE_IRC_CHANNEL, channelName, archive),
 		getAllIrcChannels: () => ipcRenderer.invoke(IPC_CHANNELS.GET_ALL_IRC_CHANNELS),
 		getIrcChannel: (channelName: string) => ipcRenderer.invoke(IPC_CHANNELS.GET_IRC_CHANNEL, channelName),
 		setIrcChannelLabel: (channelName: string, label: string) => ipcRenderer.invoke(IPC_CHANNELS.SET_IRC_CHANNEL_LABEL, channelName, label),

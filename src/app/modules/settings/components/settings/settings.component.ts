@@ -10,6 +10,7 @@ import { GenericService } from 'app/services/generic.service';
 import { OptionsMenu } from '../../models/options-menu';
 import { CacheStoreService } from 'app/services/storage/cache-store.service';
 import { WebhookService } from '../../../../services/webhook.service';
+import { SettingsStoreService } from '../../../../services/storage/settings-store.service';
 
 @Component({
 	selector: 'app-settings',
@@ -25,6 +26,8 @@ export class SettingsComponent implements OnInit {
 	splitBanchoBotMessages: boolean;
 	chatContainerSwitched: boolean;
 	showAllShortcutsStatus: boolean;
+	archiveIrcChannelsStatus: boolean;
+	rememberArchivePreferenceStatus: boolean;
 
 	generalOptions: OptionsMenu[] = [
 		{ header: 'Show AxS menu item', description: 'Toggle visibility of the AxS menu item in the sidebar', action: () => this.toggleAxSMenu(), slideToggle: true, slideToggleValue: this.genericService.getAxSMenuStatus() }
@@ -34,7 +37,9 @@ export class SettingsComponent implements OnInit {
 		{ header: 'Show incorrect slot warning', description: 'Toggle whether to show a warning when a player is in an incorrect slot. This is shown when <code>!mp settings</code> is used', action: () => this.toggleShowIncorrectSlot(), slideToggle: true, slideToggleValue: this.genericService.getShowIncorrectSlotStatus() },
 		{ header: 'Split BanchoBot messages', description: 'Toggle whether to split BanchoBot messages into its own chat container', action: () => this.toggleSplitBanchoBotMessages(), slideToggle: true, slideToggleValue: this.genericService.getSplitBanchoBotMessagesStatus() },
 		{ header: 'Switch chat containers', description: 'Toggle whether to switch the chat containers, default is BanchoBot container on top, normal chat container on the bottom. When enabled, the normal chat container will be on top and the BanchoBot container will be on the bottom.', action: () => this.toggleChatContainerSwitch(), slideToggle: true, slideToggleValue: this.genericService.getChatContainerSwitchStatus() },
-		{ header: 'Display all shortcut commands without scrollbar', description: 'Toggle whether to display all shortcut commands in the shortcuts menu without a scrollbar. These are the buttons above the send message input on the IRC page', action: () => this.toggleShowAllShortcuts(), slideToggle: true, slideToggleValue: this.genericService.getShowAllShortcutsStatus() }
+		{ header: 'Display all shortcut commands without scrollbar', description: 'Toggle whether to display all shortcut commands in the shortcuts menu without a scrollbar. These are the buttons above the send message input on the IRC page', action: () => this.toggleShowAllShortcuts(), slideToggle: true, slideToggleValue: this.genericService.getShowAllShortcutsStatus() },
+		{ header: 'Archive IRC channels', description: 'Toggle whether to archive IRC channels after parting from them', action: () => this.toggleArchiveIrcChannels(), slideToggle: true, slideToggleValue: this.genericService.getArchiveIrcChannelsStatus() },
+		{ header: 'Remember archive preference', description: 'Toggle whether to remember your preference for archiving IRC channels after parting from them', action: () => this.toggleRememberArchivePreference(), slideToggle: true, slideToggleValue: this.genericService.getRememberArchivePreferenceStatus() }
 	];
 
 	configurationOptions: OptionsMenu[] = [
@@ -57,7 +62,8 @@ export class SettingsComponent implements OnInit {
 		public ircService: IrcService,
 		private genericService: GenericService,
 		private cacheStoreService: CacheStoreService,
-		private webhookService: WebhookService
+		private webhookService: WebhookService,
+		private settingsStore: SettingsStoreService
 	) { }
 
 	ngOnInit() {
@@ -79,6 +85,14 @@ export class SettingsComponent implements OnInit {
 
 		this.genericService.getShowAllShortcutsStatus().subscribe(status => {
 			this.showAllShortcutsStatus = status;
+		});
+
+		this.genericService.getArchiveIrcChannelsStatus().subscribe(status => {
+			this.archiveIrcChannelsStatus = status;
+		});
+
+		this.genericService.getRememberArchivePreferenceStatus().subscribe(status => {
+			this.rememberArchivePreferenceStatus = status;
 		});
 
 		this.webhookAuthorImage = this.webhookService.authorImage;
@@ -189,5 +203,15 @@ export class SettingsComponent implements OnInit {
 	toggleShowAllShortcuts(): void {
 		this.showAllShortcutsStatus = !this.showAllShortcutsStatus;
 		this.genericService.setShowAllShortcuts(this.showAllShortcutsStatus);
+	}
+
+	toggleArchiveIrcChannels(): void {
+		this.archiveIrcChannelsStatus = !this.archiveIrcChannelsStatus;
+		this.genericService.setArchiveIrcChannels(this.archiveIrcChannelsStatus);
+	}
+
+	toggleRememberArchivePreference(): void {
+		this.rememberArchivePreferenceStatus = !this.rememberArchivePreferenceStatus;
+		this.genericService.setRememberArchivePreference(this.rememberArchivePreferenceStatus);
 	}
 }

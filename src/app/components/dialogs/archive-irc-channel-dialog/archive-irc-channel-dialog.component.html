@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Closing IRC channel</h2>
+
+<mat-dialog-content>
+	<p>You are about to close <b>{{ channel.label }} ({{ channel.name }})</b>. Do you want to archive it before closing?</p>
+
+	<p><mat-checkbox [(ngModel)]="rememberChoice">Remember my choice</mat-checkbox></p>
+
+	<i><b>Note:</b> This setting chan be changed at any time in the IRC settings.</i>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button (click)="closeDialog(null)">Cancel</button>
+	<button mat-button (click)="closeDialog(false)" color="warn">Do not archive</button>
+	<button mat-button (click)="closeDialog(true)" color="accent">Archive</button>
+</mat-dialog-actions>
