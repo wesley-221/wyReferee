@@ -42,6 +42,34 @@ export class IrcMatchResultComponent implements OnChanges {
 		return this.cacheService.getBeatmapCoverUrl(beatmapId);
 	}
 
+	getTeamOneScoreDisplay(match: MultiplayerData): string {
+		const beatmap = this.selectedLobby?.tournament?.getBeatmapFromId(match.beatmap_id);
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+
+		if (compare === 'accuracy') {
+			return `${match.getTeamOneAccuracy()}%`;
+		}
+		else if (compare === 'misses') {
+			return `${match.getTeamOneMisses()} misses`;
+		}
+
+		return `${match.team_one_score}`;
+	}
+
+	getTeamTwoScoreDisplay(match: MultiplayerData): string {
+		const beatmap = this.selectedLobby?.tournament?.getBeatmapFromId(match.beatmap_id);
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+
+		if (compare === 'accuracy') {
+			return `${match.getTeamTwoAccuracy()}%`;
+		}
+		else if (compare === 'misses') {
+			return `${match.getTeamTwoMisses()} misses`;
+		}
+
+		return `${match.team_two_score}`;
+	}
+
 	closeMatchDialog() {
 		this.closeMatchDialogEmitter.emit();
 	}

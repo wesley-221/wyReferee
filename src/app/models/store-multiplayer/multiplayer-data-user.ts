@@ -12,10 +12,12 @@ export class MultiplayerDataUser {
 	slot: number;
 	team: number;
 	caption: string;
+	countmiss: number;
 
 	constructor(init?: Partial<MultiplayerDataUser>) {
 		this.score = 0;
 		this.accuracy = 0;
+		this.countmiss = 0;
 
 		Object.assign(this, init);
 	}
@@ -29,7 +31,8 @@ export class MultiplayerDataUser {
 			user: multiplayerDataUser.user,
 			slot: multiplayerDataUser.slot,
 			team: multiplayerDataUser.team,
-			caption: multiplayerDataUser.caption
+			caption: multiplayerDataUser.caption,
+			countmiss: multiplayerDataUser.countmiss
 		});
 	}
 }

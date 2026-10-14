@@ -15,6 +15,34 @@ export class SendBeatmapResultComponent implements OnInit {
 	constructor(@Inject(MAT_DIALOG_DATA) public data: ISendBeatmapResultDialogData, public cacheService: CacheService, private ircService: IrcService, private dialogRef: MatDialogRef<SendBeatmapResultComponent>) { }
 	ngOnInit(): void { }
 
+	getTeamOneScoreDisplay(match: MultiplayerData): string {
+		const beatmap = this.data.multiplayerLobby?.tournament?.getBeatmapFromId(match.beatmap_id);
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+
+		if (compare === 'accuracy') {
+			return `${match.getTeamOneAccuracy()}%`;
+		}
+		else if (compare === 'misses') {
+			return `${match.getTeamOneMisses()} misses`;
+		}
+
+		return `${match.team_one_score}`;
+	}
+
+	getTeamTwoScoreDisplay(match: MultiplayerData): string {
+		const beatmap = this.data.multiplayerLobby?.tournament?.getBeatmapFromId(match.beatmap_id);
+		const compare = beatmap?.winningConditionCompare ?? 'score';
+
+		if (compare === 'accuracy') {
+			return `${match.getTeamTwoAccuracy()}%`;
+		}
+		else if (compare === 'misses') {
+			return `${match.getTeamTwoMisses()} misses`;
+		}
+
+		return `${match.team_two_score}`;
+	}
+
 	/**
 	 * Send the result of the beatmap to irc if connected
 	 * NOTE: Update in lobby-view.component.ts and irc-component.ts as well

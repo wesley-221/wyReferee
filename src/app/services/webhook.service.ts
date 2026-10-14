@@ -455,90 +455,60 @@ export class WebhookService {
 		let embedHeader = '';
 		let lostTheirPick = false;
 
-		let isReverseScoreBeatMap = false;
+		const winningTeam = WyModBracketMap.getWinningTeam(foundBeatmap, lastMultiplayerData);
+		const compare = foundBeatmap.winningConditionCompare ?? 'score';
+		let diffText = '';
 
-		if (multiplayerLobby.tournament && multiplayerLobby.mappool) {
-			for (const modBracket of multiplayerLobby.mappool.modBrackets) {
-				for (const beatmap of modBracket.beatmaps) {
-					if (beatmap.beatmapId == foundBeatmap.beatmapId && foundBeatmap.reverseScore == true) {
-						isReverseScoreBeatMap = true;
-						break;
-					}
-				}
-			}
+		if (compare === 'accuracy') {
+			diffText = `${Math.abs(lastMultiplayerData.getTeamOneAccuracy() - lastMultiplayerData.getTeamTwoAccuracy()).toFixed(2)}% accuracy`;
+		}
+		else if (compare === 'misses') {
+			diffText = `${Math.abs(lastMultiplayerData.getTeamOneMisses() - lastMultiplayerData.getTeamTwoMisses())} misses`;
+		}
+		else {
+			diffText = `${Math.abs(lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score)} points`;
 		}
 
 		// The pick was from team two
 		if (multiplayerLobby.getNextPick() == multiplayerLobby.teamOneName) {
 			embedHeader += `${this.escape(multiplayerLobby.teamTwoName)} `;
 
-			if (isReverseScoreBeatMap == true) {
-				// Team two has won their pick
-				if (lastMultiplayerData.team_one_score > lastMultiplayerData.team_two_score) {
-					embedHeader += `won their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
-					lostTheirPick = false;
-				}
-				// Team two has lost their pick
-				else {
-					embedHeader += `lost their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
-					lostTheirPick = true;
-				}
+			if (winningTeam === 'teamTwo') {
+				embedHeader += `won their pick by ${diffText}`;
+				lostTheirPick = false;
+			}
+			else if (winningTeam === 'teamOne') {
+				embedHeader += `lost their pick by ${diffText}`;
+				lostTheirPick = true;
 			}
 			else {
-				// Team two has won their pick
-				if (lastMultiplayerData.team_two_score > lastMultiplayerData.team_one_score) {
-					embedHeader += `won their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
-					lostTheirPick = false;
-				}
-				// Team two has lost their pick
-				else {
-					embedHeader += `lost their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
-					lostTheirPick = true;
-				}
+				embedHeader += `tied their pick`;
+				lostTheirPick = false;
 			}
 		}
 		// The pick was from team one
 		else {
 			embedHeader += `${this.escape(multiplayerLobby.teamOneName)} `;
 
-			if (isReverseScoreBeatMap == true) {
-				// Team one has won their pick
-				if (lastMultiplayerData.team_two_score > lastMultiplayerData.team_one_score) {
-					embedHeader += `won their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
-					lostTheirPick = false;
-				}
-				// Team one has lost their pick
-				else {
-					embedHeader += `lost their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
-					lostTheirPick = true;
-				}
+			if (winningTeam === 'teamOne') {
+				embedHeader += `won their pick by ${diffText}`;
+				lostTheirPick = false;
+			}
+			else if (winningTeam === 'teamTwo') {
+				embedHeader += `lost their pick by ${diffText}`;
+				lostTheirPick = true;
 			}
 			else {
-				// Team one has won their pick
-				if (lastMultiplayerData.team_one_score > lastMultiplayerData.team_two_score) {
-					embedHeader += `won their pick by ${lastMultiplayerData.team_one_score - lastMultiplayerData.team_two_score} points`;
-					lostTheirPick = false;
-				}
-				// Team one has lost their pick
-				else {
-					embedHeader += `lost their pick by ${lastMultiplayerData.team_two_score - lastMultiplayerData.team_one_score} points`;
-					lostTheirPick = true;
-				}
+				embedHeader += `tied their pick`;
+				lostTheirPick = false;
 			}
 		}
 
 		resultString += `[**${foundBeatmap.beatmapName}**](${foundBeatmap.beatmapUrl})\n\n`;
 
-		let winner = null;
+		const matchLeadingTeam = multiplayerLobby.getTeamOneScore() >= multiplayerLobby.getTeamTwoScore() ? 1 : 2;
 
-		if (isReverseScoreBeatMap == true) {
-			winner = multiplayerLobby.getTeamTwoScore() > multiplayerLobby.getTeamOneScore() ? 1 : 2;
-		}
-		else {
-			winner = multiplayerLobby.getTeamOneScore() > multiplayerLobby.getTeamTwoScore() ? 1 : 2;
-		}
-
-		resultString += (winner == 1) ?
+		resultString += (matchLeadingTeam == 1) ?
 			`**Score:** __${this.escape(multiplayerLobby.teamOneName)}__ | **${multiplayerLobby.getTeamOneScore()}** - ${multiplayerLobby.getTeamTwoScore()} | ${this.escape(multiplayerLobby.teamTwoName)}\n\n` :
 			`**Score:** ${this.escape(multiplayerLobby.teamOneName)} | ${multiplayerLobby.getTeamOneScore()} - **${multiplayerLobby.getTeamTwoScore()}** | __${this.escape(multiplayerLobby.teamTwoName)}__\n\n`;
 

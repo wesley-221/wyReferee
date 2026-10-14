@@ -1,4 +1,5 @@
 import { WyModCategory } from './wy-mod-category';
+import { MultiplayerData } from '../../store-multiplayer/multiplayer-data';
 
 export type WinConditionCompare = 'score' | 'accuracy' | 'misses';
 export type WinConditionWinner = 'highest' | 'lowest';
@@ -61,5 +62,67 @@ export class WyModBracketMap {
 	 */
 	public getCoverImage(): string {
 		return `https://assets.ppy.sh/beatmaps/${this.beatmapsetId}/covers/cover.jpg`;
+	}
+
+	/**
+	 * Get win condition values from the given beatmap and match
+	 */
+	public static getComparisonValues(beatmap: WyModBracketMap, match: MultiplayerData): {
+		compare: WinConditionCompare;
+		winner: WinConditionWinner;
+		teamOneValue: number;
+		teamTwoValue: number;
+		difference: number;
+	} {
+		const compare: WinConditionCompare = beatmap?.winningConditionCompare ?? 'score';
+		const winner: WinConditionWinner = beatmap?.winningConditionWinner ?? (beatmap?.reverseScore ? 'lowest' : 'highest');
+
+		let teamOneValue: number;
+		let teamTwoValue: number;
+
+		if (compare === 'accuracy') {
+			teamOneValue = match.getTeamOneAccuracy();
+			teamTwoValue = match.getTeamTwoAccuracy();
+		}
+		else if (compare === 'misses') {
+			teamOneValue = match.getTeamOneMisses();
+			teamTwoValue = match.getTeamTwoMisses();
+		}
+		else {
+			teamOneValue = match.team_one_score ?? 0;
+			teamTwoValue = match.team_two_score ?? 0;
+		}
+
+		const difference = Math.abs(teamOneValue - teamTwoValue);
+
+		return {
+			compare,
+			winner,
+			teamOneValue,
+			teamTwoValue,
+			difference
+		};
+	}
+
+	/**
+	 * Get the winning team based on the win conditions
+	 */
+	public static getWinningTeam(beatmap: WyModBracketMap, match: MultiplayerData): 'teamOne' | 'teamTwo' | 'tie' {
+		if (!match) {
+			return 'tie';
+		}
+
+		const { winner, teamOneValue, teamTwoValue } = WyModBracketMap.getComparisonValues(beatmap, match);
+
+		if (teamOneValue === teamTwoValue) {
+			return 'tie';
+		}
+
+		if (winner === 'lowest') {
+			return teamOneValue < teamTwoValue ? 'teamOne' : 'teamTwo';
+		}
+		else {
+			return teamOneValue > teamTwoValue ? 'teamOne' : 'teamTwo';
+		}
 	}
 }
