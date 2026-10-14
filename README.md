@@ -17,11 +17,17 @@
 - Full IRC functionality.
 - Match progression tracking:
 	- Live score updates.
-	- Tracks picked/banned maps.
-	- Indicates which player/team picks next.
+	- Tracks picked and banned beatmaps.
+	- Shows which team or player picks or bans next.
 - Clickable beatmap list for the current match stage.
-- Recognizes and hyperlinks messages like `NM1`, `DT3`, `FM4`, etc.
+- Automatically recognizes links and beatmap references such as `NM1`, `DT3`, `FM4`.
 - Player invite buttons for current match participants.
+
+#### IRC Customisation
+- Customise your IRC interface to whatever fits your need.
+- Rearrage, resize, add or remove sections to create your preferred layout.
+![IRC customisation](./src/assets/screenshots//irc-customisation.png)
+
 
 ### Tournament Management
 - Manage your tournament by adding referees, participants, and mappools to automate referee tasks.
@@ -31,6 +37,11 @@
 - Mappool configuration per stage:
 	- Each stage has its own mappool.
 	- Mod brackets can specify their own mods, applied alongside the selected beatmap.
+	- Individual beatmaps have their own win conditions, which could be highest/lowest score, accuracy or misses
+
+### Fully customisable match flow
+- Define the order of how the match is supposed to flow. For example, start with two bans per team, followed by two protects per team, another ban per team and then the beatmap picking phase.
+- Configure score-based triggers that will give additional actions when a specific condition has been met. For example, when **Team 1** reaches **3 points**, **Team 2** received additional ban.
 
 ### Custom Score System Support
 - Modify how scores are calculated in real time.
