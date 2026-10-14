@@ -4,38 +4,6 @@
 	margin-top: 8px;
 }
 
-.pill-button {
-	display: inline-flex;
-	align-items: center;
-	flex: 0 0 auto;
-
-	padding: 8px 16px;
-	min-height: 40px;
-
-	border: 1px solid rgba(255, 255, 255, 0.12);
-	border-radius: 24px;
-
-	background: transparent;
-	color: inherit;
-
-	cursor: pointer;
-
-	.beatmap-count {
-		opacity: 0.6;
-	}
-
-	&.active {
-		font-weight: bold;
-		border-color: $primary;
-		background: $primary;
-		color: #000000;
-	}
-
-	&:hover {
-		border-color: $primary;
-	}
-}
-
 .buttons {
 	display: flex;
 	gap: 8px;

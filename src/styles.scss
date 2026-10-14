@@ -324,6 +324,52 @@ code {
 	}
 }
 
+.pill-button {
+	display: inline-flex;
+	align-items: center;
+	flex: 0 0 auto;
+
+	padding: 8px 16px;
+	min-height: 40px;
+
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 24px;
+
+	background: transparent;
+	color: inherit;
+
+	cursor: pointer;
+
+	.beatmap-count {
+		opacity: 0.6;
+	}
+
+	.caret {
+		font-size: 18px;
+
+		width: 18px;
+		height: 18px;
+		line-height: 18px;
+
+		margin-right: -4px;
+	}
+
+	&.active {
+		font-weight: bold;
+		border-color: $primary;
+		background: $primary;
+		color: #000000;
+	}
+
+	&.highlighted {
+		border-color: $primary;
+	}
+
+	&:hover {
+		border-color: $primary;
+	}
+}
+
 .mat-mdc-dialog-inner-container {
 	.mat-mdc-dialog-surface {
 		background-color: $tile-background-color;
