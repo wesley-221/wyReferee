@@ -26,7 +26,7 @@
 #### IRC Customisation
 - Customise your IRC interface to whatever fits your need.
 - Rearrage, resize, add or remove sections to create your preferred layout.
-![IRC customisation](./src/assets/screenshots//irc-customisation.png)
+![IRC customisation](./src/assets/screenshots/irc-customisation.png)
 
 
 ### Tournament Management
@@ -42,6 +42,7 @@
 ### Fully customisable match flow
 - Define the order of how the match is supposed to flow. For example, start with two bans per team, followed by two protects per team, another ban per team and then the beatmap picking phase.
 - Configure score-based triggers that will give additional actions when a specific condition has been met. For example, when **Team 1** reaches **3 points**, **Team 2** received additional ban.
+![Customisable match flow](./src/assets/screenshots/match-flow.png)
 
 ### Custom Score System Support
 - Modify how scores are calculated in real time.
