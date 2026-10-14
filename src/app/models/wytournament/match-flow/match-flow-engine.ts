@@ -1,8 +1,10 @@
-import { FlowAction, FlowActor, FlowPhase, MatchFlow, MatchTeam } from './match-flow';
+import { MatchFlowAction, MatchFlowPhase } from "./match-flow-phase";
+import { MatchFlowActor, MatchFlow } from "./match-flow";
+import { MatchTeam } from "./match-flow-trigger";
 
 export interface ProcedureStep {
-	action: FlowAction;
-	actor?: FlowActor;
+	action: MatchFlowAction;
+	actor?: MatchFlowActor;
 	team?: MatchTeam;
 	source: 'phase' | 'trigger';
 	status: 'pending' | 'done';
@@ -15,18 +17,18 @@ export interface FiredTrigger {
 	timesFired: number;
 }
 
-export type FirstTeams = Record<FlowAction, MatchTeam>;
+export type FirstTeams = Record<MatchFlowAction, MatchTeam>;
 
 export interface MatchProcedure {
 	flowId: number;
 	firstTeams: FirstTeams;
 	steps: ProcedureStep[];
-	openPhase: Pick<FlowPhase, 'action' | 'order'> | null;
+	openPhase: Pick<MatchFlowPhase, 'action' | 'phaseOrder'> | null;
 	firedTriggers: FiredTrigger[];
 }
 
 export interface CurrentTurn {
-	action: FlowAction;
+	action: MatchFlowAction;
 	team: MatchTeam;
 	open: boolean;
 }
@@ -62,14 +64,14 @@ export class MatchFlowEngine {
 
 		for (const phase of flow.phases) {
 			if (phase.countPerTeam === null) {
-				openPhase = { action: phase.action, order: phase.order };
+				openPhase = { action: phase.action, phaseOrder: phase.phaseOrder };
 				break;
 			}
 
 			const countPerTeam = this.getCountPerTeam(phase, stage);
-			const actors: FlowActor[] = [];
+			const actors: MatchFlowActor[] = [];
 
-			if (phase.order === 'alternate') {
+			if (phase.phaseOrder === 'alternate') {
 				for (let i = 0; i < countPerTeam; i++) {
 					actors.push('first', 'second');
 				}
@@ -98,7 +100,7 @@ export class MatchFlowEngine {
 	 * @param phase the phase to get the amount for
 	 * @param stage the ban and protect count of the stage, used when the phase takes its amount from the stage
 	 */
-	public static getCountPerTeam(phase: FlowPhase, stage?: { bans: number; protects: number }): number {
+	public static getCountPerTeam(phase: MatchFlowPhase, stage?: { bans: number; protects: number }): number {
 		if (phase.useStageCount && stage && phase.action !== 'pick') {
 			return (phase.action === 'ban' ? stage.bans : stage.protects) || 0;
 		}
@@ -127,7 +129,7 @@ export class MatchFlowEngine {
 	 * @param firstTeam the team that goes first
 	 * @param action only change the first team of this action, changes every action when omitted
 	 */
-	public static setFirstTeam(procedure: MatchProcedure, firstTeam: MatchTeam, action?: FlowAction): void {
+	public static setFirstTeam(procedure: MatchProcedure, firstTeam: MatchTeam, action?: MatchFlowAction): void {
 		if (action) {
 			procedure.firstTeams[action] = firstTeam;
 		}
@@ -150,7 +152,7 @@ export class MatchFlowEngine {
 
 		if (procedure.openPhase) {
 			const openCount = procedure.steps.filter(s => s.open).length;
-			const actor: FlowActor = openCount % 2 === 0 ? 'first' : 'second';
+			const actor: MatchFlowActor = openCount % 2 === 0 ? 'first' : 'second';
 
 			return { action: procedure.openPhase.action, team: this.resolveTeam(procedure, { action: procedure.openPhase.action, actor }), open: true };
 		}
@@ -208,10 +210,10 @@ export class MatchFlowEngine {
 				timesReached = trigger.repeatEvery && trigger.repeatEvery > 0 ? 1 + Math.floor((value - trigger.threshold) / trigger.repeatEvery) : 1;
 			}
 
-			let fired = procedure.firedTriggers.find(f => f.triggerKey === trigger.key);
+			let fired = procedure.firedTriggers.find(f => f.triggerKey === trigger.matchFlowTriggerKey);
 
 			if (!fired) {
-				fired = { triggerKey: trigger.key, timesFired: 0 };
+				fired = { triggerKey: trigger.matchFlowTriggerKey, timesFired: 0 };
 				procedure.firedTriggers.push(fired);
 			}
 
@@ -247,7 +249,7 @@ export class MatchFlowEngine {
 
 		const remaining: Record<string, number> = {};
 
-		for (const action of ['protect', 'ban'] as FlowAction[]) {
+		for (const action of ['protect', 'ban'] as MatchFlowAction[]) {
 			for (const team of ['team1', 'team2'] as MatchTeam[]) {
 				remaining[`${action}-${team}`] = progress.done[action][team];
 			}

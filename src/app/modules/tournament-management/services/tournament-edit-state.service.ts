@@ -7,7 +7,7 @@ import { TournamentAccessState } from '../interfaces/tournament-access-state.int
 import { TournamentWebhookForm } from '../interfaces/tournament-webhook-form.interface';
 import { WyWebhook } from '../../../models/wytournament/wy-webhook';
 import { TournamentTriggerMessageForm } from '../interfaces/tournament-trigger-messages-form.interface';
-import { MatchFlow } from '../../../models/match-flow/match-flow';
+import { MatchFlow } from '../../../models/wytournament/match-flow/match-flow';
 import { WyTriggerMessage } from '../../../models/wytournament/trigger-message';
 import { TournamentStageForm } from '../interfaces/tournament-stage-form.interface';
 import { WyStage } from '../../../models/wytournament/wy-stage';
@@ -184,7 +184,7 @@ export class TournamentEditStateService {
 		}
 
 		const updatedDraft = this.getCurrent();
-		const flowKeys = matchFlows.map(flow => flow.key);
+		const flowKeys = matchFlows.map(flow => flow.matchFlowKey);
 
 		updatedDraft.matchFlows = matchFlows;
 

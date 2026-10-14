@@ -21,8 +21,10 @@ import { WyTeamPlayer } from './wytournament/wy-team-player';
 import { WyTournament } from './wytournament/wy-tournament';
 import { Observable, map } from 'rxjs';
 import { IMatchActionData } from '../interfaces/i-match-action-data';
-import { MatchFlowEngine } from './match-flow/match-flow-engine';
-import { FlowAction, MatchFlow, MatchTeam } from './match-flow/match-flow';
+import { MatchFlowEngine } from './wytournament/match-flow/match-flow-engine';
+import { MatchFlow } from './wytournament/match-flow/match-flow';
+import { MatchTeam } from './wytournament/match-flow/match-flow-trigger';
+import { MatchFlowAction } from './wytournament/match-flow/match-flow-phase';
 
 export class Lobby {
 	rawFileName: string;
@@ -887,7 +889,7 @@ export class Lobby {
 			return null;
 		}
 
-		return this.tournament.matchFlows.find(flow => flow.key === key) ?? null;
+		return this.tournament.matchFlows.find(flow => flow.matchFlowKey === key) ?? null;
 	}
 
 	/**
@@ -915,14 +917,14 @@ export class Lobby {
 			nextPickTeam: toTeam(nextPick)
 		});
 
-		const descriptions: Record<FlowAction, Pick<IMatchActionData, 'description' | 'icon' | 'svgIcon'>> = {
+		const descriptions: Record<MatchFlowAction, Pick<IMatchActionData, 'description' | 'icon' | 'svgIcon'>> = {
 			protect: { description: 'protects', icon: 'shield' },
 			ban: { description: 'bans', svgIcon: 'hammer' },
 			pick: { description: 'picks', icon: 'play_arrow' }
 		};
 
 		const team = turn ? toName(turn.team) : nextPick;
-		const action: FlowAction = turn ? turn.action : 'pick';
+		const action: MatchFlowAction = turn ? turn.action : 'pick';
 
 		return {
 			team,

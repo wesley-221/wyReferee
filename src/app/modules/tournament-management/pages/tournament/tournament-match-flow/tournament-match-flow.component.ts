@@ -1,13 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, filter, Subscription } from 'rxjs';
-import { FLOW_ACTIONS, FlowAction, FlowPhase, FlowTrigger, MatchFlow, MatchTeam } from 'app/models/match-flow/match-flow';
-import { MatchFlowEngine } from 'app/models/match-flow/match-flow-engine';
+import { MatchFlowEngine } from 'app/models/wytournament/match-flow/match-flow-engine';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
+import { MatchFlow } from '../../../../../models/wytournament/match-flow/match-flow';
+import { FLOW_ACTIONS, MatchFlowAction, MatchFlowPhase } from '../../../../../models/wytournament/match-flow/match-flow-phase';
+import { MatchFlowTrigger, MatchTeam } from '../../../../../models/wytournament/match-flow/match-flow-trigger';
 
 interface PreviewStep {
-	action: FlowAction;
+	action: MatchFlowAction;
 	team: MatchTeam;
 }
 
@@ -23,7 +25,7 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 	selectedIndex: number;
 	previewFirstTeam: MatchTeam;
 
-	readonly actionIcons: Record<FlowAction, string> = { protect: 'shield', ban: 'block', pick: 'check_circle' };
+	readonly actionIcons: Record<MatchFlowAction, string> = { protect: 'shield', ban: 'block', pick: 'check_circle' };
 
 	private initialized: boolean;
 	private subscriptions: Subscription[];
@@ -65,7 +67,7 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 		this.subscriptions.forEach(s => s.unsubscribe());
 	}
 
-	get actions(): FlowAction[] {
+	get actions(): MatchFlowAction[] {
 		return FLOW_ACTIONS.filter(action => action !== 'protect' || this.tournament?.protects === true);
 	}
 
@@ -91,7 +93,7 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 	 * @param phase the phase form group
 	 */
 	getPhaseIcon(phase: AbstractControl): string {
-		return this.actionIcons[phase.get('action').value as FlowAction];
+		return this.actionIcons[phase.get('action').value as MatchFlowAction];
 	}
 
 	/**
@@ -101,8 +103,8 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 		this.flows.push(this.createFlowGroup(new MatchFlow({
 			name: `Match flow ${this.flows.length + 1}`,
 			phases: [
-				new FlowPhase({ action: 'ban', useStageCount: true }),
-				new FlowPhase({ action: 'pick', countPerTeam: null })
+				new MatchFlowPhase({ action: 'ban', useStageCount: true }),
+				new MatchFlowPhase({ action: 'pick', countPerTeam: null })
 			]
 		})));
 
@@ -132,7 +134,7 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 	 * Add a ban phase to the selected flow
 	 */
 	addPhase(): void {
-		this.phases.push(this.createPhaseGroup(new FlowPhase({ action: 'ban' })));
+		this.phases.push(this.createPhaseGroup(new MatchFlowPhase({ action: 'ban' })));
 	}
 
 	/**
@@ -167,7 +169,7 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 	 * Add a default trigger to the selected flow
 	 */
 	addTrigger(): void {
-		this.triggers.push(this.createTriggerGroup(new FlowTrigger({ subject: 'team1', threshold: 3, action: 'ban' })));
+		this.triggers.push(this.createTriggerGroup(new MatchFlowTrigger({ subject: 'team1', threshold: 3, action: 'ban' })));
 	}
 
 	/**
@@ -228,7 +230,7 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 			return { steps: [], open: null, sample: '' };
 		}
 
-		const stage = this.tournament.stages.find(s => s.matchFlowKey === flow.key) ?? this.tournament.stages[0];
+		const stage = this.tournament.stages.find(s => s.matchFlowKey === flow.matchFlowKey) ?? this.tournament.stages[0];
 		const counts = stage ? { bans: stage.bans, protects: stage.protects } : { bans: 2, protects: 1 };
 		const procedure = MatchFlowEngine.compile(flow, this.previewFirstTeam, counts);
 
@@ -242,18 +244,18 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 	private toMatchFlows(): MatchFlow[] {
 		return this.flows.getRawValue().map(flow => new MatchFlow({
 			id: flow.id,
-			key: flow.key,
+			matchFlowKey: flow.key,
 			name: flow.name,
 			description: flow.description,
-			phases: flow.phases.map((phase: any) => new FlowPhase({
+			phases: flow.phases.map((phase: any) => new MatchFlowPhase({
 				action: phase.action,
-				order: phase.order,
+				phaseOrder: phase.order,
 				useStageCount: phase.useStageCount,
 				countPerTeam: phase.untilEnd ? null : Number(phase.countPerTeam)
 			})),
-			triggers: flow.triggers.map((trigger: any) => new FlowTrigger({
+			triggers: flow.triggers.map((trigger: any) => new MatchFlowTrigger({
 				id: trigger.id,
-				key: trigger.key,
+				matchFlowTriggerKey: trigger.key,
 				subject: trigger.subject,
 				threshold: Number(trigger.threshold),
 				repeatEvery: trigger.repeat ? Number(trigger.repeatEvery) : null,
@@ -267,7 +269,7 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 	private createFlowGroup(flow: MatchFlow): FormGroup {
 		return new FormGroup({
 			id: new FormControl(flow.id ?? null),
-			key: new FormControl(flow.key),
+			key: new FormControl(flow.matchFlowKey),
 			name: new FormControl(flow.name ?? '', Validators.required),
 			description: new FormControl(flow.description ?? ''),
 			phases: new FormArray(flow.phases.map(phase => this.createPhaseGroup(phase))),
@@ -275,22 +277,22 @@ export class TournamentMatchFlowComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	private createPhaseGroup(phase: FlowPhase): FormGroup {
+	private createPhaseGroup(phase: MatchFlowPhase): FormGroup {
 		return new FormGroup({
 			action: new FormControl(phase.action),
-			order: new FormControl(phase.order),
+			order: new FormControl(phase.phaseOrder),
 			useStageCount: new FormControl(phase.useStageCount),
 			countPerTeam: new FormControl(phase.countPerTeam ?? 1, [Validators.required, Validators.min(1)]),
 			untilEnd: new FormControl(phase.countPerTeam === null)
 		});
 	}
 
-	private createTriggerGroup(trigger: FlowTrigger): FormGroup {
+	private createTriggerGroup(trigger: MatchFlowTrigger): FormGroup {
 		const repeat = trigger.repeatEvery != null;
 
 		const group = new FormGroup({
 			id: new FormControl(trigger.id ?? null),
-			key: new FormControl(trigger.key),
+			key: new FormControl(trigger.matchFlowTriggerKey),
 			subject: new FormControl(trigger.subject),
 			threshold: new FormControl(trigger.threshold ?? 1, [Validators.required, Validators.min(1)]),
 			repeat: new FormControl(repeat),

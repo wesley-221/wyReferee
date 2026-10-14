@@ -102,7 +102,7 @@
 
 								<mat-select formControlName="matchFlowKey">
 									<mat-option [value]="null">None</mat-option>
-									<mat-option *ngFor="let flow of tournament.matchFlows" [value]="flow.key">{{ flow.name }}</mat-option>
+									<mat-option *ngFor="let flow of tournament.matchFlows" [value]="flow.matchFlowKey">{{ flow.name }}</mat-option>
 								</mat-select>
 							</mat-form-field>
 						</div>

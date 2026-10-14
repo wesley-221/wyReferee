@@ -8,7 +8,7 @@ import { WyStage } from './wy-stage';
 import { WyModBracket } from './mappool/wy-mod-bracket';
 import { WyModBracketMap } from './mappool/wy-mod-bracket-map';
 import { WyTriggerMessage } from './trigger-message';
-import { MatchFlow } from '../match-flow/match-flow';
+import { MatchFlow } from './match-flow/match-flow';
 
 export enum TournamentFormat {
 	Solo = 'solo',
