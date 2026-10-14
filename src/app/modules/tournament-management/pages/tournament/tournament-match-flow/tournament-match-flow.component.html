@@ -1,0 +1,286 @@
+<div class="container-fluid">
+	<form [formGroup]="form">
+		<h2>Match flow</h2>
+
+		<p>
+			A match flow describes the order of protects, bans and picks of a match. It only knows about the <b>first</b> and <b>second</b> team, the referee will select the first protects, bans and picks once the match has been created.
+			Create multiple flows and assign them to a stage on the stages page.
+		</p>
+
+		<div class="flow-tabs">
+			<button mat-stroked-button *ngFor="let flowGroup of flows.controls; let i = index" [color]="i == selectedIndex ? 'primary' : undefined" (click)="selectFlow(i)">
+				{{ flowGroup.get('name')?.value || 'unnamed flow' }}
+			</button>
+
+			<button mat-raised-button color="primary" (click)="addFlow()">
+				<mat-icon>add</mat-icon> add match flow
+			</button>
+		</div>
+
+		<app-alert alertType="info" *ngIf="flows.length == 0">
+			There are no match flows yet. Add one to get started.
+		</app-alert>
+
+		<div *ngIf="selectedFlow" [formGroup]="selectedFlow">
+			<div class="flow-header">
+				<div class="body">
+					<mat-form-field class="name">
+						<mat-label>Name</mat-label>
+
+						<input matInput formControlName="name" />
+						<mat-error>This field is required</mat-error>
+					</mat-form-field>
+
+					<mat-form-field class="description">
+						<mat-label>Description</mat-label>
+
+						<input matInput formControlName="description" />
+					</mat-form-field>
+
+					<button class="form-button danger" (click)="removeFlow(selectedIndex)" [disabled]="stagesUsingFlow(selectedFlow.get('key')?.value).length > 0">
+						<mat-icon>delete</mat-icon>
+					</button>
+				</div>
+
+				<div class="used-by" *ngIf="stagesUsingFlow(selectedFlow.get('key')?.value).length > 0">
+					Used by: <span class="used-by-stage">{{ stagesUsingFlow(selectedFlow.get('key')?.value).join(', ') }}</span>. Unassign it from these stages before deleting it.
+				</div>
+			</div>
+
+			<div class="phases-content">
+				<div class="header">
+					<h3>Phases</h3>
+					<p>Phases are played from top to bottom.</p>
+
+					<button mat-raised-button color="primary" (click)="addPhase()">
+						<mat-icon>add</mat-icon> add phase
+					</button>
+				</div>
+
+				<div class="body">
+					<div class="phases" formArrayName="phases">
+						<div class="phase" *ngFor="let phase of phases.controls; let i = index" [formGroupName]="i">
+							<div class="top">
+								<div class="information">
+									<div class="index">
+										{{ i + 1 }}
+									</div>
+
+									<div class="icon" [ngClass]="phase.get('action')?.value">
+										<mat-icon>{{ getPhaseIcon(phase) }}</mat-icon>
+									</div>
+
+									<div class="phase-action">
+										<div class="phase-label">
+											{{ phase.get('action')?.value }}
+										</div>
+
+										<div class="phase-description">
+											{{ describePhase($any(phase)) }}
+										</div>
+									</div>
+								</div>
+
+								<div class="settings">
+									<mat-form-field>
+										<mat-label>Action</mat-label>
+
+										<mat-select formControlName="action" (selectionChange)="onActionChange($any(phase))">
+											<mat-option *ngFor="let action of actions" [value]="action">{{ action }}</mat-option>
+										</mat-select>
+									</mat-form-field>
+
+									<mat-form-field>
+										<mat-label>Order</mat-label>
+
+										<mat-select formControlName="order">
+											<mat-option value="alternate">Alternating</mat-option>
+											<mat-option value="sequential">First team, then second team</mat-option>
+										</mat-select>
+									</mat-form-field>
+								</div>
+							</div>
+
+							<div class="bottom">
+								<div class="fields">
+									<div class="count-selector">
+										<div class="count-label">
+											Count
+										</div>
+
+										<ng-container *ngIf="phase.get('action')?.value != 'pick'">
+											<mat-button-toggle-group formControlName="useStageCount">
+												<mat-button-toggle [value]="false">Fixed</mat-button-toggle>
+												<mat-button-toggle [value]="true">Stage</mat-button-toggle>
+											</mat-button-toggle-group>
+										</ng-container>
+
+										<ng-container *ngIf="phase.get('action')?.value == 'pick'">
+											<mat-button-toggle-group formControlName="untilEnd">
+												<mat-button-toggle [value]="false">Fixed</mat-button-toggle>
+												<mat-button-toggle [value]="true">Stage</mat-button-toggle>
+											</mat-button-toggle-group>
+										</ng-container>
+									</div>
+
+									<mat-form-field class="count" *ngIf="!phase.get('useStageCount')?.value && !phase.get('untilEnd')?.value">
+										<mat-label>Amount per team</mat-label>
+
+										<input matInput type="number" min="1" formControlName="countPerTeam" />
+										<mat-error>Must be at least 1</mat-error>
+									</mat-form-field>
+								</div>
+
+								<div class="actions">
+									<button class="form-button" (click)="movePhase(i, -1)" [disabled]="i == 0">
+										<mat-icon>arrow_upward</mat-icon>
+									</button>
+
+									<button class="form-button" (click)="movePhase(i, 1)" [disabled]="i == phases.length - 1">
+										<mat-icon>arrow_downward</mat-icon>
+									</button>
+
+									<button class="form-button danger" (click)="removePhase(i)">
+										<mat-icon>delete</mat-icon>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="triggers-content">
+				<div class="header">
+					<h3>Triggers</h3>
+					<p>A trigger gives extra protects, bans or picks when a team reaches a score.</p>
+
+					<button mat-raised-button color="primary" (click)="addTrigger()">
+						<mat-icon>add</mat-icon> add trigger
+					</button>
+				</div>
+
+				<div class="body">
+					<div class="triggers" formArrayName="triggers">
+						<div class="trigger" *ngFor="let trigger of triggers.controls; let i = index" [formGroupName]="i">
+							<div class="trigger-section">
+								<div class="trigger-label">
+									When
+								</div>
+
+								<mat-form-field class="small">
+									<mat-select formControlName="subject">
+										<mat-option value="team1">team 1</mat-option>
+										<mat-option value="team2">team 2</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
+
+							<div class="trigger-section">
+								<div class="trigger-label">
+									reaches
+								</div>
+
+								<mat-form-field class="tiny">
+									<input matInput type="number" min="1" formControlName="threshold" />
+								</mat-form-field>
+							</div>
+
+							<div class="trigger-section">
+								<div class="trigger-label invisible">&#8203;</div>
+								<div class="trigger-label lowercase no-bold">points</div>
+							</div>
+
+							<div class="trigger-section">
+								<div class="trigger-label invisible">&#8203;</div>
+
+								<mat-slide-toggle formControlName="repeat">repeat every</mat-slide-toggle>
+							</div>
+
+							<div class="trigger-section">
+								<div class="trigger-label" [ngClass]="{'disabled': !trigger.get('repeat')?.value}">points</div>
+
+								<mat-form-field class="tiny">
+									<input matInput type="number" min="1" formControlName="repeatEvery" />
+								</mat-form-field>
+							</div>
+
+							<div class="trigger-section">
+								<div class="trigger-label invisible">&#8203;</div>
+								<div class="trigger-label lowercase no-bold"><mat-icon>arrow_right_alt</mat-icon></div>
+							</div>
+
+							<div class="trigger-section">
+								<div class="trigger-label">
+									who
+								</div>
+
+								<mat-form-field>
+									<mat-select formControlName="grantTo">
+										<mat-option value="opponent">the opponent</mat-option>
+										<mat-option value="subject">that team</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
+
+							<div class="trigger-section">
+								<div class="trigger-label">gets</div>
+
+								<mat-form-field class="tiny">
+									<input matInput type="number" min="1" formControlName="count" />
+								</mat-form-field>
+							</div>
+
+
+							<div class="trigger-section">
+								<div class="trigger-label">action</div>
+
+								<mat-form-field class="small">
+									<mat-select formControlName="action">
+										<mat-option *ngFor="let action of actions" [value]="action">{{ action }}</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
+
+							<div class="trigger-section float-right">
+								<div class="trigger-label invisible">&#8203;</div>
+
+								<button class="form-button danger" (click)="removeTrigger(i)">
+									<mat-icon>delete</mat-icon>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="preview-content">
+				<h3>Preview</h3>
+
+				<ng-container *ngIf="getPreview() as preview">
+					<div class="preview-options">
+						<mat-button-toggle-group [(ngModel)]="previewFirstTeam" [ngModelOptions]="{ standalone: true }">
+							<mat-button-toggle value="team1">Team 1 first</mat-button-toggle>
+							<mat-button-toggle value="team2">Team 2 first</mat-button-toggle>
+						</mat-button-toggle-group>
+
+					</div>
+
+					<div class="preview-sample">
+						{{ preview.sample }}
+					</div>
+
+					<ol class="preview">
+						<li *ngFor="let step of preview.steps">
+							<span class="icon-container" [ngClass]="step.action"><mat-icon class="icon">{{ actionIcons[step.action] }}</mat-icon></span> {{ step.team == 'team1' ? 'Team 1' : 'Team 2' }} {{ step.action }}s
+						</li>
+
+						<li *ngIf="preview.open">
+							<span class="icon-container" [ngClass]="preview.open.action"><mat-icon class="icon">{{ actionIcons[preview.open.action] }}</mat-icon></span> {{ preview.open.team == 'team1' ? 'Team 1' : 'Team 2' }} starts, then alternating {{ preview.open.action }}s until the match is decided
+						</li>
+					</ol>
+				</ng-container>
+			</div>
+		</div>
+	</form>
+</div>

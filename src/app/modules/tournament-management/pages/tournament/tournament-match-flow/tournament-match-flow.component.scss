@@ -1,0 +1,321 @@
+@import "variables";
+
+$protect-background-color: #16301f;
+$ban-background-color: #3a1916;
+$pick-background-color: #2a1d3a;
+
+$protect-icon-color: #3ec97b;
+$ban-icon-color: #ff7a6e;
+$pick-icon-color: #b583e6;
+
+$card-background-color: #1a1a1a;
+$card-border-color: #2b2b2b;
+
+$faded-text-color: #a3a3a3;
+
+.flow-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 16px;
+}
+
+.flow-header {
+	display: flex;
+	flex-direction: column;
+
+	gap: 16px;
+	padding: 20px 24px;
+	margin-bottom: 8px;
+
+	background-color: $card-background-color;
+	border: 1px solid $card-border-color;
+
+	.body {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		.name {
+			flex: 1;
+		}
+
+		.description {
+			flex: 2;
+		}
+	}
+
+	.used-by {
+		color: $faded-text-color;
+
+		.used-by-stage {
+			color: white;
+		}
+	}
+}
+
+.phases-content {
+	margin-bottom: 8px;
+
+	.header {
+		margin-bottom: 8px;
+	}
+
+	.body {
+		.phases {
+			display: flex;
+			flex-direction: column;
+
+			gap: 8px;
+
+			.phase {
+				display: flex;
+				flex-direction: column;
+
+				gap: 16px;
+				padding: 8px;
+
+				background-color: $card-background-color;
+				border: 1px solid $card-border-color;
+
+				.top {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+
+					.information {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						min-width: 320px;
+
+						.index {
+							display: flex;
+							align-items: center;
+							justify-content: center;
+
+							width: 32px;
+							height: 32px;
+
+							border-radius: 50%;
+
+							background: #262626;
+							color: $faded-text-color;
+						}
+
+						.icon {
+							display: flex;
+							align-items: center;
+							justify-content: center;
+
+							width: 40px;
+							height: 40px;
+
+							border-radius: 8px;
+
+							&.protect {
+								background: $protect-background-color;
+								color: $protect-icon-color;
+							}
+
+							&.ban {
+								background: $ban-background-color;
+								color: $ban-icon-color;
+							}
+
+							&.pick {
+								background: $pick-background-color;
+								color: $pick-icon-color;
+							}
+						}
+
+						.phase-action {
+							.phase-label {
+								text-transform: capitalize;
+								font-weight: bold;
+							}
+
+							.phase-description {
+								color: $faded-text-color;
+							}
+						}
+					}
+
+					.settings {
+						display: flex;
+						align-items: center;
+						justify-content: flex-end;
+						flex-wrap: wrap;
+						flex: 1;
+
+						gap: 8px;
+					}
+				}
+
+				.bottom {
+					display: flex;
+					justify-content: space-between;
+
+					.fields {
+						flex: 1;
+						display: flex;
+						align-items: flex-end;
+						flex-wrap: wrap;
+						gap: 8px;
+
+						.count-selector {
+							.count-label {
+								color: $faded-text-color;
+								font-weight: bold;
+
+								margin-bottom: 4px;
+							}
+						}
+
+						.count {
+							margin-bottom: 0;
+						}
+					}
+
+					.actions {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.triggers-content {
+	.header {
+		margin-bottom: 8px;
+	}
+
+	.body {
+		.triggers {
+			margin-bottom: 8px;
+
+			.trigger {
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+
+				background-color: $card-background-color;
+				border: 1px solid $card-border-color;
+
+				gap: 8px;
+				padding: 8px;
+				margin-bottom: 8px;
+
+				.small {
+					width: 130px;
+				}
+
+				.tiny {
+					width: 70px;
+				}
+
+				.trigger-section {
+					.trigger-label {
+						font-weight: bold;
+						color: $faded-text-color;
+						text-transform: capitalize;
+
+						&.invisible {
+							opacity: 0;
+						}
+
+						&.lowercase {
+							text-transform: lowercase;
+						}
+
+						&.no-bold {
+							font-weight: normal;
+						}
+
+						&.disabled {
+							opacity: 0.3;
+						}
+					}
+
+					&.float-right {
+						margin-left: auto;
+					}
+				}
+			}
+		}
+	}
+}
+
+.preview-content {
+	display: flex;
+	flex-direction: column;
+
+	gap: 16px;
+	padding: 20px 24px;
+	margin-bottom: 8px;
+
+	background-color: $card-background-color;
+	border: 1px solid $card-border-color;
+
+	.preview-options {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		margin-bottom: 8px;
+	}
+
+	.preview-sample {
+		color: $faded-text-color;
+		background: #121212;
+		padding: 8px 16px;
+	}
+
+	.preview {
+		list-style: none;
+		padding: 0;
+
+		li {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 2px 0;
+
+			.icon-container {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				width: 32px;
+				height: 32px;
+
+				border-radius: 8px;
+
+				.icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					font-size: 16px;
+				}
+
+				&.protect {
+					background: $protect-background-color;
+					color: $protect-icon-color;
+				}
+
+				&.ban {
+					background: $ban-background-color;
+					color: $ban-icon-color;
+				}
+
+				&.pick {
+					background: $pick-background-color;
+					color: $pick-icon-color;
+				}
+			}
+		}
+	}
+}

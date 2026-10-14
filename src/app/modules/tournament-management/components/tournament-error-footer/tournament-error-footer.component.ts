@@ -28,6 +28,10 @@ export class TournamentErrorFooterComponent {
 			errorSection = 'trigger-messages';
 		}
 
+		if (errorSection == 'matchFlow') {
+			errorSection = 'match-flow';
+		}
+
 		errorSection = errorSection.toLowerCase();
 
 		return `${this.managementSidebarService.baseLink}/${errorSection}`;
@@ -36,6 +40,10 @@ export class TournamentErrorFooterComponent {
 	getErrorSection(errorSection: string): string {
 		if (errorSection == 'triggerMessages') {
 			return 'triggers';
+		}
+
+		if (errorSection == 'matchFlow') {
+			return 'match flow';
 		}
 
 		return errorSection;

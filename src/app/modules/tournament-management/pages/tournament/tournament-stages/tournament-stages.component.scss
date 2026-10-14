@@ -15,10 +15,10 @@
 		grid-auto-flow: column;
 		gap: 8px;
 
-		grid-template-columns: 2fr 1fr 1fr 50px;
+		grid-template-columns: 2fr 1fr 1fr 1fr 50px;
 
 		&.has-protects {
-			grid-template-columns: 2fr 1fr 1fr 1fr 50px;
+			grid-template-columns: 2fr 1fr 1fr 1fr 1fr 50px;
 		}
 
 		.actions {

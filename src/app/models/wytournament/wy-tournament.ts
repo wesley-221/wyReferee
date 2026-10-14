@@ -8,6 +8,7 @@ import { WyStage } from './wy-stage';
 import { WyModBracket } from './mappool/wy-mod-bracket';
 import { WyModBracketMap } from './mappool/wy-mod-bracket-map';
 import { WyTriggerMessage } from './trigger-message';
+import { MatchFlow } from '../match-flow/match-flow';
 
 export enum TournamentFormat {
 	Solo = 'solo',
@@ -40,6 +41,8 @@ export class WyTournament {
 	triggerMessages: WyTriggerMessage[];
 	triggerMessageIndex: number;
 
+	matchFlows: MatchFlow[];
+
 	defaultTeamMode: number;
 	defaultWinCondition: number;
 	defaultPlayers: number;
@@ -71,6 +74,7 @@ export class WyTournament {
 		this.webhookIndex = 0;
 		this.triggerMessages = [];
 		this.triggerMessageIndex = 0;
+		this.matchFlows = [];
 		this.mappools = [];
 		this.invalidateBeatmaps = true;
 		this.allowDoublePick = true;
@@ -146,6 +150,10 @@ export class WyTournament {
 			newTournament.triggerMessageIndex++;
 
 			newTournament.triggerMessages.push(newTriggerMessage);
+		}
+
+		for (const matchFlow in tournament.matchFlows) {
+			newTournament.matchFlows.push(MatchFlow.makeTrueCopy(tournament.matchFlows[matchFlow]));
 		}
 
 		for (const mappool in tournament.mappools) {

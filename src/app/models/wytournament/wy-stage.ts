@@ -7,6 +7,7 @@ export class WyStage {
 	bestOf: number;
 	bans: number;
 	protects: number;
+	matchFlowKey: string | null;
 
 	constructor(init?: Partial<WyStage>) {
 		Object.assign(this, init);
@@ -20,7 +21,8 @@ export class WyStage {
 			hitpoints: stage.hitpoints,
 			bestOf: stage.bestOf,
 			bans: stage.bans,
-			protects: stage.protects
+			protects: stage.protects,
+			matchFlowKey: stage.matchFlowKey
 		});
 	}
 
