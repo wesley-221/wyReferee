@@ -65,8 +65,10 @@ export class JoinLobbyComponent implements OnInit {
 			'team-two-name': new FormControl('', [
 				Validators.required
 			]),
+			'qualifier-lobby-identifier': new FormControl(''),
+			'is-qualifier-lobby': new FormControl(''),
 			'selected-tournament': new FormControl(''),
-			'custom-match': new FormControl(false)
+			'custom-match': new FormControl(false),
 		});
 	}
 
@@ -84,6 +86,12 @@ export class JoinLobbyComponent implements OnInit {
 		}
 
 		const lobbyForm = this.lobbyFormComponent.getVariables();
+
+		console.log(lobbyForm);
+
+		console.log(this.validationForm);
+
+		return;
 
 		if (this.validationForm.valid) {
 			let lobby: Lobby;
