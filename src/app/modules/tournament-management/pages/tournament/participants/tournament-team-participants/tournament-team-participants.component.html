@@ -18,6 +18,12 @@
 				</button>
 			</div>
 
+			<button *ngIf="tournament.hasWyBinConnected()" class="form-button import-button" (click)="importWyBinTeams.emit()">
+				<mat-icon [class.rotate]="importingFromWyBin">sync</mat-icon>
+
+				import teams from wyBin
+			</button>
+
 			<mat-form-field class="filter-field">
 				<mat-label>Filter teams</mat-label>
 
@@ -33,12 +39,6 @@
 				<p class="empty-list" *ngIf="!teams.controls.length">No teams yet. Add a team to get started.</p>
 				<p class="empty-list" *ngIf="teams.controls.length && !hasMatchingTeams">No teams match this filter.</p>
 			</div>
-
-			<button *ngIf="tournament.hasWyBinConnected()" class="form-button import-button" (click)="importWyBinTeams.emit()">
-				<mat-icon [class.rotate]="importingFromWyBin">sync</mat-icon>
-
-				import teams from wyBin
-			</button>
 		</div>
 
 		<div class="team-editor">
