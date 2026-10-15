@@ -1,30 +1,191 @@
 @import "variables";
 
-.buttons {
+:host {
 	display: flex;
-	gap: 8px;
+	min-height: 0;
+	flex: 1;
 }
 
-.margin-top {
-	margin-top: 8px;
-}
-
-.split {
+.solo-layout {
 	display: flex;
+	flex-direction: column;
+	flex: 1;
+
+	min-width: 0;
+	min-height: 0;
+
 	gap: 8px;
 
-	.col {
+	.players-toolbar {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		.players-heading {
+			display: flex;
+			align-items: baseline;
+			flex: 0 0 auto;
+
+			margin-right: 4px;
+
+			h3 {
+				margin: 0;
+			}
+
+			span {
+				color: $faded-text-color;
+
+				&:last-child {
+					margin-left: 4px;
+				}
+			}
+		}
+
+		.filter-field {
+			min-width: 100px;
+			flex: 1;
+			margin: 0;
+		}
+
+		.import-button {
+			.rotate {
+				animation: rotate 0.5s ease-in-out infinite;
+			}
+		}
+	}
+
+	.bulk-add-panel {
+		border: 1px solid $card-border-color;
+
+		margin: 8px 0 16px;
+		padding: 8px;
+
+		background: $card-background-accent-color;
+
+		p {
+			color: $faded-text-color;
+			font-size: 13px;
+		}
+
+		textarea {
+			width: 100%;
+			min-height: 100px;
+
+			padding: 8px;
+
+			border: solid 1px $card-border-color;
+
+			background: lighten($card-background-color, 8%);
+			color: inherit;
+
+			font: inherit;
+			resize: vertical;
+			outline: none;
+
+			&:active,
+			&:focus {
+				outline: 1px solid $primary;
+			}
+		}
+
+		.bulk-add-footer {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			gap: 8px;
+			margin-top: 16px;
+
+			color: $faded-text-color;
+
+			.bulk-players-actions {
+				display: flex;
+				gap: 8px;
+			}
+		}
+	}
+
+	.import-from-wybin {
+	}
+
+	.players-table {
+		display: flex;
+		flex-direction: column;
 		flex: 1;
+
+		min-height: 0;
+		overflow: hidden;
+
+		border: 1px solid $card-border-color;
+		background: $card-background-color;
+
+		.players-table-header,
+		.player-row {
+			display: grid;
+			grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr) 40px;
+			align-items: center;
+
+			gap: 8px;
+			padding: 0 16px;
+		}
+
+		.players-table-header {
+			min-height: 40px;
+
+			border-bottom: 1px solid $card-border-color;
+		}
+
+		.players-list {
+			min-height: 0;
+			flex: 1;
+			overflow-y: auto;
+
+			padding: 8px 0;
+		}
+
+		.player-row {
+			min-height: 50px;
+			padding-top: 8px;
+			padding-bottom: 8px;
+
+			.player-index {
+				color: $faded-text-color;
+				font-size: 12px;
+			}
+		}
+
+		.empty-list {
+			padding: 8px 16px;
+			color: $faded-text-color;
+		}
 	}
 }
 
-.sync {
-	display: none;
-}
+@media (max-width: 720px) {
+	.solo-layout {
+		.players-toolbar {
+			flex-wrap: wrap;
 
-.rotate {
-	display: inline-block;
-	animation: rotate 0.5s ease-in-out 0s infinite;
+			.players-heading {
+				width: 100%;
+			}
+
+			.filter-field {
+				flex-basis: 100%;
+			}
+		}
+
+		.players-table {
+			.players-table-header,
+			.player-row {
+				grid-template-columns: 28px minmax(0, 1fr) minmax(0, 1fr) 32px;
+
+				gap: 6px;
+				padding-right: 8px;
+				padding-left: 8px;
+			}
+		}
+	}
 }
 
 @keyframes rotate {
@@ -33,83 +194,5 @@
 	}
 	to {
 		transform: rotate(0deg);
-	}
-}
-
-.team {
-	overflow: hidden;
-
-	margin-bottom: 8px;
-
-	border: 1px solid darken(#3c4452, 15%);
-
-	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-
-	.header {
-		display: flex;
-		justify-content: space-between;
-
-		padding: 16px;
-
-		&:hover {
-			background-color: darken($background-color, 5%);
-		}
-
-		.information {
-			display: flex;
-			align-items: center;
-
-			h3 {
-				margin: 0;
-			}
-		}
-
-		button {
-			margin-left: 4px;
-		}
-
-		.collapse {
-			position: fixed;
-			right: 0;
-		}
-
-		&:hover {
-			cursor: pointer;
-		}
-	}
-
-	.body {
-		padding: 16px;
-
-		.team-players {
-			margin-top: 8px;
-
-			.player {
-				display: flex;
-				justify-content: space-between;
-
-				.player-name,
-				.manage-buttons {
-					display: flex;
-					align-items: center;
-
-					padding: 8px;
-				}
-
-				.col {
-					padding: 8px;
-				}
-
-				&:nth-child(odd) {
-					background-color: lighten($background-color, 15%);
-				}
-			}
-		}
-
-		&.hide {
-			display: none;
-		}
 	}
 }

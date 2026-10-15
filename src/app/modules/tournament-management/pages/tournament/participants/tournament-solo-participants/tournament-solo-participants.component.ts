@@ -12,29 +12,77 @@ export class TournamentSoloParticipantsComponent {
 	@Input() tournament: WyTournament;
 	@Input() importingFromWyBin: boolean;
 	@Input() teamsToAdd: string;
-	@Output() teamsToAddChange = new EventEmitter<string>();
 
+	@Output() teamsToAddChange = new EventEmitter<string>();
 	@Output() addTeam = new EventEmitter<void>();
 	@Output() addBulkPlayers = new EventEmitter<void>();
 	@Output() importWyBinPlayers = new EventEmitter<void>();
 	@Output() deletePlayer = new EventEmitter<number>();
 
-	collapsedState: Map<AbstractControl, boolean> = new Map();
+	playerFilter: string;
+	bulkAddOpen: boolean;;
+
+	constructor() {
+		this.playerFilter = '';
+		this.bulkAddOpen = false;
+	}
 
 	get players(): FormArray {
 		return this.form.get('players') as FormArray;
 	}
 
-	trackByIndex(index: number): number {
-		return index;
+	get filteredPlayers(): AbstractControl[] {
+		const filter = this.playerFilter.trim().toLocaleLowerCase();
+
+		if (!filter) {
+			return this.players.controls;
+		}
+
+		return this.players.controls.filter(player => {
+			const name = (player.get('name')?.value || '').toLocaleLowerCase();
+			const userId = (player.get('userId')?.value || '').toString().toLocaleLowerCase();
+			return name.includes(filter) || userId.includes(filter);
+		});
 	}
 
-	collapse(player: AbstractControl, event: MouseEvent): void {
-		if ((event.target as HTMLElement).closest('button')) {
+	get teamsToAddCount() {
+		return this.teamsToAdd?.trim().split('\n').length || 0;
+	}
+
+	trackByControl(_index: number, player: AbstractControl): AbstractControl {
+		return player;
+	}
+
+	onPlayerFilterInput(event: Event): void {
+		this.playerFilter = (event.target as HTMLInputElement).value;
+	}
+
+	toggleBulkAdd(): void {
+		if (this.bulkAddOpen) {
+			this.closeBulkAdd();
 			return;
 		}
 
-		const currentState = this.collapsedState.get(player) ?? true;
-		this.collapsedState.set(player, !currentState);
+		this.teamsToAddChange.emit('');
+		this.bulkAddOpen = true;
+	}
+
+	closeBulkAdd(): void {
+		this.bulkAddOpen = false;
+		this.teamsToAddChange.emit('');
+	}
+
+	submitBulkAdd(): void {
+		if (!this.teamsToAdd?.trim()) {
+			return;
+		}
+
+		const currentCount = this.players.length;
+
+		this.addBulkPlayers.emit();
+
+		if (this.players.length > currentCount) {
+			this.closeBulkAdd();
+		}
 	}
 }

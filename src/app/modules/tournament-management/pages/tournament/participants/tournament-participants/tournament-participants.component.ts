@@ -236,19 +236,31 @@ export class TournamentParticipantsComponent implements OnInit {
 	}
 
 	addBulkPlayersSoloTournament(): void {
-		const allTeams = this.teamsToAdd.split('\n');
+		const allPlayers = (this.teamsToAdd || '').split('\n')
+			.map(player => player.trim())
+			.filter(player => player.length > 0);
+		const parsedPlayers = allPlayers.map(playerLine => {
+			const [rawName, rawUserId, ...extraFields] = playerLine.split(',');
+			const name = rawName?.trim() || '';
+			const userId = rawUserId?.trim() || '';
 
-		allTeams.forEach(team => {
-			const newTeam = new WyTeam();
-			const [username, userId] = team.trim().split(',');
-
-			newTeam.name = username.trim();
-			newTeam.userId = parseInt(userId.trim());
-
-			this.players.push(this.createPlayerGroup(null, newTeam.name, newTeam.userId));
+			return {
+				name,
+				userId: userId ? parseInt(userId, 10) : null,
+				isValid: !!name && extraFields.length === 0 && (!userId || /^\d+$/.test(userId))
+			};
 		});
 
-		this.teamsToAdd = null;
+		if (parsedPlayers.some(player => !player.isValid)) {
+			this.toastService.addToast('Players must be entered one per line as "name" or "name, numeric user id". Check the format and try again.', ToastType.Error);
+			return;
+		}
+
+		parsedPlayers.forEach(player => {
+			this.players.push(this.createPlayerGroup(null, player.name, player.userId));
+		});
+
+		this.teamsToAdd = '';
 	}
 
 	importWyBinPlayers(): void {

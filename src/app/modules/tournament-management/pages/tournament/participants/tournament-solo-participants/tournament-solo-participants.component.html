@@ -1,78 +1,83 @@
 <ng-container [formGroup]="form">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col">
-				<h3>Players</h3>
-				<p>Add a player to the tournament.</p>
+	<div class="solo-layout">
+		<div class="players-toolbar">
+			<div class="players-heading">
+				<h3>Players <span>&bull;</span><span>{{ players.length }}</span></h3>
+			</div>
 
-				<div class="buttons">
-					<button mat-raised-button (click)="addTeam.emit()" color="primary"><mat-icon>add</mat-icon> add new player</button>
-					<button mat-raised-button (click)="addBulkPlayers.emit()" color="primary" [disabled]="teamsToAdd == null || teamsToAdd.length <= 0"><mat-icon>add</mat-icon> add bulk players</button>
-					<button mat-raised-button (click)="importWyBinPlayers.emit()" color="primary" *ngIf="tournament.hasWyBinConnected()">
-						<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon>import players from wyBin
+			<mat-form-field class="filter-field">
+				<mat-label>Filter players</mat-label>
+
+				<input matInput [value]="playerFilter" (input)="onPlayerFilterInput($event)" />
+			</mat-form-field>
+
+			<button class="form-button" (click)="toggleBulkAdd()">
+				<mat-icon *ngIf="!bulkAddOpen">expand_more</mat-icon>
+				<mat-icon *ngIf="bulkAddOpen">expand_less</mat-icon>
+
+				bulk add
+			</button>
+
+			<button class="form-button primary" (click)="addTeam.emit()">
+				<mat-icon>add</mat-icon> add player
+			</button>
+		</div>
+
+		<div class="bulk-add-panel" *ngIf="bulkAddOpen">
+			<p>One player per line: <code>username, userid</code></p>
+
+			<textarea [(ngModel)]="teamsToAdd" (ngModelChange)="teamsToAddChange.emit($event)" [ngModelOptions]="{ standalone: true }" placeholder="Player A, 1111111&#10;Player B, 2222222"></textarea>
+
+			<div class="bulk-add-footer">
+				<span>{{ teamsToAdd?.trim() ? 'Add ' + teamsToAddCount + ' player(s)' : 'No players to add' }}</span>
+
+				<div class="bulk-players-actions">
+					<button class="form-button danger" (click)="closeBulkAdd()">cancel</button>
+
+					<button class="form-button primary" [disabled]="!teamsToAdd?.trim()" (click)="submitBulkAdd()">
+						<mat-icon>add</mat-icon> add players
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="import-from-wybin" *ngIf="tournament.hasWyBinConnected()">
+			<button class="form-button" (click)="importWyBinPlayers.emit()">
+				<mat-icon [class.rotate]="importingFromWyBin">sync</mat-icon>
+
+				import players from wyBin
+			</button>
+		</div>
+
+		<div class="players-table">
+			<div class="players-table-header">
+				<span>#</span>
+				<span>Player name</span>
+				<span>User id</span>
+				<span></span>
+			</div>
+
+			<div class="players-list" formArrayName="players">
+				<div class="player-row" [class.missing-user-id]="!playerGroup.get('userId')?.value" *ngFor="let playerGroup of filteredPlayers; trackBy: trackByControl" [formGroupName]="players.controls.indexOf(playerGroup)">
+					<span class="player-index">{{ players.controls.indexOf(playerGroup) + 1 }}</span>
+
+					<mat-form-field>
+						<mat-label>Player name</mat-label>
+						<input matInput formControlName="name" />
+					</mat-form-field>
+
+					<mat-form-field>
+						<mat-label>User id</mat-label>
+						<input matInput formControlName="userId" />
+					</mat-form-field>
+
+					<button class="form-button danger" (click)="deletePlayer.emit(players.controls.indexOf(playerGroup))">
+						<mat-icon>delete</mat-icon>
 					</button>
 				</div>
 
-				<div class="split">
-					<div class="col">
-						<mat-form-field class="full-width margin-top">
-							<mat-label>Bulk add players, list all players. 1 player (comma seperated: Username, userid) per line (click me)</mat-label>
-							<textarea matInput [(ngModel)]="teamsToAdd" (ngModelChange)="teamsToAddChange.emit($event)" [ngModelOptions]="{standalone: true}"></textarea>
-						</mat-form-field>
-					</div>
-				</div>
-
-				<hr />
-
-				<div class="all-teams" formArrayName="players">
-					<div class="team" *ngFor="let playerGroup of players.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
-						<div class="header" (click)="collapse(playerGroup, $event)">
-							<div class="information">
-								<h3>{{ playerGroup.get('name')?.value || 'Unnamed Player' }}</h3>
-							</div>
-
-							<div class="buttons">
-								<button mat-mini-fab color="warn" (click)="deletePlayer.emit(i)">
-									<mat-icon>delete</mat-icon>
-								</button>
-							</div>
-						</div>
-
-						<div *ngIf="!(collapsedState.get(playerGroup) ?? true)" class="body">
-							<h3>Create a new player</h3>
-
-							<div class="split">
-								<div class="col">
-									<mat-form-field class="full-width">
-										<mat-label>Player name</mat-label>
-
-										<input matInput formControlName="name" />
-
-										<mat-error *ngIf="playerGroup.get('name') != null && playerGroup.get('name').errors && (playerGroup.get('name').touched || playerGroup.get('name').dirty)">
-											This field is required
-										</mat-error>
-									</mat-form-field>
-
-									<p>The name of the player</p>
-								</div>
-
-								<div class="col">
-									<mat-form-field class="full-width">
-										<mat-label>User id</mat-label>
-
-										<input matInput formControlName="userId" />
-
-										<mat-error *ngIf="playerGroup.get('userId') != null && playerGroup.get('userId').errors && (playerGroup.get('userId').touched || playerGroup.get('userId').dirty)">
-											This field is required
-										</mat-error>
-									</mat-form-field>
-
-									<p>The id of the user. Used to invite players and will work regardless of a name change. The id of the user are the numbers at the end of their profile link: https://osu.ppy.sh/users/2407265 (in this case 2407265)</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				<p class="empty-list" *ngIf="!players.length">No players yet. Add a player to get started.</p>
+				<p class="empty-list" *ngIf="players.length && !filteredPlayers.length">No players match this filter.</p>
 			</div>
 		</div>
 	</div>
