@@ -8,9 +8,9 @@ import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
-import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
+import { TournamentEditStateService } from '../../../../services/tournament-edit-state.service';
 import { debounceTime, filter } from 'rxjs';
-import { ImportWybinParticipantsDialogComponent } from '../../../../../components/dialogs/import-wybin-participants-dialog/import-wybin-participants-dialog.component';
+import { ImportWybinParticipantsDialogComponent } from '../../../../../../components/dialogs/import-wybin-participants-dialog/import-wybin-participants-dialog.component';
 
 @Component({
 	selector: 'app-tournament-participants',
@@ -20,8 +20,6 @@ import { ImportWybinParticipantsDialogComponent } from '../../../../../component
 export class TournamentParticipantsComponent implements OnInit {
 	tournament: WyTournament;
 	form: FormGroup;
-
-	collapsedState: WeakMap<AbstractControl, boolean>;
 
 	usersToAdd: string;
 	teamsToAdd: string;
@@ -43,8 +41,6 @@ export class TournamentParticipantsComponent implements OnInit {
 			players: new FormArray([]),
 			teams: new FormArray([])
 		});
-
-		this.collapsedState = new WeakMap();
 	}
 
 	ngOnInit(): void {
@@ -128,19 +124,6 @@ export class TournamentParticipantsComponent implements OnInit {
 		return this.form.get('players') as FormArray;
 	}
 
-	trackByIndex(index: number) {
-		return index;
-	}
-
-	collapse(team: AbstractControl, event: MouseEvent) {
-		if ((event.target as HTMLElement).closest('button')) {
-			return;
-		}
-
-		const currentState = this.collapsedState.get(team) ?? true;
-		this.collapsedState.set(team, !currentState);
-	}
-
 	addTeam() {
 		if (this.tournament.isSoloTournament()) {
 			this.players.push(this.createPlayerGroup(null, '', null));
@@ -152,10 +135,6 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	addNewPlayer(team: AbstractControl) {
 		(team.get('players') as FormArray).push(this.createPlayerGroup(null, '', null));
-	}
-
-	deletePlayer(i: number) {
-		this.players.removeAt(i);
 	}
 
 	deleteTeam(index: number) {
@@ -336,10 +315,6 @@ export class TournamentParticipantsComponent implements OnInit {
 				});
 			}
 		});
-	}
-
-	getPlayersFormArray(index: number): FormArray {
-		return this.teams.at(index).get('players') as FormArray;
 	}
 
 	private createPlayerGroup(id: number, name: string, userId: number): FormGroup {

@@ -1,0 +1,113 @@
+<ng-container [formGroup]="form">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
+				<h3>Teams</h3>
+				<p>Add a team to the tournament.</p>
+
+				<div class="buttons">
+					<button mat-raised-button (click)="addTeam.emit()" color="primary"><mat-icon>add</mat-icon> add new team</button>
+					<button mat-raised-button (click)="addBulkTeams.emit()" color="primary"><mat-icon>add</mat-icon> add bulk teams</button>
+					<button mat-raised-button (click)="importWyBinTeams.emit()" color="primary" *ngIf="tournament.hasWyBinConnected()">
+						<mat-icon>add</mat-icon> <mat-icon class="sync" [ngClass]="{'rotate': importingFromWyBin == true}">sync</mat-icon>import teams from wyBin
+					</button>
+				</div>
+
+				<div class="split">
+					<div class="col">
+						<mat-form-field class="full-width margin-top">
+							<mat-label>Filter players/teams by name</mat-label>
+							<textarea matInput [(ngModel)]="teamFilter" (ngModelChange)="teamFilterChange.emit($event)" [ngModelOptions]="{standalone: true}"></textarea>
+						</mat-form-field>
+					</div>
+				</div>
+
+				<hr />
+
+				<div class="all-teams" formArrayName="teams">
+					<div class="team" *ngFor="let teamGroup of teams.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+						<div class="header" (click)="collapse(teamGroup, $event)">
+							<div class="information">
+								<h3>{{ teamGroup.get('name')?.value || 'Unnamed Team' }}</h3>
+							</div>
+
+							<div class="buttons">
+								<button mat-mini-fab color="warn" (click)="deleteTeam.emit(i)"><mat-icon>delete</mat-icon></button>
+							</div>
+						</div>
+
+						<div *ngIf="!(collapsedState.get(teamGroup) ?? true)" class="body">
+							<h3>Create a new team</h3>
+
+							<div class="split">
+								<div class="col">
+									<mat-form-field class="full-width">
+										<mat-label>Team name</mat-label>
+
+										<input matInput formControlName="name" />
+
+										<mat-error *ngIf="teamGroup.get('name') != null && teamGroup.get('name').errors && (teamGroup.get('name').touched || teamGroup.get('name').dirty)">
+											This field is required
+										</mat-error>
+									</mat-form-field>
+
+									<p>The name of the team</p>
+								</div>
+							</div>
+
+							<h3>Manage players</h3>
+							<p>Add or remove players from the given team</p>
+
+							<div class="buttons">
+								<button mat-raised-button (click)="addNewPlayer.emit(teamGroup)" color="primary">
+									<mat-icon>add</mat-icon> add new player
+								</button>
+
+								<button mat-raised-button (click)="addBulkPlayers.emit(teamGroup)" color="primary" [disabled]="usersToAdd == null || usersToAdd.length <= 0">
+									<mat-icon>add</mat-icon> add bulk players
+								</button>
+							</div>
+
+							<mat-form-field class="full-width">
+								<mat-label>List with all players. 1 player (comma seperated: Username, userid) per line (click me)</mat-label>
+								<textarea matInput [(ngModel)]="usersToAdd" (ngModelChange)="usersToAddChange.emit($event)" [ngModelOptions]="{standalone: true}"></textarea>
+							</mat-form-field>
+
+							<div class="team-players" formArrayName="players">
+								<div class="player" *ngFor="let playerGroup of getPlayersFormArray(i).controls; let j = index; trackBy: trackByIndex" [formGroupName]="j">
+									<div class="split">
+										<div class="col">
+											<mat-form-field class="full-width">
+												<mat-label>Player name</mat-label>
+
+												<input matInput formControlName="name" />
+											</mat-form-field>
+
+											<p>The name of the player</p>
+										</div>
+
+										<div class="col">
+											<mat-form-field class="full-width">
+												<mat-label>User id</mat-label>
+
+												<input matInput formControlName="userId" />
+											</mat-form-field>
+
+											<p>The id of the user. Used to invite players and will work regardless of a name change. The id of the user are the numbers at the end of their profile link: https://osu.ppy.sh/users/2407265 (in this case 2407265)</p>
+										</div>
+									</div>
+
+									<div class="manage-buttons">
+										<button mat-mini-fab color="warn" (click)="removePlayerFromTeam.emit({ team: teamGroup, playerIndex: j })">
+											<mat-icon>delete</mat-icon>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>

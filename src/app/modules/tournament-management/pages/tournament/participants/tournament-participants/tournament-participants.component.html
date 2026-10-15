@@ -1,0 +1,32 @@
+<div *ngIf="tournament">
+	<app-tournament-team-participants
+		*ngIf="!tournament.isSoloTournament()"
+		[form]="form"
+		[tournament]="tournament"
+		[importingFromWyBin]="importingFromWyBin"
+		[usersToAdd]="usersToAdd"
+		[teamFilter]="teamFilter"
+		(usersToAddChange)="usersToAdd = $event"
+		(teamFilterChange)="teamFilter = $event"
+		(addTeam)="addTeam()"
+		(addBulkTeams)="addBulkTeams()"
+		(importWyBinTeams)="importWyBinTeams()"
+		(deleteTeam)="deleteTeam($event)"
+		(addNewPlayer)="addNewPlayer($event)"
+		(addBulkPlayers)="addBulkPlayers($event)"
+		(removePlayerFromTeam)="removePlayerFromTeam($event.team, $event.playerIndex)">
+	</app-tournament-team-participants>
+
+	<app-tournament-solo-participants
+		*ngIf="tournament.isSoloTournament()"
+		[form]="form"
+		[tournament]="tournament"
+		[importingFromWyBin]="importingFromWyBin"
+		[teamsToAdd]="teamsToAdd"
+		(teamsToAddChange)="teamsToAdd = $event"
+		(addTeam)="addTeam()"
+		(addBulkPlayers)="addBulkPlayersSoloTournament()"
+		(importWyBinPlayers)="importWyBinPlayers()"
+		(deletePlayer)="deleteTeam($event)">
+	</app-tournament-solo-participants>
+</div>
