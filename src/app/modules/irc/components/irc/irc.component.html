@@ -2,7 +2,7 @@
 <app-debug [data]="{ selectedChannel, selectedLobby }"></app-debug>
 
 <div class="irc">
-	<div class="first-pick-not-set" *ngIf="selectedLobby?.isQualifierLobby != true && (selectedLobby?.firstPick == null || selectedLobby?.bestOf == null)" (click)="openLobbyDialog()">
+	<div class="first-pick-not-set" *ngIf="showFirstPickHeader" (click)="openLobbyDialog()">
 		You haven't set the <b>First pick</b> of the match yet. Click here to set who picks first.
 	</div>
 
@@ -139,7 +139,7 @@
 			<app-irc-lobbies
 				[selectedChannel]="selectedChannel"
 				[channels]="channels"
-				(changeChannel)="changeChannel($event)"
+				(changeChannel)="changeChannel($event, true)"
 			/>
 		</div>
 
