@@ -1,4 +1,4 @@
-<div *ngIf="tournament">
+<div class="participants-content" *ngIf="tournament">
 	<app-tournament-team-participants
 		*ngIf="!tournament.isSoloTournament()"
 		[form]="form"
@@ -9,7 +9,7 @@
 		(usersToAddChange)="usersToAdd = $event"
 		(teamFilterChange)="teamFilter = $event"
 		(addTeam)="addTeam()"
-		(addBulkTeams)="addBulkTeams()"
+		(addBulkTeams)="addBulkTeams($event)"
 		(importWyBinTeams)="importWyBinTeams()"
 		(deleteTeam)="deleteTeam($event)"
 		(addNewPlayer)="addNewPlayer($event)"

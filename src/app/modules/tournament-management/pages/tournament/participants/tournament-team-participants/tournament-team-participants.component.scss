@@ -1,30 +1,318 @@
 @import "variables";
 
-.buttons {
+:host {
 	display: flex;
-	gap: 8px;
+	min-height: 0;
+	flex: 1;
 }
 
-.margin-top {
-	margin-top: 8px;
-}
+.teams-layout {
+	display: grid;
+	grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+	flex: 1;
 
-.split {
-	display: flex;
-	gap: 8px;
+	gap: 16px;
+	min-height: 0;
 
-	.col {
-		flex: 1;
+	.teams-sidebar {
+		display: flex;
+		min-height: 0;
+		flex-direction: column;
+
+		.sidebar-heading {
+			display: flex;
+			align-items: baseline;
+			margin-bottom: 8px;
+
+			h3 {
+				margin: 0;
+			}
+
+			span {
+				color: $faded-text-color;
+
+				&:last-child {
+					margin-left: 4px;
+				}
+			}
+		}
+
+		.sidebar-actions {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+
+			gap: 8px;
+			margin-bottom: 8px;
+
+			button {
+				min-width: 0;
+			}
+		}
+
+		.filter-field {
+			width: 100%;
+			margin-bottom: 4px;
+		}
+
+		.team-list {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+
+			gap: 4px;
+			padding-right: 4px;
+
+			min-height: 0;
+			overflow-y: auto;
+
+			.team-list-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				text-align: left;
+
+				width: 100%;
+
+				gap: 12px;
+				padding: 10px 12px;
+
+				border: 0;
+				border-radius: 8px;
+
+				background: transparent;
+				color: inherit;
+
+				cursor: pointer;
+
+				&:hover {
+					background: lighten($background-color, 7%);
+				}
+
+				&.selected {
+					background: rgba($primary, 0.1);
+					color: $primary;
+
+					.team-player-count {
+						color: $primary;
+					}
+				}
+
+				.team-list-name {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+
+				.team-player-count {
+					flex: 0 0 auto;
+					color: $faded-text-color;
+					font-size: 12px;
+				}
+			}
+		}
+
+		.empty-list {
+			padding: 8px 16px;
+			color: $faded-text-color;
+		}
+
+		.import-button {
+			margin-top: 8px;
+
+			.rotate {
+				animation: rotate 0.5s ease-in-out infinite;
+			}
+		}
 	}
-}
 
-.sync {
-	display: none;
-}
+	.team-editor {
+		display: flex;
+		flex-direction: column;
 
-.rotate {
-	display: inline-block;
-	animation: rotate 0.5s ease-in-out 0s infinite;
+		min-width: 0;
+		min-height: 0;
+		padding: 16px;
+
+		border: 1px solid $card-border-color;
+		background: $card-background-color;
+
+		.team-details {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+
+			min-height: 0;
+		}
+
+		.team-toolbar {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+
+			.team-name-field {
+				flex: 1;
+				min-width: 0;
+			}
+
+			button {
+				margin-top: 4px;
+			}
+		}
+
+		.section-label {
+			margin: 0 0 8px;
+			color: $faded-text-color;
+			font-size: 12px;
+		}
+
+		.players-list {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		.player-row {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) 40px;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.empty-players {
+			padding: 8px 16px;
+			color: $faded-text-color;
+		}
+
+		.user-id-help {
+			margin: auto 0 0;
+			padding-top: 16px;
+
+			font-size: 12px;
+			color: $faded-text-color;
+		}
+
+		.bulk-teams-panel {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+
+			min-height: 0;
+		}
+
+		.bulk-teams-input {
+			flex: 1;
+
+			width: 100%;
+			min-height: 240px;
+
+			border: 1px solid $card-border-color;
+			border-radius: 8px;
+
+			margin-top: 12px;
+			padding: 12px;
+
+			background: lighten($card-background-color, 8%);
+			color: inherit;
+
+			font: inherit;
+			font-family: monospace;
+
+			resize: vertical;
+			outline: none;
+
+			&:active,
+			&:focus {
+				outline: 1px solid $primary;
+			}
+		}
+
+		.bulk-teams-footer,
+		.bulk-teams-actions,
+		.bulk-players-actions {
+			display: flex;
+			justify-content: space-between;
+
+			gap: 8px;
+			margin-top: 12px;
+		}
+
+		.bulk-teams-footer {
+			align-items: center;
+		}
+
+		.bulk-players-panel {
+			border: 1px solid $card-border-color;
+
+			margin: 8px 0 16px;
+			padding: 8px;
+
+			background: $card-background-accent-color;
+
+			p {
+				color: $faded-text-color;
+				font-size: 13px;
+			}
+
+			textarea {
+				width: 100%;
+				min-height: 100px;
+
+				padding: 8px;
+
+				border: solid 1px $card-border-color;
+
+				background: lighten($card-background-color, 8%);
+				color: inherit;
+
+				font: inherit;
+				resize: vertical;
+				outline: none;
+
+				&:active,
+				&:focus {
+					outline: 1px solid $primary;
+				}
+			}
+
+			.bulk-players-actions {
+				justify-content: flex-end;
+			}
+		}
+
+		.no-team-selected {
+			display: grid;
+			place-items: center;
+			flex: 1;
+
+			color: $faded-text-color;
+		}
+	}
+
+	@media (max-width: 720px) {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 8px;
+
+		.teams-sidebar {
+			min-height: auto;
+
+			.team-list {
+				max-height: 220px;
+			}
+		}
+
+		.team-editor {
+			min-height: 440px;
+
+			.team-toolbar {
+				flex-wrap: wrap;
+
+				.team-name-field {
+					flex-basis: 100%;
+				}
+			}
+		}
+	}
 }
 
 @keyframes rotate {
@@ -33,83 +321,5 @@
 	}
 	to {
 		transform: rotate(0deg);
-	}
-}
-
-.team {
-	overflow: hidden;
-
-	margin-bottom: 8px;
-
-	border: 1px solid darken(#3c4452, 15%);
-
-	-webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	-moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
-
-	.header {
-		display: flex;
-		justify-content: space-between;
-
-		padding: 16px;
-
-		&:hover {
-			background-color: darken($background-color, 5%);
-		}
-
-		.information {
-			display: flex;
-			align-items: center;
-
-			h3 {
-				margin: 0;
-			}
-		}
-
-		button {
-			margin-left: 4px;
-		}
-
-		.collapse {
-			position: fixed;
-			right: 0;
-		}
-
-		&:hover {
-			cursor: pointer;
-		}
-	}
-
-	.body {
-		padding: 16px;
-
-		.team-players {
-			margin-top: 8px;
-
-			.player {
-				display: flex;
-				justify-content: space-between;
-
-				.player-name,
-				.manage-buttons {
-					display: flex;
-					align-items: center;
-
-					padding: 8px;
-				}
-
-				.col {
-					padding: 8px;
-				}
-
-				&:nth-child(odd) {
-					background-color: lighten($background-color, 15%);
-				}
-			}
-		}
-
-		&.hide {
-			display: none;
-		}
 	}
 }

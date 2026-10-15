@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AddBulkTeamsDialogComponent } from 'app/components/dialogs/add-bulk-teams-dialog/add-bulk-teams-dialog.component';
 import { DeleteTeamDialogComponent } from 'app/components/dialogs/delete-team-dialog/delete-team-dialog.component';
 import { WyTeam } from 'app/models/wytournament/wy-team';
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { ToastType } from 'app/models/toast';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
 import { TournamentEditStateService } from '../../../../services/tournament-edit-state.service';
@@ -167,52 +167,71 @@ export class TournamentParticipantsComponent implements OnInit {
 	}
 
 	addBulkPlayers(teamGroup: AbstractControl) {
-		const allUsers = this.usersToAdd.split('\n');
+		const allUsers = (this.usersToAdd || '').split('\n')
+			.map(user => user.trim())
+			.filter(user => user.length > 0);
 
-		allUsers.forEach(user => {
-			const teamPlayer = new WyTeamPlayer();
-			const [username, userId] = user.trim().split(',');
+		const parsedUsers = allUsers.map(user => {
+			const [username, rawUserId] = user.split(',');
+			const userId = rawUserId?.trim();
 
-			teamPlayer.name = username.trim();
-			teamPlayer.userId = parseInt(userId.trim());
-
-			(teamGroup.get('players') as FormArray).push(this.createPlayerGroup(null, teamPlayer.name, teamPlayer.userId));
+			return {
+				name: username?.trim() || '',
+				userId: userId && /^\d+$/.test(userId) ? parseInt(userId, 10) : null,
+				isValid: !!username?.trim() && (!userId || /^\d+$/.test(userId))
+			};
 		});
 
-		this.usersToAdd = null;
+		if (parsedUsers.some(user => !user.isValid)) {
+			this.toastService.addToast('Players must be entered one per line as "name, user id". Check the names and numeric user ids, then try again.', ToastType.Error);
+			return;
+		}
+
+		parsedUsers.forEach(user => {
+			(teamGroup.get('players') as FormArray).push(this.createPlayerGroup(null, user.name, user.userId));
+		});
+
+		this.usersToAdd = '';
 	}
 
-	addBulkTeams(): void {
-		const dialogRef = this.dialog.open(AddBulkTeamsDialogComponent);
+	addBulkTeams(teamLines: string): void {
+		const allTeams = (teamLines || '').split('\n')
+			.map(team => team.trim())
+			.filter(team => team.length > 0);
 
-		dialogRef.afterClosed().subscribe(result => {
-			if (result != null) {
-				const allTeams = result.split('\n');
+		const parsedTeams = allTeams.map(teamLine => {
+			const [teamName, ...players] = teamLine.split(',').map(value => value.trim());
+			const validPlayers = players.length % 2 === 0 && players.every((value, index) => {
+				if (index % 2 === 0) {
+					return value.length > 0;
+				}
 
-				allTeams.forEach((team: string) => {
-					const [teamName, ...players] = team.trim().split(',');
+				return value.length === 0 || /^\d+$/.test(value);
+			});
 
-					const newTeam = new WyTeam({
-						name: teamName.trim(),
-						index: this.tournament.teamIndex,
-						collapsed: true
-					});
+			return { teamName, players, isValid: !!teamName && validPlayers };
+		});
 
-					for (let i = 0; i < players.length; i += 2) {
-						const playerName = players[i].trim();
-						const playerId = parseInt(players[i + 1]?.trim() || '') || null;
+		if (parsedTeams.some(team => !team.isValid)) {
+			this.toastService.addToast('Each team line needs a team name followed by player name and user id pairs. Check the format and try again.', ToastType.Error);
+			return;
+		}
 
-						const newPlayer = new WyTeamPlayer({
-							name: playerName,
-							userId: playerId
-						});
+		parsedTeams.forEach(({ teamName, players }) => {
+			const newTeam = new WyTeam({
+				name: teamName,
+				index: this.tournament.teamIndex,
+				collapsed: true
+			});
 
-						newTeam.players.push(newPlayer);
-					}
-
-					this.teams.push(this.createTeamGroup(newTeam));
-				});
+			for (let i = 0; i < players.length; i += 2) {
+				newTeam.players.push(new WyTeamPlayer({
+					name: players[i],
+					userId: players[i + 1] ? parseInt(players[i + 1], 10) : null
+				}));
 			}
+
+			this.teams.push(this.createTeamGroup(newTeam));
 		});
 	}
 
