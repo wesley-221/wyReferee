@@ -161,6 +161,12 @@ export class IrcComponent implements OnInit, OnDestroy {
 			});
 	}
 
+	get showFirstPickHeader() {
+		return this.selectedChannel?.name.startsWith('#mp_') &&
+			this.selectedLobby?.isQualifierLobby != true &&
+			(this.selectedLobby?.firstPick == null || this.selectedLobby?.bestOf == null);
+	}
+
 	/**
 	 * Track which key has been pressed so we can navigate through the message history
 	 *
