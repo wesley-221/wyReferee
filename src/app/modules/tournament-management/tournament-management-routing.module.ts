@@ -12,7 +12,7 @@ import { TournamentWybinComponent } from './pages/tournament/tournament-wybin/to
 import { TournamentAccessComponent } from './pages/tournament/tournament-access/tournament-access.component';
 import { TournamentWebhookComponent } from './pages/tournament/tournament-webhook/tournament-webhook.component';
 import { TournamentStagesComponent } from './pages/tournament/tournament-stages/tournament-stages.component';
-import { TournamentParticipantsComponent } from './pages/tournament/tournament-participants/tournament-participants.component';
+import { TournamentParticipantsComponent } from './pages/tournament/participants/tournament-participants/tournament-participants.component';
 import { MappoolOverviewComponent } from './pages/tournament/tournament-mappool/mappool-overview/mappool-overview.component';
 import { TournamentTriggerMessageComponent } from './pages/tournament/tournament-trigger-message/tournament-trigger-message.component';
 import { TournamentMatchFlowComponent } from './pages/tournament/tournament-match-flow/tournament-match-flow.component';

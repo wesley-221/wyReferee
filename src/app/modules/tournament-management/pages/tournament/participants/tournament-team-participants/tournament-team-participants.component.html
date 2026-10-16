@@ -1,0 +1,137 @@
+<ng-container [formGroup]="form">
+	<div class="teams-layout">
+		<div class="teams-sidebar">
+			<div class="sidebar-heading">
+				<h3>Teams <span>&bull;</span><span>{{ teams.length }}</span></h3>
+			</div>
+
+			<div class="sidebar-actions">
+				<button class="form-button primary" (click)="createTeam()">
+					<mat-icon>add</mat-icon> add team
+				</button>
+
+				<button class="form-button" (click)="toggleBulkTeams()">
+					<mat-icon *ngIf="!bulkTeamsOpen">expand_more</mat-icon>
+					<mat-icon *ngIf="bulkTeamsOpen">expand_less</mat-icon>
+
+					bulk teams
+				</button>
+			</div>
+
+			<button *ngIf="tournament.hasWyBinConnected()" class="form-button import-button" (click)="importWyBinTeams.emit()">
+				<mat-icon [class.rotate]="importingFromWyBin">sync</mat-icon>
+
+				import teams from wyBin
+			</button>
+
+			<mat-form-field class="filter-field">
+				<mat-label>Filter teams</mat-label>
+
+				<input matInput [value]="teamFilter || ''" (input)="onTeamFilterInput($event)" />
+			</mat-form-field>
+
+			<div class="team-list" formArrayName="teams">
+				<button class="team-list-item" *ngFor="let teamGroup of filteredTeams; let i = index; trackBy: trackByControl" [class.selected]="activeTeam === teamGroup" (click)="selectTeam(teamGroup)">
+					<span class="team-list-name">{{ teamGroup.get('name')?.value || 'Unnamed Team' }}</span>
+					<span class="team-player-count">{{ getPlayersFormArray(teams.controls.indexOf(teamGroup)).length }} players</span>
+				</button>
+
+				<p class="empty-list" *ngIf="!teams.controls.length">No teams yet. Add a team to get started.</p>
+				<p class="empty-list" *ngIf="teams.controls.length && !hasMatchingTeams">No teams match this filter.</p>
+			</div>
+		</div>
+
+		<div class="team-editor">
+			<div class="bulk-teams-panel" *ngIf="bulkTeamsOpen">
+				<h3>Bulk add teams</h3>
+				<p>One team per line: the team name, then each player as a name and a user id, all comma separated.</p>
+				<code>team name, player1 name, player1 id, player2 name, player2 id, ...</code>
+
+				<textarea class="bulk-teams-input" [(ngModel)]="bulkTeamsText" [ngModelOptions]="{standalone: true}" placeholder="Team 1, Player A, 1111111, Player B, 2222222&#10;Team 2, Player C, 3333333, Player D, 4444444"></textarea>
+
+				<div class="bulk-teams-footer">
+					<span>{{ bulkTeamsText.trim() ? 'Ready to add teams' : 'Nothing to add yet' }}</span>
+
+					<div class="bulk-teams-actions">
+						<button class="form-button danger" (click)="closeBulkTeams()">
+							cancel
+						</button>
+
+						<button class="form-button primary" [disabled]="!bulkTeamsText.trim()" (click)="submitBulkTeams()">
+							<mat-icon>add</mat-icon> add teams
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="team-details" *ngIf="!bulkTeamsOpen && activeTeam as teamGroup" [formGroup]="teamGroup">
+				<div class="team-toolbar">
+					<mat-form-field class="team-name-field">
+						<mat-label>Team name</mat-label>
+						<input matInput formControlName="name" />
+					</mat-form-field>
+
+					<button class="form-button" (click)="toggleBulkPlayers(teamGroup)">
+						<mat-icon *ngIf="!bulkPlayersTeam || bulkPlayersTeam !== teamGroup">expand_more</mat-icon>
+						<mat-icon *ngIf="bulkPlayersTeam === teamGroup">expand_less</mat-icon>
+
+						bulk players
+					</button>
+
+					<button class="form-button primary" (click)="addNewPlayer.emit(teamGroup)">
+						<mat-icon>add</mat-icon> add player
+					</button>
+
+					<button class="form-button danger" (click)="deleteTeam.emit(selectedTeamIndex)">
+						<mat-icon>delete</mat-icon>
+					</button>
+				</div>
+
+				<p class="section-label">Players &bull; {{ getPlayersFormArray(selectedTeamIndex).length }} players</p>
+
+				<div class="bulk-players-panel" *ngIf="bulkPlayersTeam === teamGroup">
+					<p>One player per line: player name, user id.</p>
+
+					<textarea [(ngModel)]="usersToAdd" (ngModelChange)="usersToAddChange.emit($event)" [ngModelOptions]="{standalone: true}" placeholder="Player name, 1234567"></textarea>
+
+					<div class="bulk-players-actions">
+						<button class="form-button danger" (click)="closeBulkPlayers()">
+							cancel
+						</button>
+
+						<button class="form-button primary" [disabled]="!usersToAdd?.trim()" (click)="submitBulkPlayers(teamGroup)">
+							<mat-icon>add</mat-icon> add players
+						</button>
+					</div>
+				</div>
+
+				<div class="players-list" formArrayName="players">
+					<div class="player-row" *ngFor="let playerGroup of getPlayersFormArray(selectedTeamIndex).controls; let j = index; trackBy: trackByIndex" [formGroupName]="j">
+						<mat-form-field>
+							<mat-label>Player name</mat-label>
+
+							<input matInput formControlName="name" />
+						</mat-form-field>
+
+						<mat-form-field>
+							<mat-label>User id</mat-label>
+
+							<input matInput formControlName="userId" />
+						</mat-form-field>
+
+						<button class="form-button danger" (click)="removePlayerFromTeam.emit({ team: teamGroup, playerIndex: j })">
+							<mat-icon>delete</mat-icon>
+						</button>
+					</div>
+					<p class="empty-players" *ngIf="!getPlayersFormArray(selectedTeamIndex).length">No players on this team yet.</p>
+				</div>
+
+				<p class="user-id-help">User id is the number at the end of the osu! profile link (for example, osu.ppy.sh/users/2407265 > 2407265). When a player changes their name, wyReferee will still be able to invite the correct player through the user id.</p>
+			</div>
+
+			<div class="no-team-selected" *ngIf="!bulkTeamsOpen && !activeTeam">
+				Select a team or add a new one to get started.
+			</div>
+		</div>
+	</div>
+</ng-container>

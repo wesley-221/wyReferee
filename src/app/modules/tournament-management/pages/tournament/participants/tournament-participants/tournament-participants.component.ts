@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AddBulkTeamsDialogComponent } from 'app/components/dialogs/add-bulk-teams-dialog/add-bulk-teams-dialog.component';
 import { DeleteTeamDialogComponent } from 'app/components/dialogs/delete-team-dialog/delete-team-dialog.component';
 import { WyTeam } from 'app/models/wytournament/wy-team';
 import { WyTeamPlayer } from 'app/models/wytournament/wy-team-player';
 import { WyTournament } from 'app/models/wytournament/wy-tournament';
+import { ToastType } from 'app/models/toast';
 import { ToastService } from 'app/services/toast.service';
 import { TournamentService } from 'app/services/tournament.service';
-import { TournamentEditStateService } from '../../../services/tournament-edit-state.service';
+import { TournamentEditStateService } from '../../../../services/tournament-edit-state.service';
 import { debounceTime, filter } from 'rxjs';
-import { ImportWybinParticipantsDialogComponent } from '../../../../../components/dialogs/import-wybin-participants-dialog/import-wybin-participants-dialog.component';
+import { ImportWybinParticipantsDialogComponent } from '../../../../../../components/dialogs/import-wybin-participants-dialog/import-wybin-participants-dialog.component';
 
 @Component({
 	selector: 'app-tournament-participants',
@@ -20,8 +20,6 @@ import { ImportWybinParticipantsDialogComponent } from '../../../../../component
 export class TournamentParticipantsComponent implements OnInit {
 	tournament: WyTournament;
 	form: FormGroup;
-
-	collapsedState: WeakMap<AbstractControl, boolean>;
 
 	usersToAdd: string;
 	teamsToAdd: string;
@@ -43,8 +41,6 @@ export class TournamentParticipantsComponent implements OnInit {
 			players: new FormArray([]),
 			teams: new FormArray([])
 		});
-
-		this.collapsedState = new WeakMap();
 	}
 
 	ngOnInit(): void {
@@ -128,19 +124,6 @@ export class TournamentParticipantsComponent implements OnInit {
 		return this.form.get('players') as FormArray;
 	}
 
-	trackByIndex(index: number) {
-		return index;
-	}
-
-	collapse(team: AbstractControl, event: MouseEvent) {
-		if ((event.target as HTMLElement).closest('button')) {
-			return;
-		}
-
-		const currentState = this.collapsedState.get(team) ?? true;
-		this.collapsedState.set(team, !currentState);
-	}
-
 	addTeam() {
 		if (this.tournament.isSoloTournament()) {
 			this.players.push(this.createPlayerGroup(null, '', null));
@@ -152,10 +135,6 @@ export class TournamentParticipantsComponent implements OnInit {
 
 	addNewPlayer(team: AbstractControl) {
 		(team.get('players') as FormArray).push(this.createPlayerGroup(null, '', null));
-	}
-
-	deletePlayer(i: number) {
-		this.players.removeAt(i);
 	}
 
 	deleteTeam(index: number) {
@@ -188,69 +167,100 @@ export class TournamentParticipantsComponent implements OnInit {
 	}
 
 	addBulkPlayers(teamGroup: AbstractControl) {
-		const allUsers = this.usersToAdd.split('\n');
+		const allUsers = (this.usersToAdd || '').split('\n')
+			.map(user => user.trim())
+			.filter(user => user.length > 0);
 
-		allUsers.forEach(user => {
-			const teamPlayer = new WyTeamPlayer();
-			const [username, userId] = user.trim().split(',');
+		const parsedUsers = allUsers.map(user => {
+			const [username, rawUserId] = user.split(',');
+			const userId = rawUserId?.trim();
 
-			teamPlayer.name = username.trim();
-			teamPlayer.userId = parseInt(userId.trim());
-
-			(teamGroup.get('players') as FormArray).push(this.createPlayerGroup(null, teamPlayer.name, teamPlayer.userId));
+			return {
+				name: username?.trim() || '',
+				userId: userId && /^\d+$/.test(userId) ? parseInt(userId, 10) : null,
+				isValid: !!username?.trim() && (!userId || /^\d+$/.test(userId))
+			};
 		});
 
-		this.usersToAdd = null;
+		if (parsedUsers.some(user => !user.isValid)) {
+			this.toastService.addToast('Players must be entered one per line as "name, user id". Check the names and numeric user ids, then try again.', ToastType.Error);
+			return;
+		}
+
+		parsedUsers.forEach(user => {
+			(teamGroup.get('players') as FormArray).push(this.createPlayerGroup(null, user.name, user.userId));
+		});
+
+		this.usersToAdd = '';
 	}
 
-	addBulkTeams(): void {
-		const dialogRef = this.dialog.open(AddBulkTeamsDialogComponent);
+	addBulkTeams(teamLines: string): void {
+		const allTeams = (teamLines || '').split('\n')
+			.map(team => team.trim())
+			.filter(team => team.length > 0);
 
-		dialogRef.afterClosed().subscribe(result => {
-			if (result != null) {
-				const allTeams = result.split('\n');
+		const parsedTeams = allTeams.map(teamLine => {
+			const [teamName, ...players] = teamLine.split(',').map(value => value.trim());
+			const validPlayers = players.length % 2 === 0 && players.every((value, index) => {
+				if (index % 2 === 0) {
+					return value.length > 0;
+				}
 
-				allTeams.forEach((team: string) => {
-					const [teamName, ...players] = team.trim().split(',');
+				return value.length === 0 || /^\d+$/.test(value);
+			});
 
-					const newTeam = new WyTeam({
-						name: teamName.trim(),
-						index: this.tournament.teamIndex,
-						collapsed: true
-					});
+			return { teamName, players, isValid: !!teamName && validPlayers };
+		});
 
-					for (let i = 0; i < players.length; i += 2) {
-						const playerName = players[i].trim();
-						const playerId = parseInt(players[i + 1]?.trim() || '') || null;
+		if (parsedTeams.some(team => !team.isValid)) {
+			this.toastService.addToast('Each team line needs a team name followed by player name and user id pairs. Check the format and try again.', ToastType.Error);
+			return;
+		}
 
-						const newPlayer = new WyTeamPlayer({
-							name: playerName,
-							userId: playerId
-						});
+		parsedTeams.forEach(({ teamName, players }) => {
+			const newTeam = new WyTeam({
+				name: teamName,
+				index: this.tournament.teamIndex,
+				collapsed: true
+			});
 
-						newTeam.players.push(newPlayer);
-					}
-
-					this.teams.push(this.createTeamGroup(newTeam));
-				});
+			for (let i = 0; i < players.length; i += 2) {
+				newTeam.players.push(new WyTeamPlayer({
+					name: players[i],
+					userId: players[i + 1] ? parseInt(players[i + 1], 10) : null
+				}));
 			}
+
+			this.teams.push(this.createTeamGroup(newTeam));
 		});
 	}
 
 	addBulkPlayersSoloTournament(): void {
-		const allTeams = this.teamsToAdd.split('\n');
+		const allPlayers = (this.teamsToAdd || '').split('\n')
+			.map(player => player.trim())
+			.filter(player => player.length > 0);
+		const parsedPlayers = allPlayers.map(playerLine => {
+			const [rawName, rawUserId, ...extraFields] = playerLine.split(',');
+			const name = rawName?.trim() || '';
+			const userId = rawUserId?.trim() || '';
 
-		allTeams.forEach(team => {
-			const newTeam = new WyTeam();
-			const [username, userId] = team.trim().split(',');
-
-			newTeam.name = username.trim();
-			newTeam.userId = parseInt(userId.trim());
-
-			this.players.push(this.createPlayerGroup(null, newTeam.name, newTeam.userId));
+			return {
+				name,
+				userId: userId ? parseInt(userId, 10) : null,
+				isValid: !!name && extraFields.length === 0 && (!userId || /^\d+$/.test(userId))
+			};
 		});
 
-		this.teamsToAdd = null;
+		if (parsedPlayers.some(player => !player.isValid)) {
+			this.toastService.addToast('Players must be entered one per line as "name" or "name, numeric user id". Check the format and try again.', ToastType.Error);
+			return;
+		}
+
+		parsedPlayers.forEach(player => {
+			this.players.push(this.createPlayerGroup(null, player.name, player.userId));
+		});
+
+		this.teamsToAdd = '';
 	}
 
 	importWyBinPlayers(): void {
@@ -336,10 +346,6 @@ export class TournamentParticipantsComponent implements OnInit {
 				});
 			}
 		});
-	}
-
-	getPlayersFormArray(index: number): FormArray {
-		return this.teams.at(index).get('players') as FormArray;
 	}
 
 	private createPlayerGroup(id: number, name: string, userId: number): FormGroup {

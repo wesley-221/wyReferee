@@ -10,7 +10,9 @@ import { ModBracketComponent } from './pages/tournament/tournament-mappool/mod-b
 import { MappoolOverviewComponent } from './pages/tournament/tournament-mappool/mappool-overview/mappool-overview.component';
 import { TournamentAccessComponent } from './pages/tournament/tournament-access/tournament-access.component';
 import { TournamentGeneralComponent } from './pages/tournament/tournament-general/tournament-general.component';
-import { TournamentParticipantsComponent } from './pages/tournament/tournament-participants/tournament-participants.component';
+import { TournamentParticipantsComponent } from './pages/tournament/participants/tournament-participants/tournament-participants.component';
+import { TournamentTeamParticipantsComponent } from './pages/tournament/participants/tournament-team-participants/tournament-team-participants.component';
+import { TournamentSoloParticipantsComponent } from './pages/tournament/participants/tournament-solo-participants/tournament-solo-participants.component';
 import { TournamentStagesComponent } from './pages/tournament/tournament-stages/tournament-stages.component';
 import { TournamentWebhookComponent } from './pages/tournament/tournament-webhook/tournament-webhook.component';
 import { ImportTournamentComponent } from './pages/import-tournament/import-tournament.component';
@@ -36,6 +38,8 @@ import { TournamentMatchFlowComponent } from './pages/tournament/tournament-matc
 		TournamentAccessComponent,
 		TournamentGeneralComponent,
 		TournamentParticipantsComponent,
+		TournamentTeamParticipantsComponent,
+		TournamentSoloParticipantsComponent,
 		TournamentStagesComponent,
 		TournamentWebhookComponent,
 		ImportTournamentComponent,

@@ -1,0 +1,86 @@
+<ng-container [formGroup]="form">
+	<div class="solo-layout">
+		<div class="players-toolbar">
+			<div class="players-heading">
+				<h3>Players <span>&bull;</span><span>{{ players.length }}</span></h3>
+			</div>
+
+			<mat-form-field class="filter-field">
+				<mat-label>Filter players</mat-label>
+
+				<input matInput [value]="playerFilter" (input)="onPlayerFilterInput($event)" />
+			</mat-form-field>
+
+			<button class="form-button" (click)="toggleBulkAdd()">
+				<mat-icon *ngIf="!bulkAddOpen">expand_more</mat-icon>
+				<mat-icon *ngIf="bulkAddOpen">expand_less</mat-icon>
+
+				bulk add
+			</button>
+
+			<button class="form-button primary" (click)="addTeam.emit()">
+				<mat-icon>add</mat-icon> add player
+			</button>
+		</div>
+
+		<p class="user-id-help">User id is the number at the end of the osu! profile link (for example, osu.ppy.sh/users/2407265 > 2407265). When a player changes their name, wyReferee will still be able to invite the correct player through the user id.</p>
+
+		<div class="bulk-add-panel" *ngIf="bulkAddOpen">
+			<p>One player per line: <code>username, userid</code></p>
+
+			<textarea [(ngModel)]="teamsToAdd" (ngModelChange)="teamsToAddChange.emit($event)" [ngModelOptions]="{ standalone: true }" placeholder="Player A, 1111111&#10;Player B, 2222222"></textarea>
+
+			<div class="bulk-add-footer">
+				<span>{{ teamsToAdd?.trim() ? 'Add ' + teamsToAddCount + ' player(s)' : 'No players to add' }}</span>
+
+				<div class="bulk-players-actions">
+					<button class="form-button danger" (click)="closeBulkAdd()">cancel</button>
+
+					<button class="form-button primary" [disabled]="!teamsToAdd?.trim()" (click)="submitBulkAdd()">
+						<mat-icon>add</mat-icon> add players
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="import-from-wybin" *ngIf="tournament.hasWyBinConnected()">
+			<button class="form-button" (click)="importWyBinPlayers.emit()">
+				<mat-icon [class.rotate]="importingFromWyBin">sync</mat-icon>
+
+				import players from wyBin
+			</button>
+		</div>
+
+		<div class="players-table">
+			<div class="players-table-header">
+				<span>#</span>
+				<span>Player name</span>
+				<span>User id</span>
+				<span></span>
+			</div>
+
+			<div class="players-list" formArrayName="players">
+				<div class="player-row" [class.missing-user-id]="!playerGroup.get('userId')?.value" *ngFor="let playerGroup of filteredPlayers; trackBy: trackByControl" [formGroupName]="players.controls.indexOf(playerGroup)">
+					<span class="player-index">{{ players.controls.indexOf(playerGroup) + 1 }}</span>
+
+					<mat-form-field>
+						<mat-label>Player name</mat-label>
+						<input matInput formControlName="name" />
+					</mat-form-field>
+
+					<mat-form-field>
+						<mat-label>User id</mat-label>
+						<input matInput formControlName="userId" />
+					</mat-form-field>
+
+					<button class="form-button danger" (click)="deletePlayer.emit(players.controls.indexOf(playerGroup))">
+						<mat-icon>delete</mat-icon>
+					</button>
+				</div>
+
+				<p class="empty-list" *ngIf="!players.length">No players yet. Add a player to get started.</p>
+				<p class="empty-list" *ngIf="players.length && !filteredPlayers.length">No players match this filter.</p>
+			</div>
+		</div>
+	</div>
+</ng-container>
