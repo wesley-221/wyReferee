@@ -54,6 +54,13 @@
 		}
 	}
 
+	.user-id-help {
+		margin: 0;
+
+		font-size: 13px;
+		color: $faded-text-color;
+	}
+
 	.bulk-add-panel {
 		border: 1px solid $card-border-color;
 
@@ -103,9 +110,6 @@
 				gap: 8px;
 			}
 		}
-	}
-
-	.import-from-wybin {
 	}
 
 	.players-table {
