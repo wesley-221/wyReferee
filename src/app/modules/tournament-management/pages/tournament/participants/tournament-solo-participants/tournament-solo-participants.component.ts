@@ -32,15 +32,15 @@ export class TournamentSoloParticipantsComponent {
 	}
 
 	get filteredPlayers(): AbstractControl[] {
-		const filter = this.playerFilter.trim().toLocaleLowerCase();
+		const filter = this.playerFilter.trim().toLowerCase();
 
 		if (!filter) {
 			return this.players.controls;
 		}
 
 		return this.players.controls.filter(player => {
-			const name = (player.get('name')?.value || '').toLocaleLowerCase();
-			const userId = (player.get('userId')?.value || '').toString().toLocaleLowerCase();
+			const name = (player.get('name')?.value || '').toLowerCase();
+			const userId = (player.get('userId')?.value || '').toString().toLowerCase();
 			return name.includes(filter) || userId.includes(filter);
 		});
 	}
