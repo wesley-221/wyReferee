@@ -41,7 +41,7 @@ export class WybinScheduleTournamentComponent {
 		const timeRegex = /(\d+):?(\d+)?/;
 		const matchTimeRegex = match.time.trim().match(timeRegex);
 
-		matchDate.setHours(parseInt(matchTimeRegex[1]), isNaN(parseInt(matchTimeRegex[2])) ? 0 : parseInt(matchTimeRegex[2]));
+		matchDate.setUTCHours(parseInt(matchTimeRegex[1]), isNaN(parseInt(matchTimeRegex[2])) ? 0 : parseInt(matchTimeRegex[2]), 0, 0);
 
 		const timeDifference = matchDate.getTime() - currentDate.getTime();
 
