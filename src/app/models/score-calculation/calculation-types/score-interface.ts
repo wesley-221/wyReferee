@@ -199,14 +199,6 @@ export abstract class ScoreInterface {
 			return users;
 		}
 
-		const teamRedUsers = this.getTeamRedUsers();
-
-		console.log('-- Team red users');
-		console.log(teamRedUsers);
-		console.log(this.allUsers);
-		console.log('-- End of team red users');
-
-
 		return this.getTeamRedUsers();
 	}
 
@@ -223,13 +215,6 @@ export abstract class ScoreInterface {
 
 			return users;
 		}
-
-		const teamBlueUsers = this.getTeamBlueUsers();
-
-		console.log('-- Team blue users');
-		console.log(teamBlueUsers);
-		console.log(this.allUsers);
-		console.log('-- End of team blue users');
 
 		return this.getTeamBlueUsers();
 	}
@@ -272,6 +257,19 @@ export abstract class ScoreInterface {
 			}
 			else if (player.team == Team.Blue as number) {
 				this.teamBlueUsers.push(player);
+			}
+		}
+
+		// Fallback to assigning players based on slot, usually only happens in "Head to Head" team mode
+		const teamSize = this.getTeamSize();
+
+		if (this.allUsers.length > 0) {
+			if (this.teamRedUsers.length === 0) {
+				this.teamRedUsers.push(...this.allUsers.filter(player => player.slot < teamSize));
+			}
+
+			if (this.teamBlueUsers.length === 0) {
+				this.teamBlueUsers.push(...this.allUsers.filter(player => player.slot >= teamSize && player.slot < teamSize * 2));
 			}
 		}
 	}
