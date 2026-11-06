@@ -37,6 +37,14 @@ export abstract class ScoreInterface {
 			return;
 		}
 
+		const index = this.allUsers.findIndex(existingUser => existingUser.slot === user.slot);
+
+		if (index !== -1) {
+			this.allUsers[index] = user;
+
+			return;
+		}
+
 		this.allUsers.push(user);
 	}
 
@@ -191,6 +199,14 @@ export abstract class ScoreInterface {
 			return users;
 		}
 
+		const teamRedUsers = this.getTeamRedUsers();
+
+		console.log('-- Team red users');
+		console.log(teamRedUsers);
+		console.log(this.allUsers);
+		console.log('-- End of team red users');
+
+
 		return this.getTeamRedUsers();
 	}
 
@@ -207,6 +223,13 @@ export abstract class ScoreInterface {
 
 			return users;
 		}
+
+		const teamBlueUsers = this.getTeamBlueUsers();
+
+		console.log('-- Team blue users');
+		console.log(teamBlueUsers);
+		console.log(this.allUsers);
+		console.log('-- End of team blue users');
 
 		return this.getTeamBlueUsers();
 	}
