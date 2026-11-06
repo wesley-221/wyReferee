@@ -37,6 +37,14 @@ export abstract class ScoreInterface {
 			return;
 		}
 
+		const index = this.allUsers.findIndex(existingUser => existingUser.slot === user.slot);
+
+		if (index !== -1) {
+			this.allUsers[index] = user;
+
+			return;
+		}
+
 		this.allUsers.push(user);
 	}
 
@@ -249,6 +257,19 @@ export abstract class ScoreInterface {
 			}
 			else if (player.team == Team.Blue as number) {
 				this.teamBlueUsers.push(player);
+			}
+		}
+
+		// Fallback to assigning players based on slot, usually only happens in "Head to Head" team mode
+		const teamSize = this.getTeamSize();
+
+		if (this.allUsers.length > 0) {
+			if (this.teamRedUsers.length === 0) {
+				this.teamRedUsers.push(...this.allUsers.filter(player => player.slot < teamSize));
+			}
+
+			if (this.teamBlueUsers.length === 0) {
+				this.teamBlueUsers.push(...this.allUsers.filter(player => player.slot >= teamSize && player.slot < teamSize * 2));
 			}
 		}
 	}
