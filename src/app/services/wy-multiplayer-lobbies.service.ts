@@ -289,11 +289,12 @@ export class WyMultiplayerLobbiesService {
 
 				const calculate = new Calculate();
 				const scoreInterface = calculate.getScoreInterface(multiplayerLobby.tournament.scoreInterfaceIdentifier);
-				scoreInterface.addUserScores(multiplayerData.getPlayers());
 
 				if (scoreInterface.getTeamSize() == undefined || scoreInterface.getTeamSize() == null || scoreInterface.getTeamSize() == 0) {
 					scoreInterface.setTeamSize(multiplayerLobby.tournament.teamSize);
 				}
+
+				scoreInterface.addUserScores(multiplayerData.getPlayers());
 
 				// Set the modifier if AxS score interface is being used
 				if (scoreInterface instanceof AxSCalculation) {
