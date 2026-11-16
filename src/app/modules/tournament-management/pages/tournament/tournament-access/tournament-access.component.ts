@@ -45,6 +45,10 @@ export class TournamentAccessComponent implements OnInit {
 				const newAvailableTo = [...tournament.availableTo];
 
 				for (const staff of allStaff) {
+					if (staff.user == null) {
+						continue;
+					}
+
 					const user = User.makeTrueCopy(staff.user);
 
 					const isHost = staff.roles.some(r => r.tournamentHostPermission === true);
